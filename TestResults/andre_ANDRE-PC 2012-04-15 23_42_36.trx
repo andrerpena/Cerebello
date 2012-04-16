@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="16ab7bbc-533a-48fc-ae5e-2ef494971e24" name="andre@ANDRE-PC 2012-04-15 23:42:36" runUser="andre-PC\andre" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="ef9f2aab-2efc-4d6e-a3fa-346b6afda278">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="andre_ANDRE-PC 2012-04-15 23_42_36">
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\ThirdParty\Bin\Moq.4.0.10827\Moq.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.Diagnostics.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\HtmlAgilityPack\HtmlAgilityPack.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Deployment.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-core-5.1.3\itextsharp.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Helpers.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.StorageClient.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\CipherLite\CipherLite.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\Microsoft.Web.Infrastructure.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\packages\System.Web.Providers.1.0.1\lib\Net40\System.Web.Providers.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-xtra-5.1.3\itextsharp.xtra.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CerebelloWebRole.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\Cerebello.Firestarter.exe" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Razor.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Razor.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-04-15T23:42:36.2074316-03:00" queuing="2012-04-15T23:42:36.3754412-03:00" start="2012-04-15T23:42:36.6694580-03:00" finish="2012-04-15T23:44:13.5870052-03:00" />
+  <ResultSummary outcome="Error">
+    <Counters total="21" executed="21" passed="21" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <RunInfos>
+      <RunInfo computerName="ANDRE-PC" outcome="Error" timestamp="2012-04-15T23:43:33.4169347-03:00">
+        <Text>Class Cleanup method MedicalCertificatesControllerTests.ClassCleanup failed. Error Message: System.Data.SqlClient.SqlException: Cannot detach the database 'CerebelloTEST' because it is currently in use.. Stack Trace:     at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning()
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at CerebelloWebRole.Tests.DatabaseHelper.DetachCerebelloTestDatabase() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\DatabaseHelper.cs:line 86
+   at CerebelloWebRole.Tests.MedicalCertificatesControllerTests.ClassCleanup() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\Tests\MedicalCertificatesControllerTests.cs:line 32
+</Text>
+      </RunInfo>
+      <RunInfo computerName="ANDRE-PC" outcome="Error" timestamp="2012-04-15T23:43:53.4473699-03:00">
+        <Text>Class Cleanup method AnamnesesControllerTests.ClassCleanup failed. Error Message: System.Data.SqlClient.SqlException: Cannot detach the database 'CerebelloTEST' because it is currently in use.. Stack Trace:     at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning()
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at CerebelloWebRole.Tests.DatabaseHelper.DetachCerebelloTestDatabase() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\DatabaseHelper.cs:line 86
+   at CerebelloWebRole.Tests.AnamnesesControllerTests.ClassCleanup() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\Tests\AnamnesesControllerTests.cs:line 31
+</Text>
+      </RunInfo>
+      <RunInfo computerName="ANDRE-PC" outcome="Error" timestamp="2012-04-15T23:44:13.5402051-03:00">
+        <Text>Class Cleanup method ModelMedicalCertificateControllerTests.ClassCleanup failed. Error Message: System.Data.SqlClient.SqlException: Cannot detach the database 'CerebelloTEST' because it is currently in use.. Stack Trace:     at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning()
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at CerebelloWebRole.Tests.DatabaseHelper.DetachCerebelloTestDatabase() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\DatabaseHelper.cs:line 86
+   at CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests.ClassCleanup() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\Tests\ModelMedicalCertificateControllerTests.cs:line 39
+</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="Edit_1_CannotSaveWithInvalidModelId" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="ebf3e47b-d14a-7c74-dc98-2b6cbaf08fbd">
+      <Execution id="402be90d-9151-4c30-b457-d1fdac887088" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_1_CannotSaveWithInvalidModelId" />
+    </UnitTest>
+    <UnitTest name="Edit_New_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="3ade3956-00aa-d0a4-1abf-f65910587805">
+      <Execution id="eeabde10-cab3-4c9d-917c-84b6a5094e5f" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_New_HappyPath" />
+    </UnitTest>
+    <UnitTest name="Edit_4_AllFieldsInTheTextMustBeDeclaredWithTheExceptionOfPatient" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="a9c2d8ef-8ba3-864f-6ea6-4ddc26091c80">
+      <Execution id="8a58fa00-2ffb-442e-9480-310cf3c55e0b" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_4_AllFieldsInTheTextMustBeDeclaredWithTheExceptionOfPatient" />
+    </UnitTest>
+    <UnitTest name="Edit_5_CanSaveAllFieldsWhenModelDoesNotExist" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="8ad46afa-eca0-79c4-56f7-49478b8f2eb0">
+      <Execution id="997f57b6-4fe4-4bc5-8166-025fd915aab6" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_5_CanSaveAllFieldsWhenModelDoesNotExist" />
+    </UnitTest>
+    <UnitTest name="Edit_5_CanProperlyCreateModelWithNoFields" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="da6ff516-a175-cf7e-1426-3150ac2dd6f1">
+      <Execution id="40683a67-0129-49ef-8e64-3f21135a0723" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_5_CanProperlyCreateModelWithNoFields" />
+    </UnitTest>
+    <UnitTest name="Delete_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="726a5bb4-9b7c-e7ec-a2fe-831bc4b50f36">
+      <Execution id="c55f9e17-101e-4595-95a7-46cc599017b0" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Delete_HappyPath" />
+    </UnitTest>
+    <UnitTest name="Edit_1_CannotAddFieldWithNotAllowedCharacters" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="f7dc56dc-f7ad-b300-031a-f461b1d69216">
+      <Execution id="0d187910-0ac1-472b-866b-ad79eb2ed40d" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_1_CannotAddFieldWithNotAllowedCharacters" />
+    </UnitTest>
+    <UnitTest name="Delete_2_ShouldReturnProperResultWhenNotExisting" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="22c0653d-06de-02b2-ff5a-5a058eaff4b2">
+      <Execution id="ef347976-5c67-408d-b39e-7302ab192d12" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.AnamnesesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Delete_2_ShouldReturnProperResultWhenNotExisting" />
+    </UnitTest>
+    <UnitTest name="Edit_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="2991ac51-0559-0a18-e396-d1c6f83abee5">
+      <Execution id="b9d32fbf-26bf-436b-801a-1db1ef407e5a" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_HappyPath" />
+    </UnitTest>
+    <UnitTest name="Edit_2_CannotSaveWithInvalidPatient" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="c646ae78-61a8-6b7f-04dd-4875a2e65d3a">
+      <Execution id="adff576b-0047-4696-9fe6-1a7b955bf6e8" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_2_CannotSaveWithInvalidPatient" />
+    </UnitTest>
+    <UnitTest name="Delete_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="2d97d549-56fe-0637-6441-464f76f05c69">
+      <Execution id="431ea39b-7686-4db6-aff1-c498beaa16b6" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Delete_HappyPath" />
+    </UnitTest>
+    <UnitTest name="Edit_4_AllFieldsInTheTextMustBeDeclared" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="f7a445b4-027e-bd35-529e-6c76d0124a9f">
+      <Execution id="a6ecd39d-2910-4c9a-9435-e24c6c564522" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_4_AllFieldsInTheTextMustBeDeclared" />
+    </UnitTest>
+    <UnitTest name="Edit_3_CannotSaveWithInvalidModelIdAndId" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="be5c3fd0-b537-a2f6-1213-29c231a57f6f">
+      <Execution id="a31d9fdd-1f9a-4579-9413-988e7f52d6b1" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_3_CannotSaveWithInvalidModelIdAndId" />
+    </UnitTest>
+    <UnitTest name="Delete_1_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="c2ec3d3f-37b6-59b7-2b75-e5c4d9997483">
+      <Execution id="1b6c30dc-d8f9-40ab-837e-f26ae5b50c00" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.AnamnesesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Delete_1_HappyPath" />
+    </UnitTest>
+    <UnitTest name="Edit_1_CreateIfItDoesntExist" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="b17a794d-9843-f1d9-6c87-beeeb8c3629e">
+      <Execution id="28bef62a-0e7b-4bce-864a-a4f6c77b2d8a" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.AnamnesesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_1_CreateIfItDoesntExist" />
+    </UnitTest>
+    <UnitTest name="GetCertificateText_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="6b210cc2-df8e-72e7-9de4-ed61a7d5644e">
+      <Execution id="5f363292-a3a5-4244-a881-3607f2ae93fc" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetCertificateText_HappyPath" />
+    </UnitTest>
+    <UnitTest name="Edit_3_AllDeclaredFieldsMustBeReferenced" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="4b41cbeb-89e7-e429-8520-393b7037c042">
+      <Execution id="532e2a84-72cd-4d2e-9224-b8c1ecbb0092" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_3_AllDeclaredFieldsMustBeReferenced" />
+    </UnitTest>
+    <UnitTest name="Edit_2_CannotUseMalformedPlaceHolders" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="247b13e5-656a-2369-c034-0cbe7e55f868">
+      <Execution id="73340427-f6ad-4e90-95d7-5f7195cc7833" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_2_CannotUseMalformedPlaceHolders" />
+    </UnitTest>
+    <UnitTest name="Edit_2_SymptomsThatExistMustBeReferenced" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="d1e32f09-1346-5fe3-495a-5fffef038602">
+      <Execution id="39f443ee-3e6b-45a4-be46-2c4efdad68e8" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.AnamnesesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_2_SymptomsThatExistMustBeReferenced" />
+    </UnitTest>
+    <UnitTest name="Edit_4_CannotSaveACertificateWithInvalidFields" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="2226a31a-b073-3995-dc8a-d66d152dfc43">
+      <Execution id="c9d62cd2-a2a1-4642-9534-f29624558a78" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_4_CannotSaveACertificateWithInvalidFields" />
+    </UnitTest>
+    <UnitTest name="Edit_Existing_HappyPath" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="d6022e27-9611-eb2e-ec54-245d47e99307">
+      <Execution id="87c57f1f-5d68-4857-9803-95f734bb98f5" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.ModelMedicalCertificateControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_Existing_HappyPath" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="2226a31a-b073-3995-dc8a-d66d152dfc43" executionId="c9d62cd2-a2a1-4642-9534-f29624558a78" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="22c0653d-06de-02b2-ff5a-5a058eaff4b2" executionId="ef347976-5c67-408d-b39e-7302ab192d12" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="247b13e5-656a-2369-c034-0cbe7e55f868" executionId="73340427-f6ad-4e90-95d7-5f7195cc7833" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2991ac51-0559-0a18-e396-d1c6f83abee5" executionId="b9d32fbf-26bf-436b-801a-1db1ef407e5a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2d97d549-56fe-0637-6441-464f76f05c69" executionId="431ea39b-7686-4db6-aff1-c498beaa16b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3ade3956-00aa-d0a4-1abf-f65910587805" executionId="eeabde10-cab3-4c9d-917c-84b6a5094e5f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4b41cbeb-89e7-e429-8520-393b7037c042" executionId="532e2a84-72cd-4d2e-9224-b8c1ecbb0092" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b210cc2-df8e-72e7-9de4-ed61a7d5644e" executionId="5f363292-a3a5-4244-a881-3607f2ae93fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="726a5bb4-9b7c-e7ec-a2fe-831bc4b50f36" executionId="c55f9e17-101e-4595-95a7-46cc599017b0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8ad46afa-eca0-79c4-56f7-49478b8f2eb0" executionId="997f57b6-4fe4-4bc5-8166-025fd915aab6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a9c2d8ef-8ba3-864f-6ea6-4ddc26091c80" executionId="8a58fa00-2ffb-442e-9480-310cf3c55e0b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b17a794d-9843-f1d9-6c87-beeeb8c3629e" executionId="28bef62a-0e7b-4bce-864a-a4f6c77b2d8a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be5c3fd0-b537-a2f6-1213-29c231a57f6f" executionId="a31d9fdd-1f9a-4579-9413-988e7f52d6b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c2ec3d3f-37b6-59b7-2b75-e5c4d9997483" executionId="1b6c30dc-d8f9-40ab-837e-f26ae5b50c00" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c646ae78-61a8-6b7f-04dd-4875a2e65d3a" executionId="adff576b-0047-4696-9fe6-1a7b955bf6e8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d1e32f09-1346-5fe3-495a-5fffef038602" executionId="39f443ee-3e6b-45a4-be46-2c4efdad68e8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d6022e27-9611-eb2e-ec54-245d47e99307" executionId="87c57f1f-5d68-4857-9803-95f734bb98f5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="da6ff516-a175-cf7e-1426-3150ac2dd6f1" executionId="40683a67-0129-49ef-8e64-3f21135a0723" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ebf3e47b-d14a-7c74-dc98-2b6cbaf08fbd" executionId="402be90d-9151-4c30-b457-d1fdac887088" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f7a445b4-027e-bd35-529e-6c76d0124a9f" executionId="a6ecd39d-2910-4c9a-9435-e24c6c564522" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f7dc56dc-f7ad-b300-031a-f461b1d69216" executionId="0d187910-0ac1-472b-866b-ad79eb2ed40d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="c9d62cd2-a2a1-4642-9534-f29624558a78" testId="2226a31a-b073-3995-dc8a-d66d152dfc43" testName="Edit_4_CannotSaveACertificateWithInvalidFields" computerName="ANDRE-PC" duration="00:00:12.4349747" startTime="2012-04-15T23:42:36.7844646-03:00" endTime="2012-04-15T23:42:54.8314968-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c9d62cd2-a2a1-4642-9534-f29624558a78">
+    </UnitTestResult>
+    <UnitTestResult executionId="ef347976-5c67-408d-b39e-7302ab192d12" testId="22c0653d-06de-02b2-ff5a-5a058eaff4b2" testName="Delete_2_ShouldReturnProperResultWhenNotExisting" computerName="ANDRE-PC" duration="00:00:00.9083772" startTime="2012-04-15T23:42:54.8414974-03:00" endTime="2012-04-15T23:42:55.7755508-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ef347976-5c67-408d-b39e-7302ab192d12">
+    </UnitTestResult>
+    <UnitTestResult executionId="73340427-f6ad-4e90-95d7-5f7195cc7833" testId="247b13e5-656a-2369-c034-0cbe7e55f868" testName="Edit_2_CannotUseMalformedPlaceHolders" computerName="ANDRE-PC" duration="00:00:00.6641780" startTime="2012-04-15T23:42:55.7775509-03:00" endTime="2012-04-15T23:42:56.4555897-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="73340427-f6ad-4e90-95d7-5f7195cc7833">
+    </UnitTestResult>
+    <UnitTestResult executionId="b9d32fbf-26bf-436b-801a-1db1ef407e5a" testId="2991ac51-0559-0a18-e396-d1c6f83abee5" testName="Edit_HappyPath" computerName="ANDRE-PC" duration="00:00:00.9352865" startTime="2012-04-15T23:42:56.4575898-03:00" endTime="2012-04-15T23:42:57.4036439-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b9d32fbf-26bf-436b-801a-1db1ef407e5a">
+    </UnitTestResult>
+    <UnitTestResult executionId="431ea39b-7686-4db6-aff1-c498beaa16b6" testId="2d97d549-56fe-0637-6441-464f76f05c69" testName="Delete_HappyPath" computerName="ANDRE-PC" duration="00:00:01.0741827" startTime="2012-04-15T23:42:57.4066441-03:00" endTime="2012-04-15T23:42:58.4887060-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="431ea39b-7686-4db6-aff1-c498beaa16b6">
+    </UnitTestResult>
+    <UnitTestResult executionId="eeabde10-cab3-4c9d-917c-84b6a5094e5f" testId="3ade3956-00aa-d0a4-1abf-f65910587805" testName="Edit_New_HappyPath" computerName="ANDRE-PC" duration="00:00:00.8729735" startTime="2012-04-15T23:42:58.4917061-03:00" endTime="2012-04-15T23:42:59.3747567-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eeabde10-cab3-4c9d-917c-84b6a5094e5f">
+    </UnitTestResult>
+    <UnitTestResult executionId="532e2a84-72cd-4d2e-9224-b8c1ecbb0092" testId="4b41cbeb-89e7-e429-8520-393b7037c042" testName="Edit_3_AllDeclaredFieldsMustBeReferenced" computerName="ANDRE-PC" duration="00:00:00.7247395" startTime="2012-04-15T23:42:59.3767568-03:00" endTime="2012-04-15T23:43:00.1107988-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="532e2a84-72cd-4d2e-9224-b8c1ecbb0092">
+    </UnitTestResult>
+    <UnitTestResult executionId="5f363292-a3a5-4244-a881-3607f2ae93fc" testId="6b210cc2-df8e-72e7-9de4-ed61a7d5644e" testName="GetCertificateText_HappyPath" computerName="ANDRE-PC" duration="00:00:00.9843988" startTime="2012-04-15T23:43:00.1137989-03:00" endTime="2012-04-15T23:43:01.1068557-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5f363292-a3a5-4244-a881-3607f2ae93fc">
+    </UnitTestResult>
+    <UnitTestResult executionId="c55f9e17-101e-4595-95a7-46cc599017b0" testId="726a5bb4-9b7c-e7ec-a2fe-831bc4b50f36" testName="Delete_HappyPath" computerName="ANDRE-PC" duration="00:00:00.9321018" startTime="2012-04-15T23:43:01.1098559-03:00" endTime="2012-04-15T23:43:02.0769112-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c55f9e17-101e-4595-95a7-46cc599017b0">
+    </UnitTestResult>
+    <UnitTestResult executionId="997f57b6-4fe4-4bc5-8166-025fd915aab6" testId="8ad46afa-eca0-79c4-56f7-49478b8f2eb0" testName="Edit_5_CanSaveAllFieldsWhenModelDoesNotExist" computerName="ANDRE-PC" duration="00:00:01.0096934" startTime="2012-04-15T23:43:02.0799114-03:00" endTime="2012-04-15T23:43:03.0969696-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="997f57b6-4fe4-4bc5-8166-025fd915aab6">
+    </UnitTestResult>
+    <UnitTestResult executionId="8a58fa00-2ffb-442e-9480-310cf3c55e0b" testId="a9c2d8ef-8ba3-864f-6ea6-4ddc26091c80" testName="Edit_4_AllFieldsInTheTextMustBeDeclaredWithTheExceptionOfPatient" computerName="ANDRE-PC" duration="00:00:00.8127211" startTime="2012-04-15T23:43:03.0999697-03:00" endTime="2012-04-15T23:43:03.9200166-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a58fa00-2ffb-442e-9480-310cf3c55e0b">
+    </UnitTestResult>
+    <UnitTestResult executionId="28bef62a-0e7b-4bce-864a-a4f6c77b2d8a" testId="b17a794d-9843-f1d9-6c87-beeeb8c3629e" testName="Edit_1_CreateIfItDoesntExist" computerName="ANDRE-PC" duration="00:00:00.9796622" startTime="2012-04-15T23:43:03.9230168-03:00" endTime="2012-04-15T23:43:04.9130734-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="28bef62a-0e7b-4bce-864a-a4f6c77b2d8a">
+    </UnitTestResult>
+    <UnitTestResult executionId="a31d9fdd-1f9a-4579-9413-988e7f52d6b1" testId="be5c3fd0-b537-a2f6-1213-29c231a57f6f" testName="Edit_3_CannotSaveWithInvalidModelIdAndId" computerName="ANDRE-PC" duration="00:00:00.9233433" startTime="2012-04-15T23:43:04.9150735-03:00" endTime="2012-04-15T23:43:05.8481269-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a31d9fdd-1f9a-4579-9413-988e7f52d6b1">
+    </UnitTestResult>
+    <UnitTestResult executionId="1b6c30dc-d8f9-40ab-837e-f26ae5b50c00" testId="c2ec3d3f-37b6-59b7-2b75-e5c4d9997483" testName="Delete_1_HappyPath" computerName="ANDRE-PC" duration="00:00:00.9688965" startTime="2012-04-15T23:43:05.8501270-03:00" endTime="2012-04-15T23:43:06.8291830-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1b6c30dc-d8f9-40ab-837e-f26ae5b50c00">
+    </UnitTestResult>
+    <UnitTestResult executionId="adff576b-0047-4696-9fe6-1a7b955bf6e8" testId="c646ae78-61a8-6b7f-04dd-4875a2e65d3a" testName="Edit_2_CannotSaveWithInvalidPatient" computerName="ANDRE-PC" duration="00:00:01.0245390" startTime="2012-04-15T23:43:06.8311831-03:00" endTime="2012-04-15T23:43:07.8662423-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="adff576b-0047-4696-9fe6-1a7b955bf6e8">
+    </UnitTestResult>
+    <UnitTestResult executionId="39f443ee-3e6b-45a4-be46-2c4efdad68e8" testId="d1e32f09-1346-5fe3-495a-5fffef038602" testName="Edit_2_SymptomsThatExistMustBeReferenced" computerName="ANDRE-PC" duration="00:00:00.9932940" startTime="2012-04-15T23:43:07.8672424-03:00" endTime="2012-04-15T23:43:08.8712998-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="39f443ee-3e6b-45a4-be46-2c4efdad68e8">
+    </UnitTestResult>
+    <UnitTestResult executionId="87c57f1f-5d68-4857-9803-95f734bb98f5" testId="d6022e27-9611-eb2e-ec54-245d47e99307" testName="Edit_Existing_HappyPath" computerName="ANDRE-PC" duration="00:00:00.6457559" startTime="2012-04-15T23:43:08.8743000-03:00" endTime="2012-04-15T23:43:09.5293375-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="87c57f1f-5d68-4857-9803-95f734bb98f5">
+    </UnitTestResult>
+    <UnitTestResult executionId="40683a67-0129-49ef-8e64-3f21135a0723" testId="da6ff516-a175-cf7e-1426-3150ac2dd6f1" testName="Edit_5_CanProperlyCreateModelWithNoFields" computerName="ANDRE-PC" duration="00:00:00.8231825" startTime="2012-04-15T23:43:09.5323376-03:00" endTime="2012-04-15T23:43:10.3653853-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40683a67-0129-49ef-8e64-3f21135a0723">
+    </UnitTestResult>
+    <UnitTestResult executionId="402be90d-9151-4c30-b457-d1fdac887088" testId="ebf3e47b-d14a-7c74-dc98-2b6cbaf08fbd" testName="Edit_1_CannotSaveWithInvalidModelId" computerName="ANDRE-PC" duration="00:00:00.8546234" startTime="2012-04-15T23:43:10.3673854-03:00" endTime="2012-04-15T23:43:11.2294347-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="402be90d-9151-4c30-b457-d1fdac887088">
+    </UnitTestResult>
+    <UnitTestResult executionId="a6ecd39d-2910-4c9a-9435-e24c6c564522" testId="f7a445b4-027e-bd35-529e-6c76d0124a9f" testName="Edit_4_AllFieldsInTheTextMustBeDeclared" computerName="ANDRE-PC" duration="00:00:00.6062838" startTime="2012-04-15T23:43:11.2324349-03:00" endTime="2012-04-15T23:43:11.8484701-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a6ecd39d-2910-4c9a-9435-e24c6c564522">
+    </UnitTestResult>
+    <UnitTestResult executionId="0d187910-0ac1-472b-866b-ad79eb2ed40d" testId="f7dc56dc-f7ad-b300-031a-f461b1d69216" testName="Edit_1_CannotAddFieldWithNotAllowedCharacters" computerName="ANDRE-PC" duration="00:00:00.7414802" startTime="2012-04-15T23:43:11.8634710-03:00" endTime="2012-04-15T23:43:12.6125138-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0d187910-0ac1-472b-866b-ad79eb2ed40d">
+    </UnitTestResult>
+  </Results>
+</TestRun>

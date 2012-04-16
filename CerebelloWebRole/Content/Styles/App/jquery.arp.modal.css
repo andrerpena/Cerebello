@@ -1,0 +1,44 @@
+﻿.modal-mask
+{
+    position: absolute;
+    background-color: #000;
+    top: 0;
+    left: 0;
+    opacity: 0.2;
+    display: none;
+}
+
+.modal
+{
+    background-color: White;
+    box-shadow: 0 0 4px #626262;
+    display: none;
+    position: absolute;
+}
+
+.modal .modal-header
+{
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #DDDDDD;
+    font-weight: bold;
+    padding: 8px;
+}
+
+.modal .modal-header .modal-title
+{
+    margin-top: 3px;
+}
+
+.modal .modal-header .modal-close
+{
+    background-image: url("/content/images/app/icons16/clear.png");
+    cursor: pointer;
+    float: right;
+    height: 16px;
+    width: 16px;
+}
+
+.modal .content
+{
+    padding: 10px 10px 0;
+}

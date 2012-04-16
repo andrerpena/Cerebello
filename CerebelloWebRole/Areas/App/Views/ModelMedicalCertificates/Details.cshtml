@@ -1,0 +1,52 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificateViewModel
+@{
+    ViewBag.Title = "Details";
+}
+@section Title {
+    Medicamento: <b>@Model.Name</b>
+}
+@section SideBar {
+    <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar modelo de atestado</a>
+    <a href="@Url.Action("index")" class="icon-link icon-link-home" id="list-medications-link">Resumo de modelos de atestados</a>
+
+    <script type="text/javascript">
+        $("#delete-model-link").click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir este modelo de atestado médico?\nTodas as receitas de pacientes associadas com este modelo perderão esta associação.\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Este modelo de atestado médico foi excluído");
+                        window.location = "@Url.Action("index")";
+                    }
+                    else
+                        alert("Não foi possível excluir este modelo de atestado médico.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+}
+
+<table class="view-table">
+    <tr>
+        <th>@Html.LabelFor(model => model.Name)</th>
+        <td>@Html.DisplayFor(model => model.Name)</td>
+    </tr>
+    <tr>
+        <th>@Html.LabelFor(model => model.Text)</th>
+        <td>@Html.DisplayFor(model => model.Text)</td>
+    </tr>
+    <tr>
+        <th>@Html.LabelFor(model => model.Fields)</th>
+        <td>
+            <ul class="string-list">
+                @foreach (var field in this.Model.Fields)
+                {
+                    <li>
+                        @field.Name
+                    </li>
+                }
+            </ul>
+        </td>
+    </tr>
+</table>

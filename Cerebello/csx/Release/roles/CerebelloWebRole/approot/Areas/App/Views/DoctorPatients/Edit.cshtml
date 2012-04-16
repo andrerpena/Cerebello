@@ -1,0 +1,174 @@
+﻿@model Cerebello.Areas.App.Models.EditPatientViewModel
+@using Cerebello.Code
+@{
+    ViewBag.Title = "Create";
+}
+@section Title {
+    Alterar paciente
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+    <div class="field-group">
+        <div class="field-large">
+            @Html.LabelFor(model => model.FullName)
+            @Html.TextBoxFor(model => model.FullName)
+        </div>
+    </div>
+    
+    <div class="field-group-transparent">
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Gender)
+                    @Html.EnumDropdownFor(model => model.Gender)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.DateOfBirth)
+                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "date-text-editor" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.MaritalStatus)
+                    @Html.EnumDropdownFor(model => model.MaritalStatus)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.BirthPlace)
+                    @Html.EditorFor(model => model.BirthPlace)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.CPF)
+                    @Html.EditorFor(model => model.CPF)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.CPFOwner)
+                    @Html.EnumDropdownFor(model => model.CPFOwner)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Profissao)
+                    @Html.EditorFor(model => model.Profissao)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <p class="field-group-title">
+        Contato
+    </p>
+    
+    <div class="field-group-transparent">
+        <div class="field-large">
+            @Html.LabelFor(model => model.EMail)
+            @Html.TextBoxFor(model => model.EMail)
+        </div>
+    </div>
+    
+    <p class="field-group-title">
+        Endereço
+    </p>
+    <div class="field-group-transparent">
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.StateProvince)
+                    @Html.EditorFor(model => model.StateProvince)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.City)
+                    @Html.EditorFor(model => model.City)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Neighborhood)
+                    @Html.EditorFor(model => model.Neighborhood)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field-large">
+                    @Html.LabelFor(model => model.Street)
+                    @Html.EditorFor(model => model.Street)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Complement)
+                    @Html.EditorFor(model => model.Complement)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.CEP)
+                    @Html.EditorFor(model => model.CEP)
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <p class="field-group-title">
+        Dados Hospitalares
+    </p>
+    <div class="field-group-transparent">
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Chart)
+                    @Html.EditorFor(model => model.Chart)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Bed)
+                    @Html.EditorFor(model => model.Bed)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Coverage)
+                    @Html.EditorFor(model => model.Coverage)
+                </div>
+            </div>
+            <div class="col-50">
+                <div class="field">
+                    @Html.LabelFor(model => model.Registration)
+                    @Html.EditorFor(model => model.Registration)
+                </div>
+            </div>
+        </div>
+    </div>
+            
+    <div class="buttons-bar">
+        <input type="submit" value="Salvar alterações deste paciente" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("Cancelar", "Index")
+    </div>
+}

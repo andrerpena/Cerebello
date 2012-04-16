@@ -1,0 +1,12 @@
+﻿ModelMedicalCertificate
+
+On Create:
+	- Fields referenced in the text that does not exist should raise an exception
+	- Fields that exist but are not referenced in the text should raise an exception
+
+On Edit:
+	- Fields referenced in the text that does not exist should raise an exception
+	- Fields that exist but are not referenced in the text should raise an exception
+
+On Delete:
+	- Should delete all medical certificates that use this model

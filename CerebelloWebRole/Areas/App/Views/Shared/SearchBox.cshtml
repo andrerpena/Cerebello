@@ -1,0 +1,19 @@
+﻿@model CerebelloWebRole.Areas.App.Models.SearchModel
+@{
+    ViewBag.Title = "SearchBox";
+    Layout = null;
+}
+<div class="search-box">
+    <div class="input-submit-wrapper">
+        <input type="submit" value="Pesquisar" />
+    </div>
+    <div class="input-text-wrapper">
+        @Html.EditorFor(model => model.Term)
+        @if (ViewBag.Watermark != null)
+        {
+            <script type="text/javascript">
+                $("#Term").watermark({ text: "@Html.Raw(ViewBag.Watermark)" });
+            </script>
+        }
+    </div>
+</div>

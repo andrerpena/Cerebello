@@ -1,0 +1,217 @@
+﻿@model Cerebello.Areas.App.Models.ViewPatientViewModel
+@{
+    ViewBag.Title = "Create";
+    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+}
+@section Title {
+    Paciente: <b>@Model.FullName</b>
+}
+@section SideBar {
+    <a href="#" class="icon-link icon-link-edit">Editar este paciente</a>
+}
+@Html.Partial("DetailsCardSimple", this.Model)
+<div class="medical-appointments-panel">
+    <a id="start-appointment" href="#" class="icon-link icon-link-plus">Iniciar consulta</a>
+    <div class="medical-appointment-panel" style="display:none">
+
+        <p><a href="#" class="icon-link icon-link-plus">Nova anamnese</a></p>
+        <div class="new-anamnese-wrapper appointment-panel-wrapper"></div>
+
+        <p><a id="new-receipt" href="#" class="icon-link icon-link-plus">Nova receita</a></p>
+        <div class="new-receipt-wrapper appointment-panel-wrapper"></div>
+
+        <p><a href="#" class="icon-link icon-link-plus">Nova solicitação de exames</a></p>
+        <div class="new-exams-wrapper appointment-panel-wrapper"></div>
+
+        <p><a href="#" class="icon-link icon-link-plus">Nova atestado médico</a></p>
+        <div class="new-sick-note-wrapper appointment-panel-wrapper"></div>
+
+        <p><a href="#" class="icon-link icon-link-reload">Marcar retorno</a></p>
+        <div class="schedule-return-wrapper appointment-panel-wrapper"></div>
+
+        <p><a href="#" class="icon-link icon-link-check">Finalizar consulta</a></p>
+
+    </div>
+    <script type="text/javascript">
+        $("#start-appointment").click(function (e) {
+            e.preventDefault();
+            $("#start-appointment").replaceWith("<p class='link-disabled'>Consulta iniciada</p>");
+            $(".medical-appointment-panel").toggle();
+        });
+
+        $("#new-receipt").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("NewReceiptPanel", new { id= Model.Id })",
+                success: function(html) {
+                    $("#new-receipt").parent("p").addClass("selected");
+                    $("#new-receipt").replaceWith("<span>Nova receita</span>");            
+                    $(".new-receipt-wrapper").html(html);
+                    $(".new-receipt-wrapper").show();
+                }
+            });
+        });
+    </script>
+</div>
+
+ @*<div class="tabs-wrapper">
+    <div class="tabs">
+        <ul>
+            <li class="@(ViewBag.DetailsAction == "history" ? "you-are-here" : "")"><a href="@Url.Action("detailshistory", new { id = Model.Id })">Histórico</a></li>
+            <li class="@(ViewBag.DetailsAction == "anamneses" ? "you-are-here" : "")"><a href="@Url.Action("detailsanamneses", new { id = Model.Id })">Anamneses</a></li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        
+    </div>
+</div>*@ @*
+<div class="field-group-transparent">
+    <div class="row">
+        <div class="field-view">
+            @Html.LabelFor(model => model.FullName)
+            @Html.DisplayFor(model => model.FullName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Gender)
+                @Html.DisplayFor(model => model.Gender)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.DateOfBirth)
+                @Html.DisplayFor(model => model.DateOfBirth, new { @class = "date-text-editor" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.MaritalStatus)
+                @Html.DisplayFor(model => model.MaritalStatus)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.BirthPlace)
+                @Html.DisplayFor(model => model.BirthPlace)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.CPF)
+                @Html.DisplayFor(model => model.CPF)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.CPFOwner)
+                @Html.DisplayFor(model => model.CPFOwner)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Profissao)
+                @Html.DisplayFor(model => model.Profissao)
+            </div>
+        </div>
+    </div>
+</div>
+<p class="field-group-title">
+    Contato
+</p>
+<div class="field-group-transparent">
+    <div class="field-view">
+        @Html.LabelFor(model => model.EMail)
+        @Html.DisplayFor(model => model.EMail)
+    </div>
+</div>
+<p class="field-group-title">
+    Endereço
+</p>
+<div class="field-group-transparent">
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.StateProvince)
+                @Html.DisplayFor(model => model.StateProvince)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.City)
+                @Html.DisplayFor(model => model.City)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Neighborhood)
+                @Html.DisplayFor(model => model.Neighborhood)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Street)
+                @Html.DisplayFor(model => model.Street)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Complement)
+                @Html.DisplayFor(model => model.Complement)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.CEP)
+                @Html.DisplayFor(model => model.CEP)
+            </div>
+        </div>
+    </div>
+</div>
+<p class="field-group-title">
+    Dados Hospitalares
+</p>
+<div class="field-group-transparent">
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Chart)
+                @Html.DisplayFor(model => model.Chart)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Bed)
+                @Html.DisplayFor(model => model.Bed)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Coverage)
+                @Html.DisplayFor(model => model.Coverage)
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="field-view">
+                @Html.LabelFor(model => model.Registration)
+                @Html.DisplayFor(model => model.Registration)
+            </div>
+        </div>
+    </div>
+</div>
+*@

@@ -1,0 +1,136 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
+@using CommonLib.Mvc
+@{
+    
+}
+@section Title {
+    @ViewBag.Title
+}
+@section SideBar {
+    <a href="#" class="icon-link icon-link-import">Importar da Anvisa</a>
+    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
+
+    <script type="text/javascript">
+        $(".icon-link-import").click(function(e) {
+            e.preventDefault();
+            $.modal({
+                url: "@Url.Action("anvisaimporteditor", new { medicationId = this.Model != null ? this.Model.Id : null})",
+                title: "Importar medicamento da Anvisa",
+                width: 480,
+                height: 150
+            });
+        });
+    </script>
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery.arp.modal.css" />
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(model => model.Id)
+    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.Name)
+            </th>
+            <td class="large">@Html.TextBoxFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.LaboratoryName)
+            </th>
+            <td>
+                @Html.TextBoxFor(model => model.LaboratoryName, new { @class = "lookup" })
+                @Html.HiddenFor(model => model.LaboratoryId)
+                <script type="text/javascript">
+                    $("#LaboratoryName").autocomplete({
+                        source: "@Url.Action("searchlaboratory")",
+                        select: function(event, ui) {
+                            $("#LaboratoryId").val(ui.item.id);
+                        }
+                    });
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Usage)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.Usage)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.ActiveIngredients)
+            </th>
+            <td>
+                <ul class="edit-list-single-line active-ingredients-list">
+                    @if (Model != null && Model.ActiveIngredients != null)
+                    {
+                        foreach (var activeIngredient in Model.ActiveIngredients)
+                        {
+                        @Html.Partial("ActiveIngredientEditor", activeIngredient)
+                        }
+                    }
+                    else
+                    {
+                        @Html.Partial("ActiveIngredientEditor", new ViewDataDictionary())
+                    }
+                </ul>
+                <a id="add-active-ingredient" href="#" class="block-little-link add-another-link">Adicionar
+                    princípio ativo</a>
+                <script type="text/javascript">
+
+                    $("#add-active-ingredient").click(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: "@Url.Action("activeingredienteditor")",
+                            success: function(result) {
+                                $(".active-ingredients-list").append(result);
+                            }
+                        });
+                    });
+                
+                </script>
+            </td>
+        </tr>
+    </table>
+    
+    <p class="form-title">
+        @Html.LabelFor(model => model.Leaflets)
+    </p>    
+    
+    <div class="leaflets">
+        <ul class="edit-list leaflets-list">
+            @if (Model != null && Model.Leaflets != null)
+            {
+                foreach (var leaflet in Model.Leaflets)
+                {
+                    @Html.Partial("LeafletEditor", leaflet)
+                }
+            }
+            else
+            {
+                @Html.Partial("LeafletEditor", new ViewDataDictionary())
+            }
+        </ul>
+        <a id="add-leaflet" href="#" class="block-little-link add-another-link">Adicionar bula</a>
+        <script type="text/javascript">
+
+                    $("#add-leaflet").click(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: "@Url.Action("leafleteditor")",
+                            success: function(result) {
+                                $(".leaflets-list").append(result);
+                            }
+                        });
+                    });
+                
+        </script>
+    </div>
+    <div class="submit-bar">
+        <input type="submit" value="salvar medicamento" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

@@ -1,0 +1,92 @@
+﻿.ui-datepicker
+{
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    color: #333333;
+    padding: 0;
+    width: auto;
+}
+
+#ui-datepicker-div 
+{
+    display: none;
+}
+
+.ui-datepicker td span, .ui-datepicker td a
+{
+    display: block;
+    padding: 2px;
+    text-align: right;
+    text-decoration: none;
+    font-size: 11px;
+}
+
+.ui-widget-header
+{
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    background-color: #ffffff;
+    color: #4A6B82;
+    font-weight: bold;
+}
+
+.ui-priority-secondary, .ui-widget-content .ui-priority-secondary, .ui-widget-header .ui-priority-secondary
+{
+    font-weight: normal;
+    opacity: 0.4;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active
+{
+    border: 1px solid #F9A51B;
+    color: #DD390D;
+    font-weight: bold;
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight
+{
+    background: none repeat scroll 0 0 transparent;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
+{
+    background: none;
+    border: none;
+}
+
+.ui-widget-header .ui-icon
+{
+    background-image: url("/content/images/ui-icons_222222_256x240.png");
+}
+
+.ui-datepicker-calendar
+{
+    background-color: #F0F3F5;
+    border-collapse: separate;
+    border-spacing: 1px;
+}
+
+.ui-datepicker-calendar > tbody td
+{
+    border: 1px solid #FFFFFF;
+}
+
+.ui-datepicker th {
+    border: 0 none;
+    font-size: 10px;
+    padding: 0.7em 0.3em;
+    text-align: center;
+}
+
+.ui-datepicker th {
+    border: 0 none;
+    color: gray;
+    padding: 0.7em 0.3em;
+    text-align: center;
+    font-weight: normal;
+}
+
+.ui-autocomplete 
+{
+    z-index:1000 !important;
+}

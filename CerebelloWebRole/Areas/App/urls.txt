@@ -1,0 +1,9 @@
+﻿consultório: 
+
+/												inicio do consultório
+/{doctor}										início do médico
+/{doctor}/schedule								agenda do médico
+/{doctor}/patients								pacientes do médico
+/{doctor}/patients/{id}/{urltags}				início do paciente
+/{doctor}/patients/{id}/{urltags}/schedule		início do paciente
+/{doctor}/patients/{id}/{urltags}/anamneses		início do paciente

@@ -1,0 +1,28 @@
+﻿@model CerebelloWebRole.Areas.App.Models.DoctorPatientsSearchViewModel
+@{
+    ViewBag.Title = "Search";
+    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+    
+    WebGrid grid = new WebGrid();
+    grid.Bind(Model.Patients, null, false, Model.Count);
+    var nameColumn = grid.Column(header: "Nome completo", format: @<text><a href="@Url.Action("view", new { id = @item.Id })">@item.FullName</a></text>);
+    var ageColumn = grid.Column(header: "Idade", format: @<text>@item.Age</text>);
+}
+@section Title {
+    Pesquisa de pacientes
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("create", "patients")">Novo paciente</a></li>
+    </ul>
+}
+@using (Html.BeginForm("search", null, FormMethod.Get))
+{
+    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+}
+<div class="search-result">
+    <p class="title">
+        Resultado da pesquisa
+    </p>
+    @grid.GetHtml(columns: new List<WebGridColumn>() { nameColumn, ageColumn }, displayHeader: false, headerStyle: "webgrid-header", rowStyle: "webgrid-row-style", alternatingRowStyle: "webgrid-alternating-row", footerStyle: "webgrid-footer", tableStyle: "webgrid")
+</div>

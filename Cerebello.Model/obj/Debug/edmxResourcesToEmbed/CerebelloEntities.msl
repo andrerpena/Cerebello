@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="cerebelloModelStoreContainer" CdmEntityContainer="CerebelloEntities">
+    <EntitySetMapping Name="Addresses">
+      <EntityTypeMapping TypeName="Cerebello.Model.Address">
+        <MappingFragment StoreEntitySet="Address">
+          <ScalarProperty Name="CEP" ColumnName="CEP" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="StateProvince" ColumnName="StateProvince" />
+          <ScalarProperty Name="Neighborhood" ColumnName="Neighborhood" />
+          <ScalarProperty Name="Complement" ColumnName="Complement" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Appointments">
+      <EntityTypeMapping TypeName="Cerebello.Model.Appointment">
+        <MappingFragment StoreEntitySet="Appointment">
+          <ScalarProperty Name="End" ColumnName="End" />
+          <ScalarProperty Name="Start" ColumnName="Start" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+          <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Coverages">
+      <EntityTypeMapping TypeName="Cerebello.Model.Coverage">
+        <MappingFragment StoreEntitySet="Coverage">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Doctors">
+      <EntityTypeMapping TypeName="Cerebello.Model.Doctor">
+        <MappingFragment StoreEntitySet="Doctor">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CRM" ColumnName="CRM" />
+          <ScalarProperty Name="MedicalEntityId" ColumnName="MedicalEntityId" />
+          <ScalarProperty Name="MedicalSpecialtyId" ColumnName="MedicalSpecialtyId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Emails">
+      <EntityTypeMapping TypeName="Cerebello.Model.Email">
+        <MappingFragment StoreEntitySet="Email">
+          <ScalarProperty Name="GravatarEmailHash" ColumnName="GravatarEmailHash" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Laboratories">
+      <EntityTypeMapping TypeName="Cerebello.Model.Laboratory">
+        <MappingFragment StoreEntitySet="Laboratory">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Licenses">
+      <EntityTypeMapping TypeName="Cerebello.Model.License">
+        <MappingFragment StoreEntitySet="License">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="IsSuspended" ColumnName="IsSuspended" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MedicalEntities">
+      <EntityTypeMapping TypeName="Cerebello.Model.MedicalEntity">
+        <MappingFragment StoreEntitySet="MedicalEntity">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MedicalSpecialties">
+      <EntityTypeMapping TypeName="Cerebello.Model.MedicalSpecialty">
+        <MappingFragment StoreEntitySet="MedicalSpecialty">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Patients">
+      <EntityTypeMapping TypeName="Cerebello.Model.Patient">
+        <MappingFragment StoreEntitySet="Patient">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CoverageId" ColumnName="CoverageId" />
+          <ScalarProperty Name="Registration" ColumnName="Registration" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+          <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="People">
+      <EntityTypeMapping TypeName="Cerebello.Model.Person">
+        <MappingFragment StoreEntitySet="Person">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FullName" ColumnName="FullName" />
+          <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="MaritalStatus" ColumnName="MaritalStatus" />
+          <ScalarProperty Name="BirthPlace" ColumnName="BirthPlace" />
+          <ScalarProperty Name="CPF" ColumnName="CPF" />
+          <ScalarProperty Name="CPFOwner" ColumnName="CPFOwner" />
+          <ScalarProperty Name="Observations" ColumnName="Observations" />
+          <ScalarProperty Name="Profession" ColumnName="Profession" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Phones">
+      <EntityTypeMapping TypeName="Cerebello.Model.Phone">
+        <MappingFragment StoreEntitySet="Phone">
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Practices">
+      <EntityTypeMapping TypeName="Cerebello.Model.Practice">
+        <MappingFragment StoreEntitySet="Practice">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
+          <ScalarProperty Name="LicenseId" ColumnName="LicenseId" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Receipts">
+      <EntityTypeMapping TypeName="Cerebello.Model.Receipt">
+        <MappingFragment StoreEntitySet="Receipt">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReceiptMedicines">
+      <EntityTypeMapping TypeName="Cerebello.Model.ReceiptMedicine">
+        <MappingFragment StoreEntitySet="ReceiptMedicine">
+          <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Prescription" ColumnName="Prescription" />
+          <ScalarProperty Name="Observations" ColumnName="Observations" />
+          <ScalarProperty Name="ReceiptId" ColumnName="ReceiptId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Secretaries">
+      <EntityTypeMapping TypeName="Cerebello.Model.Secretary">
+        <MappingFragment StoreEntitySet="Secretary">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="Cerebello.Model.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="GravatarEmailHash" ColumnName="GravatarEmailHash" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+          <ScalarProperty Name="LastActiveOn" ColumnName="LastActiveOn" />
+          <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserPractices">
+      <EntityTypeMapping TypeName="Cerebello.Model.UserPractice">
+        <MappingFragment StoreEntitySet="UserPractice">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ActiveIngredients">
+      <EntityTypeMapping TypeName="Cerebello.Model.ActiveIngredient">
+        <MappingFragment StoreEntitySet="ActiveIngredient">
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Medicines">
+      <EntityTypeMapping TypeName="Cerebello.Model.Medicine">
+        <MappingFragment StoreEntitySet="Medicine">
+          <ScalarProperty Name="Usage" ColumnName="Usage" />
+          <ScalarProperty Name="LaboratoryId" ColumnName="LaboratoryId" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="MedicineActiveIngredient" TypeName="Cerebello.Model.MedicineActiveIngredient" StoreEntitySet="MedicineActiveIngredient">
+      <EndProperty Name="Medicine">
+        <ScalarProperty Name="Id" ColumnName="MedicineId" />
+      </EndProperty>
+      <EndProperty Name="ActiveIngredient">
+        <ScalarProperty Name="Id" ColumnName="ActiveIngredientId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="Anamnese">
+      <EntityTypeMapping TypeName="Cerebello.Model.Anamnese">
+        <MappingFragment StoreEntitySet="Anamnese">
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SYS_ActiveIngredient">
+      <EntityTypeMapping TypeName="Cerebello.Model.SYS_ActiveIngredient">
+        <MappingFragment StoreEntitySet="SYS_ActiveIngredient">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SYS_Laboratory">
+      <EntityTypeMapping TypeName="Cerebello.Model.SYS_Laboratory">
+        <MappingFragment StoreEntitySet="SYS_Laboratory">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SYS_Medicine">
+      <EntityTypeMapping TypeName="Cerebello.Model.SYS_Medicine">
+        <MappingFragment StoreEntitySet="SYS_Medicine">
+          <ScalarProperty Name="Decription" ColumnName="Decription" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="LaboratoryId" ColumnName="LaboratoryId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="SYS_MedicineActiveIngredient" TypeName="Cerebello.Model.SYS_MedicineActiveIngredient" StoreEntitySet="SYS_MedicineActiveIngredient">
+      <EndProperty Name="SYS_Medicine">
+        <ScalarProperty Name="Id" ColumnName="MedicineId" />
+      </EndProperty>
+      <EndProperty Name="SYS_ActiveIngredient">
+        <ScalarProperty Name="Id" ColumnName="ActiveIngredientId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="CFG_Schedule">
+      <EntityTypeMapping TypeName="Cerebello.Model.CFG_Schedule">
+        <MappingFragment StoreEntitySet="CFG_Schedule">
+          <ScalarProperty Name="SaturdayLunchEndTime" ColumnName="SaturdayLunchEndTime" />
+          <ScalarProperty Name="SaturdayLunchStartTime" ColumnName="SaturdayLunchStartTime" />
+          <ScalarProperty Name="SaturdayWorkdayEndTime" ColumnName="SaturdayWorkdayEndTime" />
+          <ScalarProperty Name="SaturdayWorkdayStartTime" ColumnName="SaturdayWorkdayStartTime" />
+          <ScalarProperty Name="FridayLunchEndTime" ColumnName="FridayLunchEndTime" />
+          <ScalarProperty Name="FridayLunchStartTime" ColumnName="FridayLunchStartTime" />
+          <ScalarProperty Name="FridayWorkdayEndTime" ColumnName="FridayWorkdayEndTime" />
+          <ScalarProperty Name="FridayWorkdayStartTime" ColumnName="FridayWorkdayStartTime" />
+          <ScalarProperty Name="ThursdayLunchEndTime" ColumnName="ThursdayLunchEndTime" />
+          <ScalarProperty Name="ThursdayLunchStartTime" ColumnName="ThursdayLunchStartTime" />
+          <ScalarProperty Name="ThursdayWorkdayEndTime" ColumnName="ThursdayWorkdayEndTime" />
+          <ScalarProperty Name="ThursdayWorkdayStartTime" ColumnName="ThursdayWorkdayStartTime" />
+          <ScalarProperty Name="WednesdayLunchEndTime" ColumnName="WednesdayLunchEndTime" />
+          <ScalarProperty Name="WednesdayLunchStartTime" ColumnName="WednesdayLunchStartTime" />
+          <ScalarProperty Name="WednesdayWorkdayEndTime" ColumnName="WednesdayWorkdayEndTime" />
+          <ScalarProperty Name="WednesdayWorkdayStartTime" ColumnName="WednesdayWorkdayStartTime" />
+          <ScalarProperty Name="TuesdayLunchEndTime" ColumnName="TuesdayLunchEndTime" />
+          <ScalarProperty Name="TuesdayLunchStartTime" ColumnName="TuesdayLunchStartTime" />
+          <ScalarProperty Name="TuesdayWorkdayEndTime" ColumnName="TuesdayWorkdayEndTime" />
+          <ScalarProperty Name="TuesdayWorkdayStartTime" ColumnName="TuesdayWorkdayStartTime" />
+          <ScalarProperty Name="MondayLunchEndTime" ColumnName="MondayLunchEndTime" />
+          <ScalarProperty Name="MondayLunchStartTime" ColumnName="MondayLunchStartTime" />
+          <ScalarProperty Name="MondayWorkdayEndTime" ColumnName="MondayWorkdayEndTime" />
+          <ScalarProperty Name="MondayWorkdayStartTime" ColumnName="MondayWorkdayStartTime" />
+          <ScalarProperty Name="SundayLunchEndTime" ColumnName="SundayLunchEndTime" />
+          <ScalarProperty Name="SundayLunchStartTime" ColumnName="SundayLunchStartTime" />
+          <ScalarProperty Name="SundayWorkdayEndTime" ColumnName="SundayWorkdayEndTime" />
+          <ScalarProperty Name="SundayWorkdayStartTime" ColumnName="SundayWorkdayStartTime" />
+          <ScalarProperty Name="Saturday" ColumnName="Saturday" />
+          <ScalarProperty Name="Friday" ColumnName="Friday" />
+          <ScalarProperty Name="Thursday" ColumnName="Thursday" />
+          <ScalarProperty Name="Wednesday" ColumnName="Wednesday" />
+          <ScalarProperty Name="Tuesday" ColumnName="Tuesday" />
+          <ScalarProperty Name="Monday" ColumnName="Monday" />
+          <ScalarProperty Name="Sunday" ColumnName="Sunday" />
+          <ScalarProperty Name="AppointmentTime" ColumnName="AppointmentTime" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SYS_Leaflet">
+      <EntityTypeMapping TypeName="Cerebello.Model.SYS_Leaflet">
+        <MappingFragment StoreEntitySet="SYS_Leaflet">
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="SYS_MedicineLeaflet" TypeName="Cerebello.Model.SYS_MedicineLeaflet" StoreEntitySet="SYS_MedicineLeaflet">
+      <EndProperty Name="SYS_Medicine">
+        <ScalarProperty Name="Id" ColumnName="SYS_MedicineId" />
+      </EndProperty>
+      <EndProperty Name="SYS_Leaflet">
+        <ScalarProperty Name="Id" ColumnName="SYS_LeafletId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="Leaflets">
+      <EntityTypeMapping TypeName="Cerebello.Model.Leaflet">
+        <MappingFragment StoreEntitySet="Leaflet">
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="MedicineLeaflet" TypeName="Cerebello.Model.MedicineLeaflet" StoreEntitySet="MedicineLeaflet">
+      <EndProperty Name="Medicine">
+        <ScalarProperty Name="Id" ColumnName="MedicineId" />
+      </EndProperty>
+      <EndProperty Name="Leaflet">
+        <ScalarProperty Name="Id" ColumnName="LeaftletId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="CFG_Documents">
+      <EntityTypeMapping TypeName="Cerebello.Model.CFG_Documents">
+        <MappingFragment StoreEntitySet="CFG_Documents">
+          <ScalarProperty Name="FooterRight2" ColumnName="FooterRight2" />
+          <ScalarProperty Name="FooterRight1" ColumnName="FooterRight1" />
+          <ScalarProperty Name="FooterLeft2" ColumnName="FooterLeft2" />
+          <ScalarProperty Name="FooterLeft1" ColumnName="FooterLeft1" />
+          <ScalarProperty Name="Header2" ColumnName="Header2" />
+          <ScalarProperty Name="Header1" ColumnName="Header1" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ModelMedicalCertificates">
+      <EntityTypeMapping TypeName="Cerebello.Model.ModelMedicalCertificate">
+        <MappingFragment StoreEntitySet="ModelMedicalCertificate">
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ModelMedicalCertificateFields">
+      <EntityTypeMapping TypeName="Cerebello.Model.ModelMedicalCertificateField">
+        <MappingFragment StoreEntitySet="ModelMedicalCertificateField">
+          <ScalarProperty Name="ModelMedicalCertificateId" ColumnName="ModelMedicalCertificateId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MedicalCertificates">
+      <EntityTypeMapping TypeName="Cerebello.Model.MedicalCertificate">
+        <MappingFragment StoreEntitySet="MedicalCertificate">
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+          <ScalarProperty Name="ModelMedicalCertificateId" ColumnName="ModelMedicalCertificateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MedicalCertificateFields">
+      <EntityTypeMapping TypeName="Cerebello.Model.MedicalCertificateField">
+        <MappingFragment StoreEntitySet="MedicalCertificateField">
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="MedicalCertificateId" ColumnName="MedicalCertificateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Symptoms">
+      <EntityTypeMapping TypeName="Cerebello.Model.Symptom">
+        <MappingFragment StoreEntitySet="Symptom">
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AnamneseSymptoms">
+      <EntityTypeMapping TypeName="Cerebello.Model.AnamneseSymptom">
+        <MappingFragment StoreEntitySet="AnamneseSymptoms">
+          <ScalarProperty Name="SymptomId" ColumnName="SymptomId" />
+          <ScalarProperty Name="AnamneseId" ColumnName="AnamneseId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,130 @@
+﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+@{
+    ViewBag.Title = "Create";
+    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+}
+@section Title {
+    Paciente: <b>@Model.FullName</b>
+}
+@section SideBar {
+    <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">
+        Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">
+            Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">
+                Resumo de pacientes</a>
+    <script type="text/javascript">
+        $("#delete-patient-link").click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir este paciente?\nTodas as informações relacionadas a este paciente serão excluídas.\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Este paciente foi excluído");
+                        window.location = "@Url.Action("index")";
+                    }
+                    else
+                        alert("Não foi possível excluir este paciente.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+}
+@Html.Partial("DetailsCardSimple", this.Model)
+<p class="details-title">Histórico do paciente</p>
+<div class="medical-appointments-panel">
+    @foreach (var session in this.Model.Sessions)
+    {
+        <div class="medical-appointment-panel">
+            <p class="title">
+                Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CommonLib.Helpers.DateTimeHelper.ConvertToRelative(session.Date, CommonLib.Helpers.DateTimeHelper.GetTimeZoneNow(), CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.ReplaceToday | CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
+            </p>
+            @if (session.AnamneseIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Anamneses</p>
+                foreach (var anamneseId in session.AnamneseIds)
+                {
+                    @Html.Action("details", "anamneses", new { id = anamneseId })
+                }
+            }
+            @if (session.ReceiptIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Receitas</p>
+                foreach (var receiptId in session.ReceiptIds)
+                {
+                    @Html.Action("details", "receipts", new { id = receiptId })
+                }
+            }
+            @if (session.MedicalCertificateIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Atestados médicos</p>
+                foreach (var certificateId in session.MedicalCertificateIds)
+                {
+                    @Html.Action("details", "medicalcertificates", new { id = certificateId })
+                }
+            }
+        </div>
+    }
+
+    <p class="details-title">Nova consulta</p>
+
+    <div class="new-medical-appointment-panel-wrapper">
+        <div class="new-medical-appointment-panel">
+            <!-- anamnese -->
+            <div>
+                <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "anamneses", new { patientId = Model.Id })">
+                    Nova anamnese</a>
+                <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
+                </div>
+            </div>
+            <!-- receipt -->
+            <div>
+                <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "receipts", new { patientId = Model.Id })">
+                    Nova receita</a>
+                <div id="new-receipt-wrapper" class="appointment-panel-wrapper">
+                </div>
+            </div>
+            <!-- exam requirement -->
+            <div>
+                <a href="#" class="icon-link icon-link-plus">Nova solicitação de exames</a>
+                <div class="new-exams-wrapper appointment-panel-wrapper">
+                </div>
+            </div>
+            <!-- medical certificate -->
+            <div>
+                <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "medicalcertificates", new { patientId = Model.Id })">
+                    Novo atestado médico</a>
+                <div class="medical-certificate-wrapper appointment-panel-wrapper">
+                </div>
+            </div>
+            <!-- schedule return -->
+            <div>
+                <a href="#" class="icon-link icon-link-reload">Marcar retorno</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("a.add-appointment-panel").click(function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            $this.removeClass("icon-link-plus").addClass("icon-link-loading");
+            $.ajax({
+                url: $this.attr("href"),
+                success: function (html) {
+                    var $appointmentPanel = $this.siblings(".appointment-panel-wrapper");
+                    $appointmentPanel.show();
+                    $appointmentPanel.prepend(html);
+                    $appointmentPanel.bind("cancel", function () {
+                        if ($appointmentPanel.children().length == 0)
+                            $appointmentPanel.hide();
+                    });
+                    $this.removeClass("icon-link-loading").addClass("icon-link-plus");
+                },
+                error: function (html) {
+                    $this.removeClass("icon-link-loading").addClass("icon-link-plus");
+                }
+            });
+        });
+    </script>
+</div>

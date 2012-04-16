@@ -1,0 +1,77 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ConfigDocumentsViewModel
+@using CommonLib.Mvc
+@{
+    var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
+}
+@section Title {
+Configurações de documentos
+}
+@section SideBar {
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+if (ViewBag.ReturnUrl != null)
+{
+        @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
+}
+    <p class="form-title">
+        Cabeçalho
+    </p>    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.Header1)
+            </th>
+            <td>@Html.EditorFor(model => model.Header1)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Header2)
+            </th>
+            <td>@Html.EditorFor(model => model.Header2)
+            </td>
+        </tr>
+    </table>
+    
+    <p class="form-title">
+        Rodapé esquerdo
+    </p>    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.FooterLeft1)
+            </th>
+            <td>@Html.EditorFor(model => model.FooterLeft1)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.FooterLeft2)
+            </th>
+            <td>@Html.EditorFor(model => model.FooterLeft2)
+            </td>
+        </tr>
+    </table>
+    
+    <p class="form-title">
+        Rodapé direito
+    </p>    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.FooterRight1)
+            </th>
+            <td>@Html.EditorFor(model => model.FooterRight1)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.FooterRight2)
+            </th>
+            <td>@Html.EditorFor(model => model.FooterRight2)
+            </td>
+        </tr>
+    </table>
+    
+    <div class="submit-bar">
+        <input type="submit" value="salvar configurações de agenda" />
+        <span class="separator">ou</span> <a href="@cancelUrl">cancelar</a>
+    </div>
+}

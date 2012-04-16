@@ -1,0 +1,89 @@
+﻿@model CerebelloWebRole.Areas.App.Models.AnamneseViewModel
+@using CommonLib.Mvc
+@{
+    Layout = null;
+    string anamneseId = null;
+    if (this.Model != null && Model.Id == null)
+    {
+        anamneseId = "new-" + Guid.NewGuid().ToString();
+    }
+    else
+    {
+        anamneseId = Model.Id.ToString();
+    }
+}
+<div class="anamnese-edit appointment-panel" data-val-id="anamnese-@anamneseId">
+    @using (Html.BeginForm(null, null, FormMethod.Post))
+    {
+        @Html.ValidationSummary(false)
+        @Html.HiddenFor(model => model.PatientId)
+        @Html.HiddenFor(model => model.Id)
+
+        <table class="form-table">
+            <tr>
+                <th>@Html.LabelFor(model => model.Text)
+                </th>
+                <td class="large">@Html.TextAreaFor(model => model.Text, new { rows = 5 })
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.LabelFor(model => model.AnamneseSymptoms)
+                </th>
+                <td>
+                    <ul class="edit-list-single-line anamnese-symptoms-list">
+                        @if (Model != null && Model.AnamneseSymptoms.Count > 0)
+                        {
+                            foreach (var anamneseSymptom in Model.AnamneseSymptoms)
+                            {
+                                @Html.Partial("AnamneseSymptomEditor", anamneseSymptom)
+                            }
+                        }
+                        else
+                        {
+                            @Html.Partial("AnamneseSymptomEditor", new ViewDataDictionary())
+                        }
+                    </ul>
+                    <a href="#" class="add-symptom block-little-link add-another-link" style="marin-left: 5px">
+                        incluir sintoma</a>
+                </td>
+            </tr>
+        </table>
+
+        <div class="submit-bar">
+            <input type="submit" value="salvar anamnese" />
+            <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
+        </div>
+    }
+    <script type="text/javascript">
+        (function() {
+            var $container = $("div[data-val-id='anamnese-@anamneseId']");
+            $(".add-symptom", $container).click(function (e) {
+                e.preventDefault();
+                console.log("novo sintoma");
+                $.ajax({
+                    url: "@Url.Action("AnamneseSymptomEditor")",
+                    success: function(result) {
+                        console.log("peguei o editor");        
+                        $(".anamnese-symptoms-list", $container).append(result);
+                    }
+                });
+            });
+            $('form', $container).ajaxForm({
+                success: function (result) {
+                    $container.replaceWith(result);
+                }
+            });
+            $('a.cancel', $container).click(function(e) {
+                e.preventDefault();
+                @if (Model.Id != null)
+                {
+                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                }
+                else
+                {
+                    @:$container.remove();
+                }
+            });
+        })();
+    </script>
+</div>

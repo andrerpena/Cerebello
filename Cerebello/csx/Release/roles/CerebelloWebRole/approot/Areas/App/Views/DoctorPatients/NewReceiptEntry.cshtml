@@ -1,0 +1,9 @@
+﻿@model Cerebello.Areas.App.Models.NewReceiptMedicineViewModel
+@{
+    Layout = null;
+}
+
+<div class="new-receipt-entry">
+    @Html.EditorFor(model => model.MedicineName)
+    @Html.HiddenFor(model => model.MedicineId)
+</div>

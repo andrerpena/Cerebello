@@ -1,0 +1,78 @@
+﻿body
+{
+    background-image: url("/Content/Images/bkgd-pinstripe-bc.png");
+    background-repeat: repeat-x;
+    font-family: helvetica,arial,sans-serif !important;
+}
+
+.loginBoxContainer
+{
+    margin-top: 200px;
+}
+
+.loginBox
+{
+    width: 210px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px #999999;
+    margin: 0 auto;
+    background-color: white;
+    text-align: center;
+    padding: 10px 39px 19px;
+}
+
+.loginBox .login-fields div
+{
+    margin: 0 0 10px;
+}
+
+h1
+{
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 19px;
+    margin: 13px 0 15px;
+    letter-spacing: 0;
+}
+
+h1 strong
+{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.login-fields input
+{
+    font-family: helvetica,arial,sans-serif;
+    font-size: 18px;
+    padding: 3px;
+    width: 200px;
+}
+
+.remember-container
+{
+    color: #333333;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.sign-in-button
+{
+    margin-top: 1em;
+}
+
+.sign-in-button .button
+{
+    width: 80px;
+    margin: 0 auto;
+}
+
+.login-failed 
+{
+    background-color: #FFFFCC;
+    border-bottom: 1px solid #FFBBBB;
+    border-top: 1px solid #FFBBBB;
+    font-size: 0.9em;
+    line-height: 1.4em;
+    padding: 5px;
+}

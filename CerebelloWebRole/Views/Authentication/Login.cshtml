@@ -1,0 +1,44 @@
+﻿@model CerebelloWebRole.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+}
+<div class="authentication-container">
+    <div class="authentication-container-wrapper">
+        <div class="header">
+            <h2>
+                Login no Cerebello</h2>
+            <a href="@Url.Action("createaccount")" class="link">Criar uma conta</a>
+        </div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
+        {
+            <fieldset>
+                <div class="controls-wrapper">
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Email)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Email, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Password)
+                        <div class="controls">
+                            @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                            <p>
+                                <a href="#">Esqueceu sua senha?</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            @Html.CheckBoxFor(model => model.RememberMe) @Html.LabelFor(model => model.RememberMe, new { @class="remember-me" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions" style="margin: 0">
+                    <button class="btn btn-primary btn-large" type="submit">
+                        Login</button>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

@@ -1,0 +1,45 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ReceiptViewModel
+@{
+    Layout = null;
+}
+<div class="receipt-details medical-appointment-details-panel" data-val-id="receipt-@Model.Id">
+    <ul class="view-list receipts-list">
+        @if (Model != null && Model.ReceiptMedicines != null)
+        {
+            foreach (var medicine in Model.ReceiptMedicines)
+            {
+                @Html.Partial("ReceiptMedicineDetails", medicine)
+            }
+        }
+    </ul>
+    <div class="inline-link-bar">
+        <a href="#" class="edit-receipt inline-link">Editar receita</a>
+        <a href="#" class="delete-receipt inline-link">Excluir receita</a>
+        <a href="@Url.Action("viewpdf", new { id = this.Model.Id })" class="inline-link" target="_blank">Visualizar para impressão</a>
+    </div>
+    <script type="text/javascript">
+        $(".edit-receipt", $("div[data-val-id='receipt-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("edit", "receipts", new { id = Model.Id })",
+                success: function(result) {
+                    $("div[data-val-id='receipt-@Model.Id']").replaceWith(result);
+                }
+            });
+        });
+        $(".delete-receipt", $("div[data-val-id='receipt-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir esta receita?\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Esta receita foi excluída");
+                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                    }
+                    else
+                        alert("Não foi possível excluir esta receita.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+</div>

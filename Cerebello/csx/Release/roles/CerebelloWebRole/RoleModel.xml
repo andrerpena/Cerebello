@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RoleModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CerebelloWebRole" version="1.6.21103.1459" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
+  <Startup>
+    <Task commandLine="DiagnosticsAgent.exe" taskType="background" relativePath="plugins\Diagnostics">
+      <Environment>
+        <Variable name="RdModuleName" value="Diagnostics" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
+    <Task commandLine="DiagnosticsAgent.exe /blockStartup" relativePath="plugins\Diagnostics">
+      <Environment>
+        <Variable name="RdModuleName" value="Diagnostics" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
+    <Task commandLine="RemoteAccessAgent.exe" executionContext="elevated" taskType="background" relativePath="plugins\RemoteAccess">
+      <Environment>
+        <Variable name="RdModuleName" value="RemoteAccess" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
+    <Task commandLine="RemoteAccessAgent.exe /blockStartup" executionContext="elevated" relativePath="plugins\RemoteAccess">
+      <Environment>
+        <Variable name="RdModuleName" value="RemoteAccess" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
+    <Task commandLine="RemoteForwarderAgent.exe" executionContext="elevated" relativePath="plugins\RemoteForwarder">
+      <Environment>
+        <Variable name="RdModuleName" value="RemoteForwarder" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
+  </Startup>
+  <Runtime>
+    <EntryPoint>
+      <NetFxEntryPoint assemblyName="CerebelloWebRole2.dll" />
+    </EntryPoint>
+  </Runtime>
+  <ConfigurationSettings>
+    <Setting name="ConnectionString" nameSpace="Microsoft.WindowsAzure.Plugins.Diagnostics" />
+    <Setting name="Enabled" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="AccountUsername" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="AccountEncryptedPassword" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="AccountExpiration" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="Enabled" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteForwarder" />
+  </ConfigurationSettings>
+  <Properties>
+    <Property name="RoleType" value="Web" />
+    <Property name="RoleName" value="CerebelloWebRole" />
+    <Property name="ProjectName" value="CerebelloWebRole" />
+    <Property name="Configuration" value="Release" />
+    <Property name="Platform" value="AnyCPU" />
+    <Property name="OutputDir" value="D:\Projetos\Azure\Cerebello\Cerebello\obj\Release\CerebelloWebRole\" />
+    <Property name="EntryPoint" value="CerebelloWebRole2.dll" />
+    <Property name="SourceDir" value="D:\Projetos\Azure\Cerebello\CerebelloWebRole2\" />
+    <Property name="RoleTargetFramework" value="v4.0" />
+    <Property name="SitePhysicalPath" value="D:\Projetos\Azure\Cerebello\CerebelloWebRole2\" />
+    <Property name="OriginalItemSpec" value="D:\Projetos\Azure\Cerebello\Cerebello\Cerebello.ccproj" />
+    <Property name="MSBuildSourceProjectFile" value="D:\Projetos\Azure\Cerebello\Cerebello\Cerebello.ccproj" />
+    <Property name="MSBuildSourceTargetName" value="ResolveSingleWebRoleReference" />
+    <Property name="TargetFrameworkVersion" value="v4.0" />
+    <Property name="TargetRuntimeVersion" value="v4.0" />
+  </Properties>
+  <Sites>
+    <Site name="Web" physicalDirectory="D:\Projetos\Azure\Cerebello\CerebelloWebRole2\">
+      <Bindings>
+        <Binding name="Endpoint1" endpointName="Endpoint1" />
+      </Bindings>
+    </Site>
+  </Sites>
+</RoleModel>

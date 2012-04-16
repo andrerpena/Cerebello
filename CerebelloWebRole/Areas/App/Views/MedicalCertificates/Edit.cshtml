@@ -1,0 +1,75 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicalCertificateViewModel
+@{
+    Layout = null;
+    string certificateId = null;
+    if (this.Model != null && Model.Id == null)
+    {
+        certificateId = "new-" + Guid.NewGuid().ToString();
+    }
+    else
+    {
+        certificateId = Model.Id.ToString();
+    }
+}
+<div class="certificate-edit appointment-panel" data-val-id="certificate-@certificateId">
+    @using (Html.BeginForm(null, null, FormMethod.Post))
+    {
+        @Html.ValidationSummary(false)
+        @Html.HiddenFor(model => model.PatientId)
+        @Html.HiddenFor(model => model.Id)
+
+        <table class="form-table">
+            <tr>
+                <th>@Html.LabelFor(model => model.ModelId)
+                </th>
+                <td class="large">@Html.DropDownListFor(model => model.ModelId, this.Model.ModelOptions)
+                </td>
+            </tr>
+        </table>
+        
+        <div class="fields-wrapper">
+            @Html.Partial("MedicalCertificateFieldsEditor")        
+        </div>
+        
+        <div class="submit-bar">
+            <input type="submit" value="salvar atestado" />
+            <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
+        </div>
+    }
+    <script type="text/javascript">
+        (function() {
+            var $container = $("div[data-val-id='certificate-@certificateId']");
+            
+            $('form', $container).ajaxForm({
+                success: function (result) {
+                    $container.replaceWith(result);
+                }
+            });
+
+            $("select", $container).change(function(e) {
+                $.ajax({
+                    url: "@Url.Action("MedicalCertificateFieldsEditor")",
+                    data: { modelId: $(this).val() },
+                    success: function(result) {
+                        $(".fields-wrapper", $container).html(result);
+                    },
+                    error: function(e) {
+                        alert("algo deu errado");
+                    }
+                });
+            });
+
+            $('a.cancel', $container).click(function(e) {
+                e.preventDefault();
+                @if (Model.Id != null)
+                {
+                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                }
+                else
+                {
+                    @:$container.remove();
+                }
+            });
+        })();
+    </script>
+</div>

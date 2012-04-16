@@ -1,0 +1,13 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicalCertificateViewModel
+@{
+    this.Layout = null;
+}
+<table class="view-table">
+    @for (var i = 0; i < this.Model.Fields.Count; i++)
+    {
+        <tr>
+            <th>@Html.Label(this.Model.Fields[i].Name)</th>
+            <td class="large">@Html.EditorFor(model => model.Fields[i].Value)</td>
+        </tr>
+    }
+</table>

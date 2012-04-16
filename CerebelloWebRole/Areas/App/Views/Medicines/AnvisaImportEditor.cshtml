@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+<div class="anvisa-edit">
+    @using (Html.BeginForm("edit", "medicines", new { id = ViewBag.MedicationId }, FormMethod.Get, new { id = "anvisa_form" }))
+    {
+        <table class="form-table">
+            <tr>
+                <th>
+                    Medicamento
+                </th>
+                <td>
+                    @Html.TextBox("anvisa_text", null, new { @class = "lookup" })
+                    @Html.Hidden("anvisaid")
+                </td>
+            </tr>
+        </table>
+        <div class="submit-bar">
+            <input type="submit" value="importar" />
+            <span class="separator">ou</span> <a id="modal_cancel" href="#">cancelar</a>
+        </div>
+    }
+    
+    <script type="text/javascript">
+
+        $("#modal_cancel").click(function (e) {
+            e.preventDefault();
+            $(this).trigger("modal-cancel");
+        });
+
+        $("#anvisa_text").autocomplete({
+                source: "@Url.Action("searchsysmedication")",
+                select: function(event, ui) {
+                            $("#anvisaid").val(ui.item.id);
+                        }
+            }).data( "autocomplete" )._renderItem = function( ul, item ) {
+			    return $( "<li></li>" )
+				    .data( "item.autocomplete", item )
+				    .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.laboratory + "</span></a>" )
+				    .appendTo( ul );
+		    };
+    </script>
+</div>

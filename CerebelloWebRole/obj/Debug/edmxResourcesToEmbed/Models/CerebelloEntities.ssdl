@@ -1,0 +1,479 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="cerebelloModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="cerebelloModelStoreContainer">
+    <EntitySet Name="ActiveIngredient" EntityType="cerebelloModel.Store.ActiveIngredient" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Appointment" EntityType="cerebelloModel.Store.Appointment" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="License" EntityType="cerebelloModel.Store.License" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MedicalEntity" EntityType="cerebelloModel.Store.MedicalEntity" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MedicalSpecialty" EntityType="cerebelloModel.Store.MedicalSpecialty" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Medicine" EntityType="cerebelloModel.Store.Medicine" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MedicineActiveIngredient" EntityType="cerebelloModel.Store.MedicineActiveIngredient" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Patient" EntityType="cerebelloModel.Store.Patient" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Person" EntityType="cerebelloModel.Store.Person" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Phone" EntityType="cerebelloModel.Store.Phone" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Practice" EntityType="cerebelloModel.Store.Practice" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="User" EntityType="cerebelloModel.Store.User" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserPractice" EntityType="cerebelloModel.Store.UserPractice" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_ActiveIngredient_Doctor" Association="cerebelloModel.Store.FK_ActiveIngredient_Doctor">
+      <End Role="Doctor" EntitySet="Doctor" />
+      <End Role="ActiveIngredient" EntitySet="ActiveIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Appointment_Doctor" Association="cerebelloModel.Store.FK_Appointment_Doctor">
+      <End Role="Doctor" EntitySet="Doctor" />
+      <End Role="Appointment" EntitySet="Appointment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Doctor_MedicalEntity" Association="cerebelloModel.Store.FK_Doctor_MedicalEntity">
+      <End Role="MedicalEntity" EntitySet="MedicalEntity" />
+      <End Role="Doctor" EntitySet="Doctor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Doctor_MedicalSpecialty" Association="cerebelloModel.Store.FK_Doctor_MedicalSpecialty">
+      <End Role="MedicalSpecialty" EntitySet="MedicalSpecialty" />
+      <End Role="Doctor" EntitySet="Doctor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Doctor_Medicine" Association="cerebelloModel.Store.FK_Doctor_Medicine">
+      <End Role="Medicine" EntitySet="Medicine" />
+      <End Role="Doctor" EntitySet="Doctor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Medicine_MedicineLaboratory" Association="cerebelloModel.Store.FK_Medicine_MedicineLaboratory">
+      <End Role="Laboratory" EntitySet="Laboratory" />
+      <End Role="Medicine" EntitySet="Medicine" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MedicineActiveIngredient_ActiveIngredient" Association="cerebelloModel.Store.FK_MedicineActiveIngredient_ActiveIngredient">
+      <End Role="ActiveIngredient" EntitySet="ActiveIngredient" />
+      <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MedicineActiveIngredient_Medicine" Association="cerebelloModel.Store.FK_MedicineActiveIngredient_Medicine">
+      <End Role="Medicine" EntitySet="Medicine" />
+      <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Patient_Doctor" Association="cerebelloModel.Store.FK_Patient_Doctor">
+      <End Role="Doctor" EntitySet="Doctor" />
+      <End Role="Patient" EntitySet="Patient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Patient_Person" Association="cerebelloModel.Store.FK_Patient_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="Patient" EntitySet="Patient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PersonPhone_Person" Association="cerebelloModel.Store.FK_PersonPhone_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="Phone" EntitySet="Phone" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Practice_License" Association="cerebelloModel.Store.FK_Practice_License">
+      <End Role="License" EntitySet="License" />
+      <End Role="Practice" EntitySet="Practice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Receipt_Doctor" Association="cerebelloModel.Store.FK_Receipt_Doctor">
+      <End Role="Doctor" EntitySet="Doctor" />
+      <End Role="Receipt" EntitySet="Receipt" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Receipt_Patient" Association="cerebelloModel.Store.FK_Receipt_Patient">
+      <End Role="Patient" EntitySet="Patient" />
+      <End Role="Receipt" EntitySet="Receipt" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReceiptMedicine_Receipt" Association="cerebelloModel.Store.FK_ReceiptMedicine_Receipt">
+      <End Role="Receipt" EntitySet="Receipt" />
+      <End Role="ReceiptMedicine" EntitySet="ReceiptMedicine" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Person" Association="cerebelloModel.Store.FK_User_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserPractice_Practice" Association="cerebelloModel.Store.FK_UserPractice_Practice">
+      <End Role="Practice" EntitySet="Practice" />
+      <End Role="UserPractice" EntitySet="UserPractice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserPractice_User" Association="cerebelloModel.Store.FK_UserPractice_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserPractice" EntitySet="UserPractice" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="ActiveIngredient">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="DoctorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Appointment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="int" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="DoctorId" Type="int" Nullable="false" />
+    <Property Name="PracticeId" Type="int" Nullable="false" />
+    <Property Name="PatientId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Doctor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CRM" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="MedicalEntityId" Type="int" Nullable="false" />
+    <Property Name="MedicalSpecialtyId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Laboratory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="DoctorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="License">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="IsSuspended" Type="bit" Nullable="false" />
+    <Property Name="IsDeleted" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MedicalEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="MedicalSpecialty">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Medicine">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="DoctorId" Type="int" Nullable="false" />
+    <Property Name="LaboratoryId" Type="int" />
+    <Property Name="Usage" Type="smallint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MedicineActiveIngredient">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="MedicineId" Type="int" Nullable="false" />
+    <Property Name="ActiveIngredient" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="Patient">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="CoverageId" Type="int" />
+    <Property Name="Registration" Type="varchar" MaxLength="100" />
+    <Property Name="DoctorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
+    <Property Name="Gender" Type="smallint" Nullable="false" />
+    <Property Name="MaritalSatus" Type="smallint" />
+    <Property Name="BirthPlace" Type="varchar" MaxLength="100" />
+    <Property Name="CPF" Type="varchar" MaxLength="12" />
+    <Property Name="CPFOwner" Type="smallint" />
+    <Property Name="GravatarEmailHash" Type="varchar" MaxLength="100" />
+    <Property Name="RefererId" Type="int" />
+    <Property Name="Street" Type="varchar" MaxLength="100" />
+    <Property Name="Complement" Type="varchar" MaxLength="50" />
+    <Property Name="Neighborhood" Type="varchar" MaxLength="100" />
+    <Property Name="StateProvince" Type="varchar" MaxLength="100" />
+    <Property Name="City" Type="varchar" MaxLength="100" />
+    <Property Name="CEP" Type="varchar" MaxLength="20" />
+    <Property Name="Observations" Type="text" />
+  </EntityType>
+  <EntityType Name="Phone">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="PersonId" Type="int" Nullable="false" />
+    <Property Name="Phone" Type="varchar" Nullable="false" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Practice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
+    <Property Name="LicenseId" Type="int" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Receipt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="PatientId" Type="int" Nullable="false" />
+    <Property Name="DoctorId" Type="int" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ReceiptMedicine">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Quantity" Type="varchar" Nullable="false" MaxLength="100" />
+    <Property Name="Prescription" Type="varchar" Nullable="false" MaxLength="150" />
+    <Property Name="Observations" Type="text" />
+    <Property Name="ReceiptId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="Password" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="PasswordSalt" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="LastActiveOn" Type="datetime" />
+  </EntityType>
+  <EntityType Name="UserPractice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="PracticeId" Type="int" Nullable="false" />
+    <Property Name="Role" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ActiveIngredient_Doctor">
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+    <End Role="ActiveIngredient" Type="cerebelloModel.Store.ActiveIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ActiveIngredient">
+        <PropertyRef Name="DoctorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Appointment_Doctor">
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+    <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Appointment">
+        <PropertyRef Name="DoctorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Doctor_MedicalEntity">
+    <End Role="MedicalEntity" Type="cerebelloModel.Store.MedicalEntity" Multiplicity="1" />
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MedicalEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="MedicalEntityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Doctor_MedicalSpecialty">
+    <End Role="MedicalSpecialty" Type="cerebelloModel.Store.MedicalSpecialty" Multiplicity="1" />
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MedicalSpecialty">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="MedicalSpecialtyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Doctor_Medicine">
+    <End Role="Medicine" Type="cerebelloModel.Store.Medicine" Multiplicity="1" />
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Medicine">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Medicine_MedicineLaboratory">
+    <End Role="Laboratory" Type="cerebelloModel.Store.Laboratory" Multiplicity="0..1" />
+    <End Role="Medicine" Type="cerebelloModel.Store.Medicine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Laboratory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Medicine">
+        <PropertyRef Name="LaboratoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MedicineActiveIngredient_ActiveIngredient">
+    <End Role="ActiveIngredient" Type="cerebelloModel.Store.ActiveIngredient" Multiplicity="1" />
+    <End Role="MedicineActiveIngredient" Type="cerebelloModel.Store.MedicineActiveIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ActiveIngredient">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MedicineActiveIngredient">
+        <PropertyRef Name="ActiveIngredient" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MedicineActiveIngredient_Medicine">
+    <End Role="Medicine" Type="cerebelloModel.Store.Medicine" Multiplicity="1" />
+    <End Role="MedicineActiveIngredient" Type="cerebelloModel.Store.MedicineActiveIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Medicine">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MedicineActiveIngredient">
+        <PropertyRef Name="MedicineId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Patient_Doctor">
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+    <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="DoctorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Patient_Person">
+    <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1" />
+    <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Patient">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PersonPhone_Person">
+    <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1" />
+    <End Role="Phone" Type="cerebelloModel.Store.Phone" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Phone">
+        <PropertyRef Name="PersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Practice_License">
+    <End Role="License" Type="cerebelloModel.Store.License" Multiplicity="1" />
+    <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="License">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Practice">
+        <PropertyRef Name="LicenseId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Receipt_Doctor">
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+    <End Role="Receipt" Type="cerebelloModel.Store.Receipt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Receipt">
+        <PropertyRef Name="DoctorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Receipt_Patient">
+    <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+    <End Role="Receipt" Type="cerebelloModel.Store.Receipt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Patient">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Receipt">
+        <PropertyRef Name="PatientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReceiptMedicine_Receipt">
+    <End Role="Receipt" Type="cerebelloModel.Store.Receipt" Multiplicity="1" />
+    <End Role="ReceiptMedicine" Type="cerebelloModel.Store.ReceiptMedicine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Receipt">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ReceiptMedicine">
+        <PropertyRef Name="ReceiptId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Person">
+    <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1" />
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserPractice_Practice">
+    <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+    <End Role="UserPractice" Type="cerebelloModel.Store.UserPractice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Practice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserPractice">
+        <PropertyRef Name="PracticeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserPractice_User">
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
+    <End Role="UserPractice" Type="cerebelloModel.Store.UserPractice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserPractice">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

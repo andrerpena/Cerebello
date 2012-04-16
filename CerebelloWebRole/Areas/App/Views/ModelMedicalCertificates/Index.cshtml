@@ -1,0 +1,29 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificatesIndexViewModel
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Watermark = "Pesquisar pelo nome do atestado";
+    
+    WebGrid grid = new WebGrid();
+    grid.Bind(Model.Objects, null, false, Model.Count);
+    var nameColumn = grid.Column(header: "Nome", format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.Name</a></text>);
+}
+@section Title {
+    Modelos de atestado médico
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo modelo de atestado</a> </li>
+    </ul>
+}
+
+@using (Html.BeginForm("search", null, FormMethod.Get))
+{
+    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+}
+
+<div class="widget">
+    <p class="title">
+        Últimos modelos de atestado cadastrados cadastrados
+    </p>
+    @grid.GetHtml(columns: new List<WebGridColumn>() { nameColumn }, displayHeader: false, headerStyle: "webgrid-header", rowStyle: "webgrid-row-style", alternatingRowStyle: "webgrid-alternating-row", footerStyle: "webgrid-footer", tableStyle: "webgrid")
+</div>

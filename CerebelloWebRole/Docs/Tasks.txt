@@ -1,0 +1,36 @@
+﻿Tarefas divididas de forma que dê para serem concluídas entre 1 e 2 horas, tornando possível a carga horária de desenvolvimento atual:
+
+Versão 1.0 beta
+
+10/04/2012 - Implement the PDF generation for medical certificates		
+15/04/2012 - Implement the tests for "add anamnese" complying with the "auto-complete data" pattern
+15/04/2012 - Implement "add anamnese"
+15/04/2012 - Implement the tests for "remove anamnese"
+15/04/2012 - Implement "remove anamnese"
+
+- Implement the "list/search" action test for symptoms
+- Implement the "list/search" action/page for symptoms part I
+- Implement the "list/search" action/page for symptoms part II
+- Implement the "view" action test for symptoms
+- Implement the "view" action/page for symptoms, including patients with that symptom, part I
+- Implement the "view" action/page for symptoms, including patients with that symptom, part II
+- Implement the "delete" action test for symptoms
+- Implement the "delete" action for symptoms
+
+- Implement the "list/search" action test for laboratories
+- Implement the "list/search" action/page for laboratories part I
+- Implement the "list/search" action/page for laboratories part II
+- Implement the "view" action test for laboratories
+- Implement the "view" action/page for laboratories, including medications with that laboratory, part I
+- Implement the "view" action/page for laboratories, including medications with that laboratory, part II
+- Implement the "delete" action test for laboratories
+- Implement the "delete" action for laboratories
+
+- Implement the "list/search" action test for exams
+- Implement the "list/search" action/page for exams part I
+- Implement the "list/search" action/page for exams part II
+- Implement the "view" action test for exams
+- Implement the "view" action/page for exams, including patients with that exam, part I
+- Implement the "view" action/page for exams, including patients with that exam, part II
+- Implement the "delete" action test for exams
+- Implement the "delete" action for exams

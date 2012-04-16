@@ -1,0 +1,12 @@
+﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+@{
+    Layout = null;
+}
+
+<div class="card-simple">
+    <p>@Model.FullName, sexo @(CommonLib.Helpers.EnumHelper.GetText(Model.Gender, typeof(CerebelloWebRole.Models.TypeGender)).ToLower()), @CommonLib.Helpers.DateTimeHelper.GetPersonAgeInWords(Model.DateOfBirth, true)</p>
+    @foreach (var address in this.Model.Addresses)
+    {
+        <p>@CommonLib.Helpers.AddressHelper.GetAddressText(address.Street, address.Complement, address.Neighborhood, address.City, address.StateProvince, address.CEP)</p>
+    }
+</div>

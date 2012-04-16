@@ -1,0 +1,45 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel
+@using CommonLib.Mvc
+@{
+    Layout = null;
+}
+<li class="view-list-item">
+    @Html.HiddenFor(model => model.Id)
+    <table class="view-table">
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.MedicineText)
+            </th>
+            <td>
+                <a href="@Url.Action("details", "medicines", new { id = this.Model.MedicineId })">@Html.DisplayFor(model => model.MedicineText)</a>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.Quantity)
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Quantity)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.Prescription)
+            </th>
+            <td class="large">
+                @Html.DisplayFor(model => model.Prescription)
+            </td>
+        </tr>
+        @if(!string.IsNullOrEmpty(Model.Observations))
+        {
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.Observations)
+                </th>
+                <td class="large">
+                    @Html.DisplayFor(model => model.Observations)
+                </td>
+            </tr>
+        }
+    </table>
+</li>

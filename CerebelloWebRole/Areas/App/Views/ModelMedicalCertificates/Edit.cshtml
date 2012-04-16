@@ -1,0 +1,74 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificateViewModel
+@using CommonLib.Mvc
+@{
+    
+}
+@section Title {
+    @ViewBag.Title
+}
+@section SideBar {
+    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de modelos de atestados</a>
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery.arp.modal.css" />
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(model => model.Id)
+    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.Name)
+            </th>
+            <td class="large">@Html.TextBoxFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Text)
+            </th>
+            <td class="large">@Html.TextAreaFor(model => model.Text)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Fields)
+            </th>
+            <td>
+                <ul class="edit-list-single-line fields-list">
+                    @if (Model != null && Model.Fields != null)
+                    {
+                        foreach (var field in Model.Fields)
+                        {
+                        @Html.Partial("FieldEditor", field)
+                        }
+                    }
+                    else
+                    {
+                        @Html.Partial("FieldEditor", new ViewDataDictionary())
+                    }
+                </ul>
+                <a id="add_field" href="#" class="block-little-link add-another-link in-form">Adicionar
+                    campo</a>
+                <script type="text/javascript">
+
+                    $("#add_field").click(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: "@Url.Action("fieldeditor")",
+                            success: function(result) {
+                                $(".fields-list").append(result);
+                            }
+                        });
+                    });
+                
+                </script>
+            </td>
+        </tr>
+    </table>
+    
+    <div class="submit-bar">
+        <input type="submit" value="salvar modelo de atestado" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

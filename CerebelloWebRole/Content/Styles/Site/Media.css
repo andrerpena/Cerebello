@@ -1,0 +1,13 @@
+﻿@media screen and (max-width: 600px) 
+{
+    .brand
+    {
+        float: none !important;
+    }
+    
+    #top_menu 
+    {
+        float: none;
+        display: block;
+    }
+}

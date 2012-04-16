@@ -1,0 +1,884 @@
+﻿/* reset */
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus
+{
+    outline: 0;
+}
+body
+{
+    line-height: 1;
+    color: black;
+    background: white;
+}
+ol, ul
+{
+    list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table
+{
+    border-collapse: separate;
+    border-spacing: 0;
+}
+caption, th, td
+{
+    text-align: left;
+    font-weight: normal;
+}
+blockquote:before, blockquote:after, q:before, q:after
+{
+    content: "";
+}
+blockquote, q
+{
+    quotes: "" "";
+}
+
+
+.validation-summary-errors
+{
+    background-color: #FFFFDE;
+    border-color: #FFD3D3;
+    border-style: solid;
+    border-width: 1px 0;
+    color: #FF0000;
+    font-weight: normal;
+    padding: 10px;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.validation-summary-errors ul li
+{
+    margin: 5px 0;
+}
+
+.input-validation-error
+{
+    background-color: #FFE3E3;
+}
+
+/* basic styles */
+
+body
+{
+    background-color: #F3F1EC;
+    font-family: Arial;
+    font-size: 14px;
+    color: #333333;
+}
+
+a
+{
+    color: #396497;
+}
+
+p
+{
+    padding: 0;
+    margin: 0;
+}
+
+h1
+{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.menu-column
+{
+    overflow: hidden;
+    position: absolute;
+    width: 215px;
+}
+
+select, input, textarea
+{
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #CBCBCB;
+}
+
+.link-button
+{
+    background: -moz-linear-gradient(center top , #8BB0CF, #729FCD) repeat scroll 0 0 transparent;
+    border: 1px solid #245E9C;
+    border-radius: 2px 2px 2px 2px;
+    color: white;
+    font-weight: bold;
+    padding: 6px 10px;
+    text-decoration: none;
+}
+
+.menu-column hr
+{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border: none;
+    margin: 1.0em 0px 1.0em 0;
+    border-color: #DAD8D4 -moz-use-text-color #FFFFFF;
+    border-top: 1px solid #DAD8D4;
+    border-bottom: 1px solid white;
+    border-left: medium none;
+    border-right: medium none;
+    border-style: solid none;
+    border-width: 1px medium;
+    margin: 1em 0 1em 0;
+}
+
+
+.main-column
+{
+    margin-left: 215px;
+}
+
+.side-column
+{
+    float: left;
+    width: 30%;
+}
+
+.icon-link-plus
+{
+    background-image: url("/content/images/app/icons16/plus.png");
+}
+
+.icon-link-reload
+{
+    background-image: url("/content/images/app/icons16/reload.png");
+}
+
+.icon-link-check
+{
+    background-image: url("/content/images/app/icons16/checkbox_checked.png");
+}
+
+.icon-link-edit
+{
+    background-image: url("/content/images/app/icons16/edit.png");
+}
+
+.icon-link
+{
+    background-repeat: no-repeat;
+    padding: 1px 0 3px 22px;
+}
+
+.document-page
+{
+    padding: 12px 23px 0 30px;
+}
+
+.document
+{
+    background-color: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 3px #CCCCCC;
+    min-height: 500px;
+    padding: 0 0 30px;
+    position: relative;
+}
+
+.document .document-header
+{
+    background: none repeat scroll 0 0 #F0F5F8;
+    border-bottom: 1px solid #DADEE5;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin: 0;
+    padding: 15px 20px;
+}
+
+.document .document-header h2
+{
+    color: #000000;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0;
+}
+
+.document .document-header .subtitle
+{
+    font-size: 0.8em;
+    color: #666666;
+    margin-left: 10px;
+}
+
+.document .document-body
+{
+    font-size: 12px;
+}
+
+.document .document-body .document-main-column
+{
+    margin-right: 220px;
+    padding: 20px;
+}
+
+.document .document-body .document-side-column
+{
+    border-left: 1px solid #DADEE5;
+    float: right;
+    padding: 20px 0 20px 20px;
+    width: 200px;
+}
+
+.input-water-mark-blured
+{
+    color: #ABABAB;
+}
+.input-water-mark-focused
+{
+    color: #CCCCCC;
+}
+
+.actions
+{
+    border-left: 1px solid #DADEE5;
+    float: right;
+    margin: -32px 0 20px;
+    padding-left: 15px;
+    width: 200px;
+}
+
+.actions ul
+{
+    margin-top: 18px;
+}
+
+.actions li
+{
+    padding: 0 0 10px;
+}
+
+.actions a
+{
+}
+
+input, select
+{
+    padding: 3px;
+}
+
+fieldset
+{
+    border-color: #CCCCCC -moz-use-text-color -moz-use-text-color;
+    border-right: medium none;
+    border-style: solid none none;
+    border-width: 1px medium medium;
+    padding: 0 0 5px 15px;
+}
+
+fieldset legend
+{
+    color: #000000;
+    font-weight: bold;
+    padding: 7px;
+}
+
+.editor-label
+{
+    margin-top: 5px;
+}
+
+
+.editor-field
+{
+    margin: 5px 0px 15px 0px;
+}
+
+.editor-field > input
+{
+    font-size: 18px;
+    padding: 3px;
+    min-width: 200px;
+}
+
+.main
+{
+    margin: 10px auto;
+    max-width: 1200px;
+    overflow: hidden;
+}
+
+div.header
+{
+    background-color: #005782;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#1A719C), to(#005782));
+    background-image: -moz-linear-gradient(center top, #1A719C 0%, #005782 100% );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1A719C', endColorstr='#005782');
+    color: white;
+    box-shadow: 0 0 3px #666666;
+    margin-bottom: 15px;
+    padding: 0 30px;
+    position: relative;
+    z-index: 3;
+}
+
+div.header a
+{
+    color: White;
+    text-decoration: none;
+}
+
+div.header .title
+{
+    margin: 0 auto;
+    max-width: 1200px;
+    min-width: 800px;
+    padding: 12px 0;
+}
+
+.tabNav
+{
+    list-style-type: none;
+    margin-top: 18px;
+    text-align: left;
+}
+
+.tabNav li
+{
+    display: block;
+}
+
+.tabNav li a
+{
+    color: #555555;
+    display: block;
+    margin-right: 0;
+    padding: 8px 0 8px 34px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px #FFFFFF;
+}
+
+.tabNav li.youarehere a
+{
+    background-color: #E5E3DE;
+    color: #000000;
+    font-weight: bold;
+}
+
+.tabNav li.youarehere a
+{
+}
+
+.document h3
+{
+    background-color: #EBEBEB;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+.side-column hr
+{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #DAD8D4 -moz-use-text-color #FFFFFF;
+    border-left: medium none;
+    border-right: medium none;
+    border-style: solid none;
+    border-width: 1px medium;
+    margin: 1em 0 1em 0;
+}
+
+
+.form-table
+{
+    border: collapse;
+    width: 100%;
+    background-color: #f0f3f5;
+    padding: 5px;
+}
+
+.form-table input, select, textarea
+{
+    box-sizing: content-box;
+    -ms-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    max-width: 160px;
+    width: 100%;
+}
+
+.form-table .large input, .form-table .large select, .form-table .large textarea
+{
+    max-width: 240px;
+    width: 100%;
+}
+
+.form-table .small input, .form-table .small select, .form-table .small textarea
+{
+    max-width: 80px;
+    width: 100%;
+}
+
+.form-table th
+{
+    font-weight: bold;
+    min-width: 140px;
+    padding: 12px 12px 12px 0;
+    text-align: right;
+    width: 1px;
+}
+
+.form-title
+{
+    margin: 20px 0 5px;
+    color: Gray;
+}
+
+.buttons-bar
+{
+    margin-top: 20px;
+    font-size: 0.9em;
+    text-align: left;
+}
+
+.buttons-bar input[type="submit"]
+{
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.model-list
+{
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+.model-list li
+{
+    padding: 4px 0;
+    border-bottom: 1px solid #E3E3E3;
+    color: #666666;
+}
+
+.model-list li .title
+{
+    font-weight: bold;
+    color: Black;
+}
+
+.buttons-bar .separator
+{
+    margin: 0 5px;
+}
+
+.row
+{
+    overflow: hidden;
+}
+
+.col-33
+{
+    width: 33%;
+    float: left;
+}
+
+.col-50
+{
+    width: 50%;
+    float: left;
+}
+
+.tabNav li a.home-icon
+{
+    background-image: url("/content/images/app/icons/home-off.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li.youarehere a.home-icon
+{
+    background-image: url("/content/images/app/icons/home-on.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+    text-shadow: 1px 1px white;
+}
+
+.tabNav li a.doctors-icon
+{
+    background-image: url("/content/images/app/icons/contact-off.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li.youarehere a.doctors-icon
+{
+    background-image: url("/content/images/app/icons/contact-on.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li a.schedule-icon
+{
+    background-image: url("/content/images/app/icons/schedule-off.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li.youarehere a.schedule-icon
+{
+    background-image: url("/content/images/app/icons/schedule-on.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li a.contact-icon
+{
+    background-image: url("/content/images/app/icons/contact-off.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li.youarehere a.contact-icon
+{
+    background-image: url("/content/images/app/icons/contact-on.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li a.medicines-icon
+{
+    background-image: url("/content/images/app/icons/medicines-off.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+.tabNav li.youarehere a.medicines-icon
+{
+    background-image: url("/content/images/app/icons/medicines-on.png");
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+
+/* pacientes do consultório */
+
+.doctors-list .doctor-picture
+{
+    float: left;
+}
+
+.doctors-list .doctor-info
+{
+    margin-left: 74px;
+}
+
+.doctors-list td
+{
+    padding: 0 3px 6px;
+}
+
+td.header
+{
+    color: Gray;
+}
+
+td.value
+{
+    padding-left: 10px;
+}
+
+/* layout do médico */
+
+.doctor-card
+{
+    margin-bottom: -3px;
+    margin-top: 20px;
+}
+
+.doctor-card .doctor-picture
+{
+    float: left;
+}
+
+.doctor-card .doctor-info
+{
+    margin-left: 42px;
+    margin-top: 3px;
+}
+
+.doctor-card .doctor-info .name
+{
+}
+
+.doctor-card .doctor-info .crm
+{
+    color: Gray;
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+a.gotoPractice
+{
+    display: block;
+    font-size: 10px;
+    margin-top: 10px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+/* grid */
+
+.webgrid
+{
+    border-collapse: collapse;
+    width: 100%;
+    word-wrap: break-word;
+}
+.webgrid .no-wrap-column
+{
+    white-space: nowrap;
+}
+.webgrid a
+{
+    color: #284B7B;
+    text-decoration: none;
+}
+.webgrid a:hover
+{
+    text-decoration: underline;
+}
+.webgrid-header
+{
+    border-bottom: 1px solid gray;
+    border-color: #D6E8FF #D6E8FF gray;
+    border-style: solid;
+    padding: 6px 5px;
+    text-align: left;
+}
+.webgrid-header th
+{
+    color: gray;
+    font-weight: bold;
+    padding: 5px 0;
+    white-space: nowrap;
+}
+.webgrid-footer
+{
+    background-color: #F0F3F5;
+    border-color: #3966A2 #D6E8FF #D6E8FF;
+    border-style: solid;
+    border-width: 1px;
+    height: 30px;
+    padding: 6px 5px;
+    text-align: center;
+}
+.webgrid-alternating-row
+{
+}
+.webgrid-row-style
+{
+}
+.webgrid-selected-row
+{
+    background-color: #E3DFFF;
+    font-weight: bold;
+}
+.webgrid .check-column
+{
+    width: 50px;
+}
+.webgrid td
+{
+    border-bottom: 1px solid #EEEEEE;
+    border-style: solid;
+    padding: 6px 0;
+}
+.webgrid-footer a
+{
+    background-color: #DDE8EF;
+    border-radius: 5px 5px 5px 5px;
+    margin: 0 3px;
+    padding: 2px 10px;
+}
+
+/* search box */
+
+.search-box
+{
+    background-color: #F0F3F5;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+}
+
+.search-box .input-submit-wrapper
+{
+    float: right;
+    padding-left: 10px;
+    width: 90px;
+}
+
+.search-box .input-submit-wrapper input[type=submit]
+{
+    background-color: #E1E1E1;
+    padding: 3px 10px;
+}
+
+.search-box .input-text-wrapper
+{
+    margin-right: 100px;
+}
+
+.search-box .input-text-wrapper input[type=text]
+{
+    font-size: 15px;
+    width: 100%;
+}
+
+.search-result .title
+{
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.link-disabled
+{
+    color: gray;
+    text-decoration: none;
+}
+
+/* cards */
+
+.card-simple
+{
+    font-size: 14px;
+}
+
+.card-simple p
+{
+    margin-bottom: 5px;
+}
+
+.tabs-wrapper
+{
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.tabs-wrapper .tabs
+{
+    float: left;
+    margin-top: 20px;
+    width: 120px;
+}
+
+.tabs-wrapper .tabs ul
+{
+    padding: 0 0 20px;
+}
+
+.tabs-wrapper .tabs ul li
+{
+    color: #396497;
+    padding: 10px 5px;
+}
+
+.tabs-wrapper .tabs ul .you-are-here
+{
+    background-color: white;
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: 1px 0 1px 1px;
+    box-shadow: -3px 1px 4px #E5E5E5;
+    color: #CCCCCC;
+    font-weight: bold;
+    left: 1px;
+    padding: 10px 5px;
+    position: relative;
+}
+
+.tabs-wrapper .tabs a
+{
+    text-decoration: none;
+}
+
+.tabs-wrapper .tab-content
+{
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: 0 0 0 1px;
+    box-shadow: -2px -3px 3px #EEEEEE;
+    margin-left: 120px;
+    min-height: 300px;
+    padding-left: 10px;
+}
+
+/* patients */
+
+.appointment-panel-wrapper
+{
+    background-color: #FFFDE1;
+    border: 1px solid #D3D2D2;
+    display: none;
+    margin: 10px 0 16px;
+    padding: 10px;
+}
+
+.patients-extra-info
+{
+    margin-top: 20px;
+}
+
+.patients-extra-info .title
+{
+    color: #336699;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.medical-appointments-panel
+{
+    border-top: 1px solid #DADEE5;
+    margin-top: 30px;
+    padding-top: 10px;
+}
+
+.medical-appointment-panel
+{
+    margin: 12px 0 0;
+}
+
+.medical-appointment-panel p
+{
+    margin-bottom: 12px;
+}
+
+.medical-appointment-panel p.selected
+{
+    margin-bottom: -5px;
+    margin-top: 20px;
+}
+
+.medical-appointment-panel p.selected span
+{
+    background-color: #FFFDE1;
+    border-left: 1px solid #D3D2D2;
+    border-right: 1px solid #D3D2D2;
+    border-top: 1px solid #D3D2D2;
+    line-height: 13px;
+    padding: 5px 10px;
+}

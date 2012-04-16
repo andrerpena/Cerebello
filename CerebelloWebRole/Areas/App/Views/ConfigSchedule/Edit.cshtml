@@ -1,0 +1,108 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ConfigScheduleViewModel
+@using CommonLib.Mvc
+@{
+    var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
+}
+@section Title {
+Configurações de agenda
+}
+@section SideBar {
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+if (ViewBag.ReturnUrl != null)
+{
+    @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
+}
+
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.AppointmentDuration)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.AppointmentDuration)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Horário de trabalho
+            </th>
+            <td>
+                <ul class="time-table">
+                    @for (int i = 0; i < Model.DaysOfWeek.Count; i++)
+                    {
+                        <li>
+                            <div class="day-check">
+                                @Html.CheckBoxFor(model => model.DaysOfWeek[i].IsBusinessDay)
+                                @Html.LabelFor(model => model.DaysOfWeek[i].IsBusinessDay, (string)Model.DaysOfWeek[i].Name)
+                                @Html.HiddenFor(model => model.DaysOfWeek[i].Name)
+                            </div>
+                            <div class="table-table-editors small">
+                                <div class="period">
+                                    <div class="period-title">
+                                        Expediente
+                                    </div>
+                                    <div class="period-editors">
+                                        @Html.EditorFor(model => model.DaysOfWeek[i].WorkdayStartTime)
+                                        <span class="separator">às</span>
+                                        @Html.EditorFor(model => model.DaysOfWeek[i].WorkdayEndTime)
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+                                <div class="period">
+                                    <div class="period-title">
+                                        Almoço
+                                    </div>
+                                    <div class="period-editors">
+                                        @Html.EditorFor(model => model.DaysOfWeek[i].LunchStartTime)
+                                        <span class="separator">às</span>
+                                        @Html.EditorFor(model => model.DaysOfWeek[i].LunchEndTime)
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+                            </div>
+                            <div style="clear: both">
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+        $("input[type=text]", $(".time-table")).mask("99:99");
+
+        function onCheck($el, suppressFocus) {
+            var isChecked = $el.is(":checked");
+            if (isChecked) {
+                var $inputs = $("input[type=text]", $el.closest("li"));
+                $inputs.removeAttr("disabled");
+                if (!suppressFocus)
+                    $inputs.first().focus();
+            }
+            else {
+                var $inputs = $("input[type=text]", $el.closest("li"));
+                $inputs.val('');
+                $inputs.attr("disabled", "true");
+            }
+        }
+
+        var $checkBoxes = $("input[type=checkbox]");
+
+        $checkBoxes.each(function (i, el) {
+            onCheck($(el), true);
+        });
+
+        $checkBoxes.change(function (e) {
+            onCheck($(this));
+        });
+
+    </script>
+    
+    <div class="submit-bar">
+        <input type="submit" value="salvar configurações de agenda" />
+        <span class="separator">ou</span> <a href="@cancelUrl">cancelar</a>
+    </div>
+}

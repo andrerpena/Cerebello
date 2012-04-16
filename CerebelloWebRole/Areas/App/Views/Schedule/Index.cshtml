@@ -1,0 +1,41 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ScheduleViewModel
+@{
+    ViewBag.Title = "Index";
+}
+@section Title {
+Agenda
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/fullcalendar.css" />
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/schedule.css" />
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery.arp.modal.css" />
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery-ui-overrides.css" />
+}
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.ui.datepicker-pt-BR.js"></script>
+    <script type="text/javascript">
+
+        window.createUrl = "@Url.Action("Create")";
+        window.editUrl = "@Url.Action("Edit")";
+        window.eventsUrl = "@Url.Action("GetAppointments")";
+        window.getDatesWithAppointmentsUrl = "@Url.Action("GetDatesWithAppointments")";
+
+        window.doctorId = @Model.DoctorId;
+        window.slotMinutes = @Model.SlotMinutes;
+        window.minTime = "@Model.MinTime";
+        window.maxTime = "@Model.MaxTime";
+        window.weekends = @Model.Weekends.ToString().ToLower();
+    </script>
+    <script type="text/javascript" src="/scripts/app/schedule.js"></script>
+}
+@section SideBar {
+    <div class="datepicker">
+    </div>
+    <ul style="margin-top: 10px;">
+        <li><a href="@Url.Action("edit", "configschedule", new { returnUrl = Url.Action(null) })" class="icon-link icon-link-config">
+            Configurações da agenda</a> </li>
+    </ul>
+}
+<div id="calendar">
+</div>

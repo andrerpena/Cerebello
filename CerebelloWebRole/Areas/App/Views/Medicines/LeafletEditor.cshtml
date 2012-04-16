@@ -1,0 +1,27 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicineLeafletViewModel
+@using CommonLib.Mvc
+@{
+    Layout = null;
+}
+<li class="edit-list-item">
+    @using (Html.BeginCollectionItem("Leaflets"))
+    {
+        @Html.HiddenFor(model => model.Id)
+        <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()">
+        </div>
+        <table class="form-table">
+            <tr>
+                <th>@Html.LabelFor(model => model.Description)
+                </th>
+                <td>@Html.EditorFor(model => model.Description)
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.LabelFor(model => model.Url)
+                </th>
+                <td class="large">@Html.EditorFor(model => model.Url)
+                </td>
+            </tr>
+        </table>
+    }
+</li>

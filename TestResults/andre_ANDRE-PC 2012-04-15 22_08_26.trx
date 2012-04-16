@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="23f5c3ca-c32c-4bfc-9258-167006933791" name="andre@ANDRE-PC 2012-04-15 22:08:26" runUser="andre-PC\andre" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="ef9f2aab-2efc-4d6e-a3fa-346b6afda278">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment userDeploymentRoot="D:\Projetos\Azure\Cerebello\TestResults" useDefaultDeploymentRoot="false" enabled="false" runDeploymentRoot="andre_ANDRE-PC 2012-04-15 22_08_26">
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\ThirdParty\Bin\Moq.4.0.10827\Moq.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.Diagnostics.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\HtmlAgilityPack\HtmlAgilityPack.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Deployment.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-core-5.1.3\itextsharp.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Helpers.dll" />
+      <DeploymentItem filename="D:\Projetos\Library\CommonLib\bin\Debug\CommonLib.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\CipherLite\CipherLite.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.StorageClient.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\packages\System.Web.Providers.1.0.1\lib\Net40\System.Web.Providers.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\Microsoft.Web.Infrastructure.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-xtra-5.1.3\itextsharp.xtra.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CerebelloWebRole.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\Cerebello.Firestarter.exe" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Razor.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Razor.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-04-15T22:08:26.9407005-03:00" queuing="2012-04-15T22:08:28.9308099-03:00" start="2012-04-15T22:08:29.1638232-03:00" finish="2012-04-15T22:09:10.7898598-03:00" />
+  <ResultSummary outcome="Error">
+    <Counters total="1" executed="1" error="0" failed="0" timeout="0" aborted="1" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+    <RunInfos>
+      <RunInfo computerName="ANDRE-PC" outcome="Error" timestamp="2012-04-15T22:09:10.7878597-03:00">
+        <Text>Test host process exited unexpectedly.</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="Edit_2_SymptomsThatExistMustBeReferenced" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="d1e32f09-1346-5fe3-495a-5fffef038602">
+      <Execution id="171625b9-5f1d-48d6-8d53-cb6d57e9c625" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.AnamnesesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_2_SymptomsThatExistMustBeReferenced" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="d1e32f09-1346-5fe3-495a-5fffef038602" executionId="171625b9-5f1d-48d6-8d53-cb6d57e9c625" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="171625b9-5f1d-48d6-8d53-cb6d57e9c625" testId="d1e32f09-1346-5fe3-495a-5fffef038602" testName="Edit_2_SymptomsThatExistMustBeReferenced" computerName="ANDRE-PC" duration="00:00:41.4520272" startTime="2012-04-15T22:08:29.3378326-03:00" endTime="2012-04-15T22:09:10.7898598-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Aborted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="171625b9-5f1d-48d6-8d53-cb6d57e9c625">
+    </UnitTestResult>
+  </Results>
+</TestRun>

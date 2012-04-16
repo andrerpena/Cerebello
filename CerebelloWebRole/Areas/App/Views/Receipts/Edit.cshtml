@@ -1,0 +1,77 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ReceiptViewModel
+@{
+    Layout = null;
+    string receiptId = null;
+    if (this.Model != null && Model.Id == null)
+    {
+        receiptId = "new-" + Guid.NewGuid().ToString();
+    }
+    else
+    {
+        receiptId = Model.Id.ToString();
+    }
+}
+<div class="receipt-edit appointment-panel" data-val-id="receipt-@receiptId">
+    @using (Html.BeginForm(null, null, FormMethod.Post))
+    {
+        @Html.ValidationSummary(false)
+        @Html.HiddenFor(model => model.PatientId)
+        @Html.HiddenFor(model => model.Id)
+    
+        <ul class="edit-list medicines-list">
+            @if (Model != null && Model.ReceiptMedicines.Count > 0)
+            {
+                foreach (var receiptMedicine in Model.ReceiptMedicines)
+                {
+                    @Html.Partial("ReceiptMedicineEditor", receiptMedicine)
+                }
+            }
+            else
+            {
+                @Html.Partial("ReceiptMedicineEditor", new ViewDataDictionary())
+            }
+        </ul>
+        
+        <div class="inline-link-bar">
+            <a href="#" class="add-medicine inline-link">Incluir medicamento</a>
+            <a href="@Url.Action("index", "medicines")" target="_blank" class="inline-link">Gerenciar medicamentos</a>
+        </div>
+    
+        <div class="submit-bar">
+            <input type="submit" value="salvar receita" />
+            <span class="separator">ou</span>
+            <a href="#" class="cancel">cancelar</a>
+        </div>
+    }
+
+    <script type="text/javascript">
+        (function() {
+            var $container = $("div[data-val-id='receipt-@receiptId']");
+            $(".add-medicine", $container).click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "@Url.Action("receiptmedicineeditor")",
+                    success: function(result) {
+                        $(".medicines-list", $container).append(result);
+                    }
+                });
+            });
+            $('form', $container).ajaxForm({
+                success: function (result) {
+                    $container.replaceWith(result);
+                }
+            });
+            $('a.cancel', $container).click(function(e) {
+                e.preventDefault();
+                @if(Model.Id != null) 
+                {
+                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                }
+                else
+                {
+                    @:$container.remove();
+                }
+            });
+        })();
+    </script>
+</div>

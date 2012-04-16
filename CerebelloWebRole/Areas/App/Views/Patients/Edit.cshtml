@@ -1,0 +1,122 @@
+﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+@using CommonLib.Mvc
+@{
+    ViewBag.Title = "Create";
+}
+@section Scripts {
+    <script type="text/javascript">
+        function getGetInfo(cep, opts) {
+            $.ajax({
+                url: "@Url.Action("getcepinfo", "patients")",
+                data: { cep: cep },
+                dataType: "json",
+                success: function (e) {
+                    var cepInfo = e ? e : {};
+                    opts.success(cepInfo);
+                },
+                error: function () {
+                    opts.error();
+                    alert("Ocorreu um erro ao tentar obter o endereço a partir do CEP");
+                }
+            });
+        }
+    </script>
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/patients_edit.css" />
+}
+@section Title {
+    Cadastrar um novo paciente
+}
+@section SideBar {
+    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.FullName)
+            </th>
+            <td class="large">@Html.TextBoxFor(model => model.FullName)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Gender)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.Gender)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.DateOfBirth)
+            </th>
+            <td class="small">@Html.TextBoxFor(model => model.DateOfBirth, new { @class = "date-text-editor" })
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.MaritalStatus)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.MaritalStatus)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.BirthPlace)
+            </th>
+            <td>@Html.EditorFor(model => model.BirthPlace)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.CPF)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.CPFOwner)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Profissao)
+            </th>
+            <td>@Html.EditorFor(model => model.Profissao)
+            </td>
+        </tr>
+    </table>
+        
+    <p class="form-title">
+        @Html.LabelFor(model => model.Addresses)
+    </p>    
+    
+    <div class="addresses">
+        <ul class="edit-list addresses-list">
+            @if (Model != null && Model.Addresses != null)
+            {
+                foreach (var address in Model.Addresses)
+                {
+                    @Html.Partial("AddressEditor", address)
+                }
+            }
+            else
+            {
+                @Html.Partial("AddressEditor", new ViewDataDictionary())
+            }                    
+        </ul>
+        <a id="add-address" class="block-little-link add-another-link" href="#">Adicionar endereço</a>
+        <script type="text/javascript">
+
+            $("#add-address").click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "@Url.Action("addresseditor")",
+                    success: function(result) {
+                        $(".addresses-list").append(result);
+                    }
+                });
+            });
+                
+        </script>
+    </div>
+    
+    <div class="submit-bar">
+        <input type="submit" value="salvar paciente" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

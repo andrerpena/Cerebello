@@ -1,0 +1,9 @@
+﻿@model Cerebello.Areas.App.Models.ViewPatientViewModel
+@{
+    Layout = null;
+}
+
+<div class="card-simple">
+    <p>@Model.FullName, sexo @(CommonLib.Helpers.EnumHelper.GetText(Model.Gender).ToLower()), @CommonLib.Helpers.DateTimeHelper.GetPersonAgeInWords(Model.DateOfBirth, true)</p>
+    <p>@CommonLib.Helpers.AddressHelper.GetAddressText(Model.Street, Model.Complement, Model.Neighborhood, Model.City, Model.StateProvince, Model.CEP)</p>
+</div>

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="1b71e3b4-9562-4729-bea8-54d7d2a204be" name="andre@ANDRE-PC 2012-04-14 17:49:19" runUser="andre-PC\andre" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="ef9f2aab-2efc-4d6e-a3fa-346b6afda278">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment userDeploymentRoot="D:\Projetos\Azure\Cerebello\TestResults" useDefaultDeploymentRoot="false" enabled="false" runDeploymentRoot="andre_ANDRE-PC 2012-04-14 17_49_19">
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\ThirdParty\Bin\Moq.4.0.10827\Moq.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.Diagnostics.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\HtmlAgilityPack\HtmlAgilityPack.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Deployment.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-core-5.1.3\itextsharp.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Helpers.dll" />
+      <DeploymentItem filename="D:\Projetos\Library\CommonLib\bin\Debug\CommonLib.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\CipherLite\CipherLite.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.StorageClient.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\packages\System.Web.Providers.1.0.1\lib\Net40\System.Web.Providers.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\Microsoft.Web.Infrastructure.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-xtra-5.1.3\itextsharp.xtra.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CerebelloWebRole.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\Cerebello.Firestarter.exe" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Razor.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Razor.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-04-14T17:49:19.9893282-03:00" queuing="2012-04-14T17:49:21.7209312-03:00" start="2012-04-14T17:49:21.9393316-03:00" finish="2012-04-14T17:50:16.9384427-03:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="Edit_2_SymptomsThatExistMustBeReferenced" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="d1e32f09-1346-5fe3-495a-5fffef038602">
+      <Execution id="360d7209-8ae8-4a14-b354-57436ef0b119" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.AnamnesesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Edit_2_SymptomsThatExistMustBeReferenced" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="d1e32f09-1346-5fe3-495a-5fffef038602" executionId="360d7209-8ae8-4a14-b354-57436ef0b119" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="360d7209-8ae8-4a14-b354-57436ef0b119" testId="d1e32f09-1346-5fe3-495a-5fffef038602" testName="Edit_2_SymptomsThatExistMustBeReferenced" computerName="ANDRE-PC" duration="00:00:52.0429295" startTime="2012-04-14T17:49:22.1421320-03:00" endTime="2012-04-14T17:50:16.5016419-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="360d7209-8ae8-4a14-b354-57436ef0b119">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method CerebelloWebRole.Tests.AnamnesesControllerTests.Edit_2_SymptomsThatExistMustBeReferenced threw exception: 
+System.NullReferenceException: Object reference not set to an instance of an object.</Message>
+          <StackTrace>    at CommonLib.Mvc.EntityObjectExtensions.Update[TModel,TViewModel](EntityCollection`1 entityCollection, IEnumerable`1 viewModelCollection, Func`3 compare, Action`2 update, Action`1 delete, CollectionUpdateStrategy updateStrategy) in D:\Projetos\Library\CommonLib\Mvc\ObjectContextExtensions.cs:line 66
+   at CerebelloWebRole.Areas.App.Controllers.AnamnesesController.Edit(AnamneseViewModel formModel) in D:\Projetos\Azure\Cerebello\CerebelloWebRole\Areas\App\Controllers\AnamnesesController.cs:line 98
+   at CerebelloWebRole.Areas.App.Controllers.AnamnesesController.Create(AnamneseViewModel viewModel) in D:\Projetos\Azure\Cerebello\CerebelloWebRole\Areas\App\Controllers\AnamnesesController.cs:line 45
+   at CerebelloWebRole.Tests.AnamnesesControllerTests.Edit_2_SymptomsThatExistMustBeReferenced() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\Tests\AnamnesesControllerTests.cs:line 115
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

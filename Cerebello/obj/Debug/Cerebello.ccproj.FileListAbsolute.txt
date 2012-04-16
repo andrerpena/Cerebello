@@ -1,0 +1,9 @@
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\bin\Debug\ServiceConfiguration.cscfg
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\CerebelloWebRole.dll
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\CerebelloWebRole.pdb
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.Diagnostics.dll
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.Diagnostics.xml
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.StorageClient.dll
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.StorageClient.xml
+D:\Projetos\Applications\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\System.Web.Providers.dll
+D:\Projetos\Azure\Cerebello\Cerebello\bin\Debug\ServiceConfiguration.cscfg

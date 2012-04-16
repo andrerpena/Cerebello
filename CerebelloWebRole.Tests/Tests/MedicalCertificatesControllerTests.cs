@@ -1,0 +1,387 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Cerebello.Model;
+using System.Configuration;
+using CerebelloWebRole.Areas.App.Models;
+using System.Web.Mvc;
+using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Areas.App.Controllers;
+using Test1;
+using Cerebello.Firestarter;
+
+namespace CerebelloWebRole.Tests
+{
+    [TestClass]
+    public class MedicalCertificatesControllerTests
+    {
+        #region TEST_SETUP
+        protected CerebelloEntities db = null;
+
+        [ClassInitialize()]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            DatabaseHelper.AttachCerebelloTestDatabase();
+        }
+
+        [ClassCleanup()]
+        public static void ClassCleanup()
+        {
+            DatabaseHelper.DetachCerebelloTestDatabase();
+        }
+
+        [TestInitialize()]
+        public void TestInitialize()
+        {
+            // will clear all data and setup initial data again
+            DatabaseHelper.ClearAllData();
+            this.db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString);
+
+            Firestarter.CreateFakeUserAndPractice(this.db);
+            this.db.SaveChanges();
+        }
+
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            this.db.Dispose();
+        }
+        #endregion
+
+        #region Edit
+
+        [TestMethod]
+        public void Edit_1_CannotSaveWithInvalidModelId()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // this probably doesn't exist
+                ModelId = 9999,
+                PatientId = patientId
+            };
+
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var controllerResult = controller.Edit(formModel);
+
+            Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
+            Assert.AreEqual(false, controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState.Count);
+        }
+
+        [TestMethod]
+        public void Edit_2_CannotSaveWithInvalidPatient()
+        {
+            // obtains a valid certificate model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This has no references"
+            };
+            var certificateModelController = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
+            int modelId = this.db.ModelMedicalCertificates.First().Id;
+
+            // tries to save
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                ModelId = modelId,
+                // this probably doesn't exist
+                PatientId = 9999
+            };
+
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var controllerResult = controller.Edit(formModel);
+
+            Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
+            Assert.AreEqual(false, controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState.Count);
+        }
+
+        [TestMethod]
+        public void Edit_3_CannotSaveWithInvalidModelIdAndId()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            // tries to save
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = null,
+                Id = null,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "field_1" },
+                     new MedicalCertificateFieldViewModel() { Name = "field_2" }
+                }
+            };
+
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var controllerResult = controller.Edit(formModel);
+
+            Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
+            Assert.AreEqual(false, controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState.Count);
+        }
+
+        [TestMethod]
+        public void Edit_4_CannotSaveACertificateWithInvalidFields()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            // obtains a valid certificate model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%FIELD_1%>",
+                Fields = new List<ModelMedicalCertificateFieldViewModel>()                {
+                     new ModelMedicalCertificateFieldViewModel() {
+                           Name = "FIELD_1"
+                     }
+                }
+            };
+            var certificateModelTarget = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
+            var modelId = this.db.ModelMedicalCertificates.First().Id;
+
+            // tries to save
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = modelId,
+                PatientId = patientId
+            };
+
+            var target = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var result = target.Edit(formModel);
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(false, target.ModelState.IsValid);
+            Assert.AreEqual(1, target.ModelState.Count);
+        }
+
+        [TestMethod]
+        public void Edit_5_CanSaveAllFieldsWhenModelDoesNotExist()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            // obtains a valid certificate model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%FIELD_1%>",
+                Fields = new List<ModelMedicalCertificateFieldViewModel>()
+                {
+                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
+                }
+            };
+            var certificateModelTarget = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
+            var modelId = this.db.ModelMedicalCertificates.First().Id;
+
+            // tries to save
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = modelId,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "field_1", Value = "value 1" }
+                }
+            };
+
+            var target = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var result = target.Edit(formModel);
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(true, target.ModelState.IsValid);
+
+            // now, edit to remove the model and add a field
+
+            var medicalCerticate = this.db.MedicalCertificates.First();
+            formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                Id = medicalCerticate.Id,
+                ModelId = null,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "field_1" },
+                     new MedicalCertificateFieldViewModel() { Name = "field_2" },
+                }
+            };
+
+            target = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            result = target.Edit(formModel);
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(true, target.ModelState.IsValid);
+        }
+
+        [TestMethod]
+        public void Edit_HappyPath()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            // obtains a valid certificate model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%FIELD_1%>",
+                Fields = new List<ModelMedicalCertificateFieldViewModel>()
+                {
+                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
+                }
+            };
+            var certificateModelTarget = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
+            var modelId = this.db.ModelMedicalCertificates.First().Id;
+
+            // tries to save
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = modelId,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "field_1", Value ="Este é o valor" }
+                }
+            };
+
+            var target = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var result = target.Edit(formModel);
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(true, target.ModelState.IsValid);
+        }
+
+#endregion
+
+        #region Delete
+
+        [TestMethod]
+        public void Delete_HappyPath()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            // obtains a valid certificate model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%FIELD_1%>",
+                Fields = new List<ModelMedicalCertificateFieldViewModel>()
+                {
+                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
+                }
+            };
+            var certificateModelController = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
+            var certificateModel = this.db.ModelMedicalCertificates.First();
+
+            // tries to save a certificate based on that model
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                ModelId = certificateModel.Id,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "field_1", Value = "value 1" }
+                }
+            };
+
+            var certificateController = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var certificateControllerResult = certificateController.Edit(formModel);
+            var certificate = this.db.MedicalCertificates.First();
+
+            // tries to delete the certificate
+            var result = certificateController.Delete(certificateModel.Id);
+            JsonDeleteMessage deleteMessage = (JsonDeleteMessage)result.Data;
+
+            Assert.AreEqual(true, deleteMessage.success);
+            Assert.AreEqual(0, this.db.MedicalCertificates.Count());
+        }
+
+        #endregion
+
+        #region GetCertificateText
+
+        [TestMethod]
+        public void GetCertificateText_HappyPath()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+
+            var patient = this.db.Patients.First();
+            var patientId = patient.Id;
+            var patientName = patient.Person.FullName;
+
+            // obtains a valid certificate model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%FIELD_1%>. This is the patient name: <%paCIENTE%>",
+                Fields = new List<ModelMedicalCertificateFieldViewModel>()
+                {
+                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
+                }
+            };
+            var certificateModelController = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
+            var modelId = this.db.ModelMedicalCertificates.First().Id;
+
+            // tries to save
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = modelId,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "field_1", Value = "This is a value" }
+                }
+            };
+
+            var certificateController = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var certificateControllerResult = certificateController.Edit(formModel);
+
+            Assert.IsInstanceOfType(certificateControllerResult, typeof(ViewResult));
+            Assert.AreEqual(true, certificateController.ModelState.IsValid);
+
+            // Now verifies whether the result is the expected
+            var newlyCreatedCertificate = this.db.MedicalCertificates.First();
+
+            var certificateControllerAcessor  = new MedicalCertificatesController_Accessor(new PrivateObject(certificateController));
+            var certificateText = certificateControllerAcessor.GetCertificateText(newlyCreatedCertificate.Id);
+
+            Assert.AreEqual("This is a reference: This is a value. This is the patient name: " + patientName, certificateText);
+        }
+
+        #endregion
+    }
+}

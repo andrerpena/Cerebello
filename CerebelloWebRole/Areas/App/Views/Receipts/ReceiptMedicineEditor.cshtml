@@ -1,0 +1,60 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel
+@using CommonLib.Mvc
+@{
+    Layout = null;
+}
+<li class="edit-list-item">
+    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()">
+    </div>
+    @using (Html.BeginCollectionItem("ReceiptMedicines"))
+    {
+        @Html.HiddenFor(model => model.Id);
+        <div class="edit-list-item-wrapper">
+            <table class="form-table">
+                <tr>
+                    <th>
+                        @Html.LabelFor(model => model.MedicineId)
+                    </th>
+                    <td>
+                        @Html.TextBoxFor(model => model.MedicineText, new { @class = "lookup" })
+                        @Html.HiddenFor(model => model.MedicineId)
+                        <script type="text/javascript">
+                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).MedicineText']").autocomplete({
+                        source: "@Url.Action("searchmedication", "medicines")",
+                        select: function(event, ui) {
+                            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).MedicineId']").val(ui.item.id);
+                        }
+                    });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.LabelFor(model => model.Quantity)
+                    </th>
+                    <td>
+                        @Html.EditorFor(model => model.Quantity)
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.LabelFor(model => model.Prescription)
+                    </th>
+                    <td class="large">
+                        @Html.TextAreaFor(model => model.Prescription)
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.LabelFor(model => model.Observations)
+                    </th>
+                    <td class="large">
+                        @Html.TextAreaFor(model => model.Observations)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="clear: both">
+        </div>
+    }
+</li>

@@ -1,0 +1,98 @@
+﻿@model CerebelloWebRole.Areas.App.Models.PatientsIndexViewModel
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+    
+    WebGrid grid = new WebGrid();
+    grid.Bind(Model.Patients, null, false, Model.Count);
+    var nameColumn = grid.Column(header: "Nome completo", format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
+    var ageColumn = grid.Column(header: "Idade", format: @<text>@CommonLib.Helpers.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>);
+}
+@section Title {
+Prontuário
+}
+@section Styles {
+    <link type="text/css" rel="Stylesheet" href="/content/jquery.jqplot.min.css" />
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("create", "patients")" class="icon-link icon-link-plus">Novo paciente</a></li>
+        <li><a href="@Url.Action("index", "symptoms")" class="icon-link icon-link-list">Gerenciar sintomas</a></li>
+    </ul>
+}
+@section Scripts
+{
+    <script type="text/javascript" src="/scripts/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.flot.stack.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var mvcData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.PatientAgeDistribution)));
+
+            var male = [];
+            var female = [];
+
+            for(var i=0; i< mvcData.length; i++)
+            {
+                if(mvcData[i].Gender == 0)
+                    male.push([mvcData[i].Age, mvcData[i].Count]);
+                else
+                    female.push([mvcData[i].Age, mvcData[i].Count]);
+            }
+
+            function plotWithOptions() {
+                $.plot($("#placeholder"), [male, female], {
+                    series: {
+                        stack: 0,
+                        bars: { show: true, barWidth: 0.6 },
+                    },
+                    yaxis: { color: "#cccccc", position: "right", show: false },
+                    xaxis: { color: "#cccccc" },
+                    grid: {
+                        borderColor: "#cccccc",
+                        borderWidth: 0
+                    },
+					colors: ["#AFC2E0", "pink"]
+                });
+            }
+			
+            plotWithOptions();
+        });
+    </script>
+}
+@using (Html.BeginForm("search", null, FormMethod.Get))
+{
+    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+}
+<div class="patients-summary">
+    <table>
+        <tr>
+            <tr>
+                <td class="header">
+                    Total de pacientes:
+                </td>
+                <td class="value">@Model.Count
+                </td>
+            </tr>
+        </tr>
+    </table>
+</div>
+<div style="clear: both">
+</div>
+<div class="patients-graphs">
+    <div id="placeholder" style="height: 50px; width: 200px;">
+    </div>
+</div>
+<div class="widget">
+    <p class="title">
+        Últimos pacientes cadastrados
+    </p>
+    @grid.GetHtml(
+       columns: new List<WebGridColumn>() { nameColumn, ageColumn },
+       displayHeader: true,
+       tableStyle: "webgrid",
+       headerStyle: "webgrid-header",
+       footerStyle: "webgrid-footer",
+       alternatingRowStyle: "webgrid-alternating-row",
+       selectedRowStyle: "webgrid-selected-row",
+       rowStyle: "webgrid-row-style")
+</div>

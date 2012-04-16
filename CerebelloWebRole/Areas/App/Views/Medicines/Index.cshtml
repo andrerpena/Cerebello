@@ -1,0 +1,38 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicinesIndexViewModel
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Watermark = "Pesquisar pelo nome do medicamento, princípio ativo ou laboratório";
+    
+    WebGrid grid = new WebGrid();
+    grid.Bind(Model.Medicines, null, false, Model.Count);
+    var nameColumn = grid.Column(header: "Nome", format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.Name</a></text>);
+    var laboratorioColumn = grid.Column(header: "Laboratório", format: @<text>@item.LaboratoryName</text>);
+}
+@section Title {
+    Medicamentos
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
+    </ul>
+}
+
+@using (Html.BeginForm("search", null, FormMethod.Get))
+{
+    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+}
+
+<div class="widget">
+    <p class="title">
+        Últimos medicamentos cadastrados
+    </p>
+   @grid.GetHtml(
+       columns: new List<WebGridColumn>() { nameColumn, laboratorioColumn },
+       displayHeader: true,
+       tableStyle: "webgrid",
+       headerStyle: "webgrid-header",
+       footerStyle: "webgrid-footer",
+       alternatingRowStyle: "webgrid-alternating-row",
+       selectedRowStyle: "webgrid-selected-row",
+       rowStyle: "webgrid-row-style")
+</div>

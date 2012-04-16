@@ -1,0 +1,11 @@
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\Test1.exe.config
+D:\Projetos\Azure\Cerebello\Test1\obj\x86\Debug\Test1.exe
+D:\Projetos\Azure\Cerebello\Test1\obj\x86\Debug\Test1.pdb
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\Test1.exe
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\Test1.pdb
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\Cerebello.Model.dll
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\CommonLib.dll
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\CipherLite.dll
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\CommonLib.pdb
+D:\Projetos\Azure\Cerebello\Test1\bin\Debug\Cerebello.Model.pdb
+D:\Projetos\Azure\Cerebello\Test1\obj\x86\Debug\ResolveAssemblyReference.cache

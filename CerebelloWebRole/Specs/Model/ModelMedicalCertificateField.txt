@@ -1,0 +1,7 @@
+﻿ModelMedicalCertificateField
+
+On Delete:
+	- Should delete all medical certificate fields that use this model
+
+On Create:
+	- There's the need to find every medical certificate that uses this model and add the field

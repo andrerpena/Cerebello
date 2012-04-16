@@ -1,0 +1,12 @@
+﻿Auto-complete data
+
+To this kind of data are applyed the following rules:
+	- By the time the user is inserting the data, if the data doesn't exist, it is created
+	- To determine whether or not the data exists, a strict comparison is used (considering case and diacritics)
+	- There must be section in the software so that the user can manage this data. He/she can edit and add extra information to this data
+	- The data can only be deleted if there's no references (further on, there must be a way to mark this data obsolete)
+
+By the version 1.0 beta, the following tables apply to "Auto-complete data" rules:
+	- Symptoms
+	- Exams
+	- Laboratories

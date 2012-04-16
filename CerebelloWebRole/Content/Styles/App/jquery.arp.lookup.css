@@ -1,0 +1,131 @@
+﻿.lookup-wrapper
+{
+    background-color: white;
+}
+.lookup-wrapper table tr:hover
+{
+    background-color: #F0F3F5;
+    color: #060606;
+}
+.lookup-wrapper table tbody tr td
+{
+    cursor: default;
+    padding: 0.3em 1.5em;
+}
+.lookup-wrapper table
+{
+    border: 1px solid #EDEDED;
+    border-collapse: collapse;
+    line-height: 1;
+    width: 100%;
+}
+.lookup-wrapper table tr
+{
+    border-bottom: 1px solid #EEEEEE;
+}
+.lookup-wrapper table tr.selected
+{
+    background-color: #3875D7;
+    color: #FFFFFF;
+}
+.lookup-wrapper table tr.selected:hover
+{
+    background-color: #3875D7;
+    color: #FFFFFF;
+}
+.lookup-wrapper .empty-box
+{
+    background-color: #FFFFED;
+    padding: 10px;
+    text-align: center;
+}
+.lookup-search-box
+{
+    background: url("/content/images/app/components/lookup/search.png") no-repeat scroll 0 0 white;
+    border: 1px solid silver;
+    height: 22px;
+    overflow: hidden;
+    padding: 0 0 0 24px;
+    vertical-align: middle;
+}
+.lookup-search-box .input-wrapper
+{
+    overflow: auto;
+    width: auto;
+}
+.lookup-search-box .buttons-wrapper
+{
+    float: right;
+    width: 57px;
+}
+.lookup-search-box input[type="text"]
+{
+    border: medium none;
+    vertical-align: top;
+    width: 100% !important;
+}
+.lookup-search-box input
+{
+    display: inline-block;
+}
+.loading
+{
+    background-image: url("/content/images/progress.gif");
+    background-position: 4px 4px;
+    background-repeat: no-repeat;
+}
+.lookup-search-box input
+{
+    -moz-box-sizing: border-box;
+    border: 0 non;e
+    margin: 0 0 1px;
+    padding: 3px;
+    vertical-align: top;
+    width: 235px;
+}
+.lookup-dropdown
+{
+    background-color: #F5F5F5;
+    border: 1px solid gray;
+    box-shadow: 3px 3px 5px #888888;
+    display: none;
+    padding: 1px;
+    position: absolute;
+    font-size: 12px;
+}
+.lookup-filter
+{
+    background-color: #F1F1F1;
+    background-image: url("/content/images/app/components/lookup/filter.png");
+    background-position: 1px 4px;
+    background-repeat: no-repeat;
+    border-left: 1px solid silver;
+    cursor: pointer;
+    display: inline-block;
+    height: 22px;
+    width: 18px;
+}
+.lookup-clear-search
+{
+    background-color: #F1F1F1;
+    background-image: url("/content/images/app/components/lookup/clear.png");
+    background-position: 1px 4px;
+    background-repeat: no-repeat;
+    border-left: 1px solid silver;
+    cursor: pointer;
+    display: inline-block;
+    height: 22px;
+    width: 18px;
+}
+.lookup-dropdown-button
+{
+    background-color: #DEDEDE;
+    background-image: url("/content/images/app/components/lookup/toggle-collapse-dark.png");
+    background-position: 0 4px;
+    background-repeat: no-repeat;
+    border-left: 1px solid silver;
+    cursor: pointer;
+    display: inline-block;
+    height: 22px;
+    width: 18px;
+}

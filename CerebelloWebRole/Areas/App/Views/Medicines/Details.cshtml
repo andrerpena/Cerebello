@@ -1,0 +1,62 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
+@{
+    ViewBag.Title = "Details";
+}
+@section Title {
+    Medicamento: <b>@Model.Name</b>
+}
+@section SideBar {
+    <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar medicamento</a>
+    <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-medication-link">Excluir medicamento</a>
+    <a href="@Url.Action("index")" class="icon-link icon-link-home" id="list-medications-link">Resumo de medicamentos</a>
+
+    <script type="text/javascript">
+        $("#delete-medication-link").click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir este medicamento?\nTodas as receitas de pacientes associadas com este medicamento perderão esta associação.\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Este medicamento foi excluído");
+                        window.location = "@Url.Action("index")";
+                    }
+                    else
+                        alert("Não foi possível excluir este medicamento.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+}
+
+<table class="view-table">
+    <tr>
+        <th>@Html.LabelFor(model => model.Name)</th>
+        <td>@Html.DisplayFor(model => model.Name)</td>
+    </tr>
+    <tr>
+        <th>@Html.LabelFor(model => model.LaboratoryName)</th>
+        <td>@Html.DisplayFor(model => model.LaboratoryName)</td>
+    </tr>
+    <tr>
+        <th>@Html.LabelFor(model => model.ActiveIngredients)</th>
+        <td>
+            <ul class="string-list">
+                @foreach (var activeIngredient in this.Model.ActiveIngredients)
+                {
+                    <li>
+                        @activeIngredient.ActiveIngredientName
+                    </li>
+                }
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<div class="tabs">
+    <a href="#" class="activated">Bulas</a>
+    <a href="#">Pacientes</a>
+</div>
+
+<div class="details-search-result-list">
+    @Html.Partial(this.ViewBag.DetailsView as string);
+</div>

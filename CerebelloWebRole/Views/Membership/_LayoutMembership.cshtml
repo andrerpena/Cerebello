@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+}
+@section MainMenu {
+    <ul class="tabNav">
+        <li class="youarehere"><a href="#">Practices</a></li>
+    </ul>
+}
+
+@section Title {
+    @RenderSection("Title")
+}
+
+@section AdditionalTitleInfo {
+    @if (IsSectionDefined("AdditionalTitleInfo"))
+    {
+        <span class="subtitle">
+        @RenderSection("AdditionalTitleInfo")
+        </span>
+    }
+}
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+}
+
+@section Styles {
+    @RenderSection("Styles", false)
+}
+
+@section SideBar {
+    @RenderSection("SideBar", false)
+}
+
+@RenderBody()

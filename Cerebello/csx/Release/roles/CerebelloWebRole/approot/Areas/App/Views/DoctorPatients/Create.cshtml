@@ -1,0 +1,228 @@
+﻿@model Cerebello.Areas.App.Models.EditPatientViewModel
+@using Cerebello.Code
+@{
+    ViewBag.Title = "Create";
+}
+@section Scripts {
+    <script src="/Scripts/jquery.webcam.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            // máscaras
+            $("#CEP").mask("99999-999");
+            $("#CPF").mask("999999999-99");
+
+            $("#getCepInfoAnchor").bind("click", function (e) {
+                e.preventDefault();
+                getGetInfo($("#CEP").val());
+            });
+
+            $("#photographPatientLink").bind("click", function (e) {
+                $("#photographPatientPanel").toggle();
+            });
+        });
+
+        function getGetInfo(cep) {
+            var $ai = $("#getCepInfoActivityIndicator");
+            $ai.show();
+
+            $.ajax({
+                url: "@Url.Action("GetCEPInfo")",
+                data: { cep: cep },
+                dataType: "json",
+                success: function (e) {
+                    $ai.hide();
+                    var cepInfo = e ? e : {};
+                    $("#StateProvince").val(cepInfo.StateProvince);
+                    $("#City").val(cepInfo.City);
+                    $("#Neighborhood").val(cepInfo.Neighborhood);
+                    $("#StateProvince").val(cepInfo.StateProvince);
+                    $("#Street").val(cepInfo.Street);
+                },
+                error: function () {
+                    $ai.hide();
+                    alert("Ocorreu um erro ao tentar obter o endereço a partir do CEP");
+                }
+            });
+        }
+    </script>
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/patients_edit.css" />
+}
+@section Title {
+Cadastrar um novo paciente
+}
+@section SideBar {
+    testando
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.FullName)
+            </th>
+            <td class="large">@Html.TextBoxFor(model => model.FullName)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Gender)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.Gender)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.DateOfBirth)
+            </th>
+            <td class="small">@Html.TextBoxFor(model => model.DateOfBirth, new { @class = "date-text-editor" })
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.MaritalStatus)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.MaritalStatus)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.BirthPlace)
+            </th>
+            <td>@Html.EditorFor(model => model.BirthPlace)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.CPF)
+            </th>
+            <td>@Html.EnumDropdownFor(model => model.CPFOwner)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Profissao)
+            </th>
+            <td>@Html.EditorFor(model => model.Profissao)
+            </td>
+        </tr>
+    </table>
+    
+    <p class="form-title">
+        Contato
+    </p>
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.EMail)
+            </th>
+            <td class="large">@Html.TextBoxFor(model => model.EMail)
+            </td>
+        </tr>
+    </table>
+    
+    <p class="form-title">
+        Endereço
+    </p>    
+    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.CEP)
+            </th>
+            <td class="small">@Html.EditorFor(model => model.CEP)
+                <a id="getCepInfoAnchor" href="#" style="margin-left: 5px">Obter endereço</a>
+                <img id="getCepInfoActivityIndicator" src="/content/images/progress.gif" style="display: none" />
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.StateProvince)
+            </th>
+            <td>@Html.DropDownListFor(model => model.StateProvince,
+                    new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Text = "Acre", Value="AC"},
+                        new SelectListItem() { Text = "Alagoas", Value="AL"},
+                        new SelectListItem() { Text = "Amapá", Value="AP"},
+                        new SelectListItem() { Text = "Amazonas", Value="AM"},
+                        new SelectListItem() { Text = "Bahia", Value="BA"},
+                        new SelectListItem() { Text = "Ceará", Value="CE"},
+                        new SelectListItem() { Text = "Distrito Federal", Value="DF"},
+                        new SelectListItem() { Text = "Espírito Santo", Value="ES"},
+                        new SelectListItem() { Text = "Goiás", Value="GO"},
+                        new SelectListItem() { Text = "Maranhão", Value="MA"},
+                        new SelectListItem() { Text = "Mato Grosso", Value="MT"},
+                        new SelectListItem() { Text = "Mato Grosso do Sul", Value="MS"},
+                        new SelectListItem() { Text = "Minas Gerais", Value="MG"},
+                        new SelectListItem() { Text = "Pará", Value="PA"},
+                        new SelectListItem() { Text = "Paraiba", Value="PB"},
+                        new SelectListItem() { Text = "Pernambuco", Value="PE"},
+                        new SelectListItem() { Text = "Piauí", Value="PI"},
+                        new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
+                        new SelectListItem() { Text = "Rio Grande do Norte", Value="RN"},
+                        new SelectListItem() { Text = "Rio Grande do Sul", Value="RS"},
+                        new SelectListItem() { Text = "Rondônia", Value="RO"},
+                        new SelectListItem() { Text = "Roraima", Value="RR"},
+                        new SelectListItem() { Text = "Santa Catarina", Value="SC"},
+                        new SelectListItem() { Text = "São Paulo", Value="SP"},
+                        new SelectListItem() { Text = "Sergipe", Value="SE"},
+                        new SelectListItem() { Text = "Tocantins", Value="TO"}
+                    }, "selecione uma opção"
+                    )
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.City)
+            </th>
+            <td>@Html.EditorFor(model => model.City)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Neighborhood)
+            </th>
+            <td>@Html.EditorFor(model => model.Neighborhood)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Street)
+            </th>
+            <td class="large">@Html.EditorFor(model => model.Street)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Complement)
+            </th>
+            <td class="small">@Html.EditorFor(model => model.Complement)
+            </td>
+        </tr>
+    </table>
+    
+    <p class="form-title">
+        Dados Hospitalares
+    </p>
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.Chart)
+            </th>
+            <td>@Html.EditorFor(model => model.Chart)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Bed)
+            </th>
+            <td>@Html.EditorFor(model => model.Bed)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Coverage)
+            </th>
+            <td>@Html.EditorFor(model => model.Coverage)
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Registration)
+            </th>
+            <td>@Html.EditorFor(model => model.Registration)
+            </td>
+        </tr>
+    </table>
+    <div class="buttons-bar">
+        <input type="submit" value="Incluir este paciente" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("Cancelar", "Index")
+    </div>
+}
