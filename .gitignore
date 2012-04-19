@@ -3,6 +3,6 @@
 *.suo
 *.user
 *.trx
-Bin/
-Obj/
+[Bb]in/
+[Oo]bj/
 TestResults/
