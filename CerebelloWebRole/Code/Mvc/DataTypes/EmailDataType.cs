@@ -12,7 +12,7 @@ namespace CommonLib.Mvc.DataTypes
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple  = false)]
     public class EmailAddressAttribute : DataTypeAttribute
     {
-        private readonly Regex regex = new Regex(@"$\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", RegexOptions.Compiled);
+        private readonly Regex regex = new Regex(@"^\S+@\S+\.\S+", RegexOptions.Compiled);
 
         public EmailAddressAttribute() : base(DataType.EmailAddress)
         {

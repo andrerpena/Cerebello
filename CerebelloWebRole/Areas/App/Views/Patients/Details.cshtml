@@ -35,7 +35,7 @@
     {
         <div class="medical-appointment-panel">
             <p class="title">
-                Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CommonLib.Helpers.DateTimeHelper.ConvertToRelative(session.Date, CommonLib.Helpers.DateTimeHelper.GetTimeZoneNow(), CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.ReplaceToday | CommonLib.Helpers.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
+                Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(session.Date, CerebelloWebRole.Code.DateTimeHelper.GetTimeZoneNow(), CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
             </p>
             @if (session.AnamneseIds.Count > 0)
             {

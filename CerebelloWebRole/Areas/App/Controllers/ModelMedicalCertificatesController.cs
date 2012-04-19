@@ -84,7 +84,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <remarks>
         /// Requirements:
         /// 
-        ///     1   Only alpha-numeric caracters, minus and underscores are allowed for fields.
+        ///     1   Only alpha-numeric characters, minus and underscores are allowed for fields.
         ///         One ModelState error must be added for each noncomplying field
         ///         
         ///     2   Place holders must follow the pattern <%PROPERTY_NAME%>.

@@ -1,4 +1,9 @@
-﻿Auto-complete data
+﻿The different tables of the system fall in different data categories. Depending on this category, the expected behavior varies
+
+Types of data:
+
+Auto-complete data
+------------------
 
 To this kind of data are applyed the following rules:
 	- By the time the user is inserting the data, if the data doesn't exist, it is created

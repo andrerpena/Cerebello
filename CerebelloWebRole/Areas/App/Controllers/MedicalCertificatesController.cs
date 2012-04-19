@@ -57,6 +57,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Edit(formModel);
         }
 
+        /// <summary>
+        /// Edits a medical certificate
+        /// </summary>
+        /// <remarks>
+        /// Requirements:
+        /// 
+        ///     1   If no ID is supplied, it's assumed to be new, that is, the user is going to select one now.
+        ///     
+        /// </remarks>
         [HttpGet]
         public ActionResult Edit(int? id, int? patientId)
         {
@@ -91,7 +100,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // NOTE: The ModelMedicalCertificateController is responsible for keeping medical certificate fields up to date with the model
             // At this point, viewModel.Fields must be fully populated
             string selectedModelValue = viewModel.ModelId.HasValue ? viewModel.ModelId.ToString() : null;
-            viewModel.ModelOptions = new SelectList(this.db.ModelMedicalCertificates.ToList().Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() }).ToList(), "Value", "Text", selectedModelValue);
+            viewModel.ModelOptions = this.db.ModelMedicalCertificates.ToList().Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() }).ToList();
 
             return View("Edit", viewModel);
         }
@@ -218,7 +227,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.View("Details", viewModel);
             }
 
-            formModel.ModelOptions = new SelectList(this.db.ModelMedicalCertificates.ToList().Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() }).ToList(), "Value", "Text");
+            formModel.ModelOptions = this.db.ModelMedicalCertificates.ToList().Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() }).ToList();
             return View("Edit", formModel);
         }
 
@@ -257,8 +266,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <summary>
         /// Returns an editor view with the fields described by the given certificate model
         /// </summary>
+        /// <remarks>
+        /// Requirements:
+        ///     1 - If no modelId is supplied, the certificateId is ignored and the default view must be returned
+        ///         with a new MedicalCertificateViewModel as model
+        ///     2 - If a modelId is supplied and a certificateId is not supplied, the default view must be returned
+        ///         with a MedicalCertificateViewModel containing the fields of the specified model
+        ///     3 - If a modelId is supplied and a certificateId is supplied and they don't match, the result must
+        ///         be equal to case [2]
+        ///     4 - If a modelID is supplied and a certificateId is supplied and they match, the default view must
+        ///         be returned with a MedicalCertificateViewModel containing the fields of the specified model
+        ///         but taking into account fields already registered for the given certificate
+        /// </remarks>
         [HttpGet]
-        public ActionResult MedicalCertificateFieldsEditor(int? modelId)
+        public ActionResult MedicalCertificateFieldsEditor(int? modelId, int? certificateId)
         {
             var viewModel = new MedicalCertificateViewModel() { Fields = new List<MedicalCertificateFieldViewModel>() };
             var model = this.db.ModelMedicalCertificates.Where(mmc => mmc.Id == modelId).FirstOrDefault();
@@ -271,6 +292,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         Name = field.Name,
                         Value = null
                     });
+
+                var certificate = this.db.MedicalCertificates.FirstOrDefault(mc => mc.Id == certificateId && mc.ModelMedicalCertificateId == modelId);
+                if (certificate != null)
+                {
+                    foreach (var field in certificate.Fields)
+                    {
+                        var matchingField = viewModel.Fields.FirstOrDefault(f => f.Name == field.Name);
+                        if (matchingField != null)
+                            matchingField.Value = field.Value;
+                    }
+                }
             }
 
             return this.View(viewModel);

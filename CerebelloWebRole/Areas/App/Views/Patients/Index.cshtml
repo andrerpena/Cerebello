@@ -6,7 +6,7 @@
     WebGrid grid = new WebGrid();
     grid.Bind(Model.Patients, null, false, Model.Count);
     var nameColumn = grid.Column(header: "Nome completo", format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
-    var ageColumn = grid.Column(header: "Idade", format: @<text>@CommonLib.Helpers.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>);
+    var ageColumn = grid.Column(header: "Idade", format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>);
 }
 @section Title {
 Prontuário

@@ -1,3 +1,0 @@
-﻿Regras de negócio para a marcação de consulta
-- Não é permitido marcar consultas para o passado
-- Não é permitido marcar consultas para um horário fora dos intervalos de trabalho determinados nas configurações

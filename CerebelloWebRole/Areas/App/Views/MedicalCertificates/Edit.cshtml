@@ -22,7 +22,7 @@
             <tr>
                 <th>@Html.LabelFor(model => model.ModelId)
                 </th>
-                <td class="large">@Html.DropDownListFor(model => model.ModelId, this.Model.ModelOptions)
+                <td class="large">@Html.DropDownListFor(model => model.ModelId, this.Model.ModelOptions, "")
                 </td>
             </tr>
         </table>
@@ -49,7 +49,7 @@
             $("select", $container).change(function(e) {
                 $.ajax({
                     url: "@Url.Action("MedicalCertificateFieldsEditor")",
-                    data: { modelId: $(this).val() },
+                    data: { modelId: $(this).val(), certificateId: @(Model.Id != null ? Model.Id.ToString() : "null") },
                     success: function(result) {
                         $(".fields-wrapper", $container).html(result);
                     },

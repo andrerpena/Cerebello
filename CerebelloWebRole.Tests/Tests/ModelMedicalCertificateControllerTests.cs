@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(false, controller.ModelState.IsValid);
             Assert.AreEqual(2, controller.ModelState.Count);
         }
-
+        
         /// <summary>
         /// Verify if it's not possible to place malformed placeholders
         /// </summary>

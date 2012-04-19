@@ -39,5 +39,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // There must be a DIFFERENT output for AJAX and regular requests
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Returns a view indicating that the requested object does not exist in the database (for requests that expect HTML and prints 
+        /// the result in the page through AJAX)
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ObjectNotFound_Ajax()
+        {
+            return this.View();
+        }
     }
 }

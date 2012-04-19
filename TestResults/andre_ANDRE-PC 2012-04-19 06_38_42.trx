@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="e293d041-60e7-476f-b7dc-f5b38a37c180" name="andre@ANDRE-PC 2012-04-19 06:38:42" runUser="andre-PC\andre" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="ef9f2aab-2efc-4d6e-a3fa-346b6afda278">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="andre_ANDRE-PC 2012-04-19 06_38_42">
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\ThirdParty\Bin\Moq.4.0.10827\Moq.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.Diagnostics.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\HtmlAgilityPack\HtmlAgilityPack.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Deployment.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-core-5.1.3\itextsharp.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Helpers.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.dll" />
+      <DeploymentItem filename="C:\Program Files\Windows Azure SDK\v1.6\ref\Microsoft.WindowsAzure.StorageClient.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\CipherLite\CipherLite.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\Microsoft.Web.Infrastructure.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\packages\System.Web.Providers.1.0.1\lib\Net40\System.Web.Providers.dll" />
+      <DeploymentItem filename="D:\Projetos\ThirdParty\Bin\iTextShap\itextsharp-dll-xtra-5.1.3\itextsharp.xtra.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CerebelloWebRole.dll" />
+      <DeploymentItem filename="D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\Cerebello.Firestarter.exe" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.WebPages.Razor.dll" />
+      <DeploymentItem filename="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Razor.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-04-19T06:38:42.5525712-03:00" queuing="2012-04-19T06:38:42.9805957-03:00" start="2012-04-19T06:38:43.0515997-03:00" finish="2012-04-19T06:38:47.8798759-03:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="MedicalCertificateFieldsEditor_2_ModelIdIsSuppliedAndCertficateIdIsNot" storage="d:\projetos\azure\cerebello\cerebellowebrole.tests\bin\debug\cerebellowebrole.tests.dll" id="364781d2-e08f-b3cb-3cb7-d60896298aaf">
+      <Execution id="e70c705c-eb13-40f3-9ca7-625414233d33" />
+      <TestMethod codeBase="D:/Projetos/Azure/Cerebello/CerebelloWebRole.Tests/bin/Debug/CerebelloWebRole.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="CerebelloWebRole.Tests.MedicalCertificatesControllerTests, CerebelloWebRole.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="MedicalCertificateFieldsEditor_2_ModelIdIsSuppliedAndCertficateIdIsNot" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="364781d2-e08f-b3cb-3cb7-d60896298aaf" executionId="e70c705c-eb13-40f3-9ca7-625414233d33" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="e70c705c-eb13-40f3-9ca7-625414233d33" testId="364781d2-e08f-b3cb-3cb7-d60896298aaf" testName="MedicalCertificateFieldsEditor_2_ModelIdIsSuppliedAndCertficateIdIsNot" computerName="ANDRE-PC" duration="00:00:02.5788859" startTime="2012-04-19T06:38:43.0826015-03:00" endTime="2012-04-19T06:38:46.1827788-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e70c705c-eb13-40f3-9ca7-625414233d33">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method CerebelloWebRole.Tests.MedicalCertificatesControllerTests.MedicalCertificateFieldsEditor_2_ModelIdIsSuppliedAndCertficateIdIsNot threw exception: 
+System.InvalidCastException: Unable to cast object of type 'System.Web.Mvc.RedirectResult' to type 'System.Web.Mvc.ViewResult'.</Message>
+          <StackTrace>    at CerebelloWebRole.Tests.MedicalCertificatesControllerTests.MedicalCertificateFieldsEditor_2_ModelIdIsSuppliedAndCertficateIdIsNot() in D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\Tests\MedicalCertificatesControllerTests.cs:line 443
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

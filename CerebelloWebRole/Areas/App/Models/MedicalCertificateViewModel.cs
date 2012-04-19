@@ -43,6 +43,6 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// The options for certificate model
         /// </summary>
-        public SelectList ModelOptions { get; set; }
+        public List<SelectListItem> ModelOptions { get; set; }
     }
 }

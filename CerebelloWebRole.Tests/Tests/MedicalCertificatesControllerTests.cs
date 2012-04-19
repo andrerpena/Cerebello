@@ -383,5 +383,204 @@ namespace CerebelloWebRole.Tests
         }
 
         #endregion
+
+        #region MedicalCertificateFieldsEditor
+
+        [TestMethod]
+        public void MedicalCertificateFieldsEditor_1_NoModelIdSupplied()
+        {
+            // create a model
+            ModelMedicalCertificateViewModel formModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%PROP_1%>, <%pRoP_2%>, <%PrOP_3%>, <%ProP_4%>",
+                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
+                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_2" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_3" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PrOP_4" },
+                 }
+            };
+
+            var certificateModelcontroller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            certificateModelcontroller.Edit(formModel);
+
+            // create a certificate
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+
+            var patientId = this.db.Patients.First().Id;
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var controllerResult = controller.MedicalCertificateFieldsEditor(null, 37);
+
+            // obtaining the view-model
+            ViewResult view = (ViewResult)controllerResult;
+            var viewModel = (MedicalCertificateViewModel) view.Model;
+
+            Assert.AreEqual(0, viewModel.Fields.Count);
+            Assert.AreEqual(null, viewModel.ModelId);
+            Assert.AreEqual(null, viewModel.ModelName);
+        }
+
+        [TestMethod]
+        public void MedicalCertificateFieldsEditor_2_ModelIdIsSuppliedAndCertficateIdIsNot()
+        {
+            // create a model
+            ModelMedicalCertificateViewModel formModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%PROP_1%>, <%pRoP_2%>, <%PrOP_3%>, <%ProP_4%>",
+                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
+                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_2" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_3" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PrOP_4" },
+                 }
+            };
+
+            var certificateModelcontroller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            certificateModelcontroller.Edit(formModel);
+            var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
+
+            // create a certificate
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+
+            var patientId = this.db.Patients.First().Id;
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, null);
+
+            // obtaining the view-model
+            ViewResult view = (ViewResult)controllerResult;
+            var viewModel = (MedicalCertificateViewModel)view.Model;
+
+            Assert.AreEqual(4, viewModel.Fields.Count);
+        }
+
+        [TestMethod]
+        public void MedicalCertificateFieldsEditor_3_BothParametersAreSuppliedButTheyDontMatch()
+        {
+            // create a model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%PROP_1%>",
+                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
+                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" }
+                 }
+            };
+
+            var certificateModelcontroller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            certificateModelcontroller.Edit(certificateModelFormModel);
+            var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
+
+            // create another model
+            certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%PROP_1%>, <%ProP_4%>",
+                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
+                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" },
+                    new ModelMedicalCertificateFieldViewModel() { Name = "PrOP_4" },
+                 }
+            };
+
+            certificateModelcontroller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            certificateModelcontroller.Edit(certificateModelFormModel);
+            var anotherModelId = this.db.ModelMedicalCertificates.Select(m => m.Id).ToList().AsEnumerable().Reverse().First();
+
+            // create a certificate
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+
+            var patientId = this.db.Patients.First().Id;
+
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = modelId,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "prop_1", Value ="Este é o valor" }
+                }
+            };
+
+            // save the certificate
+            controller.Edit(formModel);
+            var certificateId = this.db.MedicalCertificates.Select(c => c.Id).First();
+
+            // at this point we have 2 certificate models, "modelId" and "anotherModelId" and we have a certificate using "modelId". The point is 
+            // to call MedicalCertificateFieldsEditor passing "anotherModelId" 
+
+            var controllerResult = controller.MedicalCertificateFieldsEditor(anotherModelId, certificateId);
+
+            // obtaining the view-model
+            ViewResult view = (ViewResult)controllerResult;
+            var viewModel = (MedicalCertificateViewModel)view.Model;
+
+            Assert.AreEqual(2, viewModel.Fields.Count);
+            Assert.AreEqual(null, viewModel.Fields[0].Value);
+            Assert.AreEqual(null, viewModel.Fields[1].Value);
+        }
+
+        [TestMethod]
+        public void MedicalCertificateFieldsEditor_4_BothParametersAreSuppliedAndTheyDontMatch()
+        {
+            // create a model
+            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a reference: <%PROP_1%>",
+                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
+                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" }
+                 }
+            };
+
+            var certificateModelcontroller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            certificateModelcontroller.Edit(certificateModelFormModel);
+            var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
+            
+            // create a certificate
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            this.db.SaveChanges();
+
+            var patientId = this.db.Patients.First().Id;
+
+            var controller = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            {
+                // both EXISTING
+                ModelId = modelId,
+                PatientId = patientId,
+                Fields = new List<MedicalCertificateFieldViewModel>()
+                {
+                     new MedicalCertificateFieldViewModel() { Name = "prop_1", Value ="Este é o valor" }
+                }
+            };
+
+            // save the certificate
+            controller.Edit(formModel);
+            var certificateId = this.db.MedicalCertificates.Select(c => c.Id).First();
+
+            // at this point we have 2 certificate models, "modelId" and "anotherModelId" and we have a certificate using "modelId". The point is 
+            // to call MedicalCertificateFieldsEditor passing "anotherModelId" 
+
+            var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, certificateId);
+
+            // obtaining the view-model
+            ViewResult view = (ViewResult)controllerResult;
+            var viewModel = (MedicalCertificateViewModel)view.Model;
+
+            Assert.AreEqual(1, viewModel.Fields.Count);
+            Assert.AreEqual("Este é o valor", viewModel.Fields[0].Value);
+        }
+
+        #endregion
     }
 }

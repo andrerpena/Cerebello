@@ -298,8 +298,8 @@
     <Content Include="Content\themes\base\jquery.ui.slider.css" />
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
-    <Content Include="Docs\Data.txt" />
-    <Content Include="Docs\Schedule.txt" />
+    <Content Include="Docs\DataPatterns.txt" />
+    <Content Include="Docs\ScreenPatterns.txt" />
     <Content Include="Docs\Tasks.txt" />
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
@@ -467,6 +467,7 @@
     <Content Include="Views\Authentication\CreateAccount.cshtml" />
     <Content Include="Views\Authentication\CreateAccountCompleted.cshtml" />
     <Content Include="Scripts\jquery.arp.ajax.link.js" />
+    <Content Include="Views\Shared\ObjectNotFound_Ajax.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Cerebello" generation="1" functional="0" release="0" Id="1a0f37ba-b832-4832-82ac-07da91fd281d" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Cerebello" generation="1" functional="0" release="0" Id="6277f883-74e0-42fb-8f3b-5a3de6085997" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="CerebelloGroup" generation="1" functional="0" release="0">
       <componentports>
@@ -165,14 +165,14 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="1574adad-854d-4004-8acf-8b42e0e2572d" ref="Microsoft.RedDog.Contract\ServiceContract\CerebelloContract@ServiceDefinition.build">
+    <implementation Id="17cb376e-0e6a-4504-aa52-921e5fe9faa2" ref="Microsoft.RedDog.Contract\ServiceContract\CerebelloContract@ServiceDefinition.build">
       <interfacereferences>
-        <interfaceReference Id="36ac2789-d70a-4e8f-9228-4659f2d9be3e" ref="Microsoft.RedDog.Contract\Interface\CerebelloWebRole:Endpoint1@ServiceDefinition.build">
+        <interfaceReference Id="70201b5f-0c3a-4aca-901b-8cb61fdaa36c" ref="Microsoft.RedDog.Contract\Interface\CerebelloWebRole:Endpoint1@ServiceDefinition.build">
           <inPort>
             <inPortMoniker name="/Cerebello/CerebelloGroup/CerebelloWebRole:Endpoint1" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="0e893a8e-5ece-440e-bca6-a0561bb78040" ref="Microsoft.RedDog.Contract\Interface\CerebelloWebRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition.build">
+        <interfaceReference Id="4e44427b-9d5f-40d2-bcee-28ab3165bc2a" ref="Microsoft.RedDog.Contract\Interface\CerebelloWebRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition.build">
           <inPort>
             <inPortMoniker name="/Cerebello/CerebelloGroup/CerebelloWebRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" />
           </inPort>

@@ -1,0 +1,2 @@
+﻿The different types of screens in the system fall in different categories. Each of them have common behavior which will be described in this document
+
