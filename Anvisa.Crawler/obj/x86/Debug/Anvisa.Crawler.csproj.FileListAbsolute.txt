@@ -5,6 +5,4 @@ D:\Projetos\Azure\Cerebello\Anvisa.Crawler\bin\Debug\LeafletCrawler.exe
 D:\Projetos\Azure\Cerebello\Anvisa.Crawler\bin\Debug\LeafletCrawler.pdb
 D:\Projetos\Azure\Cerebello\Anvisa.Crawler\bin\Debug\EntityFramework.dll
 D:\Projetos\Azure\Cerebello\Anvisa.Crawler\bin\Debug\EntityFramework.xml
-D:\Projetos\Azure\Cerebello\Anvisa.Crawler\bin\Debug\HtmlAgilityPack.pdb
-D:\Projetos\Azure\Cerebello\Anvisa.Crawler\bin\Debug\HtmlAgilityPack.xml
 D:\Projetos\Azure\Cerebello\Anvisa.Crawler\obj\x86\Debug\ResolveAssemblyReference.cache
