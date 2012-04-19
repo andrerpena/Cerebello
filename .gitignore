@@ -1,3 +1,8 @@
 *.dll
 *.pdb
 *.suo
+*.user
+*.trx
+Bin/
+Obj/
+TestResults/
