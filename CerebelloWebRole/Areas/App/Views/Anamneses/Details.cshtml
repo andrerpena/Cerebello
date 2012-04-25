@@ -17,13 +17,13 @@
             </tr>
             <tr>
                 <th>
-                    @Html.LabelFor(model => model.AnamneseSymptoms)
+                    @Html.LabelFor(model => model.Diagnoses)
                 </th>
                 <td>
-                    @if (Model.AnamneseSymptoms != null)
+                    @if (Model.Diagnoses != null)
                     {
                         <ul class="string-list">
-                            @foreach (var symptom in Model.AnamneseSymptoms)
+                            @foreach (var symptom in Model.Diagnoses)
                             {
                                 <li>
                                     @symptom.Text

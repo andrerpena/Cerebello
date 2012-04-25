@@ -117,7 +117,7 @@
     <Compile Include="Areas\App\Controllers\DoctorsController.cs" />
     <Compile Include="Areas\App\Controllers\PracticeHomeController.cs" />
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
-    <Compile Include="Areas\App\Models\AnamneseSymtomViewModel.cs" />
+    <Compile Include="Areas\App\Models\DiagnosisViewModel.cs" />
     <Compile Include="Areas\App\Models\AnamneseViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDocumentsViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicalCertificateFieldViewModel.cs" />
@@ -162,6 +162,21 @@
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
     <Compile Include="Code\Controllers\PracticeManagingContextController.cs" />
+    <Compile Include="Code\Controls\CardView\CardView.cs" />
+    <Compile Include="Code\Controls\CardView\CardViewField.cs" />
+    <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
+    <Compile Include="Code\Controls\CardView\CardViewResponsive.cs" />
+    <Compile Include="Code\Controls\EditPanel\EditPanel.cs" />
+    <Compile Include="Code\Controls\EditPanel\EditPanelField.cs" />
+    <Compile Include="Code\Controls\EditPanel\EditPanelFieldBase.cs" />
+    <Compile Include="Code\Controls\Grid.cs" />
+    <Compile Include="Code\Controls\GridField.cs" />
+    <Compile Include="Code\Controls\GridFieldBase.cs" />
+    <Compile Include="Code\Controls\Lookup\Data\LookupJsonResult.cs" />
+    <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
+    <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />
+    <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
+    <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Filters\RequiresAuthenticationAttribute.cs" />
     <Compile Include="Code\Filters\RequiresPracticeAuthorizationAttribute.cs" />
@@ -177,6 +192,7 @@
     <Compile Include="Code\Helpers\HttpHelper.cs" />
     <Compile Include="Code\Helpers\ImageHelper.cs" />
     <Compile Include="Code\Helpers\MemberExpressionHelper.cs" />
+    <Compile Include="Code\Helpers\PLKExpressionHelper.cs" />
     <Compile Include="Code\Helpers\StringHelper.cs" />
     <Compile Include="Code\Helpers\TagsHelper.cs" />
     <Compile Include="Code\Helpers\UrlBuilder.cs" />
@@ -187,7 +203,6 @@
     <Compile Include="Code\Mvc\DataTypes\DateOfBirthDataType.cs" />
     <Compile Include="Code\Mvc\DataTypes\EmailDataType.cs" />
     <Compile Include="Code\Mvc\DataTypes\TimeDataType.cs" />
-    <Compile Include="Code\Mvc\HtmlExtensions.cs" />
     <Compile Include="Code\Mvc\LabelExtensions.cs" />
     <Compile Include="Code\Mvc\LowercaseRoutes.cs" />
     <Compile Include="Code\Mvc\ModelStateExtensions.cs" />
@@ -298,6 +313,7 @@
     <Content Include="Content\themes\base\jquery.ui.slider.css" />
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <EmbeddedResource Include="Data\CID10.xml" />
     <Content Include="Docs\DataPatterns.txt" />
     <Content Include="Docs\ScreenPatterns.txt" />
     <Content Include="Docs\Tasks.txt" />
@@ -431,7 +447,7 @@
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\AnamneseSymptomEditor.cshtml" />
+    <Content Include="Areas\App\Views\Anamneses\DiagnosisEditor.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -451,6 +467,7 @@
     <Content Include="Areas\App\Views\MedicalCertificates\Edit.cshtml" />
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsDetails.cshtml" />
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsEditor.cshtml" />
+    <Content Include="Areas\App\Views\Symptoms\Index.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\Login.cshtml" />

@@ -1,23 +1,20 @@
-﻿@model CerebelloWebRole.Areas.App.Models.MedicinesIndexViewModel
+﻿@model CerebelloWebRole.Areas.App.Models.SymptomsIndexViewModel
 @{
     ViewBag.Title = "Index";
     ViewBag.Watermark = "Pesquisar pelo nome do medicamento, princípio ativo ou laboratório";
     
     WebGrid grid = new WebGrid();
-    grid.Bind(Model.Medicines, null, false, Model.Count);
+    grid.Bind(Model.MostCommonSymptoms, null, false, Model.MostCommonSymptomsCount);
     var nameColumn = grid.Column(header: "Nome", format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.Name</a></text>);
-    var laboratorioColumn = grid.Column(header: "Laboratório", format: @<text>@item.LaboratoryName</text>);
 }
 @section Title {
     Medicamentos
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
+        <li></li>
     </ul>
 }
-
-
 
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
@@ -26,10 +23,10 @@
 
 <div class="widget">
     <p class="title">
-        Últimos medicamentos cadastrados
+        Sintomas mais comuns
     </p>
    @grid.GetHtml(
-       columns: new List<WebGridColumn>() { nameColumn, laboratorioColumn },
+       columns: new List<WebGridColumn>() { nameColumn },
        displayHeader: true,
        tableStyle: "webgrid",
        headerStyle: "webgrid-header",

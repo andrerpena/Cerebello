@@ -1,16 +1,16 @@
-﻿@model CerebelloWebRole.Areas.App.Models.AnamneseSymptomViewModel
+﻿@model CerebelloWebRole.Areas.App.Models.DiagnosisViewModel
 @using CommonLib.Mvc
 @{
     Layout = null;
 }
 
 <li class="edit-list-item">
-    @using (Html.BeginCollectionItem("AnamneseSymptoms"))
+    @using (Html.BeginCollectionItem("Diagnoses"))
     {
         @Html.EditorFor(model => model.Text)
         <script type="text/javascript">
             $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Text']").autocomplete({
-                        source: "@Url.Action("searchsymptom")",
+                        source: "@Url.Action("lookupdiagnoses")",
                         select: function(event, ui) {
                                     $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Id']").val(ui.item.id);
                                 }

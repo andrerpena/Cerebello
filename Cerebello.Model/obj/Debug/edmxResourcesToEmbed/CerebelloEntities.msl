@@ -394,20 +394,12 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Symptoms">
-      <EntityTypeMapping TypeName="Cerebello.Model.Symptom">
-        <MappingFragment StoreEntitySet="Symptom">
-          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="AnamneseSymptoms">
-      <EntityTypeMapping TypeName="Cerebello.Model.AnamneseSymptom">
-        <MappingFragment StoreEntitySet="AnamneseSymptoms">
-          <ScalarProperty Name="SymptomId" ColumnName="SymptomId" />
+    <EntitySetMapping Name="Diagnoses">
+      <EntityTypeMapping TypeName="Cerebello.Model.Diagnosis">
+        <MappingFragment StoreEntitySet="Diagnosis">
+          <ScalarProperty Name="Cid10Name" ColumnName="Cid10Name" />
+          <ScalarProperty Name="Cid10Code" ColumnName="Cid10Code" />
+          <ScalarProperty Name="Observations" ColumnName="Observations" />
           <ScalarProperty Name="AnamneseId" ColumnName="AnamneseId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>

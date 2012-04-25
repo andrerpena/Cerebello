@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using CerebelloWebRole.Areas.App.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class SymptomsController : Controller
     {
-        //
-        // GET: /App/Symptoms/
-
+        
+        /// <summary>
+        /// Symptoms index
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
-            return View();
+            var viewModel = new SymptomsIndexViewModel();
+            return View(viewModel);
         }
 
     }

@@ -27,24 +27,24 @@
                 </td>
             </tr>
             <tr>
-                <th>@Html.LabelFor(model => model.AnamneseSymptoms)
+                <th>@Html.LabelFor(model => model.Diagnoses)
                 </th>
                 <td>
                     <ul class="edit-list-single-line anamnese-symptoms-list">
-                        @if (Model != null && Model.AnamneseSymptoms.Count > 0)
+                        @if (Model != null && Model.Diagnoses.Count > 0)
                         {
-                            foreach (var anamneseSymptom in Model.AnamneseSymptoms)
+                            foreach (var anamneseSymptom in Model.Diagnoses)
                             {
-                                @Html.Partial("AnamneseSymptomEditor", anamneseSymptom)
+                                @Html.Partial("DiagnosisEditor", anamneseSymptom)
                             }
                         }
                         else
                         {
-                            @Html.Partial("AnamneseSymptomEditor", new ViewDataDictionary())
+                            @Html.Partial("DiagnosisEditor", new ViewDataDictionary())
                         }
                     </ul>
                     <a href="#" class="add-symptom block-little-link add-another-link" style="marin-left: 5px">
-                        incluir sintoma</a>
+                        incluir diagnóstico</a>
                 </td>
             </tr>
         </table>
@@ -61,7 +61,7 @@
                 e.preventDefault();
                 console.log("novo sintoma");
                 $.ajax({
-                    url: "@Url.Action("AnamneseSymptomEditor")",
+                    url: "@Url.Action("DiagnosisEditor")",
                     success: function(result) {
                         console.log("peguei o editor");        
                         $(".anamnese-symptoms-list", $container).append(result);

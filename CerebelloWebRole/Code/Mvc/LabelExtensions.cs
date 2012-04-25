@@ -6,8 +6,7 @@ using System.Linq;
 
 namespace CommonLib.Mvc
 {
-
-    public static class LabelExtensions
+    public static class MyLabelExtensions
     {
         public static MvcHtmlString LabelFor<TModel, TValue>(
             this HtmlHelper<TModel> html,

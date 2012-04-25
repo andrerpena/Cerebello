@@ -11,5 +11,10 @@ namespace CerebelloWebRole.Areas.App.Models
         /// List of most common symptoms
         /// </summary>
         public List<SymptomViewModel> MostCommonSymptoms { get; set; }
+
+        /// <summary>
+        /// Count of the most common symptoms
+        /// </summary>
+        public int MostCommonSymptomsCount { get; set; }
     }
 }

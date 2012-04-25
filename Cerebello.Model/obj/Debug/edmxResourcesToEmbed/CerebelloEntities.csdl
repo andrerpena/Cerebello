@@ -189,19 +189,10 @@
       <End Role="MedicalCertificate" EntitySet="MedicalCertificates" />
       <End Role="MedicalCertificateField" EntitySet="MedicalCertificateFields" />
     </AssociationSet>
-    <EntitySet Name="Symptoms" EntityType="Cerebello.Model.Symptom" />
-    <AssociationSet Name="FK_Symptom_Doctor" Association="Cerebello.Model.FK_Symptom_Doctor">
-      <End Role="Doctor" EntitySet="Doctors" />
-      <End Role="Symptom" EntitySet="Symptoms" />
-    </AssociationSet>
-    <EntitySet Name="AnamneseSymptoms" EntityType="Cerebello.Model.AnamneseSymptom" />
-    <AssociationSet Name="FK_AnamneseSymptoms_Anamnese" Association="Cerebello.Model.FK_AnamneseSymptoms_Anamnese">
+    <EntitySet Name="Diagnoses" EntityType="Cerebello.Model.Diagnosis" />
+    <AssociationSet Name="FK_Diagnosis_Anamnese" Association="Cerebello.Model.FK_Diagnosis_Anamnese">
       <End Role="Anamnese" EntitySet="Anamnese" />
-      <End Role="AnamneseSymptom" EntitySet="AnamneseSymptoms" />
-    </AssociationSet>
-    <AssociationSet Name="FK_AnamneseSymptoms_SYS_Symptom" Association="Cerebello.Model.FK_AnamneseSymptoms_SYS_Symptom">
-      <End Role="Symptom" EntitySet="Symptoms" />
-      <End Role="AnamneseSymptom" EntitySet="AnamneseSymptoms" />
+      <End Role="Diagnosi" EntitySet="Diagnoses" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Address">
@@ -260,7 +251,6 @@
     <NavigationProperty Name="CFG_Schedule" Relationship="Cerebello.Model.FK_CFG_Schedule_Doctor" FromRole="Doctor" ToRole="CFG_Schedule" />
     <NavigationProperty Name="CFG_Documents" Relationship="Cerebello.Model.FK_CFG_Documents_Doctor" FromRole="Doctor" ToRole="CFG_Documents" />
     <NavigationProperty Name="ModelMedicalCertificates" Relationship="Cerebello.Model.FK_ModelMedicalCertificate_Doctor" FromRole="Doctor" ToRole="ModelMedicalCertificate" />
-    <NavigationProperty Name="Symptoms" Relationship="Cerebello.Model.FK_Symptom_Doctor" FromRole="Doctor" ToRole="Symptom" />
   </EntityType>
   <EntityType Name="Email">
     <Key>
@@ -789,7 +779,7 @@
     <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
     <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_Anamnese_Patient" FromRole="Anamnese" ToRole="Patient" />
     <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="AnamneseSymptoms" Relationship="Cerebello.Model.FK_AnamneseSymptoms_Anamnese" FromRole="Anamnese" ToRole="AnamneseSymptom" />
+    <NavigationProperty Name="Diagnoses" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese" FromRole="Anamnese" ToRole="Diagnosi" />
   </EntityType>
   <Association Name="FK_Anamnese_Patient">
     <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -1069,60 +1059,26 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="Symptom">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Type="String" Name="Name" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
-    <Property Type="Int32" Name="DoctorId" Nullable="false" />
-    <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_Symptom_Doctor" FromRole="Symptom" ToRole="Doctor" />
-    <NavigationProperty Name="AnamneseSymptoms" Relationship="Cerebello.Model.FK_AnamneseSymptoms_SYS_Symptom" FromRole="Symptom" ToRole="AnamneseSymptom" />
-  </EntityType>
-  <Association Name="FK_Symptom_Doctor">
-    <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
-    <End Type="Cerebello.Model.Symptom" Role="Symptom" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Doctor">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Symptom">
-        <PropertyRef Name="DoctorId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="AnamneseSymptom">
+  <EntityType Name="Diagnosis">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Type="Int32" Name="AnamneseId" Nullable="false" />
-    <Property Type="Int32" Name="SymptomId" Nullable="false" />
-    <NavigationProperty Name="Anamnese" Relationship="Cerebello.Model.FK_AnamneseSymptoms_Anamnese" FromRole="AnamneseSymptom" ToRole="Anamnese" />
-    <NavigationProperty Name="Symptom" Relationship="Cerebello.Model.FK_AnamneseSymptoms_SYS_Symptom" FromRole="AnamneseSymptom" ToRole="Symptom" />
+    <Property Type="String" Name="Observations" MaxLength="200" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Anamnese" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese" FromRole="Diagnosi" ToRole="Anamnese" />
+    <Property Type="String" Name="Cid10Code" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="Cid10Name" MaxLength="10" FixedLength="true" Unicode="true" />
   </EntityType>
-  <Association Name="FK_AnamneseSymptoms_Anamnese">
+  <Association Name="FK_Diagnosis_Anamnese">
     <End Type="Cerebello.Model.Anamnese" Role="Anamnese" Multiplicity="1" />
-    <End Type="Cerebello.Model.AnamneseSymptom" Role="AnamneseSymptom" Multiplicity="*" />
+    <End Type="Cerebello.Model.Diagnosis" Role="Diagnosi" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Anamnese">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="AnamneseSymptom">
+      <Dependent Role="Diagnosi">
         <PropertyRef Name="AnamneseId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_AnamneseSymptoms_SYS_Symptom">
-    <End Type="Cerebello.Model.Symptom" Role="Symptom" Multiplicity="1" />
-    <End Type="Cerebello.Model.AnamneseSymptom" Role="AnamneseSymptom" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Symptom">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="AnamneseSymptom">
-        <PropertyRef Name="SymptomId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

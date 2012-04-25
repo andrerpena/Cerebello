@@ -4,11 +4,11 @@
     <EntitySet Name="ActiveIngredient" EntityType="cerebelloModel.Store.ActiveIngredient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Address" EntityType="cerebelloModel.Store.Address" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Anamnese" EntityType="cerebelloModel.Store.Anamnese" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="AnamneseSymptoms" EntityType="cerebelloModel.Store.AnamneseSymptoms" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Appointment" EntityType="cerebelloModel.Store.Appointment" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CFG_Documents" EntityType="cerebelloModel.Store.CFG_Documents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CFG_Schedule" EntityType="cerebelloModel.Store.CFG_Schedule" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Coverage" EntityType="cerebelloModel.Store.Coverage" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Diagnosis" EntityType="cerebelloModel.Store.Diagnosis" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Email" EntityType="cerebelloModel.Store.Email" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
@@ -30,7 +30,6 @@
     <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Symptom" EntityType="cerebelloModel.Store.Symptom" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="SYS_Laboratory" EntityType="cerebelloModel.Store.SYS_Laboratory" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="SYS_Leaflet" EntityType="cerebelloModel.Store.SYS_Leaflet" store:Type="Tables" Schema="dbo" />
@@ -51,14 +50,6 @@
       <End Role="Patient" EntitySet="Patient" />
       <End Role="Anamnese" EntitySet="Anamnese" />
     </AssociationSet>
-    <AssociationSet Name="FK_AnamneseSymptoms_Anamnese" Association="cerebelloModel.Store.FK_AnamneseSymptoms_Anamnese">
-      <End Role="Anamnese" EntitySet="Anamnese" />
-      <End Role="AnamneseSymptoms" EntitySet="AnamneseSymptoms" />
-    </AssociationSet>
-    <AssociationSet Name="FK_AnamneseSymptoms_SYS_Symptom" Association="cerebelloModel.Store.FK_AnamneseSymptoms_SYS_Symptom">
-      <End Role="Symptom" EntitySet="Symptom" />
-      <End Role="AnamneseSymptoms" EntitySet="AnamneseSymptoms" />
-    </AssociationSet>
     <AssociationSet Name="FK_Appointment_Doctor" Association="cerebelloModel.Store.FK_Appointment_Doctor">
       <End Role="Doctor" EntitySet="Doctor" />
       <End Role="Appointment" EntitySet="Appointment" />
@@ -74,6 +65,10 @@
     <AssociationSet Name="FK_CFG_Schedule_Doctor" Association="cerebelloModel.Store.FK_CFG_Schedule_Doctor">
       <End Role="Doctor" EntitySet="Doctor" />
       <End Role="CFG_Schedule" EntitySet="CFG_Schedule" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Diagnosis_Anamnese" Association="cerebelloModel.Store.FK_Diagnosis_Anamnese">
+      <End Role="Anamnese" EntitySet="Anamnese" />
+      <End Role="Diagnosis" EntitySet="Diagnosis" />
     </AssociationSet>
     <AssociationSet Name="FK_Doctor_MedicalEntity" Association="cerebelloModel.Store.FK_Doctor_MedicalEntity">
       <End Role="MedicalEntity" EntitySet="MedicalEntity" />
@@ -179,10 +174,6 @@
       <End Role="UserPractice" EntitySet="UserPractice" />
       <End Role="Secretary" EntitySet="Secretary" />
     </AssociationSet>
-    <AssociationSet Name="FK_Symptom_Doctor" Association="cerebelloModel.Store.FK_Symptom_Doctor">
-      <End Role="Doctor" EntitySet="Doctor" />
-      <End Role="Symptom" EntitySet="Symptom" />
-    </AssociationSet>
     <AssociationSet Name="FK_SYS_Medicine_SYS_Laboratory" Association="cerebelloModel.Store.FK_SYS_Medicine_SYS_Laboratory">
       <End Role="SYS_Laboratory" EntitySet="SYS_Laboratory" />
       <End Role="SYS_Medicine" EntitySet="SYS_Medicine" />
@@ -245,14 +236,6 @@
     <Property Name="PatientId" Type="int" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
     <Property Name="Text" Type="text" />
-  </EntityType>
-  <EntityType Name="AnamneseSymptoms">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-    <Property Name="AnamneseId" Type="int" Nullable="false" />
-    <Property Name="SymptomId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Appointment">
     <Key>
@@ -326,6 +309,16 @@
     </Key>
     <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Diagnosis">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="AnamneseId" Type="int" Nullable="false" />
+    <Property Name="Observations" Type="varchar" MaxLength="200" />
+    <Property Name="Cid10Code" Type="varchar" Nullable="false" MaxLength="10" />
+    <Property Name="Cid10Name" Type="nchar" MaxLength="10" />
   </EntityType>
   <EntityType Name="Doctor">
     <Key>
@@ -518,15 +511,6 @@
     </Key>
     <Property Name="Id" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="Symptom">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="varchar" MaxLength="200" />
-    <Property Name="Description" Type="text" />
-    <Property Name="DoctorId" Type="int" Nullable="false" />
-  </EntityType>
   <EntityType Name="SYS_ActiveIngredient">
     <Key>
       <PropertyRef Name="Id" />
@@ -632,30 +616,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_AnamneseSymptoms_Anamnese">
-    <End Role="Anamnese" Type="cerebelloModel.Store.Anamnese" Multiplicity="1" />
-    <End Role="AnamneseSymptoms" Type="cerebelloModel.Store.AnamneseSymptoms" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Anamnese">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="AnamneseSymptoms">
-        <PropertyRef Name="AnamneseId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_AnamneseSymptoms_SYS_Symptom">
-    <End Role="Symptom" Type="cerebelloModel.Store.Symptom" Multiplicity="1" />
-    <End Role="AnamneseSymptoms" Type="cerebelloModel.Store.AnamneseSymptoms" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Symptom">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="AnamneseSymptoms">
-        <PropertyRef Name="SymptomId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Appointment_Doctor">
     <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
     <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
@@ -701,6 +661,18 @@
       </Principal>
       <Dependent Role="CFG_Schedule">
         <PropertyRef Name="DoctorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Diagnosis_Anamnese">
+    <End Role="Anamnese" Type="cerebelloModel.Store.Anamnese" Multiplicity="1" />
+    <End Role="Diagnosis" Type="cerebelloModel.Store.Diagnosis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Anamnese">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Diagnosis">
+        <PropertyRef Name="AnamneseId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1019,18 +991,6 @@
       </Principal>
       <Dependent Role="Secretary">
         <PropertyRef Name="Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Symptom_Doctor">
-    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
-    <End Role="Symptom" Type="cerebelloModel.Store.Symptom" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Doctor">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Symptom">
-        <PropertyRef Name="DoctorId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

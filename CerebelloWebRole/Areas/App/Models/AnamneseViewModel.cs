@@ -10,7 +10,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public AnamneseViewModel()
         {
-            this.AnamneseSymptoms = new List<AnamneseSymptomViewModel>();
+            this.Diagnoses = new List<DiagnosisViewModel>();
         }
 
         public int? Id { get; set; }
@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name="Texto")]
         public string Text { get; set; }
 
-        [Display(Name="Sintomas")]
-        public List<AnamneseSymptomViewModel> AnamneseSymptoms { get; set; }
+        [Display(Name="Diagnósticos")]
+        public List<DiagnosisViewModel> Diagnoses { get; set; }
     }
 }

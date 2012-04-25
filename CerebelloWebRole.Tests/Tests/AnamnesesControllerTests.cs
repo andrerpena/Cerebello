@@ -52,7 +52,7 @@ namespace CerebelloWebRole.Tests
         #region Edit
 
         [TestMethod]
-        public void Edit_1_CreateIfItDoesntExist()
+        public void Edit_1_CreateDiagnosisIfItDoesNotExist()
         {
             // obtains a valid patient
             Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
@@ -63,9 +63,9 @@ namespace CerebelloWebRole.Tests
             {
                 PatientId = patientId,
                 Text = "This is my anamnese",
-                AnamneseSymptoms = new List<AnamneseSymptomViewModel>() {
-                        new AnamneseSymptomViewModel() { Text = "NonExistingSymptom1" },
-                        new AnamneseSymptomViewModel() { Text = "NonExistingSymptom2" }
+                Diagnoses = new List<DiagnosisViewModel>() {
+                        new DiagnosisViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new DiagnosisViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 
@@ -75,50 +75,18 @@ namespace CerebelloWebRole.Tests
             Assert.IsTrue(controller.ModelState.IsValid);
 
             var anamneses = this.db.Anamnese.ToList();
-            var symptoms = this.db.Symptoms.ToList();
+            var diagnoses = this.db.Diagnoses.ToList();
 
             Assert.AreEqual(1, anamneses.Count);
-            Assert.AreEqual(2, symptoms.Count);
+            Assert.AreEqual(2, diagnoses.Count);
 
-            Assert.AreEqual(formModel.AnamneseSymptoms[0].Text, anamneses[0].AnamneseSymptoms.ElementAt(0).Symptom.Name);
-            Assert.AreEqual(formModel.AnamneseSymptoms[1].Text, anamneses[0].AnamneseSymptoms.ElementAt(1).Symptom.Name);
+            Assert.AreEqual(formModel.Diagnoses[0].Text, anamneses[0].Diagnoses.ElementAt(0).Cid10Name);
+            Assert.AreEqual(formModel.Diagnoses[0].Cid10Code, anamneses[0].Diagnoses.ElementAt(0).Cid10Code);
+
+            Assert.AreEqual(formModel.Diagnoses[1].Text, anamneses[0].Diagnoses.ElementAt(1).Cid10Name);
+            Assert.AreEqual(formModel.Diagnoses[1].Cid10Code, anamneses[0].Diagnoses.ElementAt(1).Cid10Code);
         }
-
-        [TestMethod]
-        public void Edit_2_SymptomsThatExistMustBeReferenced()
-        {
-            // obtains a valid patient
-            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
-            this.db.SaveChanges();
-            var patientId = this.db.Patients.First().Id;
-
-            AnamneseViewModel formModel = new AnamneseViewModel()
-            {
-                PatientId = patientId,
-                Text = "This is my anamnese",
-                AnamneseSymptoms = new List<AnamneseSymptomViewModel>() {
-                        new AnamneseSymptomViewModel() { Text = "Symptom1" }
-                   }
-            };
-
-            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
-            controller.Create(formModel);
-
-            formModel = new AnamneseViewModel()
-            {
-                PatientId = patientId,
-                Text = "This is my OTHER anamnese",
-                AnamneseSymptoms = new List<AnamneseSymptomViewModel>() {
-                        new AnamneseSymptomViewModel() { Text = "Symptom1" }
-                   }
-            };
-
-            controller.Edit(formModel);
-
-            Assert.AreEqual(1, this.db.Symptoms.Count());
-            Assert.AreEqual("Symptom1", this.db.Symptoms.First().Name);
-        }
-
+        
         #endregion
 
         #region Delete
@@ -135,9 +103,9 @@ namespace CerebelloWebRole.Tests
             {
                 PatientId = patientId,
                 Text = "This is my anamnese",
-                AnamneseSymptoms = new List<AnamneseSymptomViewModel>() {
-                        new AnamneseSymptomViewModel() { Text = "NonExistingSymptom1" },
-                        new AnamneseSymptomViewModel() { Text = "NonExistingSymptom2" }
+                Diagnoses = new List<DiagnosisViewModel>() {
+                        new DiagnosisViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new DiagnosisViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 

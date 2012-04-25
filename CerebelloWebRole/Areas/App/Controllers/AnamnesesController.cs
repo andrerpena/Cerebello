@@ -8,6 +8,10 @@ using Cerebello.Model;
 using CommonLib.Mvc;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Json;
+using System.Xml;
+using System.Xml.Linq;
+using System.Reflection;
+using CerebelloWebRole.Code.Controls;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -20,11 +24,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = anamnese.Id,
                 PatientId = anamnese.PatientId,
                 Text = anamnese.Text,
-                AnamneseSymptoms = (from s in anamnese.AnamneseSymptoms
-                                    select new AnamneseSymptomViewModel
-                                    {
-                                        Text = s.Symptom.Name
-                                    }).ToList()
+                Diagnoses = (from s in anamnese.Diagnoses
+                             select new DiagnosisViewModel
+                             {
+                                 Text = s.Cid10Name,
+                                 Cid10Code = s.Cid10Code
+
+                             }).ToList()
             };
         }
 
@@ -65,13 +71,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         /// <summary>
         /// Requirements:
-        /// 
-        ///     1 - For each symptom, if it doesn't exist, it must be created
-        ///     
-        ///     2 - For each symptom, if it exists, it should be referenced, not created
-        ///     
-        ///     2 - For each symptom, if it existed but doesn't exist anymore, it must be deleted
-        ///     
+        ///    - The list of diagnoses passed in must be sinchronized with the server
         /// </summary>
         /// <param name="formModel"></param>
         /// <returns></returns>
@@ -96,43 +96,30 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 anamnese.Text = formModel.Text;
 
-                #region Update Symptoms
+                #region Update Diagnoses
                 // step 1: add new
-                foreach (var symptomViewModel in formModel.AnamneseSymptoms)
+                foreach (var diagnosis in formModel.Diagnoses)
                 {
-                    if (!anamnese.AnamneseSymptoms.Any(ans => ans.Symptom.Name == symptomViewModel.Text))
-                    {
-                        // the symptom has beed added, now we have to verify whether this symptom exists already
-                        var possiblyExistingSymptom = this.db.Symptoms.FirstOrDefault(s => s.Name == symptomViewModel.Text);
-                        if (possiblyExistingSymptom != null)
-                            anamnese.AnamneseSymptoms.Add(new AnamneseSymptom() { 
-                                Symptom = possiblyExistingSymptom
-                            });
-                                
-                        else
-                            anamnese.AnamneseSymptoms.Add(new AnamneseSymptom()
-                            {
-                                Symptom = new Symptom()
-                                {
-                                    Doctor = this.Doctor,
-                                    Name = symptomViewModel.Text
-                                }
-                            });
-                    }
+                    if (!anamnese.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Text))
+                        anamnese.Diagnoses.Add(new Diagnosis()
+                        {
+                            Cid10Code = diagnosis.Cid10Code,
+                            Cid10Name = diagnosis.Text
+                        });
                 }
 
-                Queue<AnamneseSymptom> harakiriQueue = new Queue<AnamneseSymptom>();
+                Queue<Diagnosis> harakiriQueue = new Queue<Diagnosis>();
 
                 // step 2: remove deleted
-                foreach (var anamneseSymptomModel in anamnese.AnamneseSymptoms)
+                foreach (var diagnosis in anamnese.Diagnoses)
                 {
-                    if (!formModel.AnamneseSymptoms.Any(ans => ans.Text == anamneseSymptomModel.Symptom.Name))
-                        harakiriQueue.Enqueue(anamneseSymptomModel);
+                    if (!formModel.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Cid10Code))
+                        harakiriQueue.Enqueue(diagnosis);
                 }
 
                 while (harakiriQueue.Count > 0)
-                    anamnese.AnamneseSymptoms.Remove(harakiriQueue.Dequeue());
-                #endregion 
+                    this.db.Diagnoses.DeleteObject(harakiriQueue.Dequeue());
+                #endregion
 
                 db.SaveChanges();
 
@@ -141,24 +128,32 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("edit", formModel);
         }
 
-        public ActionResult AnamneseSymptomEditor(AnamneseSymptomViewModel formModel)
+        public ActionResult AnamneseSymptomEditor(DiagnosisViewModel formModel)
         {
             return View(formModel);
         }
 
         [HttpGet]
-        public JsonResult SearchSymptom(string term)
+        public JsonResult LookupDiagnoses(string term, int pageSize, int? pageIndex)
         {
-            var medicines = (from s in this.db.Symptoms
-                             where s.Name.Contains(term)
-                             orderby s.Name
-                             select new
-                             {
-                                 id = s.Id,
-                                 value = s.Name
-                             }).Take(5).ToList();
+            // read CID10.xml as an embedded resource
+            var xmlStreamReader = Assembly.GetExecutingAssembly().GetManifestResourceStream("CerebelloWebRole.Code.CID10.xml");
 
-            return this.Json(medicines, JsonRequestBehavior.AllowGet);
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.DtdProcessing = DtdProcessing.Parse;
+            XmlReader reader = XmlReader.Create(xmlStreamReader, settings);
+            XDocument doc = XDocument.Load(reader);
+
+            return this.Json(LookupHelper.GetData<LookupRow>(term, pageSize, pageIndex,
+                t =>
+                (from e in doc.Descendants()
+                 where e.Name == "nome" && e.Value.ToLower().Contains(t)
+                 select new LookupRow { Value = e.Value, Id = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value }).ToList()), JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult Json(LookupJsonResult lookupJsonResult, JsonRequestBehavior jsonRequestBehavior)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -180,8 +175,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var anamnese = db.Anamnese.Where(m => m.Id == id).First();
 
                 // get rid of associations
-                while (anamnese.AnamneseSymptoms.Count > 0)
-                    this.db.AnamneseSymptoms.DeleteObject(anamnese.AnamneseSymptoms.ElementAt(0));
+                while (anamnese.Diagnoses.Count > 0)
+                    this.db.Diagnoses.DeleteObject(anamnese.Diagnoses.ElementAt(0));
 
                 this.db.Anamnese.DeleteObject(anamnese);
                 this.db.SaveChanges();
