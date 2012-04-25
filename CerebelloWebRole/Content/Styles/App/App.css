@@ -448,7 +448,7 @@ fieldset legend
     padding: 0 10px;
 }
 
-div.header
+#app-header
 {
     background-color: #F5F5F5;
     border-bottom: 1px solid #DADEE5;
@@ -459,20 +459,20 @@ div.header
     z-index: 3;
 }
 
-div.header a
+#app-header a
 {
     color: White;
     text-decoration: none;
 }
 
-div.header .title
+#app-header .title
 {
     margin: 0 auto;
     max-width: 1200px;
     padding: 10px 0;
 }
 
-div.header .title span.action a
+#app-header .title span.action a
 {
     background: url("/content/images/app/bkd_page_action_button.png") no-repeat scroll right top transparent;
     color: #FFFFFF;
@@ -489,7 +489,7 @@ div.header .title span.action a
     white-space: nowrap;
 }
 
-div.header .title span.action a > span
+#app-header .title span.action a > span
 {
     background: url("/content/images/app/bkd_page_action_button.png") no-repeat scroll left bottom transparent;
     display: block;
@@ -499,19 +499,19 @@ div.header .title span.action a > span
     padding-left: 25px;
 }
 
-div.header .title .menu-item
+#app-header .title .menu-item
 {
     display: inline-block;
     vertical-align: top;
 }
 
-div.header .title .global-search-wrapper
+#app-header .title .global-search-wrapper
 {
     overflow: hidden;
     vertical-align: top;
 }
 
-div.header .title .global-search-wrapper input[type=text]
+#app-header .title .global-search-wrapper input[type=text]
 {
     border: 1px solid #CCCCCC;
     border-radius: 4px 4px 4px 4px;
@@ -521,18 +521,18 @@ div.header .title .global-search-wrapper input[type=text]
     width: 500px;
 }
 
-div.header .title .actions-wrapper
+#app-header .title .actions-wrapper
 {
     margin-left: 212px;
 }
 
-div.header .title .actions-wrapper input[type=text]
+#app-header .title .actions-wrapper input[type=text]
 {
     width: 100%;
     max-width: 300px;
 }
 
-div.header .title .logo-wrapper
+#app-header .title .logo-wrapper
 {
     float: left;
     width: 200px;
@@ -1071,7 +1071,6 @@ a.gotoPractice
 {
     background-color: #F5F5F5;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 4px 4px 4px 4px;
     color: black;
     margin-bottom: 10px;
     padding: 10px 10px 0;

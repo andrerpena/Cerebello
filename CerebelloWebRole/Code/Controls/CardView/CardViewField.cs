@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Code.Controls
             this.Format = format;
             this.Expression = exp;
             this.Header = header;
-            this.ForeverAlone = foreverAlone;
+            this.WholeRow = foreverAlone;
         }
     }
 }

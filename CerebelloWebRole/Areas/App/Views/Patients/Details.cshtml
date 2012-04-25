@@ -1,7 +1,14 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+@using CerebelloWebRole.Code.Extensions
 @{
     ViewBag.Title = "Create";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+    
+    // creating details CardView
+    var cardView = Html.CreateCardView();
+    cardView.AddField(m => m.FullName);
+    cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
+    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
 }
 @section Title {
     Paciente: <b>@Model.FullName</b>
@@ -28,7 +35,9 @@
         });
     </script>
 }
-@Html.Partial("DetailsCardSimple", this.Model)
+
+@cardView.GetHtml()
+
 <p class="details-title">Histórico do paciente</p>
 <div class="medical-appointments-panel">
     @foreach (var session in this.Model.Sessions)

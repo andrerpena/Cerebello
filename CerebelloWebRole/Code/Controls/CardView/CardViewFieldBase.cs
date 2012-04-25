@@ -14,6 +14,6 @@ namespace CerebelloWebRole.Code.Controls
         /// ಠ.ಠ
         /// Determina se este campo aparece sozinho na linha
         /// </summary>
-        public bool ForeverAlone { get; set; }
+        public bool WholeRow { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace CerebelloWebRole.Code.Controls
 {
-    public class CardView<TModel>
+    public class CardViewResponsive<TModel>
     {
         private TModel Model { get; set; }
 
@@ -20,7 +20,7 @@ namespace CerebelloWebRole.Code.Controls
 
         public int FieldsPerRow { get; set; }
 
-        public CardView(HtmlHelper<TModel> htmlHelper, int fieldsPerRow = 2)
+        public CardViewResponsive(HtmlHelper<TModel> htmlHelper, int fieldsPerRow = 2)
         {
             this.Fields = new List<CardViewFieldBase>();
             this.HtmlHelper = htmlHelper;
@@ -55,7 +55,7 @@ namespace CerebelloWebRole.Code.Controls
                 {
                     var field = this.Fields[i];
 
-                    if (field.ForeverAlone)
+                    if (field.WholeRow)
                     {
                         // neste caso o campo ocupa a linha inteira e, se já existe um TR
                         // aberto, eu preciso fechar
@@ -80,20 +80,16 @@ namespace CerebelloWebRole.Code.Controls
             }
 
             var wrapperDiv = new TagBuilder("div");
-            wrapperDiv.AddCssClass("cardview-wrapper");
-
-            var table = new TagBuilder("table");
-            var tableContentBuilder = new StringBuilder();
-
-            table.AddCssClass("cardview");
-            table.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            wrapperDiv.AddCssClass("cardview");
+            var wrapperDivContentBuilder = new StringBuilder();
 
             for (int i = 0; i < rows.Count; i++)
             {
                 var row = rows[i];
 
-                var tableTR = new TagBuilder("tr");
-                var tableTRContentBuilder = new StringBuilder();
+                var divRow = new TagBuilder("div");
+                divRow.AddCssClass("row");
+                var divRowContentBuilder = new StringBuilder();
 
                 for (var j = 0; j < row.Count; j++)
                 {
@@ -104,20 +100,18 @@ namespace CerebelloWebRole.Code.Controls
                     var valueType = funcType.GetGenericArguments()[1];
                     var propertyInfo = (PropertyInfo)((MemberExpression)expressionPropertyValue.GetType().GetProperty("Body").GetValue(expressionPropertyValue, null)).Member;
 
-                    var tableHeaderTD = new TagBuilder("td");
+                    var divColumn = new TagBuilder("div");
+                    divColumn.AddCssClass("span" + (field.WholeRow ? 1 : this.FieldsPerRow).ToString());
+
+                    var tableHeaderTD = new TagBuilder("div");
                     tableHeaderTD.AddCssClass("header");
                     if (i == 0)
                         tableHeaderTD.AddCssClass("first");
 
-                    var tableValueTD = new TagBuilder("td");
+                    var tableValueTD = new TagBuilder("div");
                     tableValueTD.AddCssClass("value");
                     if (i == 0)
                         tableValueTD.AddCssClass("first");
-
-                    if (j == row.Count - 1 && row.Count < this.FieldsPerRow)
-                    {
-                        tableValueTD.Attributes["colspan"] = (1 + (this.FieldsPerRow - row.Count) * 2).ToString();
-                    }
 
                     // LabelFor
                     // public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression);
@@ -141,20 +135,20 @@ namespace CerebelloWebRole.Code.Controls
                     tableHeaderTD.InnerHtml = field.Header != null ? new MvcHtmlString(field.Header).ToString() : labelForMethodGeneric.Invoke(null, new object[] { this.HtmlHelper, expressionPropertyValue }).ToString();
                     tableValueTD.InnerHtml = field.Format != null ? new MvcHtmlString(field.Format(this.Model).ToString()).ToString() : displayForMethodGeneric.Invoke(null, new object[] { this.HtmlHelper, expressionPropertyValue }).ToString();
 
-                    tableTRContentBuilder.Append(tableHeaderTD.ToString() + tableValueTD.ToString());
+                    divColumn.InnerHtml = tableHeaderTD.ToString() + tableValueTD.ToString();
+
+                    divRowContentBuilder.Append(divColumn.ToString());
                 }
 
 
-                if (tableTRContentBuilder.Length > 0)
+                if (divRowContentBuilder.Length > 0)
                 {
-                    tableTR.InnerHtml = tableTRContentBuilder.ToString();
-                    tableContentBuilder.Append(tableTR.ToString());
+                    divRow.InnerHtml = divRowContentBuilder.ToString();
+                    wrapperDivContentBuilder.Append(divRow.ToString());
                 }
             }
 
-            table.InnerHtml = tableContentBuilder.ToString();
-            wrapperDiv.InnerHtml = table.ToString();
-
+            wrapperDiv.InnerHtml = wrapperDivContentBuilder.ToString();
             return new MvcHtmlString(wrapperDiv.ToString());
         }
     }

@@ -70,7 +70,7 @@ namespace CerebelloWebRole.Code.Controls
                 {
                     var field = this.Fields[i];
 
-                    if (field.ForeverAlone)
+                    if (field.WholeRow)
                     {
                         // neste caso o campo ocupa a linha inteira e, se já existe um TR
                         // aberto, eu preciso fechar

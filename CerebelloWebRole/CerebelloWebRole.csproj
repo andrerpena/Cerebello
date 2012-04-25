@@ -162,10 +162,9 @@
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
     <Compile Include="Code\Controllers\PracticeManagingContextController.cs" />
-    <Compile Include="Code\Controls\CardView\CardView.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
-    <Compile Include="Code\Controls\CardView\CardViewResponsive.cs" />
+    <Compile Include="Code\Controls\CardView\CardView.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanel.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelField.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelFieldBase.cs" />
@@ -275,6 +274,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\Controls\media.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
     <Content Include="Content\Styles\App\jquery-ui-overrides.css" />
     <Content Include="Content\Styles\App\jquery.arp.lookup.css" />
@@ -282,6 +282,7 @@
     <Content Include="Content\Styles\App\Media.css" />
     <Content Include="Content\Styles\App\Patients_Edit.css" />
     <Content Include="Content\Styles\App\Schedule.css" />
+    <Content Include="Content\Styles\App\Controls\cardview.css" />
     <Content Include="Content\Styles\Docs\Docs.css" />
     <Content Include="Content\Styles\Docs\Media.css" />
     <Content Include="Content\Styles\Site\Media.css" />

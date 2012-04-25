@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Code.Controls
             this.FormatDescription = formatDescription;
             this.Expression = exp;
             this.Header = header;
-            this.ForeverAlone = foreverAlone;
+            this.WholeRow = foreverAlone;
             this.Size = size;
         }
     }

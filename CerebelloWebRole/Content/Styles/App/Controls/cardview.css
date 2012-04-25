@@ -1,0 +1,87 @@
+.cardview-wrapper
+{
+    margin: 0 0 20px;
+    overflow-x: auto;
+}
+
+.cardview
+{
+    border-collapse: separate;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.cardview .row
+{
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.cardview .row:first-child
+{
+    border-top: none;
+}
+
+.cardview tr
+{
+    margin: 0;
+    padding: 0;
+}
+
+.cardview span
+{
+    display: table-cell;
+    padding-left: 4px;
+    vertical-align: text-top;
+}
+
+.cardview .header
+{
+    color: #848E98;
+    text-align: right;
+    white-space: nowrap;
+    width: 150px;
+    float: left;
+    margin: 6px 0;
+}
+
+.cardview .header.first
+{
+    border: medium none;
+}
+
+.cardview .value.first
+{
+    border: medium none;
+}
+
+.cardview .value
+{
+    text-align: left;
+    margin: 6px 0 6px 160px;
+}
+
+.cardview .value a
+{
+    line-height: 1.2em;
+    position: relative;
+    top: -2px;
+}
+
+.cardview .row
+{
+    overflow: hidden;
+}
+
+.cardview .span1
+{
+    width: 100%;
+    float: left;
+    overflow: hidden;
+}
+
+.cardview .span2
+{
+    width: 50%;
+    float: left;
+    overflow: hidden;
+}

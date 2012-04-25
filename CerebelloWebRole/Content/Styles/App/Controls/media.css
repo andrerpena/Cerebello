@@ -1,0 +1,30 @@
+@media screen and (max-width: 1000px)
+{
+    .cardview .row
+    {
+        border-bottom: none;
+    }
+    
+    .cardview .span2, .cardview .span1
+    {
+        width: auto;
+        float: none;
+        overflow: hidden;
+        border-bottom: 1px solid #F5F5F5;
+    }
+}
+
+@media screen and (max-width: 500px)
+{
+    .cardview .header
+    {
+        text-align: left;
+        float: none;
+    }
+    
+    .cardview .value
+    {
+        margin: 6px 0;
+        min-height: 1em;
+    }
+}
