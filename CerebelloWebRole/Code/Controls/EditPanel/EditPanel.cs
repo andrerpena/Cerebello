@@ -34,7 +34,7 @@ namespace CerebelloWebRole.Code.Controls
 
         public bool IsChildPanel { get; set; }
 
-        public EditPanel(HtmlHelper<TModel> htmlHelper, String title, int fieldsPerRow = 2, bool isChildPanel = false)
+        public EditPanel(HtmlHelper<TModel> htmlHelper, String title, int fieldsPerRow = 1, bool isChildPanel = false)
         {
             this.Fields = new List<EditPanelFieldBase>();
             this.HtmlHelper = htmlHelper;

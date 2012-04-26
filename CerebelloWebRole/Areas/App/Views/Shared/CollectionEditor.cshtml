@@ -1,0 +1,31 @@
+﻿@model CerebelloWebRole.Areas.App.Models.CollectionEditorViewModel
+<div class="addresses">
+    <ul class="edit-list @Model.ListClass">
+        @if (Model != null)
+        {
+            foreach (var element in this.Model.Items)
+            {
+                @Html.Partial(this.Model.ListParialViewName, element)
+            }
+        }
+        else
+        {
+            @Html.Partial(this.Model.ListParialViewName, new ViewDataDictionary())
+        }                    
+    </ul>
+    <a id="@Model.AddAnotherLinkId" class="block-little-link add-another-link" href="#">Adicionar endereço</a>
+    <script type="text/javascript">
+
+        $("#@Model.AddAnotherLinkId").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action(this.Model.ListParialViewName)",
+                success: function(result) {
+                    $(".@Model.ListClass").append(result);
+                }
+            });
+        });
+                
+</script>
+</div>
+           

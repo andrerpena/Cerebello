@@ -13,7 +13,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -101,6 +101,7 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
+    <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Code\Controllers\CerebelloController.cs" />
@@ -274,6 +275,8 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\Controls\editpanel.css" />
+    <Content Include="Content\Styles\App\Controls\grid.css" />
     <Content Include="Content\Styles\App\Controls\media.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
     <Content Include="Content\Styles\App\jquery-ui-overrides.css" />
@@ -469,6 +472,7 @@
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsDetails.cshtml" />
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsEditor.cshtml" />
     <Content Include="Areas\App\Views\Symptoms\Index.cshtml" />
+    <Content Include="Areas\App\Views\Shared\CollectionEditor.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\Login.cshtml" />

@@ -2,6 +2,15 @@
 @using CerebelloWebRole.Code.Extensions
 @{
     ViewBag.Title = "Create";
+
+    var editPanel = this.Html.CreateEditPanel();
+    editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownFor(model => model.Gender)</text>);
+    editPanel.AddField(m => m.DateOfBirth,  CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownFor(model => model.MaritalStatus)</text>);
+    editPanel.AddField(m => m.BirthPlace);
+    editPanel.AddField(m => m.CPF);
+    editPanel.AddField(m => m.Profissao);
 }
 @section Scripts {
     <script type="text/javascript">
@@ -35,56 +44,15 @@
 {
     @Html.ValidationSummary(false)
 
-    <table class="form-table">
-        <tr>
-            <th>@Html.LabelFor(model => model.FullName)
-            </th>
-            <td class="large">@Html.TextBoxFor(model => model.FullName)
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.Gender)
-            </th>
-            <td>@Html.EnumDropdownFor(model => model.Gender)
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.DateOfBirth)
-            </th>
-            <td class="small">@Html.TextBoxFor(model => model.DateOfBirth, new { @class = "date-text-editor" })
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.MaritalStatus)
-            </th>
-            <td>@Html.EnumDropdownFor(model => model.MaritalStatus)
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.BirthPlace)
-            </th>
-            <td>@Html.EditorFor(model => model.BirthPlace)
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.CPF)
-            </th>
-            <td>@Html.EnumDropdownFor(model => model.CPFOwner)
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.Profissao)
-            </th>
-            <td>@Html.EditorFor(model => model.Profissao)
-            </td>
-        </tr>
-    </table>
-        
+    @editPanel.GetHtml();
+
     <p class="form-title">
         @Html.LabelFor(model => model.Addresses)
-    </p>    
+    </p>
     
-    <div class="addresses">
+    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor"))
+    
+    @*<div class="addresses">
         <ul class="edit-list addresses-list">
             @if (Model != null && Model.Addresses != null)
             {
@@ -112,7 +80,7 @@
             });
                 
         </script>
-    </div>
+    </div>*@
     
     <div class="submit-bar">
         <input type="submit" value="salvar paciente" />

@@ -1,0 +1,138 @@
+﻿.edit-panel-wrapper
+{
+    margin: 0 0 15px;
+}
+
+.edit-panel-wrapper .title
+ {
+    color: gray;
+    margin: 6px 0;
+ }
+
+.edit-panel
+{
+    
+}
+
+table.edit-panel
+{
+    border-collapse: separate;
+    width: 100%;
+}
+
+table.edit-panel > tbody > tr > th
+{
+    background: none repeat scroll 0 0 transparent;
+    color: #333333;
+    padding: 12px 10px 0 16px;
+    text-align: right;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.search-filters table.edit-panel > tbody > tr > th
+{
+    padding: 8px 10px 0 16px !important;
+}
+
+.edit-panel > tbody > tr > th.first
+{
+    width: 130px;
+}
+
+.edit-panel > tbody > tr > td 
+{
+    margin: 0;
+    padding: 5px 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+.edit-panel > tbody > tr
+{
+    margin: 0;
+    padding: 0;
+}
+
+.edit-panel select, .edit-panel textarea, .edit-panel input[type=text], .edit-panel .lookup, .edit-panel .lookup-tree
+{
+    max-width: 200px;
+    width: 100%;
+}
+
+.edit-panel .large select, .edit-panel .large textarea, .edit-panel .large input[type=text], .edit-panel .large .lookup, .edit-panel .large .lookup-tree
+{
+    width: 100%;
+    max-width: 320px;
+}
+
+.edit-panel .x-large select, .edit-panel .x-large textarea, .edit-panel .x-large input[type=text], .edit-panel .x-large .lookup, .edit-panel .x-large .lookup-tree
+{
+    width: 100%;
+    max-width: 380px;
+}
+
+
+.edit-panel .small select, .edit-panel .small textarea, .edit-panel .small input[type=text], .edit-panel .small .lookup, .edit-panel .small .lookup-tree
+{
+    width: 100%;
+    max-width: 90px;
+}
+
+.edit-panel .required 
+{
+    margin-left: 3px;
+    color: Red;
+}
+
+.edit-panel td .description
+{
+    color: #666666;
+    font-size: 0.9em;
+    padding-top: 4px;
+}
+
+/* children */
+
+.edit-panel-wrapper.child-panel-wrapper
+{
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.edit-panel.child-panel
+{
+    display: inline-block;
+    padding: 0;
+}
+
+.edit-panel.child-panel textarea, .edit-panel.child-panel input[type=text], .edit-panel.child-panel .lookup
+{
+    font-size: 14px;
+    height: 26px;
+    width: 200px;
+}
+
+.edit-panel.child-panel .large select, .edit-panel.child-panel .large textarea, .edit-panel.child-panel .large input[type=text], .edit-panel.child-panel .large .lookup
+{
+    width: 290px;
+}
+
+.edit-panel.child-panel .small select, .edit-panel.child-panel .small textarea, .edit-panel.child-panel .small input[type=text], .edit-panel.child-panel .small .lookup
+{
+    width: 90px;
+}
+
+/* search */
+
+.search-filters .edit-panel 
+{
+    padding: 0;
+}
+
+.search-filters .edit-panel > tbody > tr > td
+{
+    padding: 0 5px 10px;
+}
+

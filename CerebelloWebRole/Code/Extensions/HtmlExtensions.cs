@@ -11,6 +11,8 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using System.Dynamic;
 using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Areas.App.Models;
+using System.Collections;
 
 namespace CerebelloWebRole.Code.Extensions
 {
@@ -31,7 +33,7 @@ namespace CerebelloWebRole.Code.Extensions
             return new CardViewResponsive<TModel>(html);
         }
 
-        public static EditPanel<TModel> CreateEditPanel<TModel>(this HtmlHelper<TModel> html, object htmlAttributes = null, bool isChildPanel = false, int fieldsPerRow = 2)
+        public static EditPanel<TModel> CreateEditPanel<TModel>(this HtmlHelper<TModel> html, object htmlAttributes = null, bool isChildPanel = false, int fieldsPerRow = 1)
         {
             return new EditPanel<TModel>(html, null, isChildPanel: isChildPanel, fieldsPerRow: fieldsPerRow);
         }
@@ -61,20 +63,20 @@ namespace CerebelloWebRole.Code.Extensions
             if (expression.Body.NodeType != ExpressionType.MemberAccess)
                 throw new Exception("Expression must be an object member");
 
-            var vPropertyInfo = (PropertyInfo)((MemberExpression)expression.Body).Member;
-            var vEnumType = EnumHelper.GetEnumDataTypeFromExpression(expression);
+            var propertyInfo = (PropertyInfo)((MemberExpression)expression.Body).Member;
+            var enumType = EnumHelper.GetEnumDataTypeFromExpression(expression);
 
-            var vValueDisplayDictionary = EnumHelper.GetValueDisplayDictionary(vEnumType);
+            var valueTypeDictionary = EnumHelper.GetValueDisplayDictionary(enumType);
 
-            var vModel = html.ViewContext.ViewData.Model;
+            var model = html.ViewContext.ViewData.Model;
 
-            int? vValue = (int?)vPropertyInfo.GetValue(vModel, null);
-            if (vValue.HasValue)
+            int? value = (int?)propertyInfo.GetValue(model, null);
+            if (value.HasValue)
             {
-                if (vValueDisplayDictionary.ContainsKey(vValue.Value))
-                    return new MvcHtmlString(vValueDisplayDictionary[vValue.Value]);
+                if (valueTypeDictionary.ContainsKey(value.Value))
+                    return new MvcHtmlString(valueTypeDictionary[value.Value]);
 
-                throw new Exception(String.Format("Integer value does not have a correspondent Enum value of the given enum type. Integer value: {0}. Enum type: {1}", vValue.Value, vEnumType.FullName));
+                throw new Exception(String.Format("Integer value does not have a correspondent Enum value of the given enum type. Integer value: {0}. Enum type: {1}", value.Value, enumType.FullName));
             }
 
             return new MvcHtmlString(defaultLabel);
@@ -230,6 +232,26 @@ namespace CerebelloWebRole.Code.Extensions
                 tagBuilder.Attributes["class"] = "lookup-validation-error";
 
             return new MvcHtmlString(tagBuilder.ToString() + "\n" + scriptTag.ToString());
+        }
+
+        /// <summary>
+        /// Creates a collection editor for an N-Property
+        /// </summary>
+        public static MvcHtmlString CollectionEditorFor<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, IEnumerable<TItemModel>>> expression, string collectionItemEditor)
+        {
+            var propertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            var addAnotherLinkId = "add-another-to-" + propertyInfo.Name.ToLower();
+            var listClass = propertyInfo.Name.ToLower() + "-list";
+
+            var viewModel = new CollectionEditorViewModel()
+            {
+                ListParialViewName = collectionItemEditor,
+                AddAnotherLinkId = addAnotherLinkId,
+                ListClass = listClass,
+                Items = new System.Collections.ArrayList((ICollection) expression.Compile()((TModel) html.ViewContext.ViewData.Model))
+            };
+
+            return html.Partial("CollectionEditor", viewModel);
         }
 
         /// <summary>
