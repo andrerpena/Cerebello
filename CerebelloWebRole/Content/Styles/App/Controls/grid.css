@@ -1,0 +1,56 @@
+﻿.webgrid
+ {
+     width: 100%;
+     border: 0px;
+     border-collapse: collapse;
+ }
+  
+ .webgrid a
+ {
+     color: #000;
+ }
+  
+ .webgrid-header
+ {
+    background-color: #F5F5F5;
+    font-weight: bold;
+ }
+ 
+ .webgrid-header th
+ {
+    font-weight: bold;
+ }
+  
+ .webgrid-footer
+ {
+     padding: 6px 5px;
+     text-align: center;
+     background-color: #e8eef4;
+     border-top: 2px solid #3966A2;
+     height: 30px;
+  
+     border-bottom: 2px solid #D6E8FF;
+     border-left: 2px solid #D6E8FF;
+     border-right: 2px solid #D6E8FF;
+ }
+ 
+ .webgrid tr td, .webgrid tr th
+ {
+    border: 1px solid #D7D7D7;
+    padding: 8px;
+ }
+  
+ .webgrid-alternating-row
+ {
+    background-color: #FBFBFB;
+ }
+  
+ .webgrid-row-style
+ {
+     
+ }
+  
+ .webgrid-selected-row
+ {
+     font-weight: bold;
+ }

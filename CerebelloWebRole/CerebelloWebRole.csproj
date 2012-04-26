@@ -168,9 +168,9 @@
     <Compile Include="Code\Controls\EditPanel\EditPanel.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelField.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelFieldBase.cs" />
-    <Compile Include="Code\Controls\Grid.cs" />
-    <Compile Include="Code\Controls\GridField.cs" />
-    <Compile Include="Code\Controls\GridFieldBase.cs" />
+    <Compile Include="Code\Controls\Grid\Grid.cs" />
+    <Compile Include="Code\Controls\Grid\GridField.cs" />
+    <Compile Include="Code\Controls\Grid\GridFieldBase.cs" />
     <Compile Include="Code\Controls\Lookup\Data\LookupJsonResult.cs" />
     <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
     <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />

@@ -11,5 +11,6 @@ namespace CerebelloWebRole.Code.Controls
         public String Header { get; set; }
         public bool CanSort { get; set; }
         public bool WordWrap { get; set; }
+        public string CssClass { get; set; }
     }
 }

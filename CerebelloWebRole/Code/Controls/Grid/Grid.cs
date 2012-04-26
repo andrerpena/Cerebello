@@ -28,9 +28,9 @@ namespace CerebelloWebRole.Code.Controls
             this.Count = count;
         }
 
-        public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, string header = null, bool canSort = false, bool wordWrap = false)
+        public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, string header = null, bool canSort = false, bool wordWrap = false, string cssClass = null)
         {
-            this.Fields.Add(new GridField<TModel, TValue>(exp, format, header, canSort, wordWrap));
+            this.Fields.Add(new GridField<TModel, TValue>(exp, format, header, canSort, wordWrap, cssClass));
         }
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
@@ -50,18 +50,31 @@ namespace CerebelloWebRole.Code.Controls
                     var propertyInfo = (PropertyInfo)((MemberExpression)expressionPropertyValue.GetType().GetProperty("Body").GetValue(expressionPropertyValue, null)).Member;
 
                     string columnHeader;
-                    var displayAttributes = propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true);
-                    if (displayAttributes.Length > 0)
+                    if (field.Header != null)
+                        columnHeader = field.Header;
+                    else
                     {
-                        columnHeader = (displayAttributes[0] as DisplayAttribute).Name;
-                        if (string.IsNullOrEmpty(columnHeader))
+                        var displayAttributes = propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true);
+                        if (displayAttributes.Length > 0)
+                        {
+                            columnHeader = (displayAttributes[0] as DisplayAttribute).Name;
+                            if (string.IsNullOrEmpty(columnHeader))
+                                columnHeader = propertyInfo.Name;
+                        }
+                        else
                             columnHeader = propertyInfo.Name;
                     }
-                    else
-                        columnHeader = propertyInfo.Name;
 
                     if (field.Format == null)
                         field.Format = x => propertyInfo.GetValue(x.Value, null);
+
+                    List<string> cssClasses = new List<string>();
+                    if (field.WordWrap)
+                        cssClasses.Add("no-wrap-column");
+                    if (field.CssClass != null)
+                        cssClasses.Add(field.CssClass);
+
+                    webGridColumns.Add(webGrid.Column(style: string.Join(" ", cssClasses), header: columnHeader, format: field.Format, canSort: field.CanSort));
                 }
 
                 return new MvcHtmlString(webGrid.GetHtml(
