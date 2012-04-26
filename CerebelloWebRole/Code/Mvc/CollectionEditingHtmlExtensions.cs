@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
-namespace CommonLib.Mvc
+namespace CerebelloWebRole.Code.Mvc
 {
     public static class CollectionEditingHtmlExtensions
     {

@@ -13,7 +13,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -177,6 +177,7 @@
     <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
+    <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\RequiresAuthenticationAttribute.cs" />
     <Compile Include="Code\Filters\RequiresPracticeAuthorizationAttribute.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
@@ -202,7 +203,6 @@
     <Compile Include="Code\Mvc\DataTypes\DateOfBirthDataType.cs" />
     <Compile Include="Code\Mvc\DataTypes\EmailDataType.cs" />
     <Compile Include="Code\Mvc\DataTypes\TimeDataType.cs" />
-    <Compile Include="Code\Mvc\LabelExtensions.cs" />
     <Compile Include="Code\Mvc\LowercaseRoutes.cs" />
     <Compile Include="Code\Mvc\ModelStateExtensions.cs" />
     <Compile Include="Code\Mvc\ObjectContextExtensions.cs" />

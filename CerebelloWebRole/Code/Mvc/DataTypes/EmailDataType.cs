@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Web.Mvc;
 
-namespace CommonLib.Mvc.DataTypes
+namespace CerebelloWebRole.Code.Mvc
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple  = false)]
     public class EmailAddressAttribute : DataTypeAttribute

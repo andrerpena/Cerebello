@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Web.Mvc;
 using CerebelloWebRole.Code;
 
-namespace CommonLib.Mvc.DataTypes
+namespace CerebelloWebRole.Code.Mvc
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple  = false)]
     public class DateOfBirthAttribute : DataTypeAttribute

@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace CommonLib.Mvc
+namespace CerebelloWebRole.Code.Mvc
 {
     public class LowercaseRoute : System.Web.Routing.Route
     {

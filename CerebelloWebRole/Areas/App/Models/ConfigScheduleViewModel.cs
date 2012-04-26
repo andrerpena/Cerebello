@@ -5,7 +5,7 @@ using System.Web;
 using CerebelloWebRole.Models;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
-using CommonLib.Mvc.DataTypes;
+using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Models
 {

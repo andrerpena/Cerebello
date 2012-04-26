@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.Code;
 
-namespace CommonLib.Mvc
+namespace CerebelloWebRole.Code.Mvc
 {
     public static class ModelStateExtensions
     {

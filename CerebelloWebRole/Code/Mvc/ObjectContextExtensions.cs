@@ -6,7 +6,7 @@ using System.Data.Objects.DataClasses;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace CommonLib.Mvc
+namespace CerebelloWebRole.Code.Mvc
 {
     public static class EntityObjectExtensions
     {
