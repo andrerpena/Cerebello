@@ -639,7 +639,7 @@ fieldset legend
 {
     border-bottom: 1px solid #EBE7E7;
     color: Gray;
-    margin: 20px 0 5px;
+    margin: 20px 0 0;
     padding-bottom: 3px;
 }
 
@@ -1118,6 +1118,7 @@ a.gotoPractice
 {
     border-bottom: 1px dashed #E8E7E7;
     display: block;
+    padding-top: 10px;
 }
 
 .edit-list .edit-list-item:last-child
