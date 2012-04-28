@@ -51,37 +51,7 @@
     </p>
     
     @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor"))
-    
-    @*<div class="addresses">
-        <ul class="edit-list addresses-list">
-            @if (Model != null && Model.Addresses != null)
-            {
-                foreach (var address in Model.Addresses)
-                {
-                    @Html.Partial("AddressEditor", address)
-                }
-            }
-            else
-            {
-                @Html.Partial("AddressEditor", new ViewDataDictionary())
-            }                    
-        </ul>
-        <a id="add-address" class="block-little-link add-another-link" href="#">Adicionar endereço</a>
-        <script type="text/javascript">
-
-            $("#add-address").click(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "@Url.Action("addresseditor")",
-                    success: function(result) {
-                        $(".addresses-list").append(result);
-                    }
-                });
-            });
-                
-        </script>
-    </div>*@
-    
+        
     <div class="submit-bar">
         <input type="submit" value="salvar paciente" />
         <span class="separator">ou</span>

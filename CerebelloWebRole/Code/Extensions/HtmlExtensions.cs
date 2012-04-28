@@ -237,7 +237,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
-        public static MvcHtmlString CollectionEditorFor<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, IEnumerable<TItemModel>>> expression, string collectionItemEditor)
+        public static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor)
         {
             var propertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
             var addAnotherLinkId = "add-another-to-" + propertyInfo.Name.ToLower();
@@ -248,7 +248,7 @@ namespace CerebelloWebRole.Code.Extensions
                 ListParialViewName = collectionItemEditor,
                 AddAnotherLinkId = addAnotherLinkId,
                 ListClass = listClass,
-                Items = new System.Collections.ArrayList((ICollection) expression.Compile()((TModel) html.ViewContext.ViewData.Model))
+                Items = html.ViewContext.ViewData.Model != null ? new ArrayList(expression.Compile()((TModel)html.ViewContext.ViewData.Model)) : new ArrayList()
             };
 
             return html.Partial("CollectionEditor", viewModel);

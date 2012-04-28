@@ -11,6 +11,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Reflection;
 using CerebelloWebRole.Code.Controls;
+using System.IO;
+using System.Xml.Resolvers;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -132,15 +134,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(formModel);
         }
 
+        public class MyResolver : XmlResolver
+        {
+
+            public override System.Net.ICredentials Credentials
+            {
+                set { throw new NotImplementedException(); }
+            }
+
+            public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Lookup of diagnoses
+        /// </summary>
+        /// <remarks>
+        /// Requirements:
+        ///     1   Should return a LookupJsonResult serialized in Json containing a the Count of CID-10 entries found
+        ///         and the list of entries themselves. Each entry has a Value and an Id, the Value is the text, the Id
+        ///         is the Cid10 category or sub-category of the condition
+        /// </remarks>
         [HttpGet]
         public JsonResult LookupDiagnoses(string term, int pageSize, int? pageIndex)
         {
             // read CID10.xml as an embedded resource
-            var xmlStreamReader = Assembly.GetExecutingAssembly().GetManifestResourceStream("CerebelloWebRole.Code.CID10.xml");
-
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.DtdProcessing = DtdProcessing.Parse;
-            XmlReader reader = XmlReader.Create(xmlStreamReader, settings);
+            XmlReader reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
             XDocument doc = XDocument.Load(reader);
 
             return this.Json(LookupHelper.GetData<LookupRow>(term, pageSize, pageIndex,

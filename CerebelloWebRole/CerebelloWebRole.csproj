@@ -474,6 +474,7 @@
     <Content Include="Areas\App\Views\Symptoms\Index.cshtml" />
     <Content Include="Areas\App\Views\Shared\CollectionEditor.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
+    <EmbeddedResource Include="Data\CID10.dtd" />
     <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

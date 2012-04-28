@@ -10,6 +10,7 @@ using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code.Controls;
 
 namespace CerebelloWebRole.Tests
 {
@@ -136,6 +137,17 @@ namespace CerebelloWebRole.Tests
 
             Assert.AreEqual(false, deleteMessage.success);
             Assert.IsNotNull(deleteMessage.text);
+        }
+
+        [TestMethod]
+        public void LookupDiagnoses_1_ShouldReturnTheProperResult()
+        {
+            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
+
+            // tries to delete the anamnese
+            var result = controller.LookupDiagnoses("cefaléia", 20, 1);
+
+            var deleteMessage = (LookupJsonResult)result.Data;
         }
 
         #endregion
