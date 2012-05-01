@@ -172,12 +172,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                  where e.Name == "nome" && e.Value.ToLower().Contains(t)
                  select new LookupRow { Value = e.Value, Id = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value }).ToList()), JsonRequestBehavior.AllowGet);
         }
-
-        private JsonResult Json(LookupJsonResult lookupJsonResult, JsonRequestBehavior jsonRequestBehavior)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         /// <summary>
         /// 
         /// Requisitos:

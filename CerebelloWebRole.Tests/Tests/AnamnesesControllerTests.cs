@@ -146,8 +146,14 @@ namespace CerebelloWebRole.Tests
 
             // tries to delete the anamnese
             var result = controller.LookupDiagnoses("cefaléia", 20, 1);
+            var lookupJsonResult = (LookupJsonResult)result.Data;
 
-            var deleteMessage = (LookupJsonResult)result.Data;
+            Assert.AreEqual(9, lookupJsonResult.Count);
+            foreach (LookupRow item in lookupJsonResult.Rows)
+            {
+                Assert.IsNotNull(item.Id);
+                Assert.IsFalse(string.IsNullOrEmpty(item.Value));
+            }
         }
 
         #endregion

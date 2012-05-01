@@ -38,7 +38,6 @@ namespace Cerebello.Firestarter
 
             db.Practices.AddObject(practice);
 
-
             Person person = new Person()
                 {
                     DateOfBirth = new DateTime(1984, 08, 12),
