@@ -29,7 +29,6 @@ D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\System.Web.Razor.xm
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\System.Web.WebPages.xml
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\System.Web.WebPages.Razor.xml
-D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\pt-br\CerebelloWebRole.resources.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\obj\Debug\ResolveAssemblyReference.cache
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\obj\Debug\CerebelloWebRole.Tests.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\obj\Debug\CerebelloWebRole.Tests.pdb

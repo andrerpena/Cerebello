@@ -65,17 +65,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Licenses">
-      <EntityTypeMapping TypeName="Cerebello.Model.License">
-        <MappingFragment StoreEntitySet="License">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Type" ColumnName="Type" />
-          <ScalarProperty Name="IsSuspended" ColumnName="IsSuspended" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="MedicalEntities">
       <EntityTypeMapping TypeName="Cerebello.Model.MedicalEntity">
         <MappingFragment StoreEntitySet="MedicalEntity">
@@ -136,7 +125,6 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
-          <ScalarProperty Name="LicenseId" ColumnName="LicenseId" />
           <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
           <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
         </MappingFragment>
@@ -173,6 +161,9 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="Cerebello.Model.User">
         <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+          <ScalarProperty Name="SecretaryId" ColumnName="SecretaryId" />
+          <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
           <ScalarProperty Name="GravatarEmailHash" ColumnName="GravatarEmailHash" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Id" ColumnName="Id" />
@@ -180,15 +171,6 @@
           <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
           <ScalarProperty Name="LastActiveOn" ColumnName="LastActiveOn" />
           <ScalarProperty Name="PersonId" ColumnName="PersonId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="UserPractices">
-      <EntityTypeMapping TypeName="Cerebello.Model.UserPractice">
-        <MappingFragment StoreEntitySet="UserPractice">
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

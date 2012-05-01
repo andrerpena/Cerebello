@@ -10,6 +10,10 @@ namespace CerebelloWebRole.Models
     public class LoginViewModel
     {
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Display(Name = "Identificador do consultório")]
+        public String PracticeIdentifier { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "E-Mail")]
         public String Email { get; set; }
 

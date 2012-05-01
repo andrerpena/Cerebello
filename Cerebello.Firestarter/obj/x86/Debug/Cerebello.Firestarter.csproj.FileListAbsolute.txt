@@ -13,4 +13,3 @@ D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\HtmlAgilityPack.dll
 D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\CerebelloWebRole.pdb
 D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\HtmlAgilityPack.pdb
 D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\HtmlAgilityPack.xml
-D:\Projetos\Azure\Cerebello\Cerebello.Firestarter\bin\Debug\pt-br\CerebelloWebRole.resources.dll

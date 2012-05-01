@@ -217,7 +217,6 @@
     <Compile Include="Code\Security\SecurityTokenHelper.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -225,8 +224,6 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\CreateAccountViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Membership\Resources\MembershipStrings.Designer.cs" />
-    <Compile Include="Views\Membership\Resources\MembershipStrings.pt-br.Designer.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -478,14 +475,6 @@
     <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Membership\_Layout.cshtml" />
-    <Content Include="Views\Membership\_LayoutMembership.cshtml" />
-    <Content Include="Views\Membership\_ViewStart.cshtml" />
-    <Content Include="Views\Membership\Create.cshtml" />
-    <Content Include="Views\Membership\Index.cshtml" />
-    <Content Include="Views\Membership\Registration.cshtml" />
-    <Content Include="Views\Membership\RegistrationCompleted.cshtml" />
-    <Content Include="Views\Membership\RegistrationFailed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Authentication\CreateAccount.cshtml" />
     <Content Include="Views\Authentication\CreateAccountCompleted.cshtml" />
@@ -497,8 +486,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ModelStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Membership\Resources\MembershipStrings.pt-br.resx" />
-    <EmbeddedResource Include="Views\Membership\Resources\MembershipStrings.resx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cerebello.Model\Cerebello.Model.csproj">

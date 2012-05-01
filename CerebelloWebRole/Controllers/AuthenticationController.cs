@@ -28,7 +28,9 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 return View();
             }
 
-            return RedirectToAction("index", "membership");
+            // TODO: efetuar o login
+
+            return RedirectToAction("index", "practicehome", new { area = "app", practice = loginModel.PracticeIdentifier });
         }
 
         protected override void Dispose(bool disposing)

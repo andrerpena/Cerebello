@@ -10,7 +10,7 @@ using Cerebello.Model;
 
 namespace CerebelloWebRole.Code
 {
-    public class PracticeController : CerebelloController
+    public abstract class PracticeController : CerebelloController
     {
         /// <summary>
         /// Retorna o usuário atual
@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Code
         public User GetCurrentUser()
         {
             var identity = this.User as AuthenticatedPrincipal;
-            return (User) db.Users.Where(p => p.Id == identity.Profile.Id).First();
+            return (User)db.Users.Where(p => p.Id == identity.Profile.Id).First();
         }
 
         public int GetCurrentUserId()
@@ -44,19 +44,13 @@ namespace CerebelloWebRole.Code
                 {
                     var practiceName = this.RouteData.Values["practice"] as string;
 
-                    var practiceUser = (
-                        from pu in this.db.UserPractices
-                        where
-                            pu.Practice.UrlIdentifier == practiceName && pu.UserId == authenticatedPrincipal.Profile.Id
-                        select pu).FirstOrDefault();
+                    var userId = this.GetCurrentUserId();
+                    var practice = this.db.Users.Where(u => u.Id == userId).First().Practice;
 
-                    if (practiceUser != null)
-                    {
-                        this.Practice = practiceUser.Practice;
-                        this.ViewBag.Practice = practiceUser.Practice;
-                        this.ViewBag.PracticeName = practiceUser.Practice.Name;
-                        return;
-                    }
+                    this.Practice = practice;
+                    this.ViewBag.Practice = practice;
+                    this.ViewBag.PracticeName = practice.Name;
+                    return;
                 }
             }
             filterContext.Result = new HttpUnauthorizedResult();

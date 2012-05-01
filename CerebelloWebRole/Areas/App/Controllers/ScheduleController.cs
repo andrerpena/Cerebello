@@ -97,13 +97,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // se não foi informado qual é o médico, eu tenho que verificar.
                 // se o usuário atual for um médico, então eu vou pegar a agenda dele
                 var user = this.GetCurrentUser();
-                var userPractice = (from up in user.UserPractices where up.PracticeId == this.Practice.Id select up).FirstOrDefault();
-
-                if (userPractice == null)
-                    throw new Exception("Não foi possível estabelecer uma relação entre o usuário atual e o consultório atual");
-
                 // se o usuário atual for um médico deste consultório, eu vou usar a agenda dele
-                if (userPractice.Doctor != null)
+                if (user.Doctor != null)
                     viewModel.DoctorId = user.Id;
                 else
                     throw new Exception("Não é possível determinar o médico do qual se deseja acessar a agenda");

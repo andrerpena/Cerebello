@@ -38,7 +38,6 @@ D:\Projetos\Azure\Cerebello\CerebelloWebRole2\bin\Cerebello.Model.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole2\bin\Cerebello.Model.pdb
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CerebelloWebRole.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CerebelloWebRole.pdb
-D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\pt-br\CerebelloWebRole.resources.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\Cerebello.Model.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\CipherLite.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\HtmlAgilityPack.dll
@@ -65,11 +64,8 @@ D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\System.Web.Helpers.xml
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\System.Web.WebPages.Deployment.xml
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\System.Web.WebPages.Razor.xml
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\ResolveAssemblyReference.cache
-D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.Views.Membership.Resources.MembershipStrings.resources
-D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.Views.Membership.Resources.MembershipStrings.pt-br.resources
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\GenerateResource.read.1.tlog
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\GenerateResource.write.1.tlog
-D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\pt-br\CerebelloWebRole.resources.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.pdb
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.App_GlobalResources.ModelStrings.resources

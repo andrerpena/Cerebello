@@ -15,4 +15,3 @@ D:\Projetos\Azure\Cerebello\Anvisa.Uploader\bin\Debug\HtmlAgilityPack.dll
 D:\Projetos\Azure\Cerebello\Anvisa.Uploader\bin\Debug\CerebelloWebRole.pdb
 D:\Projetos\Azure\Cerebello\Anvisa.Uploader\bin\Debug\HtmlAgilityPack.pdb
 D:\Projetos\Azure\Cerebello\Anvisa.Uploader\bin\Debug\HtmlAgilityPack.xml
-D:\Projetos\Azure\Cerebello\Anvisa.Uploader\bin\Debug\pt-br\CerebelloWebRole.resources.dll

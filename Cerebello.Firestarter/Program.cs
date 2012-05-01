@@ -31,8 +31,16 @@ namespace Test1
 
                 var doctor = Firestarter.CreateFakeUserAndPractice(db);
 
+                db.SaveChanges();
+
                 Firestarter.SetupDoctor(doctor, db);
+
+                db.SaveChanges();
+
                 Firestarter.SetupUserData(doctor, db);
+
+                db.SaveChanges();
+
                 Firestarter.CreateFakePatients(doctor, db);
 
                 db.SaveChanges();

@@ -23,7 +23,6 @@ D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.W
 D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.Diagnostics.xml
 D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.StorageClient.dll
 D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\Microsoft.WindowsAzure.StorageClient.xml
-D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\pt-BR\CerebelloWebRole.resources.dll
 D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\System.Web.Helpers.dll
 D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\System.Web.Helpers.xml
 D:\Projetos\Azure\Cerebello\Cerebello\obj\Debug\CerebelloWebRole\bin\System.Web.Mvc.dll

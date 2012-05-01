@@ -29,26 +29,40 @@ namespace Cerebello.Firestarter
 
             db.MedicalSpecialties.AddObject(specialty);
 
-            User user = new User()
+            var practice = new Practice()
             {
-                Person = new Person()
+                Name = "Consultório do Dr. House",
+                UrlIdentifier = "consultoriodrhourse",
+                CreatedOn = DateTime.UtcNow
+            };
+
+            db.Practices.AddObject(practice);
+
+
+            Person person = new Person()
                 {
                     DateOfBirth = new DateTime(1984, 08, 12),
                     FullName = "Gregory House",
                     UrlIdentifier = "gregoryhouse",
-                    Gender = (int) TypeGender.Male,
+                    Gender = (int)TypeGender.Male,
                     CreatedOn = DateTime.UtcNow,
-                },
+                };
+            db.People.AddObject(person);
 
+            User user = new User()
+            {
+                Person = person,
                 LastActiveOn = DateTime.UtcNow,
                 Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
                 PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
                 Email = "andrerpena@gmail.com",
-                GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6"
+                GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
+                Practice = practice
+                
             };
-            user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
 
             db.Users.AddObject(user);
+
 
             Doctor doctor = new Doctor()
             {
@@ -57,32 +71,12 @@ namespace Cerebello.Firestarter
                 MedicalEntity = entity
             };
 
-            License license = new License()
-            {
-                IsDeleted = false,
-                IsSuspended = false,
-                Type = (int)TypeLicense.Commercial
-            };
+            user.Doctor = doctor;
+            
+            user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
 
-            Practice practice = new Practice()
-            {
-                Name = "Consultório do Dr. House",
-                UrlIdentifier = "consultoriodrhourse",
-                CreatedOn = DateTime.UtcNow,
-                Owner = user,
-                License = license
-            };
+           
 
-            db.Practices.AddObject(practice);
-
-            UserPractice practiceUser = new UserPractice()
-            {
-                Practice = practice,
-                User = user,
-                Doctor = doctor
-            };
-
-            db.UserPractices.AddObject(practiceUser);
 
             return doctor;
         }
@@ -230,7 +224,7 @@ namespace Cerebello.Firestarter
 
             doctor.CFG_Documents = new CFG_Documents()
             {
-                Header1 = doctor.UserPractice.User.Person.FullName,
+                Header1 = doctor.Users.First().Person.FullName,
                 Header2 = "[Especialidade Médica]",
                 FooterLeft1 = "[Endereço]",
                 FooterLeft2 = "[Telefones]",
@@ -275,7 +269,7 @@ namespace Cerebello.Firestarter
 
             doctor.CFG_Documents = new CFG_Documents()
             {
-                Header1 = doctor.UserPractice.User.Person.FullName,
+                Header1 = doctor.Users.First().Person.FullName,
                 Header2 = "[Especialidade Médica]",
                 FooterLeft1 = "[Endereço]",
                 FooterLeft2 = "[Telefones]",

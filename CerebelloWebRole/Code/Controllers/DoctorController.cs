@@ -10,7 +10,7 @@ using Cerebello.Model;
 
 namespace CerebelloWebRole.Code.Controllers
 {
-    public class DoctorController : PracticeController
+    public abstract class DoctorController : PracticeController
     {
         public Doctor Doctor { get; private set; }
 
@@ -23,21 +23,19 @@ namespace CerebelloWebRole.Code.Controllers
                 var authenticatedPrincipal = filterContext.HttpContext.User as AuthenticatedPrincipal;
                 if (authenticatedPrincipal != null)
                 {
-                    var doctorName = this.RouteData.Values["doctor"] as string;
+                    var doctorIdentifier = this.RouteData.Values["doctor"] as string;
 
-                    var doctor = (
-                        from Doctor d in this.db.Doctors
-                        where d.UserPractice.User.Person.UrlIdentifier == doctorName
-                        select d).FirstOrDefault();
+                    // issue: 2 doctors with the same name would cause this query to fail
+                    var doctor = this.db.Doctors.Where(d => d.Users.Any(u => u.Person.UrlIdentifier == doctorIdentifier)).FirstOrDefault();
 
                     if (doctor != null)
                     {
                         this.Doctor = doctor;
                         this.ViewBag.Doctor = new DoctorViewModel()
                              {
-                                 Name = doctor.UserPractice.User.Person.FullName,
-                                 UrlIdentifier = doctor.UserPractice.User.Person.UrlIdentifier,
-                                 ImageUrl = GravatarHelper.GetGravatarUrl(doctor.UserPractice.User.GravatarEmailHash, GravatarHelper.Size.s32),
+                                 Name = doctor.Users.ElementAt(0).Person.FullName,
+                                 UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
+                                 ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
                                  CRM = doctor.CRM,
                                  MedicalEntity = doctor.MedicalEntity.Name,
                                  MedicalSpecialty = doctor.MedicalSpecialty.Name

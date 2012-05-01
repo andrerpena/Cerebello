@@ -13,7 +13,6 @@
     <EntitySet Name="Email" EntityType="cerebelloModel.Store.Email" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Leaflet" EntityType="cerebelloModel.Store.Leaflet" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="License" EntityType="cerebelloModel.Store.License" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="MedicalCertificate" EntityType="cerebelloModel.Store.MedicalCertificate" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="MedicalCertificateField" EntityType="cerebelloModel.Store.MedicalCertificateField" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="MedicalEntity" EntityType="cerebelloModel.Store.MedicalEntity" store:Type="Tables" Schema="dbo" />
@@ -37,7 +36,6 @@
     <EntitySet Name="SYS_MedicineActiveIngredient" EntityType="cerebelloModel.Store.SYS_MedicineActiveIngredient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="SYS_MedicineLeaflet" EntityType="cerebelloModel.Store.SYS_MedicineLeaflet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="User" EntityType="cerebelloModel.Store.User" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="UserPractice" EntityType="cerebelloModel.Store.UserPractice" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_ActiveIngredient_Doctor" Association="cerebelloModel.Store.FK_ActiveIngredient_Doctor">
       <End Role="Doctor" EntitySet="Doctor" />
       <End Role="ActiveIngredient" EntitySet="ActiveIngredient" />
@@ -78,10 +76,6 @@
       <End Role="MedicalSpecialty" EntitySet="MedicalSpecialty" />
       <End Role="Doctor" EntitySet="Doctor" />
     </AssociationSet>
-    <AssociationSet Name="FK_Doctor_UserPractice" Association="cerebelloModel.Store.FK_Doctor_UserPractice">
-      <End Role="UserPractice" EntitySet="UserPractice" />
-      <End Role="Doctor" EntitySet="Doctor" />
-    </AssociationSet>
     <AssociationSet Name="FK_Email_Person" Association="cerebelloModel.Store.FK_Email_Person">
       <End Role="Person" EntitySet="Person" />
       <End Role="Email" EntitySet="Email" />
@@ -89,10 +83,6 @@
     <AssociationSet Name="FK_Laboratory_Doctor" Association="cerebelloModel.Store.FK_Laboratory_Doctor">
       <End Role="Doctor" EntitySet="Doctor" />
       <End Role="Laboratory" EntitySet="Laboratory" />
-    </AssociationSet>
-    <AssociationSet Name="FK_License_User" Association="cerebelloModel.Store.FK_License_User">
-      <End Role="User" EntitySet="User" />
-      <End Role="License" EntitySet="License" />
     </AssociationSet>
     <AssociationSet Name="FK_MedicalCertificate_ModelMedicalCertificate" Association="cerebelloModel.Store.FK_MedicalCertificate_ModelMedicalCertificate">
       <End Role="ModelMedicalCertificate" EntitySet="ModelMedicalCertificate" />
@@ -154,10 +144,6 @@
       <End Role="Person" EntitySet="Person" />
       <End Role="Phone" EntitySet="Phone" />
     </AssociationSet>
-    <AssociationSet Name="FK_Practice_License" Association="cerebelloModel.Store.FK_Practice_License">
-      <End Role="License" EntitySet="License" />
-      <End Role="Practice" EntitySet="Practice" />
-    </AssociationSet>
     <AssociationSet Name="FK_Practice_User" Association="cerebelloModel.Store.FK_Practice_User">
       <End Role="User" EntitySet="User" />
       <End Role="Practice" EntitySet="Practice" />
@@ -169,10 +155,6 @@
     <AssociationSet Name="FK_ReceiptMedicine_Receipt" Association="cerebelloModel.Store.FK_ReceiptMedicine_Receipt">
       <End Role="Receipt" EntitySet="Receipt" />
       <End Role="ReceiptMedicine" EntitySet="ReceiptMedicine" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Secretary_UserPractice" Association="cerebelloModel.Store.FK_Secretary_UserPractice">
-      <End Role="UserPractice" EntitySet="UserPractice" />
-      <End Role="Secretary" EntitySet="Secretary" />
     </AssociationSet>
     <AssociationSet Name="FK_SYS_Medicine_SYS_Laboratory" Association="cerebelloModel.Store.FK_SYS_Medicine_SYS_Laboratory">
       <End Role="SYS_Laboratory" EntitySet="SYS_Laboratory" />
@@ -194,17 +176,21 @@
       <End Role="SYS_Medicine" EntitySet="SYS_Medicine" />
       <End Role="SYS_MedicineLeaflet" EntitySet="SYS_MedicineLeaflet" />
     </AssociationSet>
+    <AssociationSet Name="FK_User_Doctor" Association="cerebelloModel.Store.FK_User_Doctor">
+      <End Role="Doctor" EntitySet="Doctor" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
     <AssociationSet Name="FK_User_Person" Association="cerebelloModel.Store.FK_User_Person">
       <End Role="Person" EntitySet="Person" />
       <End Role="User" EntitySet="User" />
     </AssociationSet>
-    <AssociationSet Name="FK_UserPractice_Practice" Association="cerebelloModel.Store.FK_UserPractice_Practice">
+    <AssociationSet Name="FK_User_Practice" Association="cerebelloModel.Store.FK_User_Practice">
       <End Role="Practice" EntitySet="Practice" />
-      <End Role="UserPractice" EntitySet="UserPractice" />
-    </AssociationSet>
-    <AssociationSet Name="FK_UserPractice_User" Association="cerebelloModel.Store.FK_UserPractice_User">
       <End Role="User" EntitySet="User" />
-      <End Role="UserPractice" EntitySet="UserPractice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Secretary" Association="cerebelloModel.Store.FK_User_Secretary">
+      <End Role="Secretary" EntitySet="Secretary" />
+      <End Role="User" EntitySet="User" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="ActiveIngredient">
@@ -354,16 +340,6 @@
     <Property Name="Description" Type="varchar" MaxLength="200" />
     <Property Name="Url" Type="varchar" Nullable="false" MaxLength="200" />
   </EntityType>
-  <EntityType Name="License">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-    <Property Name="Type" Type="int" Nullable="false" />
-    <Property Name="IsSuspended" Type="bit" Nullable="false" />
-    <Property Name="IsDeleted" Type="bit" Nullable="false" />
-    <Property Name="UserId" Type="int" Nullable="false" />
-  </EntityType>
   <EntityType Name="MedicalCertificate">
     <Key>
       <PropertyRef Name="Id" />
@@ -482,9 +458,8 @@
     <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
     <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
-    <Property Name="LicenseId" Type="int" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-    <Property Name="OwnerId" Type="int" Nullable="false" />
+    <Property Name="OwnerId" Type="int" />
   </EntityType>
   <EntityType Name="Receipt">
     <Key>
@@ -569,13 +544,8 @@
     <Property Name="PersonId" Type="int" Nullable="false" />
     <Property Name="Email" Type="varchar" Nullable="false" MaxLength="200" />
     <Property Name="GravatarEmailHash" Type="varchar" MaxLength="100" />
-  </EntityType>
-  <EntityType Name="UserPractice">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="DoctorId" Type="int" />
+    <Property Name="SecretaryId" Type="int" />
     <Property Name="PracticeId" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="FK_ActiveIngredient_Doctor">
@@ -700,18 +670,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Doctor_UserPractice">
-    <End Role="UserPractice" Type="cerebelloModel.Store.UserPractice" Multiplicity="1" />
-    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="UserPractice">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Doctor">
-        <PropertyRef Name="Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Email_Person">
     <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -735,18 +693,6 @@
       </Principal>
       <Dependent Role="Laboratory">
         <PropertyRef Name="DoctorId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_License_User">
-    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
-    <End Role="License" Type="cerebelloModel.Store.License" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="License">
-        <PropertyRef Name="UserId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -932,20 +878,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Practice_License">
-    <End Role="License" Type="cerebelloModel.Store.License" Multiplicity="1" />
-    <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="License">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Practice">
-        <PropertyRef Name="LicenseId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Practice_User">
-    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="0..1" />
     <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
@@ -979,18 +913,6 @@
       </Principal>
       <Dependent Role="ReceiptMedicine">
         <PropertyRef Name="ReceiptId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Secretary_UserPractice">
-    <End Role="UserPractice" Type="cerebelloModel.Store.UserPractice" Multiplicity="1" />
-    <End Role="Secretary" Type="cerebelloModel.Store.Secretary" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="UserPractice">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Secretary">
-        <PropertyRef Name="Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1054,6 +976,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_User_Doctor">
+    <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="0..1" />
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="DoctorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_User_Person">
     <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -1068,27 +1002,27 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_UserPractice_Practice">
+  <Association Name="FK_User_Practice">
     <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
-    <End Role="UserPractice" Type="cerebelloModel.Store.UserPractice" Multiplicity="*" />
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Practice">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="UserPractice">
+      <Dependent Role="User">
         <PropertyRef Name="PracticeId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_UserPractice_User">
-    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
-    <End Role="UserPractice" Type="cerebelloModel.Store.UserPractice" Multiplicity="*" />
+  <Association Name="FK_User_Secretary">
+    <End Role="Secretary" Type="cerebelloModel.Store.Secretary" Multiplicity="0..1" />
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="User">
+      <Principal Role="Secretary">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="UserPractice">
-        <PropertyRef Name="UserId" />
+      <Dependent Role="User">
+        <PropertyRef Name="SecretaryId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

@@ -18,16 +18,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new PracticeDoctorsViewModel();
             
-            model.Doctors = (from up in this.Practice.UserPractices where up.Doctor != null
+            model.Doctors = (from u in this.Practice.Users where u.Doctor != null
 
                              select new DoctorViewModel()
                              {
-                                 Name = up.User.Person.FullName,
-                                 UrlIdentifier = up.User.Person.UrlIdentifier,
-                                 ImageUrl = GravatarHelper.GetGravatarUrl(up.User.GravatarEmailHash, GravatarHelper.Size.s64),
-                                 CRM = up.Doctor.CRM,
-                                 MedicalEntity = up.Doctor.MedicalEntity.Name,
-                                 MedicalSpecialty = up.Doctor.MedicalSpecialty.Name
+                                 Name = u.Person.FullName,
+                                 UrlIdentifier = u.Person.UrlIdentifier,
+                                 ImageUrl = GravatarHelper.GetGravatarUrl(u.GravatarEmailHash, GravatarHelper.Size.s64),
+                                 CRM = u.Doctor.CRM,
+                                 MedicalEntity = u.Doctor.MedicalEntity.Name,
+                                 MedicalSpecialty = u.Doctor.MedicalSpecialty.Name
 
                              }).ToList();
 
