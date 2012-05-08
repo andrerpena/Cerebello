@@ -7,6 +7,7 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class DoctorViewModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string UrlIdentifier { get; set; }
         public string CRM { get; set; }

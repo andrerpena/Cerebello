@@ -22,6 +22,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                              select new DoctorViewModel()
                              {
+                                 Id = u.Id,
                                  Name = u.Person.FullName,
                                  UrlIdentifier = u.Person.UrlIdentifier,
                                  ImageUrl = GravatarHelper.GetGravatarUrl(u.GravatarEmailHash, GravatarHelper.Size.s64),

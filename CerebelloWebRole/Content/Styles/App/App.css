@@ -337,17 +337,19 @@ input.lookup
 
 .document .document-header
 {
-    background: none repeat scroll 0 0 #F5F5F5;
     border-bottom: 1px solid #E5E5E5;
     margin: 0;
     padding: 10px 15px;
+    
+    background: #F5F5F5; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#E7E7E7'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#E7E7E7)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #F5F5F5,  #E7E7E7); /* for firefox 3.6+ */ 
 }
 
 .document .document-header h2
 {
-    color: #000000;
     font-size: 16px;
-    font-weight: normal;
     line-height: 1.2em;
     margin: 0;
 }
@@ -450,13 +452,17 @@ fieldset legend
 
 #app-header
 {
-    background-color: #F5F5F5;
     border-bottom: 1px solid #DADEE5;
     color: white;
     margin-bottom: 15px;
     padding: 0 10px;
     position: relative;
     z-index: 3;
+    
+    background: #F5F5F5; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#E7E7E7'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#E7E7E7)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #F5F5F5,  #E7E7E7); /* for firefox 3.6+ */ 
 }
 
 #app-header a
@@ -469,6 +475,7 @@ fieldset legend
 {
     margin: 0 auto;
     max-width: 1200px;
+    overflow: hidden;
     padding: 10px 0;
 }
 
@@ -563,6 +570,7 @@ fieldset legend
 .tabNav li.youarehere a
 {
     background-color: #F5F5F5;
+    background-position: 4px 50%;
     color: #DD390D;
     font-weight: bold;
 }
@@ -726,13 +734,6 @@ fieldset legend
 {
     background-repeat: no-repeat;
     
-}
-
-.tabNav li.youarehere a
-{
-    background-position: 4px 50%;
-    border-color: #EBEBEB;
-    border-style: solid;
 }
 
 .tabNav li a.home-icon
@@ -977,7 +978,7 @@ a.gotoPractice
 .appointment-panel-wrapper
 {
     color: black;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .appointment-panel-wrapper .appointment-panel

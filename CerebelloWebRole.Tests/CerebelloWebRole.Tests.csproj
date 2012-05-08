@@ -111,6 +111,7 @@
     <Compile Include="ControllersRepository.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
+    <Compile Include="Tests\AppControllerTests.cs" />
     <Compile Include="Tests\MedicalCertificatesControllerTests.cs" />
     <Compile Include="MockRepository.cs" />
     <Compile Include="Tests\ModelMedicalCertificateControllerTests.cs" />
