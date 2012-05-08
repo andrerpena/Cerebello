@@ -6,10 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Web.Mvc.Html;
 using System.Web;
-using System.Configuration;
-using System.Linq;
 using System.Web.Script.Serialization;
-using System.Dynamic;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Areas.App.Models;
 using System.Collections;
@@ -70,7 +67,7 @@ namespace CerebelloWebRole.Code.Extensions
 
             var model = html.ViewContext.ViewData.Model;
 
-            int? value = (int?)propertyInfo.GetValue(model, null);
+            var value = (int?)propertyInfo.GetValue(model, null);
             if (value.HasValue)
             {
                 if (valueTypeDictionary.ContainsKey(value.Value))
@@ -84,32 +81,31 @@ namespace CerebelloWebRole.Code.Extensions
 
         public static MvcHtmlString EnumDropdownFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
         {
-            var memberName = (expression.Body as MemberExpression).Member.Name;
+            var memberName = ((MemberExpression)expression.Body).Member.Name;
             var propertyInfo = typeof(TModel).GetProperty(memberName);
 
             Type enumType = null;
 
             if (propertyInfo.PropertyType.IsEnum)
-            {
                 enumType = propertyInfo.PropertyType;
-            }
             else
             {
                 var attributes = propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), true);
-                if (attributes == null || attributes.Length == 0)
+                if (attributes.Length == 0)
                     throw new Exception("cannot resolve enum type");
 
-                enumType = (attributes[0] as EnumDataTypeAttribute).EnumType;
+                enumType = ((EnumDataTypeAttribute)attributes[0]).EnumType;
                 if (enumType == null)
                     throw new Exception("cannot resolve enum type");
             }
 
             var enumValues = Enum.GetValues(enumType);
-            List<SelectListItem> items = new List<SelectListItem>();
+            var items = new List<SelectListItem>();
+
             foreach (var value in enumValues)
                 items.Add(new SelectListItem() { Value = ((int)value).ToString(), Text = EnumHelper.GetText(value) });
 
-            return SelectExtensions.DropDownList(html, memberName, items, "");
+            return html.DropDownList(memberName, items, "");
         }
 
         public static MvcHtmlString EnumDisplayFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
@@ -125,15 +121,15 @@ namespace CerebelloWebRole.Code.Extensions
             else
             {
                 var attributes = propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), true);
-                if (attributes == null || attributes.Length == 0)
+                if (attributes.Length == 0)
                     throw new Exception("cannot resolve enum type");
 
-                enumType = (attributes[0] as EnumDataTypeAttribute).EnumType;
+                enumType = ((EnumDataTypeAttribute)attributes[0]).EnumType;
                 if (enumType == null)
                     throw new Exception("cannot resolve enum type");
             }
 
-            var model = (html.ViewContext.View as WebViewPage).Model;
+            var model = ((WebViewPage)html.ViewContext.View).Model;
             var modelValue = propertyInfo.GetValue(model, null);
 
             if (modelValue == null)
@@ -145,7 +141,7 @@ namespace CerebelloWebRole.Code.Extensions
         public static MvcHtmlString DropDownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, string optionLabel, object htmlAttributes)
         {
             var valueDisplayDictionary = EnumHelper.GetSelectListItems(EnumHelper.GetEnumDataTypeFromExpression(expression));
-            return SelectExtensions.DropDownListFor(htmlHelper, expression, valueDisplayDictionary, optionLabel, htmlAttributes);
+            return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, optionLabel, htmlAttributes);
         }
 
         /// <summary>
@@ -231,8 +227,9 @@ namespace CerebelloWebRole.Code.Extensions
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
                 tagBuilder.Attributes["class"] = "lookup-validation-error";
 
-            return new MvcHtmlString(tagBuilder.ToString() + "\n" + scriptTag.ToString());
+            return new MvcHtmlString(tagBuilder + "\n" + scriptTag);
         }
+
 
         /// <summary>
         /// Creates a collection editor for an N-Property
@@ -269,18 +266,12 @@ namespace CerebelloWebRole.Code.Extensions
             string collectionIndexFieldName = String.Format("{0}.Index", collectionName);
 
             string itemIndex = null;
-            if (html.ViewData.ContainsKey(JQueryTemplatingEnabledKey))
-            {
-                itemIndex = "${index}";
-            }
-            else
-            {
-                itemIndex = GetCollectionItemIndex(collectionIndexFieldName);
-            }
+
+            itemIndex = html.ViewData.ContainsKey(JQueryTemplatingEnabledKey) ? "${index}" : GetCollectionItemIndex(collectionIndexFieldName);
 
             string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
 
-            TagBuilder indexField = new TagBuilder("input");
+            var indexField = new TagBuilder("input");
             indexField.MergeAttributes(new Dictionary<string, string>() {
                 { "name", collectionIndexFieldName },
                 { "value", itemIndex },
@@ -299,8 +290,7 @@ namespace CerebelloWebRole.Code.Extensions
                                                                                             string partialViewName,
                                                                                             TCollectionItem modelDefaultValues)
         {
-            ViewDataDictionary<TCollectionItem> viewData = new ViewDataDictionary<TCollectionItem>(modelDefaultValues);
-            viewData.Add(JQueryTemplatingEnabledKey, true);
+            var viewData = new ViewDataDictionary<TCollectionItem>(modelDefaultValues) { { JQueryTemplatingEnabledKey, true } };
             return html.Partial(partialViewName, modelDefaultValues, viewData);
         }
 

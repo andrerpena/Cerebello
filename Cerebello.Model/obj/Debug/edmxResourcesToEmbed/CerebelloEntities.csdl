@@ -222,7 +222,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Id" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CRM" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
     <Property Name="MedicalEntityId" Type="Int32" Nullable="false" />
     <Property Name="MedicalSpecialtyId" Type="Int32" Nullable="false" />
@@ -361,7 +361,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Secretary" FromRole="Secretary" ToRole="User" />
   </EntityType>
   <EntityType Name="User">

@@ -47,21 +47,23 @@
         
         <div class="global-search-wrapper">
             <input type="text" id="global-search" name="global-search" class="lookup" />
+            <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
             <script type="text/javascript">
-                $("#global-search").watermark({ text: "Ir para paciente, convênio ou medicamento" });
-                $("#global-search").autocomplete({
-                    source: "@Url.Action("searcheverything", "app")",
-                    select: function(event, ui) {
-                        window.location = ui.item.url;
-                    }
-                }).data( "autocomplete" )._renderItem = function( ul, item ) {
-			        return $( "<li></li>" )
-				        .data( "item.autocomplete", item )
-				        .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.description + "</span></a>" )
-				        .appendTo( ul );
-		        };
+                $("#global-search").lookup({
+                    contentUrl: "@Url.Action("lookupeverything", "app")",
+                    inputHiddenName: "global-search-hidden",
+                    ajaxParams: {
+                        doctorId: @doctor.Id
+                    },
+                    change: function(data) {
+                        window.location = data.Url;
+                    },
+                    columnHeaders: ["Nome", "Tipo"],
+                    columns: ["Value", "Description"]
+                });
             </script>
         </div>
+
     </div>
 }
 @section AdditionalTitleInfo {

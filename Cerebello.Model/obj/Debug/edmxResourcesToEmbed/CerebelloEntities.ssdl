@@ -310,7 +310,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="CRM" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="MedicalEntityId" Type="int" Nullable="false" />
     <Property Name="MedicalSpecialtyId" Type="int" Nullable="false" />
@@ -484,7 +484,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
   </EntityType>
   <EntityType Name="SYS_ActiveIngredient">
     <Key>
