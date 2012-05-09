@@ -169,7 +169,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(LookupHelper.GetData<LookupRow>(term, pageSize, pageIndex,
                 t =>
                 (from e in doc.Descendants()
-                 where e.Name == "nome" && e.Value.ToLower().Contains(t)
+                 where e.Name == "nome" &&
+                 e.Value.ToLower().Contains(t.ToLower()) &&
+                 (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
+
                  select new LookupRow { Value = e.Value, Id = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value }).ToList()), JsonRequestBehavior.AllowGet);
         }
         

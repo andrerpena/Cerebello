@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CerebelloWebRole.Code.Controls
 {
@@ -19,7 +16,7 @@ namespace CerebelloWebRole.Code.Controls
         public string contentUrl { get; set; }
         public string inputHiddenId { get; set; }
         public string inputHiddenName { get; set; }
-        public int? inputHiddenValue { get; set; }
+        public object inputHiddenValue { get; set; }
         public string inputTextId { get; set; }
         public string inputTextName { get; set; }
         public string inputTextValue { get; set; }

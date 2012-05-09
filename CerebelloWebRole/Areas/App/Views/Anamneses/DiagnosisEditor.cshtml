@@ -7,15 +7,7 @@
 <li class="edit-list-item">
     @using (Html.BeginCollectionItem("Diagnoses"))
     {
-        @Html.EditorFor(model => model.Text)
-        <script type="text/javascript">
-            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Text']").autocomplete({
-                        source: "@Url.Action("lookupdiagnoses")",
-                        select: function(event, ui) {
-                                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Id']").val(ui.item.id);
-                                }
-                    });
-        </script>
+        @Html.LookupFor(m => m.Cid10Code, m => m.Text, Url.Action("lookupdiagnoses"))
     }
     <span class="close-collection-item" onclick="$(this).closest('li').remove()"></span>
 </li>

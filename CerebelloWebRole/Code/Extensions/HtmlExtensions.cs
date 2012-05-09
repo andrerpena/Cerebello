@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Text;
+using System.Web.Mvc;
 using System.Linq.Expressions;
 using System;
 using System.Reflection;
@@ -20,9 +21,9 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
-        private static string ProcessHtmlId(string original)
+        private static string Encode(string original)
         {
-            return original.Replace('[', '_').Replace(']', '_').Replace('-', '_').Replace('.', '_');
+            return original.Replace('[', '_').Replace(']', '_').Replace('.', '_');
         }
 
         public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html)
@@ -147,31 +148,21 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Lookup
         /// </summary>
-        public static MvcHtmlString LookupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int?>> expressionId, Expression<Func<TModel, string>> expressionText, string lookupId, string actionUrl)
+        public static MvcHtmlString LookupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, object>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
         {
-            return LookupGridFor<TModel, LookupRow>(htmlHelper, expressionId, expressionText, lookupId, actionUrl, lr => lr.Id, lr => lr.Value);
+            return LookupGridFor<TModel, LookupRow>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
         }
 
         /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString LookupGridFor<TModel, TGridModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int?>> expressionId, Expression<Func<TModel, string>> expressionText, string lookupId, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
+        public static MvcHtmlString LookupGridFor<TModel, TGridModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, object>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
         {
             if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
             if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");
-            if (((Object)lookupId) == null) throw new ArgumentNullException("lookupId");
             if (String.IsNullOrEmpty(actionUrl)) throw new ArgumentException("The string cannot be null nor empty", "actionUrl");
             if (((Object)expressionLookupId) == null) throw new ArgumentNullException("expressionLookupId");
             if (((Object)expressionLookupText) == null) throw new ArgumentNullException("expressionLookupText");
-
-            var htmlPrefix = htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
-
-            TagBuilder tagBuilder = new TagBuilder("div");
-            var lookupIdFixed = string.IsNullOrEmpty(htmlPrefix) ? ProcessHtmlId(lookupId) : ProcessHtmlId(htmlPrefix + "." + lookupId);
-            var lookupName = string.IsNullOrEmpty(htmlPrefix) ? lookupId : htmlPrefix + "." + lookupId;
-
-            tagBuilder.Attributes["id"] = lookupIdFixed;
-            tagBuilder.Attributes["data-val-name"] = lookupName;
 
             TagBuilder scriptTag = new TagBuilder("script");
             scriptTag.Attributes["type"] = "text/javascript";
@@ -179,13 +170,15 @@ namespace CerebelloWebRole.Code.Extensions
             var idPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expressionId);
             var textPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expressionText);
 
+            var htmlPrefix = htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
+
             var model = htmlHelper.ViewContext.ViewData.Model;
-            var idPropertyValue = model != null ? (int?)idPropertyInfo.GetValue(model, null) : null;
+            var idPropertyValue = model != null ? idPropertyInfo.GetValue(model, null) : null;
             var textPropertyValue = model != null ? (string)textPropertyInfo.GetValue(model, null) : null;
 
-            var inputHiddenId = string.IsNullOrEmpty(htmlPrefix) ? idPropertyInfo.Name : ProcessHtmlId(htmlPrefix + "." + idPropertyInfo.Name);
+            var inputHiddenId = string.IsNullOrEmpty(htmlPrefix) ? idPropertyInfo.Name : Encode(htmlPrefix + "." + idPropertyInfo.Name);
             var inputHiddenName = string.IsNullOrEmpty(htmlPrefix) ? idPropertyInfo.Name : (htmlPrefix + "." + idPropertyInfo.Name);
-            var inputTextId = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : ProcessHtmlId(htmlPrefix + "." + textPropertyInfo.Name);
+            var inputTextId = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : Encode(htmlPrefix + "." + textPropertyInfo.Name);
             var inputTextName = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : (htmlPrefix + "." + textPropertyInfo.Name);
 
             var options = new LookupOptions()
@@ -218,16 +211,29 @@ namespace CerebelloWebRole.Code.Extensions
 
             // validação das colunas
             if (!options.columns.Contains(options.columnText))
-                throw new Exception(string.Format("O lookup possui configurações inválidas. A coluna de texto não faz parte da lista de colunas. Lookup: '{0}'. Coluna de text: '{1}'", lookupIdFixed, options.columnText));
+                throw new Exception(string.Format("O lookup possui configurações inválidas. A coluna de texto não faz parte da lista de colunas. Lookup: '{0}'. Coluna de text: '{1}'", inputTextId, options.columnText));
 
-            scriptTag.InnerHtml = string.Format("$(\"#{0}\").lookup({1});", lookupIdFixed, new JavaScriptSerializer().Serialize(options));
+            scriptTag.InnerHtml = string.Format("$(\"#{0}\").lookup({1});", inputTextId, new JavaScriptSerializer().Serialize(options));
 
-            // validation
+            // renders
+
+            var tagBuilder = new StringBuilder();
+
+            var inputTextClasses = new List<string> { "lookup" };
+
+            // determines if there's any validation issue
             if ((htmlHelper.ViewData.ModelState[inputTextName] != null && htmlHelper.ViewData.ModelState[inputTextName].Errors.Count > 0) ||
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
-                tagBuilder.Attributes["class"] = "lookup-validation-error";
+                inputTextClasses.Add("lookup-validation-error");
 
-            return new MvcHtmlString(tagBuilder + "\n" + scriptTag);
+            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray())}));
+            tagBuilder.AppendLine();
+            tagBuilder.Append(htmlHelper.HiddenFor(expressionId));
+            tagBuilder.AppendLine();
+
+            tagBuilder.Append(scriptTag.ToString());
+
+            return new MvcHtmlString(tagBuilder.ToString());
         }
 
 

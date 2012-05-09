@@ -339,6 +339,7 @@
     <Content Include="Scripts\jquery.arp.caret.js" />
     <Content Include="Scripts\jquery.arp.modal.js" />
     <Content Include="Scripts\jquery.arp.watermark.js" />
+    <Content Include="Scripts\jquery.maskedinput-1.3.min.js" />
     <Content Include="Scripts\jquery.ui.datepicker-pt-BR.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
