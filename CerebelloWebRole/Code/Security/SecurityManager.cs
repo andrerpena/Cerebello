@@ -34,13 +34,18 @@ namespace CerebelloWebRole.Code
 
             User user = new User()
             {
-                Person = new Person() {
+                Person = new Person()
+                {
                     DateOfBirth = registrationData.DateOfBirth,
                     Gender = registrationData.Gender,
                     FullName = registrationData.FullName,
+                    UrlIdentifier = StringHelper.GenerateUrlIdentifier(registrationData.FullName),
+                    CreatedOn = DateTime.Now,
                 },
                 PasswordSalt = passwordSalt,
-                Password = passwordHash
+                Password = passwordHash,
+                LastActiveOn = DateTime.Now,
+                Email = registrationData.EMail,
             };
 
             user.Person.Emails.Add(new Email() { Address = registrationData.EMail });
