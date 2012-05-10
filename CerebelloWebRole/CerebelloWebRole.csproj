@@ -101,6 +101,7 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
+    <Compile Include="Areas\App\Models\CidLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />

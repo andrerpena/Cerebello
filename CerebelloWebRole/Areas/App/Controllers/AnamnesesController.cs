@@ -13,6 +13,7 @@ using System.Reflection;
 using CerebelloWebRole.Code.Controls;
 using System.IO;
 using System.Xml.Resolvers;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -164,7 +165,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         ///         is the Cid10 category or sub-category of the condition
         /// </remarks>
         [HttpGet]
-        public JsonResult LookupDiagnoses(string term, int pageSize, int? pageIndex)
+        public JsonResult LookupDiagnoses(string term, int pageSize, int pageIndex)
         {
             // read CID10.xml as an embedded resource
             XmlReaderSettings settings = new XmlReaderSettings();
@@ -172,14 +173,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
             XmlReader reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
             XDocument doc = XDocument.Load(reader);
 
-            return this.Json(LookupHelper.GetData<LookupRow>(term, pageSize, pageIndex,
+            var result = LookupHelper.GetData<CidLookupGridModel>(term, pageSize, pageIndex,
                 t =>
-                (from e in doc.Descendants()
+                from e in doc.Descendants()
                  where e.Name == "nome" &&
-                 e.Value.ToLower().Contains(t.ToLower()) &&
+                 StringHelper.RemoveDiacritics(e.ToString()).ToLower().Contains(StringHelper.RemoveDiacritics(t.ToString()).ToLower()) &&
                  (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
+                 select new CidLookupGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
 
-                 select new LookupRow { Value = e.Value, Id = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value }).ToList()), JsonRequestBehavior.AllowGet);
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
         
         /// <summary>
