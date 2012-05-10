@@ -309,7 +309,7 @@
           <Property Name="AnamneseId" Type="int" Nullable="false" />
           <Property Name="Observations" Type="varchar" MaxLength="200" />
           <Property Name="Cid10Code" Type="varchar" Nullable="false" MaxLength="10" />
-          <Property Name="Cid10Name" Type="nchar" MaxLength="10" />
+          <Property Name="Cid10Name" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>

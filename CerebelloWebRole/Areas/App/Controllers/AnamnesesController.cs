@@ -101,7 +101,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // step 1: add new
                 foreach (var diagnosis in formModel.Diagnoses)
                 {
-                    if (!anamnese.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Text))
+                    if (!anamnese.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Cid10Code))
                         anamnese.Diagnoses.Add(new Diagnosis()
                         {
                             Cid10Code = diagnosis.Cid10Code,
@@ -129,7 +129,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("edit", formModel);
         }
 
-        public ActionResult AnamneseSymptomEditor(DiagnosisViewModel formModel)
+        /// <summary>
+        /// Will retrieve an editor for diagnosis. This is useful for the collection editor to request a new editor for 
+        /// a newly create diagnosis at client-side
+        /// </summary>
+        /// <param name="formModel"></param>
+        /// <returns></returns>
+        public ActionResult DiagnosisEditor(DiagnosisViewModel formModel)
         {
             return View(formModel);
         }
