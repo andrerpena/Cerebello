@@ -15,16 +15,14 @@
                         @Html.LabelFor(model => model.MedicineId)
                     </th>
                     <td>
-                        @Html.TextBoxFor(model => model.MedicineText, new { @class = "lookup" })
-                        @Html.HiddenFor(model => model.MedicineId)
-                        <script type="text/javascript">
-                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).MedicineText']").autocomplete({
-                        source: "@Url.Action("searchmedication", "medicines")",
-                        select: function(event, ui) {
-                            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).MedicineId']").val(ui.item.id);
-                        }
-                    });
-                        </script>
+                        @(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel, CerebelloWebRole.Areas.App.Models.MedicineLookupGridModel, int>(
+                            m => m.MedicineId,
+                            m => m.MedicineText,
+                            Url.Action("lookupmedication", "medicines"),
+                            gm => gm.Id,
+                            gm => gm.Name,
+                            gm => gm.LaboratoryName
+                        ))
                     </td>
                 </tr>
                 <tr>

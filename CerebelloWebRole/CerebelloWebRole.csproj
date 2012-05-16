@@ -101,9 +101,10 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
-    <Compile Include="Areas\App\Models\CidLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
+    <Compile Include="Areas\App\Models\LookupGriModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Code\Controllers\CerebelloController.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Code\Helpers\DataAnnotationsHelper.cs" />
     <Compile Include="Code\Helpers\DateTimeHelper.cs" />
     <Compile Include="Code\Helpers\EnumHelper.cs" />
+    <Compile Include="Code\Helpers\FlattenExpressionVisitor.cs" />
     <Compile Include="Code\Helpers\GravatarHelper.cs" />
     <Compile Include="Code\Helpers\Html\Pager.cs" />
     <Compile Include="Code\Helpers\HttpHelper.cs" />

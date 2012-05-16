@@ -8,6 +8,7 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Models;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code.Controls;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -44,9 +45,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new MedicinesIndexViewModel();
-            model.Medicines = (from medicine in db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
+            model.LastRegisteredMedicines = (from medicine in db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
                                select this.GetViewModelFromModel(medicine)).ToList();
-            model.Count = db.Medicines.Count();
+            model.TotalMedicinesCount = db.Medicines.Count();
             return View(model);
         }
 
@@ -200,17 +201,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public JsonResult SearchLaboratory(string term)
+        public JsonResult LookupLaboratories(string term, int pageSize, int pageIndex)
         {
-            var laboratories = (from l in this.db.Laboratories
-                                where l.Doctor.Id == this.Doctor.Id && l.Name.Contains(term)
-                                select new
-                                {
-                                    id = l.Id,
-                                    value = l.Name
-                                }).Take(5).ToList();
+            var baseQuery = this.db.Laboratories.Where(l => l.DoctorId == this.Doctor.Id);
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(l => l.Name.Contains(term));
 
-            return this.Json(laboratories, JsonRequestBehavior.AllowGet);
+            var query = from l in baseQuery
+                        select new
+                        {
+                            id = l.Id,
+                            value = l.Name
+                        };
+
+            var result = new LookupJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
+                Count = query.Count()
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ActiveIngredientEditor(MedicineActiveIngredientViewModel viewModel)
@@ -219,20 +229,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public JsonResult SearchMedication(string term)
+        public JsonResult LookupMedication(string term, int pageSize, int pageIndex)
         {
-            var medicines = (from m in this.db.Medicines
-                             where (m.Doctor.Id == this.Doctor.Id) && (m.Name.Contains(term) || m.ActiveIngredients.Any(ai => ai.Name.Contains(term)))
-                             orderby m.Name
-                             select new
-                             {
-                                 id = m.Id,
-                                 value = m.Name,
-                                 laboratory = m.Laboratory.Name,
-                                 activeIngredients = m.ActiveIngredients.Select(ai => ai.Name)
-                             }).Take(5).ToList();
+            var baseQuery = this.db.Medicines.Where(m => m.DoctorId == this.Doctor.Id);
+            if(!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(m => m.Name.Contains(term) || m.ActiveIngredients.Any(ai => ai.Name.Contains(term)));
 
-            return this.Json(medicines, JsonRequestBehavior.AllowGet);
+           var query = from m in baseQuery
+                        orderby m.Name
+                        select new MedicineLookupGridModel
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            LaboratoryName = m.Laboratory.Name
+                        };
+
+            var result = new LookupJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
+                Count = query.Count()
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

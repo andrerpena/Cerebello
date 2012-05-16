@@ -7,7 +7,14 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class MedicinesIndexViewModel
     {
-        public List<MedicineViewModel> Medicines { get; set; }
-        public int Count { get; set; }
+        /// <summary>
+        /// List of last registered medicines
+        /// </summary>
+        public List<MedicineViewModel> LastRegisteredMedicines { get; set; }
+
+        /// <summary>
+        /// Total number of medicines
+        /// </summary>
+        public int TotalMedicinesCount { get; set; }
     }
 }

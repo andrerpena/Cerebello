@@ -7,7 +7,7 @@
 <li class="edit-list-item">
     @using (Html.BeginCollectionItem("Diagnoses"))
     {
-        @(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.DiagnosisViewModel, CerebelloWebRole.Areas.App.Models.CidLookupGridModel>(m => m.Cid10Code, m => m.Text, Url.Action("lookupdiagnoses"), gm => gm.Cid10Code, gm => gm.Cid10Name, gm => gm.Cid10Code ))
+        @(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.DiagnosisViewModel, CerebelloWebRole.Areas.App.Models.CidLookupGridModel, string>(m => m.Cid10Code, m => m.Text, Url.Action("lookupdiagnoses"), gm => gm.Cid10Code, gm => gm.Cid10Name, gm => gm.Cid10Code ))
     }
     <span class="close-collection-item" onclick="$(this).closest('li').remove()"></span>
 </li>

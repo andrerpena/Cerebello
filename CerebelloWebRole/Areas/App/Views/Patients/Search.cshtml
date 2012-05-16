@@ -2,11 +2,10 @@
 @{
     ViewBag.Title = "Search";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
-    
-    WebGrid grid = new WebGrid();
-    grid.Bind(Model.Patients, null, false, Model.Count);
-    var nameColumn = grid.Column(header: "Nome completo", format: @<text><a href="@Url.Action("view", new { id = @item.Id })">@item.FullName</a></text>);
-    var ageColumn = grid.Column(header: "Idade", format: @<text>@item.Age</text>);
+
+    var grid = Html.CreateGrid(this.Model.Patients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+    grid.AddField(m => m.FullName);
+    grid.AddField(m => m.DateOfBirth, format: @<text>DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>);
 }
 @section Title {
     Pesquisa de pacientes
@@ -24,5 +23,5 @@
     <p class="title">
         Resultado da pesquisa
     </p>
-    @grid.GetHtml(columns: new List<WebGridColumn>() { nameColumn, ageColumn }, displayHeader: false, headerStyle: "webgrid-header", rowStyle: "webgrid-row-style", alternatingRowStyle: "webgrid-alternating-row", footerStyle: "webgrid-footer", tableStyle: "webgrid")
+    @grid.GetHtml()
 </div>

@@ -41,9 +41,12 @@ namespace CerebelloWebRole.Code.Extensions
             return new EditPanel<TModel>(html, title);
         }
 
-        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int count, int rowsPerPage)
+        /// <summary>
+        /// Creates a grid considering the current view Model as a type identifier
+        /// </summary>
+        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int rowsPerPage, int? count = null)
         {
-            return new Grid<TModel>(model, count, rowsPerPage);
+            return new Grid<TModel>(model, rowsPerPage, count);
         }
 
         public static MvcHtmlString ButtonLink(this HtmlHelper htmlHelper, string aText, string aUrl)
@@ -148,15 +151,23 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Lookup
         /// </summary>
-        public static MvcHtmlString LookupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, object>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
+        public static MvcHtmlString LookupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
         {
-            return LookupGridFor<TModel, LookupRow>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+            return LookupGridFor<TModel, LookupRow, int>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+        }
+
+        /// <summary>
+        /// Lookup
+        /// </summary>
+        public static MvcHtmlString LookupFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
+        {
+            return LookupGridFor<TModel, LookupRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
         }
 
         /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString LookupGridFor<TModel, TGridModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, object>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
+        public static MvcHtmlString LookupGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
         {
             if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
             if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");
@@ -226,7 +237,7 @@ namespace CerebelloWebRole.Code.Extensions
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
                 inputTextClasses.Add("lookup-validation-error");
 
-            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray())}));
+            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray()) }));
             tagBuilder.AppendLine();
             tagBuilder.Append(htmlHelper.HiddenFor(expressionId));
             tagBuilder.AppendLine();

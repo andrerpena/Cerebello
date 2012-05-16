@@ -1,6 +1,10 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
+    @*var editPanel = this.Html.CreateEditPanel(null);
+    editPanel.AddField(m => m.Name);
+    editPanel.AddField(m => m.LaboratoryName, format: @<text>@Html.LookupFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("lookuplaboratories"))</text>);
+    editPanel.AddField(m => m.Usage);*@
     
 }
 @section Title {

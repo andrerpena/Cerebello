@@ -15,7 +15,6 @@
             ajaxParams: {},
             formatItem: function () { },
             change: function (data) { },
-            allowInsert: false,
             inputHiddenName: null,
             columnId: "Id",
             columnText: "Value",
@@ -248,7 +247,7 @@
                 _this.textCache = _this.$el.val();
                 switch (e.keyCode) {
 
-                    // enter                                                                                                                                                                                                                             
+                    // enter                                                                                                                                                                                                                               
                     case 13:
                         e.preventDefault();
 
@@ -261,7 +260,7 @@
                         else
                             _this.getData(null, null, _this.$el.val());
                         break;
-                    // seta pra baixo                                                                                                                                                                         
+                    // seta pra baixo                                                                                                                                                                           
                     case 40:
                         if (!_this.isDropdownVisible())
                             _this.getData(null, function () { _this.moveFocusForward(); }, _this.$el.val());
@@ -270,14 +269,14 @@
                             _this.moveFocusForward();
                         }
                         break;
-                    // seta para cima                                                                                                                                                                                                                      
+                    // seta para cima                                                                                                                                                                                                                        
                     case 38:
                         if (_this.isDropdownCreated()) {
                             _this.showAndFixDropdownPosition();
                             _this.moveFocusBackward();
                         }
                         break;
-                    // esc e tab           
+                    // esc e tab             
                     case 27:
                     case 9:
                         if (_this.isDropdownCreated())
@@ -293,7 +292,6 @@
                 if (_this.$el.val() != _this.textCache) {
                     _this.$lookupInputHidden.val('');
                     _this.opts.change(undefined);
-
                     if (_this.intervalHandler)
                         clearTimeout(_this.intervalHandler);
 

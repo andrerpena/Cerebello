@@ -1,10 +1,10 @@
 ﻿@{
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
-    
+
     var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
-    
+
     var configControllerNames = new string[] { "config", "configschedule", "modelmedicalcertificate" };
-    
+
     var practiceId = ViewBag.Practice.Id;
 
     var doctor = (CerebelloWebRole.Areas.App.Models.DoctorViewModel)ViewBag.Doctor;
@@ -44,7 +44,6 @@
         </a>
     </div>
     <div class="actions-wrapper">
-        
         <div class="global-search-wrapper">
             <input type="text" id="global-search" name="global-search" class="lookup" />
             <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
@@ -56,14 +55,14 @@
                         doctorId: @doctor.Id
                     },
                     change: function(data) {
-                        window.location = data.Url;
+                        if(data)
+                            window.location = data.Url;
                     },
                     columnHeaders: ["Nome", "Tipo"],
                     columns: ["Value", "Description"]
                 });
             </script>
         </div>
-
     </div>
 }
 @section AdditionalTitleInfo {

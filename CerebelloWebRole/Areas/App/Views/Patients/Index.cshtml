@@ -2,11 +2,10 @@
 @{
     ViewBag.Title = "Index";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
-    
-    WebGrid grid = new WebGrid();
-    grid.Bind(Model.Patients, null, false, Model.Count);
-    var nameColumn = grid.Column(header: "Nome completo", format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
-    var ageColumn = grid.Column(header: "Idade", format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>);
+
+    var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+    grid.AddField(m => m.FullName);
+    grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>, header: "Idade");
 }
 @section Title {
 Prontuário
@@ -70,7 +69,7 @@ Prontuário
                 <td class="header">
                     Total de pacientes:
                 </td>
-                <td class="value">@Model.Count
+                <td class="value">@Model.TotalPatientsCount
                 </td>
             </tr>
         </tr>
@@ -86,13 +85,5 @@ Prontuário
     <p class="title">
         Últimos pacientes cadastrados
     </p>
-    @grid.GetHtml(
-       columns: new List<WebGridColumn>() { nameColumn, ageColumn },
-       displayHeader: true,
-       tableStyle: "webgrid",
-       headerStyle: "webgrid-header",
-       footerStyle: "webgrid-footer",
-       alternatingRowStyle: "webgrid-alternating-row",
-       selectedRowStyle: "webgrid-selected-row",
-       rowStyle: "webgrid-row-style")
+    @grid.GetHtml()
 </div>

@@ -127,7 +127,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new PatientsIndexViewModel();
-            model.Patients = (from p in
+            model.LastRegisteredPatients = (from p in
                                   (from Patient patient in db.Patients where patient.DoctorId == this.Doctor.Id select patient).ToList()
                               select new PatientViewModel
                               {
@@ -138,9 +138,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var timeZoneNow = DateTimeHelper.GetTimeZoneNow();
 
-            model.PatientAgeDistribution = (from p in db.Patients group p by new { Gender = p.Person.Gender, Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, timeZoneNow) } into g select g).OrderBy(g => g.Key).Select(g => new CerebelloWebRole.Areas.App.Models.PatientsIndexViewModel.ChartPatientAgeDistribution { Age = g.Key.Age, Gender = g.Key.Gender, Count = g.Count() }).ToList();
-            model.Count = db.Patients.Count();
-
+            model.PatientAgeDistribution = (from p in db.Patients where p.DoctorId == this.Doctor.Id group p by new { Gender = p.Person.Gender, Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, timeZoneNow) } into g select g).OrderBy(g => g.Key).Select(g => new CerebelloWebRole.Areas.App.Models.PatientsIndexViewModel.ChartPatientAgeDistribution { Age = g.Key.Age, Gender = g.Key.Gender, Count = g.Count() }).ToList();
+            model.TotalPatientsCount = this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id).Count();
             return View(model);
         }
 

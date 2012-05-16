@@ -16,11 +16,14 @@ namespace CerebelloWebRole.Code.Controls
 
         public List<GridFieldBase> Fields { get; set; }
 
-        public int Count { get; set; }
+        /// <summary>
+        /// The number of rows
+        /// </summary>
+        public int? Count { get; set; }
 
         public int RowsPerPage { get; set; }
 
-        public Grid(IEnumerable<TModel> model, int count, int rowsPerPage = 30)
+        public Grid(IEnumerable<TModel> model, int rowsPerPage = 30, int? count = null)
         {
             this.Model = model;
             this.Fields = new List<GridFieldBase>();
@@ -37,8 +40,21 @@ namespace CerebelloWebRole.Code.Controls
         {
             if (this.Model.Any())
             {
-                WebGrid webGrid = new WebGrid(canPage: true, sortFieldName: "SortBy", sortDirectionFieldName: "SortDirection", pageFieldName: "Page", rowsPerPage: this.RowsPerPage);
-                webGrid.Bind((IEnumerable<dynamic>)this.Model, null, false, this.Count);
+                // the way the grid is bound depends on the "Count" property. If it has been set, then 
+                // the grid will be virtually paged, otherwise it won't be paged at all
+
+                WebGrid webGrid = null;
+
+                if (this.Count.HasValue)
+                {
+                    webGrid = new WebGrid(canPage: true, sortFieldName: "SortBy", sortDirectionFieldName: "SortDirection", pageFieldName: "Page", rowsPerPage: this.RowsPerPage);
+                    webGrid.Bind((IEnumerable<dynamic>)this.Model, null, true, this.Count.Value);
+                }
+                else
+                {
+                    webGrid = new WebGrid();
+                    webGrid.Bind((IEnumerable<dynamic>)this.Model);
+                }
 
                 List<WebGridColumn> webGridColumns = new List<WebGridColumn>();
 

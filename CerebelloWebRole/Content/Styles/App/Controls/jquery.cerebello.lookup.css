@@ -19,8 +19,8 @@
 
 .lookup-wrapper table tbody tr td {
     border: 1px solid #EEEEEE;
-    cursor: default;
-    padding: 8px 10px;
+    max-width: 100px;
+    padding: 6px;
 }
 
 .lookup-wrapper table 

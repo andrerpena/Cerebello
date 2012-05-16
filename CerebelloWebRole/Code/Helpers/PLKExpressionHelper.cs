@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.ComponentModel.DataAnnotations;
+using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.Code
 {
@@ -22,6 +23,11 @@ namespace CerebelloWebRole.Code
             var displayAttribute = propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().FirstOrDefault();
 
             return displayAttribute != null ? displayAttribute.Name : propertyInfo.Name;
+        }
+
+        public static Expression<Func<T, object>> CleanUpExpression<T>(Expression<Func<T, object>> expression)
+        {
+            return (Expression<Func<T, object>>)new FlattenExpressionVisitor<T>().Visit(expression);
         }
 
         /// <summary>

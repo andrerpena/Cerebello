@@ -140,21 +140,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             return View(formModel);
         }
-
-        public class MyResolver : XmlResolver
-        {
-
-            public override System.Net.ICredentials Credentials
-            {
-                set { throw new NotImplementedException(); }
-            }
-
-            public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
+        
         /// <summary>
         /// Lookup of diagnoses
         /// </summary>

@@ -30,11 +30,14 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
-        /// Returns 
+        /// Returns the "NOW" relative to the current time zone.
+        /// Important: Time is always recorded in database as UTC time.
         /// </summary>
         /// <returns></returns>
         public static DateTime GetTimeZoneNow()
         {
+            //ToDo: Add logic for obtaining REAL timezone now.
+            // This code is STUB
             return DateTime.Now;
         }
 
