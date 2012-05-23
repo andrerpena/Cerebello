@@ -4,7 +4,7 @@
     ViewBag.Watermark = "Pesquisar pelo nome do medicamento, princípio ativo ou laboratório";
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredMedicines, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
-    grid.AddField(m => m.Name);
+    grid.AddField(m => m.Name, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.Name</a></text>);
     grid.AddField(m => m.LaboratoryName);
 }
 @section Title {
