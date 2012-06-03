@@ -181,7 +181,7 @@ namespace CerebelloWebRole.Code.Controls
                         && propertyInfo.PropertyType.GetGenericArguments()[0] == typeof(int)) && propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), true).Length > 0))
                     {
                         var editorForMethod = (from m in typeof(HtmlExtensions).GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                                               where m.Name == "DropDownListFor"
+                                               where m.Name == "EnumDropdownListFor"
                                                select m).First();
                         editorForMethodGeneric = editorForMethod.MakeGenericMethod(typeof(TModel), valueType);
                     }

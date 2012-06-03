@@ -1,26 +1,22 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.CollectionEditorViewModel
 <div>
-    <ul class="edit-list @Model.ListClass">
+    <ul class="edit-list-single-line @Model.ListClass">
         @if (Model != null)
         {
             foreach (var element in this.Model.Items)
             {
                <li class="edit-list-item">
-                    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()"></div>
-                    <div class="edit-list-item-wrapper">
-                        @Html.Partial(this.Model.ListParialViewName, element)
-                    </div>
+                    @Html.Partial(this.Model.ListParialViewName, element)
+                    <span onclick="$(this).closest('li').remove()" class="close-collection-item"></span>
                </li>
             }
         }
         else
         {
             <li class="edit-list-item">
-                    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()"></div>
-                    <div class="edit-list-item-wrapper">
-                        @Html.Partial(this.Model.ListParialViewName)
-                    </div>
-               </li>
+                    @Html.Partial(this.Model.ListParialViewName)
+                    <span onclick="$(this).closest('li').remove()" class="close-collection-item"></span>
+            </li>
         }                    
     </ul>
     <a id="@Model.AddAnotherLinkId" class="block-little-link add-another-link" href="#">@Model.AddAnotherText</a>
@@ -31,7 +27,7 @@
             $.ajax({
                 url: "@Url.Action(this.Model.ListParialViewName)",
                 success: function (result) {
-                    var html = "<li class='edit-list-item'><div class='remove-button' onclick='$(this).closest('.edit-list-item').remove()'></div><div class='edit-list-item-wrapper'>" + result + "</div></li>";
+                    var html = "<li class='edit-list-item'>" + result + "<span onclick='$(this).closest(\'li\').remove()' class='close-collection-item'></span></li>";
                     $(".@Model.ListClass").append(html);
                 }
             });

@@ -177,9 +177,6 @@ input[type=submit]
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
   border: 1px solid #ccc;
   border-bottom-color: #bbb;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -207,7 +204,6 @@ select, input[type=text], textarea
     box-sizing: border-box;
     font-family: Arial, Helvetica;
     border: 1px solid #CCCCCC;
-    border-radius: 3px 3px 3px 3px;
     font-family: Arial,Helvetica;
     font-size: 13px;
     padding: 4px;
@@ -337,14 +333,10 @@ input.lookup
 
 .document .document-header
 {
+    background: none repeat scroll 0 0 #F5F5F5;
     border-bottom: 1px solid #E7E7E7;
     margin: 0;
     padding: 10px 15px;
-    
-    background: #F5F5F5; /* for non-css3 browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#E7E7E7'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#E7E7E7)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #F5F5F5,  #E7E7E7); /* for firefox 3.6+ */ 
 }
 
 .document .document-header h2
@@ -452,17 +444,13 @@ fieldset legend
 
 #app-header
 {
+    background: none repeat scroll 0 0 #F5F5F5;
     border-bottom: 1px solid #DADEE5;
     color: white;
     margin-bottom: 15px;
     padding: 0 10px;
     position: relative;
     z-index: 3;
-    
-    background: #F5F5F5; /* for non-css3 browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#E7E7E7'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#E7E7E7)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #F5F5F5,  #E7E7E7); /* for firefox 3.6+ */ 
 }
 
 #app-header a
@@ -521,7 +509,6 @@ fieldset legend
 #app-header .title .global-search-wrapper input[type=text]
 {
     border: 1px solid #CCCCCC;
-    border-radius: 4px 4px 4px 4px;
     font-size: 12px;
     opacity: 0.9;
     padding: 4px 10px 4px 24px;
@@ -530,7 +517,7 @@ fieldset legend
 
 #app-header .title .actions-wrapper
 {
-    margin-left: 212px;
+    margin-left: 214px;
 }
 
 #app-header .title .actions-wrapper input[type=text]
@@ -645,10 +632,9 @@ fieldset legend
 
 .form-title
 {
-    border-bottom: 1px solid #EBE7E7;
-    color: Gray;
+    background: none repeat scroll 0 0 #F5F5F5;
     margin: 20px 0 0;
-    padding-bottom: 3px;
+    padding: 5px;
 }
 
 .modal .form-table 
@@ -985,7 +971,6 @@ a.gotoPractice
 {
     background-color: #F5F5F5;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 4px 4px 4px 4px;
     margin: 0 0 10px;
     padding: 10px 10px 0;
 }
@@ -1076,7 +1061,6 @@ a.gotoPractice
 
 .submit-bar
 {
-    border-top: 1px solid #E8E7E7;
     margin-top: 15px;
     padding: 10px;
     text-align: right;
@@ -1119,7 +1103,6 @@ a.gotoPractice
 {
     border-bottom: 1px dashed #E8E7E7;
     display: block;
-    padding-top: 10px;
 }
 
 .edit-list .edit-list-item:last-child
@@ -1133,7 +1116,7 @@ a.gotoPractice
 
 .edit-list-single-line .edit-list-item
 {
-    padding: 0 0 10px 0;
+    padding-bottom: 10px;
 }
 
 .edit-list-single-line .edit-list-item:last-child
@@ -1208,12 +1191,7 @@ a.inline-link:hover
 
 .add-another-link 
 {
-    margin-top: 5px;
-}
-
-.add-another-link.in-form
-{
-    margin-top: 7px;
+    margin-top: 8px;
 }
 
 .remove-button
@@ -1222,7 +1200,7 @@ a.inline-link:hover
     cursor: pointer;
     float: right;
     height: 16px;
-    margin-top: 10px;
+    margin-top: 6px;
     width: 16px;
 }
 

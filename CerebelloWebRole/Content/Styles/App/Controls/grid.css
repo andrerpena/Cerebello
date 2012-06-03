@@ -4,12 +4,7 @@
      border: 0px;
      border-collapse: collapse;
  }
-  
- .webgrid a
- {
-     color: #000;
- }
-  
+ 
  .webgrid-header
  {
     background-color: #F5F5F5;
@@ -36,7 +31,6 @@
  
  .webgrid tr td, .webgrid tr th
  {
-    border: 1px solid #D7D7D7;
     padding: 8px;
  }
   

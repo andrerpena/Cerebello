@@ -38,7 +38,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                               }).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Index(int? doctorId)
+        public ActionResult Index()
         {
             // verify min and max times
             List<string> minTimes = new List<string>();
@@ -90,25 +90,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 MaxTime = maxMaxTime,
                 Weekends = this.Doctor.CFG_Schedule.Saturday || this.Doctor.CFG_Schedule.Sunday
             };
-            if (doctorId != null)
-                viewModel.DoctorId = doctorId.Value;
-            else
-            {
-                // se não foi informado qual é o médico, eu tenho que verificar.
-                // se o usuário atual for um médico, então eu vou pegar a agenda dele
-                var user = this.GetCurrentUser();
-                // se o usuário atual for um médico deste consultório, eu vou usar a agenda dele
-                if (user.Doctor != null)
-                    viewModel.DoctorId = user.Id;
-                else
-                    throw new Exception("Não é possível determinar o médico do qual se deseja acessar a agenda");
-            }
+
+            viewModel.DoctorId = this.Doctor.Id;
 
             return View(viewModel);
         }
 
         [HttpGet]
-        public ActionResult Create(DateTime date, string start, string end, int doctorId)
+        public ActionResult Create(DateTime date, string start, string end)
         {
             var startTime = date + DateTimeHelper.GetTimeSpan(start);
             var endTime = date + DateTimeHelper.GetTimeSpan(end);
@@ -117,7 +106,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.Date = date;
             viewModel.Start = start;
             viewModel.End = end;
-            viewModel.DoctorId = doctorId;
+            viewModel.DoctorId = this.Doctor.Id;
             viewModel.DateSpelled = DateTimeHelper.GetDayOfWeekAsString(date) + ", " + DateTimeHelper.ConvertToRelative(date, DateTimeHelper.GetTimeZoneNow(), DateTimeHelper.RelativeDateOptions.IncludePrefixes | DateTimeHelper.RelativeDateOptions.IncludeSuffixes | DateTimeHelper.RelativeDateOptions.ReplaceToday | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
             viewModel.IsTimeValid = this.ValidateTime(date, start, end) && this.IsTimeAvailable(startTime, endTime);
 

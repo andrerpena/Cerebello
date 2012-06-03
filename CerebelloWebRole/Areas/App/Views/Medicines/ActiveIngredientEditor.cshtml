@@ -2,19 +2,16 @@
 @{
     Layout = null;
 }
-<li class="edit-list-item">
-    @using (Html.BeginCollectionItem("ActiveIngredients"))
-    {
-        @Html.HiddenFor(model => model.ActiveIngredientId)
-        @Html.TextBoxFor(model => model.ActiveIngredientName, new { @class = "lookup" })
-        <script type="text/javascript">
+@using (Html.BeginCollectionItem("ActiveIngredients"))
+{
+    @Html.HiddenFor(model => model.ActiveIngredientId)
+    @Html.TextBoxFor(model => model.ActiveIngredientName, new { @class = "lookup" })
+    <script type="text/javascript">
             $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).ActiveIngredientName']").autocomplete({
                 source: "@Url.Action("searchactiveingredient", "medicines")",
                 select: function(event, ui) {
                     $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).ActiveIngredientId']").val(ui.item.id);
                 }
             });
-        </script>
-    }
-    <span class="close-collection-item" onclick="$(this).closest('li').remove()"></span>
-</li>
+    </script>
+}

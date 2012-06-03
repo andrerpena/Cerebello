@@ -83,35 +83,6 @@ namespace CerebelloWebRole.Code.Extensions
             return new MvcHtmlString(defaultLabel);
         }
 
-        public static MvcHtmlString EnumDropdownFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
-        {
-            var memberName = ((MemberExpression)expression.Body).Member.Name;
-            var propertyInfo = typeof(TModel).GetProperty(memberName);
-
-            Type enumType = null;
-
-            if (propertyInfo.PropertyType.IsEnum)
-                enumType = propertyInfo.PropertyType;
-            else
-            {
-                var attributes = propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), true);
-                if (attributes.Length == 0)
-                    throw new Exception("cannot resolve enum type");
-
-                enumType = ((EnumDataTypeAttribute)attributes[0]).EnumType;
-                if (enumType == null)
-                    throw new Exception("cannot resolve enum type");
-            }
-
-            var enumValues = Enum.GetValues(enumType);
-            var items = new List<SelectListItem>();
-
-            foreach (var value in enumValues)
-                items.Add(new SelectListItem() { Value = ((int)value).ToString(), Text = EnumHelper.GetText(value) });
-
-            return html.DropDownList(memberName, items, "");
-        }
-
         public static MvcHtmlString EnumDisplayFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
         {
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
@@ -142,10 +113,13 @@ namespace CerebelloWebRole.Code.Extensions
             return new MvcHtmlString(EnumHelper.GetText((int)modelValue, enumType));
         }
 
-        public static MvcHtmlString DropDownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, string optionLabel, object htmlAttributes)
+        /// <summary>
+        /// DropdownList 
+        /// </summary>
+        public static MvcHtmlString EnumDropdownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
             var valueDisplayDictionary = EnumHelper.GetSelectListItems(EnumHelper.GetEnumDataTypeFromExpression(expression));
-            return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, optionLabel, htmlAttributes);
+            return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, "");
         }
 
         /// <summary>
@@ -237,7 +211,7 @@ namespace CerebelloWebRole.Code.Extensions
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
                 inputTextClasses.Add("lookup-validation-error");
 
-            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray()) }));
+            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray()), autocomplete = "off" }));
             tagBuilder.AppendLine();
             tagBuilder.Append(htmlHelper.HiddenFor(expressionId));
             tagBuilder.AppendLine();
@@ -247,12 +221,14 @@ namespace CerebelloWebRole.Code.Extensions
             return new MvcHtmlString(tagBuilder.ToString());
         }
 
-
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
-        public static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor)
+        private static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string partialName, string collectionItemEditor, string addAnotherText)
         {
+            if (string.IsNullOrEmpty(collectionItemEditor)) throw new ArgumentException("collectionItemEditor cannot be null or empty");
+            if (string.IsNullOrEmpty(addAnotherText)) throw new ArgumentException("addAnotherText cannot be null or empty");
+
             var propertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
             var addAnotherLinkId = "add-another-to-" + propertyInfo.Name.ToLower();
             var listClass = propertyInfo.Name.ToLower() + "-list";
@@ -262,10 +238,28 @@ namespace CerebelloWebRole.Code.Extensions
                 ListParialViewName = collectionItemEditor,
                 AddAnotherLinkId = addAnotherLinkId,
                 ListClass = listClass,
-                Items = html.ViewContext.ViewData.Model != null ? new ArrayList(expression.Compile()((TModel)html.ViewContext.ViewData.Model)) : new ArrayList()
+                Items = html.ViewContext.ViewData.Model != null ? new ArrayList(expression.Compile()((TModel)html.ViewContext.ViewData.Model)) : new ArrayList(),
+                AddAnotherText = addAnotherText
             };
 
-            return html.Partial("CollectionEditor", viewModel);
+            return html.Partial(partialName, viewModel);
+        }
+
+        /// <summary>
+        /// Creates a collection editor for an N-Property
+        /// </summary>
+        public static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor, string addAnotherText)
+        {
+            return CollectionEditorFor(html, expression, "CollectionEditor", collectionItemEditor, addAnotherText);
+        }
+
+
+        /// <summary>
+        /// Creates a collection editor for an N-Property
+        /// </summary>
+        public static MvcHtmlString CollectionEditorInlineFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor, string addAnotherText)
+        {
+            return CollectionEditorFor(html, expression, "CollectionEditorInline", collectionItemEditor, addAnotherText);
         }
 
         /// <summary>
@@ -281,11 +275,7 @@ namespace CerebelloWebRole.Code.Extensions
                 throw new ArgumentException("collectionName is null or empty.", "collectionName");
 
             string collectionIndexFieldName = String.Format("{0}.Index", collectionName);
-
-            string itemIndex = null;
-
-            itemIndex = html.ViewData.ContainsKey(JQueryTemplatingEnabledKey) ? "${index}" : GetCollectionItemIndex(collectionIndexFieldName);
-
+            string itemIndex = GetCollectionItemIndex(collectionIndexFieldName);
             string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
 
             var indexField = new TagBuilder("input");
@@ -300,17 +290,7 @@ namespace CerebelloWebRole.Code.Extensions
             html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
             return new CollectionItemNamePrefixScope(html.ViewData.TemplateInfo, collectionItemName);
         }
-
-        private const string JQueryTemplatingEnabledKey = "__BeginCollectionItem_jQuery";
-
-        public static MvcHtmlString CollectionItemJQueryTemplate<TModel, TCollectionItem>(this HtmlHelper<TModel> html,
-                                                                                            string partialViewName,
-                                                                                            TCollectionItem modelDefaultValues)
-        {
-            var viewData = new ViewDataDictionary<TCollectionItem>(modelDefaultValues) { { JQueryTemplatingEnabledKey, true } };
-            return html.Partial(partialViewName, modelDefaultValues, viewData);
-        }
-
+        
         /// <summary>
         /// Tries to reuse old .Index values from the HttpRequest in order to keep the ModelState consistent
         /// across requests. If none are left returns a new one.

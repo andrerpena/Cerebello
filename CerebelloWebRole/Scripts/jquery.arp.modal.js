@@ -21,10 +21,11 @@
         this.$el = null;
 
         this.resize = function () {
-            this.$el.animate({
+
+            this.$el.css({
                 top: $(window).height() / 2 - this.$el.height() / 2,
                 left: $(window).width() / 2 - this.$el.width() / 2
-            }, "fast");
+            });
 
             this.$mask.css({
                 width: $(window).width(),
@@ -86,7 +87,7 @@
                 url: _this.opts.url,
                 data: _this.opts.data,
                 success: function (html) {
-                    _this.$el.fadeIn("fast");
+                    _this.$el.show();
                     modalContent.html(html);
                 }
             });

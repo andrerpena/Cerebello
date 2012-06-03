@@ -1,55 +1,27 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel
 @{
     Layout = null;
-}
-<li class="edit-list-item">
-    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()">
-    </div>
-    @using (Html.BeginCollectionItem("ReceiptMedicines"))
-    {
-        @Html.HiddenFor(model => model.Id);
-        <div class="edit-list-item-wrapper">
-            <table class="form-table">
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.MedicineId)
-                    </th>
-                    <td>
-                        @(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel, CerebelloWebRole.Areas.App.Models.MedicineLookupGridModel, int>(
+    var editPanel = Html.CreateEditPanel();
+    editPanel.AddField(m => m.MedicineId, format: @<text>@(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel, CerebelloWebRole.Areas.App.Models.MedicineLookupGridModel, int>(
                             m => m.MedicineId,
                             m => m.MedicineText,
                             Url.Action("lookupmedication", "medicines"),
                             gm => gm.Id,
                             gm => gm.Name,
                             gm => gm.LaboratoryName
-                        ))
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.Quantity)
-                    </th>
-                    <td>
-                        @Html.EditorFor(model => model.Quantity)
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.Prescription)
-                    </th>
-                    <td class="large">
-                        @Html.TextAreaFor(model => model.Prescription)
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.Observations)
-                    </th>
-                    <td class="large">
-                        @Html.TextAreaFor(model => model.Observations)
-                    </td>
-                </tr>
-            </table>
+                        ))</text>);
+    editPanel.AddField(m => m.Quantity);
+    editPanel.AddField(m => m.Prescription, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Prescription)</text>);
+    editPanel.AddField(m => m.Observations, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Observations)</text>);
+}    
+<li class="edit-list-item">
+    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()">
+    </div>
+    @using (Html.BeginCollectionItem("ReceiptMedicines"))
+    {
+        @Html.HiddenFor(model => model.Id);                                  
+        <div class="edit-list-item-wrapper">
+            @editPanel.GetHtml()
         </div>
         <div style="clear: both">
         </div>

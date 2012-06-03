@@ -18,35 +18,11 @@
         @Html.HiddenFor(model => model.PatientId)
         @Html.HiddenFor(model => model.Id)
 
-        <table class="form-table">
-            <tr>
-                <th>@Html.LabelFor(model => model.Text)
-                </th>
-                <td class="large">@Html.TextAreaFor(model => model.Text, new { rows = 5 })
-                </td>
-            </tr>
-            <tr>
-                <th>@Html.LabelFor(model => model.Diagnoses)
-                </th>
-                <td>
-                    <ul class="edit-list-single-line anamnese-symptoms-list">
-                        @if (Model != null && Model.Diagnoses.Count > 0)
-                        {
-                            foreach (var anamneseSymptom in Model.Diagnoses)
-                            {
-                                @Html.Partial("DiagnosisEditor", anamneseSymptom)
-                            }
-                        }
-                        else
-                        {
-                            @Html.Partial("DiagnosisEditor", new ViewDataDictionary())
-                        }
-                    </ul>
-                    <a href="#" class="add-symptom block-little-link add-another-link" style="marin-left: 5px">
-                        incluir diagnóstico</a>
-                </td>
-            </tr>
-        </table>
+        var editPanel = Html.CreateEditPanel();
+        editPanel.AddField(m => m.Text, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
+        editPanel.AddField(m => m.Diagnoses, format: @<text>@Html.CollectionEditorInlineFor(m => m.Diagnoses, "DiagnosisEditor", "Adicionar diagnóstico")</text>);
+        
+        @editPanel.GetHtml()
 
         <div class="submit-bar">
             <input type="submit" value="salvar anamnese" />
@@ -56,17 +32,6 @@
     <script type="text/javascript">
         (function() {
             var $container = $("div[data-val-id='anamnese-@anamneseId']");
-            $(".add-symptom", $container).click(function (e) {
-                e.preventDefault();
-                console.log("novo sintoma");
-                $.ajax({
-                    url: "@Url.Action("DiagnosisEditor")",
-                    success: function(result) {
-                        console.log("peguei o editor");        
-                        $(".anamnese-symptoms-list", $container).append(result);
-                    }
-                });
-            });
             $('form', $container).ajaxForm({
                 success: function (result) {
                     $container.replaceWith(result);

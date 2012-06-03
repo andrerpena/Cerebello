@@ -65,21 +65,28 @@ namespace CerebelloWebRole.Code
             return vResult;
         }
 
-        public static List<SelectListItem> GetSelectListItems(Type aEnumType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">Se enumType for nulo</exception>
+        public static List<SelectListItem> GetSelectListItems(Type enumType)
         {
-            /// <exception cref="System.ArgumentNullException">Se aEnumType for nulo</exception>
-            if (((Object)aEnumType) == null) throw new ArgumentNullException("aEnumType");
-            if (!aEnumType.IsEnum)
+            if (((Object)enumType) == null) throw new ArgumentNullException("aEnumType");
+            if (!enumType.IsEnum)
                 throw new Exception("Type must be an Enum");
 
             var result = new List<SelectListItem>();
 
-            foreach (var vEnumValue in Enum.GetValues(aEnumType))
+            foreach (var vEnumValue in Enum.GetValues(enumType))
                 result.Add(new SelectListItem() { Value = ((int)vEnumValue).ToString(), Text = EnumHelper.GetText(vEnumValue) });
 
             return result;
         }
 
+        /// <summary>
+        /// Returns the enum items based on a member expression.This expression can either return an Enum or
+        /// an Integer and have an EnumDataType attribute
+        /// </summary>
         public static Type GetEnumDataTypeFromExpression<TModel, TProperty>(Expression<Func<TModel, TProperty>> expression)
         {
             if (expression.Body.NodeType != ExpressionType.MemberAccess)

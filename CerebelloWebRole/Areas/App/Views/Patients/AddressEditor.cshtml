@@ -3,9 +3,7 @@
     Layout = null;
 
     var editPanel = this.Html.CreateEditPanel();
-    editPanel.AddField(m => m.CEP, format:
-    @<text>
-    @Html.EditorFor(model => model.CEP)
+    editPanel.AddField(m => m.CEP, format: @<text> @Html.EditorFor(model => model.CEP)
     <a class="getCepInfo block-little-link" href="#">Obter endereço</a>
     <img class="getCepInfoActivityIndicator" src="/content/images/progress.gif" style="display: none" />
     </text>);
@@ -48,46 +46,39 @@
     editPanel.AddField(m => m.Complement, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
     
 }
-<li class="edit-list-item">
-    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()">
-    </div>
+@using (Html.BeginCollectionItem("Addresses"))
+{
+    @Html.HiddenFor(model => model.Id)
+    @editPanel.GetHtml()
 
-    @using (Html.BeginCollectionItem("Addresses"))
-    {
-        @Html.HiddenFor(model => model.Id)
+    <script type="text/javascript">
+        $(function () {
 
-        <div class="edit-list-item-wrapper">
-            @editPanel.GetHtml()
-        </div>
-        <script type="text/javascript">
-            $(function () {
+            var $wrapper = $(".addresses-list .edit-list-item:last-child");
+            var $activityIndicator = $(".getCepInfoActivityIndicator", $wrapper);
 
-                var $wrapper = $(".addresses-list .edit-list-item:last-child");
-                var $activityIndicator = $(".getCepInfoActivityIndicator", $wrapper);
+            // máscaras
+            var $cepInput = $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).CEP']", $wrapper);
+            $cepInput.mask("99999-999");
 
-                // máscaras
-                var $cepInput = $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).CEP']", $wrapper);
-                $cepInput.mask("99999-999");
-
-                $("a.getCepInfo", $wrapper).bind("click", function (e) {
-                    e.preventDefault();
-                    $activityIndicator.show();
-                    getGetInfo($cepInput.val(), {
-                        success: function (cepInfo) {
-                            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
-                            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);
-                            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Neighborhood']", $wrapper).val(cepInfo.Neighborhood);
-                            $("select[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
-                            $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Street']", $wrapper).val(cepInfo.Street);
-                            $activityIndicator.hide();
-                        },
-                        error: function () {
-                            $activityIndicator.hide();
-                        }
-                    });
+            $("a.getCepInfo", $wrapper).bind("click", function (e) {
+                e.preventDefault();
+                $activityIndicator.show();
+                getGetInfo($cepInput.val(), {
+                    success: function (cepInfo) {
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Neighborhood']", $wrapper).val(cepInfo.Neighborhood);
+                        $("select[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Street']", $wrapper).val(cepInfo.Street);
+                        $activityIndicator.hide();
+                    },
+                    error: function () {
+                        $activityIndicator.hide();
+                    }
                 });
+            });
 
-            })();
-        </script>
-    }
-</li>
+        })();
+    </script>
+}

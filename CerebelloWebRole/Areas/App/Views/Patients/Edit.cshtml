@@ -5,9 +5,9 @@
 
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownFor(model => model.Gender)</text>);
+    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
     editPanel.AddField(m => m.DateOfBirth,  CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownFor(model => model.MaritalStatus)</text>);
+    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.CPF);
     editPanel.AddField(m => m.Profissao);
@@ -43,14 +43,13 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(false)
-
     @editPanel.GetHtml();
 
     <p class="form-title">
         @Html.LabelFor(model => model.Addresses)
     </p>
     
-    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor"))
+    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor", "adicionar endereço"))
         
     <div class="submit-bar">
         <input type="submit" value="salvar paciente" />

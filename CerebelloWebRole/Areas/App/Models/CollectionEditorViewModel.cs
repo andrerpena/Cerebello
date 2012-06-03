@@ -27,5 +27,10 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Id of the "add-another" link
         /// </summary>
         public string AddAnotherLinkId { get; set; }
+
+        /// <summary>
+        /// Add another text
+        /// </summary>
+        public string AddAnotherText { get; set; }
     }
 }

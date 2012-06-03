@@ -14,6 +14,7 @@ using System.Data.Objects;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code.Controls;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -327,18 +328,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        public JsonResult SearchPatients(string term)
+        public JsonResult LookupPatients(string term, int pageSize, int pageIndex)
         {
-            return Json((from p in db.Patients
-                         where p.Person.FullName.Contains(term) && p.DoctorId == this.Doctor.Id
-                         select p).Take(5).ToList().Select(p =>
-                         new AutocompleteViewModel()
-                                     {
-                                         id = p.Id,
-                                         value = p.Person.FullName,
-                                         description = "Paciente, " + DateTimeHelper.GetPersonAgeInWords(p.Person.DateOfBirth, true).ToString()
-                                     })
-                         .Take(10).ToList(), JsonRequestBehavior.AllowGet);
+            var baseQuery = this.db.Patients.Include("Person").Where(l => l.DoctorId == this.Doctor.Id);
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(l => l.Person.FullName.Contains(term));
+
+            var rows = (from p in baseQuery.OrderBy(p => p.Person.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
+                        select new LookupRow
+                        {
+                            Id = p.Id,
+                            Value = p.Person.FullName
+                        }).ToList();
+
+            var result = new LookupJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(rows),
+                Count = rows.Count()
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Search(SearchModel searchModel)

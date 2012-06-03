@@ -1,6 +1,5 @@
 ﻿.edit-panel-wrapper
 {
-    margin: 0 0 15px;
 }
 
 .edit-panel-wrapper .title
@@ -17,6 +16,7 @@
 table.edit-panel
 {
     border-collapse: separate;
+    padding: 5px 0;
     width: 100%;
 }
 

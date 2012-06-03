@@ -21,7 +21,7 @@
                 <th>@Html.LabelFor(model => model.PatientNameLookup)
                 </th>
                 <td>
-                    @Html.TextBoxFor(model => model.PatientNameLookup, new { @class = "lookup" })
+                    @Html.LookupFor(model => model.PatientId, model => model.PatientNameLookup, Url.Action("lookuppatients", "patients"))
                     @if (Model.Id != null)
                     {
                         <a href="@Url.Action("details", "patients", new { id = Model.PatientId })" class="block-little-link">
@@ -41,7 +41,7 @@
             <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
                 <th>@Html.LabelFor(model => model.PatientGender)
                 </th>
-                <td>@Html.EnumDropdownFor(model => model.PatientGender)
+                <td>@Html.EnumDropdownListFor(model => model.PatientGender)
                 </td>
             </tr>
             <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
@@ -142,17 +142,17 @@
             });
         });
 
-        $("#PatientNameLookup").autocomplete({
-                source: "@Url.Action("searchpatients", "patients")",
-                select: function(event, ui) {
-                            $("#PatientId").val(ui.item.id);
-                        }
-            }).data( "autocomplete" )._renderItem = function( ul, item ) {
-			    return $( "<li></li>" )
-				    .data( "item.autocomplete", item )
-				    .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.description + "</span></a>" )
-				    .appendTo( ul );
-		    };
+//        $("#PatientNameLookup").autocomplete({
+//                source: "@Url.Action("searchpatients", "patients")",
+//                select: function(event, ui) {
+//                            $("#PatientId").val(ui.item.id);
+//                        }
+//            }).data( "autocomplete" )._renderItem = function( ul, item ) {
+//			    return $( "<li></li>" )
+//				    .data( "item.autocomplete", item )
+//				    .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.description + "</span></a>" )
+//				    .appendTo( ul );
+//		    };
 
         $("#non-existing-user-link").click(function(e) {
             e.preventDefault();
