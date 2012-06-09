@@ -1,0 +1,150 @@
+Especificação do Cerebello
+--------------------------
+
+A partir de 2012-05-26
+----------------------
+
+@	Tela Consultório.Início
+@		Total de pacientes do consultório
+@		Lista de médicos
+@			- Foto do médico
+@			- Nome do médico
+@			- Especialidade do médico (ver Tiss - tabela de especialidades)
+@			- CRM do médico (label varia de acordo com Conselho Profissional - e.g. CRM, CRO...)
+@			- Próximo horário disponível
+@		Informações gerais do consultório
+@			- Contagem de pacientes
+@			- Gráfico de pacientes que compareceram e faltaram
+@			- Gráfico de pacientes por sexo/idade
+@			- Percentual de faltas de pacientes
+
+@	Tela Consultório.Licença (IF: administrador)
+		pagar faturas atrasadas
+		visualizar todas as faturas
+		migrar entre planos do cerebello
+		alterar informações de pagamento (ex.: paypal, outras opções quando disponíveis)
+		cancelar conta
+
+	Layout Médico
+		- Voltar com botão de marcar consulta
+		
+@	Tela Médico.Início
+@		- Nome do médico
+@		- Especialidade do médico
+@		- CRM do médico
+@		- Próximo horário disponível
+@		- Contagem de pacientes do médico
+@		- Gráfico de pacientes que compareceram e faltaram
+@		- Gráfico de pacientes por sexo/idade
+@		- Percentual de faltas de pacientes do médico
+
+@	Tela Médico.Agenda.Editar
+@		- Descrição do motivo de não poder cadastrar horário específico
+
+	Tela Médico.Agenda
+		- Colorir compromissos de outra cor, e nos compromissos deve aparecer descrição.
+			(no lugar em que na consulta aparece o nome do paciente)
+		* Lista de checkbox de planos para filtrar a grid da agenda
+			(na lista aparece calculado o percentual que cada plano ocupa
+			dentre as consultas que estão no intervalo da grid da agenda)
+			* o filtro na agenda, não some com as consultas,
+				e sim destaca as que batem com o filtro
+
+	Tela Médico.Agenda.Configurações
+		- Configuração para duração da primeira consulta
+			(deve ser múltiplo da duração de uma consulta)
+		- Cadastrar feriados (são recorrente anualmente)
+			- já tem que vir com os feriados nacionais marcados
+		- Alterar tela de cadastro de "consulta" para "compromisso"
+			- aba de consulta, representa o que já tem agora
+			- aba de compromisso, para marcar quando o médico não pode atender
+		- Definir que dias específicos o médico não trabalha
+			- caixa com justificativa
+			- caixa com data de início
+			- caixa com data de fim (opcional, se não preenche vale por um dia)
+		- Tela de cadastro de consulta deve ter combo para convênio
+
+	Tela Médico.Prontuário.Paciente
+		- Foto do paciente
+		- Implementar solicitação de exames
+		* Implementar recebimento de informações de exames
+			- tipo de exame (pesquisar sobre tabela nacional de exames e procedimentos)
+			- medida
+			- unidade
+		- Laudo (conclusão do médico sobre o resultado de um exame)
+		- Implementar botão de marcar retorno
+			(já com paciente e próxima data disponível do médico a partir de agora)
+		- Convênio: mostra convênio usado na última consulta desse paciente
+		- Ao incluir registro de um novo atendimento, incrementar contador do agendamento mais próximo.
+			(ao excluir tem que decrementar o contador)
+
+	Tela Médico.Configurações.Convênios
+		- permitir cadastrar convênios
+
+	Workflow Criar Consultório:
+		- código deve definir as configurações de documentos automaticamente
+			(a partir das informações do médico, se for médico)
+		- permitir definir se o primeiro usuário é médico ou não
+
+	Tela Consultório.Usuários.Editar
+		- não pode desmarcar último administrador (sempre tem que ter um)
+
+	Tela Consultório.Usuários.Criar
+		- definir senha padrão para novo usuário
+		- permitir tirar foto usando plugin
+
+	Tela PrimeiroAcesso
+		- Implementar entrada de senha do usuário no primeiro acesso.
+
+	Notificações do sistema
+		- notificações para o médico, quando a ação for da secretária
+			- marcar uma consulta dentro das próximas 24hrs
+			- desmarcar consulta que seria nas próximas 48hrs
+
+		- notificações para secretária, quando a ação for do médico
+			* médico marcou férias, ou compromisso com horário específico
+
+	Chat interno (tipo PSI)
+		- procurar componente de chat
+
+Coisas a considerar nas tarefas
+-------------------------------
+
+	- Especificar
+	- Implementar
+	- Alterar banco e criar script do banco
+	- Criar testes
+	- Comentários
+	- Documentação/Vídeos
+	- Migração do banco
+	
+PayPal
+------
+
+	- Estudar como implementar as seguintes funcionalidades:
+		- Fazer uma cobrança recorrente
+		- Cancelar uma cobrança recorrente
+		- Visualizar todas as faturas
+		- Visualizar e pagar uma fatura que era para ter sido paga mas, por alguma razão, não foi
+
+Tarefas
+-------
+
+	- Plugin de fotos: jQuery web cam plugin - 1 dia
+	- Tela Consultório.Usuários.Criar - 1 dia
+	- Tela Consultório.Início - 1 dia
+	- 
+
+Versão 2
+--------
+
+	Financeiro
+	TISS
+	GED
+
+	Tabela de especialidades (CBO-S especialidades - Tiss)
+	Controle de acesso
+	Campo do médico
+		Código CNS do médico
+		Tiss - Conselho profissional
+		Tiss - Posição profissional
