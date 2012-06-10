@@ -19,6 +19,7 @@ A partir de 2012-05-26
 @			- Percentual de faltas de pacientes
 
 @	Tela Consultório.Licença (IF: administrador)
+		contagem de médicos da licença
 		pagar faturas atrasadas
 		visualizar todas as faturas
 		migrar entre planos do cerebello
@@ -40,9 +41,10 @@ A partir de 2012-05-26
 
 @	Tela Médico.Agenda.Editar
 @		- Descrição do motivo de não poder cadastrar horário específico
+@		- Tela de cadastro de consulta deve ter combo para convênio
 
-	Tela Médico.Agenda
-		- Colorir compromissos de outra cor, e nos compromissos deve aparecer descrição.
+@	Tela Médico.Agenda
+@		- Colorir compromissos de outra cor, e nos compromissos deve aparecer descrição.
 			(no lugar em que na consulta aparece o nome do paciente)
 		* Lista de checkbox de planos para filtrar a grid da agenda
 			(na lista aparece calculado o percentual que cada plano ocupa
@@ -50,36 +52,39 @@ A partir de 2012-05-26
 			* o filtro na agenda, não some com as consultas,
 				e sim destaca as que batem com o filtro
 
-	Tela Médico.Agenda.Configurações
-		- Configuração para duração da primeira consulta
-			(deve ser múltiplo da duração de uma consulta)
-		- Cadastrar feriados (são recorrente anualmente)
-			- já tem que vir com os feriados nacionais marcados
-		- Alterar tela de cadastro de "consulta" para "compromisso"
-			- aba de consulta, representa o que já tem agora
-			- aba de compromisso, para marcar quando o médico não pode atender
-		- Definir que dias específicos o médico não trabalha
-			- caixa com justificativa
-			- caixa com data de início
-			- caixa com data de fim (opcional, se não preenche vale por um dia)
-		- Tela de cadastro de consulta deve ter combo para convênio
+@	Tela Médico.Agenda.Configurações
+@		- Configuração para duração da primeira consulta
+@			(deve ser múltiplo da duração de uma consulta)
+@		- Cadastrar feriados (são recorrente anualmente)
+@			- já tem que vir com os feriados nacionais marcados
+@		- Alterar tela de cadastro de "consulta" para "compromisso"
+@			- aba de consulta, representa o que já tem agora
+@			- aba de compromisso, para marcar quando o médico não pode atender
+@		- Definir que dias específicos o médico não trabalha
+@			- tabela DayOff
+@			- textbox com justificativa
+@			- textbox com data de início
+@			- textbox com data de fim (opcional, se não preenche vale por um dia)
 
-	Tela Médico.Prontuário.Paciente
-		- Foto do paciente
-		- Implementar solicitação de exames
+@	Tela Médico.Prontuário.Paciente
+@		- Foto do paciente (web cam)
+@		- Implementar solicitação de exames
 		* Implementar recebimento de informações de exames
 			- tipo de exame (pesquisar sobre tabela nacional de exames e procedimentos)
 			- medida
 			- unidade
-		- Laudo (conclusão do médico sobre o resultado de um exame)
-		- Implementar botão de marcar retorno
-			(já com paciente e próxima data disponível do médico a partir de agora)
-		- Convênio: mostra convênio usado na última consulta desse paciente
-		- Ao incluir registro de um novo atendimento, incrementar contador do agendamento mais próximo.
-			(ao excluir tem que decrementar o contador)
+@		- Laudo (conclusão do médico sobre o resultado de um exame)
+@		- Implementar botão de marcar retorno
+@			(já com paciente e próxima data disponível do médico a partir de agora)
+@		- Convênio: mostra convênio usado na última consulta desse paciente
+@		- Ao incluir registro de um novo atendimento, incrementar contador do agendamento mais próximo.
+@			(ao excluir tem que decrementar o contador)
 
-	Tela Médico.Configurações.Convênios
-		- permitir cadastrar convênios
+@	Tela Médico.Configurações.Convênios
+@		- permitir cadastrar convênios
+
+	Tela CriarConsultório:
+		- contagem de médicos da licença.
 
 	Workflow Criar Consultório:
 		- código deve definir as configurações de documentos automaticamente
@@ -104,8 +109,15 @@ A partir de 2012-05-26
 		- notificações para secretária, quando a ação for do médico
 			* médico marcou férias, ou compromisso com horário específico
 
+	E-mail para o paciente sobre a consulta.
+	* SMS para o paciente sobre a consulta.
+
 	Chat interno (tipo PSI)
 		- procurar componente de chat
+
+	* Grid:
+		* checkboxes igual no gmail
+		* botões de ação para os elementos selecionados na grid
 
 Coisas a considerar nas tarefas
 -------------------------------
