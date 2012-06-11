@@ -7,7 +7,7 @@
     <AzureSlot>Production</AzureSlot>
     <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
-    <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
+    <AzureEnableWebDeploy>True</AzureEnableWebDeploy>
     <AzureStorageAccountName>cerebellostorageservice</AzureStorageAccountName>
     <AzureStorageAccountLabel>CerebelloStorageService</AzureStorageAccountLabel>
     <AzureDeploymentLabel>Cerebello</AzureDeploymentLabel>
