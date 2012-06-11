@@ -12,7 +12,7 @@
   <Role name="CerebelloWebRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebello;AccountKey=2io9+KfV4brwfhsf4Hogopb7L9taqauZTJ36YKrAHoMEFikdYDhAJkKZbDV4Fu1k0OdyvZfd4En+p2+8k7SMew==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebellostorageservice;AccountKey=wq+1+TEhn9Vc0fG4WYGv2r/f6FS1+p0/z7aQq4AiijHc46EfMum7Q/PEBP8PXVCNr46X0KLMynKrtuoWMNpJXQ==" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="andrerpena" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEBHHhHajJLePS9xY0ENZ5IUwDQYJKoZIhvcNAQEBBQAEggEAVoxQKPAyuRDDnQcY0x5L/h6gfSwTbKfe+4M4d56hCXfF8E0nIVMY+9Ov3x7GNFW0XGFYySPHI4y/4EPngJkf1wVQc1bcOC8Yx/TXZm0vAhGMZkXybFHl2OKJnXhPTA6NUYGVV6aRa1qLUrPViMmDra7bGYRpbwQYBxDGAApAKSAJ4zZ/xAL0S8NT4iockP0YIh46RMY935T9ESPebMzPcNlXP5zomuYZn1rJxHOoEAclsJSzJ/vHJ1qCAHIinWLCfAnFf2Pd4ONSj9nJzqbs7v6DiMqXrGJEJWAX2i4QItTdIWE6U/jA9SQA2LvdvABV/bZpq7A0FItGSjSlzeeL+jAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECFiGwnZRdzjHgBBhfz+lt4QX5W6lC52QRmSC" />

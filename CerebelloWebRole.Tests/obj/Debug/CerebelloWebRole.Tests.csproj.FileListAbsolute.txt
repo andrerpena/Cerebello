@@ -40,3 +40,5 @@ D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\CerebelloWebRole_Ac
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\CerebelloWebRole_Accessor.pdb
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\Cerebello.Firestarter.exe
 D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\Cerebello.Firestarter.pdb
+D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\Microsoft.WindowsAzure.ServiceRuntime.dll
+D:\Projetos\Azure\Cerebello\CerebelloWebRole.Tests\bin\Debug\Microsoft.WindowsAzure.ServiceRuntime.xml

@@ -71,3 +71,5 @@ D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.pdb
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\obj\Debug\CerebelloWebRole.App_GlobalResources.ModelStrings.resources
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\itextsharp.dll
 D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\itextsharp.xtra.dll
+D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\Microsoft.WindowsAzure.ServiceRuntime.dll
+D:\Projetos\Azure\Cerebello\CerebelloWebRole\bin\Microsoft.WindowsAzure.ServiceRuntime.xml

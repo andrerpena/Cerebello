@@ -404,9 +404,6 @@
     <Content Include="Areas\App\Views\Patients\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\App\Views\Patients\DetailsCardSimple.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\App\Views\Patients\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
