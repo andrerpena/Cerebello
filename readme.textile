@@ -1,13 +1,13 @@
-*O que é o Cerebello?
+*O que é o Cerebello?*
 O Cerebello é um software web de gerenciamento de consultórios médicos, feito com foco em simplicidade.
 
-*Quais são as credenciais de acesso ao Windows Azure?
+*Quais são as credenciais de acesso ao Windows Azure?*
 O e-mail é: cerebello_stw@live.com, a senha é 58Fu32dg.
 
-*Qual a connection-string do SQL Azure Database?
+*Qual a connection-string do SQL Azure Database?*
 Server=tcp:rzi0v72qts.database.windows.net,1433;Database=cerebello;User ID=cerebellouser@rzi0v72qts;Password=58Fu32dg;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;
 
-*Como exportar o script de um banco de dados SQL Server 2008 R2 para o Windows Azure SQL?
+*Como exportar o script de um banco de dados SQL Server 2008 R2 para o Windows Azure SQL?*
 O Windows Azure SQL não é igual ao SQL Server 2008 R2, sendo assim, ao exportar um script do 2008 R2, é necessário modificar um parâmetro para que o script possa ser executado no Azure. Siga os passos:
 # Botão direito no banco de dados, Tasks, Generate Scripts...
 # Ao invés de escolher "Script entire database", escolha "Select specific database objects" e marque a opção "Tables" (todas). Isso é porque o banco de dados Cerebello já vai existir no servidor porque é melhor que ele seja criado através da ferramenta.
