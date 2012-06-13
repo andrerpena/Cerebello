@@ -3,6 +3,5 @@
   <elements>
     <interface name="CerebelloWebRole:Endpoint1" url="http://*:80" />
     <interface name="CerebelloWebRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" url="tcp://*:3389" />
-    <interface name="CerebelloWebRole:Microsoft.WindowsAzure.Plugins.WebDeploy.InputEndpoint" url="tcp://*:8172" />
   </elements>
 </serviceContract>

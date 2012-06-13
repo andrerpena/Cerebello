@@ -224,25 +224,26 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
-        private static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string partialName, string collectionItemEditor, string addAnotherText)
+        private static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string listClass, string collectionItemEditor, string addAnotherText)
         {
             if (string.IsNullOrEmpty(collectionItemEditor)) throw new ArgumentException("collectionItemEditor cannot be null or empty");
             if (string.IsNullOrEmpty(addAnotherText)) throw new ArgumentException("addAnotherText cannot be null or empty");
 
             var propertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
             var addAnotherLinkId = "add-another-to-" + propertyInfo.Name.ToLower();
-            var listClass = propertyInfo.Name.ToLower() + "-list";
+            var listCustomClass = propertyInfo.Name.ToLower() + "-list";
 
             var viewModel = new CollectionEditorViewModel()
             {
                 ListParialViewName = collectionItemEditor,
                 AddAnotherLinkId = addAnotherLinkId,
                 ListClass = listClass,
+                ListCustomClass = listCustomClass,
                 Items = html.ViewContext.ViewData.Model != null ? new ArrayList(expression.Compile()((TModel)html.ViewContext.ViewData.Model)) : new ArrayList(),
                 AddAnotherText = addAnotherText
             };
 
-            return html.Partial(partialName, viewModel);
+            return html.Partial("CollectionEditor", viewModel);
         }
 
         /// <summary>
@@ -250,7 +251,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         public static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor, string addAnotherText)
         {
-            return CollectionEditorFor(html, expression, "CollectionEditor", collectionItemEditor, addAnotherText);
+            return CollectionEditorFor(html, expression, "edit-list", collectionItemEditor, addAnotherText);
         }
 
 
@@ -259,38 +260,33 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         public static MvcHtmlString CollectionEditorInlineFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor, string addAnotherText)
         {
-            return CollectionEditorFor(html, expression, "CollectionEditorInline", collectionItemEditor, addAnotherText);
+            return CollectionEditorFor(html, expression, "edit-list-single-line", collectionItemEditor, addAnotherText);
         }
 
         /// <summary>
         /// Begins a collection item by inserting either a previously used .Index hidden field value for it or a new one.
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="html"></param>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
-        /// <returns></returns>
         public static IDisposable BeginCollectionItem<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
             if (String.IsNullOrEmpty(collectionName))
                 throw new ArgumentException("collectionName is null or empty.", "collectionName");
 
-            string collectionIndexFieldName = String.Format("{0}.Index", collectionName);
-            string itemIndex = GetCollectionItemIndex(collectionIndexFieldName);
-            string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
-
-            var indexField = new TagBuilder("input");
-            indexField.MergeAttributes(new Dictionary<string, string>() {
-                { "name", collectionIndexFieldName },
-                { "value", itemIndex },
-                { "type", "hidden" },
-                { "autocomplete", "off" }
-            });
-
-            html.ViewData.Add(new KeyValuePair<string, object>("collectionIndex", itemIndex));
-            html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
-            return new CollectionItemNamePrefixScope(html.ViewData.TemplateInfo, collectionItemName);
+            return new CollectionItemScope<TModel>(html, collectionName);
         }
-        
+
+        /// <summary>
+        /// Begins a collection item by inserting either a previously used .Index hidden field value for it or a new one.
+        /// </summary>
+        /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
+        public static IDisposable BeginCollectionItemInline<TModel>(this HtmlHelper<TModel> html, string collectionName)
+        {
+            if (String.IsNullOrEmpty(collectionName))
+                throw new ArgumentException("collectionName is null or empty.", "collectionName");
+
+            return new CollectionItemInlineScope<TModel>(html, collectionName);
+        }
+
         /// <summary>
         /// Tries to reuse old .Index values from the HttpRequest in order to keep the ModelState consistent
         /// across requests. If none are left returns a new one.
@@ -315,22 +311,91 @@ namespace CerebelloWebRole.Code.Extensions
             return previousIndices.Count > 0 ? previousIndices.Dequeue() : Guid.NewGuid().ToString();
         }
 
-        private class CollectionItemNamePrefixScope : IDisposable
+        public abstract class CollectionItemScopeBase<TModel> : IDisposable
         {
-            private readonly TemplateInfo _templateInfo;
+            protected readonly HtmlHelper<TModel> html;
             private readonly string _previousPrefix;
 
-            public CollectionItemNamePrefixScope(TemplateInfo templateInfo, string collectionItemName)
-            {
-                this._templateInfo = templateInfo;
+            /// <summary>
+            /// Writes the beggining of the collection item
+            /// </summary>
+            /// <param name="html"></param>
+            public abstract void WriteBegin(HtmlHelper<TModel> html);
 
-                _previousPrefix = templateInfo.HtmlFieldPrefix;
-                templateInfo.HtmlFieldPrefix = collectionItemName;
+            /// <summary>
+            /// Writes the end of the collection item
+            /// </summary>
+            /// <param name="html"></param>
+            public abstract void WriteEnd(HtmlHelper<TModel> html);
+
+            /// <summary>
+            /// Starts the collection item scope
+            /// </summary>
+            public CollectionItemScopeBase(HtmlHelper<TModel> html, string collectionName)
+            {
+                this.html = html;
+                this.WriteBegin(this.html);
+
+                string collectionIndexFieldName = String.Format("{0}.Index", collectionName);
+                string itemIndex = GetCollectionItemIndex(collectionIndexFieldName);
+                string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
+
+                var indexField = new TagBuilder("input");
+                indexField.MergeAttributes(new Dictionary<string, string>() {
+                    { "name", collectionIndexFieldName },
+                    { "value", itemIndex },
+                    { "type", "hidden" },
+                    { "autocomplete", "off" }
+                });
+
+                this.html.ViewData.Add(new KeyValuePair<string, object>("collectionIndex", itemIndex));
+                this.html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
+
+                _previousPrefix = this.html.ViewData.TemplateInfo.HtmlFieldPrefix;
+                this.html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
             }
 
+            /// <summary>
+            /// Finishes the collection item scope
+            /// </summary>
             public void Dispose()
             {
-                _templateInfo.HtmlFieldPrefix = _previousPrefix;
+                this.html.ViewData.TemplateInfo.HtmlFieldPrefix = _previousPrefix;
+                this.WriteEnd(this.html);
+            }
+        }
+
+        public class CollectionItemScope<TModel> : CollectionItemScopeBase<TModel>
+        {
+            public CollectionItemScope(HtmlHelper<TModel> html, string collectionName) : base(html, collectionName) { }
+
+            public override void WriteBegin(HtmlHelper<TModel> html)
+            {
+                this.html.ViewContext.Writer.WriteLine("<li class=\"edit-list-item\">");
+                this.html.ViewContext.Writer.WriteLine("<div class=\"remove-button\" onclick=\"$(this).closest('.edit-list-item').remove()\"></div>");
+                this.html.ViewContext.Writer.WriteLine("<div class=\"edit-list-item-wrapper\">");
+            }
+
+            public override void WriteEnd(HtmlHelper<TModel> html)
+            {
+                this.html.ViewContext.Writer.WriteLine("</div>");
+                this.html.ViewContext.Writer.WriteLine("</li>");
+            }
+        }
+
+        public class CollectionItemInlineScope<TModel> : CollectionItemScopeBase<TModel>
+        {
+            public CollectionItemInlineScope(HtmlHelper<TModel> html, string collectionName) : base(html, collectionName) { }
+
+            public override void WriteBegin(HtmlHelper<TModel> html)
+            {
+                this.html.ViewContext.Writer.WriteLine("<li class=\"edit-list-item\">");
+            }
+
+            public override void WriteEnd(HtmlHelper<TModel> html)
+            {
+                this.html.ViewContext.Writer.WriteLine("<span onclick=\"$(this).closest('li').remove()\" class=\"close-collection-item\"></span>");
+                this.html.ViewContext.Writer.WriteLine("</li>");
             }
         }
     }

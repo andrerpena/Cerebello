@@ -13,17 +13,14 @@
     editPanel.AddField(m => m.Quantity);
     editPanel.AddField(m => m.Prescription, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Prescription)</text>);
     editPanel.AddField(m => m.Observations, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Observations)</text>);
-}    
-<li class="edit-list-item">
-    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()">
+}
+
+@using (Html.BeginCollectionItem("ReceiptMedicines"))
+{
+    @Html.HiddenFor(model => model.Id);                                  
+    <div class="edit-list-item-wrapper">
+        @editPanel.GetHtml()
     </div>
-    @using (Html.BeginCollectionItem("ReceiptMedicines"))
-    {
-        @Html.HiddenFor(model => model.Id);                                  
-        <div class="edit-list-item-wrapper">
-            @editPanel.GetHtml()
-        </div>
-        <div style="clear: both">
-        </div>
-    }
-</li>
+    <div style="clear: both">
+    </div>
+}

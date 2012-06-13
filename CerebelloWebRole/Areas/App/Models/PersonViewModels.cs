@@ -36,7 +36,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [EnumDataType(typeof(TypeMaritalStatus))]
         [Display(Name = "Estado Civil")]
-        public short? MaritalStatus { get; set; }
+        public int? MaritalStatus { get; set; }
 
         [Display(Name = "Naturalidade")]
         public String BirthPlace { get; set; }

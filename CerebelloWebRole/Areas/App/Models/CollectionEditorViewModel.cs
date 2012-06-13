@@ -19,6 +19,11 @@ namespace CerebelloWebRole.Areas.App.Models
         public string ListClass { get; set; }
 
         /// <summary>
+        /// Custom class for the wrapper list
+        /// </summary>
+        public string ListCustomClass { get; set; }
+
+        /// <summary>
         /// Name of the view that must be called for each item
         /// </summary>
         public string ListParialViewName { get; set; }
