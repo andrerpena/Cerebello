@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <AzureCredentials>Subscription-1</AzureCredentials>
-    <AzureHostedServiceName>cerebello</AzureHostedServiceName>
-    <AzureHostedServiceLabel>cerebello</AzureHostedServiceLabel>
+    <AzureCredentials>3-Month Free Trial</AzureCredentials>
+    <AzureHostedServiceName>cerebellohostedservice</AzureHostedServiceName>
+    <AzureHostedServiceLabel>CerebelloHostedService</AzureHostedServiceLabel>
     <AzureSlot>Production</AzureSlot>
     <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
-    <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
-    <AzureStorageAccountName>cerebello</AzureStorageAccountName>
-    <AzureStorageAccountLabel>cerebello</AzureStorageAccountLabel>
+    <AzureEnableWebDeploy>True</AzureEnableWebDeploy>
+    <AzureStorageAccountName>cerebellostorageservice</AzureStorageAccountName>
+    <AzureStorageAccountLabel>CerebelloStorageService</AzureStorageAccountLabel>
     <AzureDeploymentLabel>Cerebello</AzureDeploymentLabel>
     <AzureSolutionConfiguration>Release</AzureSolutionConfiguration>
     <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>

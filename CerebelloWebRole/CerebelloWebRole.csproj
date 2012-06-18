@@ -244,16 +244,31 @@
     <Content Include="Bootstrap\js\bootstrap.js" />
     <Content Include="Bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\Images\App\bg-noise.jpg" />
+    <Content Include="Content\Images\App\Components\Lookup\clear.png" />
+    <Content Include="Content\Images\App\Components\Lookup\filter.png" />
+    <Content Include="Content\Images\App\Components\Lookup\search.png" />
+    <Content Include="Content\Images\App\Components\Lookup\toggle-collapse-dark.png" />
     <Content Include="Content\Images\App\Controls\Lookup\clear.png" />
     <Content Include="Content\Images\App\Controls\Lookup\dropdown.png" />
     <Content Include="Content\Images\App\Controls\Lookup\filter.png" />
     <Content Include="Content\Images\App\Controls\Lookup\progress.gif" />
     <Content Include="Content\Images\App\Controls\Lookup\search.png" />
+    <Content Include="Content\Images\App\Icons16\check.png" />
     <Content Include="Content\Images\App\Icons16\checkbox_checked.png" />
     <Content Include="Content\Images\App\Icons16\clear.png" />
+    <Content Include="Content\Images\App\Icons16\config.png" />
+    <Content Include="Content\Images\App\Icons16\delete.png" />
     <Content Include="Content\Images\App\Icons16\edit.png" />
+    <Content Include="Content\Images\App\Icons16\exclamation.png" />
+    <Content Include="Content\Images\App\Icons16\help.png" />
+    <Content Include="Content\Images\App\Icons16\home.png" />
+    <Content Include="Content\Images\App\Icons16\import.png" />
+    <Content Include="Content\Images\App\Icons16\list.png" />
     <Content Include="Content\Images\App\Icons16\plus.png" />
     <Content Include="Content\Images\App\Icons16\reload.png" />
+    <Content Include="Content\Images\App\Icons16\search.png" />
+    <Content Include="Content\Images\App\Icons\config-off.png" />
+    <Content Include="Content\Images\App\Icons\config-on.png" />
     <Content Include="Content\Images\App\Icons\contact-off.png" />
     <Content Include="Content\Images\App\Icons\contact-on.png" />
     <Content Include="Content\Images\App\Icons\home-off.png" />
@@ -272,15 +287,18 @@
     <Content Include="Content\Images\horizon-tour.png" />
     <Content Include="Content\Images\img-iconmap.png" />
     <Content Include="Content\Images\progress.gif" />
+    <Content Include="Content\Images\progress2.gif" />
     <Content Include="Content\Images\red-underline.png" />
     <Content Include="Content\Images\Site\1.jpg" />
     <Content Include="Content\Images\Site\1.png" />
     <Content Include="Content\Images\Site\descubra.png" />
     <Content Include="Content\Images\Site\escolha.png" />
     <Content Include="Content\Images\Site\experimente.png" />
+    <Content Include="Content\Images\Site\screenshots.jpg" />
     <Content Include="Content\Images\step-1.png" />
     <Content Include="Content\Images\step-2.png" />
     <Content Include="Content\Images\step-3.png" />
+    <Content Include="Content\Images\top-logo-white.png" />
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
@@ -336,15 +354,22 @@
     <Content Include="Scripts\App\schedule.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.lookup.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
+    <Content Include="Scripts\date.format.js" />
+    <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.5.1.js" />
     <Content Include="Scripts\jquery-1.5.1.min.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
     <Content Include="Scripts\jquery.arp.ajax.form.js" />
     <Content Include="Scripts\jquery.arp.caret.js" />
     <Content Include="Scripts\jquery.arp.modal.js" />
+    <Content Include="Scripts\jquery.arp.pager.js" />
     <Content Include="Scripts\jquery.arp.watermark.js" />
+    <Content Include="Scripts\jquery.flot.min.js" />
+    <Content Include="Scripts\jquery.flot.stack.min.js" />
+    <Content Include="Scripts\jquery.jmNotify.js" />
     <Content Include="Scripts\jquery.maskedinput-1.3.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.ui.datepicker-pt-BR.js" />
@@ -353,11 +378,14 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
+    <Content Include="Scripts\scripts-app.js" />
     <Content Include="Scripts\scripts.js" />
     <Content Include="Specs\Model\ModelMedicalCertificateField.txt" />
     <Content Include="Specs\Model\ModelMedicalCertificate.txt" />
     <Content Include="Specs\Tests\GeneralModelTests.txt" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -383,6 +411,7 @@
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
     <Folder Include="Code\Setup\" />
+    <Folder Include="Content\Images\App\Site\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
@@ -405,9 +434,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\App\Views\Patients\Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\App\Views\Patients\DetailsCardSimple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\App\Views\Patients\Index.cshtml" />
@@ -486,13 +512,11 @@
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsEditor.cshtml" />
     <Content Include="Areas\App\Views\Symptoms\Index.cshtml" />
     <Content Include="Areas\App\Views\Shared\CollectionEditor.cshtml" />
-    <Content Include="Areas\App\Views\Shared\CollectionEditorInline.cshtml" />
     <Content Include="Areas\App\Views\Users\Index.cshtml" />
     <Content Include="Areas\App\Views\Users\Edit.cshtml" />
     <Content Include="Areas\App\Views\Users\Details.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
-    <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
@@ -500,6 +524,7 @@
     <Content Include="Views\Authentication\CreateAccountCompleted.cshtml" />
     <Content Include="Scripts\jquery.arp.ajax.link.js" />
     <Content Include="Views\Shared\ObjectNotFound_Ajax.cshtml" />
+    <None Include="Data\medicines.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

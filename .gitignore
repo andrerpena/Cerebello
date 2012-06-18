@@ -26,7 +26,7 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
-Bin
+csx/
 bin
 obj
 Debug

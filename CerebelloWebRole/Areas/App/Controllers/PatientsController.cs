@@ -215,7 +215,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.FullName);
                 patient.Person.Gender = (short)formModel.Gender;
-                patient.Person.MaritalStatus = formModel.MaritalStatus;
+                patient.Person.MaritalStatus = (short?) formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
 
@@ -225,6 +225,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     (vm, m) =>
                     {
                         m.CEP = vm.CEP;
+                        m.StateProvince = vm.StateProvince;
                         m.City = vm.City;
                         m.Complement = vm.Complement;
                         m.Neighborhood = vm.Neighborhood;

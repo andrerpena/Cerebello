@@ -24,7 +24,7 @@ Prontuário
     <script type="text/javascript" src="/scripts/jquery.flot.min.js"></script>
     <script type="text/javascript" src="/scripts/jquery.flot.stack.min.js"></script>
     <script type="text/javascript">
-        $(function () {
+        (function () {
             var mvcData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.PatientAgeDistribution)));
 
             var male = [];

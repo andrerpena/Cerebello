@@ -1,42 +1,29 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.CollectionEditorViewModel
 <div>
-    <ul class="edit-list @Model.ListClass">
+    <ul class="@Model.ListClass @Model.ListCustomClass">
         @if (Model != null)
         {
             foreach (var element in this.Model.Items)
             {
-               <li class="edit-list-item">
-                    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()"></div>
-                    <div class="edit-list-item-wrapper">
-                        @Html.Partial(this.Model.ListParialViewName, element)
-                    </div>
-               </li>
+                @Html.Partial(this.Model.ListParialViewName, element)
             }
         }
         else
         {
-            <li class="edit-list-item">
-                    <div class="remove-button" onclick="$(this).closest('.edit-list-item').remove()"></div>
-                    <div class="edit-list-item-wrapper">
-                        @Html.Partial(this.Model.ListParialViewName)
-                    </div>
-               </li>
-        }                    
+            @Html.Partial(this.Model.ListParialViewName)
+        }
     </ul>
     <a id="@Model.AddAnotherLinkId" class="block-little-link add-another-link" href="#">@Model.AddAnotherText</a>
     <script type="text/javascript">
-
         $("#@Model.AddAnotherLinkId").click(function (e) {
             e.preventDefault();
             $.ajax({
                 url: "@Url.Action(this.Model.ListParialViewName)",
                 success: function (result) {
-                    var html = "<li class='edit-list-item'><div class='remove-button' onclick='$(this).closest('.edit-list-item').remove()'></div><div class='edit-list-item-wrapper'>" + result + "</div></li>";
-                    $(".@Model.ListClass").append(html);
+                    var $list = $(".@Model.ListClass");
+                    $(".@Model.ListClass").append(result);
                 }
             });
         });
-                
-</script>
+    </script>
 </div>
-           

@@ -12,20 +12,21 @@ namespace Test1
     {
         static void Main(string[] args)
         {
-            using (var db = new CerebelloEntities())
+            using (var db = new CerebelloEntities("name=CerebelloEntitiesAzure"))
             {
-                db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
-                db.ExecuteStoreCommand(@"sp_MSForEachTable '
-                    IF OBJECTPROPERTY(object_id(''?''), ''TableHasForeignRef'') = 1
-                    DELETE FROM ?
-                    else 
-                    TRUNCATE TABLE ?
-                '");
-                db.ExecuteStoreCommand(@"sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'");
-                db.ExecuteStoreCommand(@"sp_MSForEachTable ' 
-                    IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1 
-                    DBCC CHECKIDENT (''?'', RESEED, 0) 
-                ' ");
+                #warning Isso era para ter sumido mesmo?
+                // db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
+                // db.ExecuteStoreCommand(@"sp_MSForEachTable '
+                //     IF OBJECTPROPERTY(object_id(''?''), ''TableHasForeignRef'') = 1
+                //     DELETE FROM ?
+                //     else 
+                //     TRUNCATE TABLE ?
+                // '");
+                // db.ExecuteStoreCommand(@"sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'");
+                // db.ExecuteStoreCommand(@"sp_MSForEachTable ' 
+                //     IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1 
+                //     DBCC CHECKIDENT (''?'', RESEED, 0) 
+                // ' ");
 
                 Firestarter.SetupDB(db);
 
