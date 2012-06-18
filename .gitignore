@@ -26,3 +26,12 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+Bin
+bin
+obj
+Debug
+Release
+*.dll
+*.pdb
+*.mdf
+*.ldf

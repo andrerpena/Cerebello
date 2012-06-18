@@ -1,9 +1,0 @@
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\bin\Debug\LeafletCrawler.exe
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\bin\Debug\LeafletCrawler.pdb
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\bin\Debug\HtmlAgilityPack.dll
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\bin\Debug\HtmlAgilityPack.pdb
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\bin\Debug\HtmlAgilityPack.xml
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\obj\x86\Debug\ResolveAssemblyReference.cache
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\obj\x86\Debug\LeafletCrawler.exe
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\obj\x86\Debug\LeafletCrawler.pdb
-D:\Projetos\Applications\MVC\Cerebello\LeafletCrawler\bin\Debug\LeafletCrawler.exe.config

@@ -55,6 +55,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Doctor), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Administrator", "Administrator", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Administrator), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 
 #endregion
 
@@ -601,6 +602,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<Diagnosis> _Diagnoses;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Administrator> Administrators
+        {
+            get
+            {
+                if ((_Administrators == null))
+                {
+                    _Administrators = base.CreateObjectSet<Administrator>("Administrators");
+                }
+                return _Administrators;
+            }
+        }
+        private ObjectSet<Administrator> _Administrators;
 
         #endregion
         #region AddTo Methods
@@ -851,6 +868,14 @@ namespace Cerebello.Model
         public void AddToDiagnoses(Diagnosis diagnosis)
         {
             base.AddObject("Diagnoses", diagnosis);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Administrators EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToAdministrators(Administrator administrator)
+        {
+            base.AddObject("Administrators", administrator);
         }
 
         #endregion
@@ -1290,6 +1315,86 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Cerebello.Model.FK_Address_Person", "Person", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Administrator")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Administrator : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Administrator object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        public static Administrator CreateAdministrator(global::System.Int32 id)
+        {
+            Administrator administrator = new Administrator();
+            administrator.Id = id;
+            return administrator;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_User_Administrator", "User")]
+        public EntityCollection<User> Users
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<User>("Cerebello.Model.FK_User_Administrator", "User");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<User>("Cerebello.Model.FK_User_Administrator", "User", value);
                 }
             }
         }
@@ -8083,6 +8188,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> AdministratorId
+        {
+            get
+            {
+                return _AdministratorId;
+            }
+            set
+            {
+                OnAdministratorIdChanging(value);
+                ReportPropertyChanging("AdministratorId");
+                _AdministratorId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AdministratorId");
+                OnAdministratorIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _AdministratorId;
+        partial void OnAdministratorIdChanging(Nullable<global::System.Int32> value);
+        partial void OnAdministratorIdChanged();
 
         #endregion
     
@@ -8280,6 +8409,44 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_User_Administrator", "Administrator")]
+        public Administrator Administrator
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Administrator>("Cerebello.Model.FK_User_Administrator", "Administrator").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Administrator>("Cerebello.Model.FK_User_Administrator", "Administrator").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Administrator> AdministratorReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Administrator>("Cerebello.Model.FK_User_Administrator", "Administrator");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Administrator>("Cerebello.Model.FK_User_Administrator", "Administrator", value);
                 }
             }
         }

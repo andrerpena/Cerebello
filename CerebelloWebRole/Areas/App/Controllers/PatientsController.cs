@@ -298,6 +298,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public JsonResult GetCEPInfo(string cep)
         {
+            // TODO: Miguel Angelo: copiei este código para o UsersController, deveria ser um método utilitário, ou criar uma classe de base.
+
             try
             {
                 var request = HttpWebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");

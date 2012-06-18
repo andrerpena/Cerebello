@@ -29,19 +29,22 @@ namespace Test1
 
                 Firestarter.SetupDB(db);
 
-                var doctor = Firestarter.CreateFakeUserAndPractice(db);
+                var listDoctors = Firestarter.CreateFakeUserAndPractice(db);
 
                 db.SaveChanges();
 
-                Firestarter.SetupDoctor(doctor, db);
+                foreach (var doctor in listDoctors)
+                    Firestarter.SetupDoctor(doctor, db);
 
                 db.SaveChanges();
 
-                Firestarter.SetupUserData(doctor, db);
+                foreach (var doctor in listDoctors)
+                    Firestarter.SetupUserData(doctor, db);
 
                 db.SaveChanges();
 
-                Firestarter.CreateFakePatients(doctor, db);
+                foreach (var doctor in listDoctors)
+                    Firestarter.CreateFakePatients(doctor, db);
 
                 db.SaveChanges();
             }

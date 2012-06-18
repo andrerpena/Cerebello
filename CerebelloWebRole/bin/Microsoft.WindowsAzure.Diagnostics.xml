@@ -9,11 +9,6 @@
             Provides access to common SDK constants.
             </summary>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.MajorMinorSDKVersion">
-            <summary>
-            The version to display in the command line tools banners.
-            </summary>
-        </member>
         <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.RootKeyPathRegPath">
             <summary>
             Path to the SDK installation registry key.
@@ -27,6 +22,11 @@
         <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.FullVersionKeyName">
             <summary>
             Name of the registry value that contains the SDK version string.
+            </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.PackageCertPathKeyName">
+            <summary>
+            Name of the registry value that contains the path to the packaging certificate.
             </summary>
         </member>
         <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.BannerVersion">
@@ -44,11 +44,6 @@
             Environment variable read by hosts to enable partial trust.
             </summary>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.WAAgentRpcEndpoint">
-            <summary>
-            Environment variable for Agent RPC Endpoint.
-            </summary>
-        </member>
         <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.IISConfiguratorCleanServerOnStartup">
             <summary>
             Boolean environment variable that causes IISConfigurator to delete existing sites.
@@ -59,11 +54,24 @@
             Boolean environment variable that causes IISConfigurator to configure URL rewrite.
             </summary>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.IISConfiguratorClientOperationTimeout">
+        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.IsSimulationEnvironmentPrivateSettingName">
             <summary>
-            Configurable operation timeout for IISConfigurator client connection through WCF.
-            This is in terms of minutes.
+            The name of the private configuration setting use to determine if code is running under
+            the devfabric or not.
             </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.RoleHostDebuggerPrivateSettingName">
+            <summary>
+            Path to a debugger to launch the role host process under.
+            </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.StartupTaskDebuggerPrivateSettingName">
+            <summary>
+            Path to a debugger to launch startup tasks under. 
+            </summary>
+            <remarks>
+            Not fully implemented.
+            </remarks>
         </member>
         <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.RoleTypeEnvironmentVariable">
             <summary>
@@ -85,31 +93,6 @@
             The role type value indicating a web role hosted in IIS.
             </summary>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.DeploymentsRegPath">
-            <summary>
-            Path to SDK runtime endpoint discovery.
-            </summary> 
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.RuntimeEndpointKeyName">
-            <summary>
-            Name of the runtime endpoint value.
-            </summary>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.RuntimeEndpointVariableName">
-            <summary>
-            Name of the runtime endpoint value.
-            </summary>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.ManagementCertificateSubjectName">
-            <summary>
-            Subject name of generated management certificates.
-            </summary>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.StorageKeyPathRegPath">
-            <summary>
-            Registry key path to storage key path.
-            </summary> 
-        </member>
         <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.CloudDriveKeyPathRegPath">
             <summary>
             Registry key path to cloud drive devpath.
@@ -125,25 +108,11 @@
             Name of the registry value that contains path for the devpath.
             </summary>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.WAEventLogName">
+        <member name="P:Microsoft.WindowsAzure.Internal.Common.SDKConstants.PrivateSettingsForDebuggingAndSimulation">
             <summary>
-            Name of the event log.
+            Gets all private setting that should be injected into the serivce model to support
+            simulation and debugging.
             </summary>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.WAEventSourceRuntime">
-            <summary>
-            Name of the event runtime source.
-            </summary>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Internal.Common.SDKConstants.IsSimulationEnvironmentPrivateSettingName">
-            <summary>
-            The name of the private configuration setting use to determine if code is running under
-            the devfabric or not.
-            </summary>
-            <remarks>
-            This is shared between the runtime and the devfabric. Do not change this, as it breaks
-            a contract between the two.
-            </remarks>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Management.CloudAccountDiagnosticMonitorExtensions">
             <summary>
@@ -645,9 +614,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.SelectType.Where">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.SelectType.Having">
-            <remarks/>
-        </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.SelectType.GroupBy">
             <remarks/>
         </member>
@@ -667,6 +633,45 @@
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.SelectColumnType.Value">
+            <remarks/>
+        </member>
+        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.MdsTablesType">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.MdsTablesType.Items">
+            <remarks/>
+        </member>
+        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType">
+            <remarks/>
+        </member>
+        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.TableType">
+            <remarks/>
+        </member>
+        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.name">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.schema">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.partitionKeyLoadSpreadIndexMax">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.MetaData">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.priority">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.retentionInSeconds">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.diskQuotaInMB">
+            <remarks/>
+        </member>
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.XTableSetting">
             <remarks/>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.XTableSettingType">
@@ -693,39 +698,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XTableSettingType.partitionKeyLoadSpreadIndexMaxSpecified">
             <remarks/>
         </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.MetaData">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.AdditionalIndex">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.XTableSetting">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.name">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.schema">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.partitionKeyLoadSpreadIndexMax">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.dontUsePerNDayTable">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.priority">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.retentionInSeconds">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreTableType.diskQuotaInMB">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.MetaDataType">
             <remarks/>
         </member>
@@ -745,12 +717,6 @@
             <remarks/>
         </member>
         <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.PriorityType.High">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.MdsTablesType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.MdsTablesType.Items">
             <remarks/>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.EmbeddedMdsConfigType">
@@ -840,9 +806,6 @@
         <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EventFormatType.XML">
             <remarks/>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EventFormatType.manifest">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorInfoType">
             <remarks/>
         </member>
@@ -873,40 +836,19 @@
         <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.ActiveProcesses">
             <remarks/>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.ServicesAndDrivers">
+        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.InstalledDrivers">
             <remarks/>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.LocalGroups">
+        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.UserLogons">
             <remarks/>
         </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.LocalUsers">
+        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.UserAccounts">
             <remarks/>
         </member>
         <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.FirewallSettings">
             <remarks/>
         </member>
         <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.InterfacePolicies">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.SystemSettings">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.Ip4Connections">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.Ip4Statistics">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.TcpStatistics">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.UdpStatistics">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.NetFilterRules">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorType.DosDetect">
             <remarks/>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.EwsDetectorMode">
@@ -954,9 +896,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.FileListenerWatchItemType.diskQuotaSpecified">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.FileListenerWatchItemType.removeEmptyDirectories">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.SystemEventsSubscriptionType">
             <remarks/>
         </member>
@@ -975,34 +914,13 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.EventType.tableAssignment">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.EventType.tableName">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.EventType.logToDefaultTable">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.DefaultEventType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.DefaultEventType.tableName">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.EventHeaderFields">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.DefaultEvent">
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.Event">
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.guid">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.enableFlags">
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.format">
@@ -1014,79 +932,7 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.allowDuplicateEventID">
             <remarks/>
         </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Version">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.EventVersion">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Level">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.LevelName">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Pid">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Tid">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.ProviderGuid">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.ProviderName">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.EventId">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Task">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.TaskName">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.KeywordMask">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.KeywordName">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.EventMessage">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Opcode">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.OpcodeName">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.ActivityId">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.RelatedActivityId">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.Channel">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.HeaderFieldNameType.ChannelName">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ETWSessionType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWSessionType.ETWProvider">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWSessionType.name">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWSessionType.attachToName">
+        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ETWProviderType.allowDuplicateEventIDSpecified">
             <remarks/>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.PerformanceCounterType">
@@ -1099,33 +945,6 @@
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.PerformanceCounterType.tableAssignment">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.CounterBlockType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.CounterBlockType.Counter">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.CounterBlockType.sampleRate">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.CounterBlockType.tableName">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.CounterBlockType.valueType">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.CounterTypeType">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.CounterTypeType.mtint32">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.CounterTypeType.mtint64">
-            <remarks/>
-        </member>
-        <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.CounterTypeType.mtfloat64">
             <remarks/>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ListenerType">
@@ -1257,24 +1076,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ManagementType.statusReportQueryName">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ManagementType.notificationChannelEntrypoint">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.DataSiteDeclarationType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.DataSiteDeclarationType.name">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ClientCertType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ClientCertType.ThumbPrint">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ClientCertType.IssuerName">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ClaimType">
             <remarks/>
         </member>
@@ -1339,9 +1140,6 @@
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.UserRoleType.Claims">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.UserRoleType.ClientCerts">
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.UserRoleType.Name">
@@ -1413,9 +1211,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreAccountInfoType.certificateStore">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.XstoreAccountInfoType.placeholder">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.MdsConfigServerType">
             <remarks/>
         </member>
@@ -1452,15 +1247,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.NotificationQueueActionType.QueueDataSite">
             <remarks/>
         </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.PostTaskActionsType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.PostTaskActionsType.NotificationQueueAction">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.PostTaskActionsType.SignalEventAction">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.DestinationTableType">
             <remarks/>
         </member>
@@ -1473,15 +1259,6 @@
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.DestinationTableType.dataSite">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.DestinationTableType.matchPrefix">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.DestinationTableType.matchSuffix">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.DestinationTableType.partitionKeyLoadSpreadIndexMax">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ScheduledTaskType">
             <remarks/>
         </member>
@@ -1492,9 +1269,6 @@
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ScheduledTaskType.PostTaskActions">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ScheduledTaskType.sourceTableMatch">
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.ScheduledTaskType.priority">
@@ -1557,36 +1331,6 @@
         <member name="F:Microsoft.WindowsAzure.Diagnostics.Internal.MonTimestampPolicyType.PreserveRowTime">
             <remarks/>
         </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.name">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.schema">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.partitionKeyLoadSpreadIndexMax">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableDeclarationType.dontUsePerNDayTable">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.TableType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.MetaData">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.priority">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.retentionInSeconds">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.TableType.diskQuotaInMB">
-            <remarks/>
-        </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.ColumnType">
             <remarks/>
         </member>
@@ -1644,9 +1388,6 @@
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.MonitoringAgentConfig">
             <remarks/>
         </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.MonitoringAgentConfig.DataSiteDeclarations">
-            <remarks/>
-        </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.MonitoringAgentConfig.Management">
             <remarks/>
         </member>
@@ -1669,15 +1410,6 @@
             <remarks/>
         </member>
         <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.MonitoringAgentConfig.timestamp">
-            <remarks/>
-        </member>
-        <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.FromClauseType">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.FromClauseType.alias">
-            <remarks/>
-        </member>
-        <member name="P:Microsoft.WindowsAzure.Diagnostics.Internal.FromClauseType.Value">
             <remarks/>
         </member>
         <member name="T:Microsoft.WindowsAzure.Diagnostics.Internal.FakeConfigType">

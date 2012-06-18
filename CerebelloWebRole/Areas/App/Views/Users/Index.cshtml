@@ -1,0 +1,35 @@
+﻿@model CerebelloWebRole.Areas.App.Models.PracticeUsersViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+
+    WebGrid gridUsers = new WebGrid();
+    gridUsers.Bind(Model.Users, null, false, Model.Users.Count);
+    var userNameColumn = gridUsers.Column(
+        header: "Nome do usuário",
+        format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
+}
+@section Title {
+Usuários do consultório
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo usuário</a></li>
+    </ul>
+}
+<div class="doctors-list">
+    <div class="widget">
+        <p class="title">
+            Usuários do sistema
+        </p>
+        @gridUsers.GetHtml(
+                    columns: new List<WebGridColumn>() { userNameColumn },
+                    displayHeader: true,
+                    tableStyle: "webgrid",
+                    headerStyle: "webgrid-header",
+                    footerStyle: "webgrid-footer",
+                    alternatingRowStyle: "webgrid-alternating-row",
+                    selectedRowStyle: "webgrid-selected-row",
+                    rowStyle: "webgrid-row-style")
+    </div>
+</div>

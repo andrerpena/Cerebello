@@ -161,6 +161,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="Cerebello.Model.User">
         <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="AdministratorId" ColumnName="AdministratorId" />
           <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
           <ScalarProperty Name="SecretaryId" ColumnName="SecretaryId" />
           <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
@@ -383,6 +384,13 @@
           <ScalarProperty Name="Cid10Code" ColumnName="Cid10Code" />
           <ScalarProperty Name="Observations" ColumnName="Observations" />
           <ScalarProperty Name="AnamneseId" ColumnName="AnamneseId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Administrators">
+      <EntityTypeMapping TypeName="Cerebello.Model.Administrator">
+        <MappingFragment StoreEntitySet="Administrator">
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

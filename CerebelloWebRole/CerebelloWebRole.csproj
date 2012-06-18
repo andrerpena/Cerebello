@@ -14,6 +14,7 @@
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,18 +34,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CipherLite, Version=1.5.0.0, Culture=neutral, PublicKeyToken=29e81a0118de2e3b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ThirdParty\Bin\CipherLite\CipherLite.dll</HintPath>
+    <Reference Include="CipherLite">
+      <HintPath>..\ThirdParty\CipherLite.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\ThirdParty\Bin\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="itextsharp">
-      <HintPath>..\..\..\ThirdParty\Bin\iTextShap\itextsharp-dll-core-5.1.3\itextsharp.dll</HintPath>
+      <HintPath>..\ThirdParty\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="itextsharp.xtra">
-      <HintPath>..\..\..\ThirdParty\Bin\iTextShap\itextsharp-dll-xtra-5.1.3\itextsharp.xtra.dll</HintPath>
+      <HintPath>..\ThirdParty\itextsharp.xtra.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
@@ -101,12 +101,15 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
+    <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
+    <Compile Include="Areas\App\Models\PracticeUsersViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
+    <Compile Include="Areas\App\Models\UserViewModel.cs" />
     <Compile Include="Code\Controllers\CerebelloController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigDocumentsController.cs" />
@@ -456,7 +459,7 @@
     <Content Include="Areas\App\Views\Medicines\ActiveIngredientEditor.cshtml" />
     <Content Include="Areas\App\Views\Medicines\Details.cshtml" />
     <Content Include="Areas\App\Views\Receipts\ReceiptMedicineEditor.cshtml" />
-    <Content Include="Areas\App\Views\Patients\AddressEditor.cshtml" />
+    <Content Include="Areas\App\Views\Shared\AddressEditor.cshtml" />
     <Content Include="Areas\App\Views\Receipts\ReceiptMedicineDetails.cshtml" />
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
@@ -484,6 +487,9 @@
     <Content Include="Areas\App\Views\Symptoms\Index.cshtml" />
     <Content Include="Areas\App\Views\Shared\CollectionEditor.cshtml" />
     <Content Include="Areas\App\Views\Shared\CollectionEditorInline.cshtml" />
+    <Content Include="Areas\App\Views\Users\Index.cshtml" />
+    <Content Include="Areas\App\Views\Users\Edit.cshtml" />
+    <Content Include="Areas\App\Views\Users\Details.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <None Include="Data\medicines.json" />

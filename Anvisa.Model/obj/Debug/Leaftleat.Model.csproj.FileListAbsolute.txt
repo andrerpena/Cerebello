@@ -1,7 +1,0 @@
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\bin\Debug\Leaftleat.Model.dll
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\bin\Debug\Leaftleat.Model.pdb
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\bin\Debug\EntityFramework.dll
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\bin\Debug\EntityFramework.xml
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\obj\Debug\ResolveAssemblyReference.cache
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\obj\Debug\Leaftleat.Model.dll
-D:\Projetos\Applications\MVC\Cerebello\Leaftleat.Model\obj\Debug\Leaftleat.Model.pdb

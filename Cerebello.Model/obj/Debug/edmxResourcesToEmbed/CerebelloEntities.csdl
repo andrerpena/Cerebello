@@ -180,6 +180,11 @@
       <End Role="Secretary" EntitySet="Secretaries" />
       <End Role="User" EntitySet="Users" />
     </AssociationSet>
+    <EntitySet Name="Administrators" EntityType="Cerebello.Model.Administrator" />
+    <AssociationSet Name="FK_User_Administrator" Association="Cerebello.Model.FK_User_Administrator">
+      <End Role="Administrator" EntitySet="Administrators" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Address">
     <Key>
@@ -384,6 +389,8 @@
     <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_User_Doctor" FromRole="User" ToRole="Doctor" />
     <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_User_Practice" FromRole="User" ToRole="Practice" />
     <NavigationProperty Name="Secretary" Relationship="Cerebello.Model.FK_User_Secretary" FromRole="User" ToRole="Secretary" />
+    <Property Type="Int32" Name="AdministratorId" />
+    <NavigationProperty Name="Administrator" Relationship="Cerebello.Model.FK_User_Administrator" FromRole="User" ToRole="Administrator" />
   </EntityType>
   <Association Name="FK_Address_Person">
     <End Role="Person" Type="Cerebello.Model.Person" Multiplicity="1">
@@ -1001,6 +1008,25 @@
       </Principal>
       <Dependent Role="User">
         <PropertyRef Name="SecretaryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Administrator">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Administrator" FromRole="Administrator" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_User_Administrator">
+    <End Type="Cerebello.Model.Administrator" Role="Administrator" Multiplicity="0..1" />
+    <End Type="Cerebello.Model.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Administrator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="AdministratorId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

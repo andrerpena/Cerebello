@@ -1,6 +1,6 @@
-D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll
-D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.pdb
-D:\Projetos\Azure\Cerebello\Cerebello.Model\obj\Debug\ResolveAssemblyReference.cache
-D:\Projetos\Azure\Cerebello\Cerebello.Model\obj\Debug\Cerebello.Model.dll
-D:\Projetos\Azure\Cerebello\Cerebello.Model\obj\Debug\Cerebello.Model.pdb
-D:\Projetos\Azure\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll.config
+P:\Projects.2012\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll.config
+P:\Projects.2012\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.dll
+P:\Projects.2012\Cerebello\Cerebello.Model\bin\Debug\Cerebello.Model.pdb
+P:\Projects.2012\Cerebello\Cerebello.Model\obj\Debug\ResolveAssemblyReference.cache
+P:\Projects.2012\Cerebello\Cerebello.Model\obj\Debug\Cerebello.Model.dll
+P:\Projects.2012\Cerebello\Cerebello.Model\obj\Debug\Cerebello.Model.pdb

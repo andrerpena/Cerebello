@@ -1,0 +1,40 @@
+﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+@using CerebelloWebRole.Code.Extensions
+@{
+    ViewBag.Title = "Create";
+    ViewBag.Watermark = "Pesquisar pelo nome do usuário";
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    
+    // creating details CardView
+    var cardView = Html.CreateCardView();
+    cardView.AddField(m => m.FullName);
+    cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
+    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
+}
+@section Title {
+    Usuário: <b>@Model.FullName</b>
+}
+@section SideBar {
+    <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-user-link">
+        Editar usuário</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-user-link">
+            Excluir usuário</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">
+                Resumo de usuários</a>
+    <script type="text/javascript">
+        $("#delete-user-link").click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir este usuário?\nTodas as informações relacionadas a este usuário serão excluídas.\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Este usuário foi excluído");
+                        window.location = "@Url.Action("index")";
+                    }
+                    else
+                        alert("Não foi possível excluir este usuário.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+}
+
+@cardView.GetHtml()

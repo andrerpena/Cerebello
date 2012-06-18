@@ -13,8 +13,11 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Crates a fake user, doctor and practice
         /// </summary>
-        public static Doctor CreateFakeUserAndPractice(CerebelloEntities db)
+        public static List<Doctor> CreateFakeUserAndPractice(CerebelloEntities db)
         {
+            var listDoctors = new List<Doctor>();
+
+            // Creating practice.
             var entity = new MedicalEntity()
             {
                 Name = "CRMMG"
@@ -38,7 +41,9 @@ namespace Cerebello.Firestarter
 
             db.Practices.AddObject(practice);
 
-            Person person = new Person()
+            // Creating person, user and doctor objects to be used by André.
+            {
+                Person person = new Person()
                 {
                     DateOfBirth = new DateTime(1984, 08, 12),
                     FullName = "Gregory House",
@@ -46,38 +51,81 @@ namespace Cerebello.Firestarter
                     Gender = (int)TypeGender.Male,
                     CreatedOn = DateTime.UtcNow,
                 };
-            db.People.AddObject(person);
 
-            User user = new User()
+                db.People.AddObject(person);
+
+                User user = new User()
+                {
+                    Person = person,
+                    LastActiveOn = DateTime.UtcNow,
+                    Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
+                    PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
+                    Email = "andrerpena@gmail.com",
+                    GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
+                    Practice = practice
+
+                };
+
+                db.Users.AddObject(user);
+
+                Doctor doctor = new Doctor()
+                {
+                    Id = 1,
+                    CRM = "12345",
+                    MedicalSpecialty = specialty,
+                    MedicalEntity = entity
+                };
+
+                user.Doctor = doctor;
+
+                user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
+
+
+                listDoctors.Add(doctor);
+            }
+
+            // Creating person, user and doctor objects to be used by Miguel Angelo.
             {
-                Person = person,
-                LastActiveOn = DateTime.UtcNow,
-                Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
-                PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
-                Email = "andrerpena@gmail.com",
-                GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
-                Practice = practice
-                
-            };
+                Person person = new Person()
+                {
+                    DateOfBirth = new DateTime(1984, 05, 04),
+                    FullName = "Phill Austin",
+                    UrlIdentifier = "phillaustin",
+                    Gender = (int)TypeGender.Male,
+                    CreatedOn = DateTime.UtcNow,
+                };
 
-            db.Users.AddObject(user);
+                db.People.AddObject(person);
 
+                User user = new User()
+                {
+                    Person = person,
+                    LastActiveOn = DateTime.UtcNow,
+                    Password = "IupHtucomYn3+1AlTL585GX3Ucs=",
+                    PasswordSalt = "oHdC62UZE6Hwts91+Xy88Q==",
+                    Email = "masbicudo@gmail.com",
+                    GravatarEmailHash = "b209e81c82e45437da92af24ddc97360",
+                    Practice = practice
+                };
 
-            Doctor doctor = new Doctor()
-            {
-                CRM = "12345",
-                MedicalSpecialty = specialty,
-                MedicalEntity = entity
-            };
+                db.Users.AddObject(user);
 
-            user.Doctor = doctor;
-            
-            user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
+                Doctor doctor = new Doctor()
+                {
+                    Id = 2,
+                    CRM = "98765",
+                    MedicalSpecialty = specialty,
+                    MedicalEntity = entity
+                };
 
-           
+                user.Doctor = doctor;
 
+                user.Person.Emails.Add(new Email() { Address = "masbicudo@gmail.com" });
 
-            return doctor;
+                listDoctors.Add(doctor);
+            }
+
+            return listDoctors;
         }
 
         /// <summary>

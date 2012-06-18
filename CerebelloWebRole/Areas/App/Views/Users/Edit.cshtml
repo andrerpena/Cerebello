@@ -1,0 +1,92 @@
+﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+@using CerebelloWebRole.Code.Extensions
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+
+    var editPanel = this.Html.CreateEditPanel();
+    editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownFor(model => model.Gender)</text>);
+    editPanel.AddField(m => m.DateOfBirth,  CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownFor(model => model.MaritalStatus)</text>);
+    editPanel.AddField(m => m.BirthPlace);
+    editPanel.AddField(m => m.CPF);
+    editPanel.AddField(m => m.Profissao);
+
+    var editPanelRoles = this.Html.CreateEditPanel();
+    editPanelRoles.AddField(m => m.IsAdministrador);
+    editPanelRoles.AddField(m => m.IsSecretary);
+    editPanelRoles.AddField(m => m.IsMedic);
+
+    var editPanelMedic = this.Html.CreateEditPanel();
+    editPanelMedic.AddField(m => m.MedicCRM);
+    editPanelMedic.AddField(m => m.MedicalSpecialty);
+    editPanelMedic.AddField(m => m.MedicalEntity);
+}
+@section Scripts {
+    <script type="text/javascript">
+        function getGetInfo(cep, opts) {
+            $.ajax({
+                url: "@Url.Action("getcepinfo", "users")",
+                data: { cep: cep },
+                dataType: "json",
+                success: function (e) {
+                    var cepInfo = e ? e : {};
+                    opts.success(cepInfo);
+                },
+                error: function () {
+                    opts.error();
+                    alert("Ocorreu um erro ao tentar obter o endereço a partir do CEP");
+                }
+            });
+        }
+
+        $(function() {
+            $('#IsMedic').change(function() {
+              if ($(this).is(':checked')) $('#MedicEditPanel').show();
+              else $('#MedicEditPanel').hide();
+            });
+        });
+    </script>
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/users_edit.css" />
+}
+@section Title {
+    Cadastrar um novo usuário
+}
+@section SideBar {
+    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+    @editPanel.GetHtml()
+
+    <p class="form-title">
+        Funções deste usuário
+    </p>
+    
+    @editPanelRoles.GetHtml()
+    
+    <div id="MedicEditPanel"@(Model.IsMedic ? "" : @"style=""display: none""")>
+        <p class="form-title">
+            Informações do médico
+        </p>
+    
+        @editPanelMedic.GetHtml()
+    </div>
+    
+    <p class="form-title">
+        @Html.LabelFor(model => model.Addresses)
+    </p>
+
+    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor"))
+
+    <div class="submit-bar">
+        <input type="submit" value="salvar usuário" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

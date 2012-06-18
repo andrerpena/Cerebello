@@ -14,6 +14,9 @@ namespace CerebelloWebRole.Models
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Complete name of the person being registered in the software. Sample: "João Paulo da Cunha Santiago Neto".
+        /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Nome Completo")]
         public String FullName { get; set; }

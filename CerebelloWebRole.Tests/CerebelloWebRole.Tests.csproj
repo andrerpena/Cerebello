@@ -34,16 +34,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CipherLite">
-      <HintPath>..\..\..\ThirdParty\Bin\CipherLite\CipherLite.dll</HintPath>
+      <HintPath>..\ThirdParty\CipherLite.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\ThirdParty\Bin\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="itextsharp">
-      <HintPath>..\..\..\ThirdParty\Bin\iTextShap\itextsharp-dll-core-5.1.3\itextsharp.dll</HintPath>
+      <HintPath>..\ThirdParty\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="itextsharp.xtra">
-      <HintPath>..\..\..\ThirdParty\Bin\iTextShap\itextsharp-dll-xtra-5.1.3\itextsharp.xtra.dll</HintPath>
+      <HintPath>..\ThirdParty\itextsharp.xtra.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -54,7 +54,7 @@
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Moq">
-      <HintPath>..\ThirdParty\Bin\Moq.4.0.10827\Moq.dll</HintPath>
+      <HintPath>..\ThirdParty\Moq.4.0.10827\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -111,6 +111,7 @@
     <Compile Include="ControllersRepository.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
+    <Compile Include="Tests\UsersControllerTests.cs" />
     <Compile Include="Tests\AppControllerTests.cs" />
     <Compile Include="Tests\MedicalCertificatesControllerTests.cs" />
     <Compile Include="MockRepository.cs" />

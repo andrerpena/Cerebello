@@ -3,6 +3,7 @@
   <EntityContainer Name="cerebelloModelStoreContainer">
     <EntitySet Name="ActiveIngredient" EntityType="cerebelloModel.Store.ActiveIngredient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Address" EntityType="cerebelloModel.Store.Address" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Administrator" EntityType="cerebelloModel.Store.Administrator" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Anamnese" EntityType="cerebelloModel.Store.Anamnese" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Appointment" EntityType="cerebelloModel.Store.Appointment" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CFG_Documents" EntityType="cerebelloModel.Store.CFG_Documents" store:Type="Tables" Schema="dbo" />
@@ -176,6 +177,10 @@
       <End Role="SYS_Medicine" EntitySet="SYS_Medicine" />
       <End Role="SYS_MedicineLeaflet" EntitySet="SYS_MedicineLeaflet" />
     </AssociationSet>
+    <AssociationSet Name="FK_User_Administrator" Association="cerebelloModel.Store.FK_User_Administrator">
+      <End Role="Administrator" EntitySet="Administrator" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
     <AssociationSet Name="FK_User_Doctor" Association="cerebelloModel.Store.FK_User_Doctor">
       <End Role="Doctor" EntitySet="Doctor" />
       <End Role="User" EntitySet="User" />
@@ -213,6 +218,12 @@
     <Property Name="Street" Type="varchar" MaxLength="100" />
     <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="PersonId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Administrator">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Anamnese">
     <Key>
@@ -547,6 +558,7 @@
     <Property Name="DoctorId" Type="int" />
     <Property Name="SecretaryId" Type="int" />
     <Property Name="PracticeId" Type="int" Nullable="false" />
+    <Property Name="AdministratorId" Type="int" />
   </EntityType>
   <Association Name="FK_ActiveIngredient_Doctor">
     <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
@@ -973,6 +985,18 @@
       </Principal>
       <Dependent Role="SYS_MedicineLeaflet">
         <PropertyRef Name="SYS_MedicineId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Administrator">
+    <End Role="Administrator" Type="cerebelloModel.Store.Administrator" Multiplicity="0..1" />
+    <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Administrator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="AdministratorId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
