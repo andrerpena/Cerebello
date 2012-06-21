@@ -39,7 +39,7 @@ namespace CerebelloWebRole.Tests
             DatabaseHelper.ClearAllData();
             this.db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString);
 
-            Firestarter.CreateFakeUserAndPractice(this.db);
+            Firestarter.CreateFakeUserAndPractice_1(this.db);
             this.db.SaveChanges();
         }
 
@@ -87,7 +87,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(formModel.Diagnoses[1].Text, anamneses[0].Diagnoses.ElementAt(1).Cid10Name);
             Assert.AreEqual(formModel.Diagnoses[1].Cid10Code, anamneses[0].Diagnoses.ElementAt(1).Cid10Code);
         }
-        
+
         #endregion
 
         #region Delete
@@ -144,15 +144,15 @@ namespace CerebelloWebRole.Tests
         {
             var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
 
-            // tries to delete the anamnese
+            // tries to delete the anamnese <== WTF??
             var result = controller.LookupDiagnoses("cefaléia", 20, 1);
             var lookupJsonResult = (LookupJsonResult)result.Data;
 
             Assert.AreEqual(9, lookupJsonResult.Count);
-            foreach (LookupRow item in lookupJsonResult.Rows)
+            foreach (CidLookupGridModel item in lookupJsonResult.Rows)
             {
-                Assert.IsNotNull(item.Id);
-                Assert.IsFalse(string.IsNullOrEmpty(item.Value));
+                Assert.IsNotNull(item.Cid10Code);
+                Assert.IsFalse(string.IsNullOrEmpty(item.Cid10Name));
             }
         }
 

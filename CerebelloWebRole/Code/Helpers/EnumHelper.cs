@@ -98,8 +98,17 @@ namespace CerebelloWebRole.Code
                 return vPropertyInfo.PropertyType;
             else
             {
-                if (vPropertyInfo.PropertyType != typeof(Int32) && vPropertyInfo.PropertyType != typeof(Nullable<Int32>))
-                    throw new Exception("Expression member must be either an enum type or a Int32");
+                var supportedTypes = new HashSet<Type> {
+                    typeof(Int32),
+                    typeof(Nullable<Int32>),
+                    typeof(Int16),
+                    typeof(Nullable<Int16>),
+                    typeof(Int64),
+                    typeof(Nullable<Int64>),
+                };
+
+                if (!supportedTypes.Contains(vPropertyInfo.PropertyType))
+                    throw new Exception("Expression member must be either an enum type, an integer type or a nullable of any previous types.");
 
                 var vEnumDataTypeAttributes = vPropertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), false);
                 if (vEnumDataTypeAttributes.Length == 0)

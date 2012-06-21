@@ -45,5 +45,7 @@ namespace CerebelloWebRole.Models
         [Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
+        public string UserName { get; set; }
     }
 }

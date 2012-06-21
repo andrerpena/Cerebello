@@ -320,13 +320,13 @@
           <Property Name="AnamneseId" Type="int" Nullable="false" />
           <Property Name="Observations" Type="varchar" MaxLength="200" />
           <Property Name="Cid10Code" Type="varchar" Nullable="false" MaxLength="10" />
-          <Property Name="Cid10Name" Type="varchar" MaxLength="100" />
+          <Property Name="Cid10Name" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="CRM" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="MedicalEntityId" Type="int" Nullable="false" />
           <Property Name="MedicalSpecialtyId" Type="int" Nullable="false" />
@@ -500,7 +500,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SYS_ActiveIngredient">
           <Key>
@@ -558,12 +558,13 @@
           <Property Name="PasswordSalt" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="LastActiveOn" Type="datetime" />
           <Property Name="PersonId" Type="int" Nullable="false" />
-          <Property Name="Email" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Email" Type="varchar" MaxLength="200" />
           <Property Name="GravatarEmailHash" Type="varchar" MaxLength="100" />
           <Property Name="DoctorId" Type="int" />
           <Property Name="SecretaryId" Type="int" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="AdministratorId" Type="int" />
+          <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <Association Name="FK_ActiveIngredient_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
@@ -1286,7 +1287,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="Int32" annotation:StoreGeneratedPattern="None" Nullable="false" />
           <Property Name="CRM" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="MedicalEntityId" Type="Int32" Nullable="false" />
           <Property Name="MedicalSpecialtyId" Type="Int32" Nullable="false" />
@@ -1440,7 +1441,7 @@
           <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_User" FromRole="User" ToRole="Appointment" />
           <NavigationProperty Name="Person" Relationship="Cerebello.Model.FK_User_Person" FromRole="User" ToRole="Person" />
           <NavigationProperty Name="PracticesIOwn" Relationship="Cerebello.Model.FK_Practice_User" FromRole="User" ToRole="Practice" />
-          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Email" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="GravatarEmailHash" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="DoctorId" />
           <Property Type="Int32" Name="SecretaryId" />
@@ -1450,6 +1451,7 @@
           <NavigationProperty Name="Secretary" Relationship="Cerebello.Model.FK_User_Secretary" FromRole="User" ToRole="Secretary" />
           <Property Type="Int32" Name="AdministratorId" />
           <NavigationProperty Name="Administrator" Relationship="Cerebello.Model.FK_User_Administrator" FromRole="User" ToRole="Administrator" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Address_Person">
           <End Role="Person" Type="Cerebello.Model.Person" Multiplicity="1">
@@ -2193,7 +2195,8 @@
             <ScalarProperty Name="Id" ColumnName="Id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="Cerebello.Model.User"><MappingFragment StoreEntitySet="User">
-            <ScalarProperty Name="AdministratorId" ColumnName="AdministratorId" />
+            <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AdministratorId" ColumnName="AdministratorId" />
             <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
             <ScalarProperty Name="SecretaryId" ColumnName="SecretaryId" />
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
@@ -2445,7 +2448,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="20">
+      <Diagram Name="CerebelloEntities" ZoomLevel="82">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="3" PointY="7.75" Height="2.7494921874999996" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="1.5" PointX="6.375" PointY="17.625" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="3.75" PointY="14.5" Height="1.5956835937499978" IsExpanded="true" />
@@ -2472,8 +2475,8 @@
           <ConnectorPoint PointX="7.875" PointY="20.408396809895834" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_User" ManuallyRouted="false">
-          <ConnectorPoint PointX="5" PointY="22.075979497157121" />
-          <ConnectorPoint PointX="7.125" PointY="22.075979497157121" />
+          <ConnectorPoint PointX="5" PointY="22.059679566624482" />
+          <ConnectorPoint PointX="7.125" PointY="22.059679566624482" />
           <ConnectorPoint PointX="7.125" PointY="20.566793619791667" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Patient_Coverage" ManuallyRouted="false">
@@ -2661,10 +2664,10 @@
           <ConnectorPoint PointX="5" PointY="23.796349794805476" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Practice" >
-          <ConnectorPoint PointX="9.875" PointY="21.447409888043524" />
-          <ConnectorPoint PointX="7.208333333333333" PointY="21.447409888043524" />
-          <ConnectorPoint PointX="7.041666666666667" PointY="21.447409888043524" />
-          <ConnectorPoint PointX="5" PointY="21.447409888043524" />
+          <ConnectorPoint PointX="9.875" PointY="21.469448803912925" />
+          <ConnectorPoint PointX="7.208333333333333" PointY="21.469448803912925" />
+          <ConnectorPoint PointX="7.041666666666667" PointY="21.469448803912925" />
+          <ConnectorPoint PointX="5" PointY="21.469448803912925" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Secretary" >
           <ConnectorPoint PointX="8.75" PointY="26.75" />

@@ -1,8 +1,21 @@
 Especificação do Cerebello
 --------------------------
 
+@	Já foi para o cronograma.
+X	Implementado.
+T	Testado.
+
+- Itens que vão ser feitos.
+* Itens que podem ser feitos ou não.
+
 A partir de 2012-05-26
 ----------------------
+
+	Contas de usuário:
+		- UserName único dentro do consultório
+		- Permitir fazer login com email ou user-name (igual o google)
+			(somente o e-mail principal será considerado)
+		- E-mails devem ser únicos dentro do consultório
 
 @	Tela Consultório.Início
 @		Total de pacientes do consultório
@@ -95,6 +108,7 @@ A partir de 2012-05-26
 		- não pode desmarcar último administrador (sempre tem que ter um)
 
 	Tela Consultório.Usuários.Criar
+		- para usuários sem e-mail, tem que permitir criar um nome de usuário
 		- definir senha padrão para novo usuário
 		- permitir tirar foto usando plugin
 

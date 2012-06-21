@@ -21,6 +21,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var viewModel = new UserViewModel()
             {
                 Id = user.Id,
+                UserName = user.UserName,
                 FullName = user.Person.FullName,
                 UrlIdentifier = user.Person.UrlIdentifier,
                 ImageUrl = GravatarHelper.GetGravatarUrl(user.GravatarEmailHash, GravatarHelper.Size.s64),
@@ -34,10 +35,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 IsAdministrador = user.AdministratorId != null,
                 IsMedic = user.DoctorId != null,
                 IsSecretary = user.SecretaryId != null,
-
-                MedicCRM = user.Doctor.CRM,
-                //MedicalEntity = user.Doctor.MedicalEntity,
-                //MedicalSpecialty = user.Doctor.MedicalSpecialty,
 
                 Emails = (from e in user.Person.Emails
                           select new EmailViewModel()
@@ -58,6 +55,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                  Street = a.Street
                              }).ToList()
             };
+
+            if (user.Doctor != null)
+            {
+                viewModel.MedicCRM = user.Doctor.CRM;
+                //MedicalEntity = user.Doctor.MedicalEntity,
+                //MedicalSpecialty = user.Doctor.MedicalSpecialty,
+            }
 
             return viewModel;
         }
@@ -137,6 +141,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     string emailStr = firstEmail != null ? firstEmail.Address : null;
                     user = SecurityManager.CreateUser(new CerebelloWebRole.Models.CreateAccountViewModel
                     {
+                        UserName = formModel.UserName,
                         Password = "123abc",
                         ConfirmPassword = "123abc",
                         DateOfBirth = formModel.DateOfBirth,
@@ -220,6 +225,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     (m) => this.db.Emails.DeleteObject(m)
                 );
 
+                // Setting the new user PracticeId to be the same as the logged user.
+                var loggedUser = this.GetCurrentUser();
+                user.PracticeId = loggedUser.PracticeId;
+
+                // Saving all the changes.
                 db.SaveChanges();
 
                 return RedirectToAction("details", new { id = user.Id });

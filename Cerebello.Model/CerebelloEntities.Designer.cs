@@ -7929,17 +7929,17 @@ namespace Cerebello.Model
         /// <param name="password">Initial value of the Password property.</param>
         /// <param name="passwordSalt">Initial value of the PasswordSalt property.</param>
         /// <param name="personId">Initial value of the PersonId property.</param>
-        /// <param name="email">Initial value of the Email property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static User CreateUser(global::System.Int32 id, global::System.String password, global::System.String passwordSalt, global::System.Int32 personId, global::System.String email, global::System.Int32 practiceId)
+        /// <param name="userName">Initial value of the UserName property.</param>
+        public static User CreateUser(global::System.Int32 id, global::System.String password, global::System.String passwordSalt, global::System.Int32 personId, global::System.Int32 practiceId, global::System.String userName)
         {
             User user = new User();
             user.Id = id;
             user.Password = password;
             user.PasswordSalt = passwordSalt;
             user.PersonId = personId;
-            user.Email = email;
             user.PracticeId = practiceId;
+            user.UserName = userName;
             return user;
         }
 
@@ -8072,7 +8072,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String Email
         {
@@ -8084,7 +8084,7 @@ namespace Cerebello.Model
             {
                 OnEmailChanging(value);
                 ReportPropertyChanging("Email");
-                _Email = StructuralObject.SetValidValue(value, false);
+                _Email = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("Email");
                 OnEmailChanged();
             }
@@ -8212,6 +8212,30 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _AdministratorId;
         partial void OnAdministratorIdChanging(Nullable<global::System.Int32> value);
         partial void OnAdministratorIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String UserName
+        {
+            get
+            {
+                return _UserName;
+            }
+            set
+            {
+                OnUserNameChanging(value);
+                ReportPropertyChanging("UserName");
+                _UserName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("UserName");
+                OnUserNameChanged();
+            }
+        }
+        private global::System.String _UserName;
+        partial void OnUserNameChanging(global::System.String value);
+        partial void OnUserNameChanged();
 
         #endregion
     

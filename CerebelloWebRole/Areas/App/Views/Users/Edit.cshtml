@@ -5,10 +5,24 @@
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var editPanel = this.Html.CreateEditPanel();
+    
+    if (Model == null)
+    {
+        // If Model is null, then the user is being created now,
+        // so we allow the user name to be changed.
+        editPanel.AddField(m => m.UserName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    }
+    else
+    {
+        // If Model is not null, then the user already existed before,
+        // we cannot allow the user-name to be edited.
+        editPanel.AddField(m => m.UserName, @<text>@Model.UserName</text>);
+    }
+    
     editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownFor(model => model.Gender)</text>);
-    editPanel.AddField(m => m.DateOfBirth,  CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownFor(model => model.MaritalStatus)</text>);
+    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
+    editPanel.AddField(m => m.DateOfBirth, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.CPF);
     editPanel.AddField(m => m.Profissao);
@@ -53,7 +67,7 @@
     <link rel="Stylesheet" type="text/css" href="/content/styles/app/users_edit.css" />
 }
 @section Title {
-    Cadastrar um novo usuário
+Cadastrar um novo usuário
 }
 @section SideBar {
     <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
@@ -70,11 +84,10 @@
     
     @editPanelRoles.GetHtml()
     
-    <div id="MedicEditPanel"@(Model.IsMedic ? "" : @"style=""display: none""")>
+    <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsMedic ? "" : "style=\"display: none\""))>
         <p class="form-title">
             Informações do médico
         </p>
-    
         @editPanelMedic.GetHtml()
     </div>
     
@@ -82,7 +95,7 @@
         @Html.LabelFor(model => model.Addresses)
     </p>
 
-    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor"))
+    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor", "adicionar endereço"))
 
     <div class="submit-bar">
         <input type="submit" value="salvar usuário" />

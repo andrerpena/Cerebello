@@ -17,8 +17,6 @@ namespace CerebelloWebRole.Code
 
         public static void Logout()
         {
-            // remover o usuário no ato do Logout() não é mais necessário
-            // agora que o cache é administrado pelo XPO
             FormsAuthentication.SignOut();
         }
 
@@ -42,13 +40,16 @@ namespace CerebelloWebRole.Code
                     UrlIdentifier = StringHelper.GenerateUrlIdentifier(registrationData.FullName),
                     CreatedOn = DateTime.Now,
                 },
+                UserName = registrationData.UserName,
                 PasswordSalt = passwordSalt,
                 Password = passwordHash,
                 LastActiveOn = DateTime.Now,
                 Email = registrationData.EMail,
             };
 
-            user.Person.Emails.Add(new Email() { Address = registrationData.EMail });
+            // E-mail is optional.
+            if (!string.IsNullOrEmpty(registrationData.EMail))
+                user.Person.Emails.Add(new Email() { Address = registrationData.EMail });
 
             entities.Users.AddObject(user);
             return user;
@@ -58,11 +59,11 @@ namespace CerebelloWebRole.Code
         {
             try
             {
-                string securityToken = AuthenticateUser(loginModel.Email, loginModel.Password, entities);
+                string securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, entities);
 
                 DateTime expiryDate = DateTime.UtcNow.AddYears(1);
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
-                     1, loginModel.Email, DateTime.UtcNow, expiryDate, true,
+                     1, loginModel.UserNameOrEmail, DateTime.UtcNow, expiryDate, true,
                      securityToken, FormsAuthentication.FormsCookiePath);
 
                 string encryptedTicket = FormsAuthentication.Encrypt(ticket);
@@ -118,12 +119,16 @@ namespace CerebelloWebRole.Code
         /// <param name="id"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static String AuthenticateUser(String email, String password, CerebelloEntities entities)
+        public static String AuthenticateUser(String userNameOrEmail, String password, CerebelloEntities entities)
         {
-            User user = (from u in entities.Users where u.Email == email select u).FirstOrDefault();
+            var isEmail = userNameOrEmail.Contains("@");
+
+            User user = isEmail ?
+                (from u in entities.Users where u.Email == userNameOrEmail select u).FirstOrDefault() :
+                (from u in entities.Users where u.UserName == userNameOrEmail select u).FirstOrDefault();
 
             if (user == null)
-                throw new Exception("Email [" + email + "] not found");
+                throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");
 
             // comparing password
             var passwordHash = CipherHelper.Hash(password, user.PasswordSalt);

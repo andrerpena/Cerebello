@@ -14,8 +14,8 @@ namespace CerebelloWebRole.Models
         public String PracticeIdentifier { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "E-Mail")]
-        public String Email { get; set; }
+        [Display(Name = "Nome de usuário ou e-mail")]
+        public String UserNameOrEmail { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Senha")]

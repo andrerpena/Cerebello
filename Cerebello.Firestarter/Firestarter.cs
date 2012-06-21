@@ -8,30 +8,243 @@ using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter
 {
-    public class Firestarter
+    public static class Firestarter
     {
         /// <summary>
-        /// Crates a fake user, doctor and practice
+        /// Crates a fake user, doctor and practice.
         /// </summary>
-        public static List<Doctor> CreateFakeUserAndPractice(CerebelloEntities db)
+        public static Doctor CreateFakeUserAndPractice_1(CerebelloEntities db)
         {
-            var listDoctors = new List<Doctor>();
+            // Creating data infrastructure.
+            var entity = CreateMedicalEntity_CrmMg(db);
+            var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
-            var entity = new MedicalEntity()
+            var practice = CreatePractice_DrHouse(db);
+
+            // Creating person, user and doctor objects to be used by André.
+            var andre = CreateDoctor_Andre(db, entity, specialty, practice);
+
+            return andre;
+        }
+
+        /// <summary>
+        /// Crates a fake user, doctor and practice.
+        /// </summary>
+        public static List<Doctor> CreateFakeUserAndPractice_2(CerebelloEntities db)
+        {
+            // Creating data infrastructure.
+            var entity = CreateMedicalEntity_CrmMg(db);
+            var specialty = CreateSpecialty_Psiquiatria(db);
+
+            // Creating practice.
+            var practice = CreatePractice_DrHouse(db);
+
+            // Creating person, user and doctor objects to be used by André.
+            var result = new List<Doctor>
             {
-                Name = "CRMMG"
+                CreateDoctor_Andre(db, entity, specialty, practice),
+                CreateAdministratorDoctor_Miguel(db, entity, specialty, practice),
             };
 
-            db.MedicalEntities.AddObject(entity);
+            return result;
+        }
 
+        public static MedicalSpecialty CreateSpecialty_Psiquiatria(CerebelloEntities db)
+        {
             var specialty = new MedicalSpecialty()
             {
                 Name = "Psiquiatria"
             };
 
             db.MedicalSpecialties.AddObject(specialty);
+            return specialty;
+        }
 
+        public static MedicalEntity CreateMedicalEntity_CrmMg(CerebelloEntities db)
+        {
+            var entity = new MedicalEntity()
+            {
+                Name = "CRMMG"
+            };
+
+            db.MedicalEntities.AddObject(entity);
+            return entity;
+        }
+
+        public static Doctor CreateAdministratorDoctor_Miguel(CerebelloEntities db, MedicalEntity entity, MedicalSpecialty specialty, Practice practice)
+        {
+            // Creating user.
+            User user = new User()
+            {
+                UserName = "masbicudo",
+                LastActiveOn = DateTime.UtcNow,
+                Password = "IupHtucomYn3+1AlTL585GX3Ucs=", // pwd = "masban"
+                PasswordSalt = "oHdC62UZE6Hwts91+Xy88Q==",
+                Email = "masbicudo@gmail.com",
+                GravatarEmailHash = "b209e81c82e45437da92af24ddc97360",
+                Practice = practice
+            };
+
+            db.Users.AddObject(user);
+
+            //db.SaveChanges(); // cannot save changes here, because user.Person is not nullable.
+
+            // Creating person.
+            Person person = new Person()
+            {
+                DateOfBirth = new DateTime(1984, 05, 04),
+                FullName = "Phill Austin",
+                UrlIdentifier = "phillaustin",
+                Gender = (int)TypeGender.Male,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            user.Person = person;
+
+            db.SaveChanges();
+
+            // Creating doctor.
+            Doctor doctor = new Doctor()
+            {
+                Id = 2,
+                CRM = "98765",
+                MedicalSpecialty = specialty,
+                MedicalEntity = entity
+            };
+
+            user.Doctor = doctor;
+
+            db.SaveChanges();
+
+            // Creating admin.
+            Administrator admin = new Administrator()
+            {
+                Id = 2,
+            };
+
+            user.Doctor = doctor;
+
+            db.SaveChanges();
+
+            // Creating e-mail.
+            user.Person.Emails.Add(new Email()
+            {
+                Address = "masbicudo@gmail.com"
+            });
+
+            db.SaveChanges();
+
+            return doctor;
+        }
+
+        public static Doctor CreateDoctor_Andre(CerebelloEntities db, MedicalEntity entity, MedicalSpecialty specialty, Practice practice)
+        {
+            Person person = new Person()
+            {
+                DateOfBirth = new DateTime(1984, 08, 12),
+                FullName = "Gregory House",
+                UrlIdentifier = "gregoryhouse",
+                Gender = (int)TypeGender.Male,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            db.People.AddObject(person);
+
+            db.SaveChanges();
+
+            User user = new User()
+            {
+                UserName = "andrerpena",
+                Person = person,
+                LastActiveOn = DateTime.UtcNow,
+                Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
+                PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
+                Email = "andrerpena@gmail.com",
+                GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
+                Practice = practice
+            };
+
+            db.Users.AddObject(user);
+
+            db.SaveChanges();
+
+            Doctor doctor = new Doctor()
+            {
+                Id = 1,
+                CRM = "12345",
+                MedicalSpecialty = specialty,
+                MedicalEntity = entity
+            };
+
+            db.Doctors.AddObject(doctor);
+
+            db.SaveChanges();
+
+            user.Doctor = doctor;
+            user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
+
+            db.SaveChanges();
+
+            return doctor;
+        }
+
+        /// <summary>
+        /// Creates the secretary Milena, with Id = 3.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="practice"></param>
+        /// <returns></returns>
+        public static Secretary CreateSecretary_Milena(CerebelloEntities db, Practice practice)
+        {
+            // Creating user.
+            User user = new User()
+            {
+                UserName = "milena",
+                LastActiveOn = DateTime.UtcNow,
+                PasswordSalt = "egt/lzoRIw/M7XJsK3C0jw==", // pwd = "milena"
+                Password = "TSRG03R6Atzl48oIPaaK20SiyKg=",
+                Practice = practice
+            };
+
+            db.Users.AddObject(user);
+
+            //db.SaveChanges(); // cannot save changes here, because user.Person is not nullable.
+
+            // Creating person.
+            Person person = new Person()
+            {
+                DateOfBirth = new DateTime(1984, 05, 04),
+                FullName = "Menininha Santos",
+                UrlIdentifier = "meninasantos",
+                Gender = (int)TypeGender.Female,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            user.Person = person;
+
+            db.SaveChanges();
+
+            // Creating secretary.
+            Secretary secreatry = new Secretary()
+            {
+                Id = 3,
+            };
+
+            user.Secretary = secreatry;
+
+            db.SaveChanges();
+
+            return secreatry;
+        }
+
+        /// <summary>
+        /// Creates a new practice and returns it.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static Practice CreatePractice_DrHouse(CerebelloEntities db)
+        {
             var practice = new Practice()
             {
                 Name = "Consultório do Dr. House",
@@ -41,91 +254,8 @@ namespace Cerebello.Firestarter
 
             db.Practices.AddObject(practice);
 
-            // Creating person, user and doctor objects to be used by André.
-            {
-                Person person = new Person()
-                {
-                    DateOfBirth = new DateTime(1984, 08, 12),
-                    FullName = "Gregory House",
-                    UrlIdentifier = "gregoryhouse",
-                    Gender = (int)TypeGender.Male,
-                    CreatedOn = DateTime.UtcNow,
-                };
-
-                db.People.AddObject(person);
-
-                User user = new User()
-                {
-                    Person = person,
-                    LastActiveOn = DateTime.UtcNow,
-                    Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
-                    PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
-                    Email = "andrerpena@gmail.com",
-                    GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
-                    Practice = practice
-
-                };
-
-                db.Users.AddObject(user);
-
-                Doctor doctor = new Doctor()
-                {
-                    Id = 1,
-                    CRM = "12345",
-                    MedicalSpecialty = specialty,
-                    MedicalEntity = entity
-                };
-
-                user.Doctor = doctor;
-
-                user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
-
-
-                listDoctors.Add(doctor);
-            }
-
-            // Creating person, user and doctor objects to be used by Miguel Angelo.
-            {
-                Person person = new Person()
-                {
-                    DateOfBirth = new DateTime(1984, 05, 04),
-                    FullName = "Phill Austin",
-                    UrlIdentifier = "phillaustin",
-                    Gender = (int)TypeGender.Male,
-                    CreatedOn = DateTime.UtcNow,
-                };
-
-                db.People.AddObject(person);
-
-                User user = new User()
-                {
-                    Person = person,
-                    LastActiveOn = DateTime.UtcNow,
-                    Password = "IupHtucomYn3+1AlTL585GX3Ucs=",
-                    PasswordSalt = "oHdC62UZE6Hwts91+Xy88Q==",
-                    Email = "masbicudo@gmail.com",
-                    GravatarEmailHash = "b209e81c82e45437da92af24ddc97360",
-                    Practice = practice
-                };
-
-                db.Users.AddObject(user);
-
-                Doctor doctor = new Doctor()
-                {
-                    Id = 2,
-                    CRM = "98765",
-                    MedicalSpecialty = specialty,
-                    MedicalEntity = entity
-                };
-
-                user.Doctor = doctor;
-
-                user.Person.Emails.Add(new Email() { Address = "masbicudo@gmail.com" });
-
-                listDoctors.Add(doctor);
-            }
-
-            return listDoctors;
+            db.SaveChanges();
+            return practice;
         }
 
         /// <summary>
@@ -325,10 +455,30 @@ namespace Cerebello.Firestarter
             };
         }
 
-        public static void SetupDB(CerebelloEntities db)
+        public static void InitializeDatabaseWithSystemData(CerebelloEntities db)
         {
             // System data
 
+        }
+
+        /// <summary>
+        /// Clears all data in the database.
+        /// </summary>
+        /// <param name="db"></param>
+        public static void ClearAllData(CerebelloEntities db)
+        {
+            db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
+            db.ExecuteStoreCommand(@"sp_MSForEachTable '
+                         IF OBJECTPROPERTY(object_id(''?''), ''TableHasForeignRef'') = 1
+                         DELETE FROM ?
+                         else 
+                         TRUNCATE TABLE ?
+                     '");
+            db.ExecuteStoreCommand(@"sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'");
+            db.ExecuteStoreCommand(@"sp_MSForEachTable ' 
+                         IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1 
+                         DBCC CHECKIDENT (''?'', RESEED, 0) 
+                     ' ");
         }
     }
 }

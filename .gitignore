@@ -1,5 +1,6 @@
 #ignore thumbnails created by windows
 Thumbs.db
+
 #Ignore files build by Visual Studio
 *.obj
 *.exe
@@ -18,7 +19,7 @@ Thumbs.db
 *.cache
 *.ilk
 *.log
-[Bb]in
+[Bb]in/
 [Dd]ebug*/
 *.lib
 *.sbr
@@ -27,11 +28,13 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 csx/
-bin
-obj
-Debug
-Release
+bin/
+obj/
 *.dll
 *.pdb
 *.mdf
 *.ldf
+
+#Exceptions to third-party files.
+!/ThirdParty/*
+!/ThirdParty/**/*

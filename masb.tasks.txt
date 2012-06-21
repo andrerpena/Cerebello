@@ -1,0 +1,26 @@
+S = Status
+    - Item sendo feito.
+    x Item já implementado.
+P = Prioridade: P0, P1... P9 (menor deve ser feito antes)
+Desc = Descrição do item.
+
+S   P Desc
+
+-   P0 Teste visualizar usuário: secretária.
+    P0 Teste visualizar usuário: médico.
+    P0 Teste visualizar usuário: administrador.
+    P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
+    P0 Teste cadastrar usuário: novo médico, faltando CRM.
+    P0 Não permitir excluir último administrador do consultório.
+    P0 Teste cadastrar usuário: tem que ter UserName.
+    P0 Teste cadastrar usuário: tem que ter uma função.
+    P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
+    P1 Verificar fluxo de usuário: criar, acessar, definir senha, login.
+    P1 Validação para usuários com UserName duplicados.
+    P1 Validação para usuários com Email duplicados.
+    P1 Tem que informar em algum lugar que o usuário é criado com uma senha padrão.
+    P1 Ação para resetar senha padrão caso alguém esqueça a senha.
+    P8 Quando o foco estiver na Combo, parece que não tem nada focado.
+    P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
+
+x   P0 Teste cadastrar usuário: e-mail é opcional.

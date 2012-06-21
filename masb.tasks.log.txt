@@ -1,0 +1,23 @@
+yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
+
+yyyy => ano  MM => mês  dd => dia
+h1 => hora de início	m1 => minuto de início
+h2 => hora de fim		m2 => minuto de fim
+dh => horas de duração	dm => minutos de duração
+ee => nível de concentração no trabalho
+desc => descrição do que está sendo feito
+
+2012-06-20 20:15-21:05 (0º50")  9   Teste de visualizar secretária.
+2012-06-20 19:25-20:15 (0º50")  9   Alterações no FireStarter para facilitar a criação de ambientes de teste.
+2012-06-20 17:10-19:15 (2º05")  8   Entendendo arquitetura de testes.
+2012-06-20 16:00-16:40 (0º40")  6   Teste de criar usuário sem e-mail.
+
+2012-06-19 19:10-20:00 (0º50")  5   Bugs nas telas de criação/edição de usuários.
+2012-06-19 18:40-19:10 (0º30")  7   Alterações no firestarter, seleção de conexão e opção para limpar o banco.
+2012-06-19 18:20-18:40 (0º20")  7   Cadastro de usuário com user-name, alteração do banco, modelo.
+2012-06-19 18:00-18:20 (0º20")  8   Login com nome de usuário ou e-mail.
+2012-06-19 16:00-16:20 (0º20")      Almoço.
+2012-06-19 16:20-18:00 (1º40")  8   Verificando se tudo na app está funcionando.
+2012-06-19 12:00-16:00 (4º00")  6   Arrumando os testes para poder comitar.
+
+2012-06-18 19:00-22:00 (3º00")  4   Entendendo o GIT.

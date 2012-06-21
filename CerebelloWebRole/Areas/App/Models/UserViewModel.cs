@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
     public class UserViewModel : PersonViewModel
     {
+        [Display(Name = "Nome identificador")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string UserName { get; set; }
+
         public string ImageUrl { get; set; }
 
         public string UrlIdentifier { get; set; }
