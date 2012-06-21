@@ -7,6 +7,14 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
 
+2012-06-21 13:15-15:15 (2º00")  8   Verificação e testes para username único no consultório.
+2012-06-21 15:15-15:45 (0º30")  9   Verificação e teste para criação de usuário sem UserName.
+2012-06-21 15:45-16:00 (0º15") 10   Verificação e teste de função do usuário, tem que ter pelo menos uma: admin, secretária ou médico.
+2012-06-21 16:00-16:25 (0º25") 10   Testes de visualização de médico e administrador.
+2012-06-21 16:20-16:35 (0º15")  9   Verificação e teste de criação de usuário médico, sem informar o CRM.
+2012-06-21 16:35-16:45 (0º10")  9   Teste de criação de médico com todas as informações. Ainda não passa, falta gravar a especialidade e o órgão regulador.
+
+2012-06-20 22:00-23:10 (1º10")  8   Comitando alterações, juntando scripts de criação de banco.
 2012-06-20 20:15-21:05 (0º50")  9   Teste de visualizar secretária.
 2012-06-20 19:25-20:15 (0º50")  9   Alterações no FireStarter para facilitar a criação de ambientes de teste.
 2012-06-20 17:10-19:15 (2º05")  8   Entendendo arquitetura de testes.

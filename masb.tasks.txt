@@ -1,26 +1,30 @@
 S = Status
     - Item sendo feito.
     x Item já implementado.
+    ? Está terminado, mas não pode ser verificado (depende de outra tarefa)
 P = Prioridade: P0, P1... P9 (menor deve ser feito antes)
 Desc = Descrição do item.
 
 S   P Desc
 
--   P0 Teste visualizar usuário: secretária.
-    P0 Teste visualizar usuário: médico.
-    P0 Teste visualizar usuário: administrador.
-    P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
-    P0 Teste cadastrar usuário: novo médico, faltando CRM.
+    P0 Cadastro de novo médico: combo de especialidade e órgão regulador.
     P0 Não permitir excluir último administrador do consultório.
-    P0 Teste cadastrar usuário: tem que ter UserName.
-    P0 Teste cadastrar usuário: tem que ter uma função.
+    P0 Validação para usuários com Email duplicados.
+    P1 Activity indicator para o link button "adicionar endereço".
+    P1 Página de login quando tenta acessar algo sem estar logado: The resource cannot be found. /login.aspx
     P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
     P1 Verificar fluxo de usuário: criar, acessar, definir senha, login.
-    P1 Validação para usuários com UserName duplicados.
-    P1 Validação para usuários com Email duplicados.
     P1 Tem que informar em algum lugar que o usuário é criado com uma senha padrão.
     P1 Ação para resetar senha padrão caso alguém esqueça a senha.
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
+?   P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
+x   P0 Teste cadastrar usuário: novo médico, faltando CRM.
+x   P0 Teste visualizar usuário: médico.
+x   P0 Teste visualizar usuário: administrador.
+x   P0 Teste cadastrar usuário: tem que ter uma função - admin, secretária, médico.
+x   P0 Teste cadastrar usuário: tem que ter UserName.
+x   P0 Validação e teste para usuários com UserName duplicados.
+x   P0 Teste visualizar usuário: secretária.
 x   P0 Teste cadastrar usuário: e-mail é opcional.
