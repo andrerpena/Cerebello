@@ -25,6 +25,12 @@ namespace CerebelloWebRole.Code
             return ((FormsIdentity)HttpContext.Current.User.Identity).Ticket.UserData;
         }
 
+        /// <summary>
+        /// Creates a new user and adds it to the storage object context.
+        /// </summary>
+        /// <param name="registrationData">Object containing informations about the user to be created.</param>
+        /// <param name="entities">Storage object context used to add the new user. It won't be saved, just changed.</param>
+        /// <returns>The new User object.</returns>
         public static User CreateUser(CreateAccountViewModel registrationData, CerebelloEntities entities)
         {
             string passwordSalt = CipherHelper.GenerateSalt();

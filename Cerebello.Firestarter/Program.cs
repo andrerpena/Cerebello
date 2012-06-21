@@ -91,9 +91,10 @@ namespace Test1
                                 // Implement this when needed... for now, I just need the pwd-salt and pwd-hash.
                                 //db.SaveChanges();
 
-                                Console.WriteLine(string.Format("PasswordSalt = {0};", user.PasswordSalt));
-                                Console.WriteLine(string.Format("Password = {0};", user.Password));
-                                Console.ReadKey();
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.WriteLine(string.Format("PasswordSalt = \"{0}\";", user.PasswordSalt));
+                                Console.WriteLine(string.Format("Password = \"{0}\";", user.Password));
+                                Console.ForegroundColor = ConsoleColor.White;
                             }
                         }
 
@@ -110,7 +111,18 @@ namespace Test1
                         using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                         {
                             if (clearAllData)
+                            {
                                 Firestarter.ClearAllData(db);
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Canceled!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
                         }
 
                         break;
@@ -118,26 +130,36 @@ namespace Test1
                     case "p1":
                         using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                         {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine("InitializeDatabaseWithSystemData");
                             Firestarter.InitializeDatabaseWithSystemData(db);
 
-                            var listDoctors = Firestarter.CreateFakeUserAndPractice_2(db);
+                            Console.WriteLine("CreateFakeUserAndPractice_2");
+                            var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
 
                             db.SaveChanges();
 
+                            Console.WriteLine("SetupDoctor");
                             foreach (var doctor in listDoctors)
                                 Firestarter.SetupDoctor(doctor, db);
 
                             db.SaveChanges();
 
+                            Console.WriteLine("SetupUserData");
                             foreach (var doctor in listDoctors)
                                 Firestarter.SetupUserData(doctor, db);
 
                             db.SaveChanges();
 
+                            Console.WriteLine("CreateFakePatients");
                             foreach (var doctor in listDoctors)
                                 Firestarter.CreateFakePatients(doctor, db);
 
                             db.SaveChanges();
+
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Done!");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
 
                         break;

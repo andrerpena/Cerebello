@@ -14,8 +14,17 @@ using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    /// <summary>
+    /// Controller for users in the practice.
+    /// Base URL: http://www.cerebello.com.br/p/consultoriodrhourse/users
+    /// </summary>
     public class UsersController : PracticeController
     {
+        /// <summary>
+        /// Creates an UserViewModel given an User object.
+        /// </summary>
+        /// <param name="user">User object to be used as source of values.</param>
+        /// <returns>A new UserViewModel with informations copied from the User object.</returns>
         private UserViewModel GetViewModel(User user)
         {
             var viewModel = new UserViewModel()
@@ -66,9 +75,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return viewModel;
         }
 
-        //
-        // GET: /App/PracticeUsers/
-
+        /// <summary>
+        /// Gets informations for the root page of this controller.
+        /// This page consists of a list of users.
+        /// URL: http://www.cerebello.com.br/p/consultoriodrhourse/users
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             var model = new PracticeUsersViewModel();
@@ -85,6 +97,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Gets informations for the page used to create new users.
+        /// This page has no informations at all.
+        /// URL: http://www.cerebello.com.br/p/consultoriodrhourse/users/create
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Create()
         {
@@ -120,12 +138,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             bool isEditing = formModel.Id != null;
 
+            User user = null;
+
             if (ModelState.IsValid)
             {
-                User user = null;
-
                 if (isEditing)
                 {
+                    // Note: User name cannot be edited.
                     user = db.Users.Where(p => p.Id == formModel.Id).First();
                     user.Person.DateOfBirth = formModel.DateOfBirth;
                     user.Person.FullName = formModel.FullName;
@@ -133,24 +152,68 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    // For every new user we must create a login, with a common
-                    // password used the first time the person logs in.
-                    // The only action allowed with this password,
-                    // is to change the password.
-                    var firstEmail = formModel.Emails.FirstOrDefault();
-                    string emailStr = firstEmail != null ? firstEmail.Address : null;
-                    user = SecurityManager.CreateUser(new CerebelloWebRole.Models.CreateAccountViewModel
-                    {
-                        UserName = formModel.UserName,
-                        Password = "123abc",
-                        ConfirmPassword = "123abc",
-                        DateOfBirth = formModel.DateOfBirth,
-                        EMail = emailStr,
-                        FullName = formModel.FullName,
-                        Gender = (short)formModel.Gender,
-                    }, this.db);
-                }
+                    // UserName must not be null nor empty.
+                    if (string.IsNullOrWhiteSpace(formModel.UserName))
+                        this.ModelState.AddModelError(() => formModel.UserName, "Nome de usuário inválido.");
 
+                    var firstEmail = formModel.Emails.FirstOrDefault();
+                    string userEmailStr = firstEmail != null ? firstEmail.Address : null;
+
+                    // Setting the new user PracticeId to be the same as the logged user.
+                    var loggedUser = this.GetCurrentUser();
+
+                    // Looking for another user with the same UserName or Email.
+                    var conflictingData = this.db.Users
+                        .Where(u => u.PracticeId == loggedUser.PracticeId)
+                        .Where(u => u.UserName == formModel.UserName || u.Email == userEmailStr)
+                        .Select(u => new { u.UserName, u.Email })
+                        .ToList();
+
+                    // Verifying wich fields are conflicting: UserName or Email.
+                    bool emailConflict = conflictingData.Any(c => c.Email == userEmailStr);
+                    bool nameConflict = conflictingData.Any(c => c.UserName == formModel.UserName);
+
+#warning Must validade all emails, cannot repeat emails in the same practice.
+
+                    if (nameConflict)
+                        this.ModelState.AddModelError(() => formModel.UserName, "Nome de usuário já existe.");
+
+                    if (this.ModelState.IsValid)
+                    {
+                        // For every new user we must create a login, with a common
+                        // password used the first time the person logs in.
+                        // The only action allowed with this password,
+                        // is to change the password.
+                        user = SecurityManager.CreateUser(new CerebelloWebRole.Models.CreateAccountViewModel
+                        {
+                            UserName = formModel.UserName,
+                            Password = "123abc",
+                            ConfirmPassword = "123abc",
+                            DateOfBirth = formModel.DateOfBirth,
+                            EMail = userEmailStr,
+                            FullName = formModel.FullName,
+                            Gender = (short)formModel.Gender,
+                        }, this.db);
+
+                        // The new user belongs to the same practice as the logged user.
+                        user.PracticeId = loggedUser.PracticeId;
+                    }
+                }
+            }
+
+            if (!formModel.IsMedic && !formModel.IsAdministrador && !formModel.IsSecretary)
+                this.ModelState.AddModelError("", "Usuário tem que ter pelo menos uma função: médico, administrador ou secretária.");
+
+            // If the user being edited is a medic, then we must check the fields that are required for medics.
+            if (formModel.IsMedic)
+            {
+                if (string.IsNullOrWhiteSpace(formModel.MedicCRM))
+                    this.ModelState.AddModelError(() => formModel.MedicCRM, "CRM do médico é requerido.");
+            }
+
+            // Validating model again, because the previous code block adds model errors.
+            if (this.ModelState.IsValid)
+            {
                 user.Person.BirthPlace = formModel.BirthPlace;
                 user.Person.CPF = formModel.CPF;
                 user.Person.CPFOwner = formModel.CPFOwner;
@@ -224,10 +287,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     },
                     (m) => this.db.Emails.DeleteObject(m)
                 );
-
-                // Setting the new user PracticeId to be the same as the logged user.
-                var loggedUser = this.GetCurrentUser();
-                user.PracticeId = loggedUser.PracticeId;
 
                 // Saving all the changes.
                 db.SaveChanges();

@@ -13,7 +13,7 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Crates a fake user, doctor and practice.
         /// </summary>
-        public static Doctor CreateFakeUserAndPractice_1(CerebelloEntities db)
+        public static Doctor Create_CrmMg_Psiquiatria_DrHouse_Andre(CerebelloEntities db)
         {
             // Creating data infrastructure.
             var entity = CreateMedicalEntity_CrmMg(db);
@@ -31,7 +31,7 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Crates a fake user, doctor and practice.
         /// </summary>
-        public static List<Doctor> CreateFakeUserAndPractice_2(CerebelloEntities db)
+        public static List<Doctor> Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(CerebelloEntities db)
         {
             // Creating data infrastructure.
             var entity = CreateMedicalEntity_CrmMg(db);
@@ -48,6 +48,23 @@ namespace Cerebello.Firestarter
             };
 
             return result;
+        }
+
+        /// <summary>
+        /// Crates a fake user, doctor and practice.
+        /// </summary>
+        public static Doctor Create_CrmMg_Psiquiatria_DraMarta_Marta(CerebelloEntities db)
+        {
+            // Creating data infrastructure.
+            var entity = CreateMedicalEntity_CrmMg(db);
+            var specialty = CreateSpecialty_Psiquiatria(db);
+
+            // Creating practice.
+            var practice = CreatePractice_DraMarta(db);
+
+            var marta = CreateDoctor_MartaCura(db, entity, specialty, practice);
+
+            return marta;
         }
 
         public static MedicalSpecialty CreateSpecialty_Psiquiatria(CerebelloEntities db)
@@ -123,7 +140,7 @@ namespace Cerebello.Firestarter
                 Id = 2,
             };
 
-            user.Doctor = doctor;
+            user.Administrator = admin;
 
             db.SaveChanges();
 
@@ -183,6 +200,56 @@ namespace Cerebello.Firestarter
 
             user.Doctor = doctor;
             user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
+
+            db.SaveChanges();
+
+            return doctor;
+        }
+
+        public static Doctor CreateDoctor_MartaCura(CerebelloEntities db, MedicalEntity entity, MedicalSpecialty specialty, Practice practice)
+        {
+            Person person = new Person()
+            {
+                DateOfBirth = new DateTime(1967, 04, 20),
+                FullName = "Marta Cura",
+                UrlIdentifier = "martacura",
+                Gender = (int)TypeGender.Female,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            db.People.AddObject(person);
+
+            db.SaveChanges();
+
+            User user = new User()
+            {
+                UserName = "martacura",
+                Person = person,
+                LastActiveOn = DateTime.UtcNow,
+                PasswordSalt = "ELc81TnRE+Eb+e5/D69opg==",
+                Password = "lLqJ7FjmEQF7q4rxWIGnX+AXdqQ=",
+                Email = "martacura@gmail.com",
+                Practice = practice
+            };
+
+            db.Users.AddObject(user);
+
+            db.SaveChanges();
+
+            Doctor doctor = new Doctor()
+            {
+                Id = 4,
+                CRM = "74653",
+                MedicalSpecialty = specialty,
+                MedicalEntity = entity
+            };
+
+            db.Doctors.AddObject(doctor);
+
+            db.SaveChanges();
+
+            user.Doctor = doctor;
+            user.Person.Emails.Add(new Email() { Address = "martacura@gmail.com" });
 
             db.SaveChanges();
 
@@ -249,6 +316,26 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório do Dr. House",
                 UrlIdentifier = "consultoriodrhourse",
+                CreatedOn = DateTime.UtcNow
+            };
+
+            db.Practices.AddObject(practice);
+
+            db.SaveChanges();
+            return practice;
+        }
+
+        /// <summary>
+        /// Creates a new practice and returns it.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static Practice CreatePractice_DraMarta(CerebelloEntities db)
+        {
+            var practice = new Practice()
+            {
+                Name = "Consultório da Dra. Marta",
+                UrlIdentifier = "dramarta",
                 CreatedOn = DateTime.UtcNow
             };
 

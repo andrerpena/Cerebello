@@ -43,7 +43,7 @@ namespace CerebelloWebRole.Tests.Tests
             DatabaseHelper.ClearAllData();
             this.db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString);
 
-            Firestarter.CreateFakeUserAndPractice_1(this.db);
+            Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
             this.db.SaveChanges();
         }
 
