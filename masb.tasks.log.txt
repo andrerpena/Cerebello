@@ -1,11 +1,11 @@
-yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
-
 yyyy => ano  MM => mês  dd => dia
 h1 => hora de início	m1 => minuto de início
 h2 => hora de fim		m2 => minuto de fim
 dh => horas de duração	dm => minutos de duração
 ee => nível de concentração no trabalho
 desc => descrição do que está sendo feito
+
+yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
 
 2012-06-20 20:15-21:05 (0º50")  9   Teste de visualizar secretária.
 2012-06-20 19:25-20:15 (0º50")  9   Alterações no FireStarter para facilitar a criação de ambientes de teste.

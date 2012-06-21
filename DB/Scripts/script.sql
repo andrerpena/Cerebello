@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[Practice]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Practice]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[Practice](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[SYS_Leaflet]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[SYS_Leaflet]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -30,7 +30,7 @@ CREATE TABLE [dbo].[SYS_Leaflet](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[SYS_Laboratory]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[SYS_Laboratory]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -44,7 +44,7 @@ CREATE TABLE [dbo].[SYS_Laboratory](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[SYS_ActiveIngredient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[SYS_ActiveIngredient]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -58,20 +58,20 @@ CREATE TABLE [dbo].[SYS_ActiveIngredient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Secretary]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Secretary]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Secretary](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] NOT NULL,
  CONSTRAINT [PK_Secretary] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Person]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Person]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -95,7 +95,7 @@ CREATE TABLE [dbo].[Person](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Receipt]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Receipt]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -110,7 +110,7 @@ CREATE TABLE [dbo].[Receipt](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[MedicalSpecialty]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[MedicalSpecialty]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -124,7 +124,7 @@ CREATE TABLE [dbo].[MedicalSpecialty](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[MedicalEntity]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[MedicalEntity]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -138,7 +138,7 @@ CREATE TABLE [dbo].[MedicalEntity](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Leaflet]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Leaflet]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -153,7 +153,7 @@ CREATE TABLE [dbo].[Leaflet](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Coverage]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Coverage]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -167,7 +167,20 @@ CREATE TABLE [dbo].[Coverage](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Email]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Administrator]    Script Date: 06/20/2012 22:06:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Administrator](
+	[Id] [int] NOT NULL,
+ CONSTRAINT [PK_Administrator] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+/****** Object:  Table [dbo].[Email]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -183,13 +196,13 @@ CREATE TABLE [dbo].[Email](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Doctor](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] NOT NULL,
 	[CRM] [varchar](50) NOT NULL,
 	[MedicalEntityId] [int] NOT NULL,
 	[MedicalSpecialtyId] [int] NOT NULL,
@@ -199,7 +212,7 @@ CREATE TABLE [dbo].[Doctor](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -210,18 +223,20 @@ CREATE TABLE [dbo].[User](
 	[PasswordSalt] [varchar](50) NOT NULL,
 	[LastActiveOn] [datetime] NULL,
 	[PersonId] [int] NOT NULL,
-	[Email] [varchar](200) NOT NULL,
+	[Email] [varchar](200) NULL,
 	[GravatarEmailHash] [varchar](100) NULL,
 	[DoctorId] [int] NULL,
 	[SecretaryId] [int] NULL,
 	[PracticeId] [int] NOT NULL,
+	[AdministratorId] [int] NULL,
+	[UserName] [varchar](50) NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Appointment]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Appointment]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -240,7 +255,7 @@ CREATE TABLE [dbo].[Appointment](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Address]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Address]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -276,7 +291,7 @@ CREATE TABLE [dbo].[SYS_Medicine](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Phone]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Phone]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -291,7 +306,7 @@ CREATE TABLE [dbo].[Phone](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Patient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Patient]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -308,7 +323,7 @@ CREATE TABLE [dbo].[Patient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[SYS_MedicineLeaflet]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[SYS_MedicineLeaflet]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -323,7 +338,7 @@ CREATE TABLE [dbo].[SYS_MedicineLeaflet](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[SYS_MedicineActiveIngredient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[SYS_MedicineActiveIngredient]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -338,7 +353,7 @@ CREATE TABLE [dbo].[SYS_MedicineActiveIngredient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Laboratory]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Laboratory]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -353,7 +368,7 @@ CREATE TABLE [dbo].[Laboratory](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[ModelMedicalCertificate]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[ModelMedicalCertificate]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -369,7 +384,7 @@ CREATE TABLE [dbo].[ModelMedicalCertificate](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[CFG_Schedule]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[CFG_Schedule]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -418,7 +433,7 @@ CREATE TABLE [dbo].[CFG_Schedule](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[CFG_Documents]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[CFG_Documents]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -437,7 +452,7 @@ CREATE TABLE [dbo].[CFG_Documents](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[ActiveIngredient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[ActiveIngredient]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -452,7 +467,7 @@ CREATE TABLE [dbo].[ActiveIngredient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Anamnese]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Anamnese]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -468,7 +483,7 @@ CREATE TABLE [dbo].[Anamnese](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Medicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Medicine]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -485,7 +500,7 @@ CREATE TABLE [dbo].[Medicine](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[MedicalCertificate]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[MedicalCertificate]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -502,7 +517,7 @@ CREATE TABLE [dbo].[MedicalCertificate](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[ModelMedicalCertificateField]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[ModelMedicalCertificateField]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -517,7 +532,7 @@ CREATE TABLE [dbo].[ModelMedicalCertificateField](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[ReceiptMedicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[ReceiptMedicine]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -535,7 +550,7 @@ CREATE TABLE [dbo].[ReceiptMedicine](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[MedicineLeaflet]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[MedicineLeaflet]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -550,7 +565,7 @@ CREATE TABLE [dbo].[MedicineLeaflet](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[MedicineActiveIngredient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[MedicineActiveIngredient]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -565,7 +580,7 @@ CREATE TABLE [dbo].[MedicineActiveIngredient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[MedicalCertificateField]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[MedicalCertificateField]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -581,7 +596,7 @@ CREATE TABLE [dbo].[MedicalCertificateField](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Diagnosis]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  Table [dbo].[Diagnosis]    Script Date: 06/20/2012 22:06:09 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -598,240 +613,246 @@ CREATE TABLE [dbo].[Diagnosis](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  ForeignKey [FK_ActiveIngredient_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_ActiveIngredient_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[ActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiveIngredient_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[ActiveIngredient] CHECK CONSTRAINT [FK_ActiveIngredient_Doctor]
 GO
-/****** Object:  ForeignKey [FK_Address_Person]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Address_Person]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Address]  WITH NOCHECK ADD  CONSTRAINT [FK_Address_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Address] CHECK CONSTRAINT [FK_Address_Person]
 GO
-/****** Object:  ForeignKey [FK_Anamnese_Patient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Anamnese_Patient]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Anamnese]  WITH NOCHECK ADD  CONSTRAINT [FK_Anamnese_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[Anamnese] CHECK CONSTRAINT [FK_Anamnese_Patient]
 GO
-/****** Object:  ForeignKey [FK_Appointment_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Appointment_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Doctor]
 GO
-/****** Object:  ForeignKey [FK_Appointment_User]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Appointment_User]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_User] FOREIGN KEY([CreatedById])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
 GO
-/****** Object:  ForeignKey [FK_CFG_Documents_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_CFG_Documents_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[CFG_Documents]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_Documents_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_Documents] CHECK CONSTRAINT [FK_CFG_Documents_Doctor]
 GO
-/****** Object:  ForeignKey [FK_CFG_Schedule_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_CFG_Schedule_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[CFG_Schedule]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_Schedule_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_Schedule] CHECK CONSTRAINT [FK_CFG_Schedule_Doctor]
 GO
-/****** Object:  ForeignKey [FK_Diagnosis_Anamnese]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Diagnosis_Anamnese]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Diagnosis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
 REFERENCES [dbo].[Anamnese] ([Id])
 GO
 ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
 GO
-/****** Object:  ForeignKey [FK_Doctor_MedicalEntity]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Doctor_MedicalEntity]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Doctor]  WITH NOCHECK ADD  CONSTRAINT [FK_Doctor_MedicalEntity] FOREIGN KEY([MedicalEntityId])
 REFERENCES [dbo].[MedicalEntity] ([Id])
 GO
 ALTER TABLE [dbo].[Doctor] CHECK CONSTRAINT [FK_Doctor_MedicalEntity]
 GO
-/****** Object:  ForeignKey [FK_Doctor_MedicalSpecialty]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Doctor_MedicalSpecialty]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Doctor]  WITH NOCHECK ADD  CONSTRAINT [FK_Doctor_MedicalSpecialty] FOREIGN KEY([MedicalSpecialtyId])
 REFERENCES [dbo].[MedicalSpecialty] ([Id])
 GO
 ALTER TABLE [dbo].[Doctor] CHECK CONSTRAINT [FK_Doctor_MedicalSpecialty]
 GO
-/****** Object:  ForeignKey [FK_Email_Person]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Email_Person]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Email]  WITH NOCHECK ADD  CONSTRAINT [FK_Email_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Email] CHECK CONSTRAINT [FK_Email_Person]
 GO
-/****** Object:  ForeignKey [FK_Laboratory_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Laboratory_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Laboratory] CHECK CONSTRAINT [FK_Laboratory_Doctor]
 GO
-/****** Object:  ForeignKey [FK_MedicalCertificate_ModelMedicalCertificate]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicalCertificate_ModelMedicalCertificate]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificate_ModelMedicalCertificate] FOREIGN KEY([ModelMedicalCertificateId])
 REFERENCES [dbo].[ModelMedicalCertificate] ([Id])
 GO
 ALTER TABLE [dbo].[MedicalCertificate] CHECK CONSTRAINT [FK_MedicalCertificate_ModelMedicalCertificate]
 GO
-/****** Object:  ForeignKey [FK_MedicalCertificate_Patient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicalCertificate_Patient]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificate_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[MedicalCertificate] CHECK CONSTRAINT [FK_MedicalCertificate_Patient]
 GO
-/****** Object:  ForeignKey [FK_MedicalCertificateField_MedicalCertificate]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicalCertificateField_MedicalCertificate]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicalCertificateField]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificateField_MedicalCertificate] FOREIGN KEY([MedicalCertificateId])
 REFERENCES [dbo].[MedicalCertificate] ([Id])
 GO
 ALTER TABLE [dbo].[MedicalCertificateField] CHECK CONSTRAINT [FK_MedicalCertificateField_MedicalCertificate]
 GO
-/****** Object:  ForeignKey [FK_Medicine_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Medicine_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_Medicine_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Medicine] CHECK CONSTRAINT [FK_Medicine_Doctor]
 GO
-/****** Object:  ForeignKey [FK_Medicine_MedicineLaboratory]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Medicine_MedicineLaboratory]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_Medicine_MedicineLaboratory] FOREIGN KEY([LaboratoryId])
 REFERENCES [dbo].[Laboratory] ([Id])
 GO
 ALTER TABLE [dbo].[Medicine] CHECK CONSTRAINT [FK_Medicine_MedicineLaboratory]
 GO
-/****** Object:  ForeignKey [FK_MedicineActiveIngredient_ActiveIngredient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicineActiveIngredient_ActiveIngredient]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineActiveIngredient_ActiveIngredient] FOREIGN KEY([ActiveIngredientId])
 REFERENCES [dbo].[ActiveIngredient] ([Id])
 GO
 ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_MedicineActiveIngredient_ActiveIngredient]
 GO
-/****** Object:  ForeignKey [FK_MedicineActiveIngredient_Medicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicineActiveIngredient_Medicine]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineActiveIngredient_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_MedicineActiveIngredient_Medicine]
 GO
-/****** Object:  ForeignKey [FK_MedicineLeaflet_Leaflet]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicineLeaflet_Leaflet]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineLeaflet_Leaflet] FOREIGN KEY([LeaftletId])
 REFERENCES [dbo].[Leaflet] ([Id])
 GO
 ALTER TABLE [dbo].[MedicineLeaflet] CHECK CONSTRAINT [FK_MedicineLeaflet_Leaflet]
 GO
-/****** Object:  ForeignKey [FK_MedicineLeaflet_Medicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_MedicineLeaflet_Medicine]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineLeaflet_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[MedicineLeaflet] CHECK CONSTRAINT [FK_MedicineLeaflet_Medicine]
 GO
-/****** Object:  ForeignKey [FK_ModelMedicalCertificate_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_ModelMedicalCertificate_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[ModelMedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_ModelMedicalCertificate_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[ModelMedicalCertificate] CHECK CONSTRAINT [FK_ModelMedicalCertificate_Doctor]
 GO
-/****** Object:  ForeignKey [FK_ModelMedicalCertificateField_ModelMedicalCertificate]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_ModelMedicalCertificateField_ModelMedicalCertificate]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[ModelMedicalCertificateField]  WITH NOCHECK ADD  CONSTRAINT [FK_ModelMedicalCertificateField_ModelMedicalCertificate] FOREIGN KEY([ModelMedicalCertificateId])
 REFERENCES [dbo].[ModelMedicalCertificate] ([Id])
 GO
 ALTER TABLE [dbo].[ModelMedicalCertificateField] CHECK CONSTRAINT [FK_ModelMedicalCertificateField_ModelMedicalCertificate]
 GO
-/****** Object:  ForeignKey [FK_Patient_Coverage]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Patient_Coverage]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Coverage] FOREIGN KEY([CoverageId])
 REFERENCES [dbo].[Coverage] ([Id])
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Coverage]
 GO
-/****** Object:  ForeignKey [FK_Patient_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Patient_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Doctor]
 GO
-/****** Object:  ForeignKey [FK_Patient_Person]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Patient_Person]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Person]
 GO
-/****** Object:  ForeignKey [FK_Phone_Person]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Phone_Person]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Phone]  WITH NOCHECK ADD  CONSTRAINT [FK_Phone_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 GO
 ALTER TABLE [dbo].[Phone] CHECK CONSTRAINT [FK_Phone_Person]
 GO
-/****** Object:  ForeignKey [FK_Practice_User]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_Practice_User]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_User] FOREIGN KEY([OwnerId])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Practice] CHECK CONSTRAINT [FK_Practice_User]
 GO
-/****** Object:  ForeignKey [FK_ReceiptMedicine_Medicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_ReceiptMedicine_Medicine]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[ReceiptMedicine]  WITH NOCHECK ADD  CONSTRAINT [FK_ReceiptMedicine_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[ReceiptMedicine] CHECK CONSTRAINT [FK_ReceiptMedicine_Medicine]
 GO
-/****** Object:  ForeignKey [FK_ReceiptMedicine_Receipt]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_ReceiptMedicine_Receipt]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[ReceiptMedicine]  WITH NOCHECK ADD  CONSTRAINT [FK_ReceiptMedicine_Receipt] FOREIGN KEY([ReceiptId])
 REFERENCES [dbo].[Receipt] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[ReceiptMedicine] CHECK CONSTRAINT [FK_ReceiptMedicine_Receipt]
 GO
-/****** Object:  ForeignKey [FK_SYS_Medicine_SYS_Laboratory]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_SYS_Medicine_SYS_Laboratory]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[SYS_Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_Medicine_SYS_Laboratory] FOREIGN KEY([LaboratoryId])
 REFERENCES [dbo].[SYS_Laboratory] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_Medicine] CHECK CONSTRAINT [FK_SYS_Medicine_SYS_Laboratory]
 GO
-/****** Object:  ForeignKey [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient] FOREIGN KEY([ActiveIngredientId])
 REFERENCES [dbo].[SYS_ActiveIngredient] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient] CHECK CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient]
 GO
-/****** Object:  ForeignKey [FK_SYS_MedicineActiveIngredient_SYS_Medicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_SYS_MedicineActiveIngredient_SYS_Medicine]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[SYS_Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient] CHECK CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_Medicine]
 GO
-/****** Object:  ForeignKey [FK_SYS_MedicineLeaflet_SYS_Leaflet]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_SYS_MedicineLeaflet_SYS_Leaflet]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[SYS_MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Leaflet] FOREIGN KEY([SYS_LeafletId])
 REFERENCES [dbo].[SYS_Leaflet] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineLeaflet] CHECK CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Leaflet]
 GO
-/****** Object:  ForeignKey [FK_SYS_MedicineLeaflet_SYS_Medicine]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_SYS_MedicineLeaflet_SYS_Medicine]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[SYS_MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Medicine] FOREIGN KEY([SYS_MedicineId])
 REFERENCES [dbo].[SYS_Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineLeaflet] CHECK CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Medicine]
 GO
-/****** Object:  ForeignKey [FK_User_Doctor]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_User_Administrator]    Script Date: 06/20/2012 22:06:09 ******/
+ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Administrator] FOREIGN KEY([AdministratorId])
+REFERENCES [dbo].[Administrator] ([Id])
+GO
+ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Administrator]
+GO
+/****** Object:  ForeignKey [FK_User_Doctor]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Doctor]
 GO
-/****** Object:  ForeignKey [FK_User_Person]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_User_Person]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Person]
 GO
-/****** Object:  ForeignKey [FK_User_Practice]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_User_Practice]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Practice]
 GO
-/****** Object:  ForeignKey [FK_User_Secretary]    Script Date: 06/19/2012 20:50:22 ******/
+/****** Object:  ForeignKey [FK_User_Secretary]    Script Date: 06/20/2012 22:06:09 ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Secretary] FOREIGN KEY([SecretaryId])
 REFERENCES [dbo].[Secretary] ([Id])
 GO

@@ -1,9 +1,0 @@
-P:\Projects.2012\Cerebello\Anvisa.Crawler\obj\x86\Debug\ResolveAssemblyReference.cache
-P:\Projects.2012\Cerebello\Anvisa.Crawler\bin\Debug\LeafletCrawler.exe.config
-P:\Projects.2012\Cerebello\Anvisa.Crawler\bin\Debug\LeafletCrawler.exe
-P:\Projects.2012\Cerebello\Anvisa.Crawler\bin\Debug\LeafletCrawler.pdb
-P:\Projects.2012\Cerebello\Anvisa.Crawler\bin\Debug\EntityFramework.dll
-P:\Projects.2012\Cerebello\Anvisa.Crawler\bin\Debug\HtmlAgilityPack.dll
-P:\Projects.2012\Cerebello\Anvisa.Crawler\bin\Debug\EntityFramework.xml
-P:\Projects.2012\Cerebello\Anvisa.Crawler\obj\x86\Debug\LeafletCrawler.exe
-P:\Projects.2012\Cerebello\Anvisa.Crawler\obj\x86\Debug\LeafletCrawler.pdb
