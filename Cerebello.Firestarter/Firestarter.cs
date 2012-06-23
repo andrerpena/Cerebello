@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Cerebello.Model;
-using CerebelloWebRole.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Models;
 
 namespace Cerebello.Firestarter
 {
@@ -89,15 +88,20 @@ namespace Cerebello.Firestarter
             return entity;
         }
 
-        public static Doctor CreateAdministratorDoctor_Miguel(CerebelloEntities db, MedicalEntity entity, MedicalSpecialty specialty, Practice practice)
+        public static Doctor CreateAdministratorDoctor_Miguel(CerebelloEntities db, MedicalEntity entity, MedicalSpecialty specialty, Practice practice, bool useDefaultPassword = false)
         {
+            var pwdSalt = "oHdC62UZE6Hwts91+Xy88Q==";
+            var pwdHash = CipherHelper.Hash("masban", pwdSalt);
+            if (useDefaultPassword)
+                pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
+
             // Creating user.
             User user = new User()
             {
                 UserName = "masbicudo",
                 LastActiveOn = DateTime.UtcNow,
-                Password = "IupHtucomYn3+1AlTL585GX3Ucs=", // pwd = "masban"
-                PasswordSalt = "oHdC62UZE6Hwts91+Xy88Q==",
+                Password = pwdHash,
+                PasswordSalt = pwdSalt,
                 Email = "masbicudo@gmail.com",
                 GravatarEmailHash = "b209e81c82e45437da92af24ddc97360",
                 Practice = practice
@@ -262,15 +266,20 @@ namespace Cerebello.Firestarter
         /// <param name="db"></param>
         /// <param name="practice"></param>
         /// <returns></returns>
-        public static Secretary CreateSecretary_Milena(CerebelloEntities db, Practice practice)
+        public static Secretary CreateSecretary_Milena(CerebelloEntities db, Practice practice, bool useDefaultPassword = false)
         {
+            var pwdSalt = "egt/lzoRIw/M7XJsK3C0jw==";
+            var pwdHash = CipherHelper.Hash("milena", pwdSalt);
+            if (useDefaultPassword)
+                pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
+
             // Creating user.
             User user = new User()
             {
                 UserName = "milena",
                 LastActiveOn = DateTime.UtcNow,
-                PasswordSalt = "egt/lzoRIw/M7XJsK3C0jw==", // pwd = "milena"
-                Password = "TSRG03R6Atzl48oIPaaK20SiyKg=",
+                PasswordSalt = pwdSalt,
+                Password = pwdHash,
                 Practice = practice
             };
 

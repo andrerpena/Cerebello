@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Cerebello.Model;
 using System.Configuration;
-using Test1;
-using Cerebello.Firestarter;
-using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Areas.App.Controllers;
-using CerebelloWebRole.Code.Json;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Models;
+using System.Linq;
 using System.Web.Mvc;
+using Cerebello.Firestarter;
+using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests
 {
@@ -40,6 +36,9 @@ namespace CerebelloWebRole.Tests
             // Will clear all data and setup initial data again.
             DatabaseHelper.ClearAllData();
             this.db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString);
+
+            // Static information is stored in this class, so we must reset it.
+            MockRepository.Reset();
         }
 
         [TestCleanup()]
@@ -108,21 +107,22 @@ namespace CerebelloWebRole.Tests
         [TestMethod]
         public void Create_2_RepeatedUserNameInSamePractice()
         {
+            UsersController controller;
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
             }
             catch
             {
-                Assert.Inconclusive("Firestarter has failed.");
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
             }
 
             // Creating a new user with the same UserName of another user in the same practice.
-            UsersController controller;
             ActionResult actionResult;
 
             {
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
                 actionResult = controller.Create(new UserViewModel
                 {
                     UserName = "andrerpena",
@@ -288,7 +288,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                MockRepository.SetCurrentUser_Andre_Valid();
+                MockRepository.SetCurrentUser_Andre_CorrectPassword();
                 controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
             }
             catch
@@ -348,7 +348,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                MockRepository.SetCurrentUser_Andre_Valid();
+                MockRepository.SetCurrentUser_Andre_CorrectPassword();
                 controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
             }
             catch
@@ -410,7 +410,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                MockRepository.SetCurrentUser_Andre_Valid();
+                MockRepository.SetCurrentUser_Andre_CorrectPassword();
                 controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
             }
             catch
@@ -464,12 +464,14 @@ namespace CerebelloWebRole.Tests
         [TestMethod]
         public void Details_1_ViewSecretary_HappyPath()
         {
+            UsersController controller;
             int userId;
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var s = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.ToList().Last());
                 userId = s.Users.Single().Id;
+                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
             }
             catch
             {
@@ -480,7 +482,6 @@ namespace CerebelloWebRole.Tests
             // Creating a new user without an e-mail.
             // This must be ok, no exceptions, no validation errors.
             {
-                UsersController controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db);
                 ActionResult actionResult = controller.Details(userId);
 
                 // Verifying the ActionResult, ModelState and Model.
@@ -568,6 +569,244 @@ namespace CerebelloWebRole.Tests
                 Assert.IsTrue(viewResult.ViewName == "Details" || viewResult.ViewName == "", "Wrong view name.");
                 Assert.IsTrue(controller.ModelState.IsValid);
             }
+        }
+        #endregion
+
+        #region ChangePassword
+        /// <summary>
+        /// Tests the access to the ChangePassword action, when using the default password.
+        /// This is a valid action, and shoud go straight to the "ChangePassword" view.
+        /// </summary>
+        [TestMethod]
+        public void ChangePassword_1_UserWithDefaultPassword_HappyPath()
+        {
+            // Initializing.
+            UsersController controller;
+            int userId;
+            try
+            {
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var practice = this.db.Practices.FirstOrDefault();
+                var s = Firestarter.CreateSecretary_Milena(this.db, practice, useDefaultPassword: true);
+                var user = s.Users.Single();
+                userId = user.Id;
+                MockRepository.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
+                MockRepository.SetRouteData<UsersController>(practice, null, "changepassword");
+
+                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, callOnActionExecuting: false);
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Testing.
+            ActionResult actionResult;
+
+            {
+                actionResult =
+                    ControllersRepository.ActionExecutingAndGetActionResult(controller)
+                    ?? controller.ChangePassword();
+            }
+
+            // Asserting.
+            Assert.IsNotNull(actionResult, "ActionResult must not be null.");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            ViewResult viewResult = (ViewResult)actionResult;
+            Assert.AreEqual("", viewResult.ViewName);
+            Assert.IsTrue(viewResult.ViewBag.IsDefaultPassword == true);
+        }
+
+        /// <summary>
+        /// Tests the access to the ChangePassword action, by a normal user.
+        /// This is a valid action, and shoud go straight to the "ChangePassword" view.
+        /// </summary>
+        [TestMethod]
+        public void ChangePassword_2_UserWantsToChangePassword_HappyPath()
+        {
+            // Initializing.
+            UsersController controller;
+            int userId;
+            try
+            {
+                var d = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var practice = this.db.Practices.FirstOrDefault();
+                var user = d.Users.Single();
+                userId = user.Id;
+                MockRepository.SetCurrentUser_Andre_CorrectPassword(userId);
+                MockRepository.SetRouteData<UsersController>(practice, null, "changepassword");
+
+                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, callOnActionExecuting: false);
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Testing.
+            ActionResult actionResult;
+
+            {
+                actionResult =
+                    ControllersRepository.ActionExecutingAndGetActionResult(controller)
+                    ?? controller.ChangePassword();
+            }
+
+            // Asserting.
+            Assert.IsNotNull(actionResult, "ActionResult must not be null.");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            ViewResult viewResult = (ViewResult)actionResult;
+            Assert.AreEqual("", viewResult.ViewName);
+            Assert.IsTrue(viewResult.ViewBag.IsDefaultPassword == false);
+        }
+
+        /// <summary>
+        /// Tests some cases of the user trying to access the software using the default password.
+        /// These are invalid actions, they must redirect the user back to the "ChangePassword" view.
+        /// </summary>
+        [TestMethod]
+        public void ChangePassword_3_AllActionsMustRedirectToChangePasswordWhenUserIsUsingDefaultPassword()
+        {
+            // Initializing.
+            Practice practice;
+            Doctor docToView;
+            try
+            {
+                docToView = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                practice = this.db.Practices.FirstOrDefault();
+                var d = Firestarter.CreateAdministratorDoctor_Miguel(
+                    this.db,
+                    this.db.MedicalEntities.FirstOrDefault(),
+                    this.db.MedicalSpecialties.FirstOrDefault(),
+                    practice,
+                    useDefaultPassword: true);
+                var user = d.Users.Single();
+                var userId = user.Id;
+                MockRepository.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            bool dbChanged = false;
+            this.db.SavingChanges += new EventHandler((s, e) => { dbChanged = true; });
+
+            // Testing PracticeHomeController.
+            TestChangePassword_3_Helper<PracticeHomeController>(practice, docToView, "index", c => c.Index());
+
+            // Testing UserController.
+            TestChangePassword_3_Helper<UsersController>(practice, docToView, "index", c => c.Index());
+            TestChangePassword_3_Helper<UsersController>(practice, docToView, "details", c => c.Details(1));
+            TestChangePassword_3_Helper<UsersController>(practice, docToView, "create", c => c.Create());
+            TestChangePassword_3_Helper<UsersController>(practice, docToView, "edit", c => c.Edit(1));
+            TestChangePassword_3_Helper<UsersController>(practice, docToView, "delete", c => c.Delete(1));
+
+            // Testing DoctorsController.
+            TestChangePassword_3_Helper<DoctorsController>(practice, docToView, "index", c => c.Index());
+
+            // Testing DoctorHomeController.
+            TestChangePassword_3_Helper<DoctorHomeController>(practice, docToView, "index", c => c.Index());
+
+            // Testing PatientsController.
+            TestChangePassword_3_Helper<PatientsController>(practice, docToView, "index", c => c.Index());
+            TestChangePassword_3_Helper<PatientsController>(practice, docToView, "details", c => c.Details(1));
+            TestChangePassword_3_Helper<PatientsController>(practice, docToView, "create", c => c.Create());
+            TestChangePassword_3_Helper<PatientsController>(practice, docToView, "edit", c => c.Edit(1));
+            TestChangePassword_3_Helper<PatientsController>(practice, docToView, "delete", c => c.Delete(1));
+
+            // Testing AppController.
+            TestChangePassword_3_Helper<AppController>(practice, docToView, "lookupeverything", c => c.LookupEverything("term", 10, 1, 1));
+
+            // Testing AnamnesesController.
+            TestChangePassword_3_Helper<AnamnesesController>(practice, docToView, "details", c => c.Details(1));
+            TestChangePassword_3_Helper<AnamnesesController>(practice, docToView, "create", c => c.Create(1));
+            TestChangePassword_3_Helper<AnamnesesController>(practice, docToView, "edit", c => c.Edit(1, 1));
+            TestChangePassword_3_Helper<AnamnesesController>(practice, docToView, "delete", c => c.Delete(1));
+
+            Assert.IsFalse(dbChanged, "Database should not be changed.");
+        }
+
+        private void TestChangePassword_3_Helper<T>(Practice practice, Doctor docToView, string action, Func<T, object> exec) where T : Controller, new()
+        {
+            T controller;
+
+            var counts1 = GetCounts();
+
+            try
+            {
+                MockRepository.SetRouteData<T>(practice, docToView, action);
+                controller = ControllersRepository.CreateControllerForTesting<T>(this.db, callOnActionExecuting: false);
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Testing.
+            var result =
+                (object)ControllersRepository.ActionExecutingAndGetActionResult(controller)
+                ?? exec(controller);
+
+            var counts2 = GetCounts();
+
+            // Asserting.
+            // todo: maybe there is some other way to know if the DB changed.
+            for (int it = 0; it < counts1.Length; it++)
+                Assert.AreEqual(counts1[it], counts2[it], "Database should not be changed.");
+
+            Assert.IsNotNull(result, "ActionResult must not be null.");
+            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
+            RedirectToRouteResult viewResult = (RedirectToRouteResult)result;
+            Assert.AreEqual(3, viewResult.RouteValues.Count);
+            Assert.AreEqual("app", string.Format("{0}", viewResult.RouteValues["area"]));
+            Assert.AreEqual("users", string.Format("{0}", viewResult.RouteValues["controller"]));
+            Assert.AreEqual("changepassword", string.Format("{0}", viewResult.RouteValues["action"]));
+        }
+
+        private int[] GetCounts()
+        {
+            int[] counts = new int[]
+            {
+                this.db.ActiveIngredients.Count(),
+                this.db.Addresses.Count(),
+                this.db.Administrators.Count(),
+                this.db.Anamnese.Count(),
+                this.db.Appointments.Count(),
+                this.db.CFG_Documents.Count(),
+                this.db.CFG_Schedule.Count(),
+                this.db.Coverages.Count(),
+                this.db.Diagnoses.Count(),
+                this.db.Doctors.Count(),
+                this.db.Emails.Count(),
+                this.db.Laboratories.Count(),
+                this.db.Leaflets.Count(),
+                this.db.MedicalCertificateFields.Count(),
+                this.db.MedicalCertificates.Count(),
+                this.db.MedicalEntities.Count(),
+                this.db.MedicalSpecialties.Count(),
+                this.db.Medicines.Count(),
+                this.db.ModelMedicalCertificateFields.Count(),
+                this.db.ModelMedicalCertificates.Count(),
+                this.db.Patients.Count(),
+                this.db.People.Count(),
+                this.db.Phones.Count(),
+                this.db.Practices.Count(),
+                this.db.ReceiptMedicines.Count(),
+                this.db.Receipts.Count(),
+                this.db.Secretaries.Count(),
+                this.db.SYS_ActiveIngredient.Count(),
+                this.db.SYS_Laboratory.Count(),
+                this.db.SYS_Leaflet.Count(),
+                this.db.SYS_Medicine.Count(),
+                this.db.Users.Count(),
+            };
+
+            return counts;
         }
         #endregion
     }

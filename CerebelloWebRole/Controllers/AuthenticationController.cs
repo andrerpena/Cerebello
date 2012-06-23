@@ -19,18 +19,32 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Logs the user in or not, based on the informations provided.
+        /// URL: http://www.cerebello.com.br/authentication/login
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Login(LoginViewModel loginModel)
         {
-            if (!ModelState.IsValid || !SecurityManager.Login(loginModel, db))
+            if (!this.ModelState.IsValid || !SecurityManager.Login(loginModel, db))
             {
                 ViewBag.LoginFailed = true;
                 return View();
             }
 
+#warning Todo seems to be wrong...
             // TODO: efetuar o login
 
-            return RedirectToAction("index", "practicehome", new { area = "app", practice = loginModel.PracticeIdentifier });
+            if (loginModel.Password == Constants.DEFAULT_PASSWORD)
+            {
+                return RedirectToAction("changepassword", "users", new { area = "app", practice = loginModel.PracticeIdentifier });
+            }
+            else
+            {
+                return RedirectToAction("index", "practicehome", new { area = "app", practice = loginModel.PracticeIdentifier });
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -21,6 +21,7 @@ namespace CerebelloWebRole.Code.Controllers
             if (filterContext.HttpContext.Request.IsAuthenticated)
             {
                 var authenticatedPrincipal = filterContext.HttpContext.User as AuthenticatedPrincipal;
+
                 if (authenticatedPrincipal != null)
                 {
                     var doctorIdentifier = this.RouteData.Values["doctor"] as string;
@@ -39,12 +40,12 @@ namespace CerebelloWebRole.Code.Controllers
                                  CRM = doctor.CRM,
                                  MedicalEntity = doctor.MedicalEntity.Name,
                                  MedicalSpecialty = doctor.MedicalSpecialty.Name
-
                              };
                         return;
                     }
                 }
             }
+
             filterContext.Result = new HttpUnauthorizedResult();
         }
     }

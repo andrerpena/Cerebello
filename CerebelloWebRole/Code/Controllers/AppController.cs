@@ -10,6 +10,7 @@ using Cerebello.Model;
 
 namespace CerebelloWebRole.Code.Controllers
 {
+#warning This class is not being used.
     public abstract class SiteController : Controller
     {
         IPracticeProvider _practiceProvider;

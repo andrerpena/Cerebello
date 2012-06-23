@@ -7,9 +7,13 @@ Desc = Descrição do item.
 
 S   P Desc
 
+    P0 Teste login: não pode logar em um consultório, usando um nome de usuário e senha de outro consultório.
+    P0 Secretária não pode ver aba de usuários, nem ter acesso pela URL.
     P0 Cadastro de novo médico: combo de especialidade e órgão regulador.
     P0 Não permitir excluir último administrador do consultório.
     P0 Validação para usuários com Email duplicados.
+    
+    P1 Não existe uma botão para sair do software. Vai ser necessário se houver 2 secretárias trabalhando em turnos.
     P1 Activity indicator para o link button "adicionar endereço".
     P1 Página de login quando tenta acessar algo sem estar logado: The resource cannot be found. /login.aspx
     P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
@@ -20,6 +24,14 @@ S   P Desc
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
 ?   P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
+        (esperando fazer as combos para preencher especialidade e órgão regulador)
+x   P0 Teste login: senha padrão deve redirecionar para troca de senha.
+x   P0 Teste: ao tentar acessar qualquer tela usando senha padrão deve redirecionar para troca de senha.
+x   P0 Teste: tela de troca de senha deve estar disponível para usuário utilizando a senha padrão.
+x   P0 Practice não está sendo levado em conta na hora do login.
+x   P0 Criar nova secretária, e fazer login com esse usuário.
+x   P0 Direcionar novo usuário para tela de troca de senha.
+x   P0 Usuário logado com senha padrão não pode navegar no software, com exceção da tela de alterar senha.
 x   P0 Teste cadastrar usuário: novo médico, faltando CRM.
 x   P0 Teste visualizar usuário: médico.
 x   P0 Teste visualizar usuário: administrador.

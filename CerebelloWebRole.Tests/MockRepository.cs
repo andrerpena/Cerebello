@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -19,47 +20,118 @@ namespace CerebelloWebRole.Tests
     {
         static MockRepository()
         {
-            // The default user is André, in a valid context.
-            SetCurrentUser_Andre_Valid();
+            Reset();
+        }
+
+        public static void Reset()
+        {
+            // The default user is André.
+            SetCurrentUser_Andre_CorrectPassword();
+
+            // The route context is valid by default, for the user André.
+            SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
         }
 
         /// <summary>
         /// Sets up André as the current logged user, in a valid sittuation.
         /// </summary>
-        public static void SetCurrentUser_Andre_Valid()
+        public static void SetCurrentUser_Andre_CorrectPassword(int userId = 1)
         {
             // Setting user details.
             FullName = "André Rodrigues Pena";
-            Email = "andrerpena@gmail.com";
+            UserNameOrEmail = "andrerpena@gmail.com";
             Password = "ph4r40h";
 
             // Setting DB info.
-            UserDbId = 1;
-
-            // Setting route info.
-            RoutePractice = "consultoriodrhourse";
-            RouteDoctor = "gregoryhouse";
+            UserDbId = userId;
         }
 
         /// <summary>
-        /// Sets up André as the current logged user, in an invalid sittuation.
+        /// Sets up a User as the current logged user, using the default password.
         /// </summary>
-        public static void SetCurrentUser_Andre_InvalidAccessToPractice()
+        public static void SetCurrentUser_WithDefaultPassword(User user, bool loginWithUserName = false)
         {
             // Setting user details.
-            FullName = "André Rodrigues Pena";
-            Email = "andrerpena@gmail.com";
-            Password = "ph4r40h";
+            FullName = user.Person.FullName;
+            UserNameOrEmail = loginWithUserName ? user.UserName : (user.Email ?? "");
+            Password = CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD;
 
             // Setting DB info.
-            UserDbId = 1;
-
-            // Setting route info, so that it is invalid.
-            // - The user André does not have acces to the practice "outro_consultorio",
-            //      so access to it should be denied.
-            RoutePractice = "outro_consultorio";
-            RouteDoctor = "gregoryhouse";
+            UserDbId = user.Id;
         }
+
+        public static void SetRouteData_App_ConsultorioDrHourse_GregoryHouse()
+        {
+            RouteData = new RouteData();
+            RouteData.DataTokens["area"] = "App";
+            RouteData.Values["practice"] = "consultoriodrhourse";
+            RouteData.Values["doctor"] = "gregoryhouse";
+        }
+
+        public static void SetRouteData_App_OutroConsultorio_GregoryHouse()
+        {
+            RouteData = new RouteData();
+            RouteData.DataTokens["area"] = "App";
+            RouteData.Values["practice"] = "outro_consultorio";
+            RouteData.Values["doctor"] = "gregoryhouse";
+        }
+
+        public static void SetRouteData<T>(Practice p, Doctor d, string action) where T : Controller
+        {
+            var type = typeof(T);
+
+            SetRouteData(type, p, d, action);
+        }
+
+        public static void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
+        {
+            var matchController = Regex.Match(controllerType.Name, @"(?<CONTROLLER>.*?)Controller");
+            var matchArea = Regex.Match(controllerType.Namespace, @"Areas\.(?<AREA>.*?)(?=\.Controllers)");
+
+            RouteData = new RouteData();
+
+            if (matchArea.Success)
+                RouteData.Values["controller"] = matchController.Groups["CONTROLLER"].Value.ToLowerInvariant();
+            else
+                throw new Exception("Could not determine controller.");
+
+            if (matchArea.Success)
+                RouteData.DataTokens["area"] = matchArea.Groups["AREA"].Value.ToLowerInvariant();
+
+            if (p != null)
+                RouteData.Values["practice"] = p.UrlIdentifier;
+
+            if (d != null)
+                RouteData.Values["doctor"] = d.Users.First().Person.UrlIdentifier;
+
+            if (action != null)
+                RouteData.Values["action"] = action;
+        }
+
+        /// <summary>
+        /// Full name of the logged user.
+        /// </summary>
+        public static string FullName { get; set; }
+
+        /// <summary>
+        /// E-mail of the logged user.
+        /// </summary>
+        public static string UserNameOrEmail { get; set; }
+
+        /// <summary>
+        /// Password of the logged user.
+        /// </summary>
+        public static string Password { get; set; }
+
+        /// <summary>
+        /// Id of the User object, that represents the current user in the data-store.
+        /// </summary>
+        public static int UserDbId { get; set; }
+
+        /// <summary>
+        /// RouteData that will be used.
+        /// </summary>
+        public static RouteData RouteData { get; set; }
 
         /// <summary>
         /// HttpServerUtilityBase stub.
@@ -89,18 +161,14 @@ namespace CerebelloWebRole.Tests
         }
 
         /// <summary>
-        /// Returns a RequestContext that can be used for testing
+        /// Returns a RequestContext that can be used for testing.
         /// </summary>
         /// <returns></returns>
         public static RequestContext GetRequestContext()
         {
             var mock = new Mock<RequestContext>();
 
-            RouteData routeData = new RouteData();
-            routeData.Values["practice"] = RoutePractice;
-            routeData.Values["doctor"] = RouteDoctor;
-
-            mock.SetupGet(rq => rq.RouteData).Returns(routeData);
+            mock.SetupGet(rq => rq.RouteData).Returns(RouteData);
             mock.SetupGet(m => m.HttpContext).Returns(GetHttpContext());
 
             return mock.Object;
@@ -129,13 +197,17 @@ namespace CerebelloWebRole.Tests
         {
             var mock = new Mock<HttpContextBase>();
 
-            using (var context = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString))
+            using (var db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString))
             {
-                var securityToken = SecurityManager.AuthenticateUser(Email, Password, context);
+                var securityToken = SecurityManager.AuthenticateUser(
+                    UserNameOrEmail,
+                    Password,
+                    string.Format("{0}", RouteData.Values["practice"]),
+                    db);
 
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
                      version: 1,
-                     name: Email,
+                     name: UserNameOrEmail,
                      issueDate: DateTime.UtcNow,
                      expiration: DateTime.Now.AddYears(1),
                      isPersistent: true,
@@ -146,8 +218,9 @@ namespace CerebelloWebRole.Tests
                     new AuthenticatedPrincipal(new FormsIdentity(ticket), new UserData()
                     {
                         FullName = FullName,
-                        Email = Email,
+                        Email = UserNameOrEmail,
                         Id = UserDbId,
+                        IsUsingDefaultPassword = Password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
                     });
 
                 mock.SetupGet(m => m.Request).Returns(GetRequest());
@@ -162,37 +235,8 @@ namespace CerebelloWebRole.Tests
         {
             var mock = new Mock<ActionExecutingContext>();
             mock.SetupGet(m => m.HttpContext).Returns(GetHttpContext());
+            mock.SetupGet(m => m.RouteData).Returns(RouteData);
             return mock.Object;
         }
-
-        /// <summary>
-        /// Full name of the logged user.
-        /// </summary>
-        public static string FullName { get; set; }
-
-        /// <summary>
-        /// E-mail of the logged user.
-        /// </summary>
-        public static string Email { get; set; }
-
-        /// <summary>
-        /// Password of the logged user.
-        /// </summary>
-        public static string Password { get; set; }
-
-        /// <summary>
-        /// Id of the User object, that represents the current user in the data-store.
-        /// </summary>
-        public static int UserDbId { get; set; }
-
-        /// <summary>
-        /// Practice name that should be used in the route.
-        /// </summary>
-        public static string RoutePractice { get; set; }
-
-        /// <summary>
-        /// Doctor name that should be used in the route.
-        /// </summary>
-        public static string RouteDoctor { get; set; }
     }
 }

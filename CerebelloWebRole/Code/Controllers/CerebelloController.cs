@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using CerebelloWebRole.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -48,6 +49,40 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult ObjectNotFound_Ajax()
         {
             return this.View();
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            if (filterContext.HttpContext.Request.IsAuthenticated)
+            {
+                var authenticatedPrincipal = filterContext.HttpContext.User as AuthenticatedPrincipal;
+
+                if (authenticatedPrincipal != null)
+                {
+                    // When the user is accessing the software for the first time,
+                    // he/she will be asked to set an access password, at this place:
+                    // http://www.cerebello.com.br/p/consultoriodrhourse/users/changepassword
+                    // All other places in the software will redirect the user back to that
+                    // place until he/she sets the password.
+                    bool isUsingDefaultPwd = authenticatedPrincipal.Profile.IsUsingDefaultPassword;
+
+                    bool isRedirectNeeded = string.Format("{0}", filterContext.RouteData.DataTokens["area"]).ToLowerInvariant() != "app"
+                        || string.Format("{0}", filterContext.RouteData.Values["controller"]).ToLowerInvariant() != "users"
+                        || string.Format("{0}", filterContext.RouteData.Values["action"]).ToLowerInvariant() != "changepassword";
+
+                    if (isUsingDefaultPwd && isRedirectNeeded)
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary
+                        {
+                            { "area", "app" },
+                            { "controller", "users" },
+                            { "action", "changepassword" },
+                        });
+                    }
+                }
+            }
         }
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
+    <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeUsersViewModel.cs" />
@@ -515,6 +516,7 @@
     <Content Include="Areas\App\Views\Users\Index.cshtml" />
     <Content Include="Areas\App\Views\Users\Edit.cshtml" />
     <Content Include="Areas\App\Views\Users\Details.cshtml" />
+    <Content Include="Areas\App\Views\Users\ChangePassword.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
@@ -555,7 +557,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>8121</DevelopmentServerPort>
+          <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

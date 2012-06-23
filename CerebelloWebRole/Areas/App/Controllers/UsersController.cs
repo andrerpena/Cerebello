@@ -159,7 +159,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var firstEmail = formModel.Emails.FirstOrDefault();
                     string userEmailStr = firstEmail != null ? firstEmail.Address : null;
 
-                    // Setting the new user PracticeId to be the same as the logged user.
                     var loggedUser = this.GetCurrentUser();
 
                     // Looking for another user with the same UserName or Email.
@@ -187,8 +186,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         user = SecurityManager.CreateUser(new CerebelloWebRole.Models.CreateAccountViewModel
                         {
                             UserName = formModel.UserName,
-                            Password = "123abc",
-                            ConfirmPassword = "123abc",
+                            Password = Constants.DEFAULT_PASSWORD,
+                            ConfirmPassword = Constants.DEFAULT_PASSWORD,
                             DateOfBirth = formModel.DateOfBirth,
                             EMail = userEmailStr,
                             FullName = formModel.FullName,
@@ -330,6 +329,79 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.Json(new JsonDeleteMessage { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+        public ActionResult ChangePassword()
+        {
+            var loggedUser = this.GetCurrentUser();
+            var defaultPasswordHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, loggedUser.PasswordSalt);
+            bool isDefaultPwd = defaultPasswordHash == loggedUser.Password;
+            this.ViewBag.IsDefaultPassword = isDefaultPwd;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(PasswordViewModel vm)
+        {
+            if (vm.Password == Constants.DEFAULT_PASSWORD)
+                this.ModelState.AddModelError(
+                    () => vm.Password,
+                    string.Format("A senha não pode ser '{0}'.", Constants.DEFAULT_PASSWORD));
+
+            // todo: checking password strength would be nice.
+
+            if (vm.Password != vm.RepeatPassword)
+                this.ModelState.AddModelError(() => vm.RepeatPassword, "A senha desejada deve ser repetida.");
+
+            var loggedUser = this.GetCurrentUser();
+
+            // Checking the current password (the one that will become old)
+            // - this is needed to allow the person to go away from the computer...
+            //     no one can go there and just change the password.
+            // - this is not needed if the current password is the default password.
+            var defaultPasswordHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, loggedUser.PasswordSalt);
+            bool isDefaultPwd = defaultPasswordHash == loggedUser.Password;
+            if (isDefaultPwd)
+            {
+                this.ModelState.Remove("OldPassword");
+            }
+            else
+            {
+                var oldPasswordHash = CipherHelper.Hash(vm.OldPassword, loggedUser.PasswordSalt);
+                if (loggedUser.Password != oldPasswordHash)
+                    this.ModelState.AddModelError(() => vm.RepeatPassword, "A senha atual está incorreta.");
+            }
+
+            if (this.ModelState.IsValid)
+            {
+                var newPasswordHash = CipherHelper.Hash(vm.Password, loggedUser.PasswordSalt);
+
+                // Salvando informações do usuário.
+                var user = this.db.Users.Where(u => u.Id == loggedUser.Id).Single();
+                user.Password = newPasswordHash;
+                user.LastActiveOn = DateTime.Now;
+
+                this.db.SaveChanges();
+
+                // The password has changed, we need to log the user in again.
+                var ok = SecurityManager.Login(new CerebelloWebRole.Models.LoginViewModel
+                {
+                    Password = vm.Password,
+                    PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
+                    RememberMe = false,
+                    UserNameOrEmail = loggedUser.UserName,
+                }, this.db);
+
+                if (!ok)
+                    throw new Exception("This should never happen as the login uses the same data provided by the user.");
+
+                return RedirectToAction("index", "practicehome");
+            }
+
+            return View();
+        }
+
 
         public JsonResult GetCEPInfo(string cep)
         {

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
-using CerebelloWebRole.Areas.App.Controllers;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Web.Mvc;
-using System.Configuration;
 
 namespace CerebelloWebRole.Tests
 {
@@ -17,7 +17,7 @@ namespace CerebelloWebRole.Tests
     /// </summary>
     public class ControllersRepository
     {
-        public static T CreateControllerForTesting<T>(CerebelloEntities db) where T : Controller, new()
+        public static T CreateControllerForTesting<T>(CerebelloEntities db, bool callOnActionExecuting = true) where T : Controller, new()
         {
             var routes = new RouteCollection();
             MvcApplication.RegisterRoutes(routes);
@@ -27,9 +27,18 @@ namespace CerebelloWebRole.Tests
             var privateObject = new PrivateObject(controller);
             privateObject.SetField("db", db);
             privateObject.Invoke("Initialize", MockRepository.GetRequestContext());
-            privateObject.Invoke("OnActionExecuting", MockRepository.GetActionExecutingContext());
+            if (callOnActionExecuting)
+                privateObject.Invoke("OnActionExecuting", MockRepository.GetActionExecutingContext());
             controller.Url = new UrlHelper(MockRepository.GetRequestContext(), routes);
             return controller;
+        }
+
+        public static ActionResult ActionExecutingAndGetActionResult(Controller controller)
+        {
+            var privateObject = new PrivateObject(controller);
+            var actionExecutingContext = MockRepository.GetActionExecutingContext();
+            privateObject.Invoke("OnActionExecuting", actionExecutingContext);
+            return actionExecutingContext.Result;
         }
     }
 }

@@ -65,7 +65,7 @@ namespace CerebelloWebRole.Code
         {
             try
             {
-                string securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, entities);
+                string securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, entities);
 
                 DateTime expiryDate = DateTime.UtcNow.AddYears(1);
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
@@ -125,13 +125,13 @@ namespace CerebelloWebRole.Code
         /// <param name="id"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static String AuthenticateUser(String userNameOrEmail, String password, CerebelloEntities entities)
+        public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, CerebelloEntities entities)
         {
             var isEmail = userNameOrEmail.Contains("@");
 
             User user = isEmail ?
-                (from u in entities.Users where u.Email == userNameOrEmail select u).FirstOrDefault() :
-                (from u in entities.Users where u.UserName == userNameOrEmail select u).FirstOrDefault();
+                entities.Users.Where(u => u.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
+                entities.Users.Where(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault();
 
             if (user == null)
                 throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");
@@ -147,11 +147,13 @@ namespace CerebelloWebRole.Code
             {
                 Salt = new Random().Next(0, 2000),
                 UserData = new UserData()
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FullName = user.Person.FullName,
+                    IsUsingDefaultPassword = password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
+                }
             };
-
-            securityToken.UserData.Id = user.Id;
-            securityToken.UserData.Email = user.Email;
-            securityToken.UserData.FullName = user.Person.FullName;
 
             return SecurityTokenHelper.ToString(securityToken);
         }

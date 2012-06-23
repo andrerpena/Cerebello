@@ -1,19 +1,13 @@
-﻿using CerebelloWebRole.Areas.App.Controllers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
-using CerebelloWebRole.Areas.App.Models;
-using System.Web.Mvc;
-using Cerebello.Model;
-using System.Web.Routing;
-using Moq;
-using Test1;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using Cerebello;
 using System.Linq;
-using CerebelloWebRole.Code.Json;
-using System.Collections.Generic;
+using System.Web.Mvc;
 using Cerebello.Firestarter;
+using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests
 {
@@ -48,6 +42,9 @@ namespace CerebelloWebRole.Tests
 
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
             this.db.SaveChanges();
+
+            // Static information is stored in this class, so we must reset it.
+            MockRepository.Reset();
         }
 
         [TestCleanup()]
