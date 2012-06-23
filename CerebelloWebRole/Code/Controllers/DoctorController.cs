@@ -18,35 +18,27 @@ namespace CerebelloWebRole.Code.Controllers
         {
             base.OnActionExecuting(filterContext);
 
-            if (filterContext.HttpContext.Request.IsAuthenticated)
+            // the URL's doctor identifier (doctor's name)
+            var doctorIdentifier = this.RouteData.Values["doctor"] as string;
+
+            // issue: 2 doctors with the same name would cause this query to fail
+            // the doctor being visualized (not the user as a doctor)
+            var doctor = this.db.Doctors.Where(d => d.Users.Any(u => u.Person.UrlIdentifier == doctorIdentifier)).FirstOrDefault();
+
+            if (doctor != null)
             {
-                var authenticatedPrincipal = filterContext.HttpContext.User as AuthenticatedPrincipal;
-
-                if (authenticatedPrincipal != null)
-                {
-                    var doctorIdentifier = this.RouteData.Values["doctor"] as string;
-
-                    // issue: 2 doctors with the same name would cause this query to fail
-                    var doctor = this.db.Doctors.Where(d => d.Users.Any(u => u.Person.UrlIdentifier == doctorIdentifier)).FirstOrDefault();
-
-                    if (doctor != null)
-                    {
-                        this.Doctor = doctor;
-                        this.ViewBag.Doctor = new DoctorViewModel()
-                             {
-                                 Name = doctor.Users.ElementAt(0).Person.FullName,
-                                 UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
-                                 ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
-                                 CRM = doctor.CRM,
-                                 MedicalEntity = doctor.MedicalEntity.Name,
-                                 MedicalSpecialty = doctor.MedicalSpecialty.Name
-                             };
-                        return;
-                    }
-                }
+                this.Doctor = doctor;
+                this.ViewBag.Doctor = new DoctorViewModel()
+                     {
+                         Name = doctor.Users.ElementAt(0).Person.FullName,
+                         UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
+                         ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
+                         CRM = doctor.CRM,
+                         MedicalEntity = doctor.MedicalEntity.Name,
+                         MedicalSpecialty = doctor.MedicalSpecialty.Name
+                     };
+                return;
             }
-
-            filterContext.Result = new HttpUnauthorizedResult();
         }
     }
 }

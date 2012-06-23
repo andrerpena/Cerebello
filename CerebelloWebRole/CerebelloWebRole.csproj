@@ -169,7 +169,6 @@
     <Compile Include="Code\Controllers\AppController.cs" />
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
-    <Compile Include="Code\Controllers\PracticeManagingContextController.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Controls\CardView\CardView.cs" />
@@ -186,8 +185,8 @@
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
-    <Compile Include="Code\Filters\RequiresAuthenticationAttribute.cs" />
-    <Compile Include="Code\Filters\RequiresPracticeAuthorizationAttribute.cs" />
+    <Compile Include="Code\Filters\AuthenticationFilter.cs" />
+    <Compile Include="Code\Filters\FirstAccessFilter.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
     <Compile Include="Code\Helpers\AsyncHelper.cs" />
     <Compile Include="Code\Helpers\Cipher.cs" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
+using System.Web.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Models
 {

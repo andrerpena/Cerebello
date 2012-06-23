@@ -37,23 +37,14 @@ namespace CerebelloWebRole.Code
         {
             base.OnActionExecuting(filterContext);
 
-            if (filterContext.HttpContext.Request.IsAuthenticated)
-            {
-                var authenticatedPrincipal = filterContext.HttpContext.User as AuthenticatedPrincipal;
-                if (authenticatedPrincipal != null)
-                {
-                    var practiceName = this.RouteData.Values["practice"] as string;
+            var practiceName = this.RouteData.Values["practice"] as string;
 
-                    var userId = this.GetCurrentUserId();
-                    var practice = this.db.Users.Where(u => u.Id == userId).First().Practice;
+            var userId = this.GetCurrentUserId();
+            var practice = this.db.Users.Where(u => u.Id == userId).First().Practice;
 
-                    this.Practice = practice;
-                    this.ViewBag.Practice = practice;
-                    this.ViewBag.PracticeName = practice.Name;
-                    return;
-                }
-            }
-            filterContext.Result = new HttpUnauthorizedResult();
+            this.Practice = practice;
+            this.ViewBag.Practice = practice;
+            this.ViewBag.PracticeName = practice.Name;
         }
     }
 }

@@ -130,6 +130,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 ViewBag.Title = "Novo usuário";
 
+            ViewBag.MedicalEntityOptions = new List<SelectListItem>() { 
+                new SelectListItem() { Value = "1", Text = "Opção 1" },
+                new SelectListItem() { Value = "2", Text = "Opção 2" }
+            };
+
             return View("Edit", model);
         }
 

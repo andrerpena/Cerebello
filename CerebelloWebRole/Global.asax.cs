@@ -9,6 +9,7 @@ using System.Data.Entity;
 using CerebelloWebRole.Models;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using CerebelloWebRole.Code.Filters;
 
 namespace Cerebello
 {
@@ -20,6 +21,8 @@ namespace Cerebello
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new AuthenticationFilter());
+            filters.Add(new FirstAccessFilter());
         }
 
         public static void RegisterRoutes(RouteCollection routes)
