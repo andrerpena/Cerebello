@@ -7,6 +7,20 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
 
+2012-06-26 13:30-14:50 (1º10)   9   Firestarter: Inicialização de tabelas do sistema - SYS_MedicalEntity e SYS_MedicalSpecialty.
+2012-06-26 14:50-15:20 (0º30)   9   Alterações no banco seguindo especificação.
+2012-06-26 15:20-16:00 (0º40)  10   Firestarter: opção drop all tables; opção create all tables (usando o script de criação).
+2012-06-26 16:50-17:20 (0º30)   6   Teste de primeiro acesso: testar o filtro ao invés dos controllers em sí.
+2012-06-26 17:20-17:40 (0º20)   8   HtmlHerlper para mostrar caixa de mensagem verdinha.
+2012-06-26 17:40-17:55 (0º15)   8   Mensagem mostrando a senha padrão do usuário na tela de criar usuário.
+2012-06-26 18:00-18:45 (0º45)   8   Tela de criação de uma nova conta no sistema.
+2012-06-26 20:00-20:30 (0º30)   8   Verificar se o UrlIdentifier já existe para o nome da pessoa. Se já existir adicionar um número no final.
+
+2012-06-25 ??:??-??:?? (?º??)   ?   MockRepository não é mais estático.
+2012-06-25 ??:??-??:?? (?º??)   ?   Pesquisa sobre especialidades e conselhos profissionais segundo o TISS.
+
+2012-06-23 ??:??-??:?? (?º??)   ?   Resolvemos algumas coisas na casa do André.
+
 2012-06-22 17:00-19:50 (2º50")  9   Testes de acesso usando a senha default. Não pode acessar nada no software, somente a tela de trocar senha.
 2012-06-22 15:40-16:54 (1º05")  9   Não permitir usuário com senha padrão usar o software. A única opção é trocar a senha.
 

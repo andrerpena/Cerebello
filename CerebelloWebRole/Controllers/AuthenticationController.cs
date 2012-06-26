@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
 using Cerebello.Model;
+using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
@@ -63,10 +65,40 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Users.AddObject(SecurityManager.CreateUser(registrationData, db));
-                db.SaveChanges();
-                return RedirectToAction("createaccountcompleted");
+                // Normalizing name properties.
+                registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
+                registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
+
+                var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
+
+                // Note: Url identifier for the name of the user, don't need any verification.
+                // The name of the user must be unique inside a practice, not the entire database.
+
+                bool alreadyExistsPracticeId = db.Practices.Where(p => p.UrlIdentifier == urlPracticeId).Any();
+
+                if (alreadyExistsPracticeId)
+                {
+                    this.ModelState.AddModelError("PracticeName", "Nome do consultório já está em uso.");
+                }
+                else
+                {
+                    // Creating the new user.
+                    var user = SecurityManager.CreateUser(registrationData, db);
+
+                    // Creating a new medical practice.
+                    user.Practice = new Practice
+                    {
+                        Name = registrationData.PracticeName,
+                        UrlIdentifier = urlPracticeId,
+                        CreatedOn = DateTime.Now,
+                    };
+
+                    db.Users.AddObject(user);
+                    db.SaveChanges();
+                    return RedirectToAction("createaccountcompleted");
+                }
             }
+
             return View();
         }
 

@@ -5,7 +5,7 @@
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var editPanel = this.Html.CreateEditPanel();
-    
+
     if (Model == null)
     {
         // If Model is null, then the user is being created now,
@@ -18,7 +18,7 @@
         // we cannot allow the user-name to be edited.
         editPanel.AddField(m => m.UserName, @<text>@Model.UserName</text>);
     }
-    
+
     editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
     editPanel.AddField(m => m.DateOfBirth, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
@@ -33,7 +33,7 @@
     editPanelRoles.AddField(m => m.IsMedic);
 
     var editPanelMedic = this.Html.CreateEditPanel();
-    editPanelMedic.AddField(m => m.MedicCRM, format: @<text>@Html.DropDownListFor(m => m.MedicCRM, (IEnumerable<SelectListItem>) this.ViewBag.MedicalEntityOptions)</text>);
+    editPanelMedic.AddField(m => m.MedicCRM, format: @<text>@Html.DropDownListFor(m => m.MedicCRM, (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
     editPanelMedic.AddField(m => m.MedicalSpecialty);
     editPanelMedic.AddField(m => m.MedicalEntity);
 }
@@ -78,6 +78,13 @@ Cadastrar um novo usuário
 
     @editPanel.GetHtml()
 
+    if (this.Model == null)
+    { 
+    @Html.Message(string.Format(
+        "A senha padrão deste usuário é {0}. Essa senha será usada somente para fazer o primeiro acesso ao sistema.",
+        CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD))
+    }
+    
     <p class="form-title">
         Funções deste usuário
     </p>

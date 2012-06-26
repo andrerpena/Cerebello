@@ -38,9 +38,6 @@ namespace CerebelloWebRole.Tests
 
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
             this.db.SaveChanges();
-
-            // Static information is stored in this class, so we must reset it.
-            MockRepository.Reset();
         }
 
         [TestCleanup()]
@@ -70,7 +67,8 @@ namespace CerebelloWebRole.Tests
                    }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db, mr);
             controller.Create(formModel);
 
             Assert.IsTrue(controller.ModelState.IsValid);
@@ -110,7 +108,8 @@ namespace CerebelloWebRole.Tests
                    }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db, mr);
             controller.Create(formModel);
 
             Assert.IsTrue(controller.ModelState.IsValid);
@@ -129,7 +128,8 @@ namespace CerebelloWebRole.Tests
         [TestMethod]
         public void Delete_2_ShouldReturnProperResultWhenNotExisting()
         {
-            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
             // tries to delete the anamnese
             var result = controller.Delete(999);
@@ -142,7 +142,8 @@ namespace CerebelloWebRole.Tests
         [TestMethod]
         public void LookupDiagnoses_1_ShouldReturnTheProperResult()
         {
-            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
             // tries to delete the anamnese <== WTF??
             var result = controller.LookupDiagnoses("cefaléia", 20, 1);

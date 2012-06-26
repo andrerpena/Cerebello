@@ -159,7 +159,6 @@ Tarefas
 	- Plugin de fotos: jQuery web cam plugin - 1 dia
 	- Tela Consultório.Usuários.Criar - 1 dia
 	- Tela Consultório.Início - 1 dia
-	- 
 
 Versão 2
 --------

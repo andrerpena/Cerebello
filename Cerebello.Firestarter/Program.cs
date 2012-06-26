@@ -4,6 +4,8 @@ using System.Configuration;
 using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Models;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Test1
 {
@@ -18,6 +20,7 @@ namespace Test1
             Console.Clear();
             Console.WriteLine("Choose connection to use:");
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Dictionary<string, string> connStr = new Dictionary<string, string>();
             for (int idxConnStr = 0; idxConnStr < ConfigurationManager.ConnectionStrings.Count; idxConnStr++)
             {
@@ -25,6 +28,7 @@ namespace Test1
                 connStr[idxConnStr.ToString()] = connStrSettings.Name;
                 Console.WriteLine(string.Format("{0}: {1}", idxConnStr, connStrSettings.Name));
             }
+            Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine();
             Console.Write("Type the option number and press Enter: ");
@@ -44,15 +48,128 @@ namespace Test1
                 Console.WriteLine(string.Format("Current DB: {0}", connName));
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("nu  - Create new user.");
                 Console.WriteLine("cls - Clear all data.");
                 Console.WriteLine("p1  - Populate setup 1.");
+                Console.WriteLine("sys - Initialize DB with system data.");
+                Console.WriteLine("dp  - Drop all tables and FKs.");
+                Console.WriteLine("c   - Create all tables and FKs using script.");
                 Console.WriteLine("q   - Quit.");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine();
                 Console.Write("What would you like to do with the DB: ");
                 userOption = Console.ReadLine();
 
                 switch (userOption.Trim().ToLowerInvariant())
                 {
+                    case "c":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("m = MASB");
+                            Console.WriteLine("a = André");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            userOption = Console.ReadLine();
+
+                            var dicPath = new Dictionary<string, string>
+                            {
+                                { "m", @"P:\Projects.2012\Cerebello\DB\Scripts" },
+                                { "a", @"?????" },
+                            };
+
+                            string path;
+                            dicPath.TryGetValue(userOption, out path);
+
+                            try
+                            {
+                                if (path != null)
+                                {
+                                    string script = File.ReadAllText(Path.Combine(path, "script.sql"));
+                                    using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                    {
+                                        Firestarter.ExecuteScript(db, script);
+                                    }
+                                }
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine(string.Format("Exception: {0}", ex.GetType().Name));
+                                Console.WriteLine(ex.Message);
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+
+                        break;
+
+                    case "dp":
+                        {
+                            Console.Write("This will drop EVERY table in your DB... are you sure? (y/n): ");
+                            var userDropAll = Console.ReadLine();
+                            if (userDropAll != "y" && userDropAll != "n")
+                                continue;
+                            bool clearAllData = userDropAll == "y";
+
+                            // Doing what the user has told.
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                            {
+                                if (clearAllData)
+                                {
+                                    Firestarter.DropAllTables(db);
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("Done!");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("Canceled!");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                            }
+                        }
+
+                        break;
+
+                    case "sys":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("DB sys tables will be populated with:");
+                            Console.WriteLine("    SYS_MedicalEntity: TISS - Conselhos Profissionais");
+                            Console.WriteLine("    SYS_MedicalSpecialty: TISS - CBO-S (especialidades)");
+                            Console.WriteLine();
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("Continue? (y/n): ");
+                            ConsoleKeyInfo key = default(ConsoleKeyInfo);
+                            if (key.KeyChar != 'y' && key.KeyChar != 'n')
+                                key = Console.ReadKey();
+                            Console.WriteLine();
+
+                            if (key.KeyChar == 'y')
+                            {
+                                using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                    Firestarter.InitializeDatabaseWithSystemData(db);
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Canceled!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+
+                        break;
+
                     case "nu":
                         {
                             // Asking for user data.
@@ -98,27 +215,29 @@ namespace Test1
                         break;
 
                     case "cls":
-                        Console.Write("Clear all data (y/n): ");
-                        var userClearAll = Console.ReadLine();
-                        if (userClearAll != "y" && userClearAll != "n")
-                            return;
-                        bool clearAllData = userClearAll == "y";
-
-                        // Doing what the user has told.
-                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                         {
-                            if (clearAllData)
+                            Console.Write("Clear all data (y/n): ");
+                            var userClearAll = Console.ReadLine();
+                            if (userClearAll != "y" && userClearAll != "n")
+                                continue;
+                            bool clearAllData = userClearAll == "y";
+
+                            // Doing what the user has told.
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                             {
-                                Firestarter.ClearAllData(db);
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("Done!");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Canceled!");
-                                Console.ForegroundColor = ConsoleColor.White;
+                                if (clearAllData)
+                                {
+                                    Firestarter.ClearAllData(db);
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("Done!");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("Canceled!");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
                             }
                         }
 
@@ -162,6 +281,8 @@ namespace Test1
                         break;
 
                     case "q":
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Bye!");
                         return;
 
                     default:

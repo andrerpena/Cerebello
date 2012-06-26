@@ -12,6 +12,12 @@
             <fieldset>
                 <div class="controls-wrapper">
                     <div class="control-group">
+                        @Html.LabelFor(model => model.PracticeName)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
                         @Html.LabelFor(model => model.FullName)
                         <div class="controls">
                             @Html.TextBoxFor(model => model.FullName, new { @class = "input-xlarge" })
@@ -30,9 +36,15 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        @Html.LabelFor(model => model.UserName)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.UserName, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
                         @Html.LabelFor(model => model.EMail)
                         <div class="controls">
-                            @Html.PasswordFor(model => model.EMail, new { @class = "input-xlarge" })
+                            @Html.TextBoxFor(model => model.EMail, new { @class = "input-xlarge" })
                         </div>
                     </div>
                     <div class="control-group">

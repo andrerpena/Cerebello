@@ -42,9 +42,6 @@ namespace CerebelloWebRole.Tests
 
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
             this.db.SaveChanges();
-
-            // Static information is stored in this class, so we must reset it.
-            MockRepository.Reset();
         }
 
         [TestCleanup()]
@@ -72,7 +69,8 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -96,7 +94,8 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -125,7 +124,8 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -145,7 +145,8 @@ namespace CerebelloWebRole.Tests
                 }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -165,7 +166,8 @@ namespace CerebelloWebRole.Tests
                 }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(RedirectResult));
@@ -184,7 +186,8 @@ namespace CerebelloWebRole.Tests
                 Text = "This has no references"
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(RedirectResult));
@@ -206,7 +209,8 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(RedirectResult));
@@ -228,7 +232,8 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var controller = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(RedirectResult));
@@ -272,7 +277,8 @@ namespace CerebelloWebRole.Tests
                      new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
                 }
             };
-            var certificateModelController = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db);
+            var mr = new MockRepository();
+            var certificateModelController = ControllersRepository.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             var certificateModel = this.db.ModelMedicalCertificates.First();
 
@@ -288,7 +294,7 @@ namespace CerebelloWebRole.Tests
                 }
             };
 
-            var certificateController = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db);
+            var certificateController = ControllersRepository.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
             var certificateControllerResult = certificateController.Edit(formModel);
             var certificate = this.db.MedicalCertificates.First();
 

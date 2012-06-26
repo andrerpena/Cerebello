@@ -27,8 +27,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                  UrlIdentifier = u.Person.UrlIdentifier,
                                  ImageUrl = GravatarHelper.GetGravatarUrl(u.GravatarEmailHash, GravatarHelper.Size.s64),
                                  CRM = u.Doctor.CRM,
-                                 MedicalEntity = u.Doctor.MedicalEntity.Name,
-                                 MedicalSpecialty = u.Doctor.MedicalSpecialty.Name
+                                 MedicalEntity = u.Doctor.SYS_MedicalEntity.Name,
+                                 MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name
 
                              }).ToList();
 

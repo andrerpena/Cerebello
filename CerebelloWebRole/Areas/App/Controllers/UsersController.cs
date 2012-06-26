@@ -11,6 +11,7 @@ using System.Net;
 using System.IO;
 using HtmlAgilityPack;
 using CerebelloWebRole.Code.Json;
+using System.Text.RegularExpressions;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -147,9 +148,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (ModelState.IsValid)
             {
+                // Normalizing the name of the person.
+                formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
+
                 if (isEditing)
                 {
                     // Note: User name cannot be edited.
+
                     user = db.Users.Where(p => p.Id == formModel.Id).First();
                     user.Person.DateOfBirth = formModel.DateOfBirth;
                     user.Person.FullName = formModel.FullName;
@@ -184,6 +189,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     if (this.ModelState.IsValid)
                     {
+                        // First we see if the UrlIdentifier for this user already exists or not.
+                        // If it exists, we just appen the number 2 at the end and try again.
+                        var urlIdSrc = StringHelper.GenerateUrlIdentifier(formModel.FullName);
+                        var urlId = urlIdSrc;
+
+                        int cnt = 2;
+                        while (this.db.Users.Where(u => u.Person.UrlIdentifier == urlId).Any())
+                        {
+                            urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
+
+                            if (cnt > 20)
+                            {
+                                this.ModelState.AddModelError("FullName", "Quantidade de homônimos excedida.");
+                                break;
+                            }
+                        }
+
                         // For every new user we must create a login, with a common
                         // password used the first time the person logs in.
                         // The only action allowed with this password,

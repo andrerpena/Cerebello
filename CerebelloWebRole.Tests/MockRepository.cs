@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -16,14 +14,14 @@ using Moq;
 
 namespace CerebelloWebRole.Tests
 {
-    public static class MockRepository
+    public class MockRepository
     {
-        static MockRepository()
+        public MockRepository()
         {
-            Reset();
+            this.Reset();
         }
 
-        public static void Reset()
+        public void Reset()
         {
             // The default user is André.
             SetCurrentUser_Andre_CorrectPassword();
@@ -35,7 +33,7 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Sets up André as the current logged user, in a valid sittuation.
         /// </summary>
-        public static void SetCurrentUser_Andre_CorrectPassword(int userId = 1)
+        public void SetCurrentUser_Andre_CorrectPassword(int userId = 1)
         {
             // Setting user details.
             FullName = "André Rodrigues Pena";
@@ -49,7 +47,7 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Sets up a User as the current logged user, using the default password.
         /// </summary>
-        public static void SetCurrentUser_WithDefaultPassword(User user, bool loginWithUserName = false)
+        public void SetCurrentUser_WithDefaultPassword(User user, bool loginWithUserName = false)
         {
             // Setting user details.
             FullName = user.Person.FullName;
@@ -60,7 +58,7 @@ namespace CerebelloWebRole.Tests
             UserDbId = user.Id;
         }
 
-        public static void SetRouteData_App_ConsultorioDrHourse_GregoryHouse()
+        public void SetRouteData_App_ConsultorioDrHourse_GregoryHouse()
         {
             RouteData = new RouteData();
             RouteData.DataTokens["area"] = "App";
@@ -68,7 +66,7 @@ namespace CerebelloWebRole.Tests
             RouteData.Values["doctor"] = "gregoryhouse";
         }
 
-        public static void SetRouteData_App_OutroConsultorio_GregoryHouse()
+        public void SetRouteData_App_OutroConsultorio_GregoryHouse()
         {
             RouteData = new RouteData();
             RouteData.DataTokens["area"] = "App";
@@ -76,14 +74,14 @@ namespace CerebelloWebRole.Tests
             RouteData.Values["doctor"] = "gregoryhouse";
         }
 
-        public static void SetRouteData<T>(Practice p, Doctor d, string action) where T : Controller
+        public void SetRouteData<T>(Practice p, Doctor d, string action) where T : Controller
         {
             var type = typeof(T);
 
             SetRouteData(type, p, d, action);
         }
 
-        public static void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
+        public void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
         {
             var matchController = Regex.Match(controllerType.Name, @"(?<CONTROLLER>.*?)Controller");
             var matchArea = Regex.Match(controllerType.Namespace, @"Areas\.(?<AREA>.*?)(?=\.Controllers)");
@@ -111,27 +109,27 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Full name of the logged user.
         /// </summary>
-        public static string FullName { get; set; }
+        public string FullName { get; set; }
 
         /// <summary>
         /// E-mail of the logged user.
         /// </summary>
-        public static string UserNameOrEmail { get; set; }
+        public string UserNameOrEmail { get; set; }
 
         /// <summary>
         /// Password of the logged user.
         /// </summary>
-        public static string Password { get; set; }
+        public string Password { get; set; }
 
         /// <summary>
         /// Id of the User object, that represents the current user in the data-store.
         /// </summary>
-        public static int UserDbId { get; set; }
+        public int UserDbId { get; set; }
 
         /// <summary>
         /// RouteData that will be used.
         /// </summary>
-        public static RouteData RouteData { get; set; }
+        public RouteData RouteData { get; set; }
 
         /// <summary>
         /// HttpServerUtilityBase stub.
@@ -164,7 +162,7 @@ namespace CerebelloWebRole.Tests
         /// Returns a RequestContext that can be used for testing.
         /// </summary>
         /// <returns></returns>
-        public static RequestContext GetRequestContext()
+        public RequestContext GetRequestContext()
         {
             var mock = new Mock<RequestContext>();
 
@@ -174,7 +172,7 @@ namespace CerebelloWebRole.Tests
             return mock.Object;
         }
 
-        public static HttpRequestBase GetRequest()
+        public HttpRequestBase GetRequest()
         {
             var mock = new Mock<HttpRequestBase>();
             mock.SetupGet(m => m.IsAuthenticated).Returns(true);
@@ -185,7 +183,7 @@ namespace CerebelloWebRole.Tests
             return mock.Object;
         }
 
-        public static HttpResponseBase GetResponse()
+        public HttpResponseBase GetResponse()
         {
             var mock = new Mock<HttpResponseBase>();
             mock.Setup(x => x.ApplyAppPathModifier(Moq.It.IsAny<String>())).Returns((String url) => url);
@@ -193,7 +191,7 @@ namespace CerebelloWebRole.Tests
             return mock.Object;
         }
 
-        public static HttpContextBase GetHttpContext()
+        public HttpContextBase GetHttpContext()
         {
             var mock = new Mock<HttpContextBase>();
 
@@ -231,7 +229,7 @@ namespace CerebelloWebRole.Tests
             return mock.Object;
         }
 
-        public static ActionExecutingContext GetActionExecutingContext()
+        public ActionExecutingContext CreateActionExecutingContext()
         {
             var mock = new Mock<ActionExecutingContext>();
             mock.SetupGet(m => m.HttpContext).Returns(GetHttpContext());

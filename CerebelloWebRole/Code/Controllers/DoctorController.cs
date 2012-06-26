@@ -34,8 +34,8 @@ namespace CerebelloWebRole.Code.Controllers
                          UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
                          ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
                          CRM = doctor.CRM,
-                         MedicalEntity = doctor.MedicalEntity.Name,
-                         MedicalSpecialty = doctor.MedicalSpecialty.Name
+                         MedicalEntity = doctor.SYS_MedicalEntity.Name,
+                         MedicalSpecialty = doctor.SYS_MedicalSpecialty.Name
                      };
                 return;
             }

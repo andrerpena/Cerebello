@@ -29,13 +29,13 @@ namespace CerebelloWebRole.Models
         [EnumDataType(typeof(TypeGender))]
         [Display(Name = "Sexo")]
         public short Gender { get; set; }
-        
+
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "E-Mail")]
         [DataType(DataType.EmailAddress)]
         [Remote("EmailIsAvailable", "Membership")]
         public String EMail { get; set; }
-        
+
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Senha")]
         [DataType(DataType.Password)]
@@ -46,6 +46,21 @@ namespace CerebelloWebRole.Models
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
+        /// <summary>
+        /// User name that may be use to login.
+        /// The user can also use the e-mail to login.
+        /// </summary>
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Display(Name = "Nome de usuário")]
         public string UserName { get; set; }
+
+        /// <summary>
+        /// Name of the practice being created along with the user.
+        /// If this is null, then the current practice will be used.
+        /// When no current medical practice exists, a name must be provided for the new practice.
+        /// </summary>
+        [Display(Name = "Nome do consultório")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string PracticeName { get; set; }
     }
 }

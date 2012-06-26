@@ -7,24 +7,43 @@ Desc = Descrição do item.
 
 S   P Desc
 
+    P0 Ao criar um novo usuário, validar os caracteres usados no UserName.
+    P0 Teste de criação de conta usando PracticeName que já existe. Não pode.
+    P0 Teste de criação de conta usando FullName que já existe. Essa operação é possível.
+    P0 Teste de criação de conta usando caracteres estranhos no UserName. Não pode deixar usar caracteres estranhos.
+    P0 Teste de criação de conta usando nome desnormalizado, ao gravar no banco tem que ser normalizado.
+    P0 Tem que mostrar todos os erros de validação da tela de criação de conta.
+    P0 Mandar e-mail quando acabar de criar a conta.
+    P0 CreateAccountCompleted: mensagem de confirmação de e-mail.
+    P0 Na tela que finaliza o cadastro, deve haver um link para logar no consultório.
     P0 Teste login: não pode logar em um consultório, usando um nome de usuário e senha de outro consultório.
     P0 Secretária não pode ver aba de usuários, nem ter acesso pela URL.
     P0 Cadastro de novo médico: combo de especialidade e órgão regulador.
     P0 Não permitir excluir último administrador do consultório.
     P0 Validação para usuários com Email duplicados.
     
+    P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
     P1 Não existe uma botão para sair do software. Vai ser necessário se houver 2 secretárias trabalhando em turnos.
     P1 Activity indicator para o link button "adicionar endereço".
-    P1 Página de login quando tenta acessar algo sem estar logado: The resource cannot be found. /login.aspx
-    P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
-    P1 Verificar fluxo de usuário: criar, acessar, definir senha, login.
-    P1 Tem que informar em algum lugar que o usuário é criado com uma senha padrão.
     P1 Ação para resetar senha padrão caso alguém esqueça a senha.
+    P1 Todos os e-mails deveriam ser verificados.
+    P1 Na tabela de e-mails deveria haver uma flag indicando se o e-mail já foi verificado.
+    
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
 ?   P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
         (esperando fazer as combos para preencher especialidade e órgão regulador)
+x   P1 Página de login quando tenta acessar algo sem estar logado: The resource cannot be found. /login.aspx (andré corrigiu isso)
+x   P1 Tem que informar em algum lugar que o usuário é criado com uma senha padrão.
+x   P1 Verificar fluxo de usuário: criar, acessar, definir senha, login.
+x   P0 Normalizar o nome da pessoa: múltiplos espaços viram um só e remover espaços das extremidades.
+x   P0 UrlIdentifier do nome da pessoa deve ser único dentro de um consultório. Homônimos geram UrlIdentifiers com número no final.
+x   P0 Colocar uma mensagem na tela de criação de usuários dizendo a senha padrão.
+x   P0 Criar HtmlHelper para caixa de informação.
+x   P0 Arrumar teste de permissão de Primeiro-Acesso.
+x   P0 Criar tabela SYS de especialidades.
+x   P0 Criar tabela SYS de conselhos profissionais.
 x   P0 Teste login: senha padrão deve redirecionar para troca de senha.
 x   P0 Teste: ao tentar acessar qualquer tela usando senha padrão deve redirecionar para troca de senha.
 x   P0 Teste: tela de troca de senha deve estar disponível para usuário utilizando a senha padrão.
