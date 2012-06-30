@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 using System.Web.Mvc;
+using CerebelloWebRole.Code.Validation;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -12,6 +13,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         [Display(Name = "Nome identificador")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [UserNameAttribute]
         public string UserName { get; set; }
 
         public string ImageUrl { get; set; }
@@ -31,12 +33,15 @@ namespace CerebelloWebRole.Areas.App.Models
         // If IsMedic is false, these properties have no meaning.
 
         [Display(Name = "CRM")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicCRM { get; set; }
 
         [Display(Name = "Especialidade")]
-        public string MedicalSpecialty { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicalSpecialty { get; set; }
 
         [Display(Name = "Entidade médica")]
-        public string MedicalEntity { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicalEntity { get; set; }
     }
 }

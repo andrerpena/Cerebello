@@ -46,29 +46,9 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Clears all test database data
         /// </summary>
+        [Obsolete("This is now in the 'FireStarter' class.")]
         public static void ClearAllData()
         {
-            // clears the data
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TestDB"].ConnectionString))
-            {
-                conn.Open();
-
-                var command = conn.CreateCommand();
-
-                command.CommandText = "sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "sp_MSForEachTable 'IF OBJECTPROPERTY(object_id(''?''), ''TableHasForeignRef'') = 1 DELETE FROM ? else TRUNCATE TABLE ?'";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "sp_MSForEachTable 'IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1DBCC CHECKIDENT (''?'', RESEED, 0)'";
-                command.ExecuteNonQuery();
-
-                conn.Close();
-            }
         }
 
         /// <summary>

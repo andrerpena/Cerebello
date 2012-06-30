@@ -195,7 +195,7 @@ namespace CerebelloWebRole.Tests
         {
             var mock = new Mock<HttpContextBase>();
 
-            using (var db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString))
+            using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
             {
                 var securityToken = SecurityManager.AuthenticateUser(
                     UserNameOrEmail,

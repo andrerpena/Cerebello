@@ -53,6 +53,7 @@ A partir de 2012-05-26
 @		- Percentual de faltas de pacientes do médico
 
 @	Tela Médico.Agenda.Editar
+        - deve ser possível marcar compromissos nos feriados e até mesmo nas férias do médico, só que isso gera um warning.
 @		- Descrição do motivo de não poder cadastrar horário específico
 @		- Tela de cadastro de consulta deve ter combo para convênio
 
@@ -69,11 +70,13 @@ A partir de 2012-05-26
 @		- Configuração para duração da primeira consulta
 @			(deve ser múltiplo da duração de uma consulta)
 @		- Cadastrar feriados (são recorrente anualmente)
-@			- já tem que vir com os feriados nacionais marcados
+@			- feriados nacionais já são regra no sistema... não tem como tirar eles.
+            - deve ser possível marcar compromissos nos feriados, só gera um warning.
 @		- Alterar tela de cadastro de "consulta" para "compromisso"
 @			- aba de consulta, representa o que já tem agora
 @			- aba de compromisso, para marcar quando o médico não pode atender
 @		- Definir que dias específicos o médico não trabalha
+            - deve ser possível marcar compromissos nos feriados, só gera um warning. (ver tela de agenda)
 @			- tabela DayOff
 @			- textbox com justificativa
 @			- textbox com data de início

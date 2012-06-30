@@ -13,36 +13,47 @@ namespace Test1
     {
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
+            bool isToChooseDb = true;
 
-            // Getting available connections from ConfigurationManager so that user can choose one.
-            Console.Clear();
-            Console.WriteLine("Choose connection to use:");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Dictionary<string, string> connStr = new Dictionary<string, string>();
-            for (int idxConnStr = 0; idxConnStr < ConfigurationManager.ConnectionStrings.Count; idxConnStr++)
-            {
-                var connStrSettings = ConfigurationManager.ConnectionStrings[idxConnStr];
-                connStr[idxConnStr.ToString()] = connStrSettings.Name;
-                Console.WriteLine(string.Format("{0}: {1}", idxConnStr, connStrSettings.Name));
-            }
-            Console.ForegroundColor = ConsoleColor.White;
-
-            Console.WriteLine();
-            Console.Write("Type the option number and press Enter: ");
-
-            // User may now choose a connection.
-            int idx;
-            string connName;
-            var userOption = Console.ReadLine();
-            if (!int.TryParse(userOption, out idx) || !connStr.TryGetValue(idx.ToString(), out connName))
-                return;
+            string connName = null;
 
             // New options:
             while (true)
             {
+                if (isToChooseDb)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    // Getting available connections from ConfigurationManager so that user can choose one.
+                    Console.Clear();
+                    Console.WriteLine("Choose connection to use:");
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Dictionary<string, string> connStr = new Dictionary<string, string>();
+                    for (int idxConnStr = 0; idxConnStr < ConfigurationManager.ConnectionStrings.Count; idxConnStr++)
+                    {
+                        var connStrSettings = ConfigurationManager.ConnectionStrings[idxConnStr];
+                        connStr[idxConnStr.ToString()] = connStrSettings.Name;
+                        Console.WriteLine(string.Format("{0}: {1}", idxConnStr, connStrSettings.Name));
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    Console.WriteLine();
+                    Console.Write("Type the option number and press Enter: ");
+
+                    // User may now choose a connection.
+                    int idx;
+                    string userOption = Console.ReadLine();
+                    if (!int.TryParse(userOption, out idx) || !connStr.TryGetValue(idx.ToString(), out connName))
+                        return;
+
+                    if (string.IsNullOrWhiteSpace(connName))
+                        return;
+                }
+
+                isToChooseDb = false;
+
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine(string.Format("Current DB: {0}", connName));
@@ -51,25 +62,41 @@ namespace Test1
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("nu  - Create new user.");
                 Console.WriteLine("cls - Clear all data.");
-                Console.WriteLine("p1  - Populate setup 1.");
+                Console.WriteLine("p1  - Populate database with items (type p1? to know more).");
                 Console.WriteLine("sys - Initialize DB with system data.");
-                Console.WriteLine("dp  - Drop all tables and FKs.");
-                Console.WriteLine("c   - Create all tables and FKs using script.");
+                Console.WriteLine("drp - Drop all tables and FKs.");
+                Console.WriteLine("crt - Create all tables and FKs using script.");
+                Console.WriteLine("db  - Change database.");
                 Console.WriteLine("q   - Quit.");
+                Console.WriteLine("    Type ? after any option to get help.");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine();
                 Console.Write("What would you like to do with the DB: ");
-                userOption = Console.ReadLine();
+                string userOption1 = Console.ReadLine();
 
-                switch (userOption.Trim().ToLowerInvariant())
+                switch (userOption1.Trim().ToLowerInvariant())
                 {
-                    case "c":
+                    case "crt?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Loads the file 'script.sql' and executes it.");
+                            Console.WriteLine("You must tell who you are, so that the right file is loaded.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "crt":
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("m = MASB");
                             Console.WriteLine("a = André");
                             Console.ForegroundColor = ConsoleColor.White;
-                            userOption = Console.ReadLine();
+                            userOption1 = Console.ReadLine();
 
                             var dicPath = new Dictionary<string, string>
                             {
@@ -78,7 +105,7 @@ namespace Test1
                             };
 
                             string path;
-                            dicPath.TryGetValue(userOption, out path);
+                            dicPath.TryGetValue(userOption1, out path);
 
                             try
                             {
@@ -106,7 +133,21 @@ namespace Test1
 
                         break;
 
-                    case "dp":
+                    case "drp?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Methods that will be called:");
+                            Console.WriteLine("    DropAllTables");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "drp":
                         {
                             Console.Write("This will drop EVERY table in your DB... are you sure? (y/n): ");
                             var userDropAll = Console.ReadLine();
@@ -131,6 +172,20 @@ namespace Test1
                                     Console.ForegroundColor = ConsoleColor.White;
                                 }
                             }
+                        }
+
+                        break;
+
+                    case "sys?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Methods that will be called:");
+                            Console.WriteLine("    InitializeDatabaseWithSystemData");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
                         }
 
                         break;
@@ -170,6 +225,19 @@ namespace Test1
 
                         break;
 
+                    case "nu?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("No help yet.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
                     case "nu":
                         {
                             // Asking for user data.
@@ -191,25 +259,51 @@ namespace Test1
                             // Creating user.
                             using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                             {
-                                var user = CerebelloWebRole.Code.SecurityManager.CreateUser(new CreateAccountViewModel
-                                    {
-                                        UserName = userName,
-                                        Password = userPassword,
-                                        ConfirmPassword = userPassword,
-                                        EMail = userEmail,
-                                        FullName = userFullName,
-                                        DateOfBirth = DateTime.Now.AddYears(-userAge),
-                                    }, db);
+                                var userToCreate = new CreateAccountViewModel
+                                {
+                                    UserName = userName,
+                                    Password = userPassword,
+                                    ConfirmPassword = userPassword,
+                                    EMail = userEmail,
+                                    FullName = userFullName,
+                                    DateOfBirth = DateTime.Now.AddYears(-userAge),
+                                };
 
-                                // This does not work because a practice is needed...
-                                // Implement this when needed... for now, I just need the pwd-salt and pwd-hash.
-                                //db.SaveChanges();
+                                // Verifying user-name.
+                                User user;
+                                var result = CerebelloWebRole.Code.SecurityManager.CreateUser(out user, userToCreate, db);
 
                                 Console.ForegroundColor = ConsoleColor.Gray;
                                 Console.WriteLine(string.Format("PasswordSalt = \"{0}\";", user.PasswordSalt));
                                 Console.WriteLine(string.Format("Password = \"{0}\";", user.Password));
+
+                                if (result == CerebelloWebRole.Code.Security.CreateUserResult.Ok)
+                                {
+                                    // This does not work because a practice is needed...
+                                    // Implement this when needed... for now, I just need the pwd-salt and pwd-hash.
+                                    //db.SaveChanges();
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine(string.Format("Failed: {0}", result));
+                                }
                                 Console.ForegroundColor = ConsoleColor.White;
                             }
+                        }
+
+                        break;
+
+                    case "cls?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Methods that will be called:");
+                            Console.WriteLine("    ClearAllData");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
                         }
 
                         break;
@@ -239,6 +333,24 @@ namespace Test1
                                     Console.ForegroundColor = ConsoleColor.White;
                                 }
                             }
+                        }
+
+                        break;
+
+                    case "p1?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Methods that will be called:");
+                            Console.WriteLine("    InitializeDatabaseWithSystemData");
+                            Console.WriteLine("    CreateFakeUserAndPractice_2");
+                            Console.WriteLine("    SetupDoctor");
+                            Console.WriteLine("    SetupUserData");
+                            Console.WriteLine("    CreateFakePatients");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
                         }
 
                         break;
@@ -280,10 +392,41 @@ namespace Test1
 
                         break;
 
+                    case "q?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Quits the program.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
                     case "q":
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Bye!");
                         return;
+
+                    case "db?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Changes the current database.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "db":
+                        isToChooseDb = true;
+
+                        break;
 
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;

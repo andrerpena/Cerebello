@@ -7,21 +7,24 @@ Desc = Descrição do item.
 
 S   P Desc
 
-    P0 Ao criar um novo usuário, validar os caracteres usados no UserName.
-    P0 Teste de criação de conta usando PracticeName que já existe. Não pode.
-    P0 Teste de criação de conta usando FullName que já existe. Essa operação é possível.
-    P0 Teste de criação de conta usando caracteres estranhos no UserName. Não pode deixar usar caracteres estranhos.
     P0 Teste de criação de conta usando nome desnormalizado, ao gravar no banco tem que ser normalizado.
     P0 Tem que mostrar todos os erros de validação da tela de criação de conta.
-    P0 Mandar e-mail quando acabar de criar a conta.
-    P0 CreateAccountCompleted: mensagem de confirmação de e-mail.
-    P0 Na tela que finaliza o cadastro, deve haver um link para logar no consultório.
+    P0 Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.
+    P0 Mandar e-mail quando acabar de criar a conta, contendo um token de confirmação de e-mail.
+    P0 Criar no AuthenticationController que permite ao usuário entrar com o token de confirmação do e-mail manualmente.
+    P0 Criar no AuthenticationController uma action que recebe o token de confirmação do e-mail.
+    P0 Teste para envio de e-mail na criação do usuário.
+    P0 Teste para confirmação de e-mail.
+    P0 CreateAccountCompleted: mensagem dizendo que foi enviado um e-mail que deve ser confirmado antes de continuar.
+    P0 CreateAccountCompleted: deve haver um link para logar no consultório, e outro para a tela de entrar com token de confirmação manualmente.
+    P0 Quando usuário entra no consultório pela primeira vez, mostrar mensagem de boas vindas, agradecendo, etc..
     P0 Teste login: não pode logar em um consultório, usando um nome de usuário e senha de outro consultório.
     P0 Secretária não pode ver aba de usuários, nem ter acesso pela URL.
-    P0 Cadastro de novo médico: combo de especialidade e órgão regulador.
     P0 Não permitir excluir último administrador do consultório.
-    P0 Validação para usuários com Email duplicados.
-    
+    P0 Validação para usuários no mesmo consultório com e-mails duplicados. Pode acontecer em entre consultórios distintos.
+
+    P1 Login: guardar o último consultório que se fez login num cookie.
+    P1 Login: criar action que já vai para a tela de login com o nome do consultório certo.
     P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
     P1 Não existe uma botão para sair do software. Vai ser necessário se houver 2 secretárias trabalhando em turnos.
     P1 Activity indicator para o link button "adicionar endereço".
@@ -32,8 +35,16 @@ S   P Desc
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
-?   P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
+x   P0 Cadastro de novo médico: combo de especialidade e conselho profissional.
+x   P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
         (esperando fazer as combos para preencher especialidade e órgão regulador)
+x   P0 Teste de criação de conta usando PracticeName que já existe. Não pode.
+x   P0 Teste de criação de conta usando FullName que já existe. Essa operação é possível.
+x   P0 Teste de criação de conta usando caracteres estranhos no UserName. Não pode deixar usar caracteres estranhos.
+x   P0 Teste de criação de usuário usando caracteres estranhos no UserName. Não pode deixar usar caracteres estranhos.
+x   P0 Normalizar UserName, removendo tudo exceto letras e dígitos. Esse valor será usado para saber se o UserName já existe.
+x   P0 Ao criar um novo usuário, validar os caracteres usados no UserName.
+x   P0 Criar coluna no banco para UserName normalizado. Deve ser único. O usuário ainda assim faz login usando o UserName não normalizado.
 x   P1 Página de login quando tenta acessar algo sem estar logado: The resource cannot be found. /login.aspx (andré corrigiu isso)
 x   P1 Tem que informar em algum lugar que o usuário é criado com uma senha padrão.
 x   P1 Verificar fluxo de usuário: criar, acessar, definir senha, login.

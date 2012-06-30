@@ -35,9 +35,9 @@ namespace CerebelloWebRole.Tests
         [TestInitialize()]
         public void TestInitialize()
         {
-            // Will clear all data and setup initial data again.
-            DatabaseHelper.ClearAllData();
-            this.db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString);
+            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
+
+            Firestarter.ClearAllData(this.db);
         }
 
         [TestCleanup()]
@@ -125,7 +125,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create(new UserViewModel
+                var data = new UserViewModel
                 {
                     UserName = "andrerpena",
                     FullName = "André Junior",
@@ -147,7 +147,9 @@ namespace CerebelloWebRole.Tests
                         new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
                     },
                     IsSecretary = true,
-                });
+                };
+                ControllersRepository.SetModelStateErrors(controller, data);
+                actionResult = controller.Create(data);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -188,7 +190,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create(new UserViewModel
+                var data = new UserViewModel
                 {
                     UserName = userNameToRepeat,
                     FullName = "Marta Arta dos Campos",
@@ -210,7 +212,9 @@ namespace CerebelloWebRole.Tests
                         new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
                     },
                     IsSecretary = true,
-                });
+                };
+                ControllersRepository.SetModelStateErrors(controller, data);
+                actionResult = controller.Create(data);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -453,14 +457,82 @@ namespace CerebelloWebRole.Tests
                     },
                     IsMedic = true,
                     MedicCRM = "98237",
-                    MedicalEntity = "CRMMG",
-                    MedicalSpecialty = "Psiquiatria",
+                    MedicalEntity = this.db.SYS_MedicalEntity.First().Id,
+                    MedicalSpecialty = this.db.SYS_MedicalSpecialty.First().Id,
                 });
             }
 
             // Verifying the ActionResult, and ModelState.
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
+        }
+
+        /// <summary>
+        /// Tests the creation of an user with an invalid user-name.
+        /// This is an invalid operation, and should stay in the same View, with a ModelState validation message.
+        /// </summary>
+        [TestMethod]
+        public void Create_8_InvalidUserName()
+        {
+            // Initializing test environment.
+            UsersController controller;
+            bool hasBeenSaved = false;
+            try
+            {
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository();
+                mr.SetCurrentUser_Andre_CorrectPassword();
+                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization failed.");
+                return;
+            }
+
+            // Creating a new user with the same UserName of another user in the same practice.
+            ActionResult actionResult;
+
+            {
+                var data = new UserViewModel
+                {
+                    UserName = "milena#santos", // char '#' is not valid
+                    FullName = "Milena",
+                    Gender = (int)TypeGender.Female,
+                    DateOfBirth = new DateTime(1986, 01, 03),
+                    MaritalStatus = (int)TypeMaritalStatus.Solteiro,
+                    BirthPlace = "Juiz de Fora",
+                    Addresses = new List<AddressViewModel>
+                    {
+                        new AddressViewModel
+                        {
+                            Street = "Nome rua",
+                            CEP = "36030-060",
+                            City = "Juiz de Fora",
+                        }
+                    },
+                    Emails = new List<EmailViewModel>
+                    {
+                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
+                    },
+                };
+                ControllersRepository.SetModelStateErrors(controller, data);
+                actionResult = controller.Create(data);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            // - The result must be a ViewResult, with the name "Edit".
+            // - The controller ModelState must have one validation message.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            var viewResult = (ViewResult)actionResult;
+            Assert.AreEqual(viewResult.ViewName, "Edit");
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
+            Assert.IsTrue(
+                controller.ModelState.ContainsKey("UserName"),
+                "ModelState must contain validation message for 'PracticeName'.");
+            Assert.IsFalse(hasBeenSaved, "The database has been changed. This was not supposed to happen.");
         }
         #endregion
 

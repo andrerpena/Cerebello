@@ -33,9 +33,19 @@
     editPanelRoles.AddField(m => m.IsMedic);
 
     var editPanelMedic = this.Html.CreateEditPanel();
-    editPanelMedic.AddField(m => m.MedicCRM, format: @<text>@Html.DropDownListFor(m => m.MedicCRM, (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
-    editPanelMedic.AddField(m => m.MedicalSpecialty);
-    editPanelMedic.AddField(m => m.MedicalEntity);
+    editPanelMedic.AddField(m => m.MedicCRM);
+    
+    editPanelMedic.AddField(
+        m => m.MedicalSpecialty,
+        format: @<text>@Html.DropDownListFor(
+            m => m.MedicalSpecialty,
+            (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions)</text>);
+    
+    editPanelMedic.AddField(
+        m => m.MedicalEntity,
+        format: @<text>@Html.DropDownListFor(
+            m => m.MedicalEntity,
+            (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
 }
 @section Scripts {
     <script type="text/javascript">

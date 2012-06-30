@@ -27,6 +27,12 @@ namespace CerebelloWebRole.Code.Mvc
             modelState.AddModelError(propertyInfo.Name, errorMessage);
         }
 
+        /// <summary>
+        /// Add a new validation message to the collection of messages and exceptions associated with the given model property.
+        /// </summary>
+        /// <param name="modelState">ModelState objeto to add the validation message to.</param>
+        /// <param name="expression">Expression tree that goes to the property that is not valid.</param>
+        /// <param name="errorMessage">Validation message to associate with the property.</param>
         public static void AddModelError(this ModelStateDictionary modelState, Expression<Func<object>> expression, string errorMessage)
         {
             // todo: this method should accept a resource name, instead of an error message.
@@ -41,6 +47,18 @@ namespace CerebelloWebRole.Code.Mvc
             }
 
             modelState.AddModelError(propertyInfo.Name, errorMessage);
+        }
+
+        /// <summary>
+        /// Remove the validation messages and exceptions associated with a model property,
+        /// making the value in that property valid.
+        /// </summary>
+        /// <param name="modelState">ModelState object from which the model property will be removed, and thus be considered as valid.</param>
+        /// <param name="expression">Expression tree that goes to the property that should be made valid.</param>
+        public static void Remove(this ModelStateDictionary modelState, Expression<Func<object>> expression)
+        {
+            var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
+            modelState.Remove(propertyInfo.Name);
         }
     }
 }

@@ -36,10 +36,9 @@ namespace CerebelloWebRole.Tests
         [TestInitialize()]
         public void TestInitialize()
         {
-            // will clear all data and setup initial data again
-            DatabaseHelper.ClearAllData();
-            this.db = new CerebelloEntities(ConfigurationManager.ConnectionStrings[Constants.CONNECTION_STRING_EF].ConnectionString);
+            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
 
+            Firestarter.ClearAllData(this.db);
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
             this.db.SaveChanges();
         }

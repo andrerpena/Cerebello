@@ -8,17 +8,27 @@ using CerebelloWebRole.Models;
 using Cerebello.Model;
 using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
+using CerebelloWebRole.Code.Security;
+using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private CerebelloEntities db = new CerebelloEntities();
+        private CerebelloEntities db = null;
 
         [HttpGet]
         public ActionResult Login()
         {
             return View();
+        }
+
+        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
+        {
+            if (this.db == null)
+                this.db = new CerebelloEntities();
+
+            base.Initialize(requestContext);
         }
 
         /// <summary>
@@ -63,40 +73,62 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         [HttpPost]
         public ActionResult CreateAccount(CreateAccountViewModel registrationData)
         {
-            if (ModelState.IsValid)
+            // Normalizing name properties.
+            registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
+            registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
+
+            var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
+
+            // Note: Url identifier for the name of the user, don't need any verification.
+            // The name of the user must be unique inside a practice, not the entire database.
+
+            bool alreadyExistsPracticeId = db.Practices.Where(p => p.UrlIdentifier == urlPracticeId).Any();
+
+            if (alreadyExistsPracticeId)
             {
-                // Normalizing name properties.
-                registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
-                registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
+                this.ModelState.AddModelError(
+                    () => registrationData.PracticeName,
+                    "Nome do consultório já está em uso.");
+            }
 
-                var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
+            // Creating the new user.
+            User user;
+            var result = SecurityManager.CreateUser(out user, registrationData, db);
 
-                // Note: Url identifier for the name of the user, don't need any verification.
-                // The name of the user must be unique inside a practice, not the entire database.
+            if (result == CreateUserResult.UserNameAlreadyInUse)
+            {
+                this.ModelState.AddModelError(
+                    () => registrationData.UserName,
+                    // Todo: this message is also used in the App -> UsersController.
+                    "O nome de usuário não pode ser registrado pois já está em uso. "
+                    + "Note que nomes de usuário diferenciados por acentos, "
+                    + "maiúsculas/minúsculas ou por '.', '-' ou '_' não são permitidos."
+                    + "(Não é possível cadastrar 'MiguelAngelo' e 'miguel.angelo' no mesmo consultório.");
+            }
 
-                bool alreadyExistsPracticeId = db.Practices.Where(p => p.UrlIdentifier == urlPracticeId).Any();
+            if (result == CreateUserResult.CouldNotCreateUrlIdentifier)
+            {
+                this.ModelState.AddModelError(
+                    () => registrationData.FullName,
+                    // Todo: this message is also used in the AuthenticationController.
+                    "Quantidade máxima de homônimos excedida.");
+            }
 
-                if (alreadyExistsPracticeId)
-                {
-                    this.ModelState.AddModelError("PracticeName", "Nome do consultório já está em uso.");
-                }
-                else
-                {
-                    // Creating the new user.
-                    var user = SecurityManager.CreateUser(registrationData, db);
+            // Creating a new medical practice.
+            user.Practice = new Practice
+            {
+                Name = registrationData.PracticeName,
+                UrlIdentifier = urlPracticeId,
+                CreatedOn = DateTime.Now,
+            };
 
-                    // Creating a new medical practice.
-                    user.Practice = new Practice
-                    {
-                        Name = registrationData.PracticeName,
-                        UrlIdentifier = urlPracticeId,
-                        CreatedOn = DateTime.Now,
-                    };
+            db.Users.AddObject(user);
 
-                    db.Users.AddObject(user);
-                    db.SaveChanges();
-                    return RedirectToAction("createaccountcompleted");
-                }
+            // If the ModelState is still valid, then save objects to the database.
+            if (this.ModelState.IsValid)
+            {
+                db.SaveChanges();
+                return RedirectToAction("createaccountcompleted");
             }
 
             return View();

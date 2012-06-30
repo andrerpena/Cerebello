@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace CerebelloWebRole.Code
 {
@@ -96,9 +97,25 @@ namespace CerebelloWebRole.Code
                         break;
                 }
             }
+
             string result = stringBuilder.ToString();
-            return String.Join("_", result.Split(new char[] { '_' }
-                , StringSplitOptions.RemoveEmptyEntries)); // remove duplicate underscores
+            result = Regex.Replace(result, @"_+", "_"); // remove duplicate underscores
+            return result;
+        }
+
+        /// <summary>
+        /// Normalizes a UserName, to compare against other normalized user-names in the database.
+        /// This is a security measure, the UserName must be typed exactly the same as the user entered the first time,
+        /// but no other users may exist with the same normalized user-name.
+        /// This leaves a gap, that makes it more difficult to guess what the UserName of a person may be.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public static string NormalizeUserName(string userName)
+        {
+            var normalizedString = userName.ToLowerInvariant().Normalize(NormalizationForm.FormD);
+            var result = Regex.Replace(normalizedString, @"\W+", "");
+            return result;
         }
 
         /// <summary>

@@ -100,12 +100,13 @@ namespace Cerebello.Firestarter
             User user = new User()
             {
                 UserName = "masbicudo",
+                UserNameNormalized = "masbicudo",
                 LastActiveOn = DateTime.UtcNow,
                 Password = pwdHash,
                 PasswordSalt = pwdSalt,
                 Email = "masbicudo@gmail.com",
                 GravatarEmailHash = "b209e81c82e45437da92af24ddc97360",
-                Practice = practice
+                Practice = practice,
             };
 
             db.Users.AddObject(user);
@@ -178,13 +179,14 @@ namespace Cerebello.Firestarter
             User user = new User()
             {
                 UserName = "andrerpena",
+                UserNameNormalized = "andrerpena",
                 Person = person,
                 LastActiveOn = DateTime.UtcNow,
                 Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
                 PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
                 Email = "andrerpena@gmail.com",
                 GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
-                Practice = practice
+                Practice = practice,
             };
 
             db.Users.AddObject(user);
@@ -229,12 +231,13 @@ namespace Cerebello.Firestarter
             User user = new User()
             {
                 UserName = "martacura",
+                UserNameNormalized = "martacura",
                 Person = person,
                 LastActiveOn = DateTime.UtcNow,
                 PasswordSalt = "ELc81TnRE+Eb+e5/D69opg==",
                 Password = "lLqJ7FjmEQF7q4rxWIGnX+AXdqQ=",
                 Email = "martacura@gmail.com",
-                Practice = practice
+                Practice = practice,
             };
 
             db.Users.AddObject(user);
@@ -278,10 +281,11 @@ namespace Cerebello.Firestarter
             User user = new User()
             {
                 UserName = "milena",
+                UserNameNormalized = "milena",
                 LastActiveOn = DateTime.UtcNow,
                 PasswordSalt = pwdSalt,
                 Password = pwdHash,
-                Practice = practice
+                Practice = practice,
             };
 
             db.Users.AddObject(user);

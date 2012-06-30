@@ -12,6 +12,7 @@ using System.IO;
 using HtmlAgilityPack;
 using CerebelloWebRole.Code.Json;
 using System.Text.RegularExpressions;
+using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -131,10 +132,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 ViewBag.Title = "Novo usuário";
 
-            ViewBag.MedicalEntityOptions = new List<SelectListItem>() { 
-                new SelectListItem() { Value = "1", Text = "Opção 1" },
-                new SelectListItem() { Value = "2", Text = "Opção 2" }
-            };
+            ViewBag.MedicalSpecialty =
+                this.db.SYS_MedicalSpecialty
+                .ToList()
+                .Select(me => new List<SelectListItem>
+                {
+                    new SelectListItem { Value = me.Id.ToString(), Text = me.Name },
+                });
+
+            ViewBag.MedicalEntityOptions =
+                this.db.SYS_MedicalEntity
+                .ToList()
+                .Select(me => new List<SelectListItem>
+                {
+                    new SelectListItem { Value = me.Id.ToString(), Text = me.Name },
+                });
 
             return View("Edit", model);
         }
@@ -144,88 +156,86 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             bool isEditing = formModel.Id != null;
 
-            User user = null;
+            User user;
 
-            if (ModelState.IsValid)
+            // Normalizing the name of the person.
+            formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
+
+            if (isEditing)
             {
-                // Normalizing the name of the person.
-                formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
+                // Note: User name cannot be edited.
 
-                if (isEditing)
+                user = db.Users.Where(p => p.Id == formModel.Id).First();
+                user.Person.DateOfBirth = formModel.DateOfBirth;
+                user.Person.FullName = formModel.FullName;
+                user.Person.Gender = (short)formModel.Gender;
+            }
+            else
+            {
+                // UserName must not be null nor empty.
+                if (string.IsNullOrWhiteSpace(formModel.UserName))
                 {
-                    // Note: User name cannot be edited.
-
-                    user = db.Users.Where(p => p.Id == formModel.Id).First();
-                    user.Person.DateOfBirth = formModel.DateOfBirth;
-                    user.Person.FullName = formModel.FullName;
-                    user.Person.Gender = (short)formModel.Gender;
+                    this.ModelState.AddModelError(
+                        () => formModel.UserName,
+                        "Nome de usuário inválido.");
                 }
-                else
+
+                var firstEmail = formModel.Emails.FirstOrDefault();
+                string userEmailStr = firstEmail != null ? firstEmail.Address : null;
+
+                var loggedUser = this.GetCurrentUser();
+
+                // Looking for another user with the same UserName or Email.
+                var conflictingData = this.db.Users
+                    .Where(u => u.PracticeId == loggedUser.PracticeId)
+                    .Where(u => u.UserName == formModel.UserName || u.Email == userEmailStr)
+                    .Select(u => new { u.UserName, u.Email })
+                    .ToList();
+
+                // Verifying wich fields are conflicting: Email.
+#warning [Validate] Must validate all emails.
+                bool emailConflict = conflictingData.Any(c => c.Email == userEmailStr);
+
+                // For every new user we must create a login, with a common
+                // password used the first time the person logs in.
+                // The only action allowed with this password,
+                // is to change the password.
+                var userData = new CerebelloWebRole.Models.CreateAccountViewModel
                 {
-                    // UserName must not be null nor empty.
-                    if (string.IsNullOrWhiteSpace(formModel.UserName))
-                        this.ModelState.AddModelError(() => formModel.UserName, "Nome de usuário inválido.");
+                    UserName = formModel.UserName,
+                    Password = Constants.DEFAULT_PASSWORD,
+                    ConfirmPassword = Constants.DEFAULT_PASSWORD,
+                    DateOfBirth = formModel.DateOfBirth,
+                    EMail = userEmailStr,
+                    FullName = formModel.FullName,
+                    Gender = (short)formModel.Gender,
+                };
 
-                    var firstEmail = formModel.Emails.FirstOrDefault();
-                    string userEmailStr = firstEmail != null ? firstEmail.Address : null;
+                // Creating the new user.
+                // The user belongs to the same practice as the logged user.
+                var result = SecurityManager.CreateUser(out user, userData, this.db, loggedUser.PracticeId);
 
-                    var loggedUser = this.GetCurrentUser();
+                if (result == CreateUserResult.UserNameAlreadyInUse)
+                {
+                    this.ModelState.AddModelError(
+                        () => formModel.UserName,
+                        // Todo: this message is also used in the AuthenticationController.
+                        "O nome de usuário não pode ser registrado pois já está em uso. "
+                        + "Note que nomes de usuário diferenciados por acentos, "
+                        + "maiúsculas/minúsculas ou por '.', '-' ou '_' não são permitidos."
+                        + "(Não é possível cadastrar 'MiguelAngelo' e 'miguel.angelo' no mesmo consultório.");
+                }
 
-                    // Looking for another user with the same UserName or Email.
-                    var conflictingData = this.db.Users
-                        .Where(u => u.PracticeId == loggedUser.PracticeId)
-                        .Where(u => u.UserName == formModel.UserName || u.Email == userEmailStr)
-                        .Select(u => new { u.UserName, u.Email })
-                        .ToList();
-
-                    // Verifying wich fields are conflicting: UserName or Email.
-                    bool emailConflict = conflictingData.Any(c => c.Email == userEmailStr);
-                    bool nameConflict = conflictingData.Any(c => c.UserName == formModel.UserName);
-
-#warning Must validade all emails, cannot repeat emails in the same practice.
-
-                    if (nameConflict)
-                        this.ModelState.AddModelError(() => formModel.UserName, "Nome de usuário já existe.");
-
-                    if (this.ModelState.IsValid)
-                    {
-                        // First we see if the UrlIdentifier for this user already exists or not.
-                        // If it exists, we just appen the number 2 at the end and try again.
-                        var urlIdSrc = StringHelper.GenerateUrlIdentifier(formModel.FullName);
-                        var urlId = urlIdSrc;
-
-                        int cnt = 2;
-                        while (this.db.Users.Where(u => u.Person.UrlIdentifier == urlId).Any())
-                        {
-                            urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
-
-                            if (cnt > 20)
-                            {
-                                this.ModelState.AddModelError("FullName", "Quantidade de homônimos excedida.");
-                                break;
-                            }
-                        }
-
-                        // For every new user we must create a login, with a common
-                        // password used the first time the person logs in.
-                        // The only action allowed with this password,
-                        // is to change the password.
-                        user = SecurityManager.CreateUser(new CerebelloWebRole.Models.CreateAccountViewModel
-                        {
-                            UserName = formModel.UserName,
-                            Password = Constants.DEFAULT_PASSWORD,
-                            ConfirmPassword = Constants.DEFAULT_PASSWORD,
-                            DateOfBirth = formModel.DateOfBirth,
-                            EMail = userEmailStr,
-                            FullName = formModel.FullName,
-                            Gender = (short)formModel.Gender,
-                        }, this.db);
-
-                        // The new user belongs to the same practice as the logged user.
-                        user.PracticeId = loggedUser.PracticeId;
-                    }
+                if (result == CreateUserResult.CouldNotCreateUrlIdentifier)
+                {
+                    this.ModelState.AddModelError(
+                        () => formModel.FullName,
+                        // Todo: this message is also used in the AuthenticationController.
+                        "Quantidade máxima de homônimos excedida.");
                 }
             }
+
+#warning Must validade all emails, cannot repeat emails in the same practice.
 
             if (!formModel.IsMedic && !formModel.IsAdministrador && !formModel.IsSecretary)
                 this.ModelState.AddModelError("", "Usuário tem que ter pelo menos uma função: médico, administrador ou secretária.");
@@ -234,11 +244,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (formModel.IsMedic)
             {
                 if (string.IsNullOrWhiteSpace(formModel.MedicCRM))
-                    this.ModelState.AddModelError(() => formModel.MedicCRM, "CRM do médico é requerido.");
+                    this.ModelState.AddModelError(
+                        () => formModel.MedicCRM,
+                        "CRM do médico é requerido.");
+            }
+            else
+            {
+                // Removing validation error of medic properties, because this user is not a medic.
+                this.ModelState.Remove(() => formModel.MedicCRM);
+                this.ModelState.Remove(() => formModel.MedicalEntity);
+                this.ModelState.Remove(() => formModel.MedicalSpecialty);
             }
 
-            // Validating model again, because the previous code block adds model errors.
-            if (this.ModelState.IsValid)
+            if (user != null)
             {
                 user.Person.BirthPlace = formModel.BirthPlace;
                 user.Person.CPF = formModel.CPF;
@@ -257,8 +275,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         user.Doctor = db.Doctors.CreateObject();
 
                     user.Doctor.CRM = formModel.MedicCRM;
-                    //user.Doctor.MedicalSpecialtyId = formModel.MedicalSpecialty;
-                    //user.Doctor.MedicalEntityId = formModel.MedicalEntity;
+                    user.Doctor.MedicalSpecialtyId = formModel.MedicalSpecialty ?? 0;
+                    user.Doctor.MedicalEntityId = formModel.MedicalEntity ?? 0;
                 }
                 else
                 {
@@ -313,7 +331,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     },
                     (m) => this.db.Emails.DeleteObject(m)
                 );
+            }
 
+            // If ModelState is still valid, save the objects to the database.
+            if (this.ModelState.IsValid)
+            {
                 // Saving all the changes.
                 db.SaveChanges();
 

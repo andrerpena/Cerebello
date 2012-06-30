@@ -8527,7 +8527,8 @@ namespace Cerebello.Model
         /// <param name="personId">Initial value of the PersonId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="userName">Initial value of the UserName property.</param>
-        public static User CreateUser(global::System.Int32 id, global::System.String password, global::System.String passwordSalt, global::System.Int32 personId, global::System.Int32 practiceId, global::System.String userName)
+        /// <param name="userNameNormalized">Initial value of the UserNameNormalized property.</param>
+        public static User CreateUser(global::System.Int32 id, global::System.String password, global::System.String passwordSalt, global::System.Int32 personId, global::System.Int32 practiceId, global::System.String userName, global::System.String userNameNormalized)
         {
             User user = new User();
             user.Id = id;
@@ -8536,6 +8537,7 @@ namespace Cerebello.Model
             user.PersonId = personId;
             user.PracticeId = practiceId;
             user.UserName = userName;
+            user.UserNameNormalized = userNameNormalized;
             return user;
         }
 
@@ -8832,6 +8834,30 @@ namespace Cerebello.Model
         private global::System.String _UserName;
         partial void OnUserNameChanging(global::System.String value);
         partial void OnUserNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String UserNameNormalized
+        {
+            get
+            {
+                return _UserNameNormalized;
+            }
+            set
+            {
+                OnUserNameNormalizedChanging(value);
+                ReportPropertyChanging("UserNameNormalized");
+                _UserNameNormalized = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("UserNameNormalized");
+                OnUserNameNormalizedChanged();
+            }
+        }
+        private global::System.String _UserNameNormalized;
+        partial void OnUserNameNormalizedChanging(global::System.String value);
+        partial void OnUserNameNormalizedChanged();
 
         #endregion
     

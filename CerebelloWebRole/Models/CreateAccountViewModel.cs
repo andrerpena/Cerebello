@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Validation;
 
 namespace CerebelloWebRole.Models
 {
@@ -52,6 +53,7 @@ namespace CerebelloWebRole.Models
         /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Nome de usuário")]
+        [UserNameAttribute]
         public string UserName { get; set; }
 
         /// <summary>

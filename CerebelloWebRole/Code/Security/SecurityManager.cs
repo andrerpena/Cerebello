@@ -14,7 +14,6 @@ namespace CerebelloWebRole.Code
 {
     public class SecurityManager
     {
-
         public static void Logout()
         {
             FormsAuthentication.SignOut();
@@ -29,24 +28,63 @@ namespace CerebelloWebRole.Code
         /// Creates a new user and adds it to the storage object context.
         /// </summary>
         /// <param name="registrationData">Object containing informations about the user to be created.</param>
-        /// <param name="entities">Storage object context used to add the new user. It won't be saved, just changed.</param>
+        /// <param name="db">Storage object context used to add the new user. It won't be saved, just changed.</param>
         /// <returns>The new User object.</returns>
-        public static User CreateUser(CreateAccountViewModel registrationData, CerebelloEntities entities)
+        public static CreateUserResult CreateUser(out User createdUser, CreateAccountViewModel registrationData, CerebelloEntities db, int? practiceId = null)
         {
+            // Password salt and hash.
             string passwordSalt = CipherHelper.GenerateSalt();
             var passwordHash = CipherHelper.Hash(registrationData.Password, passwordSalt);
 
-            User user = new User()
+            // Normalizing user name.
+            // The normalized user-name will be used to discover if another user with the same user-name already exists.
+            // This is a security measure. This makes it very difficult to guess what a person's user name may be.
+            // You can only login with the exact user name that you provided the first time,
+            // but if someone tries to register a similar user name just to know if that one is the one you used...
+            // the attacker won't be sure... because it could be any other variation.
+            // e.g. I register user-name "Miguel.Angelo"... the attacker tries to register "miguelangelo", he'll be denied...
+            // but that doesn't mean the exact user-name "miguelangelo" is the one I used, in fact it is not.
+            var normalizedUserName = StringHelper.NormalizeUserName(registrationData.UserName);
+
+            bool isUserNameAlreadyInUse =
+                practiceId != null &&
+                db.Users.Where(u => u.UserNameNormalized == normalizedUserName && u.PracticeId == practiceId).Any();
+
+            if (isUserNameAlreadyInUse)
+            {
+                createdUser = null;
+                return CreateUserResult.UserNameAlreadyInUse;
+            }
+
+            // Creating an unique UrlIdentifier for this user.
+            var urlIdSrc = StringHelper.GenerateUrlIdentifier(registrationData.FullName);
+            var urlId = urlIdSrc;
+
+            int cnt = 2;
+            while (db.Users.Where(u => u.Person.UrlIdentifier == urlId).Any())
+            {
+                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
+
+                if (cnt > 20)
+                {
+                    createdUser = null;
+                    return CreateUserResult.CouldNotCreateUrlIdentifier;
+                }
+            }
+
+            // Creating user.
+            createdUser = new User()
             {
                 Person = new Person()
                 {
                     DateOfBirth = registrationData.DateOfBirth,
                     Gender = registrationData.Gender,
                     FullName = registrationData.FullName,
-                    UrlIdentifier = StringHelper.GenerateUrlIdentifier(registrationData.FullName),
+                    UrlIdentifier = urlId,
                     CreatedOn = DateTime.Now,
                 },
                 UserName = registrationData.UserName,
+                UserNameNormalized = normalizedUserName,
                 PasswordSalt = passwordSalt,
                 Password = passwordHash,
                 LastActiveOn = DateTime.Now,
@@ -55,10 +93,14 @@ namespace CerebelloWebRole.Code
 
             // E-mail is optional.
             if (!string.IsNullOrEmpty(registrationData.EMail))
-                user.Person.Emails.Add(new Email() { Address = registrationData.EMail });
+                createdUser.Person.Emails.Add(new Email() { Address = registrationData.EMail });
 
-            entities.Users.AddObject(user);
-            return user;
+            if (practiceId != null)
+                createdUser.PracticeId = (int)practiceId;
+
+            db.Users.AddObject(createdUser);
+
+            return CreateUserResult.Ok;
         }
 
         public static bool Login(LoginViewModel loginModel, CerebelloEntities entities)
