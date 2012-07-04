@@ -14,5 +14,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public string MedicalSpecialty { get; set; }
         public string MedicalEntity { get; set; }
         public string ImageUrl { get; set; }
+
+        public DateTime? NextAvailableTime { get; set; }
     }
 }

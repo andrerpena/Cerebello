@@ -108,8 +108,11 @@
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
+    <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
+    <Compile Include="Areas\App\Models\ExamViewModel.cs" />
+    <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
@@ -208,7 +211,7 @@
     <Compile Include="Code\Helpers\HttpHelper.cs" />
     <Compile Include="Code\Helpers\ImageHelper.cs" />
     <Compile Include="Code\Helpers\MemberExpressionHelper.cs" />
-    <Compile Include="Code\Helpers\PLKExpressionHelper.cs" />
+    <Compile Include="Code\Helpers\ExpressionHelper.cs" />
     <Compile Include="Code\Helpers\StringHelper.cs" />
     <Compile Include="Code\Helpers\TagsHelper.cs" />
     <Compile Include="Code\Helpers\UrlBuilder.cs" />
@@ -526,6 +529,8 @@
     <Content Include="Areas\App\Views\Users\Edit.cshtml" />
     <Content Include="Areas\App\Views\Users\Details.cshtml" />
     <Content Include="Areas\App\Views\Users\ChangePassword.cshtml" />
+    <Content Include="Areas\App\Views\Exams\Edit.cshtml" />
+    <Content Include="Areas\App\Views\Exams\Details.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />

@@ -56,6 +56,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Administrator", "Administrator", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Administrator), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Doctor_MedicalEntity1", "SYS_MedicalEntity", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalEntity), "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Doctor), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Doctor_MedicalSpecialty1", "SYS_MedicalSpecialty", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalSpecialty), "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Doctor), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationRequest_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "ExaminationRequest", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationRequest), true)]
 
 #endregion
 
@@ -682,6 +683,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<SYS_Holliday> _SYS_Holliday;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<ExaminationRequest> ExaminationRequests
+        {
+            get
+            {
+                if ((_ExaminationRequests == null))
+                {
+                    _ExaminationRequests = base.CreateObjectSet<ExaminationRequest>("ExaminationRequests");
+                }
+                return _ExaminationRequests;
+            }
+        }
+        private ObjectSet<ExaminationRequest> _ExaminationRequests;
 
         #endregion
         #region AddTo Methods
@@ -972,6 +989,14 @@ namespace Cerebello.Model
         public void AddToSYS_Holliday(SYS_Holliday sYS_Holliday)
         {
             base.AddObject("SYS_Holliday", sYS_Holliday);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the ExaminationRequests EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToExaminationRequests(ExaminationRequest examinationRequest)
+        {
+            base.AddObject("ExaminationRequests", examinationRequest);
         }
 
         #endregion
@@ -4322,6 +4347,180 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="ExaminationRequest")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class ExaminationRequest : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new ExaminationRequest object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="patientId">Initial value of the PatientId property.</param>
+        /// <param name="text">Initial value of the Text property.</param>
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static ExaminationRequest CreateExaminationRequest(global::System.Int32 id, global::System.Int32 patientId, global::System.String text, global::System.DateTime createdOn)
+        {
+            ExaminationRequest examinationRequest = new ExaminationRequest();
+            examinationRequest.Id = id;
+            examinationRequest.PatientId = patientId;
+            examinationRequest.Text = text;
+            examinationRequest.CreatedOn = createdOn;
+            return examinationRequest;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PatientId
+        {
+            get
+            {
+                return _PatientId;
+            }
+            set
+            {
+                OnPatientIdChanging(value);
+                ReportPropertyChanging("PatientId");
+                _PatientId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PatientId");
+                OnPatientIdChanged();
+            }
+        }
+        private global::System.Int32 _PatientId;
+        partial void OnPatientIdChanging(global::System.Int32 value);
+        partial void OnPatientIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Text
+        {
+            get
+            {
+                return _Text;
+            }
+            set
+            {
+                OnTextChanging(value);
+                ReportPropertyChanging("Text");
+                _Text = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Text");
+                OnTextChanged();
+            }
+        }
+        private global::System.String _Text;
+        partial void OnTextChanging(global::System.String value);
+        partial void OnTextChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ExaminationRequest_Patient", "Patient")]
+        public Patient Patient
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_ExaminationRequest_Patient", "Patient").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_ExaminationRequest_Patient", "Patient").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Patient> PatientReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_ExaminationRequest_Patient", "Patient");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_ExaminationRequest_Patient", "Patient", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="HealthEnsurance")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -6261,6 +6460,28 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ExaminationRequest_Patient", "ExaminationRequest")]
+        public EntityCollection<ExaminationRequest> ExaminationRequests
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ExaminationRequest>("Cerebello.Model.FK_ExaminationRequest_Patient", "ExaminationRequest");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ExaminationRequest>("Cerebello.Model.FK_ExaminationRequest_Patient", "ExaminationRequest", value);
+                }
+            }
+        }
 
         #endregion
     }
@@ -7708,11 +7929,13 @@ namespace Cerebello.Model
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
-        public static SYS_Holliday CreateSYS_Holliday(global::System.Int32 id, global::System.String name)
+        /// <param name="monthAndDay">Initial value of the MonthAndDay property.</param>
+        public static SYS_Holliday CreateSYS_Holliday(global::System.Int32 id, global::System.String name, global::System.Int32 monthAndDay)
         {
             SYS_Holliday sYS_Holliday = new SYS_Holliday();
             sYS_Holliday.Id = id;
             sYS_Holliday.Name = name;
+            sYS_Holliday.MonthAndDay = monthAndDay;
             return sYS_Holliday;
         }
 
@@ -7771,28 +7994,28 @@ namespace Cerebello.Model
         partial void OnNameChanged();
     
         /// <summary>
-        /// No Metadata Documentation available.
+        /// Base 1 month of year * 100 + base 1 day of month.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.DateTime> Date
+        public global::System.Int32 MonthAndDay
         {
             get
             {
-                return _Date;
+                return _MonthAndDay;
             }
             set
             {
-                OnDateChanging(value);
-                ReportPropertyChanging("Date");
-                _Date = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("Date");
-                OnDateChanged();
+                OnMonthAndDayChanging(value);
+                ReportPropertyChanging("MonthAndDay");
+                _MonthAndDay = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MonthAndDay");
+                OnMonthAndDayChanged();
             }
         }
-        private Nullable<global::System.DateTime> _Date;
-        partial void OnDateChanging(Nullable<global::System.DateTime> value);
-        partial void OnDateChanged();
+        private global::System.Int32 _MonthAndDay;
+        partial void OnMonthAndDayChanging(global::System.Int32 value);
+        partial void OnMonthAndDayChanged();
 
         #endregion
     

@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using CerebelloWebRole.Code;
-using CerebelloWebRole.Models;
-using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Controllers;
 using Cerebello.Model;
-using System.Text.RegularExpressions;
-using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
-using System.Data.Objects;
-using System.Threading;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -25,7 +19,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var startAsDateTime = origin.AddSeconds(start);
             var endAsDateTime = origin.AddSeconds(end);
 
-            var appointments = (from a in db.Appointments.Include("Patient").Include("Patient.Person") where a.Start >= startAsDateTime && a.End <= endAsDateTime select a).ToList();
+            var appointments =
+                this.db.Appointments
+                .Include("Patient")
+                .Include("Patient.Person")
+                .Where(a => a.DoctorId == this.Doctor.Id)
+                .Where(a => a.Start >= startAsDateTime && a.End <= endAsDateTime)
+                .ToList();
 
             return this.Json((from a in appointments
                               select new ScheduleEventViewModel()
@@ -97,18 +97,75 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(DateTime date, string start, string end)
+        public ActionResult Create(DateTime? date, string start, string end)
         {
-            var startTime = date + DateTimeHelper.GetTimeSpan(start);
-            var endTime = date + DateTimeHelper.GetTimeSpan(end);
+            var now = DateTimeHelper.GetTimeZoneNow();
+            DateTime date2 = date ?? now.Date;
 
+            var slots = GetDaySlots(date2, this.Doctor);
+            var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
+
+            // Getting start date and time.
+            DateTime startTime =
+                string.IsNullOrEmpty(start) ?
+                now :
+                date2 + DateTimeHelper.GetTimeSpan(start);
+
+            {
+                var min = slots.Min(s => (s.Item1 > startTime ? s.Item1 - startTime : startTime - s.Item1));
+                var findMin = slots.Where(s => (s.Item1 > startTime ? s.Item1 - startTime : startTime - s.Item1) == min).FirstOrDefault();
+                startTime = findMin.Item1;
+            }
+
+            start = startTime.ToString("hh:mm");
+
+            // Getting end date and time.
+            DateTime endTime =
+                string.IsNullOrEmpty(end) ?
+                startTime + slotDuration:
+                date2 + DateTimeHelper.GetTimeSpan(end);
+
+            if (endTime - startTime < slotDuration)
+                endTime = startTime + slotDuration;
+
+            {
+                var min = slots.Min(s => (s.Item2 > endTime ? s.Item2 - endTime : endTime - s.Item2));
+                var findMin = slots.Where(s => (s.Item2 > endTime ? s.Item2 - endTime : endTime - s.Item2) == min).FirstOrDefault();
+                endTime = findMin.Item2;
+            }
+
+            end = endTime.ToString("hh:mm");
+
+            // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
-            viewModel.Date = date;
+            viewModel.Date = date2;
             viewModel.Start = start;
             viewModel.End = end;
             viewModel.DoctorId = this.Doctor.Id;
-            viewModel.DateSpelled = DateTimeHelper.GetDayOfWeekAsString(date) + ", " + DateTimeHelper.ConvertToRelative(date, DateTimeHelper.GetTimeZoneNow(), DateTimeHelper.RelativeDateOptions.IncludePrefixes | DateTimeHelper.RelativeDateOptions.IncludeSuffixes | DateTimeHelper.RelativeDateOptions.ReplaceToday | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
-            viewModel.IsTimeValid = this.ValidateTime(date, start, end) && this.IsTimeAvailable(startTime, endTime);
+            viewModel.DateSpelled =
+                DateTimeHelper.GetDayOfWeekAsString(date2) + ", "
+                + DateTimeHelper.ConvertToRelative(date2,
+                    DateTimeHelper.GetTimeZoneNow(),
+                    DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                    | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                    | DateTimeHelper.RelativeDateOptions.ReplaceToday
+                    | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+
+            var isTimeValid = ValidateTime(this.db, this.Doctor, date2, start, end, this.ModelState);
+
+            var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments);
+            if (!isTimeAvailable)
+                this.ModelState.AddModelError(() => viewModel.Date, "A data e hora já está marcada para outro compromisso.");
+
+            // Flag that tells whether the time and date are valid ot not.
+            viewModel.IsTimeValid = isTimeValid && isTimeAvailable;
+
+            // Setting the error message to display near the date and time configurations.
+            var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => viewModel.Date);
+            if (dateAndTimeErrors.Errors.Any())
+            {
+                viewModel.TimeValidationMessage = dateAndTimeErrors.Errors.First().ErrorMessage;
+            }
 
             ModelState.Clear();
 
@@ -178,7 +235,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // verify if appoitment hours are consistent
             if (!string.IsNullOrEmpty(formModel.Start) && !string.IsNullOrEmpty(formModel.End))
-                formModel.IsTimeValid = this.ValidateTime(formModel.Date, formModel.Start, formModel.End) && this.IsTimeAvailable(startTime, endTime, patientId: formModel.PatientId);
+            {
+                var isTimeValid = ValidateTime(this.db, this.Doctor, formModel.Date, formModel.Start, formModel.End, this.ModelState);
+
+                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, formModel.PatientId);
+                if (!isTimeAvailable)
+                    this.ModelState.AddModelError(() => formModel.Date, "A data e hora já está marcada para outro compromisso.");
+
+                // Flag that tells whether the time and date are valid ot not.
+                formModel.IsTimeValid = isTimeValid && isTimeAvailable;
+
+                // Setting the error message to display near the date and time configurations.
+                var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => formModel.Date);
+                if (dateAndTimeErrors.Errors.Any())
+                {
+                    formModel.TimeValidationMessage = dateAndTimeErrors.Errors.First().ErrorMessage;
+                }
+            }
 
             if (ModelState.IsValid)
             {
@@ -251,7 +324,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="day"></param>
         /// <returns></returns>
-        private List<Tuple<DateTime, DateTime>> GetDaySlots(DateTime day)
+        private static List<Tuple<DateTime, DateTime>> GetDaySlots(DateTime day, Doctor doctor)
         {
             DateTime todayBeginning = new DateTime(day.Year, day.Month, day.Day);
 
@@ -263,60 +336,60 @@ namespace CerebelloWebRole.Areas.App.Controllers
             switch (day.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
-                    if (!this.Doctor.CFG_Schedule.Sunday)
+                    if (!doctor.CFG_Schedule.Sunday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.SundayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.SundayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.SundayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.SundayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.SundayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.SundayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.SundayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.SundayLunchEndTime;
                     break;
                 case DayOfWeek.Monday:
-                    if (!this.Doctor.CFG_Schedule.Monday)
+                    if (!doctor.CFG_Schedule.Monday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.MondayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.MondayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.MondayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.MondayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.MondayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.MondayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.MondayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.MondayLunchEndTime;
                     break;
                 case DayOfWeek.Tuesday:
-                    if (!this.Doctor.CFG_Schedule.Tuesday)
+                    if (!doctor.CFG_Schedule.Tuesday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.TuesdayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.TuesdayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.TuesdayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.TuesdayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.TuesdayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.TuesdayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.TuesdayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.TuesdayLunchEndTime;
                     break;
                 case DayOfWeek.Wednesday:
-                    if (!this.Doctor.CFG_Schedule.Wednesday)
+                    if (!doctor.CFG_Schedule.Wednesday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.WednesdayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.WednesdayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.WednesdayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.WednesdayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.WednesdayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.WednesdayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.WednesdayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.WednesdayLunchEndTime;
                     break;
                 case DayOfWeek.Thursday:
-                    if (!this.Doctor.CFG_Schedule.Thursday)
+                    if (!doctor.CFG_Schedule.Thursday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.ThursdayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.ThursdayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.ThursdayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.ThursdayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.ThursdayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.ThursdayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.ThursdayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.ThursdayLunchEndTime;
                     break;
                 case DayOfWeek.Friday:
-                    if (!this.Doctor.CFG_Schedule.Friday)
+                    if (!doctor.CFG_Schedule.Friday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.FridayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.FridayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.FridayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.FridayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.FridayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.FridayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.FridayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.FridayLunchEndTime;
                     break;
                 case DayOfWeek.Saturday:
-                    if (!this.Doctor.CFG_Schedule.Saturday)
+                    if (!doctor.CFG_Schedule.Saturday)
                         return new List<Tuple<DateTime, DateTime>>();
-                    workdayStartTimeAsString = this.Doctor.CFG_Schedule.SaturdayWorkdayStartTime;
-                    workdayEndTimeAsString = this.Doctor.CFG_Schedule.SaturdayWorkdayEndTime;
-                    lunchStartTimeAsString = this.Doctor.CFG_Schedule.SaturdayLunchStartTime;
-                    lunchEndTimeAsString = this.Doctor.CFG_Schedule.SaturdayLunchEndTime;
+                    workdayStartTimeAsString = doctor.CFG_Schedule.SaturdayWorkdayStartTime;
+                    workdayEndTimeAsString = doctor.CFG_Schedule.SaturdayWorkdayEndTime;
+                    lunchStartTimeAsString = doctor.CFG_Schedule.SaturdayLunchStartTime;
+                    lunchEndTimeAsString = doctor.CFG_Schedule.SaturdayLunchEndTime;
                     break;
             }
 
@@ -330,7 +403,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             List<Tuple<DateTime, DateTime>> result = new List<Tuple<DateTime, DateTime>>();
 
             var time = workdayStartTime;
-            var appointmentMinutes = this.Doctor.CFG_Schedule.AppointmentTime;
+            var appointmentMinutes = doctor.CFG_Schedule.AppointmentTime;
 
             while (true)
             {
@@ -357,33 +430,70 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult FindNextFreeTime(string date, string time)
         {
-            // the reference time begins by today with no 
+            var doctor = this.Doctor;
+            var db = this.db;
 
+            var slot = FindNextFreeTime(db, doctor, date, time);
+            return this.Json(new
+            {
+                date = slot.Item1.ToString("dd/MM/yyyy"),
+                start = slot.Item1.ToString("HH:mm"),
+                end = slot.Item2.ToString("HH:mm"),
+                dateSpelled = DateTimeHelper.GetDayOfWeekAsString(slot.Item1) + ", "
+                + DateTimeHelper.ConvertToRelative(
+                    slot.Item1,
+                    DateTimeHelper.GetTimeZoneNow(),
+                    DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                    | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                    | DateTimeHelper.RelativeDateOptions.ReplaceToday
+                    | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow)
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public static Tuple<DateTime, DateTime> FindNextFreeTime(CerebelloEntities db, Doctor doctor, string date = null, string time = null)
+        {
             DateTime startingFrom;
 
+            // Determining the date and time to start scanning for a free time slot.
+            var now = DateTimeHelper.GetTimeZoneNow();
             if (!string.IsNullOrEmpty(date))
-                startingFrom = DateTime.Parse(date) + (string.IsNullOrEmpty(time) ? new TimeSpan(0, 0, 0) : DateTimeHelper.GetTimeSpan(time));
+            {
+                startingFrom = DateTime.Parse(date) + (string.IsNullOrEmpty(time) ?
+                    new TimeSpan(0, 0, 0) :
+                    DateTimeHelper.GetTimeSpan(time));
+
+                if (now > startingFrom)
+                    startingFrom = now;
+            }
             else
-                startingFrom = DateTimeHelper.GetTimeZoneNow();
+                startingFrom = now;
 
             var currentDateStart = startingFrom.Date;
-            var currentDateEnd = currentDateStart.AddDays(1).AddMinutes(-1);
-            // take all appointments of that day 
+            var currentDateEnd = currentDateStart.AddDays(1).Date;
 
             while (true)
             {
-                var appointments = this.db.Appointments.Where(a => a.Start >= currentDateStart && a.End <= currentDateEnd).OrderBy(a => a.Start).ToList();
-                var slots = this.GetDaySlots(currentDateStart).Where(s => s.Item1 >= startingFrom);
+                // take all appointments of that day
+                var appointments = db.Appointments
+                    .Where(a => a.DoctorId == doctor.Id)
+                    .Where(a => a.End >= currentDateStart && a.Start <= currentDateEnd)
+                    .OrderBy(a => a.Start)
+                    .ToList();
 
+                var slots = GetDaySlots(currentDateStart, doctor).Where(s => s.Item1 >= startingFrom);
+
+                // Looking for available slots of time in the current day.
                 foreach (var slot in slots)
                 {
-                    if (!this.IsTimeAvailable(slot.Item1, slot.Item2, appointments))
+                    if (!IsTimeAvailable(slot.Item1, slot.Item2, appointments))
                         continue;
-                    return this.Json(new { date = slot.Item1.ToString("dd/MM/yyyy"), start = slot.Item1.ToString("HH:mm"), end = slot.Item2.ToString("HH:mm"), dateSpelled = DateTimeHelper.GetDayOfWeekAsString(slot.Item1) + ", " + DateTimeHelper.ConvertToRelative(slot.Item1, DateTimeHelper.GetTimeZoneNow(), DateTimeHelper.RelativeDateOptions.IncludePrefixes | DateTimeHelper.RelativeDateOptions.IncludeSuffixes | DateTimeHelper.RelativeDateOptions.ReplaceToday | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow) }, JsonRequestBehavior.AllowGet);
+
+                    return slot;
                 };
 
-                currentDateStart = currentDateStart.AddDays(1);
-                currentDateEnd = currentDateStart.AddDays(1).AddMinutes(-1);
+                // Moving to the next day.
+                currentDateStart = currentDateEnd;
+                currentDateEnd = currentDateStart.AddDays(1).Date;
             }
         }
 
@@ -397,36 +507,72 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
 
-        private bool ValidateTime(DateTime date, string start, string end)
+        private static bool ValidateTime(CerebelloEntities db, Doctor doctor, DateTime date, string startTimeText, string endTimeText, ModelStateDictionary modelState)
         {
-            if (string.IsNullOrEmpty(start) || string.IsNullOrEmpty(end))
+            if (string.IsNullOrEmpty(startTimeText) || string.IsNullOrEmpty(endTimeText))
                 return false;
 
             bool hasError = false;
 
-            var startRegexMatch = TimeDataTypeAttribute.Regex.Match(start);
-            var endRegexMatch = TimeDataTypeAttribute.Regex.Match(end);
+            var startRegexMatch = TimeDataTypeAttribute.Regex.Match(startTimeText);
+            var endRegexMatch = TimeDataTypeAttribute.Regex.Match(endTimeText);
 
             int integerHourStart = int.Parse(startRegexMatch.Groups[1].Value) * 100 + int.Parse(startRegexMatch.Groups[2].Value);
             int integerHourEnd = int.Parse(endRegexMatch.Groups[1].Value) * 100 + int.Parse(endRegexMatch.Groups[2].Value);
 
-            var startDate = date.Date + DateTimeHelper.GetTimeSpan(start);
+            var monthAndDay = date.Month * 100 + date.Day;
+
+            // Validation: cannot be holliday.
+            var isHolliday = db.SYS_Holliday.Where(h => h.MonthAndDay == monthAndDay).Any();
+            if (isHolliday)
+            {
+                modelState.AddModelError<AppointmentViewModel>(
+                    model => model.Date,
+                    "O campo '{0}' é inválido. Este dia é um feriado.");
+                hasError = true;
+            }
+
+            //var doctor = this.Doctor;
+
+            //// Validation: cannot be day-off.
+            //var isDayOff = this.db.DayOffs
+            //    .Where(d => d.DoctorId == doctor.Id)
+            //    .Where(d => d.StartDate <= date && date <= d.EndDate)
+            //    .Any();
+
+            //if (isDayOff)
+            //{
+            //    modelState.AddModelError<AppointmentViewModel>(
+            //        model => model.Date,
+            //        "O campo '{0}' é inválido. Este dia está no intervalo de férias do médico.");
+            //    hasError = true;
+            //}
+
+            // Validation: cannot set an appointment data to the past.
+            var startDate = date.Date + DateTimeHelper.GetTimeSpan(startTimeText);
             if (startDate < DateTimeHelper.GetTimeZoneNow())
             {
-                this.ModelState.AddModelError<AppointmentViewModel>(model => model.Date, "O campo '{0}' é inválido. Não é permitido marcar uma consulta para o passado");
+                modelState.AddModelError<AppointmentViewModel>(
+                    model => model.Date,
+                    "O campo '{0}' é inválido. Não é permitido marcar uma consulta para o passado.");
                 hasError = true;
             }
 
-            // validate
+            // Validation: end time cannot be the same as start time.
             if (integerHourStart == integerHourEnd)
             {
-                this.ModelState.AddModelError<AppointmentViewModel>(model => model.End, "O campo '{0}' não pode ser igual ao horário de início");
+                modelState.AddModelError<AppointmentViewModel>(
+                    model => model.End,
+                    "O campo '{0}' não pode ser igual ao horário de início.");
                 hasError = true;
             }
 
+            // Validation: end time must come after the start time.
             else if (integerHourStart > integerHourEnd)
             {
-                this.ModelState.AddModelError<AppointmentViewModel>(model => model.End, "O campo '{0}' não pode ser menor que o horário de início");
+                modelState.AddModelError<AppointmentViewModel>(
+                    model => model.End,
+                    "O campo '{0}' não pode ser menor que o horário de início.");
                 hasError = true;
             }
 
@@ -434,7 +580,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 if (string.IsNullOrEmpty(workdayStart) || string.IsNullOrEmpty(workdayEnd))
                 {
-                    this.ModelState.AddModelError<AppointmentViewModel>(model => model.Date, "O campo '{0}' é inválido. Não existem configurações de horário para esta data");
+                    modelState.AddModelError<AppointmentViewModel>(
+                        model => model.Date,
+                        "O campo '{0}' é inválido. Não existem configurações de horário para esta data.");
                     hasError = true;
                 }
                 else
@@ -447,12 +595,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     if (integerHourStart < dbIntegerHourStart)
                     {
-                        this.ModelState.AddModelError<AppointmentViewModel>(model => model.Start, "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho");
+                        modelState.AddModelError<AppointmentViewModel>(
+                            model => model.Start,
+                            "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
                         hasError = true;
                     }
                     if (integerHourEnd > dbIntegerHourEnd)
                     {
-                        this.ModelState.AddModelError<AppointmentViewModel>(model => model.End, "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho");
+                        modelState.AddModelError<AppointmentViewModel>(
+                            model => model.End,
+                            "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
                         hasError = true;
                     }
                 }
@@ -461,37 +613,39 @@ namespace CerebelloWebRole.Areas.App.Controllers
             switch (date.Date.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.SundayWorkdayStartTime, this.Doctor.CFG_Schedule.SundayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.SundayWorkdayStartTime, doctor.CFG_Schedule.SundayWorkdayEndTime);
                     break;
                 case DayOfWeek.Monday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.MondayWorkdayStartTime, this.Doctor.CFG_Schedule.MondayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.MondayWorkdayStartTime, doctor.CFG_Schedule.MondayWorkdayEndTime);
                     break;
                 case DayOfWeek.Tuesday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.TuesdayWorkdayStartTime, this.Doctor.CFG_Schedule.TuesdayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.TuesdayWorkdayStartTime, doctor.CFG_Schedule.TuesdayWorkdayEndTime);
                     break;
                 case DayOfWeek.Wednesday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.WednesdayWorkdayStartTime, this.Doctor.CFG_Schedule.WednesdayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.WednesdayWorkdayStartTime, doctor.CFG_Schedule.WednesdayWorkdayEndTime);
                     break;
                 case DayOfWeek.Thursday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.ThursdayWorkdayStartTime, this.Doctor.CFG_Schedule.ThursdayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.ThursdayWorkdayStartTime, doctor.CFG_Schedule.ThursdayWorkdayEndTime);
                     break;
                 case DayOfWeek.Friday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.FridayWorkdayStartTime, this.Doctor.CFG_Schedule.FridayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.FridayWorkdayStartTime, doctor.CFG_Schedule.FridayWorkdayEndTime);
                     break;
                 case DayOfWeek.Saturday:
-                    CheckModelTimingError(this.Doctor.CFG_Schedule.SaturdayWorkdayStartTime, this.Doctor.CFG_Schedule.SaturdayWorkdayEndTime);
+                    CheckModelTimingError(doctor.CFG_Schedule.SaturdayWorkdayStartTime, doctor.CFG_Schedule.SaturdayWorkdayEndTime);
                     break;
             }
 
             return !hasError;
         }
 
-        public bool IsTimeAvailable(DateTime startTime, DateTime endTime, IEnumerable<Appointment> appointments = null, int? patientId = null)
+        public static bool IsTimeAvailable(DateTime startTime, DateTime endTime, IEnumerable<Appointment> appointments, int? patientId = null)
         {
-            if (appointments == null)
-                appointments = db.Appointments;
-
-            var query = from a in appointments where (a.Start <= startTime && a.End > startTime) || (a.Start < endTime && a.End >= endTime) || (a.Start > startTime && a.End < endTime) || (a.Start == startTime && a.End == endTime) select a;
+            var query = from a in appointments
+                        where (a.Start <= startTime && a.End > startTime)
+                        || (a.Start < endTime && a.End >= endTime)
+                        || (a.Start > startTime && a.End < endTime)
+                        || (a.Start == startTime && a.End == endTime)
+                        select a;
 
             if (patientId != null)
                 query = query.Where(a => a.PatientId != patientId);
@@ -518,18 +672,34 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var dateParsed = DateTime.Parse(date);
 
-                if (ValidateTime(DateTime.Parse(date), start, end))
-                {
-                    var startTime = dateParsed + DateTimeHelper.GetTimeSpan(start);
-                    var endTime = dateParsed + DateTimeHelper.GetTimeSpan(end);
+                var isTimeValid = ValidateTime(this.db, this.Doctor, DateTime.Parse(date), start, end, this.ModelState);
 
-                    if (this.IsTimeAvailable(startTime, endTime, patientId: patientId))
-                        return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                    else
-                        error = "O horário já possui pelo menos uma consulta agendada";
+                var startTime = dateParsed + DateTimeHelper.GetTimeSpan(start);
+                var endTime = dateParsed + DateTimeHelper.GetTimeSpan(end);
+
+                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, patientId);
+                if (!isTimeAvailable)
+                {
+                    this.ModelState.AddModelError<AppointmentViewModel>(
+                        m => m.Date,
+                        "A data e hora já está marcada para outro compromisso.");
+                }
+
+                // Setting the error message to display near the date and time configurations.
+                var dateAndTimeErrors = this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Date);
+
+                if (isTimeValid && isTimeAvailable)
+                {
+                    return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                }
+                else if (dateAndTimeErrors.Errors.Any())
+                {
+                    error = dateAndTimeErrors.Errors.First().ErrorMessage;
                 }
                 else
-                    error = "O horário não é válido";
+                {
+                    error = "O horário não é válido.";
+                }
             }
 
             return this.Json(new { success = false, text = error }, JsonRequestBehavior.AllowGet);

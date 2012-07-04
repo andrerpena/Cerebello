@@ -43,6 +43,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 CoverageText = patient.Coverage != null ? patient.Coverage.Name : "",
                 CPF = patient.Person.CPF,
 
+                DoctorId = this.Doctor.Id,
+
                 Emails = (from e in patient.Person.Emails
                           select new EmailViewModel()
                           {
@@ -98,6 +100,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      group cvm by cvm.Date.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
+                var examRequestsByDate =
+                                 (from ervm in
+                                      (from c in patient.ExaminationRequests
+                                       select new SessionEvent
+                                       {
+                                           Date = DateTimeHelper.ConvertToCurrentTimeZone(c.CreatedOn),
+                                           Id = c.Id
+                                       })
+                                  group ervm by ervm.Date.Date into g
+                                  select g).ToDictionary(g => g.Key, g => g.ToList());
+
                 // discover what dates have events
                 var eventDates = receiptsByDate.Keys.Concat(anamnesesByDate.Keys).Concat(certificatesByDate.Keys).Distinct().OrderBy(dt => dt);
 
@@ -112,7 +125,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         Date = eventDate,
                         AnamneseIds = anamnesesByDate.ContainsKey(eventDate) ? anamnesesByDate[eventDate].Select(a => a.Id).ToList() : new List<int>(),
                         ReceiptIds = receiptsByDate.ContainsKey(eventDate) ? receiptsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
-                        MedicalCertificateIds = certificatesByDate.ContainsKey(eventDate) ? certificatesByDate[eventDate].Select(c => c.Id).ToList() : new List<int>()
+                        MedicalCertificateIds = certificatesByDate.ContainsKey(eventDate) ? certificatesByDate[eventDate].Select(c => c.Id).ToList() : new List<int>(),
+                        ExaminationRequestIds = examRequestsByDate.ContainsKey(eventDate) ? examRequestsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
                     });
                 }
 

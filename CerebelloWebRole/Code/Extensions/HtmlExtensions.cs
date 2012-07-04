@@ -165,8 +165,8 @@ namespace CerebelloWebRole.Code.Extensions
             TagBuilder scriptTag = new TagBuilder("script");
             scriptTag.Attributes["type"] = "text/javascript";
 
-            var idPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expressionId);
-            var textPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expressionText);
+            var idPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionId);
+            var textPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionText);
 
             var htmlPrefix = htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
 
@@ -190,21 +190,21 @@ namespace CerebelloWebRole.Code.Extensions
                 inputTextValue = textPropertyValue
             };
 
-            var columnIdPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expressionLookupId);
+            var columnIdPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionLookupId);
             options.columnId = columnIdPropertyInfo.Name;
 
             // coluna de texto
-            var columnTextPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expressionLookupText);
+            var columnTextPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionLookupText);
             options.columnText = columnTextPropertyInfo.Name;
             options.columns.Add(options.columnText);
-            options.columnHeaders.Add(PLKExpressionHelper.GetDisplayName(expressionLookupText));
+            options.columnHeaders.Add(ExpressionHelper.GetDisplayName(expressionLookupText));
 
             // adiciona os nomes das colunas
             foreach (var columnExpression in otherColumns)
             {
-                var otherColumnPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(columnExpression);
+                var otherColumnPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(columnExpression);
                 options.columns.Add(otherColumnPropertyInfo.Name);
-                options.columnHeaders.Add(PLKExpressionHelper.GetDisplayName(columnExpression));
+                options.columnHeaders.Add(ExpressionHelper.GetDisplayName(columnExpression));
             }
 
             // validação das colunas
@@ -242,7 +242,7 @@ namespace CerebelloWebRole.Code.Extensions
             if (string.IsNullOrEmpty(collectionItemEditor)) throw new ArgumentException("collectionItemEditor cannot be null or empty");
             if (string.IsNullOrEmpty(addAnotherText)) throw new ArgumentException("addAnotherText cannot be null or empty");
 
-            var propertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            var propertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
             var addAnotherLinkId = "add-another-to-" + propertyInfo.Name.ToLower();
             var listCustomClass = propertyInfo.Name.ToLower() + "-list";
 

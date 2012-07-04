@@ -7,9 +7,22 @@ Desc = Descrição do item.
 
 S   P Desc
 
-    P0 Teste de criação de conta usando nome desnormalizado, ao gravar no banco tem que ser normalizado.
+    P0 Tela de novo/editar médico: Campo UF do conselho profissional.
+    P0 Tela de prontuário: marcar retorno... não está selecionando o paciente de forma automática.
+    P0 Não pode salvar receita sem nenhum medicamento.
+    P0 Testes: validador do modelo deve preencher todas as propriedades do objeto no ModelState, com a respectiva coleção de erros, mesmo que fique vazia.
+    P0 Testar criação da solicitação de exame.
+    P0 Testar criação da solicitação de exame sem texto.
+    P0 Testar edição da solicitação de exame.
+    P0 Testar edição da solicitação de exame removendo o texto.
+    P0 Testar edição de solicitação de exame de outro consultório.
+    P0 Testar edição de solicitação de exame que não existe.
+    P0 Testar exclusão da solicitação de exame.
+    P0 Testar exclusão de solicitação de exame que não existe.
+    P0 Testar exclusão de solicitação de exame de outro consultório.
+    P0 Tela de prontuário: diagnósticos.
+    P0 Teste na agenda para considerar somente os pacientes do médico específico.
     P0 Tem que mostrar todos os erros de validação da tela de criação de conta.
-    P0 Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.
     P0 Mandar e-mail quando acabar de criar a conta, contendo um token de confirmação de e-mail.
     P0 Criar no AuthenticationController que permite ao usuário entrar com o token de confirmação do e-mail manualmente.
     P0 Criar no AuthenticationController uma action que recebe o token de confirmação do e-mail.
@@ -23,6 +36,11 @@ S   P Desc
     P0 Não permitir excluir último administrador do consultório.
     P0 Validação para usuários no mesmo consultório com e-mails duplicados. Pode acontecer em entre consultórios distintos.
 
+    P1 Na visualização de exames, anamneses, e outros, label 'Texto' renderizado como <label for="Text">. Existem vários campos "Text" nesta tela.
+    P1 Criar tela para o administrador dizer onde está o consultório, temos que sabe o fuso-horário.
+    P1 Falhas de segurança: actions de edição/criação tem que verificar o Practice do usuário logado, contra o do objeto sendo editado.
+    P1: Texto que diz a idade da pessoa tem partes em inglês: "26 anos, 5 meses and 21 dias".
+    P1 Agenda: se hoje for um dia que não está na agenda, deve ir para o próximo dia válido.
     P1 Login: guardar o último consultório que se fez login num cookie.
     P1 Login: criar action que já vai para a tela de login com o nome do consultório certo.
     P1 Teste de acesso: usuário logado tenta acessar outro practice, de que não possui acesso.
@@ -35,6 +53,13 @@ S   P Desc
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
+x   P0 Tela de prontuário: marcar retorno.
+x   P0 Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.
+x   P0 Tela de prontuário: solicitação de exames.
+x   P0 Cadastro de compromisso não está considerando o médico na hora de fazer a query.
+x   P0 Agenda não está considerando o médico na hora de fazer a query.
+x   P0 Tela do PracticeHome: Número de pacientes, e lista de médicos.
+x   P0 Teste de criação de conta usando nome desnormalizado, ao gravar no banco tem que ser normalizado.
 x   P0 Cadastro de novo médico: combo de especialidade e conselho profissional.
 x   P0 Teste cadastrar usuário: novo médico, com todas as informações preenchidas.
         (esperando fazer as combos para preencher especialidade e órgão regulador)

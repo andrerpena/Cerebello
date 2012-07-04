@@ -9,7 +9,7 @@ using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.Code
 {
-    public static class PLKExpressionHelper
+    public static class ExpressionHelper
     {
         /// <summary>
         /// Retorna o nome de exibição dado uma expression
@@ -17,7 +17,7 @@ namespace CerebelloWebRole.Code
         /// <exception cref="System.ArgumentNullException">Se expression for nulo</exception>
         public static string GetDisplayName<TModel, TProperty>(Expression<Func<TModel, TProperty>> expression)
         {
-			if (((Object) expression) == null)throw new ArgumentNullException("expression");
+            if (((Object) expression) == null)throw new ArgumentNullException("expression");
 
             var propertyInfo = GetPropertyInfoFromMemberExpression(expression);
             var displayAttribute = propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().FirstOrDefault();
@@ -43,6 +43,11 @@ namespace CerebelloWebRole.Code
                 memberBodyExpression = (MemberExpression)expression.Body;
 
             return (PropertyInfo)((MemberExpression)memberBodyExpression).Member;
+        }
+
+        public static string GetExpressionText(LambdaExpression expression)
+        {
+            return System.Web.Mvc.ExpressionHelper.GetExpressionText(expression);
         }
     }
 }

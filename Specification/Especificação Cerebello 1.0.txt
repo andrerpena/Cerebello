@@ -12,13 +12,12 @@ A partir de 2012-05-26
 ----------------------
 
 	Contas de usuário:
-		- UserName único dentro do consultório
-		- Permitir fazer login com email ou user-name (igual o google)
+		x UserName único dentro do consultório
+		x Permitir fazer login com email ou user-name (igual o google)
 			(somente o e-mail principal será considerado)
 		- E-mails devem ser únicos dentro do consultório
 
 @	Tela Consultório.Início
-@		Total de pacientes do consultório
 @		Lista de médicos
 @			- Foto do médico
 @			- Nome do médico
@@ -27,9 +26,9 @@ A partir de 2012-05-26
 @			- Próximo horário disponível
 @		Informações gerais do consultório
 @			- Contagem de pacientes
-@			- Gráfico de pacientes que compareceram e faltaram
-@			- Gráfico de pacientes por sexo/idade
-@			- Percentual de faltas de pacientes
+@			* Gráfico de pacientes que compareceram e faltaram
+@			* Gráfico de pacientes por sexo/idade
+@			* Percentual de faltas de pacientes
 
 @	Tela Consultório.Licença (IF: administrador)
 		contagem de médicos da licença

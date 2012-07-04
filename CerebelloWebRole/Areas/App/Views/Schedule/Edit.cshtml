@@ -85,19 +85,23 @@
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(Model.IsTimeValid ? "validation-passed" : "validation-failed")">
                         </span>
+                        <span id="time-validation-text">@Model.TimeValidationMessage</span>
                     </div>
-                    <a id="check_time" href="#" class="block-little-link">Verificar disponibilidade deste
-                        horário</a> <a id="next_time_from_this_link" href="#" class="block-little-link">Próximo
-                            horário livre a partir deste</a> <a id="next_time_link" href="#" class="block-little-link">
-                                Próximo horário livre a partir de agora</a>
+                    @* Action-links *@
+                    <a id="check_time" href="#" class="block-little-link">
+                        Verificar disponibilidade deste horário</a>
+                    <a id="next_time_from_this_link" href="#" class="block-little-link">
+                        Próximo horário livre a partir deste</a>
+                    <a id="next_time_link" href="#" class="block-little-link">
+                        Próximo horário livre a partir de agora</a>
                 </td>
             </tr>
         </table>
         
-                                                           if (Model.Id != null)
-                                                           {
+        if (Model.Id != null)
+        {
         <a id="delete-appointment-link" class="block-little-link" href="#">excluir consulta</a>
-                                                           }
+        }
         
         <div class="submit-bar">
             <input type="submit" value="salvar consulta" />
@@ -214,9 +218,15 @@
             },
             success: function(result){
                 if(result.success)
+                {
                     $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                    $("#time-validation-text").html("");
+                }
                 else
+                {
                     $("#time-validation-icon").removeClass("validation-passed").addClass("validation-failed");
+                    $("#time-validation-text").html(result.text);
+                }
             }
         });
                 
@@ -225,6 +235,7 @@
             success: function(data) {
                 populateTimeInfo(data);
                 $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                $("#time-validation-text").html("");
             }
         });
 
@@ -239,6 +250,7 @@
             success: function(data) {
                 populateTimeInfo(data);
                 $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                $("#time-validation-text").html("");
             }
         });
 

@@ -7,19 +7,49 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
 
-2012-06-26 13:30-14:50 (1º10)   9   Firestarter: Inicialização de tabelas do sistema - SYS_MedicalEntity e SYS_MedicalSpecialty.
-2012-06-26 14:50-15:20 (0º30)   9   Alterações no banco seguindo especificação.
-2012-06-26 15:20-16:00 (0º40)  10   Firestarter: opção drop all tables; opção create all tables (usando o script de criação).
-2012-06-26 16:50-17:20 (0º30)   6   Teste de primeiro acesso: testar o filtro ao invés dos controllers em sí.
-2012-06-26 17:20-17:40 (0º20)   8   HtmlHerlper para mostrar caixa de mensagem verdinha.
-2012-06-26 17:40-17:55 (0º15)   8   Mensagem mostrando a senha padrão do usuário na tela de criar usuário.
-2012-06-26 18:00-18:45 (0º45)   8   Tela de criação de uma nova conta no sistema.
-2012-06-26 20:00-20:30 (0º30)   8   Verificar se o UrlIdentifier já existe para o nome da pessoa. Se já existir adicionar um número no final.
+2012-07-04 15:15-18:35 (3º20")  5   Tela de prontuário: marcar retorno do paciente.
+2012-07-04 15:00-15:15 (0º15")  6   Tela de marcar compromisso: próximo horário está achando horários no passado.
+2012-07-04 13:30-14:50 (1º20")  9   Tela de marcar compromisso: mostrar erro ao tentar marcar compromisso.
+2012-07-04 10:00-12:10 (2º10")  9   Tela de prontuário: solicitação de exame.
 
-2012-06-25 ??:??-??:?? (?º??)   ?   MockRepository não é mais estático.
-2012-06-25 ??:??-??:?? (?º??)   ?   Pesquisa sobre especialidades e conselhos profissionais segundo o TISS.
+2012-07-03 18:30-20:00 (1º30")  9   Tela de prontuário: solicitação de exame.
+2012-07-03 16:30-17:00 (0º30")  6   Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.
+2012-07-03 15:00-15:15 (0º15")  9   Considerar o médico na query para a tela da agenda.
+2012-07-03 14:15-15:00 (0º45")  8   Próximo horário livre na tela de início do consultório.
+2012-07-03 13:15-14:15 (1º00")  8   Extrair lógica de próximo horário livre do ScheduleController. Tem que ser estático e acessível para outros controllers.
+2012-07-03 13:00-13:15 (0º15") 10   Cadastro de compromisso não está considerando o médico na hora de fazer a query.
+2012-07-03 12:30-13:00 (0º30")  9   Entender a lógica de achar o próximo horário livre.
 
-2012-06-23 ??:??-??:?? (?º??)   ?   Resolvemos algumas coisas na casa do André.
+2012-06-30 14:00-17:00 (3º00")  7   Adivinhar quais pacientes comparecerem a quais consultas. (desfiz isso, ficou muito complicado)
+2012-06-30 17:00-18:30 (1º30")  7   Tela de início: total de pacientes, lista de médicos, gráficos (tem que inventar outros gráficos)
+
+2012-06-28 13:20-14:45 (1º25")  7   Teste de criar consultório com UrlIdentifier que já está sendo usado.
+2012-06-28 14:45-15:20 (0º35")  6   Users e Auth controllers estavam fazendo validações com dependências entre si. Tem que validar tudo in-a-row.
+2012-06-28 15:40-16:00 (0º20")  8   Teste de criar novo consultório repetindo full-name de um usuário de outro consultório.
+2012-06-28 16:00-16:25 (0º25")  9   Mais validações com interdependências.
+2012-06-28 16:25-17:15 (0º50")  9   Criação de atributo de DataAnnotation para UserName.
+2012-06-28 17:15-17:55 (0º40")  5   Testes para validação de user-name, na criação de um novo consultório, e também de um novo usuário no consultório.
+2012-06-28 18:00-18:30 (0º30") 10   Rodei todos os testes e corrigi tudo. Falta só 1 de criar novo médico.
+2012-06-28 18:45-19:15 (0º30")  8   Combos de especialidade e conselho profissional na tela de novo/editar usuário que seja médico.
+2012-06-28 19:15-19:15 (0º00")  -   Teste de criação do médico agora tá passando. Todos os testes passam agora.
+
+2012-06-27                          Esqueci de anotar vários horários.
+2012-06-27 15:30-16:00 (0º30")  7   Validação do UserName.
+2012-06-27 17:30-18:00 (0º30")  7   Ordenador de scripts sql. Merge dos scripts.
+
+2012-06-26 13:30-14:50 (1º10")  9   Firestarter: Inicialização de tabelas do sistema - SYS_MedicalEntity e SYS_MedicalSpecialty.
+2012-06-26 14:50-15:20 (0º30")  9   Alterações no banco seguindo especificação.
+2012-06-26 15:20-16:00 (0º40") 10   Firestarter: opção drop all tables; opção create all tables (usando o script de criação).
+2012-06-26 16:50-17:20 (0º30")  6   Teste de primeiro acesso: testar o filtro ao invés dos controllers em sí.
+2012-06-26 17:20-17:40 (0º20")  8   HtmlHerlper para mostrar caixa de mensagem verdinha.
+2012-06-26 17:40-17:55 (0º15")  8   Mensagem mostrando a senha padrão do usuário na tela de criar usuário.
+2012-06-26 18:00-18:45 (0º45")  8   Tela de criação de uma nova conta no sistema.
+2012-06-26 20:00-20:30 (0º30")  8   Verificar se o UrlIdentifier já existe para o nome da pessoa. Se já existir adicionar um número no final.
+
+2012-06-25 ??:??-??:?? (?º??")  ?   MockRepository não é mais estático.
+2012-06-25 ??:??-??:?? (?º??")  ?   Pesquisa sobre especialidades e conselhos profissionais segundo o TISS.
+
+2012-06-23 ??:??-??:?? (?º??")  ?   Resolvemos algumas coisas na casa do André.
 
 2012-06-22 17:00-19:50 (2º50")  9   Testes de acesso usando a senha default. Não pode acessar nada no software, somente a tela de trocar senha.
 2012-06-22 15:40-16:54 (1º05")  9   Não permitir usuário com senha padrão usar o software. A única opção é trocar a senha.
