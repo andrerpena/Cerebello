@@ -5,6 +5,9 @@ using Cerebello.Model;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
 using System.Text.RegularExpressions;
+using System.Data.SqlClient;
+using System.Data.Common;
+using System.Data.EntityClient;
 
 namespace Cerebello.Firestarter
 {
@@ -1181,6 +1184,67 @@ GO
 
             foreach (var eachScript in scripts)
                 db.ExecuteStoreCommand(eachScript);
+        }
+
+        /// <summary>
+        /// Attaches the given database.
+        /// </summary>
+        internal static bool AttachLocalDatabase(CerebelloEntities db)
+        {
+            var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString);
+            sqlConn2.InitialCatalog = "";
+            var connStr = sqlConn2.ToString();
+            var dbName = sqlConn1.Database;
+
+            // attaches the database
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                try
+                {
+                    using (var command = conn.CreateCommand())
+                    {
+                        command.CommandText =
+                        string.Format(@"CREATE DATABASE CerebelloTEST ON 
+                    ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\{0}.mdf' )
+                     FOR ATTACH ;", dbName);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    // probably the database exists already because a previous test failed.. let's move on
+                    return false;
+                }
+                conn.Close();
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Detaches the given database.
+        /// </summary>
+        internal static void DetachLocalDatabase(CerebelloEntities db)
+        {
+            var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString);
+            sqlConn2.InitialCatalog = "";
+            var connStr = sqlConn2.ToString();
+            var dbName = sqlConn1.Database;
+
+            SqlConnection.ClearAllPools();
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("", conn);
+                cmd.CommandText = @"sp_detach_db CerebelloTEST";
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

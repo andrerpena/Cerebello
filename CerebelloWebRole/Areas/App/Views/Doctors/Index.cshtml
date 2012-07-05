@@ -3,37 +3,46 @@
     ViewBag.Title = "Index";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 }
-
 @section Title {
-    Médicos do consultório
+Médicos do consultório
 }
-
 <div class="doctors-list">
     <ul>
-    @foreach (var doctor in Model.Doctors)
-    {
-        <li>
-            <div class="doctor-picture">
-                <img alt="doctor-picture" src="@doctor.ImageUrl" />
-            </div>
-            <div class="doctor-info">
-                <table>
-                    <tr>
-                        <td class="header">Nome</td>
-                        <td class="value"><a href="@Url.Action("index", "doctorhome", new { doctor = doctor.UrlIdentifier })">@doctor.Name</a></td>
-                    </tr>
-                    <tr>
-                        <td class="header">Especialidade</td>
-                        <td class="value">@doctor.MedicalSpecialty</td>
-                    </tr>
-                    <tr>
-                        <td class="header">CRM</td>
-                        <td class="value">@doctor.CRM (@doctor.MedicalEntity)</td>
-                    </tr>
-                </table>
-            </div>
-            <div style="clear:both"></div>
-        </li>
-    }
+        @foreach (var doctor in Model.Doctors)
+        {
+            <li>
+                <div class="doctor-picture">
+                    <img alt="doctor-picture" src="@doctor.ImageUrl" />
+                </div>
+                <div class="doctor-info">
+                    <table>
+                        <tr>
+                            <td class="header">
+                                Nome
+                            </td>
+                            <td class="value">
+                                <a href="@Url.Action("index", "doctorhome", new { doctor = doctor.UrlIdentifier })">@doctor.Name</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="header">
+                                Especialidade
+                            </td>
+                            <td class="value">@doctor.MedicalSpecialty
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="header">
+                                CRM
+                            </td>
+                            <td class="value">@doctor.CRM (@doctor.MedicalEntity)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="clear: both">
+                </div>
+            </li>
+        }
     </ul>
 </div>

@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cerebello;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Areas.Site.Controllers;
+using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Tests
 {
@@ -63,7 +64,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
                 userFullName = this.db.Users.Single().Person.FullName;
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
             }
@@ -89,7 +90,7 @@ namespace CerebelloWebRole.Tests
                     FullName = "André",
                     Gender = (short)TypeGender.Male,
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.CreateAccount(data);
             }
 
@@ -121,7 +122,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
                 practiceName = this.db.Practices.Single().UrlIdentifier;
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
             }
@@ -147,7 +148,7 @@ namespace CerebelloWebRole.Tests
                     FullName = "Miguel Angelo Santos Bicudo",
                     Gender = (short)TypeGender.Male,
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.CreateAccount(data);
             }
 
@@ -157,7 +158,7 @@ namespace CerebelloWebRole.Tests
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual(viewResult.ViewName, "");
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(controller.ModelState.Count, 1, "ModelState should contain one validation message.");
+            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
             Assert.IsTrue(
                 controller.ModelState.ContainsKey("PracticeName"),
                 "ModelState must contain validation message for 'PracticeName'.");
@@ -178,7 +179,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
                 userFullName = this.db.Users.Single().Person.FullName;
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
             }
@@ -204,7 +205,7 @@ namespace CerebelloWebRole.Tests
                     FullName = userFullName,
                     Gender = (short)TypeGender.Male,
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.CreateAccount(data);
             }
 
@@ -232,7 +233,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
                 practiceName = this.db.Practices.Single().UrlIdentifier;
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
             }
@@ -258,7 +259,7 @@ namespace CerebelloWebRole.Tests
                     FullName = "André Rodrigues Pena",
                     Gender = (short)TypeGender.Male,
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.CreateAccount(data);
             }
 
@@ -268,7 +269,7 @@ namespace CerebelloWebRole.Tests
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual(viewResult.ViewName, "");
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(controller.ModelState.Count, 1, "ModelState should contain one validation message.");
+            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
             Assert.IsTrue(
                 controller.ModelState.ContainsKey("UserName"),
                 "ModelState must contain validation message for 'PracticeName'.");

@@ -7,6 +7,11 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
 
+2012-07-05 15:30-17:00 (2º00")  7   Commit anterior estava com bugs e não passava nos testes. Arrumei tudo!
+2012-07-05 14:30-15:00 (0º30")  8   Console do firestarter agora sabe dar attach no banco quando necessário.
+2012-07-05 14:15-14:30 (0º15")  8   Tela de novo/editar médico: Campo UF do conselho profissional.
+2012-07-05 13:00-14:15 (1º15")  6   Validador de modelo para testes deve preencher a validação de todas as propriedades do modelo.
+
 2012-07-04 15:15-18:35 (3º20")  5   Tela de prontuário: marcar retorno do paciente.
 2012-07-04 15:00-15:15 (0º15")  6   Tela de marcar compromisso: próximo horário está achando horários no passado.
 2012-07-04 13:30-14:50 (1º20")  9   Tela de marcar compromisso: mostrar erro ao tentar marcar compromisso.

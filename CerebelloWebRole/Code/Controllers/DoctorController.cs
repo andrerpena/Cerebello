@@ -7,6 +7,7 @@ using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
 
 namespace CerebelloWebRole.Code.Controllers
 {

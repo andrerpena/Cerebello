@@ -87,14 +87,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new PracticeUsersViewModel();
 
-            model.Users = (from u in this.Practice.Users
-                           select new UserViewModel()
-                           {
-                               Id = u.Id,
-                               FullName = u.Person.FullName,
-                               UrlIdentifier = u.Person.UrlIdentifier,
-                               ImageUrl = GravatarHelper.GetGravatarUrl(u.GravatarEmailHash, GravatarHelper.Size.s64),
-                           }).ToList();
+            var dataCollection =
+                this.Practice.Users.Select(u =>
+                new
+                {
+                    vm = new UserViewModel
+                    {
+                        Id = u.Id,
+                        FullName = u.Person.FullName,
+                        UrlIdentifier = u.Person.UrlIdentifier,
+                    },
+                    u.GravatarEmailHash,
+                }).ToList();
+
+            foreach (var eachItem in dataCollection)
+            {
+                if (!string.IsNullOrEmpty(eachItem.GravatarEmailHash))
+                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.GravatarEmailHash, GravatarHelper.Size.s64);
+            }
+
+            model.Users = dataCollection.Select(item => item.vm).ToList();
 
             return View(model);
         }

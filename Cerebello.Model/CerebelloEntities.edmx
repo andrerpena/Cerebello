@@ -348,6 +348,7 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="CRM" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="MedicalEntityId" Type="int" Nullable="false" />
+          <Property Name="MedicalEntityJurisdiction" Type="nvarchar" MaxLength="50" />
           <Property Name="MedicalSpecialtyId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Email">
@@ -1378,6 +1379,7 @@
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Doctor" FromRole="Doctor" ToRole="User" />
           <NavigationProperty Name="SYS_MedicalEntity" Relationship="Cerebello.Model.FK_Doctor_MedicalEntity1" FromRole="Doctor" ToRole="SYS_MedicalEntity" />
           <NavigationProperty Name="SYS_MedicalSpecialty" Relationship="Cerebello.Model.FK_Doctor_MedicalSpecialty1" FromRole="Doctor" ToRole="SYS_MedicalSpecialty" />
+          <Property Type="String" Name="MedicalEntityJurisdiction" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Email">
           <Key>
@@ -2260,7 +2262,8 @@
             <ScalarProperty Name="Name" ColumnName="Name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Doctors"><EntityTypeMapping TypeName="Cerebello.Model.Doctor"><MappingFragment StoreEntitySet="Doctor">
-            <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="MedicalEntityJurisdiction" ColumnName="MedicalEntityJurisdiction" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="CRM" ColumnName="CRM" />
             <ScalarProperty Name="MedicalEntityId" ColumnName="MedicalEntityId" />
             <ScalarProperty Name="MedicalSpecialtyId" ColumnName="MedicalSpecialtyId" />

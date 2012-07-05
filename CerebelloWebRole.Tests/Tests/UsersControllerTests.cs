@@ -11,6 +11,7 @@ using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cerebello;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Tests
 {
@@ -61,7 +62,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -113,7 +114,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 MockRepository mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -148,7 +149,7 @@ namespace CerebelloWebRole.Tests
                     },
                     IsSecretary = true,
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.Create(data);
             }
 
@@ -158,9 +159,9 @@ namespace CerebelloWebRole.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual(viewResult.ViewName, "Edit");
+            Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(controller.ModelState.Count, 1, "ModelState should contain one validation message.");
+            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
         }
 
         /// <summary>
@@ -178,7 +179,7 @@ namespace CerebelloWebRole.Tests
                 var marta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 userNameToRepeat = marta.Users.First().UserName;
                 MockRepository mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -213,7 +214,7 @@ namespace CerebelloWebRole.Tests
                     },
                     IsSecretary = true,
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.Create(data);
             }
 
@@ -236,7 +237,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -279,9 +280,9 @@ namespace CerebelloWebRole.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual(viewResult.ViewName, "Edit");
+            Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(controller.ModelState.Count, 1, "ModelState should contain one validation message.");
+            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
         }
 
         /// <summary>
@@ -298,7 +299,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -340,9 +341,9 @@ namespace CerebelloWebRole.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual(viewResult.ViewName, "Edit");
+            Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(controller.ModelState.Count, 1, "ModelState should contain one validation message.");
+            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
         }
 
         /// <summary>
@@ -359,7 +360,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -403,9 +404,9 @@ namespace CerebelloWebRole.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual(viewResult.ViewName, "Edit");
+            Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(controller.ModelState.Count, 1, "ModelState should contain one validation message.");
+            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
         }
 
         /// <summary>
@@ -422,7 +423,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -482,7 +483,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
             }
             catch
@@ -517,7 +518,7 @@ namespace CerebelloWebRole.Tests
                         new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
                     },
                 };
-                ControllersRepository.SetModelStateErrors(controller, data);
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.Create(data);
             }
 
@@ -527,7 +528,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual(viewResult.ViewName, "Edit");
+            Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
             Assert.IsTrue(
                 controller.ModelState.ContainsKey("UserName"),
@@ -551,7 +552,7 @@ namespace CerebelloWebRole.Tests
                 var s = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.ToList().Last());
                 userId = s.Users.Single().Id;
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -590,7 +591,7 @@ namespace CerebelloWebRole.Tests
                 var medic = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 userId = medic.Users.Single().Id;
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
             {
@@ -628,7 +629,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
                 var admin = this.db.Users.Where(m => m.AdministratorId != null).First();
                 var mr = new MockRepository();
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 userId = admin.Id;
             }
             catch
@@ -678,7 +679,7 @@ namespace CerebelloWebRole.Tests
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
             }
             catch
             {
@@ -691,7 +692,7 @@ namespace CerebelloWebRole.Tests
 
             {
                 actionResult =
-                    ControllersRepository.ActionExecutingAndGetActionResult(controller, mr)
+                    Mvc3TestHelper.ActionExecutingAndGetActionResult(controller, mr)
                     ?? controller.ChangePassword();
             }
 
@@ -724,7 +725,7 @@ namespace CerebelloWebRole.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword(userId);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
-                controller = ControllersRepository.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
             }
             catch
             {
@@ -752,7 +753,7 @@ namespace CerebelloWebRole.Tests
 
                 actionResult =
                     authContext.Result
-                    ?? ControllersRepository.ActionExecutingAndGetActionResult(controller, mr)
+                    ?? Mvc3TestHelper.ActionExecutingAndGetActionResult(controller, mr)
                     ?? controller.ChangePassword();
             }
 
@@ -832,7 +833,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 mr.SetRouteData<T>(practice, docToView, action);
-                controller = ControllersRepository.CreateControllerForTesting<T>(this.db, mr, callOnActionExecuting: false);
+                controller = Mvc3TestHelper.CreateControllerForTesting<T>(this.db, mr, callOnActionExecuting: false);
             }
             catch
             {

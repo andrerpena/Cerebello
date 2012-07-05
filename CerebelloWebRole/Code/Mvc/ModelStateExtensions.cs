@@ -86,5 +86,21 @@ namespace CerebelloWebRole.Code.Mvc
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
             modelState.Remove(propertyInfo.Name);
         }
+
+        /// <summary>
+        /// Flatten all model errors in a single list of tuples containing the property name and the ModelError object.
+        /// </summary>
+        /// <param name="modelState">ModelStateDictionary to flatten.</param>
+        /// <returns>A single flattened list of all model errors.</returns>
+        public static List<Tuple<string, ModelError>> GetAllErrors(this ModelStateDictionary modelState)
+        {
+            var result = new List<Tuple<string, ModelError>>();
+
+            foreach (var eachModelState in modelState)
+                foreach (var eachModelError in eachModelState.Value.Errors)
+                    result.Add(new Tuple<string, ModelError>(eachModelState.Key, eachModelError));
+
+            return result;
+        }
     }
 }

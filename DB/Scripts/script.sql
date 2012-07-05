@@ -207,6 +207,7 @@ CREATE TABLE [dbo].[Doctor](
 	[Id] [int] NOT NULL,
 	[CRM] [varchar](50) NOT NULL,
 	[MedicalEntityId] [int] NOT NULL,
+	[MedicalEntityJurisdiction] [nvarchar](50) NULL,
 	[MedicalSpecialtyId] [int] NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (

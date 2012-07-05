@@ -118,7 +118,7 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
 
             var mr = new MockRepository();
-            var controller = ControllersRepository.CreateControllerForTesting<AppController>(this.db, mr);
+            var controller = Mvc3TestHelper.CreateControllerForTesting<AppController>(this.db, mr);
             var controllerResult = controller.LookupEverything("Joao", 20, 1, this.db.Doctors.First().Id);
 
             var controllerResultAsLookupResult = (LookupJsonResult)controllerResult.Data;

@@ -3858,6 +3858,30 @@ namespace Cerebello.Model
         private global::System.Int32 _MedicalSpecialtyId;
         partial void OnMedicalSpecialtyIdChanging(global::System.Int32 value);
         partial void OnMedicalSpecialtyIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String MedicalEntityJurisdiction
+        {
+            get
+            {
+                return _MedicalEntityJurisdiction;
+            }
+            set
+            {
+                OnMedicalEntityJurisdictionChanging(value);
+                ReportPropertyChanging("MedicalEntityJurisdiction");
+                _MedicalEntityJurisdiction = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("MedicalEntityJurisdiction");
+                OnMedicalEntityJurisdictionChanged();
+            }
+        }
+        private global::System.String _MedicalEntityJurisdiction;
+        partial void OnMedicalEntityJurisdictionChanging(global::System.String value);
+        partial void OnMedicalEntityJurisdictionChanged();
 
         #endregion
     
