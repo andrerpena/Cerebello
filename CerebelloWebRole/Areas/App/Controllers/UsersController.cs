@@ -147,18 +147,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ViewBag.MedicalSpecialty =
                 this.db.SYS_MedicalSpecialty
                 .ToList()
-                .Select(me => new List<SelectListItem>
-                {
-                    new SelectListItem { Value = me.Id.ToString(), Text = me.Name },
-                });
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
 
             ViewBag.MedicalEntityOptions =
                 this.db.SYS_MedicalEntity
                 .ToList()
-                .Select(me => new List<SelectListItem>
-                {
-                    new SelectListItem { Value = me.Id.ToString(), Text = me.Name },
-                });
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
 
             return View("Edit", model);
         }
@@ -263,9 +259,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
             {
                 // Removing validation error of medic properties, because this user is not a medic.
-                this.ModelState.Remove(() => formModel.MedicCRM);
-                this.ModelState.Remove(() => formModel.MedicalEntity);
-                this.ModelState.Remove(() => formModel.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicCRM);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntity);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialtyJurisdiction);
             }
 
             if (user != null)

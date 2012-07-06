@@ -43,7 +43,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 CoverageText = patient.Coverage != null ? patient.Coverage.Name : "",
                 CPF = patient.Person.CPF,
 
-                DoctorId = this.Doctor.Id,
+                //DoctorId = this.Doctor.Id,
 
                 Emails = (from e in patient.Person.Emails
                           select new EmailViewModel()

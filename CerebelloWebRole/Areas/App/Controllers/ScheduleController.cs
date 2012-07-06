@@ -97,7 +97,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(DateTime? date, string start, string end)
+        public ActionResult Create(DateTime? date, string start, string end, int? patientId)
         {
             var now = DateTimeHelper.GetTimeZoneNow();
             DateTime date2 = date ?? now.Date;
@@ -122,7 +122,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Getting end date and time.
             DateTime endTime =
                 string.IsNullOrEmpty(end) ?
-                startTime + slotDuration:
+                startTime + slotDuration :
                 date2 + DateTimeHelper.GetTimeSpan(end);
 
             if (endTime - startTime < slotDuration)
@@ -138,6 +138,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
+            viewModel.PatientId = patientId;
+
+            viewModel.PatientNameLookup = this.db.Patients
+                .Where(p => p.Id == patientId)
+                .Select(p => p.Person.FullName)
+                .FirstOrDefault();
+
             viewModel.Date = date2;
             viewModel.Start = start;
             viewModel.End = end;
@@ -162,9 +169,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Setting the error message to display near the date and time configurations.
             var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => viewModel.Date);
-            if (dateAndTimeErrors.Errors.Any())
+            if (dateAndTimeErrors.Any())
             {
-                viewModel.TimeValidationMessage = dateAndTimeErrors.Errors.First().ErrorMessage;
+                viewModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
             }
 
             ModelState.Clear();
@@ -238,7 +245,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var isTimeValid = ValidateTime(this.db, this.Doctor, formModel.Date, formModel.Start, formModel.End, this.ModelState);
 
-                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, formModel.PatientId);
+                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, formModel.Id);
                 if (!isTimeAvailable)
                     this.ModelState.AddModelError(() => formModel.Date, "A data e hora já está marcada para outro compromisso.");
 
@@ -247,9 +254,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // Setting the error message to display near the date and time configurations.
                 var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => formModel.Date);
-                if (dateAndTimeErrors.Errors.Any())
+                if (dateAndTimeErrors.Any())
                 {
-                    formModel.TimeValidationMessage = dateAndTimeErrors.Errors.First().ErrorMessage;
+                    formModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
                 }
             }
 
@@ -638,17 +645,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return !hasError;
         }
 
-        public static bool IsTimeAvailable(DateTime startTime, DateTime endTime, IEnumerable<Appointment> appointments, int? patientId = null)
+        public static bool IsTimeAvailable(DateTime startTime, DateTime endTime, IEnumerable<Appointment> appointments, int? excludeAppointmentId = null)
         {
+            // Not overlap condition:
+            // The whole body of A is before the start of B   (a.start < b.start && a.end <= b.start)
+            //   OR                                             ||
+            // The whole body of A is after the end of B      (a.start >= b.end && a.end > b.end)
             var query = from a in appointments
-                        where (a.Start <= startTime && a.End > startTime)
-                        || (a.Start < endTime && a.End >= endTime)
-                        || (a.Start > startTime && a.End < endTime)
-                        || (a.Start == startTime && a.End == endTime)
+                        where
+                        !(
+                               (a.Start < startTime && a.End <= startTime)
+                                 ||
+                               (a.Start >= endTime && a.End > endTime)
+                        )
                         select a;
 
-            if (patientId != null)
-                query = query.Where(a => a.PatientId != patientId);
+            // When moving the appointment to another date or time,
+            // we must exclude it from the selection... you can
+            // move it to the position where it is now.
+            if (excludeAppointmentId != null)
+                query = query.Where(a => a.Id != excludeAppointmentId);
 
             return !query.Any();
         }
@@ -659,10 +675,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="date"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="patientId"></param>
+        /// <param name="excludeAppointmentId"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult VerifyTimeAvailability(string date, string start, string end, int? patientId = null)
+        public JsonResult VerifyTimeAvailability(string date, string start, string end, int? excludeAppointmentId = null)
         {
             string error;
 
@@ -677,7 +693,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var startTime = dateParsed + DateTimeHelper.GetTimeSpan(start);
                 var endTime = dateParsed + DateTimeHelper.GetTimeSpan(end);
 
-                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, patientId);
+                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, excludeAppointmentId);
                 if (!isTimeAvailable)
                 {
                     this.ModelState.AddModelError<AppointmentViewModel>(
@@ -692,9 +708,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
-                else if (dateAndTimeErrors.Errors.Any())
+                else if (dateAndTimeErrors.Any())
                 {
-                    error = dateAndTimeErrors.Errors.First().ErrorMessage;
+                    error = dateAndTimeErrors.First().ErrorMessage;
                 }
                 else
                 {

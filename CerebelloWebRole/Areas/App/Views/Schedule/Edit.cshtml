@@ -119,10 +119,17 @@
                 else {
                     if(result.status == "success")
                     {
-                        $("#calendar").fullCalendar("refetchEvents");
                         $(this).trigger("modal-ok");
-                        fetchDatePickerEvents();
-                        $(".datepicker").datepicker("refresh");
+
+                        // Updating the components in the background page.
+                        var calendar = $("#calendar");
+                        if (calendar.length > 0)
+                        {
+                            // If calendar is there, all the other variables and objects are there too.
+                            calendar.fullCalendar("refetchEvents");
+                            fetchDatePickerEvents();
+                            $(".datepicker").datepicker("refresh");
+                        }
                     }
                     else
                     {
@@ -187,11 +194,18 @@
             if (answer) {
                 $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
                     if(data.success) {
-                        $("#calendar").fullCalendar('refetchEvents');
                         $("#delete-appointment-link").trigger("modal-ok");
                         alert("Esta consulta foi excluída");
-                        fetchDatePickerEvents();
-                        $(".datepicker").datepicker("refresh");
+
+                        // Updating the components in the background page.
+                        var calendar = $("#calendar");
+                        if (calendar.length > 0)
+                        {
+                            // If calendar is there, all the other variables and objects are there too.
+                            calendar.fullCalendar("refetchEvents");
+                            fetchDatePickerEvents();
+                            $(".datepicker").datepicker("refresh");
+                        }
                     }
                     else
                         alert("Não foi possível excluir este paciente.\n" + "Informações técnicas: " + data.text);

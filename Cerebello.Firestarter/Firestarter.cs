@@ -19,7 +19,7 @@ namespace Cerebello.Firestarter
         public static Doctor Create_CrmMg_Psiquiatria_DrHouse_Andre(CerebelloEntities db)
         {
             // Creating data infrastructure.
-            var entity = CreateMedicalEntity_CrmMg(db);
+            var entity = GetMedicalEntity_Crm(db);
             var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
@@ -37,7 +37,7 @@ namespace Cerebello.Firestarter
         public static List<Doctor> Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(CerebelloEntities db)
         {
             // Creating data infrastructure.
-            var entity = CreateMedicalEntity_CrmMg(db);
+            var entity = GetMedicalEntity_Crm(db);
             var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
@@ -59,7 +59,7 @@ namespace Cerebello.Firestarter
         public static Doctor Create_CrmMg_Psiquiatria_DraMarta_Marta(CerebelloEntities db)
         {
             // Creating data infrastructure.
-            var entity = CreateMedicalEntity_CrmMg(db);
+            var entity = GetMedicalEntity_Crm(db);
             var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
@@ -81,15 +81,9 @@ namespace Cerebello.Firestarter
             return specialty;
         }
 
-        public static SYS_MedicalEntity CreateMedicalEntity_CrmMg(CerebelloEntities db)
+        public static SYS_MedicalEntity GetMedicalEntity_Crm(CerebelloEntities db)
         {
-            var entity = new SYS_MedicalEntity()
-            {
-                Name = "CRMMG"
-            };
-
-            db.SYS_MedicalEntity.AddObject(entity);
-            return entity;
+            return db.SYS_MedicalEntity.Where(me => me.Code == "CRM").Single();
         }
 
         public static Doctor CreateAdministratorDoctor_Miguel(CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice, bool useDefaultPassword = false)
@@ -136,7 +130,8 @@ namespace Cerebello.Firestarter
                 Id = 2,
                 CRM = "98765",
                 SYS_MedicalSpecialty = specialty,
-                SYS_MedicalEntity = entity
+                SYS_MedicalEntity = entity,
+                MedicalEntityJurisdiction = "MG",
             };
 
             user.Doctor = doctor;
@@ -201,7 +196,8 @@ namespace Cerebello.Firestarter
                 Id = 1,
                 CRM = "12345",
                 SYS_MedicalSpecialty = specialty,
-                SYS_MedicalEntity = entity
+                SYS_MedicalEntity = entity,
+                MedicalEntityJurisdiction = "MG",
             };
 
             db.Doctors.AddObject(doctor);
@@ -252,7 +248,8 @@ namespace Cerebello.Firestarter
                 Id = 4,
                 CRM = "74653",
                 SYS_MedicalSpecialty = specialty,
-                SYS_MedicalEntity = entity
+                SYS_MedicalEntity = entity,
+                MedicalEntityJurisdiction = "MG",
             };
 
             db.Doctors.AddObject(doctor);

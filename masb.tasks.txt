@@ -7,8 +7,8 @@ Desc = Descrição do item.
 
 S   P Desc
 
-    P0 Tela de novo/editar médico: Campo UF do conselho profissional.
-    P0 Tela de prontuário: marcar retorno... não está selecionando o paciente de forma automática.
+    P0 Permitir remarcar um compromisso para outro horário.
+x   P0 Tela de prontuário: marcar retorno... não está selecionando o paciente de forma automática.
     P0 Não pode salvar receita sem nenhum medicamento.
     P0 Testar criação da solicitação de exame.
     P0 Testar criação da solicitação de exame sem texto.
@@ -52,6 +52,7 @@ S   P Desc
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
+x   P0 Tela de novo/editar médico: Campo UF do conselho profissional.
 x   P0 Testes: validador do modelo deve preencher todas as propriedades do objeto no ModelState, com a respectiva coleção de erros, mesmo que fique vazia.
 x   P0 Tela de prontuário: marcar retorno.
 x   P0 Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.

@@ -43,5 +43,9 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Entidade médica")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntity { get; set; }
+
+        [Display(Name = "UF")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string MedicalSpecialtyJurisdiction { get; set; }
     }
 }

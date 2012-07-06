@@ -39,6 +39,7 @@ namespace CerebelloWebRole.Tests
             this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
 
             Firestarter.ClearAllData(this.db);
+            Firestarter.InitializeDatabaseWithSystemData(this.db);
         }
 
         [TestCleanup()]
@@ -124,9 +125,10 @@ namespace CerebelloWebRole.Tests
 
             // Creating a new user with the same UserName of another user in the same practice.
             ActionResult actionResult;
+            UserViewModel viewModel;
 
             {
-                var data = new UserViewModel
+                viewModel = new UserViewModel
                 {
                     UserName = "andrerpena",
                     FullName = "André Junior",
@@ -149,8 +151,8 @@ namespace CerebelloWebRole.Tests
                     },
                     IsSecretary = true,
                 };
-                Mvc3TestHelper.SetModelStateErrors(controller, data);
-                actionResult = controller.Create(data);
+                Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
+                actionResult = controller.Create(viewModel);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -161,7 +163,10 @@ namespace CerebelloWebRole.Tests
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
+            Assert.AreEqual(
+                1,
+                controller.ModelState.GetPropertyErrors(() => viewModel.UserName).Count(),
+                "ModelState should contain one validation message.");
         }
 
         /// <summary>
@@ -218,9 +223,6 @@ namespace CerebelloWebRole.Tests
                 actionResult = controller.Create(data);
             }
 
-            // Verifying the ActionResult, and the DB.
-            // - The result must be a ViewResult, with the name "Edit".
-            // - The controller ModelState must have one validation message.
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
         }
