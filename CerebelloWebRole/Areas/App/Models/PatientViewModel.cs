@@ -23,5 +23,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String Observations { get; set; }
 
         public List<SessionViewModel> Sessions { get; set; }
+
+        //public int DoctorId { get; set; }
     }
 }

@@ -17,11 +17,22 @@ namespace Test1
 
             string connName = null;
 
+            bool wasAttached = false;
+
             // New options:
             while (true)
             {
                 if (isToChooseDb)
                 {
+                    if (wasAttached)
+                    {
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                            Firestarter.DetachLocalDatabase(db);
+
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("DB detached.");
+                    }
+
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Black;
 
@@ -50,6 +61,17 @@ namespace Test1
 
                     if (string.IsNullOrWhiteSpace(connName))
                         return;
+
+                    using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                    {
+                        wasAttached = Firestarter.AttachLocalDatabase(db);
+                        if (wasAttached)
+                        {
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("DB attached!");
+                        }
+                    }
                 }
 
                 isToChooseDb = false;
@@ -407,6 +429,17 @@ namespace Test1
                         break;
 
                     case "q":
+                        // Dettaching previous DB if it was attached in this session.
+                        if (wasAttached)
+                        {
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                Firestarter.DetachLocalDatabase(db);
+
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("DB detached.");
+                        }
+
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Bye!");
                         return;

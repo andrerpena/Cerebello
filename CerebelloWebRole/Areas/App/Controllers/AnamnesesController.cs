@@ -127,6 +127,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 return View("details", this.GetViewModel(anamnese));
             }
+
             return View("edit", formModel);
         }
 
@@ -140,7 +141,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             return View(formModel);
         }
-        
+
         /// <summary>
         /// Lookup of diagnoses
         /// </summary>
@@ -162,14 +163,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var result = LookupHelper.GetData<CidLookupGridModel>(term, pageSize, pageIndex,
                 t =>
                 from e in doc.Descendants()
-                 where e.Name == "nome" &&
-                 StringHelper.RemoveDiacritics(e.ToString()).ToLower().Contains(StringHelper.RemoveDiacritics(t.ToString()).ToLower()) &&
-                 (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
-                 select new CidLookupGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
+                where e.Name == "nome" &&
+                StringHelper.RemoveDiacritics(e.ToString()).ToLower().Contains(StringHelper.RemoveDiacritics(t.ToString()).ToLower()) &&
+                (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
+                select new CidLookupGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
-        
+
         /// <summary>
         /// 
         /// Requisitos:

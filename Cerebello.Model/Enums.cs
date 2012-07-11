@@ -29,7 +29,7 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Superior incompleto")]
         GraduationNotCompleted = 3,
 
-        [Display(Name = "Super completo")]
+        [Display(Name = "Superior completo")]
         GraduationCompleted = 4,
 
         [Display(Name = "Pós-graduação")]

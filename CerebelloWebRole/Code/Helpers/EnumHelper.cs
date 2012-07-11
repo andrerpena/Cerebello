@@ -92,7 +92,7 @@ namespace CerebelloWebRole.Code
             if (expression.Body.NodeType != ExpressionType.MemberAccess)
                 throw new Exception("Expression must represent an object member");
 
-            var vPropertyInfo = PLKExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            var vPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
 
             if (vPropertyInfo.PropertyType.IsEnum)
                 return vPropertyInfo.PropertyType;

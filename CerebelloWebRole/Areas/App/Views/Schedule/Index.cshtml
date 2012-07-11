@@ -21,11 +21,11 @@ Agenda
         window.eventsUrl = "@Url.Action("GetAppointments")";
         window.getDatesWithAppointmentsUrl = "@Url.Action("GetDatesWithAppointments")";
 
-        window.doctorId = @Model.DoctorId;
-        window.slotMinutes = @Model.SlotMinutes;
+        window.doctorId = @(Model.DoctorId);
+        window.slotMinutes = @(Model.SlotMinutes);
         window.minTime = "@Model.MinTime";
         window.maxTime = "@Model.MaxTime";
-        window.weekends = @Model.Weekends.ToString().ToLower();
+        window.weekends = @(Model.Weekends ? "true" : "false");
     </script>
     <script type="text/javascript" src="/scripts/app/schedule.js"></script>
 }

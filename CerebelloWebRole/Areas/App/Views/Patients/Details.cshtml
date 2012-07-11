@@ -10,6 +10,9 @@
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
 }
+@section Scripts{
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery.arp.modal.css" />
+}
 @section Title {
     Paciente: <b>@Model.FullName</b>
 }
@@ -64,6 +67,15 @@
                     @Html.Action("details", "receipts", new { id = receiptId })
                 }
             }
+            @if (session.ExaminationRequestIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Solicitações de exames</p>
+                foreach (var receiptId in session.ExaminationRequestIds)
+                {
+                    @Html.Action("details", "exams", new { id = receiptId })
+                }
+            }
             @if (session.MedicalCertificateIds.Count > 0)
             {
                 <p class="subtitle">
@@ -96,7 +108,8 @@
             </div>
             <!-- exam requirement -->
             <div>
-                <a href="#" class="icon-link icon-link-plus">Nova solicitação de exames</a>
+                <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "exams", new { patientId = Model.Id })">
+                    Nova solicitação de exames</a>
                 <div class="new-exams-wrapper appointment-panel-wrapper">
                 </div>
             </div>
@@ -109,10 +122,27 @@
             </div>
             <!-- schedule return -->
             <div>
-                <a href="#" class="icon-link icon-link-reload">Marcar retorno</a>
+                <a href="#" class="icon-link icon-link-reload schedule-appointment">Marcar retorno</a>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $("a.schedule-appointment").click(function (e) {
+            $.modal({
+                url: "@Url.Action("Create", "Schedule")",
+                title: "Nova consulta",
+                data: {
+                    date: "",
+                    start: "",
+                    end: "",
+                    doctorId: "",
+                    patientId: @(this.Model.Id)
+                },
+                width: 480,
+                height: 200
+            });
+        });
+    </script>
     <script type="text/javascript">
         $("a.add-appointment-panel").click(function (e) {
             e.preventDefault();

@@ -39,6 +39,7 @@ namespace CerebelloWebRole.Tests.Tests
             this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
 
             Firestarter.ClearAllData(this.db);
+            Firestarter.InitializeDatabaseWithSystemData(this.db);
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
             this.db.SaveChanges();
         }
@@ -118,7 +119,7 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
 
             var mr = new MockRepository();
-            var controller = ControllersRepository.CreateControllerForTesting<AppController>(this.db, mr);
+            var controller = Mvc3TestHelper.CreateControllerForTesting<AppController>(this.db, mr);
             var controllerResult = controller.LookupEverything("Joao", 20, 1, this.db.Doctors.First().Id);
 
             var controllerResultAsLookupResult = (LookupJsonResult)controllerResult.Data;

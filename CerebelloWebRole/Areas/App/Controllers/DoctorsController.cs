@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Controllers;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -17,22 +18,47 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new PracticeDoctorsViewModel();
-            
-            model.Doctors = (from u in this.Practice.Users where u.Doctor != null
-
-                             select new DoctorViewModel()
-                             {
-                                 Id = u.Id,
-                                 Name = u.Person.FullName,
-                                 UrlIdentifier = u.Person.UrlIdentifier,
-                                 ImageUrl = GravatarHelper.GetGravatarUrl(u.GravatarEmailHash, GravatarHelper.Size.s64),
-                                 CRM = u.Doctor.CRM,
-                                 MedicalEntity = u.Doctor.SYS_MedicalEntity.Name,
-                                 MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name
-
-                             }).ToList();
-
+            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice);
             return View(model);
+        }
+
+        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice)
+        {
+            var usersThatAreDoctors = db.Users
+                .Where(u => u.PracticeId == practice.Id)
+                .Where(u => u.Doctor != null);
+
+            var dataCollection = usersThatAreDoctors
+                .Select(u => new
+                {
+                    vm = new DoctorViewModel()
+                    {
+                        Id = u.Id,
+                        Name = u.Person.FullName,
+                        UrlIdentifier = u.Person.UrlIdentifier,
+                        CRM = u.Doctor.CRM,
+                        MedicalEntity = u.Doctor.SYS_MedicalEntity.Name,
+                        MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name,
+                    },
+                    doc = u.Doctor,
+                    u.GravatarEmailHash,
+                })
+                .ToList();
+
+            // Getting more doctor's informations:
+            // Todo: this is going to become a problem in the future, because this info has no cache.
+            // - next free time slot of each doctor;
+            // - gravatar image.
+            foreach (var eachItem in dataCollection)
+            {
+                if (!string.IsNullOrEmpty(eachItem.GravatarEmailHash))
+                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.GravatarEmailHash, GravatarHelper.Size.s64);
+
+                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc).Item1;
+            }
+
+            var doctors = dataCollection.Select(item => item.vm).ToList();
+            return doctors;
         }
     }
 }

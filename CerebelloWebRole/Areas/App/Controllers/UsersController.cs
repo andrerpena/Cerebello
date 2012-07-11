@@ -87,14 +87,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new PracticeUsersViewModel();
 
-            model.Users = (from u in this.Practice.Users
-                           select new UserViewModel()
-                           {
-                               Id = u.Id,
-                               FullName = u.Person.FullName,
-                               UrlIdentifier = u.Person.UrlIdentifier,
-                               ImageUrl = GravatarHelper.GetGravatarUrl(u.GravatarEmailHash, GravatarHelper.Size.s64),
-                           }).ToList();
+            var dataCollection =
+                this.Practice.Users.Select(u =>
+                new
+                {
+                    vm = new UserViewModel
+                    {
+                        Id = u.Id,
+                        FullName = u.Person.FullName,
+                        UrlIdentifier = u.Person.UrlIdentifier,
+                    },
+                    u.GravatarEmailHash,
+                }).ToList();
+
+            foreach (var eachItem in dataCollection)
+            {
+                if (!string.IsNullOrEmpty(eachItem.GravatarEmailHash))
+                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.GravatarEmailHash, GravatarHelper.Size.s64);
+            }
+
+            model.Users = dataCollection.Select(item => item.vm).ToList();
 
             return View(model);
         }
@@ -135,18 +147,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ViewBag.MedicalSpecialty =
                 this.db.SYS_MedicalSpecialty
                 .ToList()
-                .Select(me => new List<SelectListItem>
-                {
-                    new SelectListItem { Value = me.Id.ToString(), Text = me.Name },
-                });
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
 
             ViewBag.MedicalEntityOptions =
                 this.db.SYS_MedicalEntity
                 .ToList()
-                .Select(me => new List<SelectListItem>
-                {
-                    new SelectListItem { Value = me.Id.ToString(), Text = me.Name },
-                });
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
 
             return View("Edit", model);
         }
@@ -251,9 +259,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
             {
                 // Removing validation error of medic properties, because this user is not a medic.
-                this.ModelState.Remove(() => formModel.MedicCRM);
-                this.ModelState.Remove(() => formModel.MedicalEntity);
-                this.ModelState.Remove(() => formModel.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicCRM);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntity);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialtyJurisdiction);
             }
 
             if (user != null)

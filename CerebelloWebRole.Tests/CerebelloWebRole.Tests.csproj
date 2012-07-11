@@ -125,7 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="ControllersRepository.cs" />
+    <Compile Include="Mvc3TestHelper.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
     <Compile Include="Tests\AuthenticationControllerTests.cs" />
@@ -151,7 +151,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Uncommited.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Shadow Include="Test References\CerebelloWebRole.accessor" />
   </ItemGroup>
   <ItemGroup>

@@ -85,19 +85,23 @@
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(Model.IsTimeValid ? "validation-passed" : "validation-failed")">
                         </span>
+                        <span id="time-validation-text">@Model.TimeValidationMessage</span>
                     </div>
-                    <a id="check_time" href="#" class="block-little-link">Verificar disponibilidade deste
-                        horário</a> <a id="next_time_from_this_link" href="#" class="block-little-link">Próximo
-                            horário livre a partir deste</a> <a id="next_time_link" href="#" class="block-little-link">
-                                Próximo horário livre a partir de agora</a>
+                    @* Action-links *@
+                    <a id="check_time" href="#" class="block-little-link">
+                        Verificar disponibilidade deste horário</a>
+                    <a id="next_time_from_this_link" href="#" class="block-little-link">
+                        Próximo horário livre a partir deste</a>
+                    <a id="next_time_link" href="#" class="block-little-link">
+                        Próximo horário livre a partir de agora</a>
                 </td>
             </tr>
         </table>
         
-                                                           if (Model.Id != null)
-                                                           {
+        if (Model.Id != null)
+        {
         <a id="delete-appointment-link" class="block-little-link" href="#">excluir consulta</a>
-                                                           }
+        }
         
         <div class="submit-bar">
             <input type="submit" value="salvar consulta" />
@@ -115,10 +119,17 @@
                 else {
                     if(result.status == "success")
                     {
-                        $("#calendar").fullCalendar("refetchEvents");
                         $(this).trigger("modal-ok");
-                        fetchDatePickerEvents();
-                        $(".datepicker").datepicker("refresh");
+
+                        // Updating the components in the background page.
+                        var calendar = $("#calendar");
+                        if (calendar.length > 0)
+                        {
+                            // If calendar is there, all the other variables and objects are there too.
+                            calendar.fullCalendar("refetchEvents");
+                            fetchDatePickerEvents();
+                            $(".datepicker").datepicker("refresh");
+                        }
                     }
                     else
                     {
@@ -183,11 +194,18 @@
             if (answer) {
                 $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
                     if(data.success) {
-                        $("#calendar").fullCalendar('refetchEvents');
                         $("#delete-appointment-link").trigger("modal-ok");
                         alert("Esta consulta foi excluída");
-                        fetchDatePickerEvents();
-                        $(".datepicker").datepicker("refresh");
+
+                        // Updating the components in the background page.
+                        var calendar = $("#calendar");
+                        if (calendar.length > 0)
+                        {
+                            // If calendar is there, all the other variables and objects are there too.
+                            calendar.fullCalendar("refetchEvents");
+                            fetchDatePickerEvents();
+                            $(".datepicker").datepicker("refresh");
+                        }
                     }
                     else
                         alert("Não foi possível excluir este paciente.\n" + "Informações técnicas: " + data.text);
@@ -214,9 +232,15 @@
             },
             success: function(result){
                 if(result.success)
+                {
                     $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                    $("#time-validation-text").html("");
+                }
                 else
+                {
                     $("#time-validation-icon").removeClass("validation-passed").addClass("validation-failed");
+                    $("#time-validation-text").html(result.text);
+                }
             }
         });
                 
@@ -225,6 +249,7 @@
             success: function(data) {
                 populateTimeInfo(data);
                 $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                $("#time-validation-text").html("");
             }
         });
 
@@ -239,6 +264,7 @@
             success: function(data) {
                 populateTimeInfo(data);
                 $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                $("#time-validation-text").html("");
             }
         });
 

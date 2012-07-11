@@ -207,6 +207,7 @@ CREATE TABLE [dbo].[Doctor](
 	[Id] [int] NOT NULL,
 	[CRM] [varchar](50) NOT NULL,
 	[MedicalEntityId] [int] NOT NULL,
+	[MedicalEntityJurisdiction] [nvarchar](50) NULL,
 	[MedicalSpecialtyId] [int] NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (
@@ -225,6 +226,22 @@ CREATE TABLE [dbo].[Email](
 	[PersonId] [int] NOT NULL,
 	[GravatarEmailHash] [varchar](200) NULL,
  CONSTRAINT [PK_Email] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+/****** Object:  Table [dbo].[ExaminationRequest] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ExaminationRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PatientId] [int] NOT NULL,
+	[Text] [nvarchar](max) NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+ CONSTRAINT [PK_ExaminationRequest] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
@@ -541,7 +558,7 @@ GO
 CREATE TABLE [dbo].[SYS_Holliday](
 	[Id] [int] NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
-	[Date] [date] NULL,
+	[MonthAndDay] [int] NOT NULL,
  CONSTRAINT [PK_SYS_Holliday] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -745,6 +762,12 @@ REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Email] CHECK CONSTRAINT [FK_Email_Person]
+GO
+/****** Object:  ForeignKey [FK_ExaminationRequest_Patient] ******/
+ALTER TABLE [dbo].[ExaminationRequest]  WITH CHECK ADD  CONSTRAINT [FK_ExaminationRequest_Patient] FOREIGN KEY([PatientId])
+REFERENCES [dbo].[Patient] ([Id])
+GO
+ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_Patient]
 GO
 /****** Object:  ForeignKey [FK_Laboratory_Doctor] ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])

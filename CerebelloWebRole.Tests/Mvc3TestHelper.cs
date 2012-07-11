@@ -6,14 +6,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
+using System.Globalization;
 
 namespace CerebelloWebRole.Tests
 {
     /// <summary>
     /// Generates controllers for testing
     /// </summary>
-#warning [Rename] Suggestion Mvc3TestHelper.
-    public class ControllersRepository
+    public class Mvc3TestHelper
     {
         public static T CreateControllerForTesting<T>(CerebelloEntities db, MockRepository mr, bool callOnActionExecuting = true) where T : Controller, new()
         {
@@ -56,6 +58,20 @@ namespace CerebelloWebRole.Tests
             foreach (var eachValidationResult in validationResults)
                 foreach (var eachMemberName in eachValidationResult.MemberNames)
                     ms.AddModelError(eachMemberName, eachValidationResult.ErrorMessage);
+
+            // Adding the remaining properties of the model to the ModelState.
+            var type = model.GetType();
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
+            foreach (var eachPropInfo in props)
+            {
+                if (!ms.ContainsKey(eachPropInfo.Name))
+                    ms.Add(eachPropInfo.Name, new ModelState() { });
+
+                // todo: attemptedValue is unknown... this is a supposition. Maybe there is another way.
+                var rawValue = eachPropInfo.GetValue(model, null);
+                var attemptedValue = string.Format(CultureInfo.InvariantCulture, "{0}", rawValue);
+                ms[eachPropInfo.Name].Value = new ValueProviderResult(rawValue, attemptedValue, CultureInfo.InvariantCulture);
+            }
         }
     }
 }

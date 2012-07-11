@@ -1,0 +1,49 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ExaminationRequestViewModel
+@{
+    Layout = null;
+}
+<div class="examrequest-details medical-appointment-details-panel" data-val-id="examrequest-@Model.Id">
+    @if (Model != null)
+    {
+        <table class="view-table">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.Text)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Text)
+                </td>
+            </tr>
+        </table>
+    }
+    <div class="inline-link-bar">
+        <a href="#" class="edit-examrequest inline-link" >Editar solicitação de exame</a>
+        <a href="#" class="delete-examrequest inline-link" >Excluir solicitação de exame</a>
+    </div>
+    <script type="text/javascript">
+        $(".edit-examrequest", $("div[data-val-id='examrequest-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("edit", "exams", new { id = Model.Id })",
+                success: function(result) {
+                    $("div[data-val-id='examrequest-@Model.Id']").replaceWith(result);
+                }
+            });
+        });
+
+        $(".delete-examrequest", $("div[data-val-id='examrequest-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir esta examrequest?\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Esta solicitação de exame foi excluída");
+                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                    }
+                    else
+                        alert("Não foi possível excluir esta examrequest.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+</div>

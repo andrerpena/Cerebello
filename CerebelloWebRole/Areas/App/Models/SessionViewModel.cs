@@ -18,18 +18,23 @@ namespace CerebelloWebRole.Areas.App.Models
         public DateTime Date { get; set; }
 
         /// <summary>
-        /// Receipt ids
+        /// Receipt ids.
         /// </summary>
         public List<int> ReceiptIds { get; set; }
 
         /// <summary>
-        /// Anamnese ids
+        /// Anamnese ids.
         /// </summary>
         public List<int> AnamneseIds { get; set; }
 
         /// <summary>
-        /// Certificate ids
+        /// Certificate ids.
         /// </summary>
         public List<int> MedicalCertificateIds { get; set; }
+
+        /// <summary>
+        /// Examination request ids.
+        /// </summary>
+        public List<int> ExaminationRequestIds { get; set; }
     }
 }

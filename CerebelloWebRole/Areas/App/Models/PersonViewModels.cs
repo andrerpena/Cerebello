@@ -17,6 +17,10 @@ namespace CerebelloWebRole.Areas.App.Models
             this.Emails = new List<EmailViewModel>();
         }
 
+        /// <summary>
+        /// Id of the object in the database.
+        /// Note: this Id may not be a Person id, but a related entity id... e.g.: a Patient id, or a Doctor id.
+        /// </summary>
         [Key]
         public int? Id { get; set; }
 

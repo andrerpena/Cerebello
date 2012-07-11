@@ -46,6 +46,8 @@
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
+    
+    editPanelMedic.AddField(m => m.MedicalSpecialtyJurisdiction);
 }
 @section Scripts {
     <script type="text/javascript">

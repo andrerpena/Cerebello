@@ -35,6 +35,8 @@ obj/
 *.mdf
 *.ldf
 
+Uncommited.config
+
 #Exceptions to third-party files.
 !/ThirdParty/*
 !/ThirdParty/**/*

@@ -11,7 +11,6 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class AppointmentViewModel
     {
-
         public int? Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
@@ -61,7 +60,10 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int DoctorId { get; set; }
+
+        /// <summary>
+        /// Validation message displayed next to the time.
+        /// </summary>
+        public string TimeValidationMessage { get; set; }
     }
-
-
 }
