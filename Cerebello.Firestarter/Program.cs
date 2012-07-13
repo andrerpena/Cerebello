@@ -121,9 +121,10 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             userOption1 = Console.ReadLine();
 
+                            // ToDo: figure out a way to remove this.. we should have a common path or something
                             var dicPath = new Dictionary<string, string>
                             {
-                                { "a", @"?????" },
+                                { "a", @"D:\Projetos\Azure\Cerebello\DB\Scripts" },
                                 { "c", @"C:\Cerebello\DB\Scripts" },
                                 { "m", @"P:\Projects.2012\Cerebello\DB\Scripts" },
                             };
