@@ -78,28 +78,39 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             ExaminationRequest modelObj = null;
 
-            // Todo: security issue... must check current user practice againt the practice of the edited objects.
+            if (formModel.Id == null)
+            {
+                modelObj = new ExaminationRequest
+                {
+                    CreatedOn = DateTime.UtcNow,
+                    PatientId = formModel.PatientId.Value,
+                };
+
+                this.db.ExaminationRequests.AddObject(modelObj);
+            }
+            else
+            {
+                modelObj = this.db.ExaminationRequests.Where(r => r.Id == formModel.Id).FirstOrDefault();
+
+                // If modelObj is null, we must tell the user that this object does not exist.
+                if (modelObj == null)
+                {
+                    return View("NotFound", formModel);
+                }
+
+                // Security issue... must check current user practice against the practice of the edited objects.
+                var currentUser = this.GetCurrentUser();
+                if (currentUser.PracticeId != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
+                {
+                    return View("NotFound", formModel);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(formModel.Text))
+                modelObj.Text = formModel.Text;
 
             if (this.ModelState.IsValid)
             {
-                if (formModel.Id == null)
-                {
-                    modelObj = new ExaminationRequest()
-                    {
-                        CreatedOn = DateTime.UtcNow,
-                        PatientId = formModel.PatientId.Value,
-                    };
-                    this.db.ExaminationRequests.AddObject(modelObj);
-                }
-                else
-                {
-                    modelObj = this.db.ExaminationRequests.Where(r => r.Id == formModel.Id).FirstOrDefault();
-
-                    // todo: if modelObj is null, we must tell the user that this object does not exist.
-                }
-
-                modelObj.Text = formModel.Text;
-
                 db.SaveChanges();
 
                 return View("details", this.GetViewModel(modelObj));
@@ -115,24 +126,45 @@ namespace CerebelloWebRole.Areas.App.Controllers
         ///     1 - The given exam-request should stop existing after this action call. In case of success, it should return a JsonDeleteMessage
         ///         with success = true
         ///     
-        ///     2 - In case the given exam-request doesn't exist, it should return a JsonDeleteMessage with success = false and the text property
-        ///         informing the reason of the failure
-        /// 
+        ///     2 - In case the given exam-request doesn't exist,
+        ///         it should return a JsonDeleteMessage with success = false and the text property
+        ///         informing that the object does not exist.
+        ///     
+        ///     3 - In case the given exam-request doesn't belong to the current user practice,
+        ///         it should return a JsonDeleteMessage with success = false and the text property
+        ///         informing that the object does not exist.
         /// </summary>
         [HttpGet]
         public JsonResult Delete(int id)
         {
             try
             {
-                var modelObj = db.ExaminationRequests.Where(m => m.Id == id).First();
+                var practiceId = this.GetCurrentUser().PracticeId;
+
+                var modelObj = db.ExaminationRequests
+                    .Where(m => m.Id == id)
+                    .Where(m => m.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
+                    .FirstOrDefault();
+
+                // If exam does not exist, return message telling this.
+                if (modelObj == null)
+                {
+                    return this.Json(
+                        new JsonDeleteMessage { success = false, text = "A requisição de exame não existe." },
+                        JsonRequestBehavior.AllowGet);
+                }
 
                 this.db.ExaminationRequests.DeleteObject(modelObj);
                 this.db.SaveChanges();
-                return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
+                return this.Json(
+                    new JsonDeleteMessage { success = true },
+                    JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return this.Json(new JsonDeleteMessage { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
+                return this.Json(
+                    new JsonDeleteMessage { success = false, text = ex.Message },
+                    JsonRequestBehavior.AllowGet);
             }
         }
     }

@@ -37,9 +37,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         Name = u.Person.FullName,
                         UrlIdentifier = u.Person.UrlIdentifier,
                         CRM = u.Doctor.CRM,
-                        MedicalEntity = u.Doctor.SYS_MedicalEntity.Name,
                         MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name,
                     },
+                    MedicalEntityCode = u.Doctor.SYS_MedicalEntity.Code,
+                    u.Doctor.MedicalEntityJurisdiction,
                     doc = u.Doctor,
                     u.GravatarEmailHash,
                 })
@@ -53,6 +54,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 if (!string.IsNullOrEmpty(eachItem.GravatarEmailHash))
                     eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.GravatarEmailHash, GravatarHelper.Size.s64);
+
+                eachItem.vm.MedicalEntity = string.Format(
+                    string.IsNullOrEmpty(eachItem.MedicalEntityJurisdiction) ? "{0}" : "{0}-{1}",
+                    eachItem.MedicalEntityCode,
+                    eachItem.MedicalEntityJurisdiction);
 
                 eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc).Item1;
             }

@@ -61,9 +61,21 @@ namespace CerebelloWebRole.Tests
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TestDBServer"].ConnectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn);
-                cmd.CommandText = @"sp_detach_db CerebelloTEST";
-                cmd.ExecuteNonQuery();
+
+                SqlCommand cmdExists = new SqlCommand("", conn);
+                cmdExists.CommandText = string.Format(
+                    "SELECT db_id(N'{0}')",
+                    "CerebelloTEST");
+
+                var dbExists = cmdExists.ExecuteScalar();
+
+                if (!(dbExists == null || dbExists is DBNull))
+                {
+                    SqlCommand cmd = new SqlCommand("", conn);
+                    cmd.CommandText = "sp_detach_db CerebelloTEST";
+
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 

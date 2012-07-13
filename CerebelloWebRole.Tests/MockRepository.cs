@@ -16,6 +16,10 @@ namespace CerebelloWebRole.Tests
 {
     public class MockRepository
     {
+        /// <summary>
+        /// Initializes a new MockRepository with the default configuration:
+        /// User = André; Route:Practice = ConsultorioDrHouse; Route:Doctor = GregoryHouse.
+        /// </summary>
         public MockRepository()
         {
             this.Reset();

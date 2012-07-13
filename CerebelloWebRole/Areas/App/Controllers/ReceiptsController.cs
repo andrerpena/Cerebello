@@ -81,20 +81,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (formModel.ReceiptMedicines == null)
                 this.ModelState.AddModelError("Medicines", "A receita deve ter pelo menos um medicamento");
 
+            if (formModel.Id == null)
+            {
+                receipt = new Receipt()
+                {
+                    CreatedOn = DateTime.UtcNow,
+                    PatientId = formModel.PatientId.Value
+                };
+                this.db.Receipts.AddObject(receipt);
+            }
+            else
+                receipt = db.Receipts.Where(r => r.Id == formModel.Id).FirstOrDefault();
+
+            if (formModel.ReceiptMedicines.Count == 0)
+            {
+                this.ModelState.AddModelError(
+                    () => formModel.ReceiptMedicines,
+                    "Não é possível criar uma receita sem medicamentos.");
+            }
+
             if (this.ModelState.IsValid)
             {
-                if (formModel.Id == null)
-                {
-                    receipt = new Receipt()
-                    {
-                        CreatedOn = DateTime.UtcNow,
-                        PatientId = formModel.PatientId.Value
-                    };
-                    this.db.Receipts.AddObject(receipt);
-                }
-                else
-                    receipt = db.Receipts.Where(r => r.Id == formModel.Id).FirstOrDefault();
-
+                // Updating receipt medicines. This is only possible when view-model is valid,
+                // otherwise this is going to throw exceptions.
                 receipt.ReceiptMedicines.Update(
                         formModel.ReceiptMedicines,
                         (vm, m) => vm.Id == m.Id,
@@ -181,7 +190,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 document.Add(list);
             }
-            
+
             document.Close();
             documentStream.Position = 0;
             return File(documentStream, "application/pdf");

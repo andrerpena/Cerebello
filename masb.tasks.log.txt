@@ -7,6 +7,22 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
 
+2012-07-12 ##:##-##:## (#º##") ##   
+
+2012-07-12 22:35-23:00 (0º25")  9   Testar exclusão de solicitação de exame de outro consultório.
+2012-07-12 21:40-22:35 (0º55")  4   Testar exclusão de solicitação de exame que não existe.
+2012-07-12 19:50-20:40 (0º50")  8   Testar exclusão da solicitação de exame.
+2012-07-12 19:00-19:50 (0º50")  4   Testar edição de solicitação de exame que não existe.
+2012-07-12 18:00-19:00 (1º00")  4   Testar edição de solicitação de exame de outro consultório.
+
+2012-07-11 20:10-20:40 (0º30")  9   Testar edição da solicitação de exame.
+2012-07-11 18:50-19:10 (0º20") 10   Testar criação da solicitação de exame sem texto.
+2012-07-11 17:30-18:50 (1º20")  6   Testar criação da solicitação de exame.
+2012-07-11 14:15-14:30 (0º15")  8   Bug: exceção ao salvar receita inválida.
+
+2012-07-09 20:30-21:00 (0º30")  5   Não pode salvar receita sem nenhum medicamento.
+2012-07-09 19:30-20:30 (1º00")  4   Mostrando o conselho médico com a UF - telas início consultório, médicos, e home do médico.
+
 2012-07-06 01:15-02:15 (0º45")  5   Preparando commit.
 
 2012-07-05 23:15-24:00 (0º45")  5   Tela de prontuário: marcar retorno... não tá fechando a janela ao clicar em salvar.

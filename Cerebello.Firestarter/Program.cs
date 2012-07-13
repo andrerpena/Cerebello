@@ -115,15 +115,17 @@ namespace Test1
                     case "crt":
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine("m = MASB");
-                            Console.WriteLine("a = André");
+                            Console.WriteLine(@"a = André");
+                            Console.WriteLine(@"c = C:\Cerebello");
+                            Console.WriteLine(@"m = MASB");
                             Console.ForegroundColor = ConsoleColor.White;
                             userOption1 = Console.ReadLine();
 
                             var dicPath = new Dictionary<string, string>
                             {
-                                { "m", @"P:\Projects.2012\Cerebello\DB\Scripts" },
                                 { "a", @"?????" },
+                                { "c", @"C:\Cerebello\DB\Scripts" },
+                                { "m", @"P:\Projects.2012\Cerebello\DB\Scripts" },
                             };
 
                             string path;
