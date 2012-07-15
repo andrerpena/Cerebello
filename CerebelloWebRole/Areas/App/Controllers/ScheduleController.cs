@@ -111,6 +111,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 now :
                 date2 + DateTimeHelper.GetTimeSpan(start);
 
+            // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
+            if (slots.Any())
             {
                 var min = slots.Min(s => (s.Item1 > startTime ? s.Item1 - startTime : startTime - s.Item1));
                 var findMin = slots.Where(s => (s.Item1 > startTime ? s.Item1 - startTime : startTime - s.Item1) == min).FirstOrDefault();
@@ -128,6 +130,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (endTime - startTime < slotDuration)
                 endTime = startTime + slotDuration;
 
+            // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
+            if (slots.Any())
             {
                 var min = slots.Min(s => (s.Item2 > endTime ? s.Item2 - endTime : endTime - s.Item2));
                 var findMin = slots.Where(s => (s.Item2 > endTime ? s.Item2 - endTime : endTime - s.Item2) == min).FirstOrDefault();

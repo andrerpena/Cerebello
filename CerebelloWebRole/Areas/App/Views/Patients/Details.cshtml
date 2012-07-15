@@ -43,49 +43,56 @@
 
 <p class="details-title">Histórico do paciente</p>
 <div class="medical-appointments-panel">
-    @foreach (var session in this.Model.Sessions)
+    @if (this.Model.Sessions.Any())
     {
-        <div class="medical-appointment-panel">
-            <p class="title">
-                Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(session.Date, CerebelloWebRole.Code.DateTimeHelper.GetTimeZoneNow(), CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
-            </p>
-            @if (session.AnamneseIds.Count > 0)
-            {
-                <p class="subtitle">
-                    Anamneses</p>
-                foreach (var anamneseId in session.AnamneseIds)
+        foreach (var session in this.Model.Sessions)
+        {
+            <div class="medical-appointment-panel">
+                <p class="title">
+                    Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(session.Date, CerebelloWebRole.Code.DateTimeHelper.GetTimeZoneNow(), CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
+                </p>
+                @if (session.AnamneseIds.Count > 0)
                 {
-                    @Html.Action("details", "anamneses", new { id = anamneseId })
+                    <p class="subtitle">
+                        Anamneses</p>
+                    foreach (var anamneseId in session.AnamneseIds)
+                    {
+                        @Html.Action("details", "anamneses", new { id = anamneseId })
+                    }
                 }
-            }
-            @if (session.ReceiptIds.Count > 0)
-            {
-                <p class="subtitle">
-                    Receitas</p>
-                foreach (var receiptId in session.ReceiptIds)
+                @if (session.ReceiptIds.Count > 0)
                 {
-                    @Html.Action("details", "receipts", new { id = receiptId })
+                    <p class="subtitle">
+                        Receitas</p>
+                    foreach (var receiptId in session.ReceiptIds)
+                    {
+                        @Html.Action("details", "receipts", new { id = receiptId })
+                    }
                 }
-            }
-            @if (session.ExaminationRequestIds.Count > 0)
-            {
-                <p class="subtitle">
-                    Solicitações de exames</p>
-                foreach (var receiptId in session.ExaminationRequestIds)
+                @if (session.ExaminationRequestIds.Count > 0)
                 {
-                    @Html.Action("details", "exams", new { id = receiptId })
+                    <p class="subtitle">
+                        Solicitações de exames</p>
+                    foreach (var receiptId in session.ExaminationRequestIds)
+                    {
+                        @Html.Action("details", "exams", new { id = receiptId })
+                    }
                 }
-            }
-            @if (session.MedicalCertificateIds.Count > 0)
-            {
-                <p class="subtitle">
-                    Atestados médicos</p>
-                foreach (var certificateId in session.MedicalCertificateIds)
+                @if (session.MedicalCertificateIds.Count > 0)
                 {
-                    @Html.Action("details", "medicalcertificates", new { id = certificateId })
+                    <p class="subtitle">
+                        Atestados médicos</p>
+                    foreach (var certificateId in session.MedicalCertificateIds)
+                    {
+                        @Html.Action("details", "medicalcertificates", new { id = certificateId })
+                    }
                 }
-            }
-        </div>
+            </div>
+        }
+    }
+    else
+    {
+        @Html.Message("O paciente não possui histórico")
     }
 
     <p class="details-title">Nova consulta</p>
