@@ -108,21 +108,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var field = formModel.Fields[i];
 
-                // this will generate a decomposed form of the given string, with accents placed in different characters
-                var stStr = field.Name.Normalize(System.Text.NormalizationForm.FormD);
-                foreach (var c in stStr)
+                // it the field name is empty, it will be validated by the mvc framework.
+                // if it's not, then we validate manually
+                if (!string.IsNullOrEmpty(field.Name))
                 {
-                    UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
-                    if (uc == UnicodeCategory.NonSpacingMark)
+                    // this will generate a decomposed form of the given string, with accents placed in different characters
+                    var stStr = field.Name.Normalize(System.Text.NormalizationForm.FormD);
+                    foreach (var c in stStr)
                     {
-                        this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido");
-                        break;
-                    }
+                        UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
+                        if (uc == UnicodeCategory.NonSpacingMark)
+                        {
+                            this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido");
+                            break;
+                        }
 
-                    if (!char.IsLetterOrDigit(c) && !new char[] { '_', '-' }.Contains(c))
-                    {
-                        this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido");
-                        break;
+                        if (!char.IsLetterOrDigit(c) && !new char[] { '_', '-' }.Contains(c))
+                        {
+                            this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido");
+                            break;
+                        }
                     }
                 }
             }
@@ -161,8 +166,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 for (int i = 0; i < formModel.Fields.Count; i++)
                 {
                     var field = formModel.Fields[i];
-                    if (!fieldsFoundInTheText.Any(f => f.ToLower() == field.Name.ToLower()))
-                        this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), string.Format("O campo '{0}' não foi referenciado no texto", field.Name));
+                    if (!string.IsNullOrEmpty(field.Name))
+                    {
+                        if (!fieldsFoundInTheText.Any(f => f.ToLower() == field.Name.ToLower()))
+                            this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), string.Format("O campo '{0}' não foi referenciado no texto", field.Name));
+                    }
                 }
             }
 

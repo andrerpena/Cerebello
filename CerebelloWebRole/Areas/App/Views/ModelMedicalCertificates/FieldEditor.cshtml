@@ -2,11 +2,8 @@
 @{
     Layout = null;
 }
-<li class="edit-list-item">
-    @using (Html.BeginCollectionItem("Fields"))
-    {
-        @Html.HiddenFor(model => model.Id)
-        @Html.TextBoxFor(model => model.Name)
-    }
-    <span class="close-collection-item" onclick="$(this).closest('li').remove()"></span>
-</li>
+@using (Html.BeginCollectionItemInline("Fields"))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.TextBoxFor(model => model.Name)
+}
