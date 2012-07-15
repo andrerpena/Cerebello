@@ -109,9 +109,10 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
-    <Compile Include="Areas\App\Controllers\SymptomsController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
+    <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ExamViewModel.cs" />
+    <Compile Include="Areas\App\Models\LookupGriModels\SysMedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
@@ -523,7 +524,6 @@
     <Content Include="Areas\App\Views\MedicalCertificates\Edit.cshtml" />
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsDetails.cshtml" />
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsEditor.cshtml" />
-    <Content Include="Areas\App\Views\Symptoms\Index.cshtml" />
     <Content Include="Areas\App\Views\Shared\CollectionEditor.cshtml" />
     <Content Include="Areas\App\Views\Users\Index.cshtml" />
     <Content Include="Areas\App\Views\Users\Edit.cshtml" />

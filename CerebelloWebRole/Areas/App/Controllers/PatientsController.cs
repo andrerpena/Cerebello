@@ -361,7 +361,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var result = new LookupJsonResult()
             {
                 Rows = new System.Collections.ArrayList(rows),
-                Count = rows.Count()
+                Count = baseQuery.Count()
             };
 
             return this.Json(result, JsonRequestBehavior.AllowGet);

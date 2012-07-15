@@ -633,6 +633,7 @@ fieldset legend
 .form-title
 {
     background: none repeat scroll 0 0 #F5F5F5;
+    border-bottom: 1px solid #E8E8E8;
     margin: 20px 0 0;
     padding: 5px;
 }
@@ -1350,7 +1351,7 @@ ul.time-table li
 
 div.tabs 
 {
-    border-bottom: 1px solid #DDDDDD;
+    border-bottom: 1px solid #D7D7D7;
     font-size: 11px;
     line-height: 14px;
     margin: 18px 0;
@@ -1364,10 +1365,8 @@ div.tabs a
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
-    border-color: #DDDDDD #DDDDDD -moz-use-text-color;
+    border-color: #D7D7D7 #D7D7D7 -moz-use-text-color;
     border-style: solid solid none;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
     border-width: 1px 1px 0;
     color: black;
     cursor: pointer;
@@ -1400,5 +1399,7 @@ div.message
 {
     background-color: #FCFBE6;
     border: 1px solid #F5F3C7;
+    color: #444444;
+    margin: 10px 0;
     padding: 10px;
 }

@@ -208,6 +208,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 baseQuery = baseQuery.Where(l => l.Name.Contains(term));
 
             var query = from l in baseQuery
+                        orderby l.Name
                         select new
                         {
                             id = l.Id,
@@ -267,22 +268,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return this.Json(activeIngredients, JsonRequestBehavior.AllowGet);
         }
-
+        
         [HttpGet]
-        public JsonResult SearchSysMedication(string term)
+        public JsonResult LookupSysMedicine(string term, int pageSize, int pageIndex)
         {
-            var medicines = (from m in this.db.SYS_Medicine
-                             where (m.Name.Contains(term) || m.ActiveIngredients.Any(ai => ai.Name.Contains(term)))
-                             orderby m.Name
-                             select new
-                             {
-                                 id = m.Id,
-                                 value = m.Name,
-                                 laboratory = m.Laboratory.Name,
-                                 activeIngredients = m.ActiveIngredients.Select(ai => ai.Name)
-                             }).Take(5).ToList();
+            var baseQuery = this.db.SYS_Medicine.Include("Laboratory").AsQueryable();
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(m => m.Name.Contains(term) || m.ActiveIngredients.Any(ai => ai.Name.Contains(term)));
 
-            return this.Json(medicines, JsonRequestBehavior.AllowGet);
+            var rows = (from p in baseQuery.OrderBy(p => p.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
+                        select new SysMedicineLookupGridModel
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            LaboratoryName = p.Laboratory.Name
+                        }).ToList();
+
+            var result = new LookupJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(rows),
+                Count = baseQuery.Count()
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult LeafletEditor(MedicineLeafletViewModel viewModel)

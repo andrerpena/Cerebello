@@ -13,6 +13,7 @@ namespace CerebelloWebRole.Code.Controls
         /// <summary>
         /// 
         /// </summary>
+        [Obsolete("This is to hard to generalize the lookup logic. This is just making stuff harder to understand. Just do it manually")]
         public static TModel GetObject<TModel>(int? id, string text, Func<int, TModel> getById, Func<string, TModel> getByText, Func<string, TModel> getNew, bool allowInsertion) where TModel : class
         {
             if (allowInsertion)
@@ -38,6 +39,7 @@ namespace CerebelloWebRole.Code.Controls
             }
         }
 
+        [Obsolete("This is to hard to generalize the lookup logic. This is just making stuff harder to understand. Just do it manually")]
         public static LookupJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IQueryable<TModel>> getQuery, Func<IQueryable<TModel>, IQueryable<TModel>> orderQueryBy, Func<TModel, object> createRow)
         {
             if (!pageIndex.HasValue)
@@ -58,6 +60,7 @@ namespace CerebelloWebRole.Code.Controls
                 };
         }
 
+        [Obsolete("This is to hard to generalize the lookup logic. This is just making stuff harder to understand. Just do it manually")]
         public static LookupJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IEnumerable<TModel>> getQuery)
         {
             if (!pageIndex.HasValue)

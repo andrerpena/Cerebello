@@ -1,4 +1,5 @@
-﻿@{
+﻿@model CerebelloWebRole.Areas.App.Models.AnvisaImportViewModel
+@{
     Layout = null;
 }
 <div class="anvisa-edit">
@@ -10,8 +11,13 @@
                     Medicamento
                 </th>
                 <td>
-                    @Html.TextBox("anvisa_text", null, new { @class = "lookup" })
-                    @Html.Hidden("anvisaid")
+                    @(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.AnvisaImportViewModel, CerebelloWebRole.Areas.App.Models.SysMedicineLookupGridModel, int>(
+                        model => model.AnvisaId,
+                        model => model.AnvisaText,
+                        Url.Action("LookupSysMedicine", "Medicines"),
+                        gridmodel => gridmodel.Id,
+                        gridmodel => gridmodel.Name,
+                        gridmodel => gridmodel.LaboratoryName))
                 </td>
             </tr>
         </table>
@@ -22,22 +28,9 @@
     }
     
     <script type="text/javascript">
-
         $("#modal_cancel").click(function (e) {
             e.preventDefault();
             $(this).trigger("modal-cancel");
         });
-
-        $("#anvisa_text").autocomplete({
-                source: "@Url.Action("searchsysmedication")",
-                select: function(event, ui) {
-                            $("#anvisaid").val(ui.item.id);
-                        }
-            }).data( "autocomplete" )._renderItem = function( ul, item ) {
-			    return $( "<li></li>" )
-				    .data( "item.autocomplete", item )
-				    .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.laboratory + "</span></a>" )
-				    .appendTo( ul );
-		    };
     </script>
 </div>
