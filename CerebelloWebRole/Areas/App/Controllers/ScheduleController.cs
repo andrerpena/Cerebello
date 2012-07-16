@@ -119,7 +119,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 startTime = findMin.Item1;
             }
 
-            start = startTime.ToString("hh:mm");
+            start = startTime.ToString("HH:mm");
 
             // Getting end date and time.
             DateTime endTime =
@@ -138,7 +138,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 endTime = findMin.Item2;
             }
 
-            end = endTime.ToString("hh:mm");
+            end = endTime.ToString("HH:mm");
 
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
