@@ -53,13 +53,20 @@ namespace CerebelloWebRole.Code.Extensions
         /// Displays an inline message-box, containing arbitrary text.
         /// The text will be html encoded.
         /// </summary>
-        /// <param name="htmlHelper"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
         public static MvcHtmlString Message(this HtmlHelper htmlHelper, string text)
         {
             var encodedText = HttpUtility.HtmlEncode(text);
             return new MvcHtmlString(String.Format(@"<div class=""message"">{0}</div>", encodedText));
+        }
+
+        /// <summary>
+        /// Displays an inline message-box for help.
+        /// This should be called in the side-boxes
+        /// </summary>
+        public static MvcHtmlString MessageHelp(this HtmlHelper htmlHelper, string text)
+        {
+            var encodedText = HttpUtility.HtmlEncode(text);
+            return new MvcHtmlString(String.Format(@"<div class=""message-help"">{0}</div>", encodedText));
         }
 
         public static MvcHtmlString ButtonLink(this HtmlHelper htmlHelper, string aText, string aUrl)

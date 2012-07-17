@@ -194,6 +194,31 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(true, controller.ModelState.IsValid);
         }
 
+        /// <summary>
+        /// Verify if it's possible to create a field with a pre-defined name
+        /// </summary>
+        [TestMethod]
+        public void Edit_CannotCreateAFieldWithPredefinedNames()
+        {
+            ModelMedicalCertificateViewModel formModel = new ModelMedicalCertificateViewModel()
+            {
+                Name = "My Model",
+                Text = "This is a medical certificate for <%paciente%>",
+                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
+                    // 'paciente' is a pre-defined field. You can reference it but you cannot add it
+                    new ModelMedicalCertificateFieldViewModel() { Name = "paciente" }
+                }
+            };
+
+            var mr = new MockRepository();
+            var controller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var controllerResult = controller.Edit(formModel);
+
+            Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
+            Assert.AreEqual(false, controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState.Count);
+        }
+
         [TestMethod]
         public void Edit_New_HappyPath()
         {

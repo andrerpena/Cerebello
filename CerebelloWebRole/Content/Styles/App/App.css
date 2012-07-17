@@ -1403,3 +1403,12 @@ div.message
     margin: 10px 0;
     padding: 10px;
 }
+
+/* messaging for help */
+div.message-help
+{
+    color: #5F5F5F;
+    font-size: 11px;
+    line-height: 1.2em;
+    margin: 8px 0;
+}
