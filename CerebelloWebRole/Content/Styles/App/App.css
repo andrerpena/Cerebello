@@ -1414,7 +1414,7 @@ div.message-help
 }
 
 /* calendar */
-.generic-commitment.fc-event-skin, .generic-commitment .fc-event-skin
+.generic-appointment.fc-event-skin, .generic-appointment .fc-event-skin
 {
     border-color: #3c6;
     background-color: #63CB95;

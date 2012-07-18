@@ -64,15 +64,15 @@ namespace CerebelloWebRole.Areas.App.Models
         public string TimeValidationMessage { get; set; }
 
         /// <summary>
-        /// Indicates whether this is a generic commitment or an appointement.
+        /// Indicates whether this is a generic or medical appointement.
         /// </summary>
-        public bool IsGenericCommitment { get; set; }
+        public bool IsGenericAppointment { get; set; }
 
         /// <summary>
-        /// Commitment description, when it is a generic commitment, instead of an appointment.
+        /// Appointment description, when it is a generic appointment, instead of a medical appointment.
         /// </summary>
         [Display(Name = "Descrição")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string CommitmentDescription { get; set; }
+        public string Description { get; set; }
     }
 }

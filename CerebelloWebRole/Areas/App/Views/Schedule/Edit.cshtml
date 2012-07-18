@@ -5,15 +5,15 @@
 
     bool isEditing = this.ViewBag.IsEditing == true;
 
-    bool isCommitment = Model.IsGenericCommitment && !Model.PatientFirstAppointment;
-    bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericCommitment;
-    bool isSubsequentAppointment = !isCommitment && !isFirstAppointment;
+    bool isGenericAppointment = Model.IsGenericAppointment && !Model.PatientFirstAppointment;
+    bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
+    bool isSubsequentAppointment = !isGenericAppointment && !isFirstAppointment;
 
-    string commitmentOnlyDisplay = isCommitment ? "table-row" : "none";
+    string genericAppointmentOnlyDisplay = isGenericAppointment ? "table-row" : "none";
     string subsequentAppointmentOnlyDisplay = isSubsequentAppointment ? "table-row" : "none";
     string firstAppointmentOnlyDisplay = isFirstAppointment ? "table-row" : "none";
 
-    string saveButtonText = isCommitment ? "salvar compromisso" : "salvar consulta";
+    string saveButtonText = isGenericAppointment ? "salvar compromisso" : "salvar consulta";
 }
 <div class="appointment-edit">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "appointment_form" }))
@@ -38,21 +38,21 @@
                 /* todo: Must vanish with this style. */
             </style>
             <ul class="tabs">
-                <li id="appointment-tab">Consulta</li>
-                <li id="commitment-tab">Compromisso</li>
+                <li id="medical-appointment-tab">Consulta</li>
+                <li id="generic-appointment-tab">Compromisso</li>
             </ul>
         }
         
-        @Html.HiddenFor(model => model.IsGenericCommitment)
+        @Html.HiddenFor(model => model.IsGenericAppointment)
         
         <table class="form-table">
-            @if (!isEditing || isCommitment)
+            @if (!isEditing || isGenericAppointment)
             {
-                <tr class="commitment-only" style="display: @commitmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.CommitmentDescription)
+                <tr class="generic-appointment-only" style="display: @genericAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.Description)
                     </th>
                     <td>
-                        @Html.TextAreaFor(model => model.CommitmentDescription)
+                        @Html.TextAreaFor(model => model.Description)
                     </td>
                 </tr>
             }
@@ -210,24 +210,24 @@
 //				    .appendTo( ul );
 //		    };
 
-        $("#appointment-tab").click(function(e) {
+        $("#medical-appointment-tab").click(function(e) {
             e.preventDefault();
-            $(".commitment-only").hide();
+            $(".generic-appointment-only").hide();
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
-            $("#IsGenericCommitment").val(false);
+            $("#IsGenericAppointment").val(false);
             $("#PatientNameLookup").focus();
             $("#save-button").val("salvar consulta");
             $(this).trigger("modal-resize");
         });
 
-        $("#commitment-tab").click(function(e) {
+        $("#generic-appointment-tab").click(function(e) {
             e.preventDefault();
-            $(".commitment-only").show();
+            $(".generic-appointment-only").show();
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").hide();
-            $("#IsGenericCommitment").val(true);
-            $("#CommitmentDescription").focus();
+            $("#IsGenericAppointment").val(true);
+            $("#Description").focus();
             $("#save-button").val("salvar compromisso");
             $(this).trigger("modal-resize");
         });

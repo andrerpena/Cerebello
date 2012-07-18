@@ -34,34 +34,34 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                   id = a.Id,
                                   start = a.Start.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                                   end = a.End.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                                  title = GetCommitmentText(a),
-                                  className = GetCommitmentClass(a),
+                                  title = GetAppointmentText(a),
+                                  className = GetAppointmentClass(a),
                               }).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        private static string GetCommitmentText(Appointment a)
+        private static string GetAppointmentText(Appointment a)
         {
-            switch ((TypeCommitment)a.Type)
+            switch ((TypeAppointment)a.Type)
             {
-                case TypeCommitment.GenericCommitment:
+                case TypeAppointment.GenericAppointment:
                     return a.Description;
-                case TypeCommitment.MedicalAppointment:
+                case TypeAppointment.MedicalAppointment:
                     return a.Patient.Person.FullName;
                 default:
-                    throw new Exception("Unsupported commitment type.");
+                    throw new Exception("Unsupported appointment type.");
             }
         }
 
-        private static string GetCommitmentClass(Appointment a)
+        private static string GetAppointmentClass(Appointment a)
         {
-            switch ((TypeCommitment)a.Type)
+            switch ((TypeAppointment)a.Type)
             {
-                case TypeCommitment.GenericCommitment:
-                    return "generic-commitment";
-                case TypeCommitment.MedicalAppointment:
+                case TypeAppointment.GenericAppointment:
+                    return "generic-appointment";
+                case TypeAppointment.MedicalAppointment:
                     return "medical-appointment";
                 default:
-                    throw new Exception("Unsupported commitment type.");
+                    throw new Exception("Unsupported appointment type.");
             }
         }
 
@@ -258,19 +258,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 IsTimeValid = true,
             };
 
-            switch ((TypeCommitment)appointment.Type)
+            switch ((TypeAppointment)appointment.Type)
             {
-                case TypeCommitment.GenericCommitment:
-                    viewModel.IsGenericCommitment = true;
-                    viewModel.CommitmentDescription = appointment.Description;
+                case TypeAppointment.GenericAppointment:
+                    viewModel.IsGenericAppointment = true;
+                    viewModel.Description = appointment.Description;
                     break;
-                case TypeCommitment.MedicalAppointment:
-                    viewModel.IsGenericCommitment = false;
+                case TypeAppointment.MedicalAppointment:
+                    viewModel.IsGenericAppointment = false;
                     viewModel.PatientNameLookup = appointment.Patient.Person.FullName;
                     viewModel.PatientId = appointment.PatientId;
                     break;
                 default:
-                    throw new Exception("Unsupported commitment type.");
+                    throw new Exception("Unsupported appointment type.");
             }
 
             this.ViewBag.IsEditing = true;
@@ -282,9 +282,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Edit(AppointmentViewModel formModel)
         {
             // Custom model validation.
-            if (formModel.IsGenericCommitment)
+            if (formModel.IsGenericAppointment)
             {
-                // This is a commitment, so we must clear validation for patient.
+                // This is a generic appointment, so we must clear validation for patient.
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
@@ -296,8 +296,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else if (formModel.PatientFirstAppointment)
             {
-                // This is a commitment, so we must clear validation for commitment.
-                this.ModelState.ClearPropertyErrors(() => formModel.CommitmentDescription);
+                // This is a medical appointment, so we must clear validation for generic appointment.
+                this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
                 if (string.IsNullOrEmpty(formModel.PatientName))
                     ModelState.AddModelError<AppointmentViewModel>(model => model.PatientName, ModelStrings.RequiredValidationMessage);
@@ -310,8 +310,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                // This is a commitment, so we must clear validation for commitment.
-                this.ModelState.ClearPropertyErrors(() => formModel.CommitmentDescription);
+                // This is a medical appointment, so we must clear validation for generic appointment.
+                this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
                 if (formModel.PatientId == null)
                     ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup, ModelStrings.RequiredValidationMessage);
@@ -354,7 +354,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Saving data if model is valid.
             if (this.ModelState.IsValid)
             {
-                // Creating the commitment.
+                // Creating the appointment.
                 Appointment appointment = null;
 
                 if (formModel.Id == null)
@@ -374,7 +374,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         .Where(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
                         .FirstOrDefault();
 
-                    // If the appointment or commitment does not exist, or does not belongs to the current practice,
+                    // If the appointment does not exist, or does not belongs to the current practice,
                     // it should go to a view indicating that.
                     if (appointment == null)
                         return View("NotFound", formModel);
@@ -383,17 +383,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 appointment.Start = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
                 appointment.End = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
 
-                // Setting the commitment type and associated properties.
-                // - generic commitment: has description, date and time interval
+                // Setting the appointment type and associated properties.
+                // - generic appointment: has description, date and time interval
                 // - medical appointment: has patient, date and time interval
-                if (formModel.IsGenericCommitment)
+                if (formModel.IsGenericAppointment)
                 {
-                    appointment.Description = formModel.CommitmentDescription;
-                    appointment.Type = (int)TypeCommitment.GenericCommitment;
+                    appointment.Description = formModel.Description;
+                    appointment.Type = (int)TypeAppointment.GenericAppointment;
                 }
                 else if (formModel.PatientFirstAppointment)
                 {
-                    appointment.Type = (int)TypeCommitment.MedicalAppointment;
+                    appointment.Type = (int)TypeAppointment.MedicalAppointment;
 
                     var patient = new Patient();
                     patient.Person = new Person();
@@ -411,7 +411,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    appointment.Type = (int)TypeCommitment.MedicalAppointment;
+                    appointment.Type = (int)TypeAppointment.MedicalAppointment;
 
                     appointment.PatientId = formModel.PatientId.Value;
                 }
