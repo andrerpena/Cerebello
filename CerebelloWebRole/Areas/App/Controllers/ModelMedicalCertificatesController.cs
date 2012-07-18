@@ -84,20 +84,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <remarks>
         /// Requirements:
         /// 
-        ///     1   Only alpha-numeric characters, minus and underscores are allowed for fields.
+        ///     -   Only alpha-numeric characters, minus and underscores are allowed for fields.
         ///         One ModelState error must be added for each noncomplying field
         ///         
-        ///     2   Place holders must follow the pattern <%PROPERTY_NAME%>.
+        ///     -   Place holders must follow the pattern <%PROPERTY_NAME%>.
         ///         Cannot use spaces between the field name and the place holder markers <% and %>
         ///         One ModelState error must be added for each noncomplying placeholder
         ///         
-        ///     3   All declared fields must be referenced in the text.
+        ///     -   All declared fields must be referenced in the text.
         ///         One ModelState error must be added for each noncomplying field
         ///         
-        ///     4   All fields referenced in the text must have been declared, with the exception of the special field <%PACIENTE%>
+        ///     -   All fields referenced in the text must have been declared, with the exception of the special field <%PACIENTE%>
         ///         One ModelState error must be added for each noncomplying field
         ///         
-        ///     5   It has to be possible to add a certificate model with no fields
+        ///     -   It has to be possible to add a certificate model with no fields
+        ///      
+        ///     -   It can't be possible to create fields with pre-defined name. The only pre-defined value today is "paciente"
+        ///         One ModelState error must be added for each noncomplying field
         ///     
         /// </remarks>
         [HttpPost]
@@ -112,27 +115,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // if it's not, then we validate manually
                 if (!string.IsNullOrEmpty(field.Name))
                 {
-                    // this will generate a decomposed form of the given string, with accents placed in different characters
-                    var stStr = field.Name.Normalize(System.Text.NormalizationForm.FormD);
-                    foreach (var c in stStr)
+                    // cannot create a field with any of the pre-defined names.
+                    // 'paciente' is the only one so far
+                    if (new string[] { "paciente" }.Contains(field.Name.ToLower()))
+                        this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "Não é permitido definir um campo chamado 'paciente'. Este campo é definido automaticamente");
+                    else
                     {
-                        UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
-                        if (uc == UnicodeCategory.NonSpacingMark)
-                        {
-                            this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido");
-                            break;
-                        }
+                        // this will generate a decomposed form of the given string, with accents placed in different characters
+                        var stStr = field.Name.Normalize(System.Text.NormalizationForm.FormD);
 
-                        if (!char.IsLetterOrDigit(c) && !new char[] { '_', '-' }.Contains(c))
+                        foreach (var c in stStr)
                         {
-                            this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido");
-                            break;
+                            UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
+                            if (uc == UnicodeCategory.NonSpacingMark)
+                            {
+                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alpha-numéricos, hífens e 'underline's são permitidos");
+                                break;
+                            }
+
+                            if (!char.IsLetterOrDigit(c) && !new char[] { '_', '-' }.Contains(c))
+                            {
+                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alpha-numéricos, hífens e 'underline's são permitidos");
+                                break;
+                            }
                         }
                     }
                 }
             }
 
-            if (!string.IsNullOrEmpty(formModel.Text))
+            // should only check for further errors if there aren't errors already
+            if (this.ModelState.IsValid && !string.IsNullOrEmpty(formModel.Text))
             {
                 // validate that fields are correctly formed
                 var matchingProblems = Regex.Matches(formModel.Text, @"<%\s+([0-9a-z_-]+)%>", RegexOptions.IgnoreCase);
@@ -250,7 +262,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var certificateModel = this.db.ModelMedicalCertificates.First(m => m.Id == id);
 
                 var childrenQueue = new Queue<ModelMedicalCertificateField>(certificateModel.Fields);
-                while(childrenQueue.Count > 0) {
+                while (childrenQueue.Count > 0)
+                {
                     var child = childrenQueue.Dequeue();
                     this.db.ModelMedicalCertificateFields.DeleteObject(child);
                 }

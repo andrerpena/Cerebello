@@ -986,7 +986,7 @@ a.gotoPractice
     color: #336699;
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .medical-appointments-panel
@@ -1402,6 +1402,15 @@ div.message
     color: #444444;
     margin: 10px 0;
     padding: 10px;
+}
+
+/* messaging for help */
+div.message-help
+{
+    color: #5F5F5F;
+    font-size: 11px;
+    line-height: 1.2em;
+    margin: 8px 0;
 }
 
 /* calendar */
