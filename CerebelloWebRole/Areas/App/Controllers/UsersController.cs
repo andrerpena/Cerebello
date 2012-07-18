@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="user">User object to be used as source of values.</param>
         /// <returns>A new UserViewModel with informations copied from the User object.</returns>
-        private UserViewModel GetViewModel(User user)
+        public static UserViewModel GetViewModel(User user)
         {
             var viewModel = new UserViewModel()
             {
@@ -70,8 +70,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (user.Doctor != null)
             {
                 viewModel.MedicCRM = user.Doctor.CRM;
-                //MedicalEntity = user.Doctor.MedicalEntity,
-                //MedicalSpecialty = user.Doctor.MedicalSpecialty,
+                viewModel.MedicalSpecialty = user.Doctor.MedicalSpecialtyId;
+                viewModel.MedicalEntity = user.Doctor.MedicalEntityId;
+                viewModel.MedicalSpecialtyJurisdiction = user.Doctor.MedicalEntityJurisdiction;
             }
 
             return viewModel;
@@ -137,14 +138,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (id != null)
             {
                 var user = db.Users.Where(p => p.Id == id).First();
-                model = this.GetViewModel(user);
+                model = GetViewModel(user);
 
                 ViewBag.Title = "Alterando usuário: " + model.FullName;
             }
             else
                 ViewBag.Title = "Novo usuário";
 
-            ViewBag.MedicalSpecialty =
+            ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
                 .ToList()
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
@@ -171,12 +172,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (isEditing)
             {
-                // Note: User name cannot be edited.
+                // Note: User name cannot be edited, and should not be validated.
+                this.ModelState.ClearPropertyErrors(() => formModel.UserName);
 
                 user = db.Users.Where(p => p.Id == formModel.Id).First();
                 user.Person.DateOfBirth = formModel.DateOfBirth;
                 user.Person.FullName = formModel.FullName;
                 user.Person.Gender = (short)formModel.Gender;
+
+                // If there are model errors, we must return original user name to the view.
+                formModel.UserName = user.UserName;
             }
             else
             {
@@ -286,6 +291,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     user.Doctor.CRM = formModel.MedicCRM;
                     user.Doctor.MedicalSpecialtyId = formModel.MedicalSpecialty ?? 0;
                     user.Doctor.MedicalEntityId = formModel.MedicalEntity ?? 0;
+                    user.Doctor.MedicalEntityJurisdiction = formModel.MedicalSpecialtyJurisdiction;
                 }
                 else
                 {
@@ -351,13 +357,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return RedirectToAction("details", new { id = user.Id });
             }
 
+            ViewBag.MedicalSpecialtyOptions =
+                this.db.SYS_MedicalSpecialty
+                .ToList()
+                .Select(ms => new SelectListItem { Value = ms.Id.ToString(), Text = ms.Name })
+                .ToList();
+
+            ViewBag.MedicalEntityOptions =
+                this.db.SYS_MedicalEntity
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
             return View("Edit", formModel);
         }
 
         public ActionResult Details(int id)
         {
             var user = (User)db.Users.Where(p => p.Id == id).First();
-            var model = this.GetViewModel(user);
+            var model = GetViewModel(user);
 
             return View(model);
         }

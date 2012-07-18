@@ -34,6 +34,18 @@
 
     var editPanelMedic = this.Html.CreateEditPanel();
     editPanelMedic.AddField(m => m.MedicCRM);
+
+    // These objects must be filled, otherwise obscure exceptions may happen.
+    // - ViewBag.MedicalSpecialtyOptions
+    // - ViewBag.MedicalEntityOptions
+    if (!(this.ViewBag.MedicalSpecialtyOptions is IEnumerable<SelectListItem>))
+    {
+        throw new Exception("ViewBag.MedicalSpecialtyOptions is not of type 'IEnumerable<SelectListItem>'.");
+    }
+    if (!(this.ViewBag.MedicalSpecialtyOptions is IEnumerable<SelectListItem>))
+    {
+        throw new Exception("ViewBag.MedicalEntityOptions is not of type 'IEnumerable<SelectListItem>'.");
+    }
     
     editPanelMedic.AddField(
         m => m.MedicalSpecialty,

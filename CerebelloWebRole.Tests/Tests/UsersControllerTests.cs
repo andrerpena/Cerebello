@@ -539,6 +539,110 @@ namespace CerebelloWebRole.Tests
         }
         #endregion
 
+        #region Edit
+        /// <summary>
+        /// Tests the edition of an user.
+        /// This is a valid operation and should complete without exceptions,
+        /// and without validation errors.
+        /// </summary>
+        [TestMethod]
+        public void Edit_1_EditUser_HappyPath()
+        {
+            UsersController controller;
+            UserViewModel vm;
+            bool isDbSaved = false;
+            try
+            {
+                var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository();
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                vm = UsersController.GetViewModel(doc.Users.First());
+
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user FullName.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                // When editing, the user-name cannot be changed. Must set it to null.
+                vm.UserName = null;
+
+                vm.FullName = "Andre R. Pena";
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+
+                actionResult = controller.Edit(vm);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            // - The controller ModelState must have no validation errors related to e-mail.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+            Assert.IsTrue(isDbSaved, "DB changes must be saved.");
+        }
+
+        /// <summary>
+        /// Tests the edition of an user, removing the value of a required field.
+        /// This is an invalid operation and should have validation errors.
+        /// </summary>
+        [TestMethod]
+        public void Edit_2_EditUserRemovingMedicalEntityJurisdiction()
+        {
+            UsersController controller;
+            UserViewModel vm;
+            bool isDbSaved = false;
+            try
+            {
+                var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository();
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                vm = UsersController.GetViewModel(doc.Users.First());
+
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user MedicalSpecialtyJurisdiction, by removing the value.
+            // This is not valid as this user is a doctor, and that property is required for doctors.
+            ActionResult actionResult;
+
+            {
+                // When editing, the user-name cannot be changed. Must set it to null.
+                vm.UserName = null;
+
+                vm.MedicalSpecialtyJurisdiction = null;
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+
+                actionResult = controller.Edit(vm);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            var viewResult = (ViewResult)actionResult;
+            Assert.AreEqual("Edit", viewResult.ViewName);
+            Assert.IsInstanceOfType(viewResult.Model, typeof(UserViewModel));
+            var resultViewModel = (UserViewModel)viewResult.Model;
+            Assert.AreEqual("andrerpena", resultViewModel.UserName);
+            Assert.IsInstanceOfType(controller.ViewBag.MedicalSpecialtyOptions, typeof(IEnumerable<SelectListItem>));
+            Assert.IsInstanceOfType(controller.ViewBag.MedicalEntityOptions, typeof(IEnumerable<SelectListItem>));
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState must be invalid.");
+            Assert.IsFalse(isDbSaved, "DB changes must not be saved.");
+        }
+        #endregion
+
         #region Details
         /// <summary>
         /// Tests the visualization of a secretary.
