@@ -493,22 +493,27 @@ namespace Cerebello.Firestarter
                 Thursday = true,
                 Friday = true,
                 Saturday = false,
+
                 MondayWorkdayStartTime = "09:00",
                 MondayWorkdayEndTime = "18:00",
                 MondayLunchStartTime = "12:00",
                 MondayLunchEndTime = "13:00",
+
                 TuesdayWorkdayStartTime = "09:00",
                 TuesdayWorkdayEndTime = "18:00",
                 TuesdayLunchStartTime = "12:00",
                 TuesdayLunchEndTime = "13:00",
+
                 WednesdayWorkdayStartTime = "09:00",
                 WednesdayWorkdayEndTime = "18:00",
                 WednesdayLunchStartTime = "12:00",
                 WednesdayLunchEndTime = "13:00",
+
                 ThursdayWorkdayStartTime = "09:00",
                 ThursdayWorkdayEndTime = "18:00",
                 ThursdayLunchStartTime = "12:00",
                 ThursdayLunchEndTime = "13:00",
+
                 FridayWorkdayStartTime = "09:00",
                 FridayWorkdayEndTime = "18:00",
                 FridayLunchStartTime = "12:00",

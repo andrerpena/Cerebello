@@ -37,7 +37,7 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Sets up André as the current logged user, in a valid sittuation.
         /// </summary>
-        public void SetCurrentUser_Andre_CorrectPassword(int userId = 1)
+        public void SetCurrentUser_Andre_CorrectPassword(int? userId = null)
         {
             // Setting user details.
             FullName = "André Rodrigues Pena";
@@ -45,7 +45,15 @@ namespace CerebelloWebRole.Tests
             Password = "ph4r40h";
 
             // Setting DB info.
-            UserDbId = userId;
+            if (userId.HasValue)
+            {
+                this.UserDbId = userId.Value;
+            }
+            else
+            {
+                using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+                    this.UserDbId = db.Users.Where(u => u.UserName == "andrerpena").Single().Id;
+            }
         }
 
         /// <summary>
@@ -202,9 +210,9 @@ namespace CerebelloWebRole.Tests
             using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
             {
                 var securityToken = SecurityManager.AuthenticateUser(
-                    UserNameOrEmail,
-                    Password,
-                    string.Format("{0}", RouteData.Values["practice"]),
+                    this.UserNameOrEmail,
+                    this.Password,
+                    string.Format("{0}", this.RouteData.Values["practice"]),
                     db);
 
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
@@ -230,6 +238,7 @@ namespace CerebelloWebRole.Tests
                 mock.SetupGet(m => m.User).Returns(userData);
                 mock.SetupGet(m => m.Server).Returns(new HttpServerUtilityBaseStub());
             }
+
             return mock.Object;
         }
 
