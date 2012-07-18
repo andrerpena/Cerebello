@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.Models;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -65,5 +62,17 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Validation message displayed next to the time.
         /// </summary>
         public string TimeValidationMessage { get; set; }
+
+        /// <summary>
+        /// Indicates whether this is a generic commitment or an appointement.
+        /// </summary>
+        public bool IsGenericCommitment { get; set; }
+
+        /// <summary>
+        /// Commitment description, when it is a generic commitment, instead of an appointment.
+        /// </summary>
+        [Display(Name = "Descrição")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string CommitmentDescription { get; set; }
     }
 }

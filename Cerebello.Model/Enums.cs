@@ -51,6 +51,15 @@ namespace CerebelloWebRole.Models
         Other
     }
 
+    public enum TypeCommitment
+    {
+        [Display(Name = "Compromisso")]
+        GenericCommitment = 0,
+
+        [Display(Name = "Consulta")]
+        MedicalAppointment = 1
+    }
+
     public enum TypeGender
     {
         [Display(Name = "Masculino")]

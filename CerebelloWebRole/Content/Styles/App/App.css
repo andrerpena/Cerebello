@@ -1403,3 +1403,16 @@ div.message
     margin: 10px 0;
     padding: 10px;
 }
+
+/* calendar */
+.generic-commitment.fc-event-skin, .generic-commitment .fc-event-skin
+{
+    border-color: #3c6;
+    background-color: #63CB95;
+}
+
+.medical-appointment.fc-event-skin, .medical-appointment .fc-event-skin
+{
+    border-color: #36c;
+    background-color: #6395CB;
+}

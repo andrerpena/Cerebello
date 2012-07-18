@@ -1,0 +1,29 @@
+﻿@model CerebelloWebRole.Areas.App.Models.AppointmentViewModel
+@using CerebelloWebRole.Code.Extensions
+@{
+    Layout = null;
+}
+<div class="appointment-edit">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "appointment_form" }))
+    {
+        @Html.Message("A consulta ou compromisso sendo editado não existe. Provavelmente ele foi removido por outro usuário do sistema.")
+        
+        <div class="submit-bar">
+            <input id="ok-button" type="submit" value="ok" />
+        </div>
+    }
+    <script type="text/javascript">
+        $("ok-button").click(function (e) {
+            $(this).trigger("modal-ok");
+
+            // Updating the components in the background page.
+            var calendar = $("#calendar");
+            if (calendar.length > 0) {
+                // If calendar is there, all the other variables and objects are there too.
+                calendar.fullCalendar("refetchEvents");
+                fetchDatePickerEvents();
+                $(".datepicker").datepicker("refresh");
+            }
+        });
+    </script>
+</div>

@@ -8,6 +8,7 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -33,9 +34,35 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                   id = a.Id,
                                   start = a.Start.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                                   end = a.End.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                                  title = a.Patient.Person.FullName,
-                                  className = "myTestClass"
+                                  title = GetCommitmentText(a),
+                                  className = GetCommitmentClass(a),
                               }).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        private static string GetCommitmentText(Appointment a)
+        {
+            switch ((TypeCommitment)a.Type)
+            {
+                case TypeCommitment.GenericCommitment:
+                    return a.Description;
+                case TypeCommitment.MedicalAppointment:
+                    return a.Patient.Person.FullName;
+                default:
+                    throw new Exception("Unsupported commitment type.");
+            }
+        }
+
+        private static string GetCommitmentClass(Appointment a)
+        {
+            switch ((TypeCommitment)a.Type)
+            {
+                case TypeCommitment.GenericCommitment:
+                    return "generic-commitment";
+                case TypeCommitment.MedicalAppointment:
+                    return "medical-appointment";
+                default:
+                    throw new Exception("Unsupported commitment type.");
+            }
         }
 
         public ActionResult Index()
@@ -142,12 +169,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
-            viewModel.PatientId = patientId;
 
-            viewModel.PatientNameLookup = this.db.Patients
+            int currentUserPracticeId = this.GetCurrentUser().PracticeId;
+
+            var patientName = this.db.Patients
                 .Where(p => p.Id == patientId)
+                .Where(p => p.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
                 .Select(p => p.Person.FullName)
                 .FirstOrDefault();
+
+            viewModel.PatientNameLookup = patientName;
+
+            if (patientName != null)
+                viewModel.PatientId = patientId;
 
             viewModel.Date = date2;
             viewModel.Start = start;
@@ -178,9 +212,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
             }
 
-            ModelState.Clear();
+            this.ModelState.Clear();
 
-            return View("Edit", viewModel);
+            this.ViewBag.IsEditing = false;
+
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -192,7 +228,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var appointment = db.Appointments.Where(a => a.Id == id).FirstOrDefault();
+            var currentUserPracticeId = this.GetCurrentUser().PracticeId;
+
+            var appointment = db.Appointments
+                .Where(a => a.Id == id)
+                .Where(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
+                .FirstOrDefault();
+
+            if (appointment == null)
+            {
+                return this.View("NotFound");
+            }
 
             AppointmentViewModel viewModel = new AppointmentViewModel()
             {
@@ -200,12 +246,34 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Date = appointment.Start.Date,
                 Start = appointment.Start.ToString("HH:mm"),
                 End = appointment.End.ToString("HH:mm"),
-                PatientNameLookup = appointment.Patient.Person.FullName,
-                PatientId = appointment.PatientId,
                 DoctorId = appointment.DoctorId,
-                DateSpelled = DateTimeHelper.GetDayOfWeekAsString(appointment.Start.Date) + ", " + DateTimeHelper.ConvertToRelative(appointment.Start.Date, DateTimeHelper.GetTimeZoneNow(), DateTimeHelper.RelativeDateOptions.IncludePrefixes | DateTimeHelper.RelativeDateOptions.IncludeSuffixes | DateTimeHelper.RelativeDateOptions.ReplaceToday | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
-                IsTimeValid = true
+                DateSpelled = DateTimeHelper.GetDayOfWeekAsString(appointment.Start.Date) + ", "
+                    + DateTimeHelper.ConvertToRelative(
+                        appointment.Start.Date,
+                        DateTimeHelper.GetTimeZoneNow(),
+                        DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                            | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                            | DateTimeHelper.RelativeDateOptions.ReplaceToday
+                            | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
+                IsTimeValid = true,
             };
+
+            switch ((TypeCommitment)appointment.Type)
+            {
+                case TypeCommitment.GenericCommitment:
+                    viewModel.IsGenericCommitment = true;
+                    viewModel.CommitmentDescription = appointment.Description;
+                    break;
+                case TypeCommitment.MedicalAppointment:
+                    viewModel.IsGenericCommitment = false;
+                    viewModel.PatientNameLookup = appointment.Patient.Person.FullName;
+                    viewModel.PatientId = appointment.PatientId;
+                    break;
+                default:
+                    throw new Exception("Unsupported commitment type.");
+            }
+
+            this.ViewBag.IsEditing = true;
 
             return View("Edit", viewModel);
         }
@@ -213,8 +281,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(AppointmentViewModel formModel)
         {
-            if (formModel.PatientFirstAppointment)
+            // Custom model validation.
+            if (formModel.IsGenericCommitment)
             {
+                // This is a commitment, so we must clear validation for patient.
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientGender);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientFirstAppointment);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientEmail);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientDateOfBirth);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientCoverageId);
+            }
+            else if (formModel.PatientFirstAppointment)
+            {
+                // This is a commitment, so we must clear validation for commitment.
+                this.ModelState.ClearPropertyErrors(() => formModel.CommitmentDescription);
+
                 if (string.IsNullOrEmpty(formModel.PatientName))
                     ModelState.AddModelError<AppointmentViewModel>(model => model.PatientName, ModelStrings.RequiredValidationMessage);
 
@@ -226,6 +310,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
+                // This is a commitment, so we must clear validation for commitment.
+                this.ModelState.ClearPropertyErrors(() => formModel.CommitmentDescription);
+
                 if (formModel.PatientId == null)
                     ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup, ModelStrings.RequiredValidationMessage);
 
@@ -244,7 +331,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var startTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
             var endTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
 
-            // verify if appoitment hours are consistent
+            // Verify if appoitment hours are consistent
             if (!string.IsNullOrEmpty(formModel.Start) && !string.IsNullOrEmpty(formModel.End))
             {
                 var isTimeValid = ValidateTime(this.db, this.Doctor, formModel.Date, formModel.Start, formModel.End, this.ModelState);
@@ -264,8 +351,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
             }
 
-            if (ModelState.IsValid)
+            // Saving data if model is valid.
+            if (this.ModelState.IsValid)
             {
+                // Creating the commitment.
                 Appointment appointment = null;
 
                 if (formModel.Id == null)
@@ -277,29 +366,57 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.db.Appointments.AddObject(appointment);
                 }
                 else
-                    appointment = db.Appointments.Where(a => a.Id == formModel.Id).FirstOrDefault();
+                {
+                    var currentUserPracticeId = this.GetCurrentUser().PracticeId;
+
+                    appointment = db.Appointments
+                        .Where(a => a.Id == formModel.Id)
+                        .Where(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
+                        .FirstOrDefault();
+
+                    // If the appointment or commitment does not exist, or does not belongs to the current practice,
+                    // it should go to a view indicating that.
+                    if (appointment == null)
+                        return View("NotFound", formModel);
+                }
 
                 appointment.Start = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
                 appointment.End = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
 
-                if (formModel.PatientFirstAppointment)
+                // Setting the commitment type and associated properties.
+                // - generic commitment: has description, date and time interval
+                // - medical appointment: has patient, date and time interval
+                if (formModel.IsGenericCommitment)
                 {
-                    appointment.Patient = new Patient();
-                    appointment.Patient.Person = new Person();
-                    appointment.Patient.Person.FullName = formModel.PatientName;
-                    appointment.Patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.PatientName);
-                    appointment.Patient.Person.Gender = (short)formModel.PatientGender;
-                    appointment.Patient.Person.DateOfBirth = formModel.PatientDateOfBirth.Value;
-                    appointment.Patient.Person.CreatedOn = DateTime.UtcNow;
-                    appointment.Patient.Doctor = this.Doctor;
+                    appointment.Description = formModel.CommitmentDescription;
+                    appointment.Type = (int)TypeCommitment.GenericCommitment;
+                }
+                else if (formModel.PatientFirstAppointment)
+                {
+                    appointment.Type = (int)TypeCommitment.MedicalAppointment;
+
+                    var patient = new Patient();
+                    patient.Person = new Person();
+                    patient.Person.FullName = formModel.PatientName;
+                    patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.PatientName);
+                    patient.Person.Gender = (short)formModel.PatientGender;
+                    patient.Person.DateOfBirth = formModel.PatientDateOfBirth.Value;
+                    patient.Person.CreatedOn = DateTime.UtcNow;
+                    patient.Doctor = this.Doctor;
+
+                    appointment.Patient = patient;
 
                     if (!string.IsNullOrEmpty(formModel.PatientEmail))
                         appointment.Patient.Person.Emails.Add(new Email() { Address = formModel.PatientEmail });
                 }
                 else
+                {
+                    appointment.Type = (int)TypeCommitment.MedicalAppointment;
+
                     appointment.PatientId = formModel.PatientId.Value;
+                }
 
-
+                // Returning a JSON result, indicating what has happened.
                 try
                 {
                     this.db.SaveChanges();
@@ -310,6 +427,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     return Json(new { status = "error", text = "Não foi possível salvar a consulta. Erro inexperado", details = ex.Message }, JsonRequestBehavior.AllowGet);
                 }
             }
+
+            this.ViewBag.IsEditing = true;
 
             return View("Edit", formModel);
         }

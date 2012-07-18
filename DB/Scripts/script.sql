@@ -77,6 +77,7 @@ CREATE TABLE [dbo].[Appointment](
 	[DoctorId] [int] NOT NULL,
 	[PatientId] [int] NOT NULL,
 	[Type] [int] NOT NULL,
+	[Description] [nvarchar](max) NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

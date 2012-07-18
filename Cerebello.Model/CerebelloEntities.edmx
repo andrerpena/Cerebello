@@ -260,6 +260,7 @@
           <Property Name="DoctorId" Type="int" Nullable="false" />
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="CFG_Documents">
           <Key>
@@ -1351,6 +1352,7 @@
           <Property Type="DateTime" Name="End" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_Appointment_Patient" FromRole="Appointment" ToRole="Patient" />
           <Property Type="Int32" Name="Type" Nullable="false" />
+          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Coverage">
           <Key>
@@ -2248,7 +2250,8 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Appointments"><EntityTypeMapping TypeName="Cerebello.Model.Appointment"><MappingFragment StoreEntitySet="Appointment">
-            <ScalarProperty Name="Type" ColumnName="Type" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="End" ColumnName="End" />
                 <ScalarProperty Name="Start" ColumnName="Start" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -2647,7 +2650,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="82">
+      <Diagram Name="CerebelloEntities" ZoomLevel="71">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="3" PointY="7.75" Height="2.7494921874999996" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="1.5" PointX="6.375" PointY="17.625" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="3.75" PointY="14.5" Height="1.5956835937499978" IsExpanded="true" />

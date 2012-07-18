@@ -3,8 +3,17 @@
 @{
     Layout = null;
 
-    string subsequentAppointmentOnlyDisplay = Model.PatientFirstAppointment ? "none" : "table-row";
-    string firstAppointmentOnlyDisplay = Model.PatientFirstAppointment ? "table-row" : "none";
+    bool isEditing = this.ViewBag.IsEditing == true;
+
+    bool isCommitment = Model.IsGenericCommitment && !Model.PatientFirstAppointment;
+    bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericCommitment;
+    bool isSubsequentAppointment = !isCommitment && !isFirstAppointment;
+
+    string commitmentOnlyDisplay = isCommitment ? "table-row" : "none";
+    string subsequentAppointmentOnlyDisplay = isSubsequentAppointment ? "table-row" : "none";
+    string firstAppointmentOnlyDisplay = isFirstAppointment ? "table-row" : "none";
+
+    string saveButtonText = isCommitment ? "salvar compromisso" : "salvar consulta";
 }
 <div class="appointment-edit">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "appointment_form" }))
@@ -16,52 +25,88 @@
         @Html.HiddenFor(model => model.DoctorId)
         @Html.HiddenFor(model => model.PatientFirstAppointment)
         
+        if (!isEditing)
+        { 
+            <style>
+                /* todo: Must vanish with this style. */
+                .appointment-edit ul.tabs > li
+                {
+                    display: inline-block;
+                    border: 1px solid black;
+                    cursor: pointer;
+                }
+                /* todo: Must vanish with this style. */
+            </style>
+            <ul class="tabs">
+                <li id="appointment-tab">Consulta</li>
+                <li id="commitment-tab">Compromisso</li>
+            </ul>
+        }
+        
+        @Html.HiddenFor(model => model.IsGenericCommitment)
+        
         <table class="form-table">
-            <tr class="subsequent-appointments-only" style="display: @subsequentAppointmentOnlyDisplay">
-                <th>@Html.LabelFor(model => model.PatientNameLookup)
-                </th>
-                <td>
-                    @Html.LookupFor(model => model.PatientId, model => model.PatientNameLookup, Url.Action("lookuppatients", "patients"))
-                    @if (Model.Id != null)
-                    {
-                        <a href="@Url.Action("details", "patients", new { id = Model.PatientId })" class="block-little-link">
-                            Ir para o perfil do paciente</a>
-                    }
-                    <a id="non-existing-user-link" href="#" class="block-little-link">O paciente ainda não
-                        é cadastrado</a>
-                </td>
-            </tr>
-            <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                <th>@Html.LabelFor(model => model.PatientName)
-                </th>
-                <td>@Html.EditorFor(model => model.PatientName)
-                    <a id="existing-user-link" href="#" class="block-little-link">O paciente já é cadastrado</a>
-                </td>
-            </tr>
-            <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                <th>@Html.LabelFor(model => model.PatientGender)
-                </th>
-                <td>@Html.EnumDropdownListFor(model => model.PatientGender)
-                </td>
-            </tr>
-            <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                <th>@Html.LabelFor(model => model.PatientCoverageId)
-                </th>
-                <td>@Html.DropDownListFor(model => model.PatientCoverageId, new SelectListItem[] { })
-                </td>
-            </tr>
-            <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                <th>@Html.LabelFor(model => model.PatientDateOfBirth)
-                </th>
-                <td class="small">@Html.TextBoxFor(model => model.PatientDateOfBirth)
-                </td>
-            </tr>
-            <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                <th>@Html.LabelFor(model => model.PatientEmail)
-                </th>
-                <td>@Html.TextBoxFor(model => model.PatientEmail)
-                </td>
-            </tr>
+            @if (!isEditing || isCommitment)
+            {
+                <tr class="commitment-only" style="display: @commitmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.CommitmentDescription)
+                    </th>
+                    <td>
+                        @Html.TextAreaFor(model => model.CommitmentDescription)
+                    </td>
+                </tr>
+            }
+            @if (!isEditing || isFirstAppointment || isSubsequentAppointment)
+            {
+                <tr class="subsequent-appointments-only" style="display: @subsequentAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.PatientNameLookup)
+                    </th>
+                    <td>
+                        @Html.LookupFor(model => model.PatientId, model => model.PatientNameLookup, Url.Action("lookuppatients", "patients"))
+                        @if (Model.Id != null)
+                        {
+                            <a href="@Url.Action("details", "patients", new { id = Model.PatientId })" class="block-little-link">
+                                Ir para o perfil do paciente</a>
+                        }
+                        <a id="non-existing-user-link" href="#" class="block-little-link">O paciente ainda não
+                            é cadastrado</a>
+                    </td>
+                </tr>
+            }
+            @if (!isEditing || isFirstAppointment || isSubsequentAppointment)
+            {
+                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.PatientName)
+                    </th>
+                    <td>@Html.EditorFor(model => model.PatientName)
+                        <a id="existing-user-link" href="#" class="block-little-link">O paciente já é cadastrado</a>
+                    </td>
+                </tr>
+                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.PatientGender)
+                    </th>
+                    <td>@Html.EnumDropdownListFor(model => model.PatientGender)
+                    </td>
+                </tr>
+                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.PatientCoverageId)
+                    </th>
+                    <td>@Html.DropDownListFor(model => model.PatientCoverageId, new SelectListItem[] { })
+                    </td>
+                </tr>
+                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.PatientDateOfBirth)
+                    </th>
+                    <td class="small">@Html.TextBoxFor(model => model.PatientDateOfBirth)
+                    </td>
+                </tr>
+                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
+                    <th>@Html.LabelFor(model => model.PatientEmail)
+                    </th>
+                    <td>@Html.TextBoxFor(model => model.PatientEmail)
+                    </td>
+                </tr>
+            }
         </table>
         <hr />
         <table class="form-table">
@@ -98,13 +143,13 @@
             </tr>
         </table>
         
-        if (Model.Id != null)
-        {
-        <a id="delete-appointment-link" class="block-little-link" href="#">excluir consulta</a>
-        }
+            if (Model.Id != null)
+            {
+            <a id="delete-appointment-link" class="block-little-link" href="#">excluir consulta</a>
+            }
         
         <div class="submit-bar">
-            <input type="submit" value="salvar consulta" />
+            <input id="save-button" type="submit" value="@saveButtonText" />
             <span class="separator">ou</span> <a id="cancel" href="#">cancelar</a>
         </div>
     }
@@ -164,6 +209,28 @@
 //				    .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.description + "</span></a>" )
 //				    .appendTo( ul );
 //		    };
+
+        $("#appointment-tab").click(function(e) {
+            e.preventDefault();
+            $(".commitment-only").hide();
+            $(".first-appointment-only").hide();
+            $(".subsequent-appointments-only").show();
+            $("#IsGenericCommitment").val(false);
+            $("#PatientNameLookup").focus();
+            $("#save-button").val("salvar consulta");
+            $(this).trigger("modal-resize");
+        });
+
+        $("#commitment-tab").click(function(e) {
+            e.preventDefault();
+            $(".commitment-only").show();
+            $(".first-appointment-only").hide();
+            $(".subsequent-appointments-only").hide();
+            $("#IsGenericCommitment").val(true);
+            $("#CommitmentDescription").focus();
+            $("#save-button").val("salvar compromisso");
+            $(this).trigger("modal-resize");
+        });
 
         $("#non-existing-user-link").click(function(e) {
             e.preventDefault();

@@ -532,6 +532,7 @@
     <Content Include="Areas\App\Views\Exams\Edit.cshtml" />
     <Content Include="Areas\App\Views\Exams\Details.cshtml" />
     <Content Include="Areas\App\Views\Exams\NotFound.cshtml" />
+    <Content Include="Areas\App\Views\Schedule\NotFound.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
