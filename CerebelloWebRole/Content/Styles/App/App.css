@@ -1013,7 +1013,7 @@ a.gotoPractice
     border-bottom: 1px solid #E8E7E7;
     color: gray;
     font-weight: bold;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
 }
 
 .new-medical-appointment-panel-wrapper
@@ -1167,7 +1167,7 @@ a.loading
 
 .block-little-link
 {
-    display: block;
+    display: inline-block;
     font-size: 11px;
     margin: 6px 0 0;
 }
@@ -1349,16 +1349,16 @@ ul.time-table li
     margin-bottom: 0;
 }
 
-div.tabs 
+div.small-tabs 
 {
     border-bottom: 1px solid #D7D7D7;
     font-size: 11px;
     line-height: 14px;
-    margin: 18px 0;
     padding: 0 18px;
+    margin-bottom:12px;
 }
 
-div.tabs a 
+div.small-tabs a 
 {
     -moz-border-bottom-colors: none;
     -moz-border-image: none;
@@ -1376,7 +1376,7 @@ div.tabs a
     text-decoration: none;
 }
 
-div.tabs a.activated 
+div.small-tabs a.activated 
 {
     background: none repeat scroll 0 0 white;
     border-bottom: 1px solid white;

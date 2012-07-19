@@ -9,37 +9,40 @@
     </text>);
     editPanel.AddField(m => m.StateProvince, format:
     @<text>
-    @Html.DropDownListFor(model => model.StateProvince,
-                new List<SelectListItem>()
-                {
-                    new SelectListItem() { Text = "Acre", Value="AC"},
-                    new SelectListItem() { Text = "Alagoas", Value="AL"},
-                    new SelectListItem() { Text = "Amapá", Value="AP"},
-                    new SelectListItem() { Text = "Amazonas", Value="AM"},
-                    new SelectListItem() { Text = "Bahia", Value="BA"},
-                    new SelectListItem() { Text = "Ceará", Value="CE"},
-                    new SelectListItem() { Text = "Distrito Federal", Value="DF"},
-                    new SelectListItem() { Text = "Espírito Santo", Value="ES"},
-                    new SelectListItem() { Text = "Goiás", Value="GO"},
-                    new SelectListItem() { Text = "Maranhão", Value="MA"},
-                    new SelectListItem() { Text = "Mato Grosso", Value="MT"},
-                    new SelectListItem() { Text = "Mato Grosso do Sul", Value="MS"},
-                    new SelectListItem() { Text = "Minas Gerais", Value="MG"},
-                    new SelectListItem() { Text = "Pará", Value="PA"},
-                    new SelectListItem() { Text = "Paraiba", Value="PB"},
-                    new SelectListItem() { Text = "Pernambuco", Value="PE"},
-                    new SelectListItem() { Text = "Piauí", Value="PI"},
-                    new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
-                    new SelectListItem() { Text = "Rio Grande do Norte", Value="RN"},
-                    new SelectListItem() { Text = "Rio Grande do Sul", Value="RS"},
-                    new SelectListItem() { Text = "Rondônia", Value="RO"},
-                    new SelectListItem() { Text = "Roraima", Value="RR"},
-                    new SelectListItem() { Text = "Santa Catarina", Value="SC"},
-                    new SelectListItem() { Text = "São Paulo", Value="SP"},
-                    new SelectListItem() { Text = "Sergipe", Value="SE"},
-                    new SelectListItem() { Text = "Tocantins", Value="TO"}
-                }, "")
-    </text>);
+        @* there seems to be a BUG regarding DropdownListFors inside editor templates
+         and possibly inside collection-editors. This is a workaraound (I'm forcingly
+         setting the value).
+         If we go into this more often we can investigate a more elegant solution.*@
+        @Html.DropDownListFor(model => model.StateProvince, new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem() { Text = "Acre", Value="AC"},
+                            new SelectListItem() { Text = "Alagoas", Value="AL"},
+                            new SelectListItem() { Text = "Amapá", Value="AP"},
+                            new SelectListItem() { Text = "Amazonas", Value="AM"},
+                            new SelectListItem() { Text = "Bahia", Value="BA"},
+                            new SelectListItem() { Text = "Ceará", Value="CE"},
+                            new SelectListItem() { Text = "Distrito Federal", Value="DF"},
+                            new SelectListItem() { Text = "Espírito Santo", Value="ES"},
+                            new SelectListItem() { Text = "Goiás", Value="GO"},
+                            new SelectListItem() { Text = "Maranhão", Value="MA"},
+                            new SelectListItem() { Text = "Mato Grosso", Value="MT"},
+                            new SelectListItem() { Text = "Mato Grosso do Sul", Value="MS"},
+                            new SelectListItem() { Text = "Minas Gerais", Value="MG"},
+                            new SelectListItem() { Text = "Pará", Value="PA"},
+                            new SelectListItem() { Text = "Paraiba", Value="PB"},
+                            new SelectListItem() { Text = "Pernambuco", Value="PE"},
+                            new SelectListItem() { Text = "Piauí", Value="PI"},
+                            new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
+                            new SelectListItem() { Text = "Rio Grande do Norte", Value="RN"},
+                            new SelectListItem() { Text = "Rio Grande do Sul", Value="RS"},
+                            new SelectListItem() { Text = "Rondônia", Value="RO"},
+                            new SelectListItem() { Text = "Roraima", Value="RR"},
+                            new SelectListItem() { Text = "Santa Catarina", Value="SC"},
+                            new SelectListItem() { Text = "São Paulo", Value="SP"},
+                            new SelectListItem() { Text = "Sergipe", Value="SE"},
+                            new SelectListItem() { Text = "Tocantins", Value="TO"}
+                        }, "Value", "Text", this.Model.StateProvince), "")
+        </text>);
     editPanel.AddField(m => m.City);
     editPanel.AddField(m => m.Neighborhood);
     editPanel.AddField(m => m.Street);
@@ -50,7 +53,7 @@
 {
     @Html.HiddenFor(model => model.Id)
     @editPanel.GetHtml()
-
+    
     <script type="text/javascript">
         (function () {
 

@@ -22,7 +22,7 @@ namespace CerebelloWebRole.Code.Mvc
         /// <param name="association">Coleção do objeto persistente atual à qual se deseja mesclar os objetos que vieram do ViewModel</param>
         /// <param name="viewModelCollection">Coleção de objetos que vieram do ViewModel</param>
         /// <param name="compare">Função comparadora. Exemplo: (telefoneModel, telefoneViewModel) => telefoneModel.Id == telefoneViewModel.Id</param>
-        /// <param name="update"></param>
+        [Obsolete("This logic is to complicated and error prone to be encapsulated. Just do it by hand")]
         public static void Update<TModel, TViewModel>(this EntityCollection<TModel> entityCollection, IEnumerable<TViewModel> viewModelCollection, Func<TViewModel, TModel, bool> compare, Action<TViewModel, TModel> update, Action<TModel> delete, CollectionUpdateStrategy updateStrategy = CollectionUpdateStrategy.Create | CollectionUpdateStrategy.Update) where TModel : EntityObject
         {
             Queue<TModel> harakiriQuerue = new Queue<TModel>();
@@ -81,7 +81,7 @@ namespace CerebelloWebRole.Code.Mvc
         /// <param name="association">Coleção do objeto persistente atual à qual se deseja mesclar os objetos que vieram do ViewModel</param>
         /// <param name="viewModelCollection">Coleção de objetos que vieram do ViewModel</param>
         /// <param name="compare">Função comparadora. Exemplo: (telefoneModel, telefoneViewModel) => telefoneModel.Id == telefoneViewModel.Id</param>
-        /// <param name="update"></param>
+        [Obsolete("This logic is to complicated and error prone to be encapsulated. Just do it by hand")]
         public static void UpdateManyToMany<TModel, TViewModel>(this EntityCollection<TModel> entityCollection, IEnumerable<TViewModel> viewModelCollection, Func<TViewModel, TModel, bool> compare, Func<TViewModel, TModel> getModel, Action<TModel> onDeleteAction) where TModel : EntityObject
         {
             Queue<TModel> harakiriQuerue = new Queue<TModel>();
