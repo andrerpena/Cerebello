@@ -229,8 +229,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.IsTimeValid = isTimeValid && isTimeAvailable;
 
             // Setting the error message to display near the date and time configurations.
-            var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => viewModel.Date).ToList();
-            dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date));
+            var emptyErrors = new ModelErrorCollection();
+            var dateAndTimeErrors = (this.ModelState.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors).ToList();
+            dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
             if (dateAndTimeErrors.Any())
             {
                 viewModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
@@ -381,8 +382,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 formModel.IsTimeValid = isTimeValid && isTimeAvailable;
 
                 // Setting the error message to display near the date and time configurations.
-                var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => formModel.Date).ToList();
-                dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Date));
+                var emptyErrors = new ModelErrorCollection();
+                var dateAndTimeErrors = (this.ModelState.GetPropertyErrors(() => formModel.Date) ?? emptyErrors).ToList();
+                dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Date) ?? emptyErrors);
                 if (dateAndTimeErrors.Any())
                 {
                     formModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
