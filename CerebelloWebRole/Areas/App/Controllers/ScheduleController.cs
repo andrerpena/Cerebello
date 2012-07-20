@@ -14,6 +14,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ScheduleController : DoctorController
     {
+        public ScheduleController()
+        {
+            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
+            this.UtcNowGetter = () => DateTime.UtcNow;
+        }
+
+        public Func<DateTime> UserNowGetter { get; set; }
+
+        public Func<DateTime> UtcNowGetter { get; set; }
+
         public JsonResult GetAppointments(int start, int end)
         {
             System.DateTime origin = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
@@ -126,8 +136,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Create(DateTime? date, string start, string end, int? patientId)
         {
-            var now = DateTimeHelper.GetTimeZoneNow();
-            DateTime date2 = date ?? now.Date;
+            var userNow = this.UserNowGetter();
+            DateTime date2 = date ?? userNow.Date;
 
             var slots = GetDaySlots(date2, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
@@ -135,7 +145,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Getting start date and time.
             DateTime startTime =
                 string.IsNullOrEmpty(start) ?
-                now :
+                userNow :
                 date2 + DateTimeHelper.GetTimeSpan(start);
 
             // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
@@ -190,23 +200,37 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.DateSpelled =
                 DateTimeHelper.GetDayOfWeekAsString(date2) + ", "
                 + DateTimeHelper.ConvertToRelative(date2,
-                    DateTimeHelper.GetTimeZoneNow(),
+                    userNow,
                     DateTimeHelper.RelativeDateOptions.IncludePrefixes
                     | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                     | DateTimeHelper.RelativeDateOptions.ReplaceToday
                     | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
 
-            var isTimeValid = ValidateTime(this.db, this.Doctor, date2, start, end, this.ModelState);
+            ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
+            var isTimeValid = ValidateTime(
+                this.db,
+                this.Doctor,
+                date2,
+                start,
+                end,
+                this.ModelState,
+                inconsistencyMessages,
+                userNow);
 
             var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments);
             if (!isTimeAvailable)
-                this.ModelState.AddModelError(() => viewModel.Date, "A data e hora já está marcada para outro compromisso.");
+            {
+                inconsistencyMessages.AddModelError(
+                    () => viewModel.Date,
+                    "A data e hora já está marcada para outro compromisso.");
+            }
 
             // Flag that tells whether the time and date are valid ot not.
             viewModel.IsTimeValid = isTimeValid && isTimeAvailable;
 
             // Setting the error message to display near the date and time configurations.
-            var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => viewModel.Date);
+            var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => viewModel.Date).ToList();
+            dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date));
             if (dateAndTimeErrors.Any())
             {
                 viewModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
@@ -240,6 +264,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.View("NotFound");
             }
 
+            var userNow = this.UserNowGetter();
+
             AppointmentViewModel viewModel = new AppointmentViewModel()
             {
                 Id = appointment.Id,
@@ -250,7 +276,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 DateSpelled = DateTimeHelper.GetDayOfWeekAsString(appointment.Start.Date) + ", "
                     + DateTimeHelper.ConvertToRelative(
                         appointment.Start.Date,
-                        DateTimeHelper.GetTimeZoneNow(),
+                        userNow,
                         DateTimeHelper.RelativeDateOptions.IncludePrefixes
                             | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                             | DateTimeHelper.RelativeDateOptions.ReplaceToday
@@ -332,19 +358,31 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var endTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
 
             // Verify if appoitment hours are consistent
+            ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
             if (!string.IsNullOrEmpty(formModel.Start) && !string.IsNullOrEmpty(formModel.End))
             {
-                var isTimeValid = ValidateTime(this.db, this.Doctor, formModel.Date, formModel.Start, formModel.End, this.ModelState);
+                var isTimeValid = ValidateTime(
+                    this.db,
+                    this.Doctor,
+                    formModel.Date,
+                    formModel.Start,
+                    formModel.End,
+                    this.ModelState,
+                    inconsistencyMessages,
+                    this.UserNowGetter());
 
                 var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, formModel.Id);
                 if (!isTimeAvailable)
-                    this.ModelState.AddModelError(() => formModel.Date, "A data e hora já está marcada para outro compromisso.");
+                    inconsistencyMessages.AddModelError(
+                        () => formModel.Date,
+                        "A data e hora já está marcada para outro compromisso.");
 
                 // Flag that tells whether the time and date are valid ot not.
                 formModel.IsTimeValid = isTimeValid && isTimeAvailable;
 
                 // Setting the error message to display near the date and time configurations.
-                var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => formModel.Date);
+                var dateAndTimeErrors = this.ModelState.GetPropertyErrors(() => formModel.Date).ToList();
+                dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Date));
                 if (dateAndTimeErrors.Any())
                 {
                     formModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
@@ -360,7 +398,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (formModel.Id == null)
                 {
                     appointment = new Appointment();
-                    appointment.CreatedOn = DateTime.UtcNow;
+                    appointment.CreatedOn = this.UtcNowGetter();
                     appointment.DoctorId = formModel.DoctorId;
                     appointment.CreatedById = this.GetCurrentUserId();
                     this.db.Appointments.AddObject(appointment);
@@ -401,7 +439,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.PatientName);
                     patient.Person.Gender = (short)formModel.PatientGender;
                     patient.Person.DateOfBirth = formModel.PatientDateOfBirth.Value;
-                    patient.Person.CreatedOn = DateTime.UtcNow;
+                    patient.Person.CreatedOn = this.UtcNowGetter();
                     patient.Doctor = this.Doctor;
 
                     appointment.Patient = patient;
@@ -420,15 +458,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 try
                 {
                     this.db.SaveChanges();
-                    return Json(new { status = "success" }, JsonRequestBehavior.AllowGet);
+                    return this.Json((dynamic)new { status = "success" }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
-                    return Json(new { status = "error", text = "Não foi possível salvar a consulta. Erro inexperado", details = ex.Message }, JsonRequestBehavior.AllowGet);
+                    return this.Json((dynamic)new { status = "error", text = "Não foi possível salvar a consulta. Erro inexperado", details = ex.Message }, JsonRequestBehavior.AllowGet);
                 }
             }
 
-            this.ViewBag.IsEditing = true;
+            this.ViewBag.IsEditing = this.RouteData.Values["action"].ToString().ToLowerInvariant() == "edit";
 
             return View("Edit", formModel);
         }
@@ -563,7 +601,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var doctor = this.Doctor;
             var db = this.db;
 
-            var slot = FindNextFreeTime(db, doctor, date, time);
+            var userNow = this.UserNowGetter();
+
+            var slot = FindNextFreeTime(db, doctor, userNow, date, time);
             return this.Json(new
             {
                 date = slot.Item1.ToString("dd/MM/yyyy"),
@@ -572,7 +612,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dateSpelled = DateTimeHelper.GetDayOfWeekAsString(slot.Item1) + ", "
                 + DateTimeHelper.ConvertToRelative(
                     slot.Item1,
-                    DateTimeHelper.GetTimeZoneNow(),
+                    userNow,
                     DateTimeHelper.RelativeDateOptions.IncludePrefixes
                     | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                     | DateTimeHelper.RelativeDateOptions.ReplaceToday
@@ -580,23 +620,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public static Tuple<DateTime, DateTime> FindNextFreeTime(CerebelloEntities db, Doctor doctor, string date = null, string time = null)
+        public static Tuple<DateTime, DateTime> FindNextFreeTime(
+            CerebelloEntities db,
+            Doctor doctor,
+            DateTime userNow,
+            string date = null,
+            string time = null)
         {
             DateTime startingFrom;
 
             // Determining the date and time to start scanning for a free time slot.
-            var now = DateTimeHelper.GetTimeZoneNow();
             if (!string.IsNullOrEmpty(date))
             {
                 startingFrom = DateTime.Parse(date) + (string.IsNullOrEmpty(time) ?
                     new TimeSpan(0, 0, 0) :
                     DateTimeHelper.GetTimeSpan(time));
 
-                if (now > startingFrom)
-                    startingFrom = now;
+                if (userNow > startingFrom)
+                    startingFrom = userNow;
             }
             else
-                startingFrom = now;
+                startingFrom = userNow;
 
             var currentDateStart = startingFrom.Date;
             var currentDateEnd = currentDateStart.AddDays(1).Date;
@@ -632,12 +676,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             DateTime dateParsed;
             if (DateTime.TryParse(date, out dateParsed))
-                return this.Json(new { success = true, text = DateTimeHelper.GetDayOfWeekAsString(dateParsed) + ", " + DateTimeHelper.ConvertToRelative(dateParsed, DateTimeHelper.GetTimeZoneNow(), DateTimeHelper.RelativeDateOptions.IncludePrefixes | DateTimeHelper.RelativeDateOptions.IncludeSuffixes | DateTimeHelper.RelativeDateOptions.ReplaceToday | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow) }, JsonRequestBehavior.AllowGet);
+                return this.Json(
+                    new
+                    {
+                        success = true,
+                        text = DateTimeHelper.GetDayOfWeekAsString(dateParsed) + ", "
+                            + DateTimeHelper.ConvertToRelative(
+                                dateParsed,
+                                this.UserNowGetter(),
+                                DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                                | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                                | DateTimeHelper.RelativeDateOptions.ReplaceToday
+                                | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow)
+                    },
+                    JsonRequestBehavior.AllowGet);
             else
                 return this.Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
 
-        private static bool ValidateTime(CerebelloEntities db, Doctor doctor, DateTime date, string startTimeText, string endTimeText, ModelStateDictionary modelState)
+        private static bool ValidateTime(
+            CerebelloEntities db,
+            Doctor doctor,
+            DateTime date,
+            string startTimeText,
+            string endTimeText,
+            ModelStateDictionary modelState,
+            ModelStateDictionary inconsistencyMessages,
+            DateTime userNow)
         {
             if (string.IsNullOrEmpty(startTimeText) || string.IsNullOrEmpty(endTimeText))
                 return false;
@@ -653,10 +718,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var monthAndDay = date.Month * 100 + date.Day;
 
             // Validation: cannot be holliday.
-            var isHolliday = db.SYS_Holliday.Where(h => h.MonthAndDay == monthAndDay).Any();
+            var isHolliday = db.SYS_Holiday.Where(h => h.MonthAndDay == monthAndDay).Any();
             if (isHolliday)
             {
-                modelState.AddModelError<AppointmentViewModel>(
+                inconsistencyMessages.AddModelError<AppointmentViewModel>(
                     model => model.Date,
                     "O campo '{0}' é inválido. Este dia é um feriado.");
                 hasError = true;
@@ -672,17 +737,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             //if (isDayOff)
             //{
-            //    modelState.AddModelError<AppointmentViewModel>(
+            //    inconsistencyMessages.AddModelError<AppointmentViewModel>(
             //        model => model.Date,
             //        "O campo '{0}' é inválido. Este dia está no intervalo de férias do médico.");
             //    hasError = true;
             //}
 
-            // Validation: cannot set an appointment data to the past.
+            // Validation: cannot set an appointment date to the past.
             var startDate = date.Date + DateTimeHelper.GetTimeSpan(startTimeText);
-            if (startDate < DateTimeHelper.GetTimeZoneNow())
+            if (startDate < userNow)
             {
-                modelState.AddModelError<AppointmentViewModel>(
+                inconsistencyMessages.AddModelError<AppointmentViewModel>(
                     model => model.Date,
                     "O campo '{0}' é inválido. Não é permitido marcar uma consulta para o passado.");
                 hasError = true;
@@ -730,6 +795,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
                         hasError = true;
                     }
+
                     if (integerHourEnd > dbIntegerHourEnd)
                     {
                         modelState.AddModelError<AppointmentViewModel>(
@@ -811,7 +877,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var dateParsed = DateTime.Parse(date);
 
-                var isTimeValid = ValidateTime(this.db, this.Doctor, DateTime.Parse(date), start, end, this.ModelState);
+                var inconsistencyMessages = this.ModelState;
+                var isTimeValid = ValidateTime(
+                    this.db,
+                    this.Doctor,
+                    DateTime.Parse(date),
+                    start,
+                    end,
+                    this.ModelState,
+                    inconsistencyMessages,
+                    this.UserNowGetter());
 
                 var startTime = dateParsed + DateTimeHelper.GetTimeSpan(start);
                 var endTime = dateParsed + DateTimeHelper.GetTimeSpan(end);

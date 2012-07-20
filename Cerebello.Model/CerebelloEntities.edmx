@@ -20,7 +20,7 @@
           <EntitySet Name="Email" EntityType="cerebelloModel.Store.Email" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="HealthEnsurance" EntityType="cerebelloModel.Store.HealthEnsurance" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Holliday" EntityType="cerebelloModel.Store.Holliday" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Holiday" EntityType="cerebelloModel.Store.Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Leaflet" EntityType="cerebelloModel.Store.Leaflet" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MedicalCertificate" EntityType="cerebelloModel.Store.MedicalCertificate" store:Type="Tables" Schema="dbo" />
@@ -38,7 +38,7 @@
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SYS_Holliday" EntityType="cerebelloModel.Store.SYS_Holliday" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SYS_Holiday" EntityType="cerebelloModel.Store.SYS_Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Laboratory" EntityType="cerebelloModel.Store.SYS_Laboratory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Leaflet" EntityType="cerebelloModel.Store.SYS_Leaflet" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_MedicalEntity" EntityType="cerebelloModel.Store.SYS_MedicalEntity" store:Type="Tables" Schema="dbo" />
@@ -377,7 +377,7 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
-        <EntityType Name="Holliday">
+        <EntityType Name="Holiday">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -540,7 +540,7 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
         </EntityType>
-        <EntityType Name="SYS_Holliday">
+        <EntityType Name="SYS_Holiday">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -1315,8 +1315,8 @@
           </AssociationSet>
           <EntitySet Name="DayOffs" EntityType="Cerebello.Model.DayOff" />
           <EntitySet Name="HealthEnsurances" EntityType="Cerebello.Model.HealthEnsurance" />
-          <EntitySet Name="Hollidays" EntityType="Cerebello.Model.Holliday" />
-          <EntitySet Name="SYS_Holliday" EntityType="Cerebello.Model.SYS_Holliday" />
+          <EntitySet Name="Holidays" EntityType="Cerebello.Model.Holiday" />
+          <EntitySet Name="SYS_Holiday" EntityType="Cerebello.Model.SYS_Holiday" />
           <EntitySet Name="ExaminationRequests" EntityType="Cerebello.Model.ExaminationRequest" />
           <AssociationSet Name="FK_ExaminationRequest_Patient" Association="Cerebello.Model.FK_ExaminationRequest_Patient">
             <End Role="Patient" EntitySet="Patients" />
@@ -2191,7 +2191,7 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Holliday">
+        <EntityType Name="Holiday">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -2199,7 +2199,7 @@
           <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="Date" Nullable="false" />
         </EntityType>
-        <EntityType Name="SYS_Holliday">
+        <EntityType Name="SYS_Holiday">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -2602,18 +2602,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Hollidays">
-            <EntityTypeMapping TypeName="Cerebello.Model.Holliday">
-              <MappingFragment StoreEntitySet="Holliday">
+          <EntitySetMapping Name="Holidays">
+            <EntityTypeMapping TypeName="Cerebello.Model.Holiday">
+              <MappingFragment StoreEntitySet="Holiday">
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SYS_Holliday">
-            <EntityTypeMapping TypeName="Cerebello.Model.SYS_Holliday">
-              <MappingFragment StoreEntitySet="SYS_Holliday">
+          <EntitySetMapping Name="SYS_Holiday">
+            <EntityTypeMapping TypeName="Cerebello.Model.SYS_Holiday">
+              <MappingFragment StoreEntitySet="SYS_Holiday">
                 <ScalarProperty Name="MonthAndDay" ColumnName="MonthAndDay" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -2895,8 +2895,8 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.DayOff" Width="1.5" PointX="5.375" PointY="3.75" Height="1.7879850260416674" />
         <EntityTypeShape EntityType="Cerebello.Model.HealthEnsurance" Width="1.5" PointX="5.375" PointY="6.75" Height="1.4033821614583246" />
-        <EntityTypeShape EntityType="Cerebello.Model.Holliday" Width="1.5" PointX="7.375" PointY="0.75" Height="1.5956835937500102" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Holliday" Width="1.5" PointX="7.375" PointY="3.75" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="1.5" PointX="7.375" PointY="0.75" Height="1.5956835937500102" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="7.375" PointY="3.75" Height="1.5956835937499996" />
         <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.5" PointX="8.25" PointY="24.125" Height="1.7879850260416674" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_Patient" >
           <ConnectorPoint PointX="6.15625" PointY="15.768697916666667" />

@@ -12,13 +12,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PracticeHomeController : PracticeController
     {
+        public PracticeHomeController()
+        {
+            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
+            this.UtcNowGetter = () => DateTime.UtcNow;
+        }
+
+        public Func<DateTime> UserNowGetter { get; set; }
+
+        public Func<DateTime> UtcNowGetter { get; set; }
+
         //
         // GET: /App/Home/
 
         public ActionResult Index()
         {
             var model = new PracticeHomeIndexViewModel();
-            model.Doctors = DoctorsController.GetDoctorViewModelsFromPractice(this.db, this.Practice);
+            model.Doctors = DoctorsController.GetDoctorViewModelsFromPractice(this.db, this.Practice, this.UserNowGetter());
 
             var currentPracticeId = this.GetCurrentUser().PracticeId;
 

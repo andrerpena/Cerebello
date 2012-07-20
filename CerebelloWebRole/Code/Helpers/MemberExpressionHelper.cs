@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace CerebelloWebRole.Code
 {
@@ -22,6 +23,23 @@ namespace CerebelloWebRole.Code
 #warning This is the strange part, why not just type-cast 'memberExpression.Member' to PropertyInfo? TModel would be dismissed that way.
             var memberName = memberExpression.Member.Name;
             return typeof(TModel).GetProperty(memberName);
+        }
+
+        /// <summary>
+        /// Returns the display name of a model property marked with DisplayAttribute.
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static string GetPropertyDisplayName(PropertyInfo propertyInfo)
+        {
+            var displayAttribute = propertyInfo
+                .GetCustomAttributes(typeof(DisplayAttribute), true)
+                .Cast<DisplayAttribute>()
+                .FirstOrDefault();
+
+            var propertyDisplay = displayAttribute != null ? displayAttribute.Name : propertyInfo.Name;
+
+            return propertyDisplay;
         }
 
         /// <summary>

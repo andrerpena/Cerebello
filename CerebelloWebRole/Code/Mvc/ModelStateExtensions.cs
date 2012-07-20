@@ -17,15 +17,12 @@ namespace CerebelloWebRole.Code.Mvc
 
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
 
-            if (errorMessage.Contains("{0}"))
-            {
-                var displayAttribute = propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().FirstOrDefault();
-                var propertyDisplay = displayAttribute != null ? displayAttribute.Name : propertyInfo.Name;
-                errorMessage = string.Format(errorMessage, propertyDisplay);
-            }
+            var propertyDisplay = MemberExpressionHelper.GetPropertyDisplayName(propertyInfo);
+            errorMessage = string.Format(errorMessage, propertyDisplay);
 
             modelState.AddModelError(propertyInfo.Name, errorMessage);
         }
+
 
         /// <summary>
         /// Add a new validation message to the collection of messages and exceptions associated with the given model property.
@@ -54,11 +51,18 @@ namespace CerebelloWebRole.Code.Mvc
         /// </summary>
         /// <param name="modelState">ModelStateDictionary that contains validation messages of the model.</param>
         /// <param name="expression">Expression tree that goes to the property of the model, for which to return the associated ModelState.</param>
-        /// <returns>Returns the ModelState associated with the property represented by the expression tree.</returns>
+        /// <returns>
+        /// Returns the ModelState associated with the property represented by the expression tree.
+        /// If there is no ModelState associated, then returns null.
+        /// </returns>
         public static ModelErrorCollection GetPropertyErrors(this ModelStateDictionary modelState, Expression<Func<object>> expression)
         {
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
             var result = modelState[propertyInfo.Name];
+
+            if (result == null)
+                return null;
+
             return result.Errors;
         }
 

@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="ExceptionHelper.cs" />
     <Compile Include="Mvc3TestHelper.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />

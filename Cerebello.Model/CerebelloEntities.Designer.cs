@@ -655,34 +655,34 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Holliday> Hollidays
+        public ObjectSet<Holiday> Holidays
         {
             get
             {
-                if ((_Hollidays == null))
+                if ((_Holidays == null))
                 {
-                    _Hollidays = base.CreateObjectSet<Holliday>("Hollidays");
+                    _Holidays = base.CreateObjectSet<Holiday>("Holidays");
                 }
-                return _Hollidays;
+                return _Holidays;
             }
         }
-        private ObjectSet<Holliday> _Hollidays;
+        private ObjectSet<Holiday> _Holidays;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<SYS_Holliday> SYS_Holliday
+        public ObjectSet<SYS_Holiday> SYS_Holiday
         {
             get
             {
-                if ((_SYS_Holliday == null))
+                if ((_SYS_Holiday == null))
                 {
-                    _SYS_Holliday = base.CreateObjectSet<SYS_Holliday>("SYS_Holliday");
+                    _SYS_Holiday = base.CreateObjectSet<SYS_Holiday>("SYS_Holiday");
                 }
-                return _SYS_Holliday;
+                return _SYS_Holiday;
             }
         }
-        private ObjectSet<SYS_Holliday> _SYS_Holliday;
+        private ObjectSet<SYS_Holiday> _SYS_Holiday;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -976,19 +976,19 @@ namespace Cerebello.Model
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Hollidays EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the Holidays EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToHollidays(Holliday holliday)
+        public void AddToHolidays(Holiday holiday)
         {
-            base.AddObject("Hollidays", holliday);
+            base.AddObject("Holidays", holiday);
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the SYS_Holliday EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the SYS_Holiday EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToSYS_Holliday(SYS_Holliday sYS_Holliday)
+        public void AddToSYS_Holiday(SYS_Holiday sYS_Holiday)
         {
-            base.AddObject("SYS_Holliday", sYS_Holliday);
+            base.AddObject("SYS_Holiday", sYS_Holiday);
         }
     
         /// <summary>
@@ -4650,26 +4650,26 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Holliday")]
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Holiday")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class Holliday : EntityObject
+    public partial class Holiday : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new Holliday object.
+        /// Create a new Holiday object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="date">Initial value of the Date property.</param>
-        public static Holliday CreateHolliday(global::System.Int32 id, global::System.String name, global::System.DateTime date)
+        public static Holiday CreateHoliday(global::System.Int32 id, global::System.String name, global::System.DateTime date)
         {
-            Holliday holliday = new Holliday();
-            holliday.Id = id;
-            holliday.Name = name;
-            holliday.Date = date;
-            return holliday;
+            Holiday holiday = new Holiday();
+            holiday.Id = id;
+            holiday.Name = name;
+            holiday.Date = date;
+            return holiday;
         }
 
         #endregion
@@ -7965,26 +7965,26 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="SYS_Holliday")]
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="SYS_Holiday")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class SYS_Holliday : EntityObject
+    public partial class SYS_Holiday : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new SYS_Holliday object.
+        /// Create a new SYS_Holiday object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="monthAndDay">Initial value of the MonthAndDay property.</param>
-        public static SYS_Holliday CreateSYS_Holliday(global::System.Int32 id, global::System.String name, global::System.Int32 monthAndDay)
+        public static SYS_Holiday CreateSYS_Holiday(global::System.Int32 id, global::System.String name, global::System.Int32 monthAndDay)
         {
-            SYS_Holliday sYS_Holliday = new SYS_Holliday();
-            sYS_Holliday.Id = id;
-            sYS_Holliday.Name = name;
-            sYS_Holliday.MonthAndDay = monthAndDay;
-            return sYS_Holliday;
+            SYS_Holiday sYS_Holiday = new SYS_Holiday();
+            sYS_Holiday.Id = id;
+            sYS_Holiday.Name = name;
+            sYS_Holiday.MonthAndDay = monthAndDay;
+            return sYS_Holiday;
         }
 
         #endregion

@@ -12,17 +12,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class DoctorsController : PracticeController
     {
+        public DoctorsController()
+        {
+            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
+            this.UtcNowGetter = () => DateTime.UtcNow;
+        }
+
+        public Func<DateTime> UserNowGetter { get; set; }
+
+        public Func<DateTime> UtcNowGetter { get; set; }
+
         //
         // GET: /App/PracticeDoctors/
 
         public ActionResult Index()
         {
             var model = new PracticeDoctorsViewModel();
-            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice);
+            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.UserNowGetter());
             return View(model);
         }
 
-        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice)
+        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice, DateTime userNow)
         {
             var usersThatAreDoctors = db.Users
                 .Where(u => u.PracticeId == practice.Id)
@@ -60,7 +70,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     eachItem.MedicalEntityCode,
                     eachItem.MedicalEntityJurisdiction);
 
-                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc).Item1;
+                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc, userNow).Item1;
             }
 
             var doctors = dataCollection.Select(item => item.vm).ToList();

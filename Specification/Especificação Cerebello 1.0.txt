@@ -53,7 +53,7 @@ A partir de 2012-05-26
 
 @	Tela Médico.Agenda.Editar
         - deve ser possível marcar compromissos nos feriados e até mesmo nas férias do médico, só que isso gera um warning.
-@		- Descrição do motivo de não poder cadastrar horário específico
+@		x Descrição do motivo de não poder cadastrar horário específico
 @		- Tela de cadastro de consulta deve ter combo para convênio
 
 @	Tela Médico.Agenda
@@ -70,7 +70,7 @@ A partir de 2012-05-26
 @			(deve ser múltiplo da duração de uma consulta)
 @		- Cadastrar feriados (são recorrente anualmente)
 @			- feriados nacionais já são regra no sistema... não tem como tirar eles.
-            - deve ser possível marcar compromissos nos feriados, só gera um warning.
+            x deve ser possível marcar compromissos nos feriados, só gera um warning.
 @		- Alterar tela de cadastro de "consulta" para "compromisso"
 @			- aba de consulta, representa o que já tem agora
 @			- aba de compromisso, para marcar quando o médico não pode atender
@@ -83,13 +83,13 @@ A partir de 2012-05-26
 
 @	Tela Médico.Prontuário.Paciente
 @		- Foto do paciente (web cam)
-@		- Implementar solicitação de exames
+@		x Implementar solicitação de exames
 		* Implementar recebimento de informações de exames
 			- tipo de exame (pesquisar sobre tabela nacional de exames e procedimentos)
 			- medida
 			- unidade
 @		- Laudo (conclusão do médico sobre o resultado de um exame)
-@		- Implementar botão de marcar retorno
+@		x Implementar botão de marcar retorno
 @			(já com paciente e próxima data disponível do médico a partir de agora)
 @		- Convênio: mostra convênio usado na última consulta desse paciente
 @		- Ao incluir registro de um novo atendimento, incrementar contador do agendamento mais próximo.

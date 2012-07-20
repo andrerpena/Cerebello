@@ -5,9 +5,45 @@ dh => horas de duração	dm => minutos de duração
 ee => nível de concentração no trabalho
 desc => descrição do que está sendo feito
 
-yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee	desc
+yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
-2012-07-13 ##:##-##:## (#º##") ##   
+2012-07-20 19:15-19:30 (0º15")  9   Preparando commit.
+2012-07-20 16:00-18:40 (2º40")  5   Teste para salvar compromisso num feriado: deve ser possível fazer isso.
+2012-07-20 15:30-15:40 (0º10") 10   Teste para salvar compromisso no passado: deve ser possível fazer isso.
+2012-07-20 14:00-15:30 (1º30")  7   Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
+2012-07-20 00:00-00:10 (0º10")  9   Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
+
+-- 6º00
+2012-07-19 23:20-24:00 (0º40")  9   Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
+2012-07-19 19:50-21:20 (1º30")  9   Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
+                                    Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
+2012-07-19 16:40-19:50 (3º10")  5   Issue #36: Não está mais sendo possível salvar consultas com horários conflitantes.
+2012-07-19 16:00-16:40 (0º40")  7   Lendo coisas no GitHub, e comentando.
+
+-- 7º15
+2012-07-18 19:00-19:10 (0º10") 10   Alterando palavra "commitment" por "appointment".
+2012-07-18 17:50-18:40 (0º50")  6   Preparando commit da issue #35 e #27. Pull e merge foram necessários.
+2012-07-18 17:10-17:35 (0º25")  9   Issue #35: Teste: POST de salvamento com ModelState inválido, deve possuir ViewBag com as opções das combos.
+2012-07-18 16:20-17:10 (0º50")  6   Teste: Edição de usuário médico com sucesso.
+2012-07-18 16:00-16:20 (0º20")  8   Issue #35: A tela de editar usuário dá exceção ao tentar salvar.
+2012-07-18 15:40-16:00 (0º30")  7   Manutenção issue #27 no github.
+2012-07-18 15:00-15:30 (0º30") 10   Teste da visualização de nova consulta com paciente predefinido de outro constultório.
+2012-07-18 14:30-15:00 (0º30")  9   Teste da visualização de nova consulta com paciente predefinido.
+2012-07-18 14:00-14:30 (0º30")  9   Teste da visualização de nova consulta.
+2012-07-18 13:10-13:30 (0º20")  5   BUG: Compromissos não estão aparecendo na agenda. Campo Description está Nullable=false no modelo.
+2012-07-18 12:50-12:50 (0º10")  8   Texto do botão "salvar consulta", agora pode ser "salvar compromisso" dependendo do contexto.
+2012-07-18 12:10-12:40 (0º30")  9   Tela de edição de compromisso não deve possuir as abas de consulta|compromisso.
+2012-07-18 11:50-12:10 (0º20") 10   Edição de um compromisso.
+2012-07-18 11:30-11:50 (0º20") 10   Teste de UI: salvamento e edição de compromissos e consultas, e edição de item inexistente.
+2012-07-18 11:10-11:30 (0º20") 10   Estilo dos compromissos e consultas no calendário.
+2012-07-18 10:50-11:10 (0º20") 10   Quando editar um appointment ou commitment que não existe, deve mostrar uma tela de not-found.
+2012-07-18 10:30-10:50 (0º20")  9   Tem que verificar o practice do médico que está editando o compromisso.
+
+-- 6º00 (2º32)
+2012-07-17 16:00-18:00 (2º00")  5   Salvamento de compromissos. Na verdade está sendo salvo na tabela de Appointments.
+2012-07-17 15:00-16:00 (1º00")  5   Abas na tela de criação de compromisso, uma para consultas e outra para compromissos diversos.
+2012-07-17 12:00-15:00 (3º00")  4   GitHub - lendo issues, comentando e fechando coisas já prontas.
+
 2012-07-13 00:00-00:20 (0º25")  8   Preparando o commit.
 
 2012-07-12 23:20-24:00 (0º40")  7   Testando tudo e preparando o commit.

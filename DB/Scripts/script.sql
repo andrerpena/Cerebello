@@ -262,12 +262,12 @@ CREATE TABLE [dbo].[HealthEnsurance](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Holliday] ******/
+/****** Object:  Table [dbo].[Holiday] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Holliday](
+CREATE TABLE [dbo].[Holiday](
 	[Id] [int] NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
 	[Date] [date] NOT NULL,
@@ -551,12 +551,12 @@ CREATE TABLE [dbo].[SYS_ActiveIngredient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[SYS_Holliday] ******/
+/****** Object:  Table [dbo].[SYS_Holiday] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[SYS_Holliday](
+CREATE TABLE [dbo].[SYS_Holiday](
 	[Id] [int] NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
 	[MonthAndDay] [int] NOT NULL,
