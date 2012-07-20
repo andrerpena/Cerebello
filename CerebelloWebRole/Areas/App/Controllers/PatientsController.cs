@@ -143,13 +143,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new PatientsIndexViewModel();
             model.LastRegisteredPatients = (from p in
-                                  (from Patient patient in db.Patients where patient.DoctorId == this.Doctor.Id select patient).ToList()
-                              select new PatientViewModel
-                              {
-                                  Id = p.Id,
-                                  DateOfBirth = p.Person.DateOfBirth,
-                                  FullName = p.Person.FullName
-                              }).ToList();
+                                                (from Patient patient in db.Patients where patient.DoctorId == this.Doctor.Id select patient).ToList()
+                                            select new PatientViewModel
+                                            {
+                                                Id = p.Id,
+                                                DateOfBirth = p.Person.DateOfBirth,
+                                                FullName = p.Person.FullName
+                                            }).ToList();
 
             var timeZoneNow = DateTimeHelper.GetTimeZoneNow();
 
@@ -188,19 +188,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            PatientViewModel model = null;
+            PatientViewModel viewModel = null;
 
             if (id != null)
             {
                 var patient = db.Patients.Where(p => p.Id == id).First();
-                model = this.GetViewModel(patient);
+                viewModel = this.GetViewModel(patient);
 
-                ViewBag.Title = "Alterando paciente: " + model.FullName;
+                ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
             }
             else
                 ViewBag.Title = "Novo paciente";
 
-            return View("Edit", model);
+            return View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -229,7 +229,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.FullName);
                 patient.Person.Gender = (short)formModel.Gender;
-                patient.Person.MaritalStatus = (short?) formModel.MaritalStatus;
+                patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
 
@@ -385,6 +385,40 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult AddressEditor(AddressViewModel viewModel)
         {
+            // there seems to be a BUG regarding DropdownListFors inside editor templates
+            // and possibly inside collection-editors. This is a workaraound (I'm forcingly
+            // setting the value).
+            // If we go into this more often we can investigate a more elegant solution.
+            ViewBag.UFOptions = new SelectList(new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Text = "Acre", Value="AC"},
+                        new SelectListItem() { Text = "Alagoas", Value="AL"},
+                        new SelectListItem() { Text = "Amapá", Value="AP"},
+                        new SelectListItem() { Text = "Amazonas", Value="AM"},
+                        new SelectListItem() { Text = "Bahia", Value="BA"},
+                        new SelectListItem() { Text = "Ceará", Value="CE"},
+                        new SelectListItem() { Text = "Distrito Federal", Value="DF"},
+                        new SelectListItem() { Text = "Espírito Santo", Value="ES"},
+                        new SelectListItem() { Text = "Goiás", Value="GO"},
+                        new SelectListItem() { Text = "Maranhão", Value="MA"},
+                        new SelectListItem() { Text = "Mato Grosso", Value="MT"},
+                        new SelectListItem() { Text = "Mato Grosso do Sul", Value="MS"},
+                        new SelectListItem() { Text = "Minas Gerais", Value="MG"},
+                        new SelectListItem() { Text = "Pará", Value="PA"},
+                        new SelectListItem() { Text = "Paraiba", Value="PB"},
+                        new SelectListItem() { Text = "Pernambuco", Value="PE"},
+                        new SelectListItem() { Text = "Piauí", Value="PI"},
+                        new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
+                        new SelectListItem() { Text = "Rio Grande do Norte", Value="RN"},
+                        new SelectListItem() { Text = "Rio Grande do Sul", Value="RS"},
+                        new SelectListItem() { Text = "Rondônia", Value="RO"},
+                        new SelectListItem() { Text = "Roraima", Value="RR"},
+                        new SelectListItem() { Text = "Santa Catarina", Value="SC"},
+                        new SelectListItem() { Text = "São Paulo", Value="SP"},
+                        new SelectListItem() { Text = "Sergipe", Value="SE"},
+                        new SelectListItem() { Text = "Tocantins", Value="TO"}
+                    }, "Value", "Text", viewModel.StateProvince);
+
             return View(viewModel);
         }
     }

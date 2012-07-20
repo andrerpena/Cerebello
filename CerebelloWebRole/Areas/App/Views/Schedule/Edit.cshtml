@@ -37,10 +37,10 @@
                 }
                 /* todo: Must vanish with this style. */
             </style>
-            <ul class="tabs">
-                <li id="medical-appointment-tab">Consulta</li>
-                <li id="generic-appointment-tab">Compromisso</li>
-            </ul>
+            <div class="small-tabs">
+                <a id="medical-appointment-tab" class="activated">Consulta</a>
+                <a id="generic-appointment-tab">Compromisso</a>
+            </div>
         }
         
         @Html.HiddenFor(model => model.IsGenericAppointment)
@@ -130,7 +130,8 @@
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(Model.IsTimeValid ? "validation-passed" : "validation-failed")">
                         </span>
-                        <span id="time-validation-text">@Model.TimeValidationMessage</span>
+                        @* ToDo: continuar desenvolvendo este estilo *@
+                        <span id="time-validation-text" style="display: block; font-size: 11px; line-height: 1.2em; padding: 10px 0 5px; color: #DD390D;">@Model.TimeValidationMessage</span>
                     </div>
                     @* Action-links *@
                     <a id="check_time" href="#" class="block-little-link">
@@ -212,6 +213,11 @@
 
         $("#medical-appointment-tab").click(function(e) {
             e.preventDefault();
+            
+            // marks the selected tab
+            $(this).addClass("activated");
+            $("#generic-appointment-tab").removeClass("activated");
+
             $(".generic-appointment-only").hide();
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
@@ -223,6 +229,11 @@
 
         $("#generic-appointment-tab").click(function(e) {
             e.preventDefault();
+
+            // marks the selected tab
+            $(this).addClass("activated");
+            $("#medical-appointment-tab").removeClass("activated");
+
             $(".generic-appointment-only").show();
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").hide();
