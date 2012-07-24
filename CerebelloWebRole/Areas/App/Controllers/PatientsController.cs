@@ -367,18 +367,39 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Searchs for patients
+        /// </summary>
+        /// <remarks>
+        /// Requirements:
+        ///     - Should return a slice of the existing records matching the criteria corresponding to the specified 'Page' 
+        ///     - Should return a result correspoding to all records when no search term is provided (respecting pagination)
+        ///     - In the result, the 'Count' property should consider all records
+        ///     - In the result, the list should bring only results corresponding to the specified page
+        /// </remarks>
         public ActionResult Search(SearchModel searchModel)
         {
             var model = new DoctorPatientsSearchViewModel();
 
-            var query = from patient in db.Patients where patient.DoctorId == this.Doctor.Id select patient;
+            var query = from patient in db.Patients.Include("Person")
+                        where patient.DoctorId == this.Doctor.Id
+                        select patient;
 
             if (!string.IsNullOrEmpty(searchModel.Term))
                 query = from patient in query where patient.Person.FullName.Contains(searchModel.Term) select patient;
 
+            // 1-based page index
+            var pageIndex = searchModel.Page;
+            var pageSize = Constants.GRID_PAGE_SIZE;
 
-            model.Patients = (from patient in query.ToList()
-                              select this.GetViewModel(patient)).ToList();
+            model.Count = query.Count();
+            model.Patients = (from p in query
+                              select new PatientViewModel()
+                              {
+                                  Id = p.Id,
+                                  DateOfBirth = p.Person.DateOfBirth,
+                                  FullName = p.Person.FullName
+                              }).OrderBy(p => p.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
         }

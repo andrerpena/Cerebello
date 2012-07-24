@@ -18,7 +18,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// The size of a page of the grid
         /// </summary>
-        public const int GRID_PAGE_SIZE = 30;
+        public const int GRID_PAGE_SIZE = 20;
 
         /// <summary>
         /// The default password given to every new user.

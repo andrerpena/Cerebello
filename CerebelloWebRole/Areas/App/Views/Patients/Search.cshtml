@@ -3,9 +3,9 @@
     ViewBag.Title = "Search";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
-    var grid = Html.CreateGrid(this.Model.Patients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
-    grid.AddField(m => m.FullName);
-    grid.AddField(m => m.DateOfBirth, format: @<text>DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>);
+    var grid = this.Html.CreateGrid(this.Model.Patients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
+    grid.AddField(m => m.FullName, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
+    grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>, header: "Idade");
 }
 @section Title {
     Pesquisa de pacientes

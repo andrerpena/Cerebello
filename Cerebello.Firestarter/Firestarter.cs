@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using System.Data.Common;
 using System.Data.EntityClient;
+using Cerebello.Firestarter.Helpers;
 
 namespace Cerebello.Firestarter
 {
@@ -362,117 +363,9 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Creates fake patients
         /// </summary>
-        public static List<Patient> CreateFakePatients(Doctor doctor, CerebelloEntities db)
+        public static List<Patient> CreateFakePatients(Doctor doctor, CerebelloEntities db, int count = 70)
         {
-            List<Patient> result = new List<Patient>();
-
-            // patient 1
-            {
-                var patient = new Patient()
-                {
-                    Person = new Person()
-                    {
-                        FullName = "Pedro Paulo Machado",
-                        Gender = (int)TypeGender.Male,
-                        DateOfBirth = new DateTime(1982, 10, 12),
-                        MaritalStatus = (int)TypeMaritalStatus.Casado,
-                        BirthPlace = "Brasileiro",
-                        CPF = "87324128910",
-                        CPFOwner = (int)TypeCPFOwner.PatientItself,
-                        Profession = "Encarregado de Obras",
-                        UrlIdentifier = StringHelper.GenerateUrlIdentifier("Pedro Paulo Machado"),
-                        CreatedOn = DateTime.UtcNow
-                    },
-                    Doctor = doctor
-                };
-                patient.Person.Emails.Add(new Email() { Address = "paulomachado@gmail.com" });
-                patient.Person.Addresses.Add(new Address()
-                {
-                    CEP = "602500330",
-                    StateProvince = "RJ",
-                    City = "Rio de Janeiro",
-                    Neighborhood = "Jacarepaguá",
-                    Street = "Rua Estrada do Pau Ferro 329",
-                    Complement = ""
-                });
-
-                db.Patients.AddObject(patient);
-                result.Add(patient);
-                db.SaveChanges();
-            }
-
-            // patient 2
-            {
-                var patient = new Patient()
-                {
-                    Person = new Person()
-                    {
-                        FullName = "Laura Gonzaga Deniz",
-                        Gender = (int)TypeGender.Female,
-                        DateOfBirth = new DateTime(1984, 8, 22),
-                        MaritalStatus = (int)TypeMaritalStatus.Solteiro,
-                        BirthPlace = "Brasileira",
-                        CPF = "72889321041",
-                        CPFOwner = (int)TypeCPFOwner.PatientItself,
-                        Profession = "Psicóloga",
-                        UrlIdentifier = StringHelper.GenerateUrlIdentifier("Laura Gonzaga Deniz"),
-                        CreatedOn = DateTime.UtcNow
-                    },
-                    Doctor = doctor
-                };
-                patient.Person.Emails.Add(new Email() { Address = "lauragonzagadeniz@gmail.com" });
-                patient.Person.Addresses.Add(new Address()
-                {
-                    CEP = "600330250",
-                    StateProvince = "RJ",
-                    City = "Rio de Janeiro",
-                    Neighborhood = "Lapa",
-                    Street = "Rua Comendador Braga nº 890/1210",
-                    Complement = ""
-                });
-
-                db.Patients.AddObject(patient);
-                result.Add(patient);
-                db.SaveChanges();
-            }
-
-            // patient 3
-            {
-                var patient = new Patient()
-                {
-                    Person = new Person()
-                    {
-                        FullName = "Antonieta Moraes Sobrinho",
-                        Gender = (int)TypeGender.Female,
-                        DateOfBirth = new DateTime(1955, 12, 2),
-                        MaritalStatus = (int)TypeMaritalStatus.Solteiro,
-                        BirthPlace = "Brasileira",
-                        CPF = "10472932188",
-                        CPFOwner = (int)TypeCPFOwner.PatientItself,
-                        Profession = "Funcionária Pública",
-                        UrlIdentifier = "antonieta_moraes_sobrinho",
-                        CreatedOn = DateTime.UtcNow
-                    },
-                    Doctor = doctor
-                };
-
-                patient.Person.Emails.Add(new Email() { Address = "lauragonzagadeniz@gmail.com" });
-                patient.Person.Addresses.Add(new Address()
-                {
-                    CEP = "600330250",
-                    StateProvince = "RJ",
-                    City = "Rio de Janeiro",
-                    Neighborhood = "Lapa",
-                    Street = "Rua Comendador Braga nº 890/1210",
-                    Complement = ""
-                });
-
-                db.Patients.AddObject(patient);
-                result.Add(patient);
-                db.SaveChanges();
-            }
-
-            return result;
+            return FakePatientsFactory.CreateFakePatients(doctor, db, count);
         }
 
         /// <summary>

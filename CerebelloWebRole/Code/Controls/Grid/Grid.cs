@@ -48,7 +48,7 @@ namespace CerebelloWebRole.Code.Controls
                 if (this.Count.HasValue)
                 {
                     webGrid = new WebGrid(canPage: true, sortFieldName: "SortBy", sortDirectionFieldName: "SortDirection", pageFieldName: "Page", rowsPerPage: this.RowsPerPage);
-                    webGrid.Bind((IEnumerable<dynamic>)this.Model, null, true, this.Count.Value);
+                    webGrid.Bind((IEnumerable<dynamic>)this.Model, null, false, this.Count.Value);
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace CerebelloWebRole.Code.Controls
             else
             {
                 TagBuilder noRecords = new TagBuilder("div");
-                noRecords.AddCssClass("empty-search-box");
+                noRecords.AddCssClass("message");
                 noRecords.SetInnerText("Não existem registros a serem exibidos");
 
                 return new MvcHtmlString(noRecords.ToString());
