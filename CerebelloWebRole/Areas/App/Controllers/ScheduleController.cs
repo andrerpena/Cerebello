@@ -148,15 +148,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 userNow :
                 date2 + DateTimeHelper.GetTimeSpan(start);
 
-            // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
-            if (slots.Any())
-            {
-                var min = slots.Min(s => (s.Item1 > startTime ? s.Item1 - startTime : startTime - s.Item1));
-                var findMin = slots.Where(s => (s.Item1 > startTime ? s.Item1 - startTime : startTime - s.Item1) == min).FirstOrDefault();
-                startTime = findMin.Item1;
-            }
-
-            start = startTime.ToString("HH:mm");
+            // todo: just delete code or find a place for it?
+            //FindNearestSlotStartTime(ref start, slots, ref startTime);
 
             // Getting end date and time.
             DateTime endTime =
@@ -167,15 +160,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (endTime - startTime < slotDuration)
                 endTime = startTime + slotDuration;
 
-            // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
-            if (slots.Any())
-            {
-                var min = slots.Min(s => (s.Item2 > endTime ? s.Item2 - endTime : endTime - s.Item2));
-                var findMin = slots.Where(s => (s.Item2 > endTime ? s.Item2 - endTime : endTime - s.Item2) == min).FirstOrDefault();
-                endTime = findMin.Item2;
-            }
-
-            end = endTime.ToString("HH:mm");
+            // todo: just delete code or find a place for it?
+            //FindNearestSlotEndTime(ref end, slots, ref endTime);
 
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
@@ -230,11 +216,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Setting the error message to display near the date and time configurations.
             var emptyErrors = new ModelErrorCollection();
-            var dateAndTimeErrors = (this.ModelState.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors).ToList();
-            dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
-            if (dateAndTimeErrors.Any())
+            var errorsList = new List<ModelError>();
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
+            if (errorsList.Any())
             {
-                viewModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
+                viewModel.TimeValidationMessage = errorsList.First().ErrorMessage;
             }
 
             this.ModelState.Clear();
@@ -242,6 +233,34 @@ namespace CerebelloWebRole.Areas.App.Controllers
             this.ViewBag.IsEditing = false;
 
             return this.View("Edit", viewModel);
+        }
+
+        private static void FindNearestSlotEndTime(ref string end, List<Tuple<DateTime, DateTime>> slots, ref DateTime endTime)
+        {
+            // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
+            if (slots != null && slots.Any())
+            {
+                var endTime2 = endTime;
+                var min = slots.Min(s => (s.Item2 > endTime2 ? s.Item2 - endTime2 : endTime2 - s.Item2));
+                var findMin = slots.Where(s => (s.Item2 > endTime2 ? s.Item2 - endTime2 : endTime2 - s.Item2) == min).FirstOrDefault();
+                endTime = findMin.Item2;
+            }
+
+            end = endTime.ToString("HH:mm");
+        }
+
+        private static void FindNearestSlotStartTime(ref string start, List<Tuple<DateTime, DateTime>> slots, ref DateTime startTime)
+        {
+            // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
+            if (slots != null && slots.Any())
+            {
+                var startTime2 = startTime;
+                var min = slots.Min(s => (s.Item1 > startTime2 ? s.Item1 - startTime2 : startTime2 - s.Item1));
+                var findMin = slots.Where(s => (s.Item1 > startTime2 ? s.Item1 - startTime2 : startTime2 - s.Item1) == min).FirstOrDefault();
+                startTime = findMin.Item1;
+            }
+
+            start = startTime.ToString("HH:mm");
         }
 
         [HttpPost]
@@ -383,11 +402,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // Setting the error message to display near the date and time configurations.
                 var emptyErrors = new ModelErrorCollection();
-                var dateAndTimeErrors = (this.ModelState.GetPropertyErrors(() => formModel.Date) ?? emptyErrors).ToList();
-                dateAndTimeErrors.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Date) ?? emptyErrors);
-                if (dateAndTimeErrors.Any())
+                var errorsList = new List<ModelError>();
+                errorsList.AddRange(this.ModelState.GetPropertyErrors(() => formModel.Date) ?? emptyErrors);
+                errorsList.AddRange(this.ModelState.GetPropertyErrors(() => formModel.Start) ?? emptyErrors);
+                errorsList.AddRange(this.ModelState.GetPropertyErrors(() => formModel.End) ?? emptyErrors);
+                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Date) ?? emptyErrors);
+                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Start) ?? emptyErrors);
+                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.End) ?? emptyErrors);
+
+                if (errorsList.Any())
                 {
-                    formModel.TimeValidationMessage = dateAndTimeErrors.First().ErrorMessage;
+                    formModel.TimeValidationMessage = errorsList.First().ErrorMessage;
                 }
             }
 
@@ -751,7 +776,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 inconsistencyMessages.AddModelError<AppointmentViewModel>(
                     model => model.Date,
-                    "O campo '{0}' é inválido. Não é permitido marcar uma consulta para o passado.");
+                    "A data e hora indicadas estão no passado.");
                 hasError = true;
             }
 
@@ -773,7 +798,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 hasError = true;
             }
 
-            Action<string, string> CheckModelTimingError = (workdayStart, workdayEnd) =>
+            Action<string, string, string, string> CheckModelTimingError = (workdayStart, workdayEnd, lunchStart, lunchEnd) =>
             {
                 if (string.IsNullOrEmpty(workdayStart) || string.IsNullOrEmpty(workdayEnd))
                 {
@@ -784,26 +809,43 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    var dbStartRegexMatch = TimeDataTypeAttribute.Regex.Match(workdayStart);
-                    int dbIntegerHourStart = int.Parse(dbStartRegexMatch.Groups[1].Value) * 100 + int.Parse(dbStartRegexMatch.Groups[2].Value);
-
-                    var dbEndRegexMatch = TimeDataTypeAttribute.Regex.Match(workdayEnd);
-                    int dbIntegerHourEnd = int.Parse(dbEndRegexMatch.Groups[1].Value) * 100 + int.Parse(dbEndRegexMatch.Groups[2].Value);
-
-                    if (integerHourStart < dbIntegerHourStart)
+                    // Verify the lunch time.
                     {
-                        modelState.AddModelError<AppointmentViewModel>(
-                            model => model.Start,
-                            "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
-                        hasError = true;
+                        var lunchStartInteger = GetTimeAsInteger(lunchStart);
+                        var lunchEndInteger = GetTimeAsInteger(lunchEnd);
+
+                        bool lunchIsAfter = integerHourStart < lunchStartInteger && integerHourEnd <= lunchStartInteger;
+                        bool lunchIsBefore = integerHourStart >= lunchEndInteger && integerHourEnd > lunchEndInteger;
+
+                        if (lunchIsAfter == lunchIsBefore)
+                        {
+                            inconsistencyMessages.AddModelError<AppointmentViewModel>(
+                                model => model.Date,
+                                "A data e hora marcada está no horário de almoço do médico.");
+                            hasError = true;
+                        }
                     }
 
-                    if (integerHourEnd > dbIntegerHourEnd)
+                    // Verify the work time.
                     {
-                        modelState.AddModelError<AppointmentViewModel>(
-                            model => model.End,
-                            "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
-                        hasError = true;
+                        int workdayStartInteger = GetTimeAsInteger(workdayStart);
+                        int workdayEndInteger = GetTimeAsInteger(workdayEnd);
+
+                        if (integerHourStart < workdayStartInteger)
+                        {
+                            modelState.AddModelError<AppointmentViewModel>(
+                                model => model.Start,
+                                "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
+                            hasError = true;
+                        }
+
+                        if (integerHourEnd > workdayEndInteger)
+                        {
+                            modelState.AddModelError<AppointmentViewModel>(
+                                model => model.End,
+                                "O campo '{0}' não é um horário válido devido às configurações de horário de trabalho.");
+                            hasError = true;
+                        }
                     }
                 }
             };
@@ -811,29 +853,70 @@ namespace CerebelloWebRole.Areas.App.Controllers
             switch (date.Date.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
-                    CheckModelTimingError(doctor.CFG_Schedule.SundayWorkdayStartTime, doctor.CFG_Schedule.SundayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.SundayWorkdayStartTime,
+                        doctor.CFG_Schedule.SundayWorkdayEndTime,
+                        doctor.CFG_Schedule.SundayLunchStartTime,
+                        doctor.CFG_Schedule.SundayLunchEndTime);
                     break;
                 case DayOfWeek.Monday:
-                    CheckModelTimingError(doctor.CFG_Schedule.MondayWorkdayStartTime, doctor.CFG_Schedule.MondayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.MondayWorkdayStartTime,
+                        doctor.CFG_Schedule.MondayWorkdayEndTime,
+                        doctor.CFG_Schedule.MondayLunchStartTime,
+                        doctor.CFG_Schedule.MondayLunchEndTime);
                     break;
                 case DayOfWeek.Tuesday:
-                    CheckModelTimingError(doctor.CFG_Schedule.TuesdayWorkdayStartTime, doctor.CFG_Schedule.TuesdayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.TuesdayWorkdayStartTime,
+                        doctor.CFG_Schedule.TuesdayWorkdayEndTime,
+                        doctor.CFG_Schedule.TuesdayLunchStartTime,
+                        doctor.CFG_Schedule.TuesdayLunchEndTime);
                     break;
                 case DayOfWeek.Wednesday:
-                    CheckModelTimingError(doctor.CFG_Schedule.WednesdayWorkdayStartTime, doctor.CFG_Schedule.WednesdayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.WednesdayWorkdayStartTime,
+                        doctor.CFG_Schedule.WednesdayWorkdayEndTime,
+                        doctor.CFG_Schedule.WednesdayLunchStartTime,
+                        doctor.CFG_Schedule.WednesdayLunchEndTime);
                     break;
                 case DayOfWeek.Thursday:
-                    CheckModelTimingError(doctor.CFG_Schedule.ThursdayWorkdayStartTime, doctor.CFG_Schedule.ThursdayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.ThursdayWorkdayStartTime,
+                        doctor.CFG_Schedule.ThursdayWorkdayEndTime,
+                        doctor.CFG_Schedule.ThursdayLunchStartTime,
+                        doctor.CFG_Schedule.ThursdayLunchEndTime);
                     break;
                 case DayOfWeek.Friday:
-                    CheckModelTimingError(doctor.CFG_Schedule.FridayWorkdayStartTime, doctor.CFG_Schedule.FridayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.FridayWorkdayStartTime,
+                        doctor.CFG_Schedule.FridayWorkdayEndTime,
+                        doctor.CFG_Schedule.FridayLunchStartTime,
+                        doctor.CFG_Schedule.FridayLunchEndTime);
                     break;
                 case DayOfWeek.Saturday:
-                    CheckModelTimingError(doctor.CFG_Schedule.SaturdayWorkdayStartTime, doctor.CFG_Schedule.SaturdayWorkdayEndTime);
+                    CheckModelTimingError(
+                        doctor.CFG_Schedule.SaturdayWorkdayStartTime,
+                        doctor.CFG_Schedule.SaturdayWorkdayEndTime,
+                        doctor.CFG_Schedule.SaturdayLunchStartTime,
+                        doctor.CFG_Schedule.SaturdayLunchEndTime);
                     break;
             }
 
             return !hasError;
+        }
+
+        /// <summary>
+        /// Converts a string containing a time to an integer.
+        /// e.g.: "13:15" -> 1315
+        /// </summary>
+        /// <param name="strTime"></param>
+        /// <returns></returns>
+        private static int GetTimeAsInteger(string strTime)
+        {
+            var match = TimeDataTypeAttribute.Regex.Match(strTime);
+            int result = int.Parse(match.Groups[1].Value) * 100 + int.Parse(match.Groups[2].Value);
+            return result;
         }
 
         public static bool IsTimeAvailable(DateTime startTime, DateTime endTime, IEnumerable<Appointment> appointments, int? excludeAppointmentId = null)
@@ -879,7 +962,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var dateParsed = DateTime.Parse(date);
 
-                var inconsistencyMessages = this.ModelState;
+                var inconsistencyMessages = new ModelStateDictionary();
                 var isTimeValid = ValidateTime(
                     this.db,
                     this.Doctor,
@@ -902,6 +985,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 // Setting the error message to display near the date and time configurations.
+                var emptyErrors = new ModelErrorCollection();
+                var errorsList = new List<ModelError>();
+                errorsList.AddRange(this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Date) ?? emptyErrors);
+                errorsList.AddRange(this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Start) ?? emptyErrors);
+                errorsList.AddRange(this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.End) ?? emptyErrors);
+                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors<AppointmentViewModel>(m => m.Date) ?? emptyErrors);
+                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors<AppointmentViewModel>(m => m.Start) ?? emptyErrors);
+                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors<AppointmentViewModel>(m => m.End) ?? emptyErrors);
                 var dateAndTimeErrors = this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Date);
 
                 if (isTimeValid && isTimeAvailable)

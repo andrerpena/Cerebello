@@ -76,6 +76,10 @@ namespace CerebelloWebRole.Code.Mvc
         {
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
             var result = modelState[propertyInfo.Name];
+
+            if (result == null)
+                return null;
+
             return result.Errors;
         }
 
