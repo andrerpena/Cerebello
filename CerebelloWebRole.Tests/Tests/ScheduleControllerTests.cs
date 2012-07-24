@@ -210,7 +210,7 @@ namespace CerebelloWebRole.Tests
             var viewResult = (ViewResult)actionResult;
             Assert.IsInstanceOfType(viewResult.Model, typeof(AppointmentViewModel));
             var resultViewModel = (AppointmentViewModel)viewResult.Model;
-            Assert.AreEqual("Pedro Paulo Machado", resultViewModel.PatientNameLookup);
+            Assert.AreEqual(patient.Person.FullName, resultViewModel.PatientNameLookup);
             Assert.AreEqual(controller.ViewBag.IsEditing, false);
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
