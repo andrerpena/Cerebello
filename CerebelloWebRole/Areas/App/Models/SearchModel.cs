@@ -22,5 +22,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Page index (this property must match the page grid's page parameter so do not rename it)
         /// </summary>
         public int Page { get; set; }
+
+
     }
 }

@@ -9,6 +9,7 @@ using CerebelloWebRole.Models;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -46,7 +47,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new MedicinesIndexViewModel();
             model.LastRegisteredMedicines = (from medicine in db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
-                               select this.GetViewModelFromModel(medicine)).ToList();
+                                             select this.GetViewModelFromModel(medicine)).ToList();
             model.TotalMedicinesCount = db.Medicines.Count();
             return View(model);
         }
@@ -233,10 +234,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult LookupMedication(string term, int pageSize, int pageIndex)
         {
             var baseQuery = this.db.Medicines.Where(m => m.DoctorId == this.Doctor.Id);
-            if(!string.IsNullOrEmpty(term))
+            if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(m => m.Name.Contains(term) || m.ActiveIngredients.Any(ai => ai.Name.Contains(term)));
 
-           var query = from m in baseQuery
+            var query = from m in baseQuery
                         orderby m.Name
                         select new MedicineLookupGridModel
                         {
@@ -268,7 +269,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return this.Json(activeIngredients, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpGet]
         public JsonResult LookupSysMedicine(string term, int pageSize, int pageIndex)
         {
@@ -302,6 +303,43 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             ViewBag.MedicationId = medicationId;
             return View();
+        }
+
+        /// <summary>
+        /// Searchs for medicines
+        /// </summary>
+        /// <remarks>
+        /// Requirements:
+        ///     - Should return a slice of the existing records matching the criteria corresponding to the specified 'Page' 
+        ///     - Should return a result correspoding to all records when no search term is provided (respecting pagination)
+        ///     - In the result, the 'Count' property should consider all records
+        ///     - In the result, the list should bring only results corresponding to the specified page
+        /// </remarks>
+        public ActionResult Search(SearchModel searchModel)
+        {
+            var model = new SearchViewModel<MedicineViewModel>();
+
+            var query = from medicine in db.Medicines
+                        where medicine.DoctorId == this.Doctor.Id
+                        select medicine;
+
+            if (!string.IsNullOrEmpty(searchModel.Term))
+                query = from medicine in query where medicine.Name.Contains(searchModel.Term) select medicine;
+
+            // 1-based page index
+            var pageIndex = searchModel.Page;
+            var pageSize = Constants.GRID_PAGE_SIZE;
+
+            model.Count = query.Count();
+            model.Objects = (from m in query
+                              select new MedicineViewModel()
+                              {
+                                  Id = m.Id,
+                                  Name = m.Name,
+                                  LaboratoryName = m.Laboratory.Name
+                              }).OrderBy(p => p.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+
+            return View(model);
         }
     }
 }

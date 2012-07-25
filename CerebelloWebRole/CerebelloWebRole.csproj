@@ -13,7 +13,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -120,6 +120,7 @@
     <Compile Include="Areas\App\Models\PracticeUsersViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\MedicineLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="Areas\App\Models\EmailViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicineConcentrationViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicinesIndexViewModel.cs" />
-    <Compile Include="Areas\App\Models\DoctorPatientsSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\PatientsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorViewModel.cs" />
     <Compile Include="Areas\App\Models\PatientViewModel.cs" />
@@ -533,6 +533,7 @@
     <Content Include="Areas\App\Views\Exams\Details.cshtml" />
     <Content Include="Areas\App\Views\Exams\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Schedule\NotFound.cshtml" />
+    <Content Include="Areas\App\Views\Medicines\Search.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />

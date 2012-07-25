@@ -78,11 +78,11 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
 
-            Assert.IsInstanceOfType(resultAsView.Model, typeof(DoctorPatientsSearchViewModel));
-            var model = resultAsView.Model as DoctorPatientsSearchViewModel;
+            Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<PatientViewModel>));
+            var model = resultAsView.Model as SearchViewModel<PatientViewModel>;
 
             Assert.AreEqual(100, model.Count);
-            Assert.AreEqual(CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, model.Patients.Count);
+            Assert.AreEqual(CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, model.Objects.Count);
         }
 
         [TestMethod]
@@ -116,11 +116,11 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
 
-            Assert.IsInstanceOfType(resultAsView.Model, typeof(DoctorPatientsSearchViewModel));
-            var model = resultAsView.Model as DoctorPatientsSearchViewModel;
+            Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<PatientViewModel>));
+            var model = resultAsView.Model as SearchViewModel<PatientViewModel>;
 
             Assert.AreEqual(matchingPatientsCount, model.Count);
-            Assert.IsTrue(model.Patients.Count >= CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+            Assert.IsTrue(model.Objects.Count >= CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
         }
 
         #endregion

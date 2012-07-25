@@ -379,7 +379,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </remarks>
         public ActionResult Search(SearchModel searchModel)
         {
-            var model = new DoctorPatientsSearchViewModel();
+            var model = new SearchViewModel<PatientViewModel>();
 
             var query = from patient in db.Patients.Include("Person")
                         where patient.DoctorId == this.Doctor.Id
@@ -393,7 +393,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var pageSize = Constants.GRID_PAGE_SIZE;
 
             model.Count = query.Count();
-            model.Patients = (from p in query
+            model.Objects = (from p in query
                               select new PatientViewModel()
                               {
                                   Id = p.Id,
