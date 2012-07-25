@@ -1,10 +1,17 @@
 ﻿.ui-datepicker
 {
-    background: none repeat scroll 0 0 transparent;
-    border: medium none;
+    background: none repeat scroll 0 0 white;
+    border: 1px solid #D7D7D7;
+    border-radius: 0 0 0 0;
     color: #333333;
+    overflow: hidden;
     padding: 0;
     width: auto;
+}
+
+.ui-datepicker-inline
+{
+    border: medium none;
 }
 
 #ui-datepicker-div 
