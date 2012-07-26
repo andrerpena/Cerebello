@@ -27,11 +27,19 @@ namespace CerebelloWebRole.Tests
 
         public void Reset()
         {
+            // Some old tests need these values to be initialized with default values,
+            // because they don't initialize them. These values are incomplete,
+            // e.g. the "action" route value is missing... new tests should not rely
+            // on the default values provided by this class.
+
             // The default user is André.
             SetCurrentUser_Andre_CorrectPassword();
 
             // The route context is valid by default, for the user André.
-            SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+            RouteData = new RouteData();
+            RouteData.DataTokens["area"] = "App";
+            RouteData.Values["practice"] = "consultoriodrhourse";
+            RouteData.Values["doctor"] = "gregoryhouse";
         }
 
         /// <summary>
@@ -70,18 +78,22 @@ namespace CerebelloWebRole.Tests
             UserDbId = user.Id;
         }
 
-        public void SetRouteData_App_ConsultorioDrHourse_GregoryHouse()
+        public void SetRouteData_ConsultorioDrHourse_GregoryHouse(Type controllerType, string action)
         {
             RouteData = new RouteData();
-            RouteData.DataTokens["area"] = "App";
+
+            FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
+
             RouteData.Values["practice"] = "consultoriodrhourse";
             RouteData.Values["doctor"] = "gregoryhouse";
         }
 
-        public void SetRouteData_App_OutroConsultorio_GregoryHouse()
+        public void SetRouteData_OutroConsultorio_GregoryHouse(Type controllerType, string action)
         {
             RouteData = new RouteData();
-            RouteData.DataTokens["area"] = "App";
+
+            FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
+
             RouteData.Values["practice"] = "outro_consultorio";
             RouteData.Values["doctor"] = "gregoryhouse";
         }
@@ -95,27 +107,32 @@ namespace CerebelloWebRole.Tests
 
         public void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
         {
-            var matchController = Regex.Match(controllerType.Name, @"(?<CONTROLLER>.*?)Controller");
-            var matchArea = Regex.Match(controllerType.Namespace, @"Areas\.(?<AREA>.*?)(?=\.Controllers)");
-
             RouteData = new RouteData();
 
-            if (matchArea.Success)
-                RouteData.Values["controller"] = matchController.Groups["CONTROLLER"].Value.ToLowerInvariant();
-            else
-                throw new Exception("Could not determine controller.");
-
-            if (matchArea.Success)
-                RouteData.DataTokens["area"] = matchArea.Groups["AREA"].Value.ToLowerInvariant();
+            FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
 
             if (p != null)
                 RouteData.Values["practice"] = p.UrlIdentifier;
 
             if (d != null)
                 RouteData.Values["doctor"] = d.Users.First().Person.UrlIdentifier;
+        }
+
+        private static void FillRouteData_App_Controller_Action(RouteData routeData, Type controllerType, string action)
+        {
+            var matchController = Regex.Match(controllerType.Name, @"(?<CONTROLLER>.*?)Controller");
+            var matchArea = Regex.Match(controllerType.Namespace, @"Areas\.(?<AREA>.*?)(?=\.Controllers)");
+            
+            if (matchArea.Success)
+                routeData.Values["controller"] = matchController.Groups["CONTROLLER"].Value.ToLowerInvariant();
+            else
+                throw new Exception("Could not determine controller.");
+
+            if (matchArea.Success)
+                routeData.DataTokens["area"] = matchArea.Groups["AREA"].Value.ToLowerInvariant();
 
             if (action != null)
-                RouteData.Values["action"] = action;
+                routeData.Values["action"] = action;
         }
 
         /// <summary>
@@ -248,6 +265,12 @@ namespace CerebelloWebRole.Tests
             mock.SetupGet(m => m.HttpContext).Returns(GetHttpContext());
             mock.SetupGet(m => m.RouteData).Returns(RouteData);
             return mock.Object;
+        }
+
+        public void SetRouteData_ControllerAndActionOnly(string controller, string action)
+        {
+            this.RouteData.Values["controller"] = controller;
+            this.RouteData.Values["action"] = action;
         }
     }
 }

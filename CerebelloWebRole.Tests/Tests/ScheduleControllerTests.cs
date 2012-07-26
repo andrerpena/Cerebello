@@ -51,7 +51,7 @@ namespace CerebelloWebRole.Tests
 
         #region Create Visualization
         [TestMethod]
-        public void CreateView_ViewNew_HappyPath()
+        public void CreateView_ViewNew_SpecificTime_HappyPath()
         {
             ScheduleController controller;
             bool isDbChanged = false;
@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -85,6 +85,64 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
 
+        /// <summary>
+        /// This test a graceful degradation,
+        /// for a bug that is caused a URL rendered in a view without all the needed params,
+        /// that should never happen if the application is functioning correctly.
+        /// But in this case, it ensures that app will degrade instead of being destroyed.
+        /// Issue #54.
+        /// </summary>
+        [TestMethod]
+        public void CreateView_ViewNew_HappyPath()
+        {
+            ScheduleController controller;
+            bool isDbChanged = false;
+
+            // Dates that will be used by this test.
+            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - start and end: start and end time of the appointments that will be created.
+            var utcNow = new DateTime(2012, 07, 26, 12, 33, 00, 000, DateTimeKind.Utc);
+            var userNow = new DateTime(2012, 07, 26, 12, 33, 00, 000, DateTimeKind.Local);
+
+            try
+            {
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+                var mr = new MockRepository();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller.UtcNowGetter = () => utcNow;
+                controller.UserNowGetter = () => userNow;
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // View new appointment.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Create((DateTime?)null, null, null, (int?)null, (bool?)null);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+
+            // Verify view-model.
+            var viewResult = (ViewResult)actionResult;
+            var viewModel = (AppointmentViewModel)viewResult.Model;
+            Assert.AreEqual("12:33", viewModel.Start);
+            Assert.AreEqual("13:03", viewModel.End);
+
+            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+            Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
+        }
+
         [TestMethod]
         public void CreateView_ViewNewWithWeirdTimes_HappyPath()
         {
@@ -95,7 +153,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -152,7 +210,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start2, TimeSpan.FromHours(5), "After mid-day.");
 
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 controller.UserNowGetter = () => userNow;
@@ -206,7 +264,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.SetupDoctor(docAndre, this.db);
 
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 controller.UserNowGetter = () => userNow;
@@ -251,7 +309,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -298,7 +356,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating test objects.
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Associating DB event.
@@ -347,7 +405,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating test objects.
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Associating DB event.
@@ -424,7 +482,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UserNowGetter = () => userNow;
@@ -483,7 +541,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
-            Assert.IsTrue(isDbChanged, "View actions must change DB.");
+            Assert.IsTrue(isDbChanged, "Create actions must change DB.");
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
@@ -526,7 +584,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
@@ -585,7 +643,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
-            Assert.IsTrue(isDbChanged, "View actions must change DB.");
+            Assert.IsTrue(isDbChanged, "Create actions must change DB.");
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
@@ -635,7 +693,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
@@ -694,7 +752,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
-            Assert.IsTrue(isDbChanged, "View actions must change DB.");
+            Assert.IsTrue(isDbChanged, "Create actions must change DB.");
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
@@ -736,7 +794,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
-                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UserNowGetter = () => userNow;
@@ -795,7 +853,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
-            Assert.IsTrue(isDbChanged, "View actions must change DB.");
+            Assert.IsTrue(isDbChanged, "Create actions must change DB.");
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
@@ -807,6 +865,84 @@ namespace CerebelloWebRole.Tests
             }
         }
 
+        /// <summary>
+        /// This test consists of creating an appointment leaving all the form data missing.
+        /// This is an invalid, and should result in validation messages.
+        /// Issue #54.
+        /// </summary>
+        [TestMethod]
+        public void Create_SaveWithEmptyFormModel()
+        {
+            ScheduleController controller;
+            bool isDbChanged = false;
+            AppointmentViewModel vm;
+
+            // Dates that will be used by this test.
+            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - start and end: start and end time of the appointments that will be created.
+            var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
+            var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
+
+            // Setting Now to be on an thursday, mid day.
+            // We know that Dr. House lunch time is from 12:00 until 13:00.
+            var start = userNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
+            var end = start.AddMinutes(30); // 2012-07-19 13:30
+
+            try
+            {
+                // Creating practice and doctor.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+
+                // Creating Asp.Net Mvc mocks.
+                var mr = new MockRepository();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+
+                controller.UserNowGetter = () => userNow;
+                controller.UtcNowGetter = () => utcNow;
+
+                // Setting view-model values to create a new appointment.
+                // - this view-model must be valid for this test... if some day it becomes invalid,
+                //   then it must be made valid again.
+                vm = new AppointmentViewModel
+                {
+                };
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+
+                // Events to know if database was changed or not.
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+            }
+            catch (Exception ex)
+            {
+                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                return;
+            }
+
+            // View new appointment.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Create(vm);
+            }
+
+            // Verifying the ActionResult.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            var viewResult = (ViewResult)actionResult;
+
+            // Verifying the view-model.
+            Assert.AreEqual(false, vm.IsTimeValid);
+
+            // Verifying the controller.
+            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState should be invalid.");
+
+            // Verifying the DB.
+            Assert.IsFalse(isDbChanged, "Create actions must not change DB when there is an error.");
+        }
+        
         #endregion
     }
 }

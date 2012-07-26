@@ -134,17 +134,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(DateTime? date, string start, string end, int? patientId, bool findNextAvailable)
+        public ActionResult Create(DateTime? date, string start, string end, int? patientId, bool? findNextAvailable)
         {
             var userNow = this.UserNowGetter();
-            DateTime dateOnly = (date ?? userNow).Date;
 
             if (date != null)
             {
                 // The behavior for 'start' and 'end' parameters are different
                 // depending on 'findNextAvailable' param, when 'date' is something:
                 // - case false: start must have a valid time value, end is optional.
-                if (findNextAvailable)
+                if (findNextAvailable == true)
                 {
                     // When 'start' is not specified, we set it to the begining of the day.
                     if (string.IsNullOrEmpty(start))
@@ -160,6 +159,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     return this.View("Edit", new AppointmentViewModel());
                 }
             }
+            else
+            {
+                date = userNow;
+                if (string.IsNullOrEmpty(start))
+                    start = userNow.ToString("HH:mm");
+            }
+
+            DateTime dateOnly = (date ?? userNow).Date;
 
             //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
@@ -186,7 +193,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             //FindNearestSlotEndTime(ref end, slots, ref endTime);
 
             // Find next available time slot.
-            if (findNextAvailable)
+            if (findNextAvailable == true)
             {
                 var doctor = this.Doctor;
                 var db = this.db;
@@ -418,13 +425,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
             }
 
-            var startTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
-            var endTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
-
             // Verify if appoitment hours are consistent
             ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
             if (!string.IsNullOrEmpty(formModel.Start) && !string.IsNullOrEmpty(formModel.End))
             {
+                var startTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
+                var endTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
+
                 var isTimeValid = ValidateTime(
                     this.db,
                     this.Doctor,

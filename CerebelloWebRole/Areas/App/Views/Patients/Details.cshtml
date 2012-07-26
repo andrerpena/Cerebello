@@ -136,7 +136,7 @@
     <script type="text/javascript">
         $("a.schedule-appointment").click(function (e) {
             $.modal({
-                url: "@Url.Action("Create", "Schedule")",
+                url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
                 title: "Nova consulta",
                 data: {
                     date: "",
