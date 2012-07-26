@@ -20,6 +20,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PatientsController : DoctorController
     {
+        public PatientsController()
+        {
+            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
+            this.UtcNowGetter = () => DateTime.UtcNow;
+        }
+
+        public Func<DateTime> UserNowGetter { get; set; }
+
+        public Func<DateTime> UtcNowGetter { get; set; }
+
         public class SessionEvent
         {
             public int Id { get; set; }
@@ -169,6 +179,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var patient = (Patient)db.Patients.Where(p => p.Id == id).First();
             var model = this.GetViewModel(patient, true);
+
+            this.ViewBag.UserNow = this.UserNowGetter();
 
             return View(model);
         }
@@ -394,12 +406,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             model.Count = query.Count();
             model.Objects = (from p in query
-                              select new PatientViewModel()
-                              {
-                                  Id = p.Id,
-                                  DateOfBirth = p.Person.DateOfBirth,
-                                  FullName = p.Person.FullName
-                              }).OrderBy(p => p.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+                             select new PatientViewModel()
+                             {
+                                 Id = p.Id,
+                                 DateOfBirth = p.Person.DateOfBirth,
+                                 FullName = p.Person.FullName
+                             }).OrderBy(p => p.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
         }

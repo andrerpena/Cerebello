@@ -4,6 +4,9 @@
     ViewBag.Title = "Create";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
     
+    string retornoDateStr = this.ViewBag.UserNow == null ? "" :
+        ((DateTime)this.ViewBag.UserNow).AddDays(30).ToString("yyyy-MM-dd");
+    
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
@@ -139,7 +142,7 @@
                 url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
                 title: "Nova consulta",
                 data: {
-                    date: "",
+                    date: "@retornoDateStr",
                     start: "",
                     end: "",
                     doctorId: "",
