@@ -7,28 +7,14 @@ Desc = Descrição do item.
 
 S   P Desc
 
-x   P0 Abas na tela de criação de compromisso, uma para consultas e outra para compromissos diversos.
-x   P1 Estilos de consultas e compromissos no calendário.
-x   P0 BUG: Criar consulta parou de funcionar. Coluna Description deve ser nullable no DB.
-x   P0 Texto de salvar consulta deve mudar ao clicar na aba de compromisso para "salvar compromisso".
-x   P0 Texto de salvar consulta deve vir como "salvar compromisso" na edição de compromisso.
-x   P0 Salvar o compromisso.
-x   P0 Edição de um compromisso.
-x   P0 Quando editar um consulta ou compromisso que não existe, deve mostrar uma tela de not-found.
-x   P0 Tela de edição de compromisso não deve possuir as abas de consulta|compromisso.
-x   P0 Tela de edição de consulta não deve possuir as abas de consulta|compromisso.
-x   P0 Tem que verificar o practice do usuário que está editando o compromisso.
-x   P0 Issue #36: Não está mais sendo possível salvar consultas com horários conflitantes.
-x   P0 Quando a validação da tela de novo compromisso falha, as abas de consulta e compromisso somem.
-    P0 Propriedades Date, Start e End devem ser consideradas no hint de inconsistências perto da data.
+x   P0 Método Create [GET] deve aceitar flag indicand se deve procurar o próximo horário livre automaticamente.
+x   P0 Teste para action de criar agendamento ir para a tela já com o próximo horário livre selecionado.
+
     P0 Testes para verificar a ViewBag.IsEditing das actions Create e Edit tanto pra GET quanto pra POST.
     P0 Teste para salvamento de novo compromisso.
     P0 Teste para salvamento de novo compromisso sem descrição.
     P0 Teste para salvamento de nova consulta.
     P0 Teste para salvamento de nova consulta sem paciente.
-x   P0 Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
-x   P0 Teste para salvar compromisso no passado: deve ser possível fazer isso.
-x   P0 Teste para salvar compromisso num feriado: deve ser possível fazer isso.
     P0 Teste para salvar compromisso num dia de folga do médico: deve ser possível fazer isso.
     P0 Teste para salvar compromisso com algum erro de validação no ModelState.
     P0 Testar ScheduleController: Create e Edit: flag passada em ViewBag.IsEditing.
@@ -42,7 +28,6 @@ x   P0 Teste para salvar compromisso num feriado: deve ser possível fazer isso.
     
     P0 Ao clicar em um horário fora do expediente, deve mostrar o mesmo horário na tela de marcar compromisso.
     P0 Deve ser impossível forçar marcação de compromisso fora do horário de expediente.
-    P0 Validação de horário de agendamento de compromisso deve respeitar horário de almoço. Mas deve ser possível forçar a marcação.
     
     P0 Permitir definir o convênio no momento de marcar a consulta.
     P0 Permitir remarcar um compromisso para outro horário.
@@ -81,6 +66,26 @@ x   P0 Teste para salvar compromisso num feriado: deve ser possível fazer isso.
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
+x   P0 Validação de horário de agendamento de compromisso deve respeitar horário de almoço. Mas deve ser possível forçar a marcação.
+x   P0 Teste para marcação de compromisso no horário de almoço.
+x   P0 Remover localização automática de horário ao abrir a tela de criar agendamento.
+x   P0 Abas na tela de criação de compromisso, uma para consultas e outra para compromissos diversos.
+x   P1 Estilos de consultas e compromissos no calendário.
+x   P0 BUG: Criar consulta parou de funcionar. Coluna Description deve ser nullable no DB.
+x   P0 Texto de salvar consulta deve mudar ao clicar na aba de compromisso para "salvar compromisso".
+x   P0 Texto de salvar consulta deve vir como "salvar compromisso" na edição de compromisso.
+x   P0 Salvar o compromisso.
+x   P0 Edição de um compromisso.
+x   P0 Quando editar um consulta ou compromisso que não existe, deve mostrar uma tela de not-found.
+x   P0 Tela de edição de compromisso não deve possuir as abas de consulta|compromisso.
+x   P0 Tela de edição de consulta não deve possuir as abas de consulta|compromisso.
+x   P0 Tem que verificar o practice do usuário que está editando o compromisso.
+x   P0 Issue #36: Não está mais sendo possível salvar consultas com horários conflitantes.
+x   P0 Quando a validação da tela de novo compromisso falha, as abas de consulta e compromisso somem.
+x   P0 Propriedades Date, Start e End devem ser consideradas no hint de inconsistências perto da data.
+x   P0 Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
+x   P0 Teste para salvar compromisso no passado: deve ser possível fazer isso.
+x   P0 Teste para salvar compromisso num feriado: deve ser possível fazer isso.
 x   P0 Testar exclusão de solicitação de exame que não existe.
 x   P0 Testar exclusão de solicitação de exame de outro consultório.
 x   P0 View de NotFound na visualização de exame.

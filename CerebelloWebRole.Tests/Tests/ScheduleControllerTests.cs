@@ -51,7 +51,7 @@ namespace CerebelloWebRole.Tests
 
         #region Create Visualization
         [TestMethod]
-        public void CreateView_1_ViewNew_HappyPath()
+        public void CreateView_ViewNew_HappyPath()
         {
             ScheduleController controller;
             bool isDbChanged = false;
@@ -75,7 +75,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create((DateTime?)null, "10:00", "10:30", (int?)null);
+                actionResult = controller.Create((DateTime?)null, "10:00", "10:30", (int?)null, false);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -110,7 +110,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create((DateTime?)null, "10:07", "12:42", (int?)null);
+                actionResult = controller.Create((DateTime?)null, "10:07", "12:42", (int?)null, false);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -121,6 +121,120 @@ namespace CerebelloWebRole.Tests
             var viewModel = (AppointmentViewModel)viewResult.Model;
             Assert.AreEqual("10:07", viewModel.Start);
             Assert.AreEqual("12:42", viewModel.End);
+
+            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+            Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
+        }
+
+        [TestMethod]
+        public void CreateView_ViewNewAndFindNextAvailableTimeSlot_Now_HappyPath()
+        {
+            ScheduleController controller;
+            bool isDbChanged = false;
+
+            // Dates that will be used by this test.
+            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - start and end: start and end time of the appointments that will be created.
+            var utcNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Utc);
+            var userNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Local);
+
+            try
+            {
+                // Creating DB entries.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+
+                // Filling current day, so that the next available time slot is on the next day.
+                var start1 = new DateTime(2012, 07, 25, 9, 00, 00, 000, DateTimeKind.Utc);
+                Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start1, TimeSpan.FromHours(3), "Before mid-day.");
+                var start2 = new DateTime(2012, 07, 25, 13, 00, 00, 000, DateTimeKind.Utc);
+                Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start2, TimeSpan.FromHours(5), "After mid-day.");
+
+                var mr = new MockRepository();
+                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller.UtcNowGetter = () => utcNow;
+                controller.UserNowGetter = () => userNow;
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // View new appointment.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Create((DateTime?)null, "", "", (int?)null, true);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+
+            // Verify view-model.
+            var viewResult = (ViewResult)actionResult;
+            var viewModel = (AppointmentViewModel)viewResult.Model;
+            Assert.AreEqual(new DateTime(2012, 07, 26), viewModel.Date);
+            Assert.AreEqual("09:00", viewModel.Start);
+            Assert.AreEqual("09:30", viewModel.End);
+
+            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+            Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
+        }
+
+        [TestMethod]
+        public void CreateView_ViewNewAndFindNextAvailableTimeSlot_30DaysAfter_HappyPath()
+        {
+            ScheduleController controller;
+            bool isDbChanged = false;
+
+            // Dates that will be used by this test.
+            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - start and end: start and end time of the appointments that will be created.
+            var utcNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Utc);
+            var userNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Local);
+
+            try
+            {
+                // Creating DB entries.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+
+                var mr = new MockRepository();
+                mr.SetRouteData_App_ConsultorioDrHourse_GregoryHouse();
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller.UtcNowGetter = () => utcNow;
+                controller.UserNowGetter = () => userNow;
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // View new appointment.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Create(utcNow.AddDays(30).Date, "", "", (int?)null, true);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+
+            // Verify view-model.
+            var viewResult = (ViewResult)actionResult;
+            var viewModel = (AppointmentViewModel)viewResult.Model;
+            Assert.AreEqual(new DateTime(2012, 08, 24), viewModel.Date);
+            Assert.AreEqual("09:00", viewModel.Start);
+            Assert.AreEqual("09:30", viewModel.End);
 
             Assert.AreEqual(controller.ViewBag.IsEditing, false);
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
@@ -152,7 +266,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create((DateTime?)null, "00:00", "00:30", (int?)null);
+                actionResult = controller.Create((DateTime?)null, "00:00", "00:30", (int?)null, false);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -170,7 +284,7 @@ namespace CerebelloWebRole.Tests
         }
 
         [TestMethod]
-        public void CreateView_2_ViewNewPredefinedPatient_HappyPath()
+        public void CreateView_ViewNewPredefinedPatient_HappyPath()
         {
             ScheduleController controller;
             bool isDbChanged = false;
@@ -201,7 +315,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create((DateTime?)null, "10:00", "10:30", (int?)patient.Id);
+                actionResult = controller.Create((DateTime?)null, "10:00", "10:30", (int?)patient.Id, false);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -217,7 +331,7 @@ namespace CerebelloWebRole.Tests
         }
 
         [TestMethod]
-        public void CreateView_3_ViewNewPredefinedPatientFromAnotherPractice()
+        public void CreateView_ViewNewPredefinedPatientFromAnotherPractice()
         {
             ScheduleController controller;
             bool isDbChanged = false;
@@ -250,7 +364,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create((DateTime?)null, "10:00", "10:30", (int?)patient.Id);
+                actionResult = controller.Create((DateTime?)null, "10:00", "10:30", (int?)patient.Id, false);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -285,7 +399,7 @@ namespace CerebelloWebRole.Tests
             var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
             var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
 
-            // Setting Now to be on an wednesday, mid day.
+            // Setting Now to be on an thursday, mid day.
             // We know that Dr. House works only after 13:00, so we need to set appointments after that.
             // 28 days from now in the future.
             var start = userNow.Date.AddDays(28).AddHours(13); // 2012-07-19 13:00
@@ -399,7 +513,7 @@ namespace CerebelloWebRole.Tests
             var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
 
             // We know that Dr. House works only after 13:00, so we need to set appointments after that.
-            // Setting Now to be on an wednesday, mid day.
+            // Setting Now to be on an thursday, mid day.
             // 28 days ago. (we are going to create an appointment in the past)
             var start = userNow.Date.AddDays(-28).AddHours(13);
             var end = start.AddMinutes(30);
@@ -501,7 +615,7 @@ namespace CerebelloWebRole.Tests
             var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
 
             // We know that Dr. House works only after 13:00, so we need to set appointments after that.
-            // Setting Now to be on an wednesday, mid day.
+            // Setting Now to be on an thursday, mid day.
             // 28 days ago. (we are going to create an appointment in the past)
             var start = userNow.Date.AddDays(28).AddHours(13);
             var end = start.AddMinutes(30);
@@ -609,7 +723,7 @@ namespace CerebelloWebRole.Tests
             var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
             var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
 
-            // Setting Now to be on an wednesday, mid day.
+            // Setting Now to be on an thursday, mid day.
             // We know that Dr. House lunch time is from 12:00 until 13:00.
             var start = userNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
             var end = start.AddMinutes(30); // 2012-07-19 13:30

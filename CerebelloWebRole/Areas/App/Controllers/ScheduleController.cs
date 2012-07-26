@@ -134,19 +134,41 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(DateTime? date, string start, string end, int? patientId)
+        public ActionResult Create(DateTime? date, string start, string end, int? patientId, bool findNextAvailable)
         {
             var userNow = this.UserNowGetter();
-            DateTime date2 = date ?? userNow.Date;
+            DateTime dateOnly = (date ?? userNow).Date;
 
-            var slots = GetDaySlots(date2, this.Doctor);
+            if (date != null)
+            {
+                // The behavior for 'start' and 'end' parameters are different
+                // depending on 'findNextAvailable' param, when 'date' is something:
+                // - case false: start must have a valid time value, end is optional.
+                if (findNextAvailable)
+                {
+                    // When 'start' is not specified, we set it to the begining of the day.
+                    if (string.IsNullOrEmpty(start))
+                        start = "00:00";
+                }
+                else if (string.IsNullOrEmpty(start))
+                {
+                    // If date has something, then start and end must also be null or empty.
+                    this.ModelState.AddModelError<AppointmentViewModel>(
+                        m => m.Date,
+                        "Ocorreu um erro nos parâmetros desta página.");
+
+                    return this.View("Edit", new AppointmentViewModel());
+                }
+            }
+
+            //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
 
             // Getting start date and time.
             DateTime startTime =
                 string.IsNullOrEmpty(start) ?
-                userNow :
-                date2 + DateTimeHelper.GetTimeSpan(start);
+                dateOnly :
+                dateOnly + DateTimeHelper.GetTimeSpan(start);
 
             // todo: just delete code or find a place for it?
             //FindNearestSlotStartTime(ref start, slots, ref startTime);
@@ -155,13 +177,35 @@ namespace CerebelloWebRole.Areas.App.Controllers
             DateTime endTime =
                 string.IsNullOrEmpty(end) ?
                 startTime + slotDuration :
-                date2 + DateTimeHelper.GetTimeSpan(end);
+                dateOnly + DateTimeHelper.GetTimeSpan(end);
 
             if (endTime - startTime < slotDuration)
                 endTime = startTime + slotDuration;
 
             // todo: just delete code or find a place for it?
             //FindNearestSlotEndTime(ref end, slots, ref endTime);
+
+            // Find next available time slot.
+            if (findNextAvailable)
+            {
+                var doctor = this.Doctor;
+                var db = this.db;
+
+                // Determining the date and time to start scanning for a free time slot.
+                DateTime startingFrom = startTime;
+
+                if (userNow > startingFrom)
+                    startingFrom = userNow;
+
+                // Finding the next available time slot, and setting the startTime and endTime.
+                var slot = FindNextFreeTime(db, doctor, userNow, startingFrom);
+                startTime = slot.Item1;
+                endTime = slot.Item2;
+            }
+
+            dateOnly = startTime.Date;
+            start = startTime.ToString("HH:mm");
+            end = endTime.ToString("HH:mm");
 
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
@@ -179,13 +223,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (patientName != null)
                 viewModel.PatientId = patientId;
 
-            viewModel.Date = date2;
+            viewModel.Date = dateOnly;
             viewModel.Start = start;
             viewModel.End = end;
             viewModel.DoctorId = this.Doctor.Id;
             viewModel.DateSpelled =
-                DateTimeHelper.GetDayOfWeekAsString(date2) + ", "
-                + DateTimeHelper.ConvertToRelative(date2,
+                DateTimeHelper.GetDayOfWeekAsString(dateOnly) + ", "
+                + DateTimeHelper.ConvertToRelative(dateOnly,
                     userNow,
                     DateTimeHelper.RelativeDateOptions.IncludePrefixes
                     | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
@@ -196,7 +240,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var isTimeValid = ValidateTime(
                 this.db,
                 this.Doctor,
-                date2,
+                dateOnly,
                 start,
                 end,
                 this.ModelState,
@@ -630,7 +674,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var userNow = this.UserNowGetter();
 
-            var slot = FindNextFreeTime(db, doctor, userNow, date, time);
+            // Determining the date and time to start scanning for a free time slot.
+            DateTime startingFrom = userNow;
+
+            if (!string.IsNullOrEmpty(date))
+            {
+                startingFrom = DateTime.Parse(date)
+                    + (string.IsNullOrEmpty(time) ?
+                        new TimeSpan(0, 0, 0) :
+                        DateTimeHelper.GetTimeSpan(time));
+            }
+
+            if (userNow > startingFrom)
+                startingFrom = userNow;
+
+            var slot = FindNextFreeTime(db, doctor, userNow, startingFrom);
             return this.Json(new
             {
                 date = slot.Item1.ToString("dd/MM/yyyy"),
@@ -651,24 +709,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             CerebelloEntities db,
             Doctor doctor,
             DateTime userNow,
-            string date = null,
-            string time = null)
+            DateTime startingFrom)
         {
-            DateTime startingFrom;
-
-            // Determining the date and time to start scanning for a free time slot.
-            if (!string.IsNullOrEmpty(date))
-            {
-                startingFrom = DateTime.Parse(date) + (string.IsNullOrEmpty(time) ?
-                    new TimeSpan(0, 0, 0) :
-                    DateTimeHelper.GetTimeSpan(time));
-
-                if (userNow > startingFrom)
-                    startingFrom = userNow;
-            }
-            else
-                startingFrom = userNow;
-
             var currentDateStart = startingFrom.Date;
             var currentDateEnd = currentDateStart.AddDays(1).Date;
 
@@ -696,6 +738,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 currentDateStart = currentDateEnd;
                 currentDateEnd = currentDateStart.AddDays(1).Date;
             }
+        }
+
+        private static DateTime? GetDateTimeFromStrings(string date, string time)
+        {
+            DateTime? result = null;
+
+            if (!string.IsNullOrEmpty(date))
+            {
+                result = DateTime.Parse(date)
+                    + (string.IsNullOrEmpty(time) ?
+                        new TimeSpan(0, 0, 0) :
+                        DateTimeHelper.GetTimeSpan(time));
+            }
+
+            return result;
         }
 
         [HttpGet]

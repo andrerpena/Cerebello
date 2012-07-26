@@ -113,7 +113,7 @@ namespace Cerebello.Firestarter.Helpers
 
             for (var i = 0; i < count; i++)
             {
-                // gender (ranrom upper bound is exclusive)
+                // gender (random upper bound is exclusive)
                 var gender = random.Next(0, 2);
 
                 // first name

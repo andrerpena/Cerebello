@@ -469,6 +469,27 @@ namespace Cerebello.Firestarter
             };
         }
 
+        public static Appointment CreateFakeAppointments(CerebelloEntities db, DateTime createdOn, Doctor doc, DateTime start, TimeSpan duration, string desc, User creator = null)
+        {
+            creator = creator ?? doc.Users.First();
+
+            Appointment result;
+
+            db.Appointments.AddObject(result = new Appointment
+            {
+                CreatedById = creator.Id,
+                CreatedOn = createdOn,
+                DoctorId = doc.Id,
+                Start = start,
+                End = start + duration,
+                Description = desc,
+            });
+
+            db.SaveChanges();
+
+            return result;
+        }
+
         public static void InitializeDatabaseWithSystemData(CerebelloEntities db)
         {
             // Conselhos profissionais, segundo o TISS - Tabelas de domínio (Versão 2.02.03)

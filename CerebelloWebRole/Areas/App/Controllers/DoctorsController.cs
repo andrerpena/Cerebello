@@ -70,7 +70,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     eachItem.MedicalEntityCode,
                     eachItem.MedicalEntityJurisdiction);
 
-                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc, userNow).Item1;
+                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc, userNow, userNow).Item1;
             }
 
             var doctors = dataCollection.Select(item => item.vm).ToList();

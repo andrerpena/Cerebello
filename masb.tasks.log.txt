@@ -7,6 +7,18 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
+2012-07-25 15:15-18:30 (3º15")  6   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
+
+2012-07-24 18:00-18:40 (0º40")  4   Commit, rodando testes e mergindo coisas.
+2012-07-24 17:45-18:00 (0º15")  7   Teste da visualização de novo agendamento fora do horário de expediente do médico.
+2012-07-24 17:20-17:45 (0º25")  7   Teste da visualização de novo agendamento num horário estranho.
+2012-07-24 17:00-17:20 (0º20")  9   Remover localização automática de horário ao abrir a tela de criar agendamento.
+2012-07-24 16:20-17:00 (0º40")  8   Teste para marcação de compromisso no horário de almoço.
+2012-07-24 15:40-16:20 (0º40")  8   Verificar horário de almoço ao marcar compromisso ou consulta. Deve ser possível forçar a marcação.
+
+2012-07-23 20:10-20:30 (0º20")  9   Propriedades Date, Start e End devem ser consideradas no hint de inconsistências perto da data.
+
+-- 5º00
 2012-07-20 20:00-20:15 (0º15") 10   Corrigindo testes que falharam no commit anterior.
 2012-07-20 19:15-19:30 (0º15")  9   Preparando commit.
 2012-07-20 16:00-18:40 (2º40")  5   Teste para salvar compromisso num feriado: deve ser possível fazer isso.
