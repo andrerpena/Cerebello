@@ -89,6 +89,7 @@
                 success: function (html) {
                     _this.$el.show();
                     modalContent.html(html);
+                    _this.resize();
                 }
             });
 

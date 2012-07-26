@@ -1,0 +1,27 @@
+﻿@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.MedicineViewModel>
+@{
+    ViewBag.Title = "Search";
+    ViewBag.Watermark = "Pesquisar pelo nome do medicamento";
+
+    var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
+    grid.AddField(m => m.Name, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.Name</a></text>);
+    grid.AddField(m => m.LaboratoryName);
+}
+@section Title {
+    Pesquisa de medicamentos
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
+    </ul>
+}
+@using (Html.BeginForm("search", null, FormMethod.Get))
+{
+    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+}
+<div class="search-result">
+    <p class="title">
+        Resultado da pesquisa
+    </p>
+    @grid.GetHtml()
+</div>

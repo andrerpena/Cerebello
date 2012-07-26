@@ -1360,12 +1360,7 @@ div.small-tabs
 
 div.small-tabs a 
 {
-    -moz-border-bottom-colors: none;
-    -moz-border-image: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: #D7D7D7 #D7D7D7 -moz-use-text-color;
+    border-color: #D7D7D7;
     border-style: solid solid none;
     border-width: 1px 1px 0;
     color: black;
@@ -1373,7 +1368,7 @@ div.small-tabs a
     display: inline-block;
     margin: -1px 0;
     padding: 3px 9px;
-    text-decoration: none;
+    text-decoration: none   
 }
 
 div.small-tabs a.activated 
