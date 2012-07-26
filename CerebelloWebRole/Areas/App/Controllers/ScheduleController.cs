@@ -740,21 +740,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        private static DateTime? GetDateTimeFromStrings(string date, string time)
-        {
-            DateTime? result = null;
-
-            if (!string.IsNullOrEmpty(date))
-            {
-                result = DateTime.Parse(date)
-                    + (string.IsNullOrEmpty(time) ?
-                        new TimeSpan(0, 0, 0) :
-                        DateTimeHelper.GetTimeSpan(time));
-            }
-
-            return result;
-        }
-
         [HttpGet]
         public JsonResult GetSpelledDate(string date)
         {
