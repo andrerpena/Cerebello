@@ -7,8 +7,12 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
-2012-07-25 16:00-17:45 (1º45")  5   Issue #54: Exceção ao tentar marcar retorno.
-2012-07-25 13:45-15:45 (2º00")  5   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
+
+2012-07-27 15:00-16:15 (1º15")  8   Issue #43: Na ficha do paciente, criar uma sessão de resultados de exames só com o texto.
+
+2012-07-26 23:00-24:00 (1º00")  7   Adicionando botões para diagnósticos e resultados de exames.
+2012-07-26 16:00-17:45 (1º45")  5   Issue #54: Exceção ao tentar marcar retorno.
+2012-07-26 13:45-15:45 (2º00")  5   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
 
 2012-07-25 15:15-18:30 (3º15")  6   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
 

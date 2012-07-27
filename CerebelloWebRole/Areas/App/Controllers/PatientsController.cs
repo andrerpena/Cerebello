@@ -77,6 +77,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (includeSessions)
             {
+                var eventDates = new List<DateTime>();
+
+                // anamneses
                 var anamnesesByDate =
                                     (from avm in
                                          (from r in patient.Anamneses
@@ -88,6 +91,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      group avm by avm.Date.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
+                eventDates.AddRange(anamnesesByDate.Keys);
+
+                // receipts
                 var receiptsByDate =
                                     (from rvm in
                                          (from r in patient.Receipts
@@ -99,6 +105,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      group rvm by rvm.Date.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
+                eventDates.AddRange(receiptsByDate.Keys);
+
+                // certificates
                 var certificatesByDate =
                                     (from cvm in
                                          (from c in patient.MedicalCertificates
@@ -110,6 +119,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      group cvm by cvm.Date.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
+                eventDates.AddRange(certificatesByDate.Keys);
+
+                // exam requests
                 var examRequestsByDate =
                                  (from ervm in
                                       (from c in patient.ExaminationRequests
@@ -121,8 +133,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                   group ervm by ervm.Date.Date into g
                                   select g).ToDictionary(g => g.Key, g => g.ToList());
 
+                eventDates.AddRange(examRequestsByDate.Keys);
+
+                // exam results
+                var examResultsByDate =
+                                 (from ervm in
+                                      (from c in patient.ExaminationResults
+                                       select new SessionEvent
+                                       {
+                                           Date = DateTimeHelper.ConvertToCurrentTimeZone(c.CreatedOn),
+                                           Id = c.Id
+                                       })
+                                  group ervm by ervm.Date.Date into g
+                                  select g).ToDictionary(g => g.Key, g => g.ToList());
+
+                eventDates.AddRange(examResultsByDate.Keys);
+
                 // discover what dates have events
-                var eventDates = receiptsByDate.Keys.Concat(anamnesesByDate.Keys).Concat(certificatesByDate.Keys).Distinct().OrderBy(dt => dt);
+                eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
 
                 // creating sessions
                 List<SessionViewModel> sessions = new List<SessionViewModel>();
@@ -137,6 +165,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         ReceiptIds = receiptsByDate.ContainsKey(eventDate) ? receiptsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
                         MedicalCertificateIds = certificatesByDate.ContainsKey(eventDate) ? certificatesByDate[eventDate].Select(c => c.Id).ToList() : new List<int>(),
                         ExaminationRequestIds = examRequestsByDate.ContainsKey(eventDate) ? examRequestsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
+                        ExaminationResultIds = examResultsByDate.ContainsKey(eventDate) ? examResultsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
                     });
                 }
 
@@ -153,7 +182,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new PatientsIndexViewModel();
             model.LastRegisteredPatients = (from p in
-                                                (from Patient patient in db.Patients where patient.DoctorId == this.Doctor.Id select patient).ToList()
+                                                (from Patient patient in db.Patients
+                                                 where patient.DoctorId == this.Doctor.Id
+                                                 select patient).ToList()
                                             select new PatientViewModel
                                             {
                                                 Id = p.Id,
@@ -163,7 +194,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var timeZoneNow = DateTimeHelper.GetTimeZoneNow();
 
-            model.PatientAgeDistribution = (from p in db.Patients where p.DoctorId == this.Doctor.Id group p by new { Gender = p.Person.Gender, Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, timeZoneNow) } into g select g).OrderBy(g => g.Key).Select(g => new CerebelloWebRole.Areas.App.Models.PatientsIndexViewModel.ChartPatientAgeDistribution { Age = g.Key.Age, Gender = g.Key.Gender, Count = g.Count() }).ToList();
+            model.PatientAgeDistribution = (from p in db.Patients
+                                            where p.DoctorId == this.Doctor.Id
+                                            group p by new
+                                            {
+                                                Gender = p.Person.Gender,
+                                                Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, timeZoneNow)
+                                            } into g
+                                            select g).OrderBy(g => g.Key)
+                                            .Select(g => new PatientsIndexViewModel.ChartPatientAgeDistribution
+                                            {
+                                                Age = g.Key.Age,
+                                                Gender = g.Key.Gender,
+                                                Count = g.Count()
+                                            }).ToList();
+
             model.TotalPatientsCount = this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id).Count();
             return View(model);
         }

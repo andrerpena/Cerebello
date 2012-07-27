@@ -108,10 +108,12 @@
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
+    <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
-    <Compile Include="Areas\App\Models\ExamViewModel.cs" />
+    <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
+    <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\SysMedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
@@ -534,6 +536,9 @@
     <Content Include="Areas\App\Views\Exams\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Schedule\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Medicines\Search.cshtml" />
+    <Content Include="Areas\App\Views\ExamResults\Details.cshtml" />
+    <Content Include="Areas\App\Views\ExamResults\Edit.cshtml" />
+    <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />

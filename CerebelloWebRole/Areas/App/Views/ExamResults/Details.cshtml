@@ -1,0 +1,57 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ExaminationResultViewModel
+@{
+    Layout = null;
+}
+<div class="examresult-details medical-appointment-details-panel" data-val-id="examresult-@Model.Id">
+    @if (Model != null)
+    {
+        <table class="view-table">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.Title)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Title)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.Text)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Text)
+                </td>
+            </tr>
+        </table>
+    }
+    <div class="inline-link-bar">
+        <a href="#" class="edit-examresult inline-link" >Editar resultado de exame</a>
+        <a href="#" class="delete-examresult inline-link" >Excluir resultado de exame</a>
+    </div>
+    <script type="text/javascript">
+        $(".edit-examresult", $("div[data-val-id='examresult-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("edit", "examresults", new { id = Model.Id })",
+                success: function(result) {
+                    $("div[data-val-id='examresult-@Model.Id']").replaceWith(result);
+                }
+            });
+        });
+
+        $(".delete-examresult", $("div[data-val-id='examresult-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            var answer = confirm("Deseja realmente excluir esta examresult?\nEsta operação não pode ser desfeita.");
+            if (answer) {
+                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                    if(data.success) {
+                        alert("Este resultado de exame foi excluído");
+                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                    }
+                    else
+                        alert("Não foi possível excluir este resultado de exame.\n" + "Informações técnicas: " + data.text);
+                });
+            }
+        });
+    </script>
+</div>

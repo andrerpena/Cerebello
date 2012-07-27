@@ -81,6 +81,15 @@
                         @Html.Action("details", "exams", new { id = receiptId })
                     }
                 }
+                @if (session.ExaminationResultIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Resultados de exames</p>
+                    foreach (var examResultId in session.ExaminationResultIds)
+                    {
+                        @Html.Action("details", "examresults", new { id = examResultId })
+                    }
+                }
                 @if (session.MedicalCertificateIds.Count > 0)
                 {
                     <p class="subtitle">
@@ -121,6 +130,20 @@
                 <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "exams", new { patientId = Model.Id })">
                     Nova solicitação de exames</a>
                 <div class="new-exams-wrapper appointment-panel-wrapper">
+                </div>
+            </div>
+            <!-- exam result -->
+            <div>
+                <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "examresults", new { patientId = Model.Id })">
+                    Novo resultado de exame</a>
+                <div class="new-exam-result-wrapper appointment-panel-wrapper">
+                </div>
+            </div>
+            <!-- diagnosis -->
+            <div>
+                <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new { patientId = Model.Id })">
+                    Nova diagnose</a>
+                <div class="new-diagnosis-wrapper appointment-panel-wrapper">
                 </div>
             </div>
             <!-- medical certificate -->

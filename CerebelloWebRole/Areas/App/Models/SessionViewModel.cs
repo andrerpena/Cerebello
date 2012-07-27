@@ -36,5 +36,10 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Examination request ids.
         /// </summary>
         public List<int> ExaminationRequestIds { get; set; }
+
+        /// <summary>
+        /// Examination result ids.
+        /// </summary>
+        public List<int> ExaminationResultIds { get; set; }
     }
 }

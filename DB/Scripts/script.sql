@@ -248,6 +248,23 @@ CREATE TABLE [dbo].[ExaminationRequest](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+/****** Object:  Table [dbo].[ExaminationResult] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ExaminationResult](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [nvarchar](200) NOT NULL,
+	[Text] [nvarchar](max) NOT NULL,
+	[PatientId] [int] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+ CONSTRAINT [PK_ExaminationResult] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 /****** Object:  Table [dbo].[HealthEnsurance] ******/
 SET ANSI_NULLS ON
 GO
@@ -769,6 +786,12 @@ ALTER TABLE [dbo].[ExaminationRequest]  WITH CHECK ADD  CONSTRAINT [FK_Examinati
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_Patient]
+GO
+/****** Object:  ForeignKey [FK_ExaminationResult_Patient] ******/
+ALTER TABLE [dbo].[ExaminationResult]  WITH CHECK ADD  CONSTRAINT [FK_ExaminationResult_Patient] FOREIGN KEY([PatientId])
+REFERENCES [dbo].[Patient] ([Id])
+GO
+ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
 GO
 /****** Object:  ForeignKey [FK_Laboratory_Doctor] ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])
