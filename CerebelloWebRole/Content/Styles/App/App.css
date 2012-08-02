@@ -1423,7 +1423,7 @@ div.message-help
 
 /* add new (global) */
 
-#global-add-new 
+.top-bar-menu-button 
 {
     background-color: #FAFAFA;
     background-image: url("/content/images/app/icons16/plus.png");
