@@ -2,12 +2,12 @@
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
 
     var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
-
     var configControllerNames = new string[] { "config", "configschedule", "modelmedicalcertificate" };
-
     var practiceId = ViewBag.Practice.Id;
-
     var doctor = (CerebelloWebRole.Areas.App.Models.DoctorViewModel)ViewBag.Doctor;
+
+    string scheduleDateStr = this.ViewBag.UserNow == null ? "" :
+    ((DateTime)this.ViewBag.UserNow).ToString("yyyy-MM-dd");
 }
 @section MainMenu {
     <div class="doctor-card">
@@ -27,8 +27,10 @@
         <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "patients")" class="contact-icon">
             Prontuário</a> </li>
     </ul>
-    <a class="block-little-link" style="margin-right: 10px; text-align: right;" href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
-        Ir para o consultório</a>
+    <div style="margin-right: 10px; text-align: right;">
+        <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
+            Ir para o consultório</a>
+    </div>
     <hr />
     <ul class="tabNav">
         <li class="@(controllerName.Equals("medicines") ? "youarehere" : "")"><a href="@Url.Action("Index", "medicines")" class="medicines-icon">
@@ -60,6 +62,64 @@
                     },
                     columnHeaders: ["Nome", "Tipo"],
                     columns: ["Value", "Description"]
+                });
+                $("#global-search").watermark({ text: "Pesquisar por paciente ou medicamento" });
+            </script>
+            <a id="global-add-new" href="#">Novo</a>
+            <div id="global-add-new-balloon" class="balloon">
+                <!-- balloon pointer -->
+                <div class="balloon-pointer">
+                    <div class="balloon-arrow menu-target">
+                    </div>
+                    <div class="balloon-arrow-border">
+                    </div>
+                </div>
+                <!-- balloon content -->
+                <div class="balloon-wrapper">
+                    <div class="balloon-content">
+                        <ul class="global-links">
+                            <li><a id="global-add-appointment" class="" href="#">Marcar consulta ou compromisso</a></li>
+                            <li><a class="" href="@Url.Action("create", "patients")">Novo paciente</a></li>
+                            <li><a class="" href="@Url.Action("create", "medicines")">Novo medicamento</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                var add_menu = $("#global-add-new");
+                var add_balloon = $("#global-add-new-balloon");
+                add_menu.bind("click", function (e) {
+                    e.stopPropagation();
+                    add_balloon.css("left", $(e.target).offset().left);
+                    add_balloon.css("top", $(e.target).offset().top + 10);
+                    add_balloon.show();
+                    handler = function (e2) {
+                        if (!add_balloon.has(e2.target).length) {
+                            add_balloon.hide();
+                            $("html").unbind("click", handler);
+                        }
+                    }
+                    $("html").click("click", handler);
+                });
+                $(window).resize(function (e) {
+                    add_balloon.hide();
+                });
+
+                $("#global-add-appointment").click(function (e) {
+                    e.preventDefault();
+                    add_balloon.hide();
+                    $.modal({
+                        url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
+                        title: "Nova consulta",
+                        data: {
+                            date: "@scheduleDateStr",
+                            start: "",
+                            end: "",
+                            doctorId: ""
+                        },
+                        width: 480,
+                        height: 200
+                    });
                 });
             </script>
         </div>
