@@ -6,6 +6,7 @@ using Cerebello.Model;
 using CerebelloWebRole.Models;
 using System.IO;
 using System.Text.RegularExpressions;
+using Cerebello.Firestarter.Helpers;
 
 namespace Test1
 {
@@ -13,6 +14,8 @@ namespace Test1
     {
         static void Main(string[] args)
         {
+            //var cbhpm = Cbhpm.LoadData();
+
             bool isToChooseDb = true;
 
             string connName = null;

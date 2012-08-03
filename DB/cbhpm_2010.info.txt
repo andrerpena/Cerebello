@@ -1,0 +1,6 @@
+Programa usado para converter para txt: Some PDF to Txt Converter
+
+Depois de converter o arquivo, fiz o programa em cima do arquivo,
+e quando necessário fiz alterações no arquivo para dar dicas ao
+programa, para corrigir erros da conversão, e para corrigir
+inconsistências e erros do próprio PDF original.

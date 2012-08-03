@@ -7,7 +7,22 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
+2012-08-03 00:00-02:50 (2º50")  7   Programa para extrair informações do pdf do CBHPM 6a edição de 2010.
 
+-- 12º00" (9º18")
+2012-08-02 22:00-24:00 (2º00")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
+2012-08-02 12:30-21:00 (8º30")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
+2012-08-02 00:00-01:30 (1º30")  6   Extrair informações do pdf do CBHPM 6a edição de 2010.
+
+-- 8º10" (5º12")
+2012-08-01 23:00-24:00 (1º00")  9   Extrair informações do pdf do CBHPM 6a edição de 2010.
+2012-08-01 12:50-20:00 (7º10")  6   Extrair informações do pdf do CBHPM 6a edição de 2010.
+
+-- 6º00" (4º48")
+2012-07-31 14:00-20:00 (6º00")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
+
+-- 2º20" (1º52")
+2012-07-27 16:45-17:40 (0º55")  8   Issue #43: Teste de interface manual, correção de bugs.
 2012-07-27 15:00-16:15 (1º15")  8   Issue #43: Na ficha do paciente, criar uma sessão de resultados de exames só com o texto.
 
 2012-07-26 23:00-24:00 (1º00")  7   Adicionando botões para diagnósticos e resultados de exames.

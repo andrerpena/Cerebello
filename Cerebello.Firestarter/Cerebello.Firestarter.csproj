@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Firestarter.cs" />
+    <Compile Include="Helpers\Cbhpm.cs" />
     <Compile Include="Helpers\FakePatientsFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

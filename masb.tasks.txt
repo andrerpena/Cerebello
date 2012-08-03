@@ -7,6 +7,9 @@ Desc = Descrição do item.
 
 S   P Desc
 
+    ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
+x   P0 Extrair informações do CBHPM 6a edição de 2010.
+
 x   P0 Método Create [GET] deve aceitar flag indicand se deve procurar o próximo horário livre automaticamente.
 x   P0 Teste para action de criar agendamento ir para a tela já com o próximo horário livre selecionado.
 
