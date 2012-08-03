@@ -13,9 +13,6 @@
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
 }
-@section Scripts{
-    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery.arp.modal.css" />
-}
 @section Title {
     Paciente: <b>@Model.FullName</b>
 }

@@ -11,9 +11,6 @@
         <hr />
         @Html.MessageHelp("Ao criar um modelo de atestado, é possível declarar campos que deverão ser definidos ao criar um novo atestado. Para definir um campo, basta clicar em 'adicionar campo' e digitar seu nome. Para referenciar um campo no texto, use o padrão <%nome_do_campo%>. O campo <%paciente%> é definido automaticamente.")
 }
-@section Styles {
-    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery.arp.modal.css" />
-}
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(false)
