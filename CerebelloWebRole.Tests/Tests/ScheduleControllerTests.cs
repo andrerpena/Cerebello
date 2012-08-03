@@ -534,7 +534,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(
                 "A data e hora já está marcada para outro compromisso.",
                 vm.TimeValidationMessage);
-            Assert.AreEqual(false, vm.IsTimeValid);
+            Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
             Assert.AreEqual(controller.ViewBag.IsEditing, null); // when JsonResult there must be no ViewBag
@@ -637,7 +637,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(
                 "A data e hora indicadas estão no passado.",
                 vm.TimeValidationMessage);
-            Assert.AreEqual(false, vm.IsTimeValid);
+            Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
@@ -746,7 +746,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(
                 "O campo 'Data da consulta' é inválido. Este dia é um feriado.",
                 vm.TimeValidationMessage);
-            Assert.AreEqual(false, vm.IsTimeValid);
+            Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
@@ -846,7 +846,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(
                 "A data e hora marcada está no horário de almoço do médico.",
                 vm.TimeValidationMessage);
-            Assert.AreEqual(false, vm.IsTimeValid);
+            Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
             Assert.AreEqual(controller.ViewBag.IsEditing, null); // when JsonResult there must be no ViewBag
@@ -933,7 +933,7 @@ namespace CerebelloWebRole.Tests
             var viewResult = (ViewResult)actionResult;
 
             // Verifying the view-model.
-            Assert.AreEqual(false, vm.IsTimeValid);
+            Assert.AreEqual(DateAndTimeValidationState.Failed, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
             Assert.AreEqual(controller.ViewBag.IsEditing, false);

@@ -27,8 +27,6 @@ namespace CerebelloWebRole.Areas.App.Models
 
         public String DateSpelled { get; set; }
 
-        public bool IsTimeValid { get; set; }
-
         public bool PatientFirstAppointment { get; set; }
 
         [Display(Name = "Paciente")]
@@ -74,5 +72,17 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Descrição")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Description { get; set; }
+
+        /// <summary>
+        /// Validation state for date and time parameters.
+        /// </summary>
+        public DateAndTimeValidationState DateAndTimeValidationState { get; set; }
+    }
+
+    public enum DateAndTimeValidationState
+    {
+        Passed,
+        Warning,
+        Failed,
     }
 }

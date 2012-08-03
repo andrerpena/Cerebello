@@ -1,5 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.AppointmentViewModel
 @using CerebelloWebRole.Code.Extensions
+@using CerebelloWebRole.Areas.App.Models
 @{
     Layout = null;
 
@@ -128,7 +129,12 @@
                     <div>
                         @Html.EditorFor(model => model.Start)<span class="separator">às</span>
                         @Html.EditorFor(model => model.End)
-                        <span id="time-validation-icon" class="@(Model.IsTimeValid ? "validation-passed" : "validation-failed")">
+                        <span id="time-validation-icon" class="@(
+                            Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
+                            Model.DateAndTimeValidationState == DateAndTimeValidationState.Warning ? "validation-warning" :
+                            Model.DateAndTimeValidationState == DateAndTimeValidationState.Failed ? "validation-failed" :
+                            ""
+                            )">
                         </span>
                         @* ToDo: continuar desenvolvendo este estilo *@
                         <span id="time-validation-text" style="display: block; font-size: 11px; line-height: 1.2em; padding: 10px 0 5px; color: #DD390D;">@Model.TimeValidationMessage</span>
@@ -309,15 +315,20 @@
                 }
             },
             success: function(result){
-                if(result.success)
+                if(result.status == "Failed")
                 {
-                    $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
-                    $("#time-validation-text").html("");
-                }
-                else
-                {
-                    $("#time-validation-icon").removeClass("validation-passed").addClass("validation-failed");
+                    $("#time-validation-icon").removeClass("validation-warning validation-passed").addClass("validation-failed");
                     $("#time-validation-text").html(result.text);
+                }
+                else if(result.status == "Warning")
+                {
+                    $("#time-validation-icon").removeClass("validation-passed validation-failed").addClass("validation-warning");
+                    $("#time-validation-text").html(result.text);
+                }
+                else if(result.status == "Passed")
+                {
+                    $("#time-validation-icon").removeClass("validation-failed validation-warning").addClass("validation-passed");
+                    $("#time-validation-text").html("");
                 }
             }
         });

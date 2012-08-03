@@ -7,6 +7,9 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
+-- 6º50" (?º??")
+2012-08-03 16:10-16:30 (0º20")  9   Preparando commit.
+2012-08-03 12:30-16:10 (3º40")  9   Issue #56 e #41: Mensagens iconsistentes da validação da tela de marcar compromissos e consultas; Ícone de warning.
 2012-08-03 00:00-02:50 (2º50")  7   Programa para extrair informações do pdf do CBHPM 6a edição de 2010.
 
 -- 12º00" (9º18")

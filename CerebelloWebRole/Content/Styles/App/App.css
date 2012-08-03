@@ -1339,6 +1339,17 @@ ul.time-table li
     background-image: url("/content/images/app/icons16/exclamation.png");
 }
 
+.validation-warning
+{
+    display: inline-block;
+    height: 16px;
+    margin-left: 5px;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    background-image: url("/content/images/app/icons16/warning.png");
+}
+
 .string-list li
 {
     margin-bottom: 3px;

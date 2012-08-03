@@ -4,3 +4,11 @@ Depois de converter o arquivo, fiz o programa em cima do arquivo,
 e quando necessário fiz alterações no arquivo para dar dicas ao
 programa, para corrigir erros da conversão, e para corrigir
 inconsistências e erros do próprio PDF original.
+
+Sites relacionados:
+
+http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
+
+http://guilhermepitta.com/?p=1675
+
+http://www2.unimedflorianopolis.com.br/processor/amb_cbhpm/

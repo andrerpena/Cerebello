@@ -166,7 +166,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     start = userNow.ToString("HH:mm");
             }
 
-            DateTime dateOnly = (date ?? userNow).Date;
+            DateTime dateAlone = (date ?? userNow).Date;
 
             //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
@@ -174,8 +174,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Getting start date and time.
             DateTime startTime =
                 string.IsNullOrEmpty(start) ?
-                dateOnly :
-                dateOnly + DateTimeHelper.GetTimeSpan(start);
+                dateAlone :
+                dateAlone + DateTimeHelper.GetTimeSpan(start);
 
             // todo: just delete code or find a place for it?
             //FindNearestSlotStartTime(ref start, slots, ref startTime);
@@ -184,7 +184,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             DateTime endTime =
                 string.IsNullOrEmpty(end) ?
                 startTime + slotDuration :
-                dateOnly + DateTimeHelper.GetTimeSpan(end);
+                dateAlone + DateTimeHelper.GetTimeSpan(end);
 
             if (endTime - startTime < slotDuration)
                 endTime = startTime + slotDuration;
@@ -210,7 +210,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 endTime = slot.Item2;
             }
 
-            dateOnly = startTime.Date;
+            dateAlone = startTime.Date;
             start = startTime.ToString("HH:mm");
             end = endTime.ToString("HH:mm");
 
@@ -230,54 +230,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (patientName != null)
                 viewModel.PatientId = patientId;
 
-            viewModel.Date = dateOnly;
+            viewModel.Date = dateAlone;
             viewModel.Start = start;
             viewModel.End = end;
             viewModel.DoctorId = this.Doctor.Id;
             viewModel.DateSpelled =
-                DateTimeHelper.GetDayOfWeekAsString(dateOnly) + ", "
-                + DateTimeHelper.ConvertToRelative(dateOnly,
+                DateTimeHelper.GetDayOfWeekAsString(dateAlone) + ", "
+                + DateTimeHelper.ConvertToRelative(dateAlone,
                     userNow,
                     DateTimeHelper.RelativeDateOptions.IncludePrefixes
                     | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                     | DateTimeHelper.RelativeDateOptions.ReplaceToday
                     | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
 
-            ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
-            var isTimeValid = ValidateTime(
-                this.db,
-                this.Doctor,
-                dateOnly,
-                start,
-                end,
-                this.ModelState,
-                inconsistencyMessages,
-                userNow);
-
-            var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments);
-            if (!isTimeAvailable)
-            {
-                inconsistencyMessages.AddModelError(
-                    () => viewModel.Date,
-                    "A data e hora já está marcada para outro compromisso.");
-            }
-
-            // Flag that tells whether the time and date are valid ot not.
-            viewModel.IsTimeValid = isTimeValid && isTimeAvailable;
-
-            // Setting the error message to display near the date and time configurations.
-            var emptyErrors = new ModelErrorCollection();
-            var errorsList = new List<ModelError>();
-            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
-            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
-            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
-            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
-            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
-            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
-            if (errorsList.Any())
-            {
-                viewModel.TimeValidationMessage = errorsList.First().ErrorMessage;
-            }
+            DoDateAndTimeValidation(viewModel, userNow, null);
 
             this.ModelState.Clear();
 
@@ -352,8 +318,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                             | DateTimeHelper.RelativeDateOptions.ReplaceToday
                             | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
-                IsTimeValid = true,
             };
+
+            DoDateAndTimeValidation(viewModel, userNow, id);
 
             switch ((TypeAppointment)appointment.Type)
             {
@@ -426,45 +393,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // Verify if appoitment hours are consistent
-            ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
-            if (!string.IsNullOrEmpty(formModel.Start) && !string.IsNullOrEmpty(formModel.End))
             {
-                var startTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
-                var endTime = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
-
-                var isTimeValid = ValidateTime(
-                    this.db,
-                    this.Doctor,
-                    formModel.Date,
-                    formModel.Start,
-                    formModel.End,
-                    this.ModelState,
-                    inconsistencyMessages,
-                    this.UserNowGetter());
-
-                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, formModel.Id);
-                if (!isTimeAvailable)
-                    inconsistencyMessages.AddModelError(
-                        () => formModel.Date,
-                        "A data e hora já está marcada para outro compromisso.");
-
-                // Flag that tells whether the time and date are valid ot not.
-                formModel.IsTimeValid = isTimeValid && isTimeAvailable;
-
-                // Setting the error message to display near the date and time configurations.
-                var emptyErrors = new ModelErrorCollection();
-                var errorsList = new List<ModelError>();
-                errorsList.AddRange(this.ModelState.GetPropertyErrors(() => formModel.Date) ?? emptyErrors);
-                errorsList.AddRange(this.ModelState.GetPropertyErrors(() => formModel.Start) ?? emptyErrors);
-                errorsList.AddRange(this.ModelState.GetPropertyErrors(() => formModel.End) ?? emptyErrors);
-                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Date) ?? emptyErrors);
-                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.Start) ?? emptyErrors);
-                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => formModel.End) ?? emptyErrors);
-
-                if (errorsList.Any())
-                {
-                    formModel.TimeValidationMessage = errorsList.First().ErrorMessage;
-                }
+                DoDateAndTimeValidation(formModel, this.UserNowGetter(), formModel.Id);
             }
 
             // Saving data if model is valid.
@@ -1003,63 +933,86 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult VerifyTimeAvailability(string date, string start, string end, int? excludeAppointmentId = null)
         {
-            string error;
-
             if (string.IsNullOrEmpty(date) || string.IsNullOrEmpty(start) || string.IsNullOrEmpty(end))
-                error = "Sem informações suficientes";
+            {
+                return this.Json(new
+                {
+                    status = DateAndTimeValidationState.Failed.ToString(),
+                    text = "Sem informações suficientes",
+                }, JsonRequestBehavior.AllowGet);
+            }
             else
             {
-                var dateParsed = DateTime.Parse(date);
+                var dateParsed = DateTime.Parse(date).Date;
 
-                var inconsistencyMessages = new ModelStateDictionary();
+                AppointmentViewModel viewModel = new AppointmentViewModel
+                {
+                    Date = dateParsed,
+                    Start = start,
+                    End = end,
+                };
+
+                DoDateAndTimeValidation(viewModel, this.UserNowGetter(), excludeAppointmentId);
+
+                return this.Json(new
+                {
+                    status = viewModel.DateAndTimeValidationState.ToString(),
+                    text = viewModel.TimeValidationMessage,
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        private void DoDateAndTimeValidation(AppointmentViewModel viewModel, DateTime userNow, int? excludeAppointmentId)
+        {
+            if (viewModel.Date != viewModel.Date.Date)
+                throw new ArgumentException("viewModel.Date must be the date alone, without time data.");
+
+            ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
+            if (!string.IsNullOrEmpty(viewModel.Start) && !string.IsNullOrEmpty(viewModel.End))
+            {
+                var startTime = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.Start);
+                var endTime = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.End);
+
                 var isTimeValid = ValidateTime(
                     this.db,
                     this.Doctor,
-                    DateTime.Parse(date),
-                    start,
-                    end,
+                    viewModel.Date,
+                    viewModel.Start,
+                    viewModel.End,
                     this.ModelState,
                     inconsistencyMessages,
-                    this.UserNowGetter());
-
-                var startTime = dateParsed + DateTimeHelper.GetTimeSpan(start);
-                var endTime = dateParsed + DateTimeHelper.GetTimeSpan(end);
+                    userNow);
 
                 var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, excludeAppointmentId);
                 if (!isTimeAvailable)
                 {
-                    this.ModelState.AddModelError<AppointmentViewModel>(
-                        m => m.Date,
+                    inconsistencyMessages.AddModelError(
+                        () => viewModel.Date,
                         "A data e hora já está marcada para outro compromisso.");
-                }
-
-                // Setting the error message to display near the date and time configurations.
-                var emptyErrors = new ModelErrorCollection();
-                var errorsList = new List<ModelError>();
-                errorsList.AddRange(this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Date) ?? emptyErrors);
-                errorsList.AddRange(this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Start) ?? emptyErrors);
-                errorsList.AddRange(this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.End) ?? emptyErrors);
-                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors<AppointmentViewModel>(m => m.Date) ?? emptyErrors);
-                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors<AppointmentViewModel>(m => m.Start) ?? emptyErrors);
-                errorsList.AddRange(inconsistencyMessages.GetPropertyErrors<AppointmentViewModel>(m => m.End) ?? emptyErrors);
-                var dateAndTimeErrors = this.ModelState.GetPropertyErrors<AppointmentViewModel>(m => m.Date);
-
-                if (isTimeValid && isTimeAvailable)
-                {
-                    return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                }
-                else if (dateAndTimeErrors.Any())
-                {
-                    error = dateAndTimeErrors.First().ErrorMessage;
-                }
-                else
-                {
-                    error = "O horário não é válido.";
                 }
             }
 
-            return this.Json(new { success = false, text = error }, JsonRequestBehavior.AllowGet);
+            // Setting the error message to display near the date and time configurations.
+            var emptyErrors = new ModelErrorCollection();
+            var errorsList = new List<ModelError>();
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
 
+            // Flag that tells whether the time and date are valid ot not.
+            viewModel.DateAndTimeValidationState =
+                errorsList.Any() ? DateAndTimeValidationState.Failed :
+                !inconsistencyMessages.IsValid ? DateAndTimeValidationState.Warning :
+                DateAndTimeValidationState.Passed;
+
+            // Continue filling error list with warnings.
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
+            if (errorsList.Any())
+            {
+                viewModel.TimeValidationMessage = errorsList.First().ErrorMessage;
+            }
         }
 
         [HttpGet]
