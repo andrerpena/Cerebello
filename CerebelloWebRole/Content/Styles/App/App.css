@@ -1437,7 +1437,7 @@ div.message-help
 .top-bar-menu-button 
 {
     background-color: #FAFAFA;
-    background-image: url("/content/images/app/icons16/plus.png");
+
     background-position: 5px 3px;
     background-repeat: no-repeat;
     border-color: #CCCCCC #CCCCCC #BBBBBB;
@@ -1448,71 +1448,13 @@ div.message-help
     padding: 4px 10px 4px 28px;
 }
 
-/* balloons */
-
-div.balloon {
-    position: absolute;
-    z-index: 3000;
-    display: none;
-}
-
-div.balloon-arrow, div.balloon-arrow-border {
-    border-color: transparent transparent #FFFFFF;
-    border-style: solid;
-    border-width: 12px;
-    cursor: pointer;
-    font-size: 0;
-    left: 32px;
-    line-height: 0;
-    margin: 0 auto;
-    position: absolute;
-    top: 0;
-    width: 0;
-    z-index: 1002;
-}
-
-div.balloon-arrow-border {
-    border-color: transparent transparent #CCCCCC;
-    border-style: solid;
-    border-width: 12px;
-    top: -2px;
-    z-index: 1001;
-}
-
-div.balloon-pointer {
-    position: relative;
-    top: -22px;
-    margin: 0 auto;
-    width: 120px;
-}
-
-div.balloon-wrapper {
-    background-color: #FFFFFF;
-    border: 1px solid #BBBBBB;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
-    position: absolute;
-    z-index: 1000;
-}
-
-.global-links {
-    color: #777777;
-    min-width: 120px;
-    padding: 5px 0;
-    width: auto;
-}
-
-.global-links li {
-    font-size: 13px;
-    padding: 5px 10px;
-    white-space: nowrap;
-}
-
-.global-links li a 
+.top-bar-menu-button.add-new-button
 {
-    color: #333333 !important;
+    background-image: url("/content/images/app/icons16/plus.png");
 }
 
-.global-links li a:hover
+.top-bar-menu-button.schedule-button
 {
-    text-decoration: underline !important;
+    background-image: url("/content/images/app/icons16/calendar.png");
 }
+

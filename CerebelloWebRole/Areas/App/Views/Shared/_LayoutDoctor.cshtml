@@ -66,47 +66,20 @@
                 $("#global-search").watermark({ text: "Pesquisar por paciente ou medicamento" });
             </script>
 
-            <a id="global-add-new" class="top-bar-menu-button" href="#">Novo</a>
-            <a id="global-schedule-new" class="top-bar-menu-button" href="#">Marcar</a>
-            
-            <div id="global-add-new-balloon" class="balloon">
-                <!-- balloon pointer -->
-                <div class="balloon-pointer">
-                    <div class="balloon-arrow menu-target">
-                    </div>
-                    <div class="balloon-arrow-border">
-                    </div>
-                </div>
-                <!-- balloon content -->
-                <div class="balloon-wrapper">
-                    <div class="balloon-content">
-                        <ul class="global-links">
-                            <li><a class="" href="@Url.Action("create", "patients")">Novo paciente</a></li>
-                            <li><a class="" href="@Url.Action("create", "medicines")">Novo medicamento</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <a id="global-add-new" class="top-bar-menu-button add-new-button" href="#">Novo</a>
+            <a id="global-schedule-new" class="top-bar-menu-button schedule-button" href="#">Marcar</a>
+
             <script type="text/javascript">
-                var add_menu = $("#global-add-new");
-                var add_balloon = $("#global-add-new-balloon");
 
-                add_menu.bind("click", function (e) {
-                    e.stopPropagation();
-                    add_balloon.css("left", $(e.target).offset().left);
-                    add_balloon.css("top", $(e.target).offset().top + 10);
-                    add_balloon.show();
-                    handler = function (e2) {
-                        if (!add_balloon.has(e2.target).length) {
-                            add_balloon.hide();
-                            $("html").unbind("click", handler);
-                        }
+                $("#global-add-new").dropdownMenu({
+                    items: [
+                        { id: "new-patient", text: "Novo paciente", href: "@Url.Action("create", "patients")" },
+                        { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("create", "medicines")" }
+                    ],
+                    onItemClicked: function(id)
+                    {
+                        alert(id);
                     }
-                    $("html").click("click", handler);
-                });
-
-                $(window).resize(function (e) {
-                    add_balloon.hide();
                 });
 
                 $("#global-schedule-new").click(function (e) {
