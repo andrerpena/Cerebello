@@ -75,11 +75,7 @@
                     items: [
                         { id: "new-patient", text: "Novo paciente", href: "@Url.Action("create", "patients")" },
                         { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("create", "medicines")" }
-                    ],
-                    onItemClicked: function(id)
-                    {
-                        alert(id);
-                    }
+                    ]
                 });
 
                 $("#global-schedule-new").click(function (e) {
