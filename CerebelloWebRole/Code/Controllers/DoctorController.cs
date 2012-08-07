@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using CerebelloWebRole.Code.Security;
-using CerebelloWebRole.Models;
-using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Controllers;
+using CerebelloWebRole.Areas.App.Models;
 
-namespace CerebelloWebRole.Code.Controllers
+namespace CerebelloWebRole.Code
 {
     public abstract class DoctorController : PracticeController
     {

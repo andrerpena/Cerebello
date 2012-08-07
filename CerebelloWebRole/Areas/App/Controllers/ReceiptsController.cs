@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Controllers;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.iText;
+using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.IO;
 using iTextSharp.text.pdf.draw;
-using CerebelloWebRole.Code.iText;
-using CerebelloWebRole.Models;
-using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {

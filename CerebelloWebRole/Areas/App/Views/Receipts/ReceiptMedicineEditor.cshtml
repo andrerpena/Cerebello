@@ -1,15 +1,18 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel
+@using CerebelloWebRole.Areas.App.Models
 @{
     Layout = null;
     var editPanel = Html.CreateEditPanel();
-    editPanel.AddField(m => m.MedicineId, format: @<text>@(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel, CerebelloWebRole.Areas.App.Models.MedicineLookupGridModel, int>(
-                            m => m.MedicineId,
-                            m => m.MedicineText,
-                            Url.Action("lookupmedication", "medicines"),
-                            gm => gm.Id,
-                            gm => gm.Name,
-                            gm => gm.LaboratoryName
-                        ))</text>);
+    editPanel.AddField(
+        m => m.MedicineId,
+        format: @<text>@(Html.LookupGridFor<ReceiptMedicineViewModel, MedicineLookupGridModel, int>(
+            m => m.MedicineId,
+            m => m.MedicineText,
+            Url.Action("lookupmedication", "medicines"),
+            gm => gm.Id,
+            gm => gm.Name,
+            gm => gm.LaboratoryName
+        ))</text>);
     editPanel.AddField(m => m.Quantity);
     editPanel.AddField(m => m.Prescription, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Prescription)</text>);
     editPanel.AddField(m => m.Observations, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Observations)</text>);

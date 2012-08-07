@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using CerebelloWebRole.Code.Controllers;
-using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Models;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Mvc;
-using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {

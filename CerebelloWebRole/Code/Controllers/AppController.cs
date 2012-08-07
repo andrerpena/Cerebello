@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using CerebelloWebRole.Models;
-using CerebelloWebRole.Code.Security;
 using Cerebello.Model;
 
-namespace CerebelloWebRole.Code.Controllers
+namespace CerebelloWebRole.Code
 {
 #warning This class is not being used.
     public abstract class SiteController : Controller
