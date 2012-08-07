@@ -25,13 +25,13 @@
         width: auto;
     }    
     
-    div.header .title .actions-wrapper
+    div.header .title .top-actions-bar-wrapper
     {
         margin-top: 10px;
         margin-left: 0;
     }
     
-    div.header .title .actions-wrapper input[type=text]
+    div.header .title .top-actions-bar-wrapper input[type=text]
     {
         max-width: inherit;
     }

@@ -180,7 +180,6 @@
     <Compile Include="Areas\Docs\DocsAreaRegistration.cs" />
     <Compile Include="Code\Business\DropDownListHelper.cs" />
     <Compile Include="Code\Constants.cs" />
-    <Compile Include="Code\Controllers\AppController.cs" />
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
@@ -196,6 +195,7 @@
     <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
     <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />
     <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
+    <Compile Include="Code\Data\UserData.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />

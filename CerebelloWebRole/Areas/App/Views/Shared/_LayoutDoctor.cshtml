@@ -39,64 +39,57 @@
             Configurações</a> </li>
     </ul>
 }
-@section AppTitle {
-    <div class="logo-wrapper">
-        <a href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
-            <img src="/content/images/top-logo.png" />
-        </a>
-    </div>
-    <div class="actions-wrapper">
-        <div class="global-search-wrapper">
-            <input type="text" id="global-search" name="global-search" class="lookup" />
-            <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
-            <script type="text/javascript">
-                $("#global-search").lookup({
-                    contentUrl: "@Url.Action("lookupeverything", "app")",
-                    inputHiddenName: "global-search-hidden",
-                    ajaxParams: {
-                        doctorId: @doctor.Id
-                    },
-                    change: function(data) {
-                        if(data)
-                            window.location = data.Url;
-                    },
-                    columnHeaders: ["Nome", "Tipo"],
-                    columns: ["Value", "Description"]
-                });
-                $("#global-search").watermark({ text: "Pesquisar por paciente ou medicamento" });
-            </script>
 
-            <a id="global-add-new" class="top-bar-menu-button add-new-button" href="#">Novo</a>
-            <a id="global-schedule-new" class="top-bar-menu-button schedule-button" href="#">Marcar</a>
+@section TopActions {
+    <input type="text" id="global-search" name="global-search" class="lookup" />
+    <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
+    <script type="text/javascript">
+        $("#global-search").lookup({
+            contentUrl: "@Url.Action("lookupeverything", "app")",
+            inputHiddenName: "global-search-hidden",
+            ajaxParams: {
+                doctorId: @doctor.Id
+            },
+            change: function(data) {
+                if(data)
+                    window.location = data.Url;
+            },
+            columnHeaders: ["Nome", "Tipo"],
+            columns: ["Value", "Description"]
+        });
+        $("#global-search").watermark({ text: "Pesquisar por paciente ou medicamento" });
+    </script>
 
-            <script type="text/javascript">
+    <a id="global-add-new" class="top-bar-menu-button add-new-button" href="#">Novo</a>
+    <a id="global-schedule-new" class="top-bar-menu-button schedule-button" href="#">Marcar</a>
 
-                $("#global-add-new").dropdownMenu({
-                    items: [
-                        { id: "new-patient", text: "Novo paciente", href: "@Url.Action("create", "patients")" },
-                        { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("create", "medicines")" }
-                    ]
-                });
+    <script type="text/javascript">
 
-                $("#global-schedule-new").click(function (e) {
-                    e.preventDefault();
-                    $.modal({
-                        url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
-                        title: "Nova consulta",
-                        data: {
-                            date: "@scheduleDateStr",
-                            start: "",
-                            end: "",
-                            doctorId: ""
-                        },
-                        width: 480,
-                        height: 200
-                    });
-                });
-            </script>
-        </div>
-    </div>
+        $("#global-add-new").dropdownMenu({
+            items: [
+                { id: "new-patient", text: "Novo paciente", href: "@Url.Action("create", "patients")" },
+                { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("create", "medicines")" }
+            ]
+        });
+
+        $("#global-schedule-new").click(function (e) {
+            e.preventDefault();
+            $.modal({
+                url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
+                title: "Nova consulta",
+                data: {
+                    date: "@scheduleDateStr",
+                    start: "",
+                    end: "",
+                    doctorId: ""
+                },
+                width: 480,
+                height: 200
+            });
+        });
+    </script>
 }
+
 @section AdditionalTitleInfo {
     @if (IsSectionDefined("AdditionalTitleInfo"))
     {

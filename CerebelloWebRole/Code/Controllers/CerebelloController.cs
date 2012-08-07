@@ -9,6 +9,10 @@ using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    /// <summary>
+    /// This is the base Controller for all Controllers inside the App. 
+    /// The site and documentation Controllers will NOT be CerebelloController
+    /// </summary>
     public class CerebelloController : Controller
     {
         protected CerebelloEntities db = null;

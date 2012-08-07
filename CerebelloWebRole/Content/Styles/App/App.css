@@ -500,13 +500,13 @@ fieldset legend
     vertical-align: top;
 }
 
-#app-header .title .global-search-wrapper
+#app-header .title .top-actions-bar
 {
     overflow: hidden;
     vertical-align: top;
 }
 
-#app-header .title .global-search-wrapper input[type=text]
+#app-header .title .top-actions-bar input[type=text]
 {
     border: 1px solid #CCCCCC;
     font-size: 12px;
@@ -515,12 +515,13 @@ fieldset legend
     width: 500px;
 }
 
-#app-header .title .actions-wrapper
+#app-header .title .top-actions-bar-wrapper
 {
     margin-left: 214px;
+    margin-right: 160px;
 }
 
-#app-header .title .actions-wrapper input[type=text]
+#app-header .title .top-actions-bar-wrapper input[type=text]
 {
     width: 100%;
     max-width: 300px;

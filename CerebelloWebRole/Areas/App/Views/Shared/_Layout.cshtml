@@ -49,14 +49,16 @@
         <div class="top-menu">
         </div>
         <div class="title">
-            @if (IsSectionDefined("AppTitle"))
-            {
-                @RenderSection("AppTitle") 
-            }
-            else
-            {
-                @:CareCraft
-            }
+            <div class="logo-wrapper">
+                <a href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
+                    <img src="/content/images/top-logo.png" />
+                </a>
+            </div>
+            <div class="top-actions-bar-wrapper">
+                <div class="top-actions-bar">
+                    @RenderSection("TopActions");
+                </div>
+            </div>
         </div>
     </div>
     <div class="main">
