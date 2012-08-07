@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ExaminationRequestViewModel
+@using CerebelloWebRole.Areas.App.Models
 @{
     Layout = null;
     string examRequestId = null;
@@ -20,9 +21,21 @@
     
         var editPanel = Html.CreateEditPanel();
         editPanel.AddField(
-            m => m.Text,
+            m => m.MedicalProcedureId,
             CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-            format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
+            format: @<text>@(Html.LookupGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, int>(
+                m => m.MedicalProcedureId,
+                m => m.MedicalProcedureText,
+                Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
+                pm => pm.Id,
+                pm => pm.Name,
+                pm => pm.Code
+            ))</text>);
+        
+        editPanel.AddField(
+            m => m.Notes,
+            CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+            format: @<text>@Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
         
         @editPanel.GetHtml()
         

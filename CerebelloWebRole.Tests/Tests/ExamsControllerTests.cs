@@ -41,6 +41,8 @@ namespace CerebelloWebRole.Tests
 
             Firestarter.ClearAllData(this.db);
             Firestarter.InitializeDatabaseWithSystemData(this.db);
+
+            this.MedicalProcedures = Firestarter.CreateFakeMedicalProcedures(this.db);
         }
 
         [TestCleanup]
@@ -81,7 +83,9 @@ namespace CerebelloWebRole.Tests
                 var viewModel = new ExaminationRequestViewModel
                 {
                     PatientId = patient.Id,
-                    Text = "Any text",
+                    Notes = "Any text",
+                    MedicalProcedureId = this.MedicalProcedures[0].Id,
+                    MedicalProcedureText = this.MedicalProcedures[0].Name,
                 };
 
                 actionResult = controller.Create(viewModel);
@@ -102,7 +106,7 @@ namespace CerebelloWebRole.Tests
         /// This is an invalid operation, and should stay in the same View, with a ModelState validation message.
         /// </summary>
         [TestMethod]
-        public void Create_2_WithoutText()
+        public void Create_WithoutMedicalProcedure()
         {
             ExamsController controller;
             Patient patient;
@@ -147,7 +151,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
             Assert.AreEqual(
                 1,
-                controller.ModelState.GetPropertyErrors(() => viewModel.Text).Count(),
+                controller.ModelState.GetPropertyErrors(() => viewModel.MedicalProcedureText).Count(),
                 "ModelState should contain one validation message.");
 
             // Verifying the database: cannot save the changes.
@@ -179,6 +183,7 @@ namespace CerebelloWebRole.Tests
                     CreatedOn = DateTime.Now,
                     PatientId = patient.Id,
                     Text = "Old text",
+                    MedicalProcedureId = this.MedicalProcedures[0].Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -197,7 +202,9 @@ namespace CerebelloWebRole.Tests
                 {
                     Id = examRequest.Id,
                     PatientId = patient.Id,
-                    Text = "Any text",
+                    Notes = "Any text",
+                    MedicalProcedureId = this.MedicalProcedures[1].Id, // editing value: old = 0; new = 1
+                    MedicalProcedureText = this.MedicalProcedures[1].Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -225,7 +232,7 @@ namespace CerebelloWebRole.Tests
         /// This is an invalid operation, and should stay in the same View, with a ModelState validation message.
         /// </summary>
         [TestMethod]
-        public void Edit_2_WithoutText()
+        public void Edit_2_WithoutMedicalProcedure()
         {
             ExamsController controller;
             Patient patient;
@@ -244,6 +251,7 @@ namespace CerebelloWebRole.Tests
                     CreatedOn = DateTime.Now,
                     PatientId = patient.Id,
                     Text = "Old text",
+                    MedicalProcedureId = this.MedicalProcedures[0].Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -284,7 +292,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
             Assert.AreEqual(
                 1,
-                controller.ModelState.GetPropertyErrors(() => viewModel.Text).Count(),
+                controller.ModelState.GetPropertyErrors(() => viewModel.MedicalProcedureText).Count(),
                 "ModelState should contain one validation message.");
 
             // Verifying the database: cannot save the changes.
@@ -318,6 +326,7 @@ namespace CerebelloWebRole.Tests
                     CreatedOn = DateTime.Now,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
+                    MedicalProcedureId = this.MedicalProcedures[0].Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -333,7 +342,9 @@ namespace CerebelloWebRole.Tests
                 {
                     Id = examRequest.Id,
                     PatientId = patientDraMarta.Id,
-                    Text = "New text",
+                    Notes = "New text",
+                    MedicalProcedureId = this.MedicalProcedures[2].Id,
+                    MedicalProcedureText = this.MedicalProcedures[2].Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -388,6 +399,7 @@ namespace CerebelloWebRole.Tests
                     CreatedOn = DateTime.Now,
                     PatientId = patient.Id,
                     Text = "Old text",
+                    MedicalProcedureId = this.MedicalProcedures[0].Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -403,7 +415,9 @@ namespace CerebelloWebRole.Tests
                 {
                     Id = 19837,
                     PatientId = patient.Id,
-                    Text = "New text",
+                    Notes = "New text",
+                    MedicalProcedureId = this.MedicalProcedures[1].Id,
+                    MedicalProcedureText = this.MedicalProcedures[1].Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -461,6 +475,7 @@ namespace CerebelloWebRole.Tests
                     examRequest.CreatedOn = DateTime.Now;
                     examRequest.PatientId = patient.Id;
                     examRequest.Text = "Old text";
+                    examRequest.MedicalProcedureId = this.MedicalProcedures[2].Id;
 
                     db2.ExaminationRequests.AddObject(examRequest);
                     db2.SaveChanges();
@@ -575,6 +590,7 @@ namespace CerebelloWebRole.Tests
                     CreatedOn = DateTime.Now,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
+                    MedicalProcedureId = this.MedicalProcedures[0].Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -609,5 +625,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(isDbChangesSaved, "Database changes were saved, but they should not.");
         }
         #endregion
+
+        public SYS_MedicalProcedure[] MedicalProcedures { get; set; }
     }
 }

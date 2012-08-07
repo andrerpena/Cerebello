@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
 
 namespace Cerebello.Firestarter.Helpers
 {
     internal class Cbhpm
     {
-        public static Cbhpm LoadData()
+        public static Cbhpm LoadData(string pathOfTxt)
         {
             var result = new Cbhpm();
-            result.LoadFromTextCopiedOfPdf(File.ReadAllText(@"C:\Cerebello\DB\cbhpm_2010[1].txt", Encoding.GetEncoding(1252)));
+            result.LoadFromTextCopiedOfPdf(File.ReadAllText(pathOfTxt, Encoding.GetEncoding(1252)));
             return result;
         }
 
@@ -20,7 +20,7 @@ namespace Cerebello.Firestarter.Helpers
         {
             this.Capitulos = new Dictionary<int, Capitulo>();
             this.Paginas = new List<Pagina>();
-            this.Itens = new Dictionary<StructTuple<string, int>, object>();
+            this.Items = new Dictionary<StructTuple<string, int>, object>();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Cerebello.Firestarter.Helpers
 
         public Dictionary<int, Capitulo> Capitulos { get; private set; }
         public List<Pagina> Paginas { get; private set; }
-        public Dictionary<StructTuple<string, int>, object> Itens { get; private set; }
+        public Dictionary<StructTuple<string, int>, object> Items { get; private set; }
 
         public void LoadFromTextCopiedOfPdf(string text)
         {
@@ -492,7 +492,7 @@ namespace Cerebello.Firestarter.Helpers
                                             proc.PaginaDeclarada = curPagina;
 
                                             var simpleCode = GetCodeSimple(code);
-                                            this.Itens.Add(StructTuple.Create(simpleCode, 0), proc);
+                                            this.Items.Add(StructTuple.Create(simpleCode, 0), proc);
 
                                             codigosUsados.Add(code);
 
@@ -534,7 +534,6 @@ namespace Cerebello.Firestarter.Helpers
 
                 if (curPagina.ProcTipo != curProcTipo && !string.IsNullOrEmpty(pageText))
                     throw new Exception();
-
             }
 
             // Checking codes that were not processed.
@@ -579,7 +578,7 @@ namespace Cerebello.Firestarter.Helpers
                     throw new Exception("Not supported type of Attachment.");
 
                 var simpleCode = GetCodeSimple(code);
-                this.Itens.Add(StructTuple.Create(simpleCode, 0), result);
+                this.Items.Add(StructTuple.Create(simpleCode, 0), result);
             }
 
             return result;
@@ -596,7 +595,7 @@ namespace Cerebello.Firestarter.Helpers
                 Tipo = parentProcTipo,
             };
             var simpleCode = GetCodeSimple(code);
-            this.Itens.Add(StructTuple.Create(simpleCode, 0), result);
+            this.Items.Add(StructTuple.Create(simpleCode, 0), result);
             parentProcTipo.Subtipos.Add(result);
             return result;
         }
@@ -609,7 +608,7 @@ namespace Cerebello.Firestarter.Helpers
             bool createNew = false;
             ProcTipo found = null;
             object item;
-            if (this.Itens.TryGetValue(StructTuple.Create(simpleCode, 0), out item))
+            if (this.Items.TryGetValue(StructTuple.Create(simpleCode, 0), out item))
             {
                 found = (ProcTipo)item;
                 found = found.FindInSetByName(name) ?? found;
@@ -640,7 +639,7 @@ namespace Cerebello.Firestarter.Helpers
 
                 parentChapter.ProcTipos.Add(result);
 
-                this.Itens.Add(StructTuple.Create(simpleCode, result.SetOfProcTipos.Count - 1), result);
+                this.Items.Add(StructTuple.Create(simpleCode, result.SetOfProcTipos.Count - 1), result);
             }
             else
             {
@@ -835,7 +834,7 @@ namespace Cerebello.Firestarter.Helpers
 
             public Proc[] GetProcs()
             {
-                return this.Cbhpm.Itens.Values.OfType<Proc>()
+                return this.Cbhpm.Items.Values.OfType<Proc>()
                     .Where(p => p.PaginaDeclarada == this)
                     .ToArray();
             }
@@ -878,7 +877,7 @@ namespace Cerebello.Firestarter.Helpers
             }
         }
 
-        public class Capitulo
+        public class Capitulo : ICbhpmItem
         {
             public Capitulo()
             {
@@ -896,13 +895,23 @@ namespace Cerebello.Firestarter.Helpers
             public Dictionary<string, ProcTipo> ProcTiposByCodigo { get; private set; }
             public List<TextoAnexo> Anexos { get; private set; }
 
+            public ICbhpmItem Parent
+            {
+                get { return null; }
+            }
+
             public override string ToString()
             {
                 return string.Format("Capítulo {0} - {1}", this.Numero, this.Nome);
             }
+
+            public string Codigo
+            {
+                get { return string.Format("{0}", this.Numero); }
+            }
         }
 
-        public class ProcTipo
+        public class ProcTipo : ICbhpmItem
         {
             public ProcTipo(ProcTipo otherProcTipoInSet = null)
             {
@@ -938,9 +947,14 @@ namespace Cerebello.Firestarter.Helpers
             {
                 return this.SetOfProcTipos.Where(pt => pt.Nome == name).FirstOrDefault();
             }
+
+            public ICbhpmItem Parent
+            {
+                get { return this.Capitulo; }
+            }
         }
 
-        public class ProcSubtipo
+        public class ProcSubtipo : ICbhpmItem
         {
             public ProcSubtipo()
             {
@@ -957,13 +971,18 @@ namespace Cerebello.Firestarter.Helpers
             public List<TextoAnexo> Anexos { get; private set; }
             public Pagina PaginaDeclarada { get; set; }
 
+            public ICbhpmItem Parent
+            {
+                get { return this.Tipo; }
+            }
+
             public override string ToString()
             {
                 return string.Format("{0} {1}", this.Codigo, this.Nome);
             }
         }
 
-        public class Proc
+        public class Proc : ICbhpmItem
         {
             public Proc()
             {
@@ -987,9 +1006,14 @@ namespace Cerebello.Firestarter.Helpers
             {
                 return string.Format("{0} {1}", this.Codigo, this.Nome);
             }
+
+            public ICbhpmItem Parent
+            {
+                get { return this.Subtipo; }
+            }
         }
 
-        public class TextoAnexo
+        public class TextoAnexo : ICbhpmItem
         {
             public Cbhpm Cbhpm { get; set; }
             public string Codigo { get; set; }
@@ -1006,6 +1030,11 @@ namespace Cerebello.Firestarter.Helpers
             }
 
             public Capitulo Capitulo { get; set; }
+
+            public ICbhpmItem Parent
+            {
+                get { return this.Subtipo; }
+            }
         }
 
         //public class Codigo : IEquatable<Codigo>
@@ -1068,5 +1097,14 @@ namespace Cerebello.Firestarter.Helpers
         //        return this.ToString().GetHashCode();
         //    }
         //}
+
+        public static string pathOfTxt { get; set; }
+
+        public interface ICbhpmItem
+        {
+            string Codigo { get; }
+            string Nome { get; }
+            ICbhpmItem Parent { get; }
+        }
     }
 }

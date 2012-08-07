@@ -240,7 +240,8 @@ GO
 CREATE TABLE [dbo].[ExaminationRequest](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PatientId] [int] NOT NULL,
-	[Text] [nvarchar](max) NOT NULL,
+	[MedicalProcedureId] [int] NOT NULL,
+	[Text] [nvarchar](max) NULL,
 	[CreatedOn] [datetime] NOT NULL,
  CONSTRAINT [PK_ExaminationRequest] PRIMARY KEY CLUSTERED 
 (
@@ -255,7 +256,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ExaminationResult](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Title] [nvarchar](200) NOT NULL,
+	[MedicalProcedureId] [int] NOT NULL,
 	[Text] [nvarchar](max) NOT NULL,
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
@@ -627,6 +628,26 @@ CREATE TABLE [dbo].[SYS_MedicalEntity](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+/****** Object:  Table [dbo].[SYS_MedicalProcedure] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SYS_MedicalProcedure](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Code] [nchar](12) NOT NULL,
+	[Name] [nvarchar](310) NOT NULL,
+ CONSTRAINT [PK_SYS_MedicalProcedures] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalProcedures_Code] ON [dbo].[SYS_MedicalProcedure] 
+(
+	[Code] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
 /****** Object:  Table [dbo].[SYS_MedicalSpecialty] ******/
 SET ANSI_NULLS ON
 GO
@@ -787,11 +808,23 @@ REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_Patient]
 GO
+/****** Object:  ForeignKey [FK_ExaminationRequest_SYS_MedicalProcedures] ******/
+ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_SYS_MedicalProcedures] FOREIGN KEY([MedicalProcedureId])
+REFERENCES [dbo].[SYS_MedicalProcedure] ([Id])
+GO
+ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_SYS_MedicalProcedures]
+GO
 /****** Object:  ForeignKey [FK_ExaminationResult_Patient] ******/
 ALTER TABLE [dbo].[ExaminationResult]  WITH CHECK ADD  CONSTRAINT [FK_ExaminationResult_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
+GO
+/****** Object:  ForeignKey [FK_ExaminationResult_SYS_MedicalProcedures] ******/
+ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationResult_SYS_MedicalProcedures] FOREIGN KEY([MedicalProcedureId])
+REFERENCES [dbo].[SYS_MedicalProcedure] ([Id])
+GO
+ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_SYS_MedicalProcedures]
 GO
 /****** Object:  ForeignKey [FK_Laboratory_Doctor] ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])

@@ -8,12 +8,23 @@
         <table class="view-table">
             <tr>
                 <th>
-                    @Html.LabelFor(model => model.Text)
+                    @Html.LabelFor(model => model.MedicalProcedureText)
                 </th>
                 <td>
-                    @Html.DisplayFor(model => model.Text)
+                    @Html.DisplayFor(model => model.MedicalProcedureText)
                 </td>
             </tr>
+            @if (!string.IsNullOrEmpty(this.Model.Notes))
+            { 
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.Notes)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Notes)
+                </td>
+            </tr>
+            }
         </table>
     }
     <div class="inline-link-bar">

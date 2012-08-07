@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using CerebelloWebRole.Code.Controllers;
-using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -27,7 +25,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = examResult.Id,
                 PatientId = examResult.PatientId,
                 Text = examResult.Text,
-                Title = examResult.Title,
+                MedicalProcedureId = examResult.MedicalProcedureId,
+                MedicalProcedureText = examResult.SYS_MedicalProcedure.Name,
             };
         }
 
@@ -126,8 +125,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!string.IsNullOrEmpty(formModel.Text))
                 modelObj.Text = formModel.Text;
 
-            if (!string.IsNullOrEmpty(formModel.Title))
-                modelObj.Title = formModel.Title;
+            // Only sets the MedicalProcedureId when MedicalProcedureText is not null.
+            if (!string.IsNullOrEmpty(formModel.MedicalProcedureText))
+                modelObj.MedicalProcedureId = formModel.MedicalProcedureId;
 
             if (this.ModelState.IsValid)
             {

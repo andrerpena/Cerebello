@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Data.Common;
 using System.Data.EntityClient;
 using Cerebello.Firestarter.Helpers;
+using System.IO;
 
 namespace Cerebello.Firestarter
 {
@@ -490,7 +491,7 @@ namespace Cerebello.Firestarter
             return result;
         }
 
-        public static void InitializeDatabaseWithSystemData(CerebelloEntities db)
+        public static void Initialize_SYS_MedicalEntity(CerebelloEntities db)
         {
             // Conselhos profissionais, segundo o TISS - Tabelas de domínio (Versão 2.02.03)
             var tissConselhoProfissional = new ListOfTuples<string, string>
@@ -512,6 +513,10 @@ namespace Cerebello.Firestarter
                 db.SYS_MedicalEntity.AddObject(new SYS_MedicalEntity { Code = eachTuple.Item1, Name = eachTuple.Item2 });
 
             db.SaveChanges();
+        }
+
+        public static void Initialize_SYS_MedicalSpecialty(CerebelloEntities db)
+        {
 
             // Especialidades - CBO-S TISS - Tabelas de domínio (Versão 2.02.03)
             var tissEspecialidades = new ListOfTuples<string, string>
@@ -962,6 +967,31 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
         }
 
+        public static SYS_MedicalProcedure[] CreateFakeMedicalProcedures(CerebelloEntities db)
+        {
+            var tissConselhoProfissional = new ListOfTuples<string, string>
+            {
+                { "4.03.04.36-1", "Hemograma com contagem de plaquetas ou frações" },
+                { "4.01.03.23-4", "Eletrencefalograma em vigília, e sono espontâneo ou induzido" },
+                { "4.01.03.55-2", "Posturografia" },
+                { "3.07.15.26-1", "Retirada de corpo estranho - tratamento cirúrgico" },
+                { "1.01.06.01-4", "Aconselhamento genético" },
+                { "2.01.01.22-8", "Acompanhamento clínico ambulatorial pós-transplante de medula óssea" },
+                { "2.01.03.45-0", "Paraplegia e tetraplegia" },
+                { "2.01.03.46-8", "Parkinson" },
+                { "3.01.01.26-3", "Dermoabrasão de lesões cutâneas" },
+                { "3.03.11.01-2", "Biópsia de músculos" },
+                { "3.03.11.02-0", "Cirurgia com sutura ajustável" },
+            };
+
+            foreach (var eachTuple in tissConselhoProfissional)
+                db.SYS_MedicalProcedure.AddObject(new SYS_MedicalProcedure { Code = eachTuple.Item1, Name = eachTuple.Item2 });
+
+            db.SaveChanges();
+
+            return db.SYS_MedicalProcedure.ToArray();
+        }
+
         class ListOfTuples<T1, T2> : List<Tuple<T1, T2>>
         {
             public void Add(T1 t1, T2 t2)
@@ -970,11 +1000,50 @@ namespace Cerebello.Firestarter
             }
         }
 
+        static object locker = new object();
+        static Cbhpm cbhpm;
+
+        public static void Initialize_SYS_MedicalProcedures(CerebelloEntities db, string pathOfTxt, int maxCount = int.MaxValue, Action<int, int> progress = null)
+        {
+            progress = progress ?? ((x, y) => { });
+
+            // Adding CBHPM medical procedures.
+            if (cbhpm == null)
+                lock (locker)
+                    if (cbhpm == null)
+                        cbhpm = Cbhpm.LoadData(pathOfTxt);
+
+            var max = Math.Min(maxCount, cbhpm.Items.Values.OfType<Cbhpm.Proc>().Count());
+
+            int count = 0;
+            foreach (var eachCbhpmProc in cbhpm.Items.Values.OfType<Cbhpm.Proc>())
+            {
+                if (count >= maxCount)
+                    break;
+
+                progress(count, max);
+
+                var item = db.SYS_MedicalProcedure.CreateObject();
+                item.Code = eachCbhpmProc.Codigo;
+                item.Name = eachCbhpmProc.Nome;
+                db.SYS_MedicalProcedure.AddObject(item);
+
+                if (count % 100 == 0)
+                    db.SaveChanges();
+
+                count++;
+            }
+
+            progress(count, max);
+
+            db.SaveChanges();
+        }
+
         /// <summary>
         /// Clears all data in the database.
         /// </summary>
         /// <param name="db"></param>
-        public static void ClearAllData(CerebelloEntities db, bool repopulateSysTablesWithDefaults = false)
+        public static void ClearAllData(CerebelloEntities db, bool repopulateSysTablesWithDefaults = false, string rootCerebelloPath = null)
         {
             db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
             db.ExecuteStoreCommand(@"sp_MSForEachTable '
@@ -990,7 +1059,16 @@ namespace Cerebello.Firestarter
                      ' ");
 
             if (repopulateSysTablesWithDefaults)
-                InitializeDatabaseWithSystemData(db);
+            {
+                Console.WriteLine("Initialize_SYS_MedicalEntity");
+                Firestarter.Initialize_SYS_MedicalEntity(db);
+                Console.WriteLine("Initialize_SYS_MedicalSpecialty");
+                Firestarter.Initialize_SYS_MedicalEntity(db);
+                Console.WriteLine("Initialize_SYS_MedicalProcedures");
+                Firestarter.Initialize_SYS_MedicalProcedures(
+                    db,
+                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"));
+            }
         }
 
         public static void DropAllTables(CerebelloEntities db)
@@ -1176,6 +1254,18 @@ GO
                 cmd.CommandText = @"sp_detach_db CerebelloTEST";
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public static void InitializeDatabaseWithSystemData(CerebelloEntities db, int medicalProceduresMaxCount = 0, string rootCerebelloPath = null, Action<int, int> progress = null)
+        {
+            Firestarter.Initialize_SYS_MedicalEntity(db);
+            Firestarter.Initialize_SYS_MedicalSpecialty(db);
+            if (medicalProceduresMaxCount > 0)
+                Firestarter.Initialize_SYS_MedicalProcedures(
+                    db,
+                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
+                    medicalProceduresMaxCount,
+                    progress);
         }
     }
 }

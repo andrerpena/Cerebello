@@ -161,7 +161,7 @@
     </None>
     <None Include="Uncommited.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Shadow Include="Test References\CerebelloWebRole.accessor" />
   </ItemGroup>

@@ -110,10 +110,12 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
+    <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
+    <Compile Include="Areas\App\Models\LookupGriModels\MedicalProceduresLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\SysMedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />

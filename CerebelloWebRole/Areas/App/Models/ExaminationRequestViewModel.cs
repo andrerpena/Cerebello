@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
@@ -24,10 +20,23 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? PatientId { get; set; }
 
         /// <summary>
-        /// Text of the examination request.
+        /// Id of the medical procedure.
         /// </summary>
-        [Display(Name = "Texto")]
+        [Display(Name = "Procedimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string Text { get; set; }
+        public int MedicalProcedureId { get; set; }
+
+        /// <summary>
+        /// Text of the medical procedure.
+        /// </summary>
+        [Display(Name = "Procedimento")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string MedicalProcedureText { get; set; }
+
+        /// <summary>
+        /// Notes for the examination request.
+        /// </summary>
+        [Display(Name = "Notas")]
+        public string Notes { get; set; }
     }
 }
