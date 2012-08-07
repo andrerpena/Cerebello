@@ -182,7 +182,6 @@
     <Compile Include="Areas\Docs\DocsAreaRegistration.cs" />
     <Compile Include="Code\Business\DropDownListHelper.cs" />
     <Compile Include="Code\Constants.cs" />
-    <Compile Include="Code\Controllers\AppController.cs" />
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
@@ -198,6 +197,7 @@
     <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
     <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />
     <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
+    <Compile Include="Code\Data\UserData.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
@@ -322,6 +322,7 @@
     <Content Include="Content\Styles\App\App.css" />
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
     <Content Include="Content\Styles\App\Controls\grid.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.dropdown.menu.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.lookup.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.paginator.css" />
     <Content Include="Content\Styles\App\Controls\media.css" />
@@ -370,6 +371,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.dropdown.menu.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.lookup.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
     <Content Include="Scripts\date.format.js" />

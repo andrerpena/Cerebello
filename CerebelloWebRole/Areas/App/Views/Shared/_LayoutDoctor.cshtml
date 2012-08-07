@@ -39,96 +39,57 @@
             Configurações</a> </li>
     </ul>
 }
-@section AppTitle {
-    <div class="logo-wrapper">
-        <a href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
-            <img src="/content/images/top-logo.png" />
-        </a>
-    </div>
-    <div class="actions-wrapper">
-        <div class="global-search-wrapper">
-            <input type="text" id="global-search" name="global-search" class="lookup" />
-            <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
-            <script type="text/javascript">
-                $("#global-search").lookup({
-                    contentUrl: "@Url.Action("lookupeverything", "app")",
-                    inputHiddenName: "global-search-hidden",
-                    ajaxParams: {
-                        doctorId: @doctor.Id
-                    },
-                    change: function(data) {
-                        if(data)
-                            window.location = data.Url;
-                    },
-                    columnHeaders: ["Nome", "Tipo"],
-                    columns: ["Value", "Description"]
-                });
-                $("#global-search").watermark({ text: "Pesquisar por paciente ou medicamento" });
-            </script>
 
-            <a id="global-add-new" class="top-bar-menu-button" href="#">Novo</a>
-            <a id="global-schedule-new" class="top-bar-menu-button" href="#">Marcar</a>
-            
-            <div id="global-add-new-balloon" class="balloon">
-                <!-- balloon pointer -->
-                <div class="balloon-pointer">
-                    <div class="balloon-arrow menu-target">
-                    </div>
-                    <div class="balloon-arrow-border">
-                    </div>
-                </div>
-                <!-- balloon content -->
-                <div class="balloon-wrapper">
-                    <div class="balloon-content">
-                        <ul class="global-links">
-                            <li><a class="" href="@Url.Action("create", "patients")">Novo paciente</a></li>
-                            <li><a class="" href="@Url.Action("create", "medicines")">Novo medicamento</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <script type="text/javascript">
-                var add_menu = $("#global-add-new");
-                var add_balloon = $("#global-add-new-balloon");
+@section TopActions {
+    <input type="text" id="global-search" name="global-search" class="lookup" />
+    <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
+    <script type="text/javascript">
+        $("#global-search").lookup({
+            contentUrl: "@Url.Action("lookupeverything", "app")",
+            inputHiddenName: "global-search-hidden",
+            ajaxParams: {
+                doctorId: @doctor.Id
+            },
+            change: function(data) {
+                if(data)
+                    window.location = data.Url;
+            },
+            columnHeaders: ["Nome", "Tipo"],
+            columns: ["Value", "Description"]
+        });
+        $("#global-search").watermark({ text: "Pesquisar por paciente ou medicamento" });
+    </script>
 
-                add_menu.bind("click", function (e) {
-                    e.stopPropagation();
-                    add_balloon.css("left", $(e.target).offset().left);
-                    add_balloon.css("top", $(e.target).offset().top + 10);
-                    add_balloon.show();
-                    handler = function (e2) {
-                        if (!add_balloon.has(e2.target).length) {
-                            add_balloon.hide();
-                            $("html").unbind("click", handler);
-                        }
-                    }
-                    $("html").click("click", handler);
-                });
+    <a id="global-add-new" class="top-bar-menu-button add-new-button" href="#">Novo</a>
+    <a id="global-schedule-new" class="top-bar-menu-button schedule-button" href="#">Marcar</a>
 
-                $(window).resize(function (e) {
-                    add_balloon.hide();
-                });
+    <script type="text/javascript">
 
-                $("#global-schedule-new").click(function (e) {
-                    e.preventDefault();
-                    add_balloon.hide();
-                    $.modal({
-                        url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
-                        title: "Nova consulta",
-                        data: {
-                            date: "@scheduleDateStr",
-                            start: "",
-                            end: "",
-                            doctorId: ""
-                        },
-                        width: 480,
-                        height: 200
-                    });
-                });
-            </script>
-        </div>
-    </div>
+        $("#global-add-new").dropdownMenu({
+            items: [
+                { id: "new-patient", text: "Novo paciente", href: "@Url.Action("create", "patients")" },
+                { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("create", "medicines")" }
+            ]
+        });
+
+        $("#global-schedule-new").click(function (e) {
+            e.preventDefault();
+            $.modal({
+                url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
+                title: "Nova consulta",
+                data: {
+                    date: "@scheduleDateStr",
+                    start: "",
+                    end: "",
+                    doctorId: ""
+                },
+                width: 480,
+                height: 200
+            });
+        });
+    </script>
 }
+
 @section AdditionalTitleInfo {
     @if (IsSectionDefined("AdditionalTitleInfo"))
     {

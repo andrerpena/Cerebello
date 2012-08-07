@@ -14,7 +14,9 @@
     <link href="@Url.Content("~/Content/Styles/App/Controls/media.css")" rel="Stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.paginator.css")" rel="Stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.lookup.css")" rel="Stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/styles/app/Controls/jquery.cerebello.dropdown.menu.css")" rel="Stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/styles/app/jquery.arp.modal.css")" rel="Stylesheet" type="text/css" />
+    
 
     @RenderSection("Styles", false)
 
@@ -35,6 +37,7 @@
     <script src="@Url.Content("~/Scripts/jquery.arp.modal.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.pager.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.lookup.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.dropdown.menu.js")" type="text/javascript"></script>
 
     @RenderSection("Scripts", false) 
 </head>
@@ -46,14 +49,16 @@
         <div class="top-menu">
         </div>
         <div class="title">
-            @if (IsSectionDefined("AppTitle"))
-            {
-                @RenderSection("AppTitle") 
-            }
-            else
-            {
-                @:CareCraft
-            }
+            <div class="logo-wrapper">
+                <a href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
+                    <img src="/content/images/top-logo.png" />
+                </a>
+            </div>
+            <div class="top-actions-bar-wrapper">
+                <div class="top-actions-bar">
+                    @RenderSection("TopActions");
+                </div>
+            </div>
         </div>
     </div>
     <div class="main">
