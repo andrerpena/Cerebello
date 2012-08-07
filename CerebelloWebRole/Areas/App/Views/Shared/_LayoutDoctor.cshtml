@@ -80,7 +80,6 @@
 
                 $("#global-schedule-new").click(function (e) {
                     e.preventDefault();
-                    add_balloon.hide();
                     $.modal({
                         url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
                         title: "Nova consulta",
