@@ -197,7 +197,7 @@
     <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
     <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />
     <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
-    <Compile Include="Code\Data\UserData.cs" />
+    <Compile Include="Code\Data\UserInfo.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />

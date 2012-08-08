@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Code.Mvc;
+using System.Web.Security;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
@@ -57,6 +58,16 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             {
                 return RedirectToAction("index", "practicehome", new { area = "app", practice = loginModel.PracticeIdentifier });
             }
+        }
+
+        /// <summary>
+        /// Signs the user out
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return this.Redirect("/");
         }
 
         protected override void Dispose(bool disposing)

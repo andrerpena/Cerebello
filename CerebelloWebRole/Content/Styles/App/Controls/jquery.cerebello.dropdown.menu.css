@@ -7,7 +7,7 @@
 div.balloon-arrow, div.balloon-arrow-border {
     border-color: transparent transparent #FFFFFF;
     border-style: solid;
-    border-width: 12px;
+    border-width: 10px;
     cursor: pointer;
     font-size: 0;
     left: 32px;
@@ -22,14 +22,14 @@ div.balloon-arrow, div.balloon-arrow-border {
 div.balloon-arrow-border {
     border-color: transparent transparent #CCCCCC;
     border-style: solid;
-    border-width: 12px;
+    border-width: 10px;
     top: -2px;
     z-index: 1001;
 }
 
 div.balloon-pointer {
     position: relative;
-    top: -22px;
+    top: -18px;
     margin: 0 auto;
     width: 120px;
 }

@@ -14,7 +14,7 @@ namespace Test1
     {
         static void Main(string[] args)
         {
-            var rootCerebelloPath = ConfigurationManager.AppSettings["AppRootPath"];
+            var rootCerebelloPath = ConfigurationManager.AppSettings["CerebelloPath"];
 
             bool isToChooseDb = true;
 
