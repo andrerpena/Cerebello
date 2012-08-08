@@ -7,6 +7,8 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
+2012-08-07 22:10-22:20 (0º10") 10   Preparando o commit, mergindo alterações.
+2012-08-07 19:00-19:20 (0º20") 10   Preparando o commit, mergindo alterações.
 2012-08-07 18:30-19:00 (0º30") 10   Alterações no firestarter.
 2012-08-07 16:30-18:30 (2º00")  8   Executando e corrigindo os testes.
 2012-08-07 12:30-16:30 (4º00")  8   Issue #43 e #44: lookup de procedimentos médicos na requisição e no resultado de exames.

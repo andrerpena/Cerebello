@@ -337,7 +337,7 @@
             url: "@Url.Action("FindNextFreeTime")",
             success: function(data) {
                 populateTimeInfo(data);
-                $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                $("#time-validation-icon").removeClass("validation-failed validation-warning").addClass("validation-passed");
                 $("#time-validation-text").html("");
             }
         });
@@ -352,7 +352,7 @@
             },
             success: function(data) {
                 populateTimeInfo(data);
-                $("#time-validation-icon").removeClass("validation-failed").addClass("validation-passed");
+                $("#time-validation-icon").removeClass("validation-failed validation-warning").addClass("validation-passed");
                 $("#time-validation-text").html("");
             }
         });
