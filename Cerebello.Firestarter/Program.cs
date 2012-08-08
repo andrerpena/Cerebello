@@ -14,7 +14,7 @@ namespace Test1
     {
         static void Main(string[] args)
         {
-            var rootCerebelloPath = ConfigurationManager.AppSettings["AppRootPath"];
+            var rootCerebelloPath = ConfigurationManager.AppSettings["CerebelloPath"];
 
             bool isToChooseDb = true;
 
@@ -106,8 +106,9 @@ namespace Test1
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
                             Console.WriteLine();
-                            Console.WriteLine("Loads the file 'script.sql' and executes it.");
-                            Console.WriteLine("You must tell who you are, so that the right file is loaded.");
+                            Console.WriteLine(@"Loads the file '\DB\Scripts\script.sql',");
+                            Console.WriteLine("Changes the collation of columns in the script to 'Latin1_General_CI_AI',");
+                            Console.WriteLine("and then executes the changed script.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
@@ -128,7 +129,9 @@ namespace Test1
                                     string script = File.ReadAllText(Path.Combine(path, "script.sql"));
                                     using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                                     {
-                                        Firestarter.ExecuteScript(db, script);
+                                        var script2 = SqlHelper.SetScriptColumnsCollation(script, "Latin1_General_CI_AI");
+                                        // Creating tables.
+                                        Firestarter.ExecuteScript(db, script2);
                                     }
                                 }
 

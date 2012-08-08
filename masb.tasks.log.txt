@@ -7,7 +7,12 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
-2012-08-07 22:10-22:20 (0º10") 10   Preparando o commit, mergindo alterações.
+2012-08-07 14:40-15:40 (1º00") 10   Issue #50: Alterar o collation das colunas diretamente no script de geração do banco, usando regex. FUNCIONOU!
+2012-08-07 12:00-14:40 (2º40")  7   Procurando saber sobre legislação de Prontuários Eletrônicos.
+2012-08-07 00:00-00:20 (0º30") 10   Issue #50: Alterar o collation do banco após criação das tabelas... não funcionou.
+
+2012-08-07 22:20-24:00 (1º40")  9   Issue #50: Alterar o collation de todas as colunas do banco após execução do script de criação... não funcionou.
+2012-08-07 22:10-22:20 (0º10") 10   Issue #61: Warning na tela de novo compromisso não desaparece ao procurar por próximo horário livre.
 2012-08-07 19:00-19:20 (0º20") 10   Preparando o commit, mergindo alterações.
 2012-08-07 18:30-19:00 (0º30") 10   Alterações no firestarter.
 2012-08-07 16:30-18:30 (2º00")  8   Executando e corrigindo os testes.

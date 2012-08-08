@@ -1189,8 +1189,17 @@ GO
         /// <param name="script"></param>
         public static void ExecuteScript(CerebelloEntities db, string script)
         {
-            var scripts = Regex.Split(script, @"(?<=(?:[\r\n]|^)+\s*)GO(?=\s*(?:[\r\n]|$))", RegexOptions.IgnoreCase);
+            var scripts = SqlHelper.SplitScript(script);
+            ExecuteScripts(db, scripts);
+        }
 
+        /// <summary>
+        /// Executes a SQL script containing GO statements.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="script"></param>
+        public static void ExecuteScripts(CerebelloEntities db, string[] scripts)
+        {
             foreach (var eachScript in scripts)
                 db.ExecuteStoreCommand(eachScript);
         }
