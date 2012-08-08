@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Security;
+using System.Linq;
+using CerebelloWebRole.Code.Data;
 
 namespace CerebelloWebRole.Code
 {
@@ -10,17 +13,50 @@ namespace CerebelloWebRole.Code
     /// </summary>
     public class CerebelloController : Controller
     {
+        /// <summary>
+        /// Object context used throughout all the controller
+        /// </summary>
         protected CerebelloEntities db = null;
+
+        protected UserInfo userInfo = null;
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
+            base.Initialize(requestContext);
+
             // this is because of how tests work
             // if a test controller has been created, this.db has already been populated
             // otherwise let's create a regular one
             if (this.db == null)
                 this.db = new CerebelloEntities();
 
-            base.Initialize(requestContext);
+            // Note that this is not CerebelloController responsability to ensure the user is logged in
+            // or that the user exists, simply because there's no way to return anything here in the 
+            // Initialize method.
+            // The responsability to ensure the user is authenticated and good to go is in the Authorization
+            // filter
+            if (this.Request.IsAuthenticated)
+            {
+                var authenticatedPrincipal = this.User as AuthenticatedPrincipal;
+
+                if (authenticatedPrincipal == null)
+                    throw new Exception("HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
+
+                var user = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+
+                if (user != null)
+                {
+                    this.userInfo = new UserInfo()
+                    {
+                        DisplayName = user.Person.FullName,
+                        GravatarEmailHash = user.GravatarEmailHash,
+                        Id = user.Id
+                    };
+
+                    // this ViewBag will carry user information to the View
+                    this.ViewBag.UserInfo = this.userInfo;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)

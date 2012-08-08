@@ -518,7 +518,7 @@ fieldset legend
 #app-header .title .top-actions-bar-wrapper
 {
     margin-left: 214px;
-    margin-right: 160px;
+    margin-right: 200px;
 }
 
 #app-header .title .top-actions-bar-wrapper input[type=text]
@@ -531,6 +531,32 @@ fieldset legend
 {
     float: left;
     width: 200px;
+}
+
+#app-header .user-menu-wrapper
+{
+    color: #333333;
+    float: right;
+}
+
+#app-header .user-menu-wrapper .picture
+{
+    float: left;
+}
+
+#app-header .user-menu-wrapper .user-menu
+{
+     margin: 6px 0 0 32px;
+}
+
+#app-header .user-menu-wrapper .user-menu .user-name
+{
+    cursor: pointer;
+}
+
+#app-header .user-menu-wrapper .user-menu .arrow-down
+{
+    font-size: 0.9em;
 }
 
 .tabNav

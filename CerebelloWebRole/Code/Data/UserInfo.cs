@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Code.Data
     /// <summary>
     /// This is user information that is present in all application Controllers and in all Views
     /// </summary>
-    public class UserData
+    public class UserInfo
     {
         /// <summary>
         /// User Id

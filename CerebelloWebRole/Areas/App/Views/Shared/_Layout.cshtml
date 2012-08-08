@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var userInfo = this.ViewBag.UserInfo;
+    if (userInfo == null)
+    {
+        throw new Exception("Application layout cannot load. User info is not available");
+    }
+}
+<!DOCTYPE html>
 <html>
 <head>
     <title></title>
@@ -54,13 +61,33 @@
                     <img src="/content/images/top-logo.png" />
                 </a>
             </div>
+            <div class="user-menu-wrapper">
+                <div class="picture">
+                    <img src="http://www.gravatar.com/avatar.php?gravatar_id=@userInfo.GravatarEmailHash&size=24" />
+                </div>
+                <div class="user-menu">
+                    <span class="user-name">
+                        @userInfo.DisplayName
+                    </span>
+                    <span class="arrow-down">▼</span>
+                </div>
+            </div>
             <div class="top-actions-bar-wrapper">
                 <div class="top-actions-bar">
                     @RenderSection("TopActions");
                 </div>
             </div>
+            <div style="clear:both"></div>
         </div>
     </div>
+    <script type="text/javascript">
+        $("#app-header .user-menu-wrapper .user-menu .user-name").dropdownMenu({
+            items: [
+                { id: "profile", text: "Perfil do usuário", href: "@Url.Action("details", "users", new { id = userInfo.Id})" },
+                { id: "logout", text: "Sair", href: "@Url.Action("logout", "authentication", new { area = ""})" }
+            ]
+        });
+    </script>
     <div class="main">
         <div class="menu-column">
             @RenderSection("MainMenu")    
