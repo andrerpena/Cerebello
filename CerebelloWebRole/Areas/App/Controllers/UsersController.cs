@@ -44,7 +44,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Profissao = user.Person.Profession,
 
                 IsAdministrador = user.AdministratorId != null,
-                IsMedic = user.DoctorId != null,
+                IsDoctor = user.DoctorId != null,
                 IsSecretary = user.SecretaryId != null,
 
                 Emails = (from e in user.Person.Emails
@@ -250,11 +250,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
 #warning Must validade all emails, cannot repeat emails in the same practice.
 
-            if (!formModel.IsMedic && !formModel.IsAdministrador && !formModel.IsSecretary)
+            if (!formModel.IsDoctor && !formModel.IsAdministrador && !formModel.IsSecretary)
                 this.ModelState.AddModelError("", "Usuário tem que ter pelo menos uma função: médico, administrador ou secretária.");
 
             // If the user being edited is a medic, then we must check the fields that are required for medics.
-            if (formModel.IsMedic)
+            if (formModel.IsDoctor)
             {
                 if (string.IsNullOrWhiteSpace(formModel.MedicCRM))
                     this.ModelState.AddModelError(
@@ -281,7 +281,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 user.Person.Profession = formModel.Profissao;
 
                 // when the user is a doctor, we need to fill the properties of the doctor
-                if (formModel.IsMedic)
+                if (formModel.IsDoctor)
                 {
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance

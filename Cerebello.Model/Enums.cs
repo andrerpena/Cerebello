@@ -144,13 +144,4 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Sub-cutâneo")]
         Subcutaneo
     }
-
-    public enum TypeUserRole
-    {
-        [Display(Name = "Secretária")]
-        Secretary = 0,
-
-        [Display(Name = "Médico")]
-        Doctor = 50
-    }
 }
