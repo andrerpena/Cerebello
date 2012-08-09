@@ -395,7 +395,7 @@ namespace CerebelloWebRole.Tests
                     {
                         new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
                     },
-                    IsMedic = true,
+                    IsDoctor = true,
                     MedicCRM = "", // Missing CRM.
                 });
             }
@@ -458,7 +458,7 @@ namespace CerebelloWebRole.Tests
                     {
                         new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
                     },
-                    IsMedic = true,
+                    IsDoctor = true,
                     MedicCRM = "98237",
                     MedicalEntity = this.db.SYS_MedicalEntity.First().Id,
                     MedicalSpecialty = this.db.SYS_MedicalSpecialty.First().Id,
@@ -715,7 +715,7 @@ namespace CerebelloWebRole.Tests
                 var viewResult = (ViewResult)actionResult;
                 Assert.IsInstanceOfType(viewResult.Model, typeof(UserViewModel));
                 var model = (UserViewModel)viewResult.Model;
-                Assert.IsTrue(model.IsMedic, "User is not medic.");
+                Assert.IsTrue(model.IsDoctor, "User is not medic.");
                 Assert.IsTrue(viewResult.ViewName == "Details" || viewResult.ViewName == "", "Wrong view name.");
                 Assert.IsTrue(controller.ModelState.IsValid);
             }

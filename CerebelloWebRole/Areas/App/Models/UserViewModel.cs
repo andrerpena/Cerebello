@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public bool IsSecretary { get; set; }
 
         [Display(Name = "Médico(a)")]
-        public bool IsMedic { get; set; }
+        public bool IsDoctor { get; set; }
 
         // Information of this user when he/she is a medic.
         // If IsMedic is false, these properties have no meaning.

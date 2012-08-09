@@ -1,5 +1,5 @@
 ﻿@{
-    var userInfo = this.ViewBag.UserInfo;
+    var userInfo = this.ViewBag.UserInfo as CerebelloWebRole.Code.Data.UserInfo;
     if (userInfo == null)
     {
         throw new Exception("Application layout cannot load. User info is not available");
@@ -81,8 +81,12 @@
         </div>
     </div>
     <script type="text/javascript">
-        $("#app-header .user-menu-wrapper .user-menu .user-name").dropdownMenu({
+        $("#app-header .user-menu-wrapper").dropdownMenu({
             items: [
+                @if(userInfo.DoctorId.HasValue)
+                {
+                    @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("index", "doctorhome", new { doctor = userInfo.DoctorUrlIdentifier })" },
+                }
                 { id: "profile", text: "Perfil do usuário", href: "@Url.Action("details", "users", new { id = userInfo.Id})" },
                 { id: "logout", text: "Sair", href: "@Url.Action("logout", "authentication", new { area = ""})" }
             ]

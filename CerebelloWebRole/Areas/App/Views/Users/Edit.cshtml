@@ -30,7 +30,7 @@
     var editPanelRoles = this.Html.CreateEditPanel();
     editPanelRoles.AddField(m => m.IsAdministrador);
     editPanelRoles.AddField(m => m.IsSecretary);
-    editPanelRoles.AddField(m => m.IsMedic);
+    editPanelRoles.AddField(m => m.IsDoctor);
 
     var editPanelMedic = this.Html.CreateEditPanel();
     editPanelMedic.AddField(m => m.MedicCRM);
@@ -115,7 +115,7 @@ Cadastrar um novo usuário
     
     @editPanelRoles.GetHtml()
     
-    <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsMedic ? "" : "style=\"display: none\""))>
+    <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsDoctor ? "" : "style=\"display: none\""))>
         <p class="form-title">
             Informações do médico
         </p>

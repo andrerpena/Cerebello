@@ -24,5 +24,15 @@ namespace CerebelloWebRole.Code.Data
         /// Gravatar Email Hash
         /// </summary>
         public string GravatarEmailHash { get; set; }
+
+        /// <summary>
+        /// The doctor's id, if it's a doctor
+        /// </summary>
+        public int? DoctorId { get; set; }
+
+        /// <summary>
+        /// The doctor's URL identifieer, if it's a doctor
+        /// </summary>
+        public string DoctorUrlIdentifier { get; set; }
     }
 }

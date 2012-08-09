@@ -48,9 +48,12 @@ namespace CerebelloWebRole.Code
                 {
                     this.userInfo = new UserInfo()
                     {
+                        Id = user.Id,
                         DisplayName = user.Person.FullName,
                         GravatarEmailHash = user.GravatarEmailHash,
-                        Id = user.Id
+                        // the following properties will only be set if the current user is a doctor
+                        DoctorId = user.DoctorId,
+                        DoctorUrlIdentifier = user.Doctor != null ? user.Person.UrlIdentifier : null
                     };
 
                     // this ViewBag will carry user information to the View

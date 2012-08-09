@@ -537,6 +537,8 @@ fieldset legend
 {
     color: #333333;
     float: right;
+    cursor: pointer;
+    
 }
 
 #app-header .user-menu-wrapper .picture
@@ -546,12 +548,11 @@ fieldset legend
 
 #app-header .user-menu-wrapper .user-menu
 {
-     margin: 6px 0 0 32px;
+     margin: 6px 0 0 30px;
 }
 
 #app-header .user-menu-wrapper .user-menu .user-name
 {
-    cursor: pointer;
 }
 
 #app-header .user-menu-wrapper .user-menu .arrow-down
