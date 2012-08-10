@@ -443,11 +443,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var patient = new Patient();
                     patient.Person = new Person();
                     patient.Person.FullName = formModel.PatientName;
-                    patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.PatientName);
                     patient.Person.Gender = (short)formModel.PatientGender;
                     patient.Person.DateOfBirth = formModel.PatientDateOfBirth.Value;
                     patient.Person.CreatedOn = this.UtcNowGetter();
                     patient.Doctor = this.Doctor;
+
+                    // Creating an unique UrlIdentifier for this patient.
+                    // This does not consider UrlIdentifier's used by the users of the software.
+                    var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
+
+                    var urlId = PatientsController.GetUniquePatientUrlId(this.db, formModel.PatientName, practiceId);
+                    if (urlId == null)
+                    {
+                        this.ModelState.AddModelError(
+                            () => formModel.PatientName,
+                            // Todo: this message is also used in the AuthenticationController.
+                            "Quantidade máxima de homônimos excedida.");
+                    }
+                    patient.Person.UrlIdentifier = urlId;
 
                     appointment.Patient = patient;
 

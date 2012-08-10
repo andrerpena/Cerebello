@@ -88,18 +88,18 @@ namespace CerebelloWebRole.Code
                     case UnicodeCategory.LowercaseLetter:
                     case UnicodeCategory.UppercaseLetter:
                     case UnicodeCategory.DecimalDigitNumber:
-                        stringBuilder.Append(c);
+                        stringBuilder.Append(char.ToLowerInvariant(c));
                         break;
                     case UnicodeCategory.SpaceSeparator:
                     case UnicodeCategory.ConnectorPunctuation:
                     case UnicodeCategory.DashPunctuation:
-                        stringBuilder.Append('_');
+                        //stringBuilder.Append('_');
                         break;
                 }
             }
 
             string result = stringBuilder.ToString();
-            result = Regex.Replace(result, @"_+", "_"); // remove duplicate underscores
+            //result = Regex.Replace(result, @"_+", "_"); // remove duplicate underscores
             return result;
         }
 

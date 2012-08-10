@@ -9,6 +9,7 @@ using CerebelloWebRole.Code.Security.Principals;
 using System.Linq;
 using CerebelloWebRole.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
 
 namespace CerebelloWebRole.Code
 {
@@ -66,19 +67,12 @@ namespace CerebelloWebRole.Code
             }
 
             // Creating an unique UrlIdentifier for this user.
-            var urlIdSrc = StringHelper.GenerateUrlIdentifier(registrationData.FullName);
-            var urlId = urlIdSrc;
-
-            int cnt = 2;
-            while (db.Users.Where(u => u.Person.UrlIdentifier == urlId).Any())
+            // This does not consider UrlIdentifier's used by patients.
+            var urlId = UsersController.GetUniqueUserUrlId(db, registrationData.FullName, practiceId);
+            if (urlId == null)
             {
-                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
-
-                if (cnt > 20)
-                {
-                    createdUser = null;
-                    return CreateUserResult.CouldNotCreateUrlIdentifier;
-                }
+                createdUser = null;
+                return CreateUserResult.CouldNotCreateUrlIdentifier;
             }
 
             // Creating user.

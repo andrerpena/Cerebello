@@ -260,11 +260,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(PatientViewModel formModel)
         {
+            Patient patient = null;
+
             if (ModelState.IsValid)
             {
-                Patient patient = null;
+                bool isEditing = formModel.Id != null;
 
-                if (formModel.Id != null)
+                if (isEditing)
                     patient = db.Patients.Where(p => p.Id == formModel.Id).First();
                 else
                 {
@@ -281,11 +283,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.CreatedOn = DateTime.UtcNow;
                 patient.Person.DateOfBirth = formModel.DateOfBirth;
                 patient.Person.FullName = formModel.FullName;
-                patient.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.FullName);
                 patient.Person.Gender = (short)formModel.Gender;
                 patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
+
+                // Creating an unique UrlIdentifier for this patient.
+                // This does not consider UrlIdentifier's used by the users of the software.
+                var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
+
+                string urlId = GetUniquePatientUrlId(this.db, formModel.FullName, practiceId);
+                if (urlId == null)
+                {
+                    this.ModelState.AddModelError(
+                        () => formModel.FullName,
+                        // Todo: this message is also used in the AuthenticationController.
+                        "Quantidade máxima de homônimos excedida.");
+                }
+                patient.Person.UrlIdentifier = urlId;
 
                 patient.Person.Addresses.Update(
                     formModel.Addresses,
@@ -312,13 +327,42 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     },
                     (m) => this.db.Emails.DeleteObject(m)
                 );
+            }
 
+            if (this.ModelState.IsValid)
+            {
                 db.SaveChanges();
 
                 return RedirectToAction("details", new { id = patient.Id });
             }
 
             return View("Edit", formModel);
+        }
+
+        public static string GetUniquePatientUrlId(CerebelloEntities db, string fullName, int practiceId)
+        {
+            // todo: this method has been cloned in firestarter
+
+            // Creating an unique UrlIdentifier for this patient.
+            // When another patient have the same UrlIdentifier, we try to append a
+            // number after the string so that it becomes different, and if it is also used
+            // then increment the number and try again.
+            var urlIdSrc = StringHelper.GenerateUrlIdentifier(fullName);
+            var urlId = urlIdSrc;
+
+            // todo: there is a concurrency problem here.
+            int cnt = 2;
+            while (db.Patients
+                .Where(p => p.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
+                .Where(p => p.Person.UrlIdentifier == urlId).Any())
+            {
+                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
+
+                if (cnt > 20)
+                    return null;
+            }
+
+            return urlId;
         }
 
         [HttpGet]

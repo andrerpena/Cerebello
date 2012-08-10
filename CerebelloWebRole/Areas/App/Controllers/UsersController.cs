@@ -279,9 +279,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 user.Person.CPF = formModel.CPF;
                 user.Person.CPFOwner = formModel.CPFOwner;
                 user.Person.CreatedOn = DateTime.UtcNow;
-                user.Person.UrlIdentifier = StringHelper.GenerateUrlIdentifier(formModel.FullName);
                 user.Person.MaritalStatus = formModel.MaritalStatus;
                 user.Person.Profession = formModel.Profissao;
+
+                var practiceId = this.Practice.Id;
+
+                // Creating an unique UrlIdentifier for this user.
+                // This does not consider UrlIdentifier's used by patients.
+                string urlId = GetUniqueUserUrlId(this.db, formModel.FullName, practiceId);
+                if (urlId == null)
+                {
+                    this.ModelState.AddModelError(
+                        () => formModel.FullName,
+                        // Todo: this message is also used in the AuthenticationController.
+                        "Quantidade máxima de homônimos excedida.");
+                }
+                user.Person.UrlIdentifier = urlId;
 
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (formModel.IsDoctor)
@@ -373,6 +386,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .ToList();
 
             return View("Edit", formModel);
+        }
+
+        public static string GetUniqueUserUrlId(CerebelloEntities db, string fullName, int? practiceId)
+        {
+            // todo: this piece of code is very similar to SetPatientUniqueUrlIdentifier.
+
+            var urlIdSrc = StringHelper.GenerateUrlIdentifier(fullName);
+            var urlId = urlIdSrc;
+
+            // todo: there is a concurrency problem here.
+            int cnt = 2;
+            while (db.Users.Where(u => u.Person.UrlIdentifier == urlId && u.PracticeId == practiceId).Any())
+            {
+                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
+
+                if (cnt > 20)
+                    return null;
+            }
+
+            return urlId;
         }
 
         public ActionResult Details(int id)
