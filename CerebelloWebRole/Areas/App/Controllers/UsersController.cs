@@ -165,10 +165,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             bool isEditing = formModel.Id != null;
 
+            this.ViewBag.IsEditing = isEditing;
+
             User user;
 
             // Normalizing the name of the person.
-            formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
+            if (!string.IsNullOrEmpty(formModel.FullName))
+                formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
 
             if (isEditing)
             {

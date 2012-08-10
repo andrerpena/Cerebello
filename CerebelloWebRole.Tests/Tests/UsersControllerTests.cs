@@ -51,6 +51,41 @@ namespace CerebelloWebRole.Tests
 
         #region Create
         /// <summary>
+        /// Tests the creation of an user without data.
+        /// This is an invalid operation and should complete with a lot of validation messages.
+        /// </summary>
+        [TestMethod]
+        public void Create_AllFieldsEmpty()
+        {
+            UsersController controller;
+            try
+            {
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository();
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Creating a new user without an e-mail.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Create(new UserViewModel());
+            }
+
+            // Verifying the ActionResult, and the DB.
+            // - The controller ModelState must have no validation errors related to e-mail.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState should be invalid.");
+        }
+
+        /// <summary>
         /// Tests the creation of an user without e-mail.
         /// This is a valid operation and should complete without exceptions,
         /// and without validation errors.

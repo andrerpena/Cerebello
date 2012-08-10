@@ -7,10 +7,17 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
-2012-08-07 14:40-15:40 (1º00") 10   Issue #50: Alterar o collation das colunas diretamente no script de geração do banco, usando regex. FUNCIONOU!
-2012-08-07 12:00-14:40 (2º40")  7   Procurando saber sobre legislação de Prontuários Eletrônicos.
-2012-08-07 00:00-00:20 (0º30") 10   Issue #50: Alterar o collation do banco após criação das tabelas... não funcionou.
+2012-08-09 16:30-17:30 (1º00")  8   Melhorias no firestarter.
+2012-08-09 14:30-16:00 (1º30")  8   Issue #28: BUG - A tela de cadastrar nova conta de usuário dá pau quando vc não preenche nada.
 
+2012-08-09 14:00-18:00 (4º00")  4   Geração de UrlIdentifier para pacientes e melhorias na geração de UrlIdentifiers.
+
+-- 4º10" (?º??")
+2012-08-08 14:40-15:40 (1º00") 10   Issue #50: Alterar o collation das colunas diretamente no script de geração do banco, usando regex. FUNCIONOU!
+2012-08-08 12:00-14:40 (2º40")  7   Procurando saber sobre legislação de Prontuários Eletrônicos.
+2012-08-08 00:00-00:20 (0º30") 10   Issue #50: Alterar o collation do banco após criação das tabelas... não funcionou.
+
+-- 8º40" (?º??")
 2012-08-07 22:20-24:00 (1º40")  9   Issue #50: Alterar o collation de todas as colunas do banco após execução do script de criação... não funcionou.
 2012-08-07 22:10-22:20 (0º10") 10   Issue #61: Warning na tela de novo compromisso não desaparece ao procurar por próximo horário livre.
 2012-08-07 19:00-19:20 (0º20") 10   Preparando o commit, mergindo alterações.
@@ -18,6 +25,7 @@ yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 2012-08-07 16:30-18:30 (2º00")  8   Executando e corrigindo os testes.
 2012-08-07 12:30-16:30 (4º00")  8   Issue #43 e #44: lookup de procedimentos médicos na requisição e no resultado de exames.
 
+-- 1º10" (?º??")
 2012-08-06 19:00-19:40 (0º40")  8   Firestarter deve gravar tabela CBHPM no banco.
 2012-08-06 16:50-17:20 (0º30")  8   Firestarter deve gravar tabela CBHPM no banco.
 

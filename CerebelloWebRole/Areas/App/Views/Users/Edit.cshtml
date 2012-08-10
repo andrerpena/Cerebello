@@ -6,17 +6,21 @@
 
     var editPanel = this.Html.CreateEditPanel();
 
-    if (Model == null)
+    if (this.ViewBag.IsEditing == false)
     {
         // If Model is null, then the user is being created now,
         // so we allow the user name to be changed.
         editPanel.AddField(m => m.UserName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
     }
-    else
+    else if (this.ViewBag.IsEditing == true)
     {
         // If Model is not null, then the user already existed before,
         // we cannot allow the user-name to be edited.
         editPanel.AddField(m => m.UserName, @<text>@Model.UserName</text>);
+    }
+    else
+    {
+        throw new Exception("'ViewBag.IsEditing' must be either true or false.");
     }
 
     editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
@@ -80,7 +84,7 @@
         }
 
         $(function() {
-            $('#IsMedic').change(function() {
+            $('#IsDoctor').change(function() {
               if ($(this).is(':checked')) $('#MedicEditPanel').show();
               else $('#MedicEditPanel').hide();
             });

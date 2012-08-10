@@ -8,10 +8,6 @@ Desc = Descrição do item.
 S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
-x   P0 Extrair informações do CBHPM 6a edição de 2010.
-
-x   P0 Método Create [GET] deve aceitar flag indicand se deve procurar o próximo horário livre automaticamente.
-x   P0 Teste para action de criar agendamento ir para a tela já com o próximo horário livre selecionado.
 
     P0 Testes para verificar a ViewBag.IsEditing das actions Create e Edit tanto pra GET quanto pra POST.
     P0 Teste para salvamento de novo compromisso.
@@ -69,6 +65,9 @@ x   P0 Teste para action de criar agendamento ir para a tela já com o próximo ho
     P8 Quando o foco estiver na Combo, parece que não tem nada focado.
     P9 Quando não existe nenhum usuário, não pode dar pau na tela do consultório.
 
+x   P0 Extrair informações do CBHPM 6a edição de 2010.
+x   P0 Método Create [GET] deve aceitar flag indicand se deve procurar o próximo horário livre automaticamente.
+x   P0 Teste para action de criar agendamento ir para a tela já com o próximo horário livre selecionado.
 x   P0 Validação de horário de agendamento de compromisso deve respeitar horário de almoço. Mas deve ser possível forçar a marcação.
 x   P0 Teste para marcação de compromisso no horário de almoço.
 x   P0 Remover localização automática de horário ao abrir a tela de criar agendamento.
