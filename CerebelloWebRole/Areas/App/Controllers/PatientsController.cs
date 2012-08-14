@@ -458,6 +458,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(model);
         }
 
+        public ActionResult EmailEditor(EmailViewModel viewModel)
+        {
+            return this.View(viewModel);
+        }
+
         public ActionResult AddressEditor(AddressViewModel viewModel)
         {
             // there seems to be a BUG regarding DropdownListFors inside editor templates

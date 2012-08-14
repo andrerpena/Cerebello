@@ -93,7 +93,11 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="Email" EntitySet="Email" />
           </AssociationSet>
-          <AssociationSet Name="FK_ExaminationRequest_SYS_MedicalProcedures1" Association="cerebelloModel.Store.FK_ExaminationRequest_SYS_MedicalProcedures1">
+          <AssociationSet Name="FK_ExaminationRequest_Patient" Association="cerebelloModel.Store.FK_ExaminationRequest_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="ExaminationRequest" EntitySet="ExaminationRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExaminationRequest_SYS_MedicalProcedures" Association="cerebelloModel.Store.FK_ExaminationRequest_SYS_MedicalProcedures">
             <End Role="SYS_MedicalProcedure" EntitySet="SYS_MedicalProcedure" />
             <End Role="ExaminationRequest" EntitySet="ExaminationRequest" />
           </AssociationSet>
@@ -518,6 +522,7 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="Number" Type="varchar" Nullable="false" MaxLength="20" />
+          <Property Name="Type" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -787,7 +792,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ExaminationRequest_SYS_MedicalProcedures1">
+        <Association Name="FK_ExaminationRequest_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+          <End Role="ExaminationRequest" Type="cerebelloModel.Store.ExaminationRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExaminationRequest">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExaminationRequest_SYS_MedicalProcedures">
           <End Role="SYS_MedicalProcedure" Type="cerebelloModel.Store.SYS_MedicalProcedure" Multiplicity="1" />
           <End Role="ExaminationRequest" Type="cerebelloModel.Store.ExaminationRequest" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1519,6 +1536,7 @@
           <Property Name="PersonId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Person" Relationship="Cerebello.Model.FK_Phone_Person" FromRole="Phone" ToRole="Person" />
           <Property Type="String" Name="Number" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Type" Nullable="false" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -2432,7 +2450,8 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Phones"><EntityTypeMapping TypeName="Cerebello.Model.Phone"><MappingFragment StoreEntitySet="Phone">
-            <ScalarProperty Name="Number" ColumnName="Number" />
+            <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>

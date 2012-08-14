@@ -486,6 +486,7 @@ CREATE TABLE [dbo].[Phone](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PersonId] [int] NOT NULL,
 	[Number] [varchar](20) NOT NULL,
+	[Type] [int] NOT NULL,
  CONSTRAINT [PK_PersonPhone] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

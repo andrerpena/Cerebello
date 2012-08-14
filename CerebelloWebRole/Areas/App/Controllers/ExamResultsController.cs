@@ -26,6 +26,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 PatientId = examResult.PatientId,
                 Text = examResult.Text,
                 MedicalProcedureId = examResult.MedicalProcedureId,
+                MedicalProcedureCode = examResult.SYS_MedicalProcedure.Code,
                 MedicalProcedureText = examResult.SYS_MedicalProcedure.Name,
             };
         }

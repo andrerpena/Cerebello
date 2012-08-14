@@ -20,8 +20,8 @@
             $.ajax({
                 url: "@Url.Action(this.Model.ListParialViewName)",
                 success: function (result) {
-                    var $list = $(".@Model.ListClass");
-                    $(".@Model.ListClass").append(result);
+                    var $list = $(".@Model.ListCustomClass");
+                    $(".@Model.ListCustomClass").append(result);
                 }
             });
         });

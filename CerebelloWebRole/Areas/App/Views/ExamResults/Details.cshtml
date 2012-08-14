@@ -5,24 +5,12 @@
 <div class="examresult-details medical-appointment-details-panel" data-val-id="examresult-@Model.Id">
     @if (Model != null)
     {
-        <table class="view-table">
-            <tr>
-                <th>
-                    @Html.LabelFor(model => model.MedicalProcedureText)
-                </th>
-                <td>
-                    @Html.DisplayFor(model => model.MedicalProcedureText)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.LabelFor(model => model.Text)
-                </th>
-                <td>
-                    @Html.DisplayFor(model => model.Text)
-                </td>
-            </tr>
-        </table>
+        var cardView = this.Html.CreateCardView();
+        cardView.AddField(model => model.MedicalProcedureText, wholeRow: true);
+        cardView.AddField(model => model.MedicalProcedureCode, wholeRow: true);
+        cardView.AddField(model => model.Text, wholeRow: true);
+
+        @cardView.GetHtml()
     }
     <div class="inline-link-bar">
         <a href="#" class="edit-examresult inline-link" >Editar resultado de exame</a>

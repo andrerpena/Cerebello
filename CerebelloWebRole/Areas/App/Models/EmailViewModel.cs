@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -12,6 +13,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Endereço")]
         [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Address { get; set; }
     }
 }

@@ -5,27 +5,12 @@
 <div class="examrequest-details medical-appointment-details-panel" data-val-id="examrequest-@Model.Id">
     @if (Model != null)
     {
-        <table class="view-table">
-            <tr>
-                <th>
-                    @Html.LabelFor(model => model.MedicalProcedureText)
-                </th>
-                <td>
-                    @Html.DisplayFor(model => model.MedicalProcedureText)
-                </td>
-            </tr>
-            @if (!string.IsNullOrEmpty(this.Model.Notes))
-            { 
-            <tr>
-                <th>
-                    @Html.LabelFor(model => model.Notes)
-                </th>
-                <td>
-                    @Html.DisplayFor(model => model.Notes)
-                </td>
-            </tr>
-            }
-        </table>
+        var cardView = this.Html.CreateCardView();
+        cardView.AddField(model => model.MedicalProcedureText, wholeRow: true);
+        cardView.AddField(model => model.MedicalProcedureCode, wholeRow: true);
+        cardView.AddField(model => model.Notes, wholeRow: true);
+
+        @cardView.GetHtml()
     }
     <div class="inline-link-bar">
         <a href="#" class="edit-examrequest inline-link" >Editar solicitação de exame</a>

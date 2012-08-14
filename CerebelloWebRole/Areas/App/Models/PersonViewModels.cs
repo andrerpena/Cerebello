@@ -13,8 +13,8 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public PersonViewModel()
         {
-            this.Addresses = new List<AddressViewModel>();
             this.Emails = new List<EmailViewModel>();
+            this.Addresses = new List<AddressViewModel>();
         }
 
         /// <summary>
@@ -55,11 +55,11 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Profissão")]
         public String Profissao { get; set; }
 
-        [Display(Name = "Endereços")]
-        public List<AddressViewModel> Addresses { get; set; }
-
         [Display(Name = "E-mails")]
         public List<EmailViewModel> Emails { get; set; }
+
+        [Display(Name = "Endereços")]
+        public List<AddressViewModel> Addresses { get; set; }
     }
 
     public class CEPInfo

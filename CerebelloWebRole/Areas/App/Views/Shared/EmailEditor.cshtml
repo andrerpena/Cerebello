@@ -1,0 +1,13 @@
+﻿@model CerebelloWebRole.Areas.App.Models.EmailViewModel
+@{
+    this.Layout = null;
+
+    var editPanel = this.Html.CreateEditPanel();
+    editPanel.AddField(m => m.Address);
+}
+
+@using (Html.BeginCollectionItem("Emails"))
+{
+    @Html.HiddenFor(model => model.Id)
+    @editPanel.GetHtml()
+}

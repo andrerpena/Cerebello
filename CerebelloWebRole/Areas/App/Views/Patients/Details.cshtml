@@ -3,15 +3,20 @@
 @{
     ViewBag.Title = "Create";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
-    
+
     string retornoDateStr = this.ViewBag.UserNow == null ? "" :
         ((DateTime)this.ViewBag.UserNow).AddDays(30).ToString("yyyy-MM-dd");
-    
+
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text> @(((DateTime)@item.DateOfBirth).ToShortDateString())
+    (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.Profissao);
+    cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeMaritalStatus))</text>);
+    cardView.AddField(m => m.CPF);
+    cardView.AddField(m => m.CPFOwner, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeCPFOwner))</text>);
 }
 @section Title {
     Paciente: <b>@Model.FullName</b>
@@ -38,74 +43,87 @@
         });
     </script>
 }
-
 @cardView.GetHtml()
+<p class="details-subtitle">
+    Endereços:</p>
+@for (var i = 0; i < this.Model.Addresses.Count; i++)
+{
+    var addressCardView = Html.CreateCardView();
+    addressCardView.AddField(m => m.Addresses[i].Street, wholeRow: true);
+    addressCardView.AddField(m => m.Addresses[i].Complement);
+    addressCardView.AddField(m => m.Addresses[i].Neighborhood);
+    addressCardView.AddField(m => m.Addresses[i].City);
+    addressCardView.AddField(m => m.Addresses[i].StateProvince);
+    addressCardView.AddField(m => m.Addresses[i].CEP);
+    
+    @addressCardView.GetHtml()
+}
 
-<p class="details-title">Histórico do paciente</p>
+<p class="details-title">
+    Histórico do paciente</p>
 <div class="medical-appointments-panel">
     @if (this.Model.Sessions.Any())
     {
         foreach (var session in this.Model.Sessions)
         {
-            <div class="medical-appointment-panel">
-                <p class="title">
-                    Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(session.Date, CerebelloWebRole.Code.DateTimeHelper.GetTimeZoneNow(), CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
-                </p>
-                @if (session.AnamneseIds.Count > 0)
+        <div class="medical-appointment-panel">
+            <p class="title">
+                Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(session.Date, CerebelloWebRole.Code.DateTimeHelper.GetTimeZoneNow(), CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
+            </p>
+            @if (session.AnamneseIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Anamneses</p>
+                foreach (var anamneseId in session.AnamneseIds)
                 {
-                    <p class="subtitle">
-                        Anamneses</p>
-                    foreach (var anamneseId in session.AnamneseIds)
-                    {
-                        @Html.Action("details", "anamneses", new { id = anamneseId })
-                    }
+                @Html.Action("details", "anamneses", new { id = anamneseId })
                 }
-                @if (session.ReceiptIds.Count > 0)
+            }
+            @if (session.ReceiptIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Receitas</p>
+                foreach (var receiptId in session.ReceiptIds)
                 {
-                    <p class="subtitle">
-                        Receitas</p>
-                    foreach (var receiptId in session.ReceiptIds)
-                    {
-                        @Html.Action("details", "receipts", new { id = receiptId })
-                    }
+                @Html.Action("details", "receipts", new { id = receiptId })
                 }
-                @if (session.ExaminationRequestIds.Count > 0)
+            }
+            @if (session.ExaminationRequestIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Solicitações de exames</p>
+                foreach (var receiptId in session.ExaminationRequestIds)
                 {
-                    <p class="subtitle">
-                        Solicitações de exames</p>
-                    foreach (var receiptId in session.ExaminationRequestIds)
-                    {
-                        @Html.Action("details", "exams", new { id = receiptId })
-                    }
+                @Html.Action("details", "exams", new { id = receiptId })
                 }
-                @if (session.ExaminationResultIds.Count > 0)
+            }
+            @if (session.ExaminationResultIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Resultados de exames</p>
+                foreach (var examResultId in session.ExaminationResultIds)
                 {
-                    <p class="subtitle">
-                        Resultados de exames</p>
-                    foreach (var examResultId in session.ExaminationResultIds)
-                    {
-                        @Html.Action("details", "examresults", new { id = examResultId })
-                    }
+                @Html.Action("details", "examresults", new { id = examResultId })
                 }
-                @if (session.MedicalCertificateIds.Count > 0)
+            }
+            @if (session.MedicalCertificateIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Atestados médicos</p>
+                foreach (var certificateId in session.MedicalCertificateIds)
                 {
-                    <p class="subtitle">
-                        Atestados médicos</p>
-                    foreach (var certificateId in session.MedicalCertificateIds)
-                    {
-                        @Html.Action("details", "medicalcertificates", new { id = certificateId })
-                    }
+                @Html.Action("details", "medicalcertificates", new { id = certificateId })
                 }
-            </div>
+            }
+        </div>
         }
     }
     else
     {
         @Html.Message("O paciente não possui histórico")
     }
-
-    <p class="details-title">Nova consulta</p>
-
+    <p class="details-title">
+        Nova consulta</p>
     <div class="new-medical-appointment-panel-wrapper">
         <div class="new-medical-appointment-panel">
             <!-- anamnese -->

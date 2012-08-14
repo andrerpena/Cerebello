@@ -34,6 +34,13 @@ namespace CerebelloWebRole.Areas.App.Models
         public string MedicalProcedureText { get; set; }
 
         /// <summary>
+        /// Code of the medical procedure.
+        /// </summary>
+        [Display(Name = "Código do procedimento")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string MedicalProcedureCode { get; set; }
+
+        /// <summary>
         /// Text of the examination request.
         /// </summary>
         [Display(Name = "Texto")]
