@@ -25,56 +25,99 @@ namespace Test1
             // New options:
             while (true)
             {
-                if (isToChooseDb)
+                while (isToChooseDb)
                 {
                     if (wasAttached)
                     {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("Detaching DB... ");
+
                         using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                             Firestarter.DetachLocalDatabase(db);
 
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine("DB detached.");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("DONE");
                     }
 
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Black;
 
                     // Getting available connections from ConfigurationManager so that user can choose one.
-                    Console.Clear();
                     Console.WriteLine("Choose connection to use:");
 
-                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Dictionary<string, string> connStr = new Dictionary<string, string>();
                     for (int idxConnStr = 0; idxConnStr < ConfigurationManager.ConnectionStrings.Count; idxConnStr++)
                     {
                         var connStrSettings = ConfigurationManager.ConnectionStrings[idxConnStr];
                         connStr[idxConnStr.ToString()] = connStrSettings.Name;
-                        Console.WriteLine(string.Format("{0}: {1}", idxConnStr, connStrSettings.Name));
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write(string.Format("{0}: ", idxConnStr));
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(connStrSettings.Name);
                     }
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine();
+                    Console.WriteLine(@"cls: Clear screen.");
+                    Console.WriteLine(@"q:   Quit!");
                     Console.ForegroundColor = ConsoleColor.White;
 
                     Console.WriteLine();
-                    Console.Write("Type the option number and press Enter: ");
+                    Console.Write("Type the option and press Enter: ");
 
                     // User may now choose a connection.
                     int idx;
-                    string userOption = Console.ReadLine();
+                    string userOption = Console.ReadLine().ToLowerInvariant().Trim();
                     if (!int.TryParse(userOption, out idx) || !connStr.TryGetValue(idx.ToString(), out connName))
-                        return;
+                    {
+                        if (userOption == "q" || userOption == "quit")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Bye!");
+                            return;
+                        }
+
+                        if (userOption == "cls")
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Clear();
+                            continue;
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine();
+                        continue;
+                    }
 
                     if (string.IsNullOrWhiteSpace(connName))
-                        return;
-
-                    using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                     {
-                        wasAttached = Firestarter.AttachLocalDatabase(db);
-                        if (wasAttached)
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Cannot connect because the connection string is empty.");
+                        Console.WriteLine();
+                        continue;
+                    }
+
+                    try
+                    {
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                         {
-                            Console.WriteLine();
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("DB attached!");
+                            wasAttached = Firestarter.AttachLocalDatabase(db);
+                            if (wasAttached)
+                            {
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.WriteLine("DB attached!");
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        ConsoleWriteException(ex);
+                        Console.WriteLine();
+                        continue;
+                    }
+
+                    break;
                 }
 
                 isToChooseDb = false;
@@ -87,12 +130,19 @@ namespace Test1
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(@"nu  - Create new user.");
-                Console.WriteLine(@"cls - Clear all data.");
+                Console.WriteLine(@"clr - Clear all data.");
                 Console.WriteLine(@"p1  - Populate database with items (type p1? to know more).");
                 Console.WriteLine(@"sys - Initialize DB with system data.");
                 Console.WriteLine(@"drp - Drop all tables and FKs.");
                 Console.WriteLine(@"crt - Create all tables and FKs using script.");
                 Console.WriteLine(@"db  - Change database.");
+                Console.WriteLine(@"cls - Clear screen.");
+
+                if (wasAttached)
+                    Console.WriteLine(@"atc - Leaves DB attached when done.");
+                else
+                    Console.WriteLine(@"dtc - Detach DB when done.");
+
                 Console.WriteLine(@"q   - Quit.");
                 Console.WriteLine(@"    Type ? after any option to get help.");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -102,6 +152,40 @@ namespace Test1
 
                 switch (userOption1.Trim().ToLowerInvariant())
                 {
+                    case "atc?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("When you are done with the current DB, it will be left attached.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "atc":
+                        wasAttached = false;
+                        break;
+
+                    case "dtc?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("When you are done with the current DB, it is going to be detached.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "dtc":
+                        wasAttached = true;
+                        break;
+
                     case "crt?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -409,6 +493,23 @@ namespace Test1
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
                             Console.WriteLine();
+                            Console.WriteLine("Clears the output from all previous commands.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "cls":
+                        Console.Clear();
+                        break;
+
+                    case "clr?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
                             Console.WriteLine("Methods that will be called:");
                             Console.WriteLine("    ClearAllData");
                             Console.WriteLine();
@@ -419,7 +520,7 @@ namespace Test1
 
                         break;
 
-                    case "cls":
+                    case "clr":
                         {
                             Console.Write("Clear all data (y/n): ");
                             var userClearAll = Console.ReadLine();
@@ -556,6 +657,7 @@ namespace Test1
 
                     case "db":
                         isToChooseDb = true;
+                        Console.WriteLine();
 
                         break;
 

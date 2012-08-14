@@ -9,6 +9,7 @@ using CerebelloWebRole.Code.Security.Principals;
 using System.Linq;
 using CerebelloWebRole.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
 
 namespace CerebelloWebRole.Code
 {
@@ -27,14 +28,23 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Creates a new user and adds it to the storage object context.
         /// </summary>
+        /// <param name="createdUser">Output paramater that returns the new user.</param>
         /// <param name="registrationData">Object containing informations about the user to be created.</param>
         /// <param name="db">Storage object context used to add the new user. It won't be saved, just changed.</param>
-        /// <returns>The new User object.</returns>
+        /// <param name="practiceId">The id of the practice that the new user belongs to.</param>
+        /// <returns>An enumerated value indicating what has happened.</returns>
         public static CreateUserResult CreateUser(out User createdUser, CreateAccountViewModel registrationData, CerebelloEntities db, int? practiceId = null)
         {
             // Password salt and hash.
             string passwordSalt = CipherHelper.GenerateSalt();
             var passwordHash = CipherHelper.Hash(registrationData.Password, passwordSalt);
+
+            // User-name cannot be null, nor empty.
+            if (string.IsNullOrEmpty(registrationData.UserName))
+            {
+                createdUser = null;
+                return CreateUserResult.InvalidUserName;
+            }
 
             // Normalizing user name.
             // The normalized user-name will be used to discover if another user with the same user-name already exists.
@@ -57,19 +67,12 @@ namespace CerebelloWebRole.Code
             }
 
             // Creating an unique UrlIdentifier for this user.
-            var urlIdSrc = StringHelper.GenerateUrlIdentifier(registrationData.FullName);
-            var urlId = urlIdSrc;
-
-            int cnt = 2;
-            while (db.Users.Where(u => u.Person.UrlIdentifier == urlId).Any())
+            // This does not consider UrlIdentifier's used by patients.
+            var urlId = UsersController.GetUniqueUserUrlId(db, registrationData.FullName, practiceId);
+            if (urlId == null)
             {
-                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
-
-                if (cnt > 20)
-                {
-                    createdUser = null;
-                    return CreateUserResult.CouldNotCreateUrlIdentifier;
-                }
+                createdUser = null;
+                return CreateUserResult.CouldNotCreateUrlIdentifier;
             }
 
             // Creating user.
