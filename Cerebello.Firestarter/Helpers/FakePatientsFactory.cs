@@ -125,14 +125,16 @@ namespace Cerebello.Firestarter.Helpers
                 for (var j = 0; j < chosenMiddleNames.Length; j++)
                     chosenMiddleNames[j] = middleNames[random.Next(middleNames.Length)];
 
+                DateTime birthDate = new DateTime(random.Next(1950, 2000), random.Next(1, 13), random.Next(1, 29), 0, 0, 0, DateTimeKind.Utc);
+
                 var patient = new Patient()
                 {
                     Person = new Person()
                     {
                         FullName = firstName + " " + string.Join(" ", chosenMiddleNames),
-                        Gender = (short) gender,
-                        DateOfBirth = Firestarter.ConvertFromDefaultToUtc(new DateTime(random.Next(1950, 2000), random.Next(1, 13), random.Next(1, 29))),
-                        MaritalStatus = (short?) random.Next(0, 4),
+                        Gender = (short)gender,
+                        DateOfBirth = birthDate,
+                        MaritalStatus = (short?)random.Next(0, 4),
                         BirthPlace = "Brasileiro(a)",
                         CPF = "87324128910",
                         CPFOwner = (int)TypeCPFOwner.PatientItself,
