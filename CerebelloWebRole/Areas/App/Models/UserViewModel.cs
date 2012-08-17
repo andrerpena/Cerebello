@@ -30,7 +30,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public bool IsDoctor { get; set; }
 
         // Information of this user when he/she is a medic.
-        // If IsMedic is false, these properties have no meaning.
+        // If IsDoctor is false, these properties have no meaning.
 
         [Display(Name = "CRM")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

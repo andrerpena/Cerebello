@@ -25,6 +25,11 @@ namespace Test1
             // New options:
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine(string.Format("DateTime (UTC):   {0}", DateTime.UtcNow));
+                Console.WriteLine(string.Format("DateTime (Local): {0}", DateTime.Now));
+                Console.WriteLine(string.Format("DateTime (?):     {0}", DateTime.Now.ToUniversalTime()));
+
                 while (isToChooseDb)
                 {
                     if (wasAttached)
@@ -461,12 +466,14 @@ namespace Test1
                                     ConfirmPassword = userPassword,
                                     EMail = userEmail,
                                     FullName = userFullName,
-                                    DateOfBirth = DateTime.Now.AddYears(-userAge),
+                                    DateOfBirth = DateTime.UtcNow.AddYears(-userAge),
                                 };
+
+                                var utcNow = DateTime.UtcNow;
 
                                 // Verifying user-name.
                                 User user;
-                                var result = CerebelloWebRole.Code.SecurityManager.CreateUser(out user, userToCreate, db);
+                                var result = CerebelloWebRole.Code.SecurityManager.CreateUser(out user, userToCreate, db, utcNow, null);
 
                                 Console.ForegroundColor = ConsoleColor.Gray;
                                 Console.WriteLine(string.Format("PasswordSalt = \"{0}\";", user.PasswordSalt));
@@ -533,7 +540,15 @@ namespace Test1
                             {
                                 if (clearAllData)
                                 {
-                                    Firestarter.ClearAllData(db);
+                                    try
+                                    {
+                                        Firestarter.ClearAllData(db);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Program.ConsoleWriteException(ex);
+                                    }
+
                                     Console.ForegroundColor = ConsoleColor.Green;
                                     Console.WriteLine("Done!");
                                     Console.ForegroundColor = ConsoleColor.White;
@@ -570,45 +585,58 @@ namespace Test1
                         break;
 
                     case "p1":
-                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                        try
                         {
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                            Console.WriteLine("Initialize_SYS_MedicalEntity");
-                            Firestarter.Initialize_SYS_MedicalEntity(db);
-                            Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                            Firestarter.Initialize_SYS_MedicalSpecialty(db);
-                            Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                            Firestarter.Initialize_SYS_MedicalProcedures(
-                                db,
-                                Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.WriteLine("Initialize_SYS_MedicalEntity");
+                                Firestarter.Initialize_SYS_MedicalEntity(db);
+                                Console.WriteLine("Initialize_SYS_MedicalSpecialty");
+                                Firestarter.Initialize_SYS_MedicalSpecialty(db);
+                                Console.WriteLine("Initialize_SYS_MedicalProcedures");
+                                Firestarter.Initialize_SYS_MedicalProcedures(
+                                    db,
+                                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
+                                    progress: new Action<int, int>(ConsoleWriteProgressIntInt));
 
-                            Console.WriteLine("CreateFakeUserAndPractice_2");
-                            var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
+                                Console.WriteLine("CreateFakeUserAndPractice_2");
+                                var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
 
-                            db.SaveChanges();
+                                db.SaveChanges();
 
-                            Console.WriteLine("SetupDoctor");
-                            foreach (var doctor in listDoctors)
-                                Firestarter.SetupDoctor(doctor, db);
+                                Console.WriteLine("SetupDoctor");
+                                foreach (var doctor in listDoctors)
+                                    Firestarter.SetupDoctor(doctor, db);
 
-                            db.SaveChanges();
+                                db.SaveChanges();
 
-                            Console.WriteLine("SetupUserData");
-                            foreach (var doctor in listDoctors)
-                                Firestarter.SetupUserData(doctor, db);
+                                Console.WriteLine("SetupUserData");
+                                foreach (var doctor in listDoctors)
+                                    Firestarter.SetupUserData(doctor, db);
 
-                            db.SaveChanges();
+                                db.SaveChanges();
 
-                            Console.WriteLine("CreateFakePatients");
-                            foreach (var doctor in listDoctors)
-                                Firestarter.CreateFakePatients(doctor, db);
+                                Console.WriteLine("CreateFakePatients");
+                                foreach (var doctor in listDoctors)
+                                    Firestarter.CreateFakePatients(doctor, db);
 
-                            db.SaveChanges();
+                                db.SaveChanges();
 
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.ConsoleWriteException(ex);
+
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Partially done!");
                             Console.ForegroundColor = ConsoleColor.White;
+
+                            break;
                         }
 
                         break;
@@ -676,19 +704,50 @@ namespace Test1
 
             while (ex1 != null)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(string.Format("Exception: {0}", ex1.GetType().Name));
-                Console.WriteLine(ex1.Message);
+                // exception type
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(string.Format("Exception: {0}", ex1.GetType().Name));
+                Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
 
+                // message
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.ForegroundColor = ConsoleColor.Red;
+                var lines = Regex.Split(ex1.Message, @"\r\n|\r|\n");
+                foreach (var eachLine in lines)
+                {
+                    Console.Write(eachLine);
+                    if (Console.CursorLeft > 0)
+                        Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
+                }
+
+                // stack-trace
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                int fncLevel = 0;
+                var linesST = Regex.Split(ex1.StackTrace, @"\r\n|\r|\n");
+                foreach (var eachLine in linesST)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(string.Format("{0:0000}:", fncLevel++));
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(eachLine);
+                    if (Console.CursorLeft > 0)
+                        Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
+                }
+
+                // inner exception
                 ex1 = ex1.InnerException;
                 if (ex1 != null)
                 {
+                    Console.BackgroundColor = ConsoleColor.Red;
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("==== inner exception ====");
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("==== inner exception ====");
+                    if (Console.CursorLeft > 0)
+                        Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
                 }
             }
 
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
         }
 

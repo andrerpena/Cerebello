@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="user">User object to be used as source of values.</param>
         /// <returns>A new UserViewModel with informations copied from the User object.</returns>
-        public static UserViewModel GetViewModel(User user)
+        public static UserViewModel GetViewModel(User user, Practice practice)
         {
             var viewModel = new UserViewModel()
             {
@@ -37,7 +37,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 UrlIdentifier = user.Person.UrlIdentifier,
                 ImageUrl = GravatarHelper.GetGravatarUrl(user.GravatarEmailHash, GravatarHelper.Size.s64),
                 Gender = user.Person.Gender,
-                DateOfBirth = user.Person.DateOfBirth,
+                DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth),
                 MaritalStatus = user.Person.MaritalStatus,
                 BirthPlace = user.Person.BirthPlace,
                 CPF = user.Person.CPF,
@@ -138,7 +138,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (id != null)
             {
                 var user = db.Users.Where(p => p.Id == id).First();
-                model = GetViewModel(user);
+                model = GetViewModel(user, this.Practice);
 
                 ViewBag.Title = "Alterando usuário: " + model.FullName;
             }
@@ -167,6 +167,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditing = isEditing;
 
+            var utcNow = this.GetUtcNow();
+
             User user;
 
             // Normalizing the name of the person.
@@ -179,7 +181,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.UserName);
 
                 user = db.Users.Where(p => p.Id == formModel.Id).First();
-                user.Person.DateOfBirth = formModel.DateOfBirth;
                 user.Person.FullName = formModel.FullName;
                 user.Person.Gender = (short)formModel.Gender;
 
@@ -221,7 +222,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     UserName = formModel.UserName,
                     Password = Constants.DEFAULT_PASSWORD,
                     ConfirmPassword = Constants.DEFAULT_PASSWORD,
-                    DateOfBirth = formModel.DateOfBirth,
                     EMail = userEmailStr,
                     FullName = formModel.FullName,
                     Gender = (short)formModel.Gender,
@@ -229,7 +229,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // Creating the new user.
                 // The user belongs to the same practice as the logged user.
-                var result = SecurityManager.CreateUser(out user, userData, this.db, loggedUser.PracticeId);
+                var result = SecurityManager.CreateUser(out user, userData, this.db, utcNow, loggedUser.PracticeId);
 
                 if (result == CreateUserResult.UserNameAlreadyInUse)
                 {
@@ -275,10 +275,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (user != null)
             {
+                user.Person.DateOfBirth = ConvertToUtcDateTime(this.Practice, formModel.DateOfBirth);
                 user.Person.BirthPlace = formModel.BirthPlace;
                 user.Person.CPF = formModel.CPF;
                 user.Person.CPFOwner = formModel.CPFOwner;
-                user.Person.CreatedOn = DateTime.UtcNow;
+                user.Person.CreatedOn = this.GetUtcNow();
                 user.Person.MaritalStatus = formModel.MaritalStatus;
                 user.Person.Profession = formModel.Profissao;
 
@@ -411,7 +412,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Details(int id)
         {
             var user = (User)db.Users.Where(p => p.Id == id).First();
-            var model = GetViewModel(user);
+            var model = GetViewModel(user, this.Practice);
 
             return View(model);
         }
@@ -492,7 +493,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Salvando informações do usuário.
                 var user = this.db.Users.Where(u => u.Id == loggedUser.Id).Single();
                 user.Password = newPasswordHash;
-                user.LastActiveOn = DateTime.Now;
+                user.LastActiveOn = this.GetUtcNow();
 
                 this.db.SaveChanges();
 
@@ -503,9 +504,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
                     RememberMe = false,
                     UserNameOrEmail = loggedUser.UserName,
-                }, this.db);
+                }, this.db, out user);
 
-                if (!ok)
+                if (!ok || user == null)
                     throw new Exception("This should never happen as the login uses the same data provided by the user.");
 
                 return RedirectToAction("index", "practicehome");

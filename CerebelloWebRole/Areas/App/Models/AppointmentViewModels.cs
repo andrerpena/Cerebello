@@ -7,6 +7,7 @@ using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
+    // todo: this class is never used.
     public class CreateAppointmentSimplifiedViewModel
     {
         public DateTime Date { get; set; }

@@ -184,6 +184,7 @@
     <Compile Include="Code\Constants.cs" />
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
+    <Compile Include="Code\Controllers\RootController.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Controls\CardView\CardView.cs" />

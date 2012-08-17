@@ -93,7 +93,11 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="Email" EntitySet="Email" />
           </AssociationSet>
-          <AssociationSet Name="FK_ExaminationRequest_SYS_MedicalProcedures1" Association="cerebelloModel.Store.FK_ExaminationRequest_SYS_MedicalProcedures1">
+          <AssociationSet Name="FK_ExaminationRequest_Patient" Association="cerebelloModel.Store.FK_ExaminationRequest_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="ExaminationRequest" EntitySet="ExaminationRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExaminationRequest_SYS_MedicalProcedures" Association="cerebelloModel.Store.FK_ExaminationRequest_SYS_MedicalProcedures">
             <End Role="SYS_MedicalProcedure" EntitySet="SYS_MedicalProcedure" />
             <End Role="ExaminationRequest" EntitySet="ExaminationRequest" />
           </AssociationSet>
@@ -528,6 +532,7 @@
           <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="OwnerId" Type="int" />
+          <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -787,7 +792,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ExaminationRequest_SYS_MedicalProcedures1">
+        <Association Name="FK_ExaminationRequest_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+          <End Role="ExaminationRequest" Type="cerebelloModel.Store.ExaminationRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExaminationRequest">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExaminationRequest_SYS_MedicalProcedures">
           <End Role="SYS_MedicalProcedure" Type="cerebelloModel.Store.SYS_MedicalProcedure" Multiplicity="1" />
           <End Role="ExaminationRequest" Type="cerebelloModel.Store.ExaminationRequest" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1531,6 +1548,7 @@
           <Property Name="OwnerId" Type="Int32" />
           <NavigationProperty Name="Owner" Relationship="Cerebello.Model.FK_Practice_User" FromRole="Practice" ToRole="User" />
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
+          <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2437,7 +2455,8 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
-            <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
             <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
             <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />

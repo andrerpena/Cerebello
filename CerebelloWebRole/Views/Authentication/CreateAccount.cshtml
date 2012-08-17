@@ -11,12 +11,21 @@
         {
             <fieldset>
                 <div class="controls-wrapper">
+                    @*Properties of the practice*@
                     <div class="control-group">
                         @Html.LabelFor(model => model.PracticeName)
                         <div class="controls">
                             @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge" })
                         </div>
                     </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.PracticeTimeZone)
+                        <div class="controls">
+                            @Html.EnumDropdownListFor(model => model.PracticeTimeZone)
+                        </div>
+                    </div>
+                    <hr />
+                    @*Properties of the user as a person*@
                     <div class="control-group">
                         @Html.LabelFor(model => model.FullName)
                         <div class="controls">
@@ -35,6 +44,8 @@
                             @Html.TextBoxFor(model => model.DateOfBirth)
                         </div>
                     </div>
+                    <hr />
+                    @*Properties of the user as an user*@
                     <div class="control-group">
                         @Html.LabelFor(model => model.UserName)
                         <div class="controls">
@@ -59,10 +70,13 @@
                             @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "input-xlarge" })
                         </div>
                     </div>
+
+                    //TODO: enviar e-mail de confirmação.
+
                 </div>
                 <div class="form-actions" style="margin: 0">
                     <button class="btn btn-primary btn-large" type="submit">
-                        Login</button>
+                        Criar conta</button>
                 </div>
             </fieldset>
         }

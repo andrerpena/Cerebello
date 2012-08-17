@@ -12,13 +12,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public DoctorsController()
         {
-            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
-            this.UtcNowGetter = () => DateTime.UtcNow;
         }
-
-        public Func<DateTime> UserNowGetter { get; set; }
-
-        public Func<DateTime> UtcNowGetter { get; set; }
 
         //
         // GET: /App/PracticeDoctors/
@@ -26,11 +20,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new PracticeDoctorsViewModel();
-            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.UserNowGetter());
+            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow());
             return View(model);
         }
 
-        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice, DateTime userNow)
+        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice, DateTime localNow)
         {
             var usersThatAreDoctors = db.Users
                 .Where(u => u.PracticeId == practice.Id)
@@ -68,7 +62,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     eachItem.MedicalEntityCode,
                     eachItem.MedicalEntityJurisdiction);
 
-                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc, userNow, userNow).Item1;
+                var nextSlotInLocalTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db, eachItem.doc, localNow);
+
+                eachItem.vm.NextAvailableTime = nextSlotInLocalTime.Item1;
             }
 
             var doctors = dataCollection.Select(item => item.vm).ToList();

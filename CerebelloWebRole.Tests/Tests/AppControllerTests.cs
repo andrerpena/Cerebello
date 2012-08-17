@@ -62,7 +62,7 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     FullName = "Joao Manuel da Silva",
                     Gender = (int)TypeGender.Male,
-                    DateOfBirth = new DateTime(1982, 10, 12),
+                    DateOfBirth = Firestarter.ConvertFromDefaultToUtc(new DateTime(1982, 10, 12)),
                     MaritalStatus = (int)TypeMaritalStatus.Casado,
                     BirthPlace = "Brasileiro",
                     CPF = "87324128910",
@@ -92,7 +92,7 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     FullName = "Manuela Moreira da Silva",
                     Gender = (int)TypeGender.Female,
-                    DateOfBirth = new DateTime(1982, 10, 12),
+                    DateOfBirth = Firestarter.ConvertFromDefaultToUtc(new DateTime(1982, 10, 12)),
                     MaritalStatus = (int)TypeMaritalStatus.Casado,
                     BirthPlace = "Brasileiro",
                     CPF = "87324128910",

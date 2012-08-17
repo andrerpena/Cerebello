@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
@@ -9,9 +7,6 @@ using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Cerebello;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Tests
 {
@@ -99,20 +94,23 @@ namespace CerebelloWebRole.Tests
             bool isDbChanged = false;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 26, 12, 33, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 26, 12, 33, 00, 000, DateTimeKind.Local);
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 07, 26, 12, 33, 00, 000);
 
             try
             {
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
+
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
-                controller.UserNowGetter = () => userNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch
@@ -192,10 +190,10 @@ namespace CerebelloWebRole.Tests
             bool isDbChanged = false;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 07, 25, 12, 00, 00, 000);
 
             try
             {
@@ -203,17 +201,19 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+
                 // Filling current day, so that the next available time slot is on the next day.
-                var start1 = new DateTime(2012, 07, 25, 9, 00, 00, 000, DateTimeKind.Utc);
+                var start1 = TimeZoneInfo.ConvertTimeToUtc(new DateTime(2012, 07, 25, 9, 00, 00, 000), timeZoneInfo);
                 Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start1, TimeSpan.FromHours(3), "Before mid-day.");
-                var start2 = new DateTime(2012, 07, 25, 13, 00, 00, 000, DateTimeKind.Utc);
+                var start2 = TimeZoneInfo.ConvertTimeToUtc(new DateTime(2012, 07, 25, 13, 00, 00, 000), timeZoneInfo);
                 Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start2, TimeSpan.FromHours(5), "After mid-day.");
 
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
-                controller.UserNowGetter = () => userNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch
@@ -252,10 +252,10 @@ namespace CerebelloWebRole.Tests
             bool isDbChanged = false;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 25, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 07, 25, 12, 00, 00, 000);
 
             try
             {
@@ -263,11 +263,13 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
-                controller.UserNowGetter = () => userNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch
@@ -281,7 +283,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create(utcNow.AddDays(30).Date, "", "", (int?)null, true);
+                actionResult = controller.Create(localNow.AddDays(30).Date, "", "", (int?)null, true);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -452,15 +454,15 @@ namespace CerebelloWebRole.Tests
             AppointmentViewModel vm;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow, utcStart, utcEnd;
+            var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
             // We know that Dr. House works only after 13:00, so we need to set appointments after that.
             // 28 days from now in the future.
-            var start = userNow.Date.AddDays(28).AddHours(13); // 2012-07-19 13:00
+            var start = localNow.Date.AddDays(28).AddHours(13); // 2012-07-19 13:00
             var end = start.AddMinutes(30); // 2012-07-19 13:30
 
             try
@@ -469,14 +471,19 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+
                 // Creating an appointment.
                 var appointment = this.db.Appointments.CreateObject();
                 appointment.CreatedBy = docAndre.Users.Single();
-                appointment.CreatedOn = DateTime.Now;
+                appointment.CreatedOn = utcNow;
                 appointment.Description = "This is a generic appointment.";
                 appointment.Doctor = docAndre;
-                appointment.Start = start;
-                appointment.End = end;
+                appointment.Start = utcStart;
+                appointment.End = utcEnd;
                 appointment.Type = (int)TypeAppointment.GenericAppointment;
                 this.db.SaveChanges();
 
@@ -485,7 +492,6 @@ namespace CerebelloWebRole.Tests
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
-                controller.UserNowGetter = () => userNow;
                 controller.UtcNowGetter = () => utcNow;
 
                 // Setting view-model values to create a new appointment.
@@ -545,8 +551,8 @@ namespace CerebelloWebRole.Tests
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
-                    .Where(a => a.Start == start)
-                    .Where(a => a.End == end)
+                    .Where(a => a.Start == utcStart)
+                    .Where(a => a.End == utcEnd)
                     .Count();
 
                 Assert.AreEqual(2, appointmentsCountAtSameTime);
@@ -565,15 +571,15 @@ namespace CerebelloWebRole.Tests
             AppointmentViewModel vm;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow, utcStart, utcEnd;
+            var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // We know that Dr. House works only after 13:00, so we need to set appointments after that.
             // Setting Now to be on an thursday, mid day.
             // 28 days ago. (we are going to create an appointment in the past)
-            var start = userNow.Date.AddDays(-28).AddHours(13);
+            var start = localNow.Date.AddDays(-28).AddHours(13);
             var end = start.AddMinutes(30);
 
             try
@@ -582,13 +588,17 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
-                controller.UserNowGetter = () => userNow;
                 controller.UtcNowGetter = () => utcNow;
 
                 // Setting view-model values to create a new appointment.
@@ -647,8 +657,8 @@ namespace CerebelloWebRole.Tests
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
-                    .Where(a => a.Start == start)
-                    .Where(a => a.End == end)
+                    .Where(a => a.Start == utcStart)
+                    .Where(a => a.End == utcEnd)
                     .Count();
 
                 Assert.AreEqual(1, appointmentsCountAtSameTime);
@@ -667,15 +677,15 @@ namespace CerebelloWebRole.Tests
             AppointmentViewModel vm;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow, utcStart, utcEnd;
+            var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // We know that Dr. House works only after 13:00, so we need to set appointments after that.
             // Setting Now to be on an thursday, mid day.
             // 28 days ago. (we are going to create an appointment in the past)
-            var start = userNow.Date.AddDays(28).AddHours(13);
+            var start = localNow.Date.AddDays(28).AddHours(13);
             var end = start.AddMinutes(30);
 
             try
@@ -691,13 +701,17 @@ namespace CerebelloWebRole.Tests
                 this.db.SYS_Holiday.AddObject(holiday);
                 this.db.SaveChanges();
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
-                controller.UserNowGetter = () => userNow;
                 controller.UtcNowGetter = () => utcNow;
 
                 // Setting view-model values to create a new appointment.
@@ -756,8 +770,8 @@ namespace CerebelloWebRole.Tests
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
-                    .Where(a => a.Start == start)
-                    .Where(a => a.End == end)
+                    .Where(a => a.Start == utcStart)
+                    .Where(a => a.End == utcEnd)
                     .Count();
 
                 Assert.AreEqual(1, appointmentsCountAtSameTime);
@@ -776,14 +790,14 @@ namespace CerebelloWebRole.Tests
             AppointmentViewModel vm;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow, utcStart, utcEnd;
+            var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
             // We know that Dr. House lunch time is from 12:00 until 13:00.
-            var start = userNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
+            var start = localNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
             var end = start.AddMinutes(30); // 2012-07-19 13:30
 
             try
@@ -792,12 +806,16 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
-                controller.UserNowGetter = () => userNow;
                 controller.UtcNowGetter = () => utcNow;
 
                 // Setting view-model values to create a new appointment.
@@ -857,8 +875,8 @@ namespace CerebelloWebRole.Tests
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
                 int appointmentsCountAtSameTime = db2.Appointments
-                    .Where(a => a.Start == start)
-                    .Where(a => a.End == end)
+                    .Where(a => a.Start == utcStart)
+                    .Where(a => a.End == utcEnd)
                     .Count();
 
                 Assert.AreEqual(1, appointmentsCountAtSameTime);
@@ -878,14 +896,14 @@ namespace CerebelloWebRole.Tests
             AppointmentViewModel vm;
 
             // Dates that will be used by this test.
-            // - utcNow and userNow: used to mock Now values from Utc and User point of view.
+            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            var utcNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Utc);
-            var userNow = new DateTime(2012, 07, 19, 12, 00, 00, 000, DateTimeKind.Local);
+            DateTime utcNow, utcStart, utcEnd;
+            var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
             // We know that Dr. House lunch time is from 12:00 until 13:00.
-            var start = userNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
+            var start = localNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
             var end = start.AddMinutes(30); // 2012-07-19 13:30
 
             try
@@ -894,12 +912,16 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
+                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository();
                 mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
-                controller.UserNowGetter = () => userNow;
                 controller.UtcNowGetter = () => utcNow;
 
                 // Setting view-model values to create a new appointment.
@@ -942,7 +964,7 @@ namespace CerebelloWebRole.Tests
             // Verifying the DB.
             Assert.IsFalse(isDbChanged, "Create actions must not change DB when there is an error.");
         }
-        
+
         #endregion
     }
 }

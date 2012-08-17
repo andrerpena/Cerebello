@@ -7514,13 +7514,15 @@ namespace Cerebello.Model
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
-        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn)
+        /// <param name="windowsTimeZoneId">Initial value of the WindowsTimeZoneId property.</param>
+        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId)
         {
             Practice practice = new Practice();
             practice.Id = id;
             practice.Name = name;
             practice.UrlIdentifier = urlIdentifier;
             practice.CreatedOn = createdOn;
+            practice.WindowsTimeZoneId = windowsTimeZoneId;
             return practice;
         }
 
@@ -7649,6 +7651,30 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _OwnerId;
         partial void OnOwnerIdChanging(Nullable<global::System.Int32> value);
         partial void OnOwnerIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String WindowsTimeZoneId
+        {
+            get
+            {
+                return _WindowsTimeZoneId;
+            }
+            set
+            {
+                OnWindowsTimeZoneIdChanging(value);
+                ReportPropertyChanging("WindowsTimeZoneId");
+                _WindowsTimeZoneId = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("WindowsTimeZoneId");
+                OnWindowsTimeZoneIdChanged();
+            }
+        }
+        private global::System.String _WindowsTimeZoneId;
+        partial void OnWindowsTimeZoneIdChanging(global::System.String value);
+        partial void OnWindowsTimeZoneIdChanged();
 
         #endregion
     

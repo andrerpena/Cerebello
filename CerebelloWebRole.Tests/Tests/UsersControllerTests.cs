@@ -591,7 +591,7 @@ namespace CerebelloWebRole.Tests
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First());
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
@@ -638,7 +638,7 @@ namespace CerebelloWebRole.Tests
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First());
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }

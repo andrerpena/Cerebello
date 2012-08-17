@@ -18,39 +18,16 @@ namespace CerebelloWebRole.Code
         }
 
         // Methods
-        public static int CalculateAge(DateTime birth)
+        [Obsolete("This method is not being used. 2012-08-15.", true)]
+        public static int CalculateAge(DateTime birth, DateTime now)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = now.Date;
             int num = today.Year - birth.Year;
             if (today < birth.AddYears(num))
             {
                 num--;
             }
             return num;
-        }
-
-        /// <summary>
-        /// Returns the "NOW" relative to the current time zone.
-        /// Important: Time is always recorded in database as UTC time.
-        /// </summary>
-        /// <returns></returns>
-        public static DateTime GetTimeZoneNow()
-        {
-            //ToDo: Add logic for obtaining REAL timezone now.
-            // This code is STUB
-            return DateTime.Now;
-        }
-
-        /// <summary>
-        /// Converts a time to the current time zone. The passed time zone is 
-        /// </summary>
-        /// <param name="dateTime"></param>
-        /// <returns></returns>
-        public static DateTime ConvertToCurrentTimeZone(DateTime dateTime)
-        {
-            var currentTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-            var convertedDateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, currentTimeZoneInfo);
-            return convertedDateTime;
         }
 
         public static string GetDayOfWeekAsString(DateTime date)
@@ -84,12 +61,21 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        public static string ConvertToRelative(DateTime dateTime, DateTime now, RelativeDateOptions flags = 0)
+        public static string ConvertToRelative(DateTime localDateTime, DateTime localNow, RelativeDateOptions flags = 0)
         {
-            dateTime = dateTime.Date;
-            now = now.Date;
+            // This method is intended to return a human readable output,
+            // so this means that the dates passed as input to this method must be local to the user.
+            if (localDateTime.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localDateTime' must be expressed in practice time-zone.", "localDateTime");
 
-            TimeSpan span = now - dateTime;
+            if (localNow.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localNow' must be expressed in practice time-zone.", "localNow");
+
+            // todo: WTF??? this is throwing away needed information for this method... it needs the seconds data.
+            localDateTime = localDateTime.Date;
+            localNow = localNow.Date;
+
+            TimeSpan span = localNow - localDateTime;
 
             bool isPast = span.TotalMinutes > 0;
             double totalSeconds = Math.Abs(span.TotalSeconds);
@@ -99,18 +85,18 @@ namespace CerebelloWebRole.Code
 
             bool requiresPreposition = true;
 
-            if ((flags & RelativeDateOptions.ReplaceToday) == RelativeDateOptions.ReplaceToday && dateTime.Date == now.Date)
+            if ((flags & RelativeDateOptions.ReplaceToday) == RelativeDateOptions.ReplaceToday && localDateTime.Date == localNow.Date)
             {
                 requiresPreposition = false;
                 spelledDate = "hoje";
             }
-            else if ((flags & RelativeDateOptions.ReplaceYesterdayAndTomorrow) == RelativeDateOptions.ReplaceYesterdayAndTomorrow && dateTime.Date == now.Date.AddDays(1))
+            else if ((flags & RelativeDateOptions.ReplaceYesterdayAndTomorrow) == RelativeDateOptions.ReplaceYesterdayAndTomorrow && localDateTime.Date == localNow.Date.AddDays(1))
             {
                 requiresPreposition = false;
                 spelledDate = "amanhã";
             }
 
-            else if ((flags & RelativeDateOptions.ReplaceYesterdayAndTomorrow) == RelativeDateOptions.ReplaceYesterdayAndTomorrow && dateTime.Date == now.Date.AddDays(-1))
+            else if ((flags & RelativeDateOptions.ReplaceYesterdayAndTomorrow) == RelativeDateOptions.ReplaceYesterdayAndTomorrow && localDateTime.Date == localNow.Date.AddDays(-1))
             {
                 requiresPreposition = false;
                 spelledDate = "ontem";
@@ -166,9 +152,18 @@ namespace CerebelloWebRole.Code
             return spelledDate;
         }
 
-        public static string ConvertToRelativeShort(DateTime dateTime)
+        [Obsolete("This method is not being used. 2012-08-15.", true)]
+        public static string ConvertToRelativeShort(DateTime localDateTime, DateTime localNow)
         {
-            TimeSpan span = new TimeSpan(DateTime.UtcNow.Ticks - dateTime.Ticks);
+            // This method is intended to return a human readable output,
+            // so this means that the dates passed as input to this method must be local to the user.
+            if (localDateTime.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localDateTime' must be expressed in practice time-zone.", "localDateTime");
+
+            if (localNow.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localNow' must be expressed in practice time-zone.", "localNow");
+
+            TimeSpan span = localNow - localDateTime;
             double totalSeconds = span.TotalSeconds;
 
             if (totalSeconds < 60.0)
@@ -206,18 +201,24 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
-        public static string GetFormattedDate(DateTime dateTime)
+        [Obsolete("This method is not being used. 2012-08-15.", true)]
+        public static string GetFormattedDate(DateTime localDateTime)
         {
+            // This method is intended to return a human readable output,
+            // so this means that the dates passed as input to this method must be local to the user.
+            if (localDateTime.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localDateTime' must be expressed in practice time-zone.", "localDateTime");
+
             StringBuilder builder = new StringBuilder();
-            if (dateTime.Day < 10)
+            if (localDateTime.Day < 10)
                 builder.Append("0");
-            builder.Append(dateTime.Day.ToString());
+            builder.Append(localDateTime.Day.ToString());
             builder.Append("/");
-            if (dateTime.Month < 10)
+            if (localDateTime.Month < 10)
                 builder.Append("0");
-            builder.Append(dateTime.Month.ToString());
+            builder.Append(localDateTime.Month.ToString());
             builder.Append("/");
-            builder.Append(dateTime.Year.ToString());
+            builder.Append(localDateTime.Year.ToString());
             return builder.ToString();
         }
 
@@ -226,16 +227,21 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
-        public static string GetFormattedTime(DateTime dateTime)
+        public static string GetFormattedTime(DateTime localDateTime)
         {
+            // This method is intended to return a human readable output,
+            // so this means that the dates passed as input to this method must be local to the user.
+            if (localDateTime.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localDateTime' must be expressed in practice time-zone.", "localDateTime");
+
             StringBuilder builder = new StringBuilder();
-            if (dateTime.Hour < 10)
+            if (localDateTime.Hour < 10)
                 builder.Append("0");
-            builder.Append(dateTime.Hour.ToString());
+            builder.Append(localDateTime.Hour.ToString());
             builder.Append(":");
-            if (dateTime.Minute < 10)
+            if (localDateTime.Minute < 10)
                 builder.Append("0");
-            builder.Append(dateTime.Minute.ToString());
+            builder.Append(localDateTime.Minute.ToString());
             builder.Append("h");
             return builder.ToString();
         }
@@ -244,8 +250,10 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Converte o DateTime passado em um formato: 12/08/2011 às 13:40h
         /// </summary>
+        [Obsolete("This method is not being used. 2012-08-15.", true)]
         public static string GetFormattedDateAndTime(DateTime dateTime)
         {
+            // todo: WTF??? this method is stub.
             return String.Format("{0} às {1}", dateTime, dateTime);
         }
 
@@ -260,30 +268,30 @@ namespace CerebelloWebRole.Code
             return strArray[monthIndex - 1] + (includeDotAtTheEnd ? "." : "");
         }
 
-        public static int GetPersonAge(DateTime dateOfBirth)
+        [Obsolete("This method is not being used. 2012-08-15.", true)]
+        public static int GetPersonAge(DateTime dateOfBirth, DateTime now)
         {
-            DateTime now = DateTime.Today;
+            now = now.Date;
+            dateOfBirth = dateOfBirth.Date;
+
             int age = now.Year - dateOfBirth.Year;
             if (dateOfBirth > now.AddYears(-age)) age--;
 
             return age;
         }
 
-        public static String GetPersonAgeInWords(DateTime dateOfBirth, bool @short = false)
+        public static String GetPersonAgeInWords(DateTime dateOfBirth, DateTime currentDate, bool @short = false)
         {
-            DateTime currentDate = DateTimeHelper.GetTimeZoneNow();
-
             if (currentDate < dateOfBirth)
                 return "ainda não nascida";
 
             TimeSpan difference = currentDate.Subtract(dateOfBirth);
-
             // This is to convert the timespan to datetime object
             DateTime age = DateTime.MinValue + difference;
 
             // Min value is 01/01/0001
             // Actual age is say 24 yrs, 9 months and 3 days represented as timespan
-            // Min Valye + actual age = 25 yrs , 10 months and 4 days.
+            // Min Value + actual age = 25 yrs , 10 months and 4 days.
             // subtract our addition or 1 on all components to get the actual date.
 
             int ageInYears = age.Year - 1;
@@ -301,6 +309,13 @@ namespace CerebelloWebRole.Code
             return date.Month + "/" + date.Day + "/" + date.Year;
         }
 
+        /// <summary>
+        /// Returns a time-span given a string in the format "hh:mm"
+        /// where hh is the hour component, and mm is the minute component.
+        /// Both must have 2 digits.
+        /// </summary>
+        /// <param name="time">String in the format "hh:mm".</param>
+        /// <returns></returns>
         public static TimeSpan GetTimeSpan(string time)
         {
             var match = TimeDataTypeAttribute.Regex.Match(time);

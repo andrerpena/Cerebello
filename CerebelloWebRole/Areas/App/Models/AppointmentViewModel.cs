@@ -49,6 +49,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [EnumDataType(typeof(TypeGender))]
         public int? PatientGender { get; set; }
 
+        // todo: this property is never being set.
         [Display(Name = "Data de nascimento")]
         [DateOfBirth]
         public DateTime? PatientDateOfBirth { get; set; }

@@ -122,7 +122,7 @@ namespace CerebelloWebRole.Tests
         {
             var matchController = Regex.Match(controllerType.Name, @"(?<CONTROLLER>.*?)Controller");
             var matchArea = Regex.Match(controllerType.Namespace, @"Areas\.(?<AREA>.*?)(?=\.Controllers)");
-            
+
             if (matchArea.Success)
                 routeData.Values["controller"] = matchController.Groups["CONTROLLER"].Value.ToLowerInvariant();
             else
@@ -226,17 +226,22 @@ namespace CerebelloWebRole.Tests
 
             using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
             {
+                User user;
+
                 var securityToken = SecurityManager.AuthenticateUser(
                     this.UserNameOrEmail,
                     this.Password,
                     string.Format("{0}", this.RouteData.Values["practice"]),
-                    db);
+                    db,
+                    out user);
+
+                user.LastActiveOn = DateTime.UtcNow;
 
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
                      version: 1,
                      name: UserNameOrEmail,
                      issueDate: DateTime.UtcNow,
-                     expiration: DateTime.Now.AddYears(1),
+                     expiration: DateTime.UtcNow.AddYears(1),
                      isPersistent: true,
                      userData: securityToken,
                      cookiePath: FormsAuthentication.FormsCookiePath);

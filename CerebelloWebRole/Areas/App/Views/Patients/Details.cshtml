@@ -3,15 +3,16 @@
 @{
     ViewBag.Title = "Create";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
-    
-    string retornoDateStr = this.ViewBag.UserNow == null ? "" :
-        ((DateTime)this.ViewBag.UserNow).AddDays(30).ToString("yyyy-MM-dd");
+
+    var localNow = (DateTime)this.ViewBag.LocalNow;
+
+    string retornoDateStr = localNow.AddDays(30).ToString("yyyy-MM-dd");
     
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
 }
 @section Title {
     Paciente: <b>@Model.FullName</b>
@@ -47,9 +48,17 @@
     {
         foreach (var session in this.Model.Sessions)
         {
+            var relativeSessionDate = CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(
+                session.Date,
+                localNow,
+                CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday
+                | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+    
             <div class="medical-appointment-panel">
                 <p class="title">
-                    Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(session.Date, CerebelloWebRole.Code.DateTimeHelper.GetTimeZoneNow(), CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow))
+                    Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
                 </p>
                 @if (session.AnamneseIds.Count > 0)
                 {

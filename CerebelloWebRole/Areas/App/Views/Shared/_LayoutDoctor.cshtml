@@ -6,8 +6,9 @@
     var practiceId = ViewBag.Practice.Id;
     var doctor = (CerebelloWebRole.Areas.App.Models.DoctorViewModel)ViewBag.Doctor;
 
-    string scheduleDateStr = this.ViewBag.UserNow == null ? "" :
-    ((DateTime)this.ViewBag.UserNow).ToString("yyyy-MM-dd");
+    var localNow = (DateTime)this.ViewBag.LocalNow;
+
+    string scheduleDateStr = localNow.ToString("yyyy-MM-dd");
 }
 @section MainMenu {
     <div class="doctor-card">

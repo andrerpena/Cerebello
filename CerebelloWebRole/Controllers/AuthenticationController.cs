@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using CerebelloWebRole.Code;
-using CerebelloWebRole.Models;
-using Cerebello.Model;
 using System.Text.RegularExpressions;
-using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.Code.Security;
-using CerebelloWebRole.Code.Mvc;
+using System.Web.Mvc;
 using System.Web.Security;
+using Cerebello.Model;
+using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controllers;
+using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code.Security;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : RootController
     {
         private CerebelloEntities db = null;
 
@@ -41,7 +39,9 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel loginModel)
         {
-            if (!this.ModelState.IsValid || !SecurityManager.Login(loginModel, db))
+            User user;
+
+            if (!this.ModelState.IsValid || !SecurityManager.Login(loginModel, db, out user))
             {
                 ViewBag.LoginFailed = true;
                 return View();
@@ -49,6 +49,10 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
 #warning Todo seems to be wrong...
             // TODO: efetuar o login
+
+            user.LastActiveOn = this.GetUtcNow();
+
+            this.db.SaveChanges();
 
             if (loginModel.Password == Constants.DEFAULT_PASSWORD)
             {
@@ -85,8 +89,11 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         public ActionResult CreateAccount(CreateAccountViewModel registrationData)
         {
             // Normalizing name properties.
-            registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
-            registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
+            if (!string.IsNullOrEmpty(registrationData.PracticeName))
+                registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
+
+            if (!string.IsNullOrEmpty(registrationData.FullName))
+                registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
 
             var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
 
@@ -102,9 +109,16 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     "Nome do consultório já está em uso.");
             }
 
+            var utcNow = this.GetUtcNow();
+
             // Creating the new user.
             User user;
-            var result = SecurityManager.CreateUser(out user, registrationData, db);
+            var result = SecurityManager.CreateUser(out user, registrationData, db, utcNow, null);
+
+            if (result == CreateUserResult.InvalidUserNameOrPassword)
+            {
+                // Note: nothing to do because user-name and password fields are already validated.
+            }
 
             if (result == CreateUserResult.UserNameAlreadyInUse)
             {
@@ -125,21 +139,33 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     "Quantidade máxima de homônimos excedida.");
             }
 
-            // Creating a new medical practice.
-            user.Practice = new Practice
+            if (user != null)
             {
-                Name = registrationData.PracticeName,
-                UrlIdentifier = urlPracticeId,
-                CreatedOn = DateTime.Now,
-            };
+                var timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeTimeZone)registrationData.PracticeTimeZone).Id;
 
-            db.Users.AddObject(user);
+                // Creating a new medical practice.
+                user.Practice = new Practice
+                {
+                    Name = registrationData.PracticeName,
+                    UrlIdentifier = urlPracticeId,
+                    CreatedOn = utcNow,
+                    WindowsTimeZoneId = timeZoneId,
+                };
 
-            // If the ModelState is still valid, then save objects to the database.
+                // Setting the BirthDate of the user as a person.
+                user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth);
+            }
+
             if (this.ModelState.IsValid)
             {
-                db.SaveChanges();
-                return RedirectToAction("createaccountcompleted");
+                db.Users.AddObject(user);
+
+                // If the ModelState is still valid, then save objects to the database.
+                if (this.ModelState.IsValid)
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("createaccountcompleted");
+                }
             }
 
             return View();

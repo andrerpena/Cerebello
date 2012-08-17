@@ -3,9 +3,11 @@
     ViewBag.Title = "Index";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
+    var localNow = (DateTime)this.ViewBag.LocalNow;
+    
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
     grid.AddField(m => m.FullName, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
-    grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, true)</text>, header: "Idade");
+    grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, true)</text>, header: "Idade");
 }
 @section Title {
 Prontuário
@@ -49,10 +51,10 @@ Prontuário
                         borderColor: "#cccccc",
                         borderWidth: 0
                     },
-					colors: ["#AFC2E0", "pink"]
+                    colors: ["#AFC2E0", "pink"]
                 });
             }
-			
+            
             plotWithOptions();
         });
     </script>

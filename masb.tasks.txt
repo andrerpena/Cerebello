@@ -9,6 +9,37 @@ S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
+    P1 A idade da pessoa está estranha : "55 anos, 0 meses and 13 dias"... deveria ser "55 anos e 13 dias".
+    
+    P0 Atributo `DateOfBirthAttribute` precisa conhecer a hora local do consultório de alguma forma.
+x   P0 Procurar todas as strings "GetFormattedDate" e garantir que estão sendo passadas datas locais de verdade.
+x   P0 Procurar todas as strings "ConvertToRelativeShort" e garantir que estão sendo passadas datas locais de verdade.
+x   P0 Procurar todas as strings "ConvertToRelative" e garantir que estão sendo passadas datas locais de verdade.
+x   P0 Procurar todas as strings "GetTimeZoneNow" e converter para a forma correta de determinar a data e hora local.
+x   P0 Procurar todas as strings "ConvertToCurrentTimeZone" e converter para a forma correta de converter a data e hora UTC para local.
+x   P0 Procurar todas as strings "GetPersonAge" no projeto e passar o valor de 'now'.
+x   P0 Procurar todas as strings "CalculateAge" no projeto e passar o valor de 'now'.
+x   P0 Procurar todas as strings "GetPersonAgeInWords" no projeto e passar o valor de 'now'.
+x   P0 Verificar trafego de datas em todos os ViewModels: achar as props do tipo DateTime e usar shift+f12 em todas, e verificar o uso delas.
+x   P0 Verificar trafego de datas em todos os DbModels: achar as props do tipo DateTime e usar shift+f12 em todas, e verificar o uso delas.
+x   P0 Procurar todas as strings "GetAppointments" no projeto e verificar se o método está realmente sendo usado `GetAppointments(int start, int end)`.
+x   P0 Procurar todas as strings "UserNow" no projeto e substituir por "LocalNow".
+x   P0 Procurar todas as strings "PracticeNow" no projeto e substituir por "LocalNow".
+x   P0 Procurar todas as strings "DateTime" no projeto e verificar se as datas estão sendo utilizadas corretamente.
+    P1 Criar tela para o administrador dizer onde está o consultório, temos que saber o fuso-horário.
+x   P0 Permitir indicar o fuso-horário do consultório na tela de criação de novo consultório.
+x   P0 Criar métodos helper para conversão de data UTC para o fuso-horário em que o consultório se encontra.
+    P1 [sugestão] Tentar remover a configuração de fuso do cadastro do consultório.
+    P1 [sugestão] Colocar um relógio dentro do software, com um menu drop-down que permite configurar o fuso-horário.
+    P1 [sugestão] Criar uma check-list com todas as coisas que estão faltando serem configuradas (igual que tem no Git Extensions)
+    P1 [sugestão] Notificação para informar que a check-list de configurações ainda possui coisas pendentes.
+x   P0 Procurar todos os UtcNowGetter e usar sempre o da classe de base: RootController.
+    P0 Teste para o método ScheduleController.GetDaySlots: verificar se todas as datas retornadas são locais.
+    
+    P4 GetPersonAgeInWords está incorreto: não considera o dia 29/2, anos bissextos, nem o fuso-horário em que a pessoa nasceu.
+
+    P0 Teste para criação de novo consultório com todos os campos em branco.
+
     P0 Testes para verificar a ViewBag.IsEditing das actions Create e Edit tanto pra GET quanto pra POST.
     P0 Teste para salvamento de novo compromisso.
     P0 Teste para salvamento de novo compromisso sem descrição.
@@ -47,7 +78,6 @@ S   P Desc
     P0 Validação para usuários no mesmo consultório com e-mails duplicados. Pode acontecer em entre consultórios distintos.
 
     P1 Na visualização de exames, anamneses, e outros, label 'Texto' renderizado como <label for="Text">. Existem vários campos "Text" nesta tela.
-    P1 Criar tela para o administrador dizer onde está o consultório, temos que sabe o fuso-horário.
     P1 Testes para a agenda considerando entradas de usuário diferentes do UTC.
     P1 Falhas de segurança: actions de edição/criação tem que verificar o Practice do usuário logado, contra o do objeto sendo editado.
     P1 Texto que diz a idade da pessoa tem partes em inglês: "26 anos, 5 meses and 21 dias".

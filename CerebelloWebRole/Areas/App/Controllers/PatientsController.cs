@@ -19,18 +19,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public PatientsController()
         {
-            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
-            this.UtcNowGetter = () => DateTime.UtcNow;
         }
 
-        public Func<DateTime> UserNowGetter { get; set; }
-
-        public Func<DateTime> UtcNowGetter { get; set; }
-
-        public class SessionEvent
+        private class SessionEvent
         {
             public int Id { get; set; }
-            public DateTime Date { get; set; }
+
+            /// <summary>
+            /// Date and time expressed in local practice time-zone.
+            /// </summary>
+            public DateTime LocalDate { get; set; }
         }
 
         private PatientViewModel GetViewModel(Patient patient, bool includeSessions = false)
@@ -45,7 +43,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 MaritalStatus = patient.Person.MaritalStatus,
                 Observations = patient.Person.Observations,
                 CPFOwner = patient.Person.CPFOwner,
-                DateOfBirth = patient.Person.DateOfBirth,
+                DateOfBirth = ConvertToLocalDateTime(this.Practice, patient.Person.DateOfBirth),
                 Profissao = patient.Person.Profession,
                 CoverageText = patient.Coverage != null ? patient.Coverage.Name : "",
                 CPF = patient.Person.CPF,
@@ -82,10 +80,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                          (from r in patient.Anamneses
                                           select new SessionEvent
                                           {
-                                              Date = DateTimeHelper.ConvertToCurrentTimeZone(r.CreatedOn),
+                                              LocalDate = ConvertToLocalDateTime(this.Practice, r.CreatedOn),
                                               Id = r.Id
                                           })
-                                     group avm by avm.Date.Date into g
+                                     group avm by avm.LocalDate.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
                 eventDates.AddRange(anamnesesByDate.Keys);
@@ -96,10 +94,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                          (from r in patient.Receipts
                                           select new SessionEvent
                                           {
-                                              Date = DateTimeHelper.ConvertToCurrentTimeZone(r.CreatedOn),
+                                              LocalDate = ConvertToLocalDateTime(this.Practice, r.CreatedOn),
                                               Id = r.Id
                                           })
-                                     group rvm by rvm.Date.Date into g
+                                     group rvm by rvm.LocalDate.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
                 eventDates.AddRange(receiptsByDate.Keys);
@@ -110,10 +108,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                          (from c in patient.MedicalCertificates
                                           select new SessionEvent
                                           {
-                                              Date = DateTimeHelper.ConvertToCurrentTimeZone(c.CreatedOn),
+                                              LocalDate = ConvertToLocalDateTime(this.Practice, c.CreatedOn),
                                               Id = c.Id
                                           })
-                                     group cvm by cvm.Date.Date into g
+                                     group cvm by cvm.LocalDate.Date into g
                                      select g).ToDictionary(g => g.Key, g => g.ToList());
 
                 eventDates.AddRange(certificatesByDate.Keys);
@@ -124,10 +122,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                       (from c in patient.ExaminationRequests
                                        select new SessionEvent
                                        {
-                                           Date = DateTimeHelper.ConvertToCurrentTimeZone(c.CreatedOn),
+                                           LocalDate = ConvertToLocalDateTime(this.Practice, c.CreatedOn),
                                            Id = c.Id
                                        })
-                                  group ervm by ervm.Date.Date into g
+                                  group ervm by ervm.LocalDate.Date into g
                                   select g).ToDictionary(g => g.Key, g => g.ToList());
 
                 eventDates.AddRange(examRequestsByDate.Keys);
@@ -138,10 +136,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                       (from c in patient.ExaminationResults
                                        select new SessionEvent
                                        {
-                                           Date = DateTimeHelper.ConvertToCurrentTimeZone(c.CreatedOn),
+                                           LocalDate = ConvertToLocalDateTime(this.Practice, c.CreatedOn),
                                            Id = c.Id
                                        })
-                                  group ervm by ervm.Date.Date into g
+                                  group ervm by ervm.LocalDate.Date into g
                                   select g).ToDictionary(g => g.Key, g => g.ToList());
 
                 eventDates.AddRange(examResultsByDate.Keys);
@@ -185,18 +183,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                             select new PatientViewModel
                                             {
                                                 Id = p.Id,
+                                                // note: this date is going to be converted in the next statement.
                                                 DateOfBirth = p.Person.DateOfBirth,
                                                 FullName = p.Person.FullName
                                             }).ToList();
 
-            var timeZoneNow = DateTimeHelper.GetTimeZoneNow();
+            // Converting dates from the DB that are Utc, to local practice time-zone.
+            foreach (var eachPatient in model.LastRegisteredPatients)
+                eachPatient.DateOfBirth = ConvertToLocalDateTime(this.Practice, eachPatient.DateOfBirth);
+
+            var utcNow = this.GetUtcNow();
 
             model.PatientAgeDistribution = (from p in db.Patients
                                             where p.DoctorId == this.Doctor.Id
                                             group p by new
                                             {
                                                 Gender = p.Person.Gender,
-                                                Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, timeZoneNow)
+                                                Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, utcNow)
                                             } into g
                                             select g).OrderBy(g => g.Key)
                                             .Select(g => new PatientsIndexViewModel.ChartPatientAgeDistribution
@@ -221,8 +224,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var patient = (Patient)db.Patients.Where(p => p.Id == id).First();
             var model = this.GetViewModel(patient, true);
-
-            this.ViewBag.UserNow = this.UserNowGetter();
 
             return View(model);
         }
@@ -280,8 +281,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.BirthPlace = formModel.BirthPlace;
                 patient.Person.CPF = formModel.CPF;
                 patient.Person.CPFOwner = formModel.CPFOwner;
-                patient.Person.CreatedOn = DateTime.UtcNow;
-                patient.Person.DateOfBirth = formModel.DateOfBirth;
+                patient.Person.CreatedOn = this.GetUtcNow();
+                patient.Person.DateOfBirth = ConvertToUtcDateTime(this.Practice, formModel.DateOfBirth);
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.Gender = (short)formModel.Gender;
                 patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
@@ -495,9 +496,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                              select new PatientViewModel()
                              {
                                  Id = p.Id,
+                                 // Note: this date is coming from the DB in Utc format, and must be converted to local time.
                                  DateOfBirth = p.Person.DateOfBirth,
                                  FullName = p.Person.FullName
-                             }).OrderBy(p => p.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+                             })
+                             .OrderBy(p => p.FullName)
+                             .Skip((pageIndex - 1) * pageSize)
+                             .Take(pageSize)
+                             .ToList();
+
+            // Converting all dates from Utc to local practice time-zone.
+            foreach (var eachPatientViewModel in model.Objects)
+                eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.Practice, eachPatientViewModel.DateOfBirth);
 
             return View(model);
         }

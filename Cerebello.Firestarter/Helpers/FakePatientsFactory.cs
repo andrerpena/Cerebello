@@ -131,7 +131,7 @@ namespace Cerebello.Firestarter.Helpers
                     {
                         FullName = firstName + " " + string.Join(" ", chosenMiddleNames),
                         Gender = (short) gender,
-                        DateOfBirth = new DateTime(random.Next(1950, 2000), random.Next(1, 13), random.Next(1, 29)),
+                        DateOfBirth = Firestarter.ConvertFromDefaultToUtc(new DateTime(random.Next(1950, 2000), random.Next(1, 13), random.Next(1, 29))),
                         MaritalStatus = (short?) random.Next(0, 4),
                         BirthPlace = "Brasileiro(a)",
                         CPF = "87324128910",

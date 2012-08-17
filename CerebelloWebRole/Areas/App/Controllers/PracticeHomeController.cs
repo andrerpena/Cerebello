@@ -10,13 +10,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public PracticeHomeController()
         {
-            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
-            this.UtcNowGetter = () => DateTime.UtcNow;
         }
-
-        public Func<DateTime> UserNowGetter { get; set; }
-
-        public Func<DateTime> UtcNowGetter { get; set; }
 
         //
         // GET: /App/Home/
@@ -24,7 +18,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new PracticeHomeIndexViewModel();
-            model.Doctors = DoctorsController.GetDoctorViewModelsFromPractice(this.db, this.Practice, this.UserNowGetter());
+            model.Doctors = DoctorsController.GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow());
 
             var currentPracticeId = this.GetCurrentUser().PracticeId;
 
