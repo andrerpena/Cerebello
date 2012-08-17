@@ -4,7 +4,7 @@
 
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.CEP, format: @<text> @Html.EditorFor(model => model.CEP)
-    <a class="getCepInfo block-little-link" href="#">Obter endereço</a>
+    <a class="getCepInfo block-little-link" href="#" style="display:block">Obter endereço</a>
     <img class="getCepInfoActivityIndicator" src="/content/images/progress.gif" style="display: none" />
     </text>);
     editPanel.AddField(m => m.StateProvince, format:

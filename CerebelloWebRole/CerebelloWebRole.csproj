@@ -117,6 +117,7 @@
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\MedicalProceduresLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\SysMedicineLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\PhoneViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
@@ -544,6 +545,7 @@
     <Content Include="Areas\App\Views\ExamResults\Details.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\Edit.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
+    <Content Include="Areas\App\Views\Shared\EmailEditor.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />

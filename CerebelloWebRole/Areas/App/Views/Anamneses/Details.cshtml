@@ -5,7 +5,26 @@
 <div class="anamnese-details medical-appointment-details-panel" data-val-id="anamnese-@Model.Id">
     @if (Model != null)
     {
-        <table class="view-table">
+        var cardView = this.Html.CreateCardView();
+        cardView.AddField(model => model.Text, wholeRow: true);
+        cardView.AddField(model => model.Diagnoses,
+            @<text>
+                @{
+                    <ul class="string-list">
+                            @foreach (var symptom in Model.Diagnoses)
+                            {
+                                <li>
+                                    @symptom.Text (@symptom.Cid10Code)
+                                </li>
+                            }
+                        </ul>
+                  }
+            </text>, wholeRow: true);
+        
+        
+        @cardView.GetHtml()
+        
+        @*<table class="view-table">
             <tr>
                 <th>
                     @Html.LabelFor(model => model.Text)
@@ -32,7 +51,7 @@
                     }
                 </td>
             </tr>
-        </table>
+        </table>*@
     }
     <div class="inline-link-bar">
         <a href="#" class="edit-anamnese inline-link" >Editar anamnese</a>

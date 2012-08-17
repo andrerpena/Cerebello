@@ -57,20 +57,20 @@ table.edit-panel > tbody > tr > th
 
 .edit-panel select, .edit-panel textarea, .edit-panel input[type=text], .edit-panel .lookup, .edit-panel .lookup-tree
 {
-    max-width: 200px;
+    max-width: 250px;
     width: 100%;
 }
 
 .edit-panel .large select, .edit-panel .large textarea, .edit-panel .large input[type=text], .edit-panel .large .lookup, .edit-panel .large .lookup-tree
 {
     width: 100%;
-    max-width: 320px;
+    max-width: 350px;
 }
 
 .edit-panel .x-large select, .edit-panel .x-large textarea, .edit-panel .x-large input[type=text], .edit-panel .x-large .lookup, .edit-panel .x-large .lookup-tree
 {
     width: 100%;
-    max-width: 380px;
+    max-width: 420px;
 }
 
 

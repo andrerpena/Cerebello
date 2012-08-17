@@ -55,7 +55,7 @@
             _this.$el.bind("click", function (e) {
                 e.stopPropagation();
                 $balloon.css("left", _this.$el.offset().left);
-                $balloon.css("top", _this.$el.offset().top + _this.$el.height() + 15);
+                $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + 5);
                 $balloon.show();
                 handler = function (e2) {
                     if (!$balloon.has(e2.target).length) {

@@ -46,9 +46,13 @@
     @editPanel.GetHtml();
 
     <p class="form-title">
+        @Html.LabelFor(model => model.Emails)
+    </p>
+    @(Html.CollectionEditorFor(m => m.Emails, "EmailEditor", "adicionar e-mail"))
+                        
+    <p class="form-title">
         @Html.LabelFor(model => model.Addresses)
     </p>
-    
     @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor", "adicionar endereço"))
         
     <div class="submit-bar">

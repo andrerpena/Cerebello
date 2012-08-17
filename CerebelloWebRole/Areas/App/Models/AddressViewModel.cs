@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
     public class AddressViewModel
     {
+        [Key]
         public int? Id { get; set; }
 
         [Display(Name = "Logradouro")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Street { get; set; }
 
         [Display(Name = "Complemento")]
@@ -20,9 +23,11 @@ namespace CerebelloWebRole.Areas.App.Models
         public String Neighborhood { get; set; }
 
         [Display(Name = "Estado")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String StateProvince { get; set; }
 
         [Display(Name = "Cidade")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String City { get; set; }
 
         [Display(Name = "CEP")]

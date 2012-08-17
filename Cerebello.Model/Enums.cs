@@ -10,9 +10,16 @@ namespace CerebelloWebRole.Models
 
     public enum TypeMaritalStatus
     {
+        [Display(Name = "Solteiro(a)")]
         Solteiro = 0,
+
+        [Display(Name = "Casado(a)")]
         Casado = 1,
+
+        [Display(Name = "Viuvo(a)")]
         Viuvo = 2,
+
+        [Display(Name = "Divorciado(a)")]
         Divorciado = 3
     }
 
@@ -51,7 +58,10 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Outro responsável")]
         Other
     }
-
+    
+    /// <summary>
+    /// Appointment type
+    /// </summary>
     public enum TypeAppointment
     {
         [Display(Name = "Compromisso")]
@@ -61,6 +71,9 @@ namespace CerebelloWebRole.Models
         MedicalAppointment = 1
     }
 
+    /// <summary>
+    /// Gender type
+    /// </summary>
     public enum TypeGender
     {
         [Display(Name = "Masculino")]

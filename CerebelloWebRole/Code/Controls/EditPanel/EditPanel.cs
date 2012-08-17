@@ -17,7 +17,8 @@ namespace CerebelloWebRole.Code.Controls
     {
         Default = 0,
         Small,
-        Large
+        Large,
+        XLarge
     }
 
     public class EditPanel<TModel>
@@ -149,6 +150,9 @@ namespace CerebelloWebRole.Code.Controls
                             break;
                         case EditPanelFieldSize.Large:
                             tableValueTD.AddCssClass("large");
+                            break;
+                        case EditPanelFieldSize.XLarge:
+                            tableValueTD.AddCssClass("x-large");
                             break;
                     }
 

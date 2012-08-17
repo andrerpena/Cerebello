@@ -1041,6 +1041,7 @@ a.gotoPractice
     border-bottom: 1px solid #E8E7E7;
     color: gray;
     font-weight: bold;
+    margin: 20px 0 8px;
     padding-bottom: 4px;
 }
 
@@ -1216,6 +1217,7 @@ a.inline-link:hover
 .inline-link-bar 
 {
     margin: 10px 0;
+    text-align: right;
 }
 
 .add-another-link 

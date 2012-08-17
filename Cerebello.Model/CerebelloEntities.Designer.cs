@@ -7365,12 +7365,14 @@ namespace Cerebello.Model
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="personId">Initial value of the PersonId property.</param>
         /// <param name="number">Initial value of the Number property.</param>
-        public static Phone CreatePhone(global::System.Int32 id, global::System.Int32 personId, global::System.String number)
+        /// <param name="type">Initial value of the Type property.</param>
+        public static Phone CreatePhone(global::System.Int32 id, global::System.Int32 personId, global::System.String number, global::System.Int32 type)
         {
             Phone phone = new Phone();
             phone.Id = id;
             phone.PersonId = personId;
             phone.Number = number;
+            phone.Type = type;
             return phone;
         }
 
@@ -7451,6 +7453,30 @@ namespace Cerebello.Model
         private global::System.String _Number;
         partial void OnNumberChanging(global::System.String value);
         partial void OnNumberChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Type
+        {
+            get
+            {
+                return _Type;
+            }
+            set
+            {
+                OnTypeChanging(value);
+                ReportPropertyChanging("Type");
+                _Type = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Type");
+                OnTypeChanged();
+            }
+        }
+        private global::System.Int32 _Type;
+        partial void OnTypeChanging(global::System.Int32 value);
+        partial void OnTypeChanged();
 
         #endregion
     
