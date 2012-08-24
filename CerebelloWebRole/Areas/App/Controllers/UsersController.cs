@@ -13,6 +13,7 @@ using HtmlAgilityPack;
 using CerebelloWebRole.Code.Json;
 using System.Text.RegularExpressions;
 using CerebelloWebRole.Code.Security;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -34,7 +35,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = user.Id,
                 UserName = user.UserName,
                 FullName = user.Person.FullName,
-                UrlIdentifier = user.Person.UrlIdentifier,
                 ImageUrl = GravatarHelper.GetGravatarUrl(user.GravatarEmailHash, GravatarHelper.Size.s64),
                 Gender = user.Person.Gender,
                 DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth),
@@ -72,7 +72,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel.MedicCRM = user.Doctor.CRM;
                 viewModel.MedicalSpecialty = user.Doctor.MedicalSpecialtyId;
                 viewModel.MedicalEntity = user.Doctor.MedicalEntityId;
-                viewModel.MedicalEntityJurisdiction = user.Doctor.MedicalEntityJurisdiction;
+                viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
+                    typeof(TypeEstadoBrasileiro),
+                    user.Doctor.MedicalEntityJurisdiction);
             }
 
             return viewModel;
@@ -96,7 +98,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         Id = u.Id,
                         FullName = u.Person.FullName,
-                        UrlIdentifier = u.Person.UrlIdentifier,
                     },
                     u.GravatarEmailHash,
                 }).ToList();
@@ -144,6 +145,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
                 ViewBag.Title = "Novo usuário";
+
+            this.ViewBag.IsEditing = id != null;
 
             ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
@@ -241,14 +244,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         + "maiúsculas/minúsculas ou por '.', '-' ou '_' não são permitidos."
                         + "(Não é possível cadastrar 'MiguelAngelo' e 'miguel.angelo' no mesmo consultório.");
                 }
-
-                if (result == CreateUserResult.CouldNotCreateUrlIdentifier)
-                {
-                    this.ModelState.AddModelError(
-                        () => formModel.FullName,
-                        // Todo: this message is also used in the AuthenticationController.
-                        "Quantidade máxima de homônimos excedida.");
-                }
             }
 
 #warning Must validade all emails, cannot repeat emails in the same practice.
@@ -256,15 +251,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!formModel.IsDoctor && !formModel.IsAdministrador && !formModel.IsSecretary)
                 this.ModelState.AddModelError("", "Usuário tem que ter pelo menos uma função: médico, administrador ou secretária.");
 
-            // If the user being edited is a medic, then we must check the fields that are required for medics.
-            if (formModel.IsDoctor)
-            {
-                if (string.IsNullOrWhiteSpace(formModel.MedicCRM))
-                    this.ModelState.AddModelError(
-                        () => formModel.MedicCRM,
-                        "CRM do médico é requerido.");
-            }
-            else
+            // If the user being edited is a doctor, then we must check the fields that are required for medics.
+            if (!formModel.IsDoctor)
             {
                 // Removing validation error of medic properties, because this user is not a medic.
                 this.ModelState.ClearPropertyErrors(() => formModel.MedicCRM);
@@ -285,18 +273,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 var practiceId = this.Practice.Id;
 
-                // Creating an unique UrlIdentifier for this user.
-                // This does not consider UrlIdentifier's used by patients.
-                string urlId = GetUniqueUserUrlId(this.db, formModel.FullName, practiceId);
-                if (urlId == null)
-                {
-                    this.ModelState.AddModelError(
-                        () => formModel.FullName,
-                        // Todo: this message is also used in the AuthenticationController.
-                        "Quantidade máxima de homônimos excedida.");
-                }
-                user.Person.UrlIdentifier = urlId;
-
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (formModel.IsDoctor)
                 {
@@ -308,7 +284,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     user.Doctor.CRM = formModel.MedicCRM;
                     user.Doctor.MedicalSpecialtyId = formModel.MedicalSpecialty ?? 0;
                     user.Doctor.MedicalEntityId = formModel.MedicalEntity ?? 0;
-                    user.Doctor.MedicalEntityJurisdiction = formModel.MedicalEntityJurisdiction;
+
+                    if (formModel.MedicalEntityJurisdiction != null)
+                        user.Doctor.MedicalEntityJurisdiction = ((TypeEstadoBrasileiro)formModel.MedicalEntityJurisdiction.Value).ToString();
+
+                    // Creating an unique UrlIdentifier for this doctor.
+                    // This does not consider UrlIdentifier's used by other kinds of objects.
+                    string urlId = GetUniqueDoctorUrlId(this.db, formModel.FullName, practiceId);
+                    if (urlId == null)
+                    {
+                        this.ModelState.AddModelError(
+                            () => formModel.FullName,
+                            // Todo: this message is also used in the AuthenticationController.
+                            "Quantidade máxima de homônimos excedida.");
+                    }
+                    user.Doctor.UrlIdentifier = urlId;
                 }
                 else
                 {
@@ -389,7 +379,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", formModel);
         }
 
-        public static string GetUniqueUserUrlId(CerebelloEntities db, string fullName, int? practiceId)
+        public static string GetUniqueDoctorUrlId(CerebelloEntities db, string fullName, int? practiceId)
         {
             // todo: this piece of code is very similar to SetPatientUniqueUrlIdentifier.
 
@@ -398,7 +388,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // todo: there is a concurrency problem here.
             int cnt = 2;
-            while (db.Users.Where(u => u.Person.UrlIdentifier == urlId && u.PracticeId == practiceId).Any())
+            while (db.Doctors.Where(d => d.UrlIdentifier == urlId
+                && d.Users.FirstOrDefault().PracticeId == practiceId
+                && d.Users.FirstOrDefault().Person.FullName != fullName).Any())
             {
                 urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
 

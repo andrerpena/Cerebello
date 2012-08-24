@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Code
             // Resolved: uniqueness of UrlIdentifier is ensured.
             // issue: 2 doctors with the same name would cause this query to fail
             // the doctor being visualized (not the user as a doctor)
-            var doctor = this.db.Doctors.Where(d => d.Users.Any(u => u.Person.UrlIdentifier == doctorIdentifier)).FirstOrDefault();
+            var doctor = this.db.Doctors.Where(d => d.UrlIdentifier == doctorIdentifier).FirstOrDefault();
 
             if (doctor != null)
             {
@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Code
                 var doc = new DoctorViewModel()
                      {
                          Name = doctor.Users.ElementAt(0).Person.FullName,
-                         UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
+                         UrlIdentifier = doctor.UrlIdentifier,
                          ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
                          CRM = doctor.CRM,
                          MedicalSpecialty = doctor.SYS_MedicalSpecialty.Name,

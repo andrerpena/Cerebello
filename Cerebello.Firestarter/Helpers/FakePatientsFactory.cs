@@ -145,17 +145,6 @@ namespace Cerebello.Firestarter.Helpers
                     Doctor = doctor
                 };
 
-                var practiceId = doctor.Users.FirstOrDefault().PracticeId;
-
-                var urlId = Firestarter.GetUniquePatientUrlId(db, patient.Person.FullName, practiceId);
-                if (urlId == null)
-                {
-                    throw new Exception(
-                        // Todo: this message is also used in the AuthenticationController.
-                        "Quantidade máxima de homônimos excedida.");
-                }
-                patient.Person.UrlIdentifier = urlId;
-
                 patient.Person.Emails.Add(new Email() { Address = firstName + string.Join("", chosenMiddleNames) + "@gmail.com" });
                 patient.Person.Addresses.Add(new Address()
                 {

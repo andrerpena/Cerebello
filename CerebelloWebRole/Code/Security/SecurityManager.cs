@@ -73,15 +73,6 @@ namespace CerebelloWebRole.Code
                 return CreateUserResult.UserNameAlreadyInUse;
             }
 
-            // Creating an unique UrlIdentifier for this user.
-            // This does not consider UrlIdentifier's used by patients.
-            var urlId = UsersController.GetUniqueUserUrlId(db, registrationData.FullName, practiceId);
-            if (urlId == null)
-            {
-                createdUser = null;
-                return CreateUserResult.CouldNotCreateUrlIdentifier;
-            }
-
             // Creating user.
             createdUser = new User()
             {
@@ -91,7 +82,6 @@ namespace CerebelloWebRole.Code
                     // The caller of this method must set the property.
                     Gender = registrationData.Gender,
                     FullName = registrationData.FullName,
-                    UrlIdentifier = urlId,
                     CreatedOn = utcNow,
                 },
                 UserName = registrationData.UserName,

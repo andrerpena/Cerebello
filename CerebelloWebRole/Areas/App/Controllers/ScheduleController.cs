@@ -456,20 +456,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient.Person.CreatedOn = this.GetUtcNow();
                     patient.Doctor = this.Doctor;
 
-                    // Creating an unique UrlIdentifier for this patient.
-                    // This does not consider UrlIdentifier's used by the users of the software.
-                    var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
-
-                    var urlId = PatientsController.GetUniquePatientUrlId(this.db, formModel.PatientName, practiceId);
-                    if (urlId == null)
-                    {
-                        this.ModelState.AddModelError(
-                            () => formModel.PatientName,
-                            // Todo: this message is also used in the AuthenticationController.
-                            "Quantidade máxima de homônimos excedida.");
-                    }
-                    patient.Person.UrlIdentifier = urlId;
-
                     appointment.Patient = patient;
 
                     if (!string.IsNullOrEmpty(formModel.PatientEmail))

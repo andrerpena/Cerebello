@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 using System.Web.Mvc;
 using CerebelloWebRole.Code.Validation;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -17,8 +18,6 @@ namespace CerebelloWebRole.Areas.App.Models
         public string UserName { get; set; }
 
         public string ImageUrl { get; set; }
-
-        public string UrlIdentifier { get; set; }
 
         [Display(Name = "Administrador(a)")]
         public bool IsAdministrador { get; set; }
@@ -46,6 +45,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "UF do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string MedicalEntityJurisdiction { get; set; }
+        [EnumDataTypeAttribute(typeof(TypeEstadoBrasileiro))]
+        public int? MedicalEntityJurisdiction { get; set; }
     }
 }

@@ -37,7 +37,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         Id = u.Id,
                         Name = u.Person.FullName,
-                        UrlIdentifier = u.Person.UrlIdentifier,
+                        UrlIdentifier = u.Doctor.UrlIdentifier,
                         CRM = u.Doctor.CRM,
                         MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name,
                     },

@@ -3822,13 +3822,15 @@ namespace Cerebello.Model
         /// <param name="cRM">Initial value of the CRM property.</param>
         /// <param name="medicalEntityId">Initial value of the MedicalEntityId property.</param>
         /// <param name="medicalSpecialtyId">Initial value of the MedicalSpecialtyId property.</param>
-        public static Doctor CreateDoctor(global::System.Int32 id, global::System.String cRM, global::System.Int32 medicalEntityId, global::System.Int32 medicalSpecialtyId)
+        /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
+        public static Doctor CreateDoctor(global::System.Int32 id, global::System.String cRM, global::System.Int32 medicalEntityId, global::System.Int32 medicalSpecialtyId, global::System.String urlIdentifier)
         {
             Doctor doctor = new Doctor();
             doctor.Id = id;
             doctor.CRM = cRM;
             doctor.MedicalEntityId = medicalEntityId;
             doctor.MedicalSpecialtyId = medicalSpecialtyId;
+            doctor.UrlIdentifier = urlIdentifier;
             return doctor;
         }
 
@@ -3957,6 +3959,30 @@ namespace Cerebello.Model
         private global::System.String _MedicalEntityJurisdiction;
         partial void OnMedicalEntityJurisdictionChanging(global::System.String value);
         partial void OnMedicalEntityJurisdictionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String UrlIdentifier
+        {
+            get
+            {
+                return _UrlIdentifier;
+            }
+            set
+            {
+                OnUrlIdentifierChanging(value);
+                ReportPropertyChanging("UrlIdentifier");
+                _UrlIdentifier = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("UrlIdentifier");
+                OnUrlIdentifierChanged();
+            }
+        }
+        private global::System.String _UrlIdentifier;
+        partial void OnUrlIdentifierChanging(global::System.String value);
+        partial void OnUrlIdentifierChanged();
 
         #endregion
     
@@ -6922,16 +6948,14 @@ namespace Cerebello.Model
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="fullName">Initial value of the FullName property.</param>
-        /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="dateOfBirth">Initial value of the DateOfBirth property.</param>
         /// <param name="gender">Initial value of the Gender property.</param>
-        public static Person CreatePerson(global::System.Int32 id, global::System.String fullName, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.DateTime dateOfBirth, global::System.Int16 gender)
+        public static Person CreatePerson(global::System.Int32 id, global::System.String fullName, global::System.DateTime createdOn, global::System.DateTime dateOfBirth, global::System.Int16 gender)
         {
             Person person = new Person();
             person.Id = id;
             person.FullName = fullName;
-            person.UrlIdentifier = urlIdentifier;
             person.CreatedOn = createdOn;
             person.DateOfBirth = dateOfBirth;
             person.Gender = gender;
@@ -6991,30 +7015,6 @@ namespace Cerebello.Model
         private global::System.String _FullName;
         partial void OnFullNameChanging(global::System.String value);
         partial void OnFullNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String UrlIdentifier
-        {
-            get
-            {
-                return _UrlIdentifier;
-            }
-            set
-            {
-                OnUrlIdentifierChanging(value);
-                ReportPropertyChanging("UrlIdentifier");
-                _UrlIdentifier = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("UrlIdentifier");
-                OnUrlIdentifierChanged();
-            }
-        }
-        private global::System.String _UrlIdentifier;
-        partial void OnUrlIdentifierChanging(global::System.String value);
-        partial void OnUrlIdentifierChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

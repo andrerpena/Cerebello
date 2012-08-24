@@ -92,25 +92,33 @@ namespace CerebelloWebRole.Code
             if (expression.Body.NodeType != ExpressionType.MemberAccess)
                 throw new Exception("Expression must represent an object member");
 
-            var vPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            Type propertyType = null;
+            var propertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            if (propertyInfo.PropertyType.IsGenericType)
+            {
+                var genericType = propertyInfo.PropertyType.GetGenericTypeDefinition();
+                if (genericType == typeof(Nullable<>))
+                    propertyType = propertyInfo.PropertyType.GetGenericArguments()[0];
+            }
+            else
+            {
+                propertyType = propertyInfo.PropertyType;
+            }
 
-            if (vPropertyInfo.PropertyType.IsEnum)
-                return vPropertyInfo.PropertyType;
+            if (propertyType.IsEnum)
+                return propertyType;
             else
             {
                 var supportedTypes = new HashSet<Type> {
                     typeof(Int32),
-                    typeof(Nullable<Int32>),
                     typeof(Int16),
-                    typeof(Nullable<Int16>),
                     typeof(Int64),
-                    typeof(Nullable<Int64>),
                 };
 
-                if (!supportedTypes.Contains(vPropertyInfo.PropertyType))
+                if (!supportedTypes.Contains(propertyType))
                     throw new Exception("Expression member must be either an enum type, an integer type or a nullable of any previous types.");
 
-                var vEnumDataTypeAttributes = vPropertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), false);
+                var vEnumDataTypeAttributes = propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), false);
                 if (vEnumDataTypeAttributes.Length == 0)
                     throw new Exception("Expression member must have the EnumDataTypeAttribute when the type is Int32");
 

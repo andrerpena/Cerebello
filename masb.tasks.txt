@@ -38,7 +38,7 @@ S   P Desc
     P0 Teste que tenta editar compromisso de outro consultório.
     P0 Teste de edição de compromisso.
     P0 Teste de edição de compromisso removendo a descrição.
-    P0 O ícone de validação da tela de marcar compromisso, deveria ser um '!' quando for possível salvar, e um 'x' quando não for.
+x   P0 O ícone de validação da tela de marcar compromisso, deveria ser um '!' quando for possível salvar, e um 'x' quando não for.
     
     P0 Teste de edição de usuário de outro consultório. Tem que ir para view NotFound.
     

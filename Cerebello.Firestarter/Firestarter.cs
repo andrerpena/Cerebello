@@ -124,7 +124,6 @@ namespace Cerebello.Firestarter
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
                 FullName = "Phill Austin",
-                UrlIdentifier = "phillaustin",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
             };
@@ -141,6 +140,7 @@ namespace Cerebello.Firestarter
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
                 MedicalEntityJurisdiction = "MG",
+                UrlIdentifier = "phillaustin",
             };
 
             user.Doctor = doctor;
@@ -174,7 +174,6 @@ namespace Cerebello.Firestarter
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
                 FullName = "Gregory House",
-                UrlIdentifier = "gregoryhouse",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
             };
@@ -207,6 +206,7 @@ namespace Cerebello.Firestarter
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
                 MedicalEntityJurisdiction = "MG",
+                UrlIdentifier = "gregoryhouse",
             };
 
             db.Doctors.AddObject(doctor);
@@ -227,7 +227,6 @@ namespace Cerebello.Firestarter
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
                 FullName = "Marta Cura",
-                UrlIdentifier = "martacura",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
             };
@@ -259,6 +258,7 @@ namespace Cerebello.Firestarter
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
                 MedicalEntityJurisdiction = "MG",
+                UrlIdentifier = "martacura",
             };
 
             db.Doctors.AddObject(doctor);
@@ -306,7 +306,6 @@ namespace Cerebello.Firestarter
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
                 FullName = "Menininha Santos",
-                UrlIdentifier = "meninasantos",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
             };
@@ -1286,32 +1285,6 @@ GO
                     Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
                     medicalProceduresMaxCount,
                     progress);
-        }
-
-        public static string GetUniquePatientUrlId(CerebelloEntities db, string fullName, int practiceId)
-        {
-            // todo: this method has been cloned from PatientsController
-
-            // Creating an unique UrlIdentifier for this patient.
-            // When another patient have the same UrlIdentifier, we try to append a
-            // number after the string so that it becomes different, and if it is also used
-            // then increment the number and try again.
-            var urlIdSrc = StringHelper.GenerateUrlIdentifier(fullName);
-            var urlId = urlIdSrc;
-
-            // todo: there is a concurrency problem here.
-            int cnt = 2;
-            while (db.Patients
-                .Where(p => p.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
-                .Where(p => p.Person.UrlIdentifier == urlId).Any())
-            {
-                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
-
-                if (cnt > 20)
-                    return null;
-            }
-
-            return urlId;
         }
     }
 }

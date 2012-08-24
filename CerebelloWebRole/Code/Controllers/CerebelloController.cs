@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Code
                         GravatarEmailHash = user.GravatarEmailHash,
                         // the following properties will only be set if the current user is a doctor
                         DoctorId = user.DoctorId,
-                        DoctorUrlIdentifier = user.Doctor != null ? user.Person.UrlIdentifier : null
+                        DoctorUrlIdentifier = user.Doctor != null ? user.Doctor.UrlIdentifier : null
                     };
 
                     // this ViewBag will carry user information to the View

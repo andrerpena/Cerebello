@@ -9,6 +9,7 @@ using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
+using CerebelloWebRole.Areas.App.Controllers;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
@@ -143,23 +144,8 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     + "(Não é possível cadastrar 'MiguelAngelo' e 'miguel.angelo' no mesmo consultório.");
             }
 
-            if (result == CreateUserResult.CouldNotCreateUrlIdentifier)
-            {
-                this.ModelState.AddModelError(
-                    () => registrationData.FullName,
-                    // Todo: this message is also used in the AuthenticationController.
-                    "Quantidade máxima de homônimos excedida.");
-            }
-
             // If the user being edited is a medic, then we must check the fields that are required for medics.
-            if (registrationData.IsDoctor)
-            {
-                if (string.IsNullOrWhiteSpace(registrationData.MedicCRM))
-                    this.ModelState.AddModelError(
-                        () => registrationData.MedicCRM,
-                        "CRM do médico é requerido.");
-            }
-            else
+            if (!registrationData.IsDoctor)
             {
                 // Removing validation error of medic properties, because this user is not a medic.
                 this.ModelState.ClearPropertyErrors(() => registrationData.MedicCRM);
@@ -196,8 +182,20 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     user.Doctor.MedicalSpecialtyId = registrationData.MedicalSpecialty ?? 0;
                     user.Doctor.MedicalEntityId = registrationData.MedicalEntity ?? 0;
                     user.Doctor.MedicalEntityJurisdiction = registrationData.MedicalEntityJurisdiction.ToString();
+
+                    // Creating an unique UrlIdentifier for this doctor.
+                    // This is the first doctor, so there will be no conflicts.
+                    string urlId = UsersController.GetUniqueDoctorUrlId(this.db, registrationData.FullName, null);
+                    if (urlId == null)
+                    {
+                        this.ModelState.AddModelError(
+                            () => registrationData.FullName,
+                            // Todo: this message is also used in the UserController.
+                            "Quantidade máxima de homônimos excedida.");
+                    }
+                    user.Doctor.UrlIdentifier = urlId;
                 }
-                
+
                 db.Users.AddObject(user);
 
                 // If the ModelState is still valid, then save objects to the database.

@@ -210,6 +210,7 @@ CREATE TABLE [dbo].[Doctor](
 	[MedicalEntityId] [int] NOT NULL,
 	[MedicalEntityJurisdiction] [nvarchar](50) NULL,
 	[MedicalSpecialtyId] [int] NOT NULL,
+	[UrlIdentifier] [varchar](200) NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -461,7 +462,6 @@ GO
 CREATE TABLE [dbo].[Person](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[FullName] [varchar](200) NOT NULL,
-	[UrlIdentifier] [varchar](200) NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[DateOfBirth] [datetime] NOT NULL,
 	[Gender] [smallint] NOT NULL,

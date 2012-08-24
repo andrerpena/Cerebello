@@ -68,7 +68,6 @@ namespace CerebelloWebRole.Tests.Tests
                     CPF = "87324128910",
                     CPFOwner = (int)TypeCPFOwner.PatientItself,
                     Profession = "Encarregado de Obras",
-                    UrlIdentifier = StringHelper.GenerateUrlIdentifier("Joao Manuel da Silva"),
                     CreatedOn = DateTime.UtcNow
                 },
                 Doctor = this.db.Doctors.First()
@@ -98,7 +97,6 @@ namespace CerebelloWebRole.Tests.Tests
                     CPF = "87324128910",
                     CPFOwner = (int)TypeCPFOwner.PatientItself,
                     Profession = "Encarregado de Obras",
-                    UrlIdentifier = StringHelper.GenerateUrlIdentifier("Manuela Moreira da Silva"),
                     CreatedOn = DateTime.UtcNow
                 },
                 Doctor = this.db.Doctors.First()

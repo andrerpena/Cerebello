@@ -115,7 +115,7 @@ namespace CerebelloWebRole.Tests
                 RouteData.Values["practice"] = p.UrlIdentifier;
 
             if (d != null)
-                RouteData.Values["doctor"] = d.Users.First().Person.UrlIdentifier;
+                RouteData.Values["doctor"] = d.UrlIdentifier;
         }
 
         private static void FillRouteData_App_Controller_Action(RouteData routeData, Type controllerType, string action)
