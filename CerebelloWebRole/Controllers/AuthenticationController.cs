@@ -82,6 +82,18 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
         public ActionResult CreateAccount()
         {
+            ViewBag.MedicalSpecialtyOptions =
+                this.db.SYS_MedicalSpecialty
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
+            ViewBag.MedicalEntityOptions =
+                this.db.SYS_MedicalEntity
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
             return View();
         }
 
@@ -139,6 +151,23 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     "Quantidade máxima de homônimos excedida.");
             }
 
+            // If the user being edited is a medic, then we must check the fields that are required for medics.
+            if (registrationData.IsDoctor)
+            {
+                if (string.IsNullOrWhiteSpace(registrationData.MedicCRM))
+                    this.ModelState.AddModelError(
+                        () => registrationData.MedicCRM,
+                        "CRM do médico é requerido.");
+            }
+            else
+            {
+                // Removing validation error of medic properties, because this user is not a medic.
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicCRM);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntity);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityJurisdiction);
+            }
+
             if (user != null)
             {
                 var timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeTimeZone)registrationData.PracticeTimeZone).Id;
@@ -154,10 +183,21 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 // Setting the BirthDate of the user as a person.
                 user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth);
-            }
 
-            if (this.ModelState.IsValid)
-            {
+                // when the user is a doctor, we need to fill the properties of the doctor
+                if (registrationData.IsDoctor)
+                {
+                    // if user is already a doctor, we just edit the properties
+                    // otherwise we create a new doctor instance
+                    if (user.Doctor == null)
+                        user.Doctor = db.Doctors.CreateObject();
+
+                    user.Doctor.CRM = registrationData.MedicCRM;
+                    user.Doctor.MedicalSpecialtyId = registrationData.MedicalSpecialty ?? 0;
+                    user.Doctor.MedicalEntityId = registrationData.MedicalEntity ?? 0;
+                    user.Doctor.MedicalEntityJurisdiction = registrationData.MedicalEntityJurisdiction.ToString();
+                }
+                
                 db.Users.AddObject(user);
 
                 // If the ModelState is still valid, then save objects to the database.
@@ -168,7 +208,19 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 }
             }
 
-            return View();
+            ViewBag.MedicalSpecialtyOptions =
+                this.db.SYS_MedicalSpecialty
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
+            ViewBag.MedicalEntityOptions =
+                this.db.SYS_MedicalEntity
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
+            return View(registrationData);
         }
 
         public ActionResult CreateAccountCompleted()

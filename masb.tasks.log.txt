@@ -9,8 +9,14 @@ yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
 2012-08-## ##:00-##:## (#º##") ##   
 
+2012-08-22 21:30-22:00 (1º00")  9   BUG: quando o médico não possui configurações da agenda dá pau pra tudo quanto é lado.
+2012-08-22 19:00-21:00 (2º00")  8   Issue #39: permitir criar médico junto com o consultório.
+2012-08-22 15:00-16:00 (1º00")  5   Issue #39: permitir criar médico junto com o consultório.
+
+2012-08-21 16:00-17:00 (1º00")  8   Issue #39: permitir criar médico junto com o consultório.
+
 -- 1º00" (?º??")
-2012-08-16 22:30-##:## (#º##") ##   Preparando commit.
+2012-08-16 22:30-24:00 (1º30")  6   Preparando commit, mergindo, corrigindo erros pós merge, testando e fazendo commit novamente.
 2012-08-16 22:00-22:30 (0º30") 10   Colocando Unique-Index nas FKs do usuário que devem ser únicos: PersonId, DoctorId, etc..
 2012-08-16 20:40-22:00 (1º20")  8   Verificando interface do software a procura de erros com datas.
 2012-08-16 19:00-19:20 (0º20") 10   Verificando interface do software a procura de erros com datas.

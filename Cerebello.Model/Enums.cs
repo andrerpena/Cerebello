@@ -5,6 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using Cerebello.Model;
 
+// todo: this namespace is wrong... should be Cerebello.Model
 namespace CerebelloWebRole.Models
 {
 

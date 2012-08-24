@@ -68,26 +68,27 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Fuso-horário do consultório")]
         public short PracticeTimeZone { get; set; }
 
-        //[Display(Name = "Sou médico neste consultório")]
-        //public bool IsDoctor { get; set; }
+        [Display(Name = "Sou médico neste consultório")]
+        public bool IsDoctor { get; set; }
 
-        //// Information of this user when he/she is a medic.
-        //// If IsDoctor is false, these properties have no meaning.
+        // Information of this user when he/she is a medic.
+        // If IsDoctor is false, these properties have no meaning, so the validation can be discarded by the code.
 
-        //[Display(Name = "CRM")]
-        //[Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        //public string MedicCRM { get; set; }
+        [Display(Name = "CRM")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string MedicCRM { get; set; }
 
-        //[Display(Name = "Especialidade")]
-        //[Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        //public int? MedicalSpecialty { get; set; }
+        [Display(Name = "Especialidade")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicalSpecialty { get; set; }
 
-        //[Display(Name = "Entidade médica")]
-        //[Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        //public int? MedicalEntity { get; set; }
+        [Display(Name = "Conselho médico")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicalEntity { get; set; }
 
-        //[Display(Name = "UF")]
-        //[Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        //public string MedicalSpecialtyJurisdiction { get; set; }
+        [Display(Name = "UF do conselho")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        //[EnumDataType(typeof(TypeEstadoBrasileiro))]
+        public TypeEstadoBrasileiro MedicalEntityJurisdiction { get; set; }
     }
 }

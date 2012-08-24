@@ -30,7 +30,8 @@ namespace CerebelloWebRole.Code
                          UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
                          ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
                          CRM = doctor.CRM,
-                         MedicalSpecialty = doctor.SYS_MedicalSpecialty.Name
+                         MedicalSpecialty = doctor.SYS_MedicalSpecialty.Name,
+                         IsScheduleConfigured = doctor.CFG_Schedule != null,
                      };
 
                 this.ViewBag.Doctor = doc;

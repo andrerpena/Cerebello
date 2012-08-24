@@ -74,6 +74,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             List<string> minTimes = new List<string>();
             List<string> maxTimes = new List<string>();
 
+            // If schedule of the doctor is missing, we must inform the user that the schedule must be configured before using the software.
+            if (this.Doctor.CFG_Schedule == null)
+            {
+                return RedirectToAction("MissingConfigurations");
+            }
+
             if (this.Doctor.CFG_Schedule.Sunday)
             {
                 minTimes.Add(this.Doctor.CFG_Schedule.SundayWorkdayStartTime);
@@ -507,6 +513,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 return this.Json(new { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult MissingConfigurations()
+        {
+            return View();
         }
 
         /// <summary>

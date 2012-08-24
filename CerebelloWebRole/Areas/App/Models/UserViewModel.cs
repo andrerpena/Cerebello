@@ -40,12 +40,12 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalSpecialty { get; set; }
 
-        [Display(Name = "Entidade médica")]
+        [Display(Name = "Conselho médico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntity { get; set; }
 
-        [Display(Name = "UF")]
+        [Display(Name = "UF do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string MedicalSpecialtyJurisdiction { get; set; }
+        public string MedicalEntityJurisdiction { get; set; }
     }
 }

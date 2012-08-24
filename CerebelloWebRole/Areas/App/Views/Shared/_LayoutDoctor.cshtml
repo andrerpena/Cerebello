@@ -74,6 +74,9 @@
         });
 
         $("#global-schedule-new").click(function (e) {
+            @if (doctor.IsScheduleConfigured)
+            {
+            <text>
             e.preventDefault();
             $.modal({
                 url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
@@ -87,6 +90,14 @@
                 width: 480,
                 height: 200
             });
+            </text>
+            }
+            else
+            { 
+            <text>
+            window.location.href = "@(Url.Action("MissingConfigurations", "Schedule"))";
+            </text>
+            }
         });
     </script>
 }

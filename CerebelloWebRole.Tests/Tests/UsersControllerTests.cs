@@ -648,7 +648,7 @@ namespace CerebelloWebRole.Tests
                 return;
             }
 
-            // Editing the user MedicalSpecialtyJurisdiction, by removing the value.
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
             // This is not valid as this user is a doctor, and that property is required for doctors.
             ActionResult actionResult;
 
@@ -656,7 +656,7 @@ namespace CerebelloWebRole.Tests
                 // When editing, the user-name cannot be changed. Must set it to null.
                 vm.UserName = null;
 
-                vm.MedicalSpecialtyJurisdiction = null;
+                vm.MedicalEntityJurisdiction = null;
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
 

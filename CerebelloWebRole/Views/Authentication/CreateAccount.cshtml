@@ -1,6 +1,28 @@
 ﻿@model CerebelloWebRole.Models.CreateAccountViewModel
 @{
     ViewBag.Title = "Login";
+
+    // These objects must be filled, otherwise obscure exceptions may happen.
+    // - ViewBag.MedicalSpecialtyOptions
+    // - ViewBag.MedicalEntityOptions
+    if (!(this.ViewBag.MedicalSpecialtyOptions is IEnumerable<SelectListItem>))
+    {
+        throw new Exception("ViewBag.MedicalSpecialtyOptions is not of type 'IEnumerable<SelectListItem>'.");
+    }
+    if (!(this.ViewBag.MedicalSpecialtyOptions is IEnumerable<SelectListItem>))
+    {
+        throw new Exception("ViewBag.MedicalEntityOptions is not of type 'IEnumerable<SelectListItem>'.");
+    }
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(function() {
+            $('#IsDoctor').change(function() {
+                if ($(this).is(':checked')) $('.doctor-info').show();
+                else $('.doctor-info').hide();
+            });
+        });
+    </script>
 }
 <div class="authentication-container">
     <div class="authentication-container-wrapper">
@@ -25,7 +47,7 @@
                         </div>
                     </div>
                     <hr />
-                    @*Properties of the user as a person*@
+                    @*Properties of the user as a person and as a doctor*@
                     <div class="control-group">
                         @Html.LabelFor(model => model.FullName)
                         <div class="controls">
@@ -42,6 +64,42 @@
                         @Html.LabelFor(model => model.DateOfBirth)
                         <div class="controls">
                             @Html.TextBoxFor(model => model.DateOfBirth)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.IsDoctor)
+                        <div class="controls">
+                            @Html.CheckBoxFor(model => model.IsDoctor)
+                        </div>
+                    </div>
+                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                        @Html.LabelFor(model => model.MedicalEntity)
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                m => m.MedicalEntity,
+                                (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
+                                "")
+                        </div>
+                    </div>
+                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                        @Html.LabelFor(model => model.MedicalEntityJurisdiction)
+                        <div class="controls">
+                            @Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)
+                        </div>
+                    </div>
+                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                        @Html.LabelFor(model => model.MedicCRM)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.MedicCRM)
+                        </div>
+                    </div>
+                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                        @Html.LabelFor(model => model.MedicalSpecialty)
+                        <div class="controls">
+                            @Html.DropDownListFor(
+                                m => m.MedicalSpecialty,
+                                (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
+                                "")
                         </div>
                     </div>
                     <hr />

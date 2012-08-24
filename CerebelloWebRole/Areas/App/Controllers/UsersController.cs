@@ -72,7 +72,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel.MedicCRM = user.Doctor.CRM;
                 viewModel.MedicalSpecialty = user.Doctor.MedicalSpecialtyId;
                 viewModel.MedicalEntity = user.Doctor.MedicalEntityId;
-                viewModel.MedicalSpecialtyJurisdiction = user.Doctor.MedicalEntityJurisdiction;
+                viewModel.MedicalEntityJurisdiction = user.Doctor.MedicalEntityJurisdiction;
             }
 
             return viewModel;
@@ -270,7 +270,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.MedicCRM);
                 this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntity);
                 this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialty);
-                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialtyJurisdiction);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntityJurisdiction);
             }
 
             if (user != null)
@@ -308,7 +308,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     user.Doctor.CRM = formModel.MedicCRM;
                     user.Doctor.MedicalSpecialtyId = formModel.MedicalSpecialty ?? 0;
                     user.Doctor.MedicalEntityId = formModel.MedicalEntity ?? 0;
-                    user.Doctor.MedicalEntityJurisdiction = formModel.MedicalSpecialtyJurisdiction;
+                    user.Doctor.MedicalEntityJurisdiction = formModel.MedicalEntityJurisdiction;
                 }
                 else
                 {

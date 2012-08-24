@@ -78,6 +78,9 @@ namespace CerebelloWebRole.Code
         /// <returns></returns>
         public static string GenerateUrlIdentifier(string title)
         {
+            if (title == null)
+                return null;
+
             String normalizedString = title.Normalize(NormalizationForm.FormD);
             StringBuilder stringBuilder = new StringBuilder();
 

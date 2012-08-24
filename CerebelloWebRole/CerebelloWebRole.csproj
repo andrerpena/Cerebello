@@ -546,6 +546,7 @@
     <Content Include="Areas\App\Views\ExamResults\Edit.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Shared\EmailEditor.cshtml" />
+    <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
