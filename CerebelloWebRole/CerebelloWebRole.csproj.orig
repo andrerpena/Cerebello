@@ -13,7 +13,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -546,8 +546,12 @@
     <Content Include="Areas\App\Views\ExamResults\Details.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\Edit.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
+<<<<<<< HEAD
     <Content Include="Areas\App\Views\Shared\DisplayTemplates\AddressViewModel.cshtml" />
+=======
+    <Content Include="Areas\App\Views\Shared\EmailEditor.cshtml" />
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
