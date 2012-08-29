@@ -12,13 +12,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public DoctorsController()
         {
-            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
-            this.UtcNowGetter = () => DateTime.UtcNow;
         }
-
-        public Func<DateTime> UserNowGetter { get; set; }
-
-        public Func<DateTime> UtcNowGetter { get; set; }
 
         //
         // GET: /App/PracticeDoctors/
@@ -26,11 +20,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new PracticeDoctorsViewModel();
-            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.UserNowGetter());
+            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow());
             return View(model);
         }
 
-        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice, DateTime userNow)
+        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice, DateTime localNow)
         {
             var usersThatAreDoctors = db.Users
                 .Where(u => u.PracticeId == practice.Id)
@@ -43,7 +37,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         Id = u.Id,
                         Name = u.Person.FullName,
-                        UrlIdentifier = u.Person.UrlIdentifier,
+                        UrlIdentifier = u.Doctor.UrlIdentifier,
                         CRM = u.Doctor.CRM,
                         MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name,
                     },
@@ -68,7 +62,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     eachItem.MedicalEntityCode,
                     eachItem.MedicalEntityJurisdiction);
 
-                eachItem.ViewModel.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.Doctor, userNow, userNow).Item1;
+                // It is only possible to determine the next available time if the schedule of the doctor is already configured.
+                if (eachItem.doc.CFG_Schedule != null)
+                {
+                    var nextSlotInLocalTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db, eachItem.doc, localNow);
+                    eachItem.vm.NextAvailableTime = nextSlotInLocalTime.Item1;
+                }
             }
 
             var doctors = dataCollection.Select(item => item.ViewModel).ToList();

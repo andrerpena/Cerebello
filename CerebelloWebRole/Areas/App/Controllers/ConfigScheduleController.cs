@@ -14,80 +14,124 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var config = this.Doctor.CFG_Schedule;
 
-            var viewModel = new ConfigScheduleViewModel()
-            {
-                AppointmentDuration = config.AppointmentTime
-            };
+            var viewModel = new ConfigScheduleViewModel();
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+            if (config == null)
             {
-                Name = "Domingo",
-                IsBusinessDay = config.Sunday,
-                WorkdayStartTime = config.SundayWorkdayStartTime,
-                WorkdayEndTime = config.SundayWorkdayEndTime,
-                LunchStartTime = config.SundayLunchStartTime,
-                LunchEndTime = config.SundayWorkdayEndTime
-            });
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Domingo",
+                });
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
-            {
-                Name = "Segunda-feira",
-                IsBusinessDay = config.Monday,
-                WorkdayStartTime = config.MondayWorkdayStartTime,
-                WorkdayEndTime = config.MondayWorkdayEndTime,
-                LunchStartTime = config.MondayLunchStartTime,
-                LunchEndTime = config.MondayLunchEndTime
-            });
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Segunda-feira",
+                    IsBusinessDay = true,
+                });
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
-            {
-                Name = "Terça-feira",
-                IsBusinessDay = config.Tuesday,
-                WorkdayStartTime = config.TuesdayWorkdayStartTime,
-                WorkdayEndTime = config.TuesdayWorkdayEndTime,
-                LunchStartTime = config.TuesdayLunchStartTime,
-                LunchEndTime = config.TuesdayLunchEndTime
-            });
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Terça-feira",
+                    IsBusinessDay = true,
+                });
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
-            {
-                Name = "Quarta-feira",
-                IsBusinessDay = config.Wednesday,
-                WorkdayStartTime = config.WednesdayWorkdayStartTime,
-                WorkdayEndTime = config.WednesdayWorkdayEndTime,
-                LunchStartTime = config.WednesdayLunchStartTime,
-                LunchEndTime = config.WednesdayLunchEndTime
-            });
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Quarta-feira",
+                    IsBusinessDay = true,
+                });
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
-            {
-                Name = "Quinta-feira",
-                IsBusinessDay = config.Thursday,
-                WorkdayStartTime = config.ThursdayWorkdayStartTime,
-                WorkdayEndTime = config.ThursdayWorkdayEndTime,
-                LunchStartTime = config.ThursdayLunchStartTime,
-                LunchEndTime = config.ThursdayLunchEndTime
-            });
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Quinta-feira",
+                    IsBusinessDay = true,
+                });
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
-            {
-                Name = "Sexta-feira",
-                IsBusinessDay = config.Friday,
-                WorkdayStartTime = config.FridayWorkdayStartTime,
-                WorkdayEndTime = config.FridayWorkdayEndTime,
-                LunchStartTime = config.FridayLunchStartTime,
-                LunchEndTime = config.FridayLunchEndTime
-            });
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Sexta-feira",
+                    IsBusinessDay = true,
+                });
 
-            viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Sábado",
+                });
+            }
+            else
             {
-                Name = "Sábado",
-                IsBusinessDay = config.Saturday,
-                WorkdayStartTime = config.SaturdayWorkdayStartTime,
-                WorkdayEndTime = config.SaturdayWorkdayEndTime,
-                LunchStartTime = config.SaturdayLunchStartTime,
-                LunchEndTime = config.SaturdayLunchEndTime
-            });
+                viewModel.AppointmentDuration = config.AppointmentTime;
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Domingo",
+                    IsBusinessDay = config.Sunday,
+                    WorkdayStartTime = config.SundayWorkdayStartTime,
+                    WorkdayEndTime = config.SundayWorkdayEndTime,
+                    LunchStartTime = config.SundayLunchStartTime,
+                    LunchEndTime = config.SundayWorkdayEndTime
+                });
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Segunda-feira",
+                    IsBusinessDay = config.Monday,
+                    WorkdayStartTime = config.MondayWorkdayStartTime,
+                    WorkdayEndTime = config.MondayWorkdayEndTime,
+                    LunchStartTime = config.MondayLunchStartTime,
+                    LunchEndTime = config.MondayLunchEndTime
+                });
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Terça-feira",
+                    IsBusinessDay = config.Tuesday,
+                    WorkdayStartTime = config.TuesdayWorkdayStartTime,
+                    WorkdayEndTime = config.TuesdayWorkdayEndTime,
+                    LunchStartTime = config.TuesdayLunchStartTime,
+                    LunchEndTime = config.TuesdayLunchEndTime
+                });
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Quarta-feira",
+                    IsBusinessDay = config.Wednesday,
+                    WorkdayStartTime = config.WednesdayWorkdayStartTime,
+                    WorkdayEndTime = config.WednesdayWorkdayEndTime,
+                    LunchStartTime = config.WednesdayLunchStartTime,
+                    LunchEndTime = config.WednesdayLunchEndTime
+                });
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Quinta-feira",
+                    IsBusinessDay = config.Thursday,
+                    WorkdayStartTime = config.ThursdayWorkdayStartTime,
+                    WorkdayEndTime = config.ThursdayWorkdayEndTime,
+                    LunchStartTime = config.ThursdayLunchStartTime,
+                    LunchEndTime = config.ThursdayLunchEndTime
+                });
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Sexta-feira",
+                    IsBusinessDay = config.Friday,
+                    WorkdayStartTime = config.FridayWorkdayStartTime,
+                    WorkdayEndTime = config.FridayWorkdayEndTime,
+                    LunchStartTime = config.FridayLunchStartTime,
+                    LunchEndTime = config.FridayLunchEndTime
+                });
+
+                viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
+                {
+                    Name = "Sábado",
+                    IsBusinessDay = config.Saturday,
+                    WorkdayStartTime = config.SaturdayWorkdayStartTime,
+                    WorkdayEndTime = config.SaturdayWorkdayEndTime,
+                    LunchStartTime = config.SaturdayLunchStartTime,
+                    LunchEndTime = config.SaturdayLunchEndTime
+                });
+            }
 
             ViewBag.ReturnUrl = returnUrl;
 
@@ -161,44 +205,50 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var config = this.Doctor.CFG_Schedule;
 
+                if (config == null)
+                {
+                    config = new Cerebello.Model.CFG_Schedule();
+                    this.Doctor.CFG_Schedule = config;
+                }
+
                 config.AppointmentTime = (int)formModel.AppointmentDuration;
-                
+
                 config.Sunday = formModel.DaysOfWeek[0].IsBusinessDay;
                 config.SundayWorkdayStartTime = formModel.DaysOfWeek[0].WorkdayStartTime;
                 config.SundayWorkdayEndTime = formModel.DaysOfWeek[0].WorkdayEndTime;
                 config.SundayLunchStartTime = formModel.DaysOfWeek[0].LunchStartTime;
                 config.SundayLunchEndTime = formModel.DaysOfWeek[0].LunchEndTime;
-                
+
                 config.Monday = formModel.DaysOfWeek[1].IsBusinessDay;
                 config.MondayWorkdayStartTime = formModel.DaysOfWeek[1].WorkdayStartTime;
                 config.MondayWorkdayEndTime = formModel.DaysOfWeek[1].WorkdayEndTime;
                 config.MondayLunchStartTime = formModel.DaysOfWeek[1].LunchStartTime;
                 config.MondayLunchEndTime = formModel.DaysOfWeek[1].LunchEndTime;
-                
+
                 config.Tuesday = formModel.DaysOfWeek[2].IsBusinessDay;
                 config.TuesdayWorkdayStartTime = formModel.DaysOfWeek[2].WorkdayStartTime;
                 config.TuesdayWorkdayEndTime = formModel.DaysOfWeek[2].WorkdayEndTime;
                 config.TuesdayLunchStartTime = formModel.DaysOfWeek[2].LunchStartTime;
                 config.TuesdayLunchEndTime = formModel.DaysOfWeek[2].LunchEndTime;
-                
+
                 config.Wednesday = formModel.DaysOfWeek[3].IsBusinessDay;
                 config.WednesdayWorkdayStartTime = formModel.DaysOfWeek[3].WorkdayStartTime;
                 config.WednesdayWorkdayEndTime = formModel.DaysOfWeek[3].WorkdayEndTime;
                 config.WednesdayLunchStartTime = formModel.DaysOfWeek[3].LunchStartTime;
                 config.WednesdayLunchEndTime = formModel.DaysOfWeek[3].LunchEndTime;
-                
+
                 config.Thursday = formModel.DaysOfWeek[4].IsBusinessDay;
                 config.ThursdayWorkdayStartTime = formModel.DaysOfWeek[4].WorkdayStartTime;
                 config.ThursdayWorkdayEndTime = formModel.DaysOfWeek[4].WorkdayEndTime;
                 config.ThursdayLunchStartTime = formModel.DaysOfWeek[4].LunchStartTime;
                 config.ThursdayLunchEndTime = formModel.DaysOfWeek[4].LunchEndTime;
-                
+
                 config.Friday = formModel.DaysOfWeek[5].IsBusinessDay;
                 config.FridayWorkdayStartTime = formModel.DaysOfWeek[5].WorkdayStartTime;
                 config.FridayWorkdayEndTime = formModel.DaysOfWeek[5].WorkdayEndTime;
                 config.FridayLunchStartTime = formModel.DaysOfWeek[5].LunchStartTime;
                 config.FridayLunchEndTime = formModel.DaysOfWeek[5].LunchEndTime;
-                
+
                 config.Saturday = formModel.DaysOfWeek[6].IsBusinessDay;
                 config.SaturdayWorkdayStartTime = formModel.DaysOfWeek[6].WorkdayStartTime;
                 config.SaturdayWorkdayEndTime = formModel.DaysOfWeek[6].WorkdayEndTime;

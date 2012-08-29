@@ -15,6 +15,13 @@ namespace Cerebello.Firestarter
 {
     public static class Firestarter
     {
+        const string DEFAULT_TIMEZONE_ID = "E. South America Standard Time";
+
+        public static DateTime ConvertFromDefaultToUtc(DateTime dateTime)
+        {
+            return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.FindSystemTimeZoneById(DEFAULT_TIMEZONE_ID));
+        }
+
         /// <summary>
         /// Crates a fake user, doctor and practice.
         /// </summary>
@@ -113,9 +120,8 @@ namespace Cerebello.Firestarter
             // Creating person.
             Person person = new Person()
             {
-                DateOfBirth = new DateTime(1984, 05, 04),
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
                 FullName = "Phill Austin",
-                UrlIdentifier = "phillaustin",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
                 Email = "masbicudo@gmail.com",
@@ -134,6 +140,7 @@ namespace Cerebello.Firestarter
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
                 MedicalEntityJurisdiction = "MG",
+                UrlIdentifier = "phillaustin",
             };
 
             user.Doctor = doctor;
@@ -162,9 +169,8 @@ namespace Cerebello.Firestarter
         {
             Person person = new Person()
             {
-                DateOfBirth = new DateTime(1984, 08, 12),
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
                 FullName = "Gregory House",
-                UrlIdentifier = "gregoryhouse",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
                 Email = "andrerpena@gmail.com",
@@ -197,7 +203,7 @@ namespace Cerebello.Firestarter
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
                 MedicalEntityJurisdiction = "MG",
-
+                UrlIdentifier = "gregoryhouse",
             };
 
             db.Doctors.AddObject(doctor);
@@ -216,9 +222,8 @@ namespace Cerebello.Firestarter
         {
             Person person = new Person()
             {
-                DateOfBirth = new DateTime(1967, 04, 20),
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
                 FullName = "Marta Cura",
-                UrlIdentifier = "martacura",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
                 Email = "martacura@gmail.com",
@@ -252,6 +257,7 @@ namespace Cerebello.Firestarter
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
                 MedicalEntityJurisdiction = "MG",
+                UrlIdentifier = "martacura",
             };
 
             db.Doctors.AddObject(doctor);
@@ -296,9 +302,8 @@ namespace Cerebello.Firestarter
             // Creating person.
             Person person = new Person()
             {
-                DateOfBirth = new DateTime(1984, 05, 04),
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
                 FullName = "Menininha Santos",
-                UrlIdentifier = "meninasantos",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
             };
@@ -331,7 +336,8 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório do Dr. House",
                 UrlIdentifier = "consultoriodrhourse",
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow,
+                WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
             };
 
             db.Practices.AddObject(practice);
@@ -351,7 +357,8 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório da Dra. Marta",
                 UrlIdentifier = "dramarta",
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow,
+                WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
             };
 
             db.Practices.AddObject(practice);
@@ -1046,6 +1053,7 @@ namespace Cerebello.Firestarter
         {
             db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
             db.ExecuteStoreCommand(@"sp_MSForEachTable '
+                         SET QUOTED_IDENTIFIER ON;
                          IF OBJECTPROPERTY(object_id(''?''), ''TableHasForeignRef'') = 1
                          DELETE FROM ?
                          else 
@@ -1053,6 +1061,7 @@ namespace Cerebello.Firestarter
                      '");
             db.ExecuteStoreCommand(@"sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'");
             db.ExecuteStoreCommand(@"sp_MSForEachTable ' 
+                         SET QUOTED_IDENTIFIER ON;
                          IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1 
                          DBCC CHECKIDENT (''?'', RESEED, 0) 
                      ' ");
@@ -1274,32 +1283,6 @@ GO
                     Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
                     medicalProceduresMaxCount,
                     progress);
-        }
-
-        public static string GetUniquePatientUrlId(CerebelloEntities db, string fullName, int practiceId)
-        {
-            // todo: this method has been cloned from PatientsController
-
-            // Creating an unique UrlIdentifier for this patient.
-            // When another patient have the same UrlIdentifier, we try to append a
-            // number after the string so that it becomes different, and if it is also used
-            // then increment the number and try again.
-            var urlIdSrc = StringHelper.GenerateUrlIdentifier(fullName);
-            var urlId = urlIdSrc;
-
-            // todo: there is a concurrency problem here.
-            int cnt = 2;
-            while (db.Patients
-                .Where(p => p.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
-                .Where(p => p.Person.UrlIdentifier == urlId).Any())
-            {
-                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
-
-                if (cnt > 20)
-                    return null;
-            }
-
-            return urlId;
         }
     }
 }

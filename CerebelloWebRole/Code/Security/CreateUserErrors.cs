@@ -9,7 +9,6 @@ namespace CerebelloWebRole.Code.Security
     {
         Ok,
         UserNameAlreadyInUse,
-        CouldNotCreateUrlIdentifier,
-        InvalidUserName
+        InvalidUserNameOrPassword
     }
 }

@@ -33,18 +33,25 @@ namespace CerebelloWebRole.Code
         /// <param name="db">Storage object context used to add the new user. It won't be saved, just changed.</param>
         /// <param name="practiceId">The id of the practice that the new user belongs to.</param>
         /// <returns>An enumerated value indicating what has happened.</returns>
-        public static CreateUserResult CreateUser(out User createdUser, CreateAccountViewModel registrationData, CerebelloEntities db, int? practiceId = null)
+        public static CreateUserResult CreateUser(out User createdUser, CreateAccountViewModel registrationData, CerebelloEntities db, DateTime utcNow, int? practiceId)
         {
-            // Password salt and hash.
-            string passwordSalt = CipherHelper.GenerateSalt();
-            var passwordHash = CipherHelper.Hash(registrationData.Password, passwordSalt);
+            // Password cannot be null, nor empty.
+            if (string.IsNullOrEmpty(registrationData.Password))
+            {
+                createdUser = null;
+                return CreateUserResult.InvalidUserNameOrPassword;
+            }
 
             // User-name cannot be null, nor empty.
             if (string.IsNullOrEmpty(registrationData.UserName))
             {
                 createdUser = null;
-                return CreateUserResult.InvalidUserName;
+                return CreateUserResult.InvalidUserNameOrPassword;
             }
+
+            // Password salt and hash.
+            string passwordSalt = CipherHelper.GenerateSalt();
+            var passwordHash = CipherHelper.Hash(registrationData.Password, passwordSalt);
 
             // Normalizing user name.
             // The normalized user-name will be used to discover if another user with the same user-name already exists.
@@ -66,25 +73,16 @@ namespace CerebelloWebRole.Code
                 return CreateUserResult.UserNameAlreadyInUse;
             }
 
-            // Creating an unique UrlIdentifier for this user.
-            // This does not consider UrlIdentifier's used by patients.
-            var urlId = UsersController.GetUniqueUserUrlId(db, registrationData.FullName, practiceId);
-            if (urlId == null)
-            {
-                createdUser = null;
-                return CreateUserResult.CouldNotCreateUrlIdentifier;
-            }
-
             // Creating user.
             createdUser = new User()
             {
                 Person = new Person()
                 {
-                    DateOfBirth = registrationData.DateOfBirth,
+                    // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
+                    // The caller of this method must set the property.
                     Gender = registrationData.Gender,
                     FullName = registrationData.FullName,
-                    UrlIdentifier = urlId,
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = utcNow,
                     Email = registrationData.EMail,
                     EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail)
                 },
@@ -92,7 +90,7 @@ namespace CerebelloWebRole.Code
                 UserNameNormalized = normalizedUserName,
                 PasswordSalt = passwordSalt,
                 Password = passwordHash,
-                LastActiveOn = DateTime.Now,
+                LastActiveOn = utcNow,
             };
 
             if (practiceId != null)
@@ -103,11 +101,13 @@ namespace CerebelloWebRole.Code
             return CreateUserResult.Ok;
         }
 
-        public static bool Login(LoginViewModel loginModel, CerebelloEntities entities)
+        public static bool Login(LoginViewModel loginModel, CerebelloEntities entities, out User loggedInUser)
         {
+            loggedInUser = null;
+
             try
             {
-                string securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, entities);
+                string securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, entities, out loggedInUser);
 
                 DateTime expiryDate = DateTime.UtcNow.AddYears(1);
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
@@ -167,32 +167,33 @@ namespace CerebelloWebRole.Code
         /// <param name="id"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, CerebelloEntities entities)
+        public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, CerebelloEntities entities, out User loggedInUser)
         {
+            // Note: this method was setting the user.LastActiveOn property, but now the caller must do this.
+            // This is because it is not allowed to use DateTime.Now, because this makes the value not mockable.
+
             var isEmail = userNameOrEmail.Contains("@");
 
-            User user = isEmail ?
+            loggedInUser = isEmail ?
                 entities.Users.Where(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
                 entities.Users.Where(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault();
 
-            if (user == null)
+            if (loggedInUser == null)
                 throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");
 
             // comparing password
-            var passwordHash = CipherHelper.Hash(password, user.PasswordSalt);
-            if (user.Password != passwordHash)
+            var passwordHash = CipherHelper.Hash(password, loggedInUser.PasswordSalt);
+            if (loggedInUser.Password != passwordHash)
                 throw new Exception("Password [" + password + "] is invalid");
-
-            user.LastActiveOn = DateTime.UtcNow;
 
             SecurityToken securityToken = new SecurityToken()
             {
                 Salt = new Random().Next(0, 2000),
                 UserData = new UserData()
                 {
-                    Id = user.Id,
+                    Id = loggedInUser.Id,
                     Email = user.Person.Email,
-                    FullName = user.Person.FullName,
+                    FullName = loggedInUser.Person.FullName,
                     IsUsingDefaultPassword = password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
                 }
             };

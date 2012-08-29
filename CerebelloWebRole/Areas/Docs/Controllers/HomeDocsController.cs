@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using CerebelloWebRole.Code.Controllers;
 
 namespace CerebelloWebRole.Areas.Docs.Controllers
 {
-    public class HomeDocsController : Controller
+    public class HomeDocsController : RootController
     {
         //
         // GET: /Docs/HomeDocs/

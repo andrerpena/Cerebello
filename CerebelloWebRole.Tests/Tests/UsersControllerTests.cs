@@ -384,7 +384,7 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Create(new UserViewModel
+                var viewModel = new UserViewModel
                 {
                     UserName = "milena",
                     FullName = "Milena",
@@ -400,8 +400,16 @@ namespace CerebelloWebRole.Tests
                         },
                     Email = "new_email_address@not_repeated.com.xpto.br",
                     IsDoctor = true,
-                    MedicCRM = "", // Missing CRM.
-                });
+                    // Missing all medical information.
+                    MedicCRM = "",
+                    MedicalEntity = null,
+                    MedicalEntityJurisdiction = null,
+                    MedicalSpecialty = null,
+                };
+
+                Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
+
+                actionResult = controller.Create(viewModel);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -412,7 +420,7 @@ namespace CerebelloWebRole.Tests
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(1, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
+            Assert.AreEqual(4, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
         }
 
         /// <summary>
@@ -548,7 +556,7 @@ namespace CerebelloWebRole.Tests
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First());
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
@@ -581,6 +589,60 @@ namespace CerebelloWebRole.Tests
         }
 
         /// <summary>
+        /// Tests the edition of an user, without changing a thing.
+        /// This is a valid operation and should complete without exceptions,
+        /// and without validation errors.
+        /// </summary>
+        [TestMethod]
+        public void Edit_EditUser_NoChanges_HappyPath()
+        {
+            UsersController controller;
+            UserViewModel vm;
+            bool isDbSaved = false;
+            Doctor doc;
+            try
+            {
+                doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository();
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
+
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user FullName.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                // When editing, the user-name cannot be changed. Must set it to null.
+                vm.UserName = null;
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+
+                actionResult = controller.Edit(vm);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            // - The controller ModelState must have no validation errors related to e-mail.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+            Assert.IsTrue(isDbSaved, "DB changes must be saved.");
+
+            // Doctor UrlIdentifier must be the same as before.
+            using (var db2 = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+            {
+                var doc2 = db2.Doctors.Where(d => d.Id == doc.Id).First();
+                Assert.AreEqual(doc.UrlIdentifier, doc2.UrlIdentifier);
+            }
+        }
+
+        /// <summary>
         /// Tests the edition of an user, removing the value of a required field.
         /// This is an invalid operation and should have validation errors.
         /// </summary>
@@ -595,7 +657,7 @@ namespace CerebelloWebRole.Tests
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First());
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
@@ -605,7 +667,7 @@ namespace CerebelloWebRole.Tests
                 return;
             }
 
-            // Editing the user MedicalSpecialtyJurisdiction, by removing the value.
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
             // This is not valid as this user is a doctor, and that property is required for doctors.
             ActionResult actionResult;
 
@@ -613,7 +675,7 @@ namespace CerebelloWebRole.Tests
                 // When editing, the user-name cannot be changed. Must set it to null.
                 vm.UserName = null;
 
-                vm.MedicalSpecialtyJurisdiction = null;
+                vm.MedicalEntityJurisdiction = null;
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
 

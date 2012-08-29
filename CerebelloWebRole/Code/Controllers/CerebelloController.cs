@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Security;
-using System.Linq;
+using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Data;
+using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Code
 {
@@ -11,7 +12,7 @@ namespace CerebelloWebRole.Code
     /// This is the base Controller for all Controllers inside the App. 
     /// The site and documentation Controllers will NOT be CerebelloController
     /// </summary>
-    public class CerebelloController : Controller
+    public class CerebelloController : RootController
     {
         /// <summary>
         /// Object context used throughout all the controller
@@ -53,7 +54,7 @@ namespace CerebelloWebRole.Code
                         GravatarEmailHash = user.Person.EmailGravatarHash,
                         // the following properties will only be set if the current user is a doctor
                         DoctorId = user.DoctorId,
-                        DoctorUrlIdentifier = user.Doctor != null ? user.Person.UrlIdentifier : null
+                        DoctorUrlIdentifier = user.Doctor != null ? user.Doctor.UrlIdentifier : null
                     };
 
                     // this ViewBag will carry user information to the View

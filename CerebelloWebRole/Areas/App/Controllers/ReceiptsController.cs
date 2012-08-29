@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 receipt = new Receipt()
                 {
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = this.GetUtcNow(),
                     PatientId = formModel.PatientId.Value
                 };
                 this.db.Receipts.AddObject(receipt);

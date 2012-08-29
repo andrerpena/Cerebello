@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace CerebelloWebRole.Areas.App.Models
@@ -18,7 +16,8 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required]
         public int? PatientId { get; set; }
 
-        public DateTime? Date { get; set; }
+        // Propriedade não está sendo usada?
+        //public DateTime? Date { get; set; }
 
         [Display(Name="Texto")]
         public string Text { get; set; }

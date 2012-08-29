@@ -1,0 +1,18 @@
+﻿@model CerebelloWebRole.Areas.App.Models.AppointmentViewModel
+@using CerebelloWebRole.Code.Extensions
+@{
+    ViewBag.Title = "Configura a agenda";
+}
+@section Title {
+Configure a agenda
+}
+<div class="appointment-edit">
+    @using (Html.BeginForm("Edit", "ConfigSchedule", FormMethod.Get))
+    {
+        @Html.Message("Antes de usar a agenda é preciso configurá-la.")
+        
+        <div class="submit-bar">
+            <input id="config-agenda-button" type="submit" value="Configurar agenda" />
+        </div>
+    }
+</div>

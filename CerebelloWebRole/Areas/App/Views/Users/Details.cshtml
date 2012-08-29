@@ -4,12 +4,14 @@
     ViewBag.Title = "Create";
     ViewBag.Watermark = "Pesquisar pelo nome do usuário";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+
+    var localNow = (DateTime)this.ViewBag.LocalNow;
     
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
 }
 @section Title {
     Usuário: <b>@Model.FullName</b>

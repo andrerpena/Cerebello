@@ -83,7 +83,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     anamnese = new Anamnese()
                     {
-                        CreatedOn = DateTime.UtcNow,
+                        CreatedOn = this.GetUtcNow(),
                         PatientId = formModel.PatientId.Value
                     };
                     this.db.Anamnese.AddObject(anamnese);
@@ -120,6 +120,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 db.SaveChanges();
 
+                // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
                 return View("details", this.GetViewModel(anamnese));
             }
 

@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 modelObj = new ExaminationRequest
                 {
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = this.GetUtcNow(),
                     PatientId = formModel.PatientId.Value,
                 };
 

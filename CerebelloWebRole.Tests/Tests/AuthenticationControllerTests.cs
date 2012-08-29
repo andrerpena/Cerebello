@@ -109,6 +109,67 @@ namespace CerebelloWebRole.Tests
         }
 
         /// <summary>
+        /// Tests the creation of a new practice, with a valid user, that is a doctor of the practice.
+        /// This can be done, and should result in no errors or validation messages.
+        /// </summary>
+        [TestMethod]
+        public void CreateAccount_WithDoctor_HappyPath()
+        {
+            AuthenticationController controller;
+            string userFullName;
+            bool hasBeenSaved = false;
+            try
+            {
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository();
+                controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                userFullName = this.db.Users.Single().Person.FullName;
+                this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Creating a new user without an e-mail.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                var data = new CreateAccountViewModel
+                {
+                    UserName = "andré-01",
+                    PracticeName = "consultoriodrhourse_08sd986",
+                    Password = "xpto",
+                    ConfirmPassword = "xpto",
+                    DateOfBirth = new DateTime(1984, 05, 04),
+                    EMail = "andre@gmail.com",
+                    FullName = "André",
+                    Gender = (short)TypeGender.Male,
+                    IsDoctor = true,
+                    MedicCRM = "98237",
+                    MedicalEntity = this.db.SYS_MedicalEntity.First().Id,
+                    MedicalSpecialty = this.db.SYS_MedicalSpecialty.First().Id,
+                };
+                Mvc3TestHelper.SetModelStateErrors(controller, data);
+                actionResult = controller.CreateAccount(data);
+            }
+
+            // Getting the user that was saved.
+            var savedUser = this.db.Users.Where(u => u.UserName == "andré-01").Single();
+
+            // Assertions.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
+            var redirectResult = (RedirectToRouteResult)actionResult;
+            Assert.AreEqual(redirectResult.RouteValues["action"], "createaccountcompleted");
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
+            Assert.IsTrue(hasBeenSaved, "The database should be changed, but it was not.");
+            Assert.AreEqual(savedUser.UserNameNormalized, "andre01");
+        }
+
+        /// <summary>
         /// Tests the creation of a new practice, using a practice name that already exists.
         /// This cannot be done, and should result in no changes to the database.
         /// Also a ModelState validation message must be returned.

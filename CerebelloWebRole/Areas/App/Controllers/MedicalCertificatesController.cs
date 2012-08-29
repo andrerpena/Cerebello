@@ -172,7 +172,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     certificate = new MedicalCertificate()
                     {
-                        CreatedOn = DateTime.UtcNow,
+                        CreatedOn = this.GetUtcNow(),
                         PatientId = formModel.PatientId.Value
                     };
                     this.db.MedicalCertificates.AddObject(certificate);

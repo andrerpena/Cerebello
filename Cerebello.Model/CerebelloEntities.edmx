@@ -355,6 +355,7 @@
           <Property Name="MedicalEntityId" Type="int" Nullable="false" />
           <Property Name="MedicalEntityJurisdiction" Type="nvarchar" MaxLength="50" />
           <Property Name="MedicalSpecialtyId" Type="int" Nullable="false" />
+          <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
         </EntityType>
         <EntityType Name="ExaminationRequest">
           <Key>
@@ -485,7 +486,6 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="FullName" Type="varchar" Nullable="false" MaxLength="200" />
-          <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
           <Property Name="Gender" Type="smallint" Nullable="false" />
@@ -509,6 +509,7 @@
           <Property Name="UrlIdentifier" Type="varchar" Nullable="false" MaxLength="200" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="OwnerId" Type="int" />
+          <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1402,6 +1403,7 @@
           <NavigationProperty Name="SYS_MedicalEntity" Relationship="Cerebello.Model.FK_Doctor_MedicalEntity1" FromRole="Doctor" ToRole="SYS_MedicalEntity" />
           <NavigationProperty Name="SYS_MedicalSpecialty" Relationship="Cerebello.Model.FK_Doctor_MedicalSpecialty1" FromRole="Doctor" ToRole="SYS_MedicalSpecialty" />
           <Property Type="String" Name="MedicalEntityJurisdiction" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UrlIdentifier" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Laboratory">
           <Key>
@@ -1438,7 +1440,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FullName" Type="String" Nullable="false" MaxLength="200" Unicode="false" FixedLength="false" />
-          <Property Name="UrlIdentifier" Type="String" Nullable="false" MaxLength="200" Unicode="false" FixedLength="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="DateOfBirth" Type="DateTime" Nullable="false" />
           <Property Name="Gender" Type="Int16" Nullable="false" />
@@ -1467,6 +1468,7 @@
           <Property Name="OwnerId" Type="Int32" />
           <NavigationProperty Name="Owner" Relationship="Cerebello.Model.FK_Practice_User" FromRole="Practice" ToRole="User" />
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
+          <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2299,7 +2301,8 @@
             <ScalarProperty Name="Name" ColumnName="Name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Doctors"><EntityTypeMapping TypeName="Cerebello.Model.Doctor"><MappingFragment StoreEntitySet="Doctor">
-            <ScalarProperty Name="MedicalEntityJurisdiction" ColumnName="MedicalEntityJurisdiction" />
+            <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
+                <ScalarProperty Name="MedicalEntityJurisdiction" ColumnName="MedicalEntityJurisdiction" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="CRM" ColumnName="CRM" />
             <ScalarProperty Name="MedicalEntityId" ColumnName="MedicalEntityId" />
@@ -2324,7 +2327,6 @@
                 <ScalarProperty Name="PhoneCell" ColumnName="PhoneCell" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="FullName" ColumnName="FullName" />
-            <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
             <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
             <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
             <ScalarProperty Name="Gender" ColumnName="Gender" />
@@ -2336,7 +2338,8 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
-            <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
             <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
             <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -2755,6 +2758,7 @@
           <ConnectorPoint PointX="2.65625" PointY="16.047506510416667" />
           <ConnectorPoint PointX="2.65625" PointY="22.28125" />
           <ConnectorPoint PointX="3.125" PointY="22.28125" />
+          <ConnectorPoint PointX="3.125" PointY="22.63209354036459" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Practice_User" ManuallyRouted="false">
           <ConnectorPoint PointX="5" PointY="22.189140814017883" />

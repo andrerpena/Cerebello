@@ -55,15 +55,18 @@
         m => m.MedicalSpecialty,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalSpecialty,
-            (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions)</text>);
+            (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
+            "")</text>);
 
     editPanelMedic.AddField(
         m => m.MedicalEntity,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
-            (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
+            (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
+            "")</text>);
 
-    editPanelMedic.AddField(m => m.MedicalSpecialtyJurisdiction);
+    editPanelMedic.AddField(m => m.MedicalEntityJurisdiction,
+    format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
 }
 @section Scripts {
     <script type="text/javascript">

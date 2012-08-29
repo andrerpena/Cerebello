@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using CerebelloWebRole.Code;
-using CerebelloWebRole.Models;
-using Cerebello.Model;
 using System.Text.RegularExpressions;
-using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.Code.Security;
-using CerebelloWebRole.Code.Mvc;
+using System.Web.Mvc;
 using System.Web.Security;
+using Cerebello.Model;
+using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controllers;
+using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code.Security;
+using CerebelloWebRole.Models;
+using CerebelloWebRole.Areas.App.Controllers;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : RootController
     {
         private CerebelloEntities db = null;
 
@@ -41,7 +40,9 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel loginModel)
         {
-            if (!this.ModelState.IsValid || !SecurityManager.Login(loginModel, db))
+            User user;
+
+            if (!this.ModelState.IsValid || !SecurityManager.Login(loginModel, db, out user))
             {
                 ViewBag.LoginFailed = true;
                 return View();
@@ -49,6 +50,10 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
 #warning Todo seems to be wrong...
             // TODO: efetuar o login
+
+            user.LastActiveOn = this.GetUtcNow();
+
+            this.db.SaveChanges();
 
             if (loginModel.Password == Constants.DEFAULT_PASSWORD)
             {
@@ -78,6 +83,18 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
         public ActionResult CreateAccount()
         {
+            ViewBag.MedicalSpecialtyOptions =
+                this.db.SYS_MedicalSpecialty
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
+            ViewBag.MedicalEntityOptions =
+                this.db.SYS_MedicalEntity
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
             return View();
         }
 
@@ -85,8 +102,11 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         public ActionResult CreateAccount(CreateAccountViewModel registrationData)
         {
             // Normalizing name properties.
-            registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
-            registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
+            if (!string.IsNullOrEmpty(registrationData.PracticeName))
+                registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
+
+            if (!string.IsNullOrEmpty(registrationData.FullName))
+                registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
 
             var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
 
@@ -102,9 +122,16 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     "Nome do consultório já está em uso.");
             }
 
+            var utcNow = this.GetUtcNow();
+
             // Creating the new user.
             User user;
-            var result = SecurityManager.CreateUser(out user, registrationData, db);
+            var result = SecurityManager.CreateUser(out user, registrationData, db, utcNow, null);
+
+            if (result == CreateUserResult.InvalidUserNameOrPassword)
+            {
+                // Note: nothing to do because user-name and password fields are already validated.
+            }
 
             if (result == CreateUserResult.UserNameAlreadyInUse)
             {
@@ -117,32 +144,81 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     + "(Não é possível cadastrar 'MiguelAngelo' e 'miguel.angelo' no mesmo consultório.");
             }
 
-            if (result == CreateUserResult.CouldNotCreateUrlIdentifier)
+            // If the user being edited is a medic, then we must check the fields that are required for medics.
+            if (!registrationData.IsDoctor)
             {
-                this.ModelState.AddModelError(
-                    () => registrationData.FullName,
-                    // Todo: this message is also used in the AuthenticationController.
-                    "Quantidade máxima de homônimos excedida.");
+                // Removing validation error of medic properties, because this user is not a medic.
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicCRM);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntity);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityJurisdiction);
             }
 
-            // Creating a new medical practice.
-            user.Practice = new Practice
+            if (user != null)
             {
-                Name = registrationData.PracticeName,
-                UrlIdentifier = urlPracticeId,
-                CreatedOn = DateTime.Now,
-            };
+                var timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeTimeZone)registrationData.PracticeTimeZone).Id;
 
-            db.Users.AddObject(user);
+                // Creating a new medical practice.
+                user.Practice = new Practice
+                {
+                    Name = registrationData.PracticeName,
+                    UrlIdentifier = urlPracticeId,
+                    CreatedOn = utcNow,
+                    WindowsTimeZoneId = timeZoneId,
+                };
 
-            // If the ModelState is still valid, then save objects to the database.
-            if (this.ModelState.IsValid)
-            {
-                db.SaveChanges();
-                return RedirectToAction("createaccountcompleted");
+                // Setting the BirthDate of the user as a person.
+                user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth);
+
+                // when the user is a doctor, we need to fill the properties of the doctor
+                if (registrationData.IsDoctor)
+                {
+                    // if user is already a doctor, we just edit the properties
+                    // otherwise we create a new doctor instance
+                    if (user.Doctor == null)
+                        user.Doctor = db.Doctors.CreateObject();
+
+                    user.Doctor.CRM = registrationData.MedicCRM;
+                    user.Doctor.MedicalSpecialtyId = registrationData.MedicalSpecialty ?? 0;
+                    user.Doctor.MedicalEntityId = registrationData.MedicalEntity ?? 0;
+                    user.Doctor.MedicalEntityJurisdiction = registrationData.MedicalEntityJurisdiction.ToString();
+
+                    // Creating an unique UrlIdentifier for this doctor.
+                    // This is the first doctor, so there will be no conflicts.
+                    string urlId = UsersController.GetUniqueDoctorUrlId(this.db, registrationData.FullName, null);
+                    if (urlId == null)
+                    {
+                        this.ModelState.AddModelError(
+                            () => registrationData.FullName,
+                            // Todo: this message is also used in the UserController.
+                            "Quantidade máxima de homônimos excedida.");
+                    }
+                    user.Doctor.UrlIdentifier = urlId;
+                }
+
+                db.Users.AddObject(user);
+
+                // If the ModelState is still valid, then save objects to the database.
+                if (this.ModelState.IsValid)
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("createaccountcompleted");
+                }
             }
 
-            return View();
+            ViewBag.MedicalSpecialtyOptions =
+                this.db.SYS_MedicalSpecialty
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
+            ViewBag.MedicalEntityOptions =
+                this.db.SYS_MedicalEntity
+                .ToList()
+                .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
+                .ToList();
+
+            return View(registrationData);
         }
 
         public ActionResult CreateAccountCompleted()

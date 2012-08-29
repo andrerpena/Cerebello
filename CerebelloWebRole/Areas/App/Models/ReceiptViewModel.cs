@@ -14,7 +14,8 @@ namespace CerebelloWebRole.Areas.App.Models
 
         public int? Id { get; set; }
         public int? PatientId { get; set; }
-        public DateTime? Date { get; set; }
+        // Propriedade não está sendo usada?
+        //public DateTime? Date { get; set; }
 
         public List<ReceiptMedicineViewModel> ReceiptMedicines { get; set; }
     }

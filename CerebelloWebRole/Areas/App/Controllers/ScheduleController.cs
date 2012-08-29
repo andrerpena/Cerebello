@@ -15,34 +15,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public ScheduleController()
         {
-            this.UserNowGetter = () => DateTimeHelper.GetTimeZoneNow();
-            this.UtcNowGetter = () => DateTime.UtcNow;
         }
-
-        public Func<DateTime> UserNowGetter { get; set; }
-
-        public Func<DateTime> UtcNowGetter { get; set; }
 
         public JsonResult GetAppointments(int start, int end)
         {
-            System.DateTime origin = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
-            var startAsDateTime = origin.AddSeconds(start);
-            var endAsDateTime = origin.AddSeconds(end);
+            DateTime originUtc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            var startAsDateTimeUtc = originUtc.AddSeconds(start);
+            var endAsDateTimeUtc = originUtc.AddSeconds(end);
 
             var appointments =
                 this.db.Appointments
                 .Include("Patient")
                 .Include("Patient.Person")
                 .Where(a => a.DoctorId == this.Doctor.Id)
-                .Where(a => a.Start >= startAsDateTime && a.End <= endAsDateTime)
+                .Where(a => a.Start >= startAsDateTimeUtc && a.End <= endAsDateTimeUtc)
                 .ToList();
 
             return this.Json((from a in appointments
                               select new ScheduleEventViewModel()
                               {
                                   id = a.Id,
-                                  start = a.Start.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                                  end = a.End.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                                  start = ConvertToLocalDateTime(this.Practice, a.Start).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                                  end = ConvertToLocalDateTime(this.Practice, a.End).ToString("yyyy-MM-ddTHH:mm:ssZ"),
                                   title = GetAppointmentText(a),
                                   className = GetAppointmentClass(a),
                               }).ToList(), JsonRequestBehavior.AllowGet);
@@ -79,6 +73,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // verify min and max times
             List<string> minTimes = new List<string>();
             List<string> maxTimes = new List<string>();
+
+            // If schedule of the doctor is missing, we must inform the user that the schedule must be configured before using the software.
+            if (this.Doctor.CFG_Schedule == null)
+            {
+                return RedirectToAction("MissingConfigurations");
+            }
 
             if (this.Doctor.CFG_Schedule.Sunday)
             {
@@ -135,7 +135,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Create(DateTime? date, string start, string end, int? patientId, bool? findNextAvailable)
         {
-            var userNow = this.UserNowGetter();
+            // Note: remember that all DataTime parameter that comes from the client, are expressed in local practice time-zone.
+
+            var localNow = this.GetPracticeLocalNow();
 
             if (date != null)
             {
@@ -160,33 +162,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                date = userNow;
+                date = localNow;
                 if (string.IsNullOrEmpty(start))
-                    start = userNow.ToString("HH:mm");
+                    start = localNow.ToString("HH:mm");
             }
 
-            DateTime dateAlone = (date ?? userNow).Date;
+            DateTime localDateAlone = (date ?? localNow).Date;
 
             //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
 
             // Getting start date and time.
-            DateTime startTime =
+            DateTime localStartTime =
                 string.IsNullOrEmpty(start) ?
-                dateAlone :
-                dateAlone + DateTimeHelper.GetTimeSpan(start);
+                localDateAlone :
+                localDateAlone + DateTimeHelper.GetTimeSpan(start);
 
             // todo: just delete code or find a place for it?
             //FindNearestSlotStartTime(ref start, slots, ref startTime);
 
             // Getting end date and time.
-            DateTime endTime =
+            DateTime localEndTime =
                 string.IsNullOrEmpty(end) ?
-                startTime + slotDuration :
-                dateAlone + DateTimeHelper.GetTimeSpan(end);
+                localStartTime + slotDuration :
+                localDateAlone + DateTimeHelper.GetTimeSpan(end);
 
-            if (endTime - startTime < slotDuration)
-                endTime = startTime + slotDuration;
+            if (localEndTime - localStartTime < slotDuration)
+                localEndTime = localStartTime + slotDuration;
 
             // todo: just delete code or find a place for it?
             //FindNearestSlotEndTime(ref end, slots, ref endTime);
@@ -198,20 +200,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var db = this.db;
 
                 // Determining the date and time to start scanning for a free time slot.
-                DateTime startingFrom = startTime;
+                DateTime localStartingFrom = localStartTime;
 
-                if (userNow > startingFrom)
-                    startingFrom = userNow;
+                if (localNow > localStartingFrom)
+                    localStartingFrom = localNow;
 
                 // Finding the next available time slot, and setting the startTime and endTime.
-                var slot = FindNextFreeTime(db, doctor, userNow, startingFrom);
-                startTime = slot.Item1;
-                endTime = slot.Item2;
+                var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom);
+                localStartTime = slot.Item1;
+                localEndTime = slot.Item2;
             }
 
-            dateAlone = startTime.Date;
-            start = startTime.ToString("HH:mm");
-            end = endTime.ToString("HH:mm");
+            localDateAlone = localStartTime.Date;
+            start = localStartTime.ToString("HH:mm");
+            end = localEndTime.ToString("HH:mm");
 
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
@@ -229,20 +231,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (patientName != null)
                 viewModel.PatientId = patientId;
 
-            viewModel.Date = dateAlone;
+            viewModel.Date = localDateAlone;
             viewModel.Start = start;
             viewModel.End = end;
             viewModel.DoctorId = this.Doctor.Id;
             viewModel.DateSpelled =
-                DateTimeHelper.GetDayOfWeekAsString(dateAlone) + ", "
-                + DateTimeHelper.ConvertToRelative(dateAlone,
-                    userNow,
+                DateTimeHelper.GetDayOfWeekAsString(localDateAlone) + ", "
+                + DateTimeHelper.ConvertToRelative(
+                    localDateAlone,
+                    localNow,
                     DateTimeHelper.RelativeDateOptions.IncludePrefixes
                     | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                     | DateTimeHelper.RelativeDateOptions.ReplaceToday
                     | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
 
-            DoDateAndTimeValidation(viewModel, userNow, null);
+            this.DoDateAndTimeValidation(viewModel, localNow, null);
 
             this.ModelState.Clear();
 
@@ -251,6 +254,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.View("Edit", viewModel);
         }
 
+        [Obsolete("This method is not used anywhere.", error: true)]
         private static void FindNearestSlotEndTime(ref string end, List<Tuple<DateTime, DateTime>> slots, ref DateTime endTime)
         {
             // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
@@ -265,6 +269,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             end = endTime.ToString("HH:mm");
         }
 
+        [Obsolete("This method is not used anywhere.", error: true)]
         private static void FindNearestSlotStartTime(ref string start, List<Tuple<DateTime, DateTime>> slots, ref DateTime startTime)
         {
             // slots.Min() dispara exceção quando slot é vazio. É necessário verificar
@@ -300,26 +305,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.View("NotFound");
             }
 
-            var userNow = this.UserNowGetter();
+            var localNow = this.GetPracticeLocalNow();
+
+            var appointmentLocalStart = ConvertToLocalDateTime(this.Practice, appointment.Start);
+            var appointmentLocalEnd = ConvertToLocalDateTime(this.Practice, appointment.End);
 
             AppointmentViewModel viewModel = new AppointmentViewModel()
             {
                 Id = appointment.Id,
-                Date = appointment.Start.Date,
-                Start = appointment.Start.ToString("HH:mm"),
-                End = appointment.End.ToString("HH:mm"),
+                Date = appointmentLocalStart.Date,
+                Start = appointmentLocalStart.ToString("HH:mm"),
+                End = appointmentLocalEnd.ToString("HH:mm"),
                 DoctorId = appointment.DoctorId,
-                DateSpelled = DateTimeHelper.GetDayOfWeekAsString(appointment.Start.Date) + ", "
+                DateSpelled = DateTimeHelper.GetDayOfWeekAsString(appointmentLocalStart.Date) + ", "
                     + DateTimeHelper.ConvertToRelative(
-                        appointment.Start.Date,
-                        userNow,
+                        appointmentLocalStart.Date,
+                        localNow,
                         DateTimeHelper.RelativeDateOptions.IncludePrefixes
                             | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                             | DateTimeHelper.RelativeDateOptions.ReplaceToday
                             | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
             };
 
-            DoDateAndTimeValidation(viewModel, userNow, id);
+            DoDateAndTimeValidation(viewModel, localNow, id);
 
             switch ((TypeAppointment)appointment.Type)
             {
@@ -407,7 +415,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Verify if appoitment hours are consistent
             {
-                DoDateAndTimeValidation(formModel, this.UserNowGetter(), formModel.Id);
+                DoDateAndTimeValidation(formModel, this.GetPracticeLocalNow(), formModel.Id);
             }
 
             // Saving data if model is valid.
@@ -439,8 +447,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         return View("NotFound", formModel);
                 }
 
-                appointment.Start = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start);
-                appointment.End = formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End);
+                appointment.Start = ConvertToUtcDateTime(this.Practice, formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start));
+                appointment.End = ConvertToUtcDateTime(this.Practice, formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End));
 
                 // Setting the appointment type and associated properties.
                 // - generic appointment: has description, date and time interval
@@ -458,13 +466,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient.Person = new Person();
                     patient.Person.FullName = formModel.PatientName;
                     patient.Person.Gender = (short)formModel.PatientGender;
-                    patient.Person.DateOfBirth = formModel.PatientDateOfBirth.Value;
-                    patient.Person.CreatedOn = this.UtcNowGetter();
+                    patient.Person.DateOfBirth = ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value);
+                    patient.Person.CreatedOn = this.GetUtcNow();
                     patient.Doctor = this.Doctor;
                     patient.Person.Email = formModel.PatientEmail;
                     patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail);
-
-                    patient.Person.UrlIdentifier = urlId;
 
                     appointment.Patient = patient;
                 }
@@ -508,21 +514,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        /// <summary>
-        /// Returns the series of all day slots ordered
-        /// </summary>
-        /// <param name="day"></param>
-        /// <returns></returns>
-        private static List<Tuple<DateTime, DateTime>> GetDaySlots(DateTime day, Doctor doctor)
+        public ActionResult MissingConfigurations()
         {
-            DateTime todayBeginning = new DateTime(day.Year, day.Month, day.Day);
+            return View();
+        }
+
+        /// <summary>
+        /// Returns the series of all day slots ordered.
+        /// </summary>
+        /// <param name="localDateTime"></param>
+        /// <param name="doctor"></param>
+        /// <returns></returns>
+        private static List<Tuple<DateTime, DateTime>> GetDaySlotsInLocalTime(DateTime localDateTime, Doctor doctor)
+        {
+            if (localDateTime.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'localDateTime' must be expressed in local practice time-zone.", "localDateTime");
 
             string workdayStartTimeAsString = null;
             string workdayEndTimeAsString = null;
             string lunchStartTimeAsString = null;
             string lunchEndTimeAsString = null;
 
-            switch (day.DayOfWeek)
+            switch (localDateTime.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
                     if (!doctor.CFG_Schedule.Sunday)
@@ -582,6 +595,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     break;
             }
 
+            DateTime todayBeginning = localDateTime.Date;
             var workdayStartTime = todayBeginning + DateTimeHelper.GetTimeSpan(workdayStartTimeAsString);
             var workdayEndTime = todayBeginning + DateTimeHelper.GetTimeSpan(workdayEndTimeAsString);
             var lunchStartTime = todayBeginning + DateTimeHelper.GetTimeSpan(lunchStartTimeAsString);
@@ -592,21 +606,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
             List<Tuple<DateTime, DateTime>> result = new List<Tuple<DateTime, DateTime>>();
 
             var time = workdayStartTime;
-            var appointmentMinutes = doctor.CFG_Schedule.AppointmentTime;
+            var appointmentTimeSpan = new TimeSpan(0, doctor.CFG_Schedule.AppointmentTime, 0);
 
             while (true)
             {
-                var timeEnd = time + new TimeSpan(0, appointmentMinutes, 0);
+                var timeEnd = time + appointmentTimeSpan;
                 if ((time >= workdayStartTime && timeEnd <= lunchStartTime) || (time >= lunchEndTime && timeEnd <= workdayEndTime))
                 {
                     // in this case this span (time to timeEnd) is absolutely valid and we must add it to the slots
                     result.Add(new Tuple<DateTime, DateTime>(time, timeEnd));
-                    time = time + new TimeSpan(0, appointmentMinutes, 0);
+                    time = time + appointmentTimeSpan;
                 }
 
                 else if (time >= workdayStartTime && timeEnd > lunchStartTime && timeEnd < workdayEndTime)
                 {
-                    // this is an exception case in which the appointment would and in the middle of the lunch time
+                    // this is an exception case in which the appointment would end in the middle of the lunch time
                     time = lunchEndTime;
                 }
                 else
@@ -622,23 +636,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var doctor = this.Doctor;
             var db = this.db;
 
-            var userNow = this.UserNowGetter();
+            var localNow = this.GetPracticeLocalNow();
 
             // Determining the date and time to start scanning for a free time slot.
-            DateTime startingFrom = userNow;
+            DateTime localStartingFrom = localNow;
 
             if (!string.IsNullOrEmpty(date))
             {
-                startingFrom = DateTime.Parse(date)
+                // Note: as 'date' param is coming from the client, it is expressed in local practice time-zone.
+                localStartingFrom = DateTime.Parse(date)
                     + (string.IsNullOrEmpty(time) ?
                         new TimeSpan(0, 0, 0) :
                         DateTimeHelper.GetTimeSpan(time));
             }
 
-            if (userNow > startingFrom)
-                startingFrom = userNow;
+            if (localNow > localStartingFrom)
+                localStartingFrom = localNow;
 
-            var slot = FindNextFreeTime(db, doctor, userNow, startingFrom);
+            var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom);
             return this.Json(new
             {
                 date = slot.Item1.ToString("dd/MM/yyyy"),
@@ -647,7 +662,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dateSpelled = DateTimeHelper.GetDayOfWeekAsString(slot.Item1) + ", "
                 + DateTimeHelper.ConvertToRelative(
                     slot.Item1,
-                    userNow,
+                    localNow,
                     DateTimeHelper.RelativeDateOptions.IncludePrefixes
                     | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                     | DateTimeHelper.RelativeDateOptions.ReplaceToday
@@ -655,38 +670,62 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public static Tuple<DateTime, DateTime> FindNextFreeTime(
+        /// <summary>
+        /// Returns the next free time of a doctor, in local practice time-zone.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="doctor"></param>
+        /// <param name="startingFromTimeOfPractice">
+        /// The date and time to start scanning for free times.
+        /// This must be a time in the practice time-zone.
+        /// </param>
+        /// <returns></returns>
+        public static Tuple<DateTime, DateTime> FindNextFreeTimeInPracticeLocalTime(
             CerebelloEntities db,
             Doctor doctor,
-            DateTime userNow,
-            DateTime startingFrom)
+            DateTime startingFromLocalTime)
         {
-            var currentDateStart = startingFrom.Date;
-            var currentDateEnd = currentDateStart.AddDays(1).Date;
+            if (startingFromLocalTime.Kind != DateTimeKind.Unspecified)
+                throw new ArgumentException("'startingFromLocalTime' must be expressed in local practice time-zone.", "startingFromLocalTime");
+
+            var practice = doctor.Users.FirstOrDefault().Practice;
+
+            var currentDateStartUtc = ConvertToUtcDateTime(practice, startingFromLocalTime.Date);
+            var currentDateEndUtc = currentDateStartUtc.AddDays(1);
 
             while (true)
             {
                 // take all appointments of that day
                 var appointments = db.Appointments
                     .Where(a => a.DoctorId == doctor.Id)
-                    .Where(a => a.End >= currentDateStart && a.Start <= currentDateEnd)
+                    .Where(a => a.End >= currentDateStartUtc && a.Start <= currentDateEndUtc)
                     .OrderBy(a => a.Start)
                     .ToList();
 
-                var slots = GetDaySlots(currentDateStart, doctor).Where(s => s.Item1 >= startingFrom);
+                var currentDateStartLocal = ConvertToLocalDateTime(practice, currentDateStartUtc);
+                var slots = GetDaySlotsInLocalTime(currentDateStartLocal, doctor)
+                    .Where(s => s.Item1 >= startingFromLocalTime)
+                    .Select(s => new
+                    {
+                        StartUtc = ConvertToUtcDateTime(practice, s.Item1),
+                        EndUtc = ConvertToUtcDateTime(practice, s.Item2)
+                    })
+                    .ToList();
 
                 // Looking for available slots of time in the current day.
                 foreach (var slot in slots)
                 {
-                    if (!IsTimeAvailable(slot.Item1, slot.Item2, appointments))
+                    if (!IsTimeAvailableUtc(slot.StartUtc, slot.EndUtc, appointments))
                         continue;
 
-                    return slot;
+                    return Tuple.Create(
+                        ConvertToLocalDateTime(practice, slot.StartUtc),
+                        ConvertToLocalDateTime(practice, slot.EndUtc));
                 };
 
                 // Moving to the next day.
-                currentDateStart = currentDateEnd;
-                currentDateEnd = currentDateStart.AddDays(1).Date;
+                currentDateStartUtc = currentDateEndUtc;
+                currentDateEndUtc = currentDateStartUtc.AddDays(1);
             }
         }
 
@@ -702,7 +741,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         text = DateTimeHelper.GetDayOfWeekAsString(dateParsed) + ", "
                             + DateTimeHelper.ConvertToRelative(
                                 dateParsed,
-                                this.UserNowGetter(),
+                                this.GetPracticeLocalNow(),
                                 DateTimeHelper.RelativeDateOptions.IncludePrefixes
                                 | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                                 | DateTimeHelper.RelativeDateOptions.ReplaceToday
@@ -716,12 +755,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         private static bool ValidateTime(
             CerebelloEntities db,
             Doctor doctor,
-            DateTime date,
+            DateTime localDate,
             string startTimeText,
             string endTimeText,
             ModelStateDictionary modelState,
             ModelStateDictionary inconsistencyMessages,
-            DateTime userNow)
+            DateTime localNow)
         {
             if (string.IsNullOrEmpty(startTimeText) || string.IsNullOrEmpty(endTimeText))
                 return false;
@@ -734,7 +773,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             int integerHourStart = int.Parse(startRegexMatch.Groups[1].Value) * 100 + int.Parse(startRegexMatch.Groups[2].Value);
             int integerHourEnd = int.Parse(endRegexMatch.Groups[1].Value) * 100 + int.Parse(endRegexMatch.Groups[2].Value);
 
-            var monthAndDay = date.Month * 100 + date.Day;
+            var monthAndDay = localDate.Month * 100 + localDate.Day;
 
             // Validation: cannot be holliday.
             var isHolliday = db.SYS_Holiday.Where(h => h.MonthAndDay == monthAndDay).Any();
@@ -763,8 +802,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             //}
 
             // Validation: cannot set an appointment date to the past.
-            var startDate = date.Date + DateTimeHelper.GetTimeSpan(startTimeText);
-            if (startDate < userNow)
+            var localStartDate = localDate.Date + DateTimeHelper.GetTimeSpan(startTimeText);
+            if (localStartDate < localNow)
             {
                 inconsistencyMessages.AddModelError<AppointmentViewModel>(
                     model => model.Date,
@@ -842,7 +881,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
             };
 
-            switch (date.Date.DayOfWeek)
+            switch (localDate.Date.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
                     CheckModelTimingError(
@@ -911,8 +950,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return result;
         }
 
-        public static bool IsTimeAvailable(DateTime startTime, DateTime endTime, IEnumerable<Appointment> appointments, int? excludeAppointmentId = null)
+        public static bool IsTimeAvailableUtc(DateTime startTimeUtc, DateTime endTimeUtc, IEnumerable<Appointment> appointments, int? excludeAppointmentId = null)
         {
+            if (startTimeUtc.Kind != DateTimeKind.Utc)
+                throw new ArgumentException("startTimeUtc must be UTC", "startTimeUtc");
+
+            if (endTimeUtc.Kind != DateTimeKind.Utc)
+                throw new ArgumentException("endTimeUtc must be UTC", "endTimeUtc");
+
             // Not overlap condition:
             // The whole body of A is before the start of B   (a.start < b.start && a.end <= b.start)
             //   OR                                             ||
@@ -920,9 +965,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var query = from a in appointments
                         where
                         !(
-                               (a.Start < startTime && a.End <= startTime)
+                               (a.Start < startTimeUtc && a.End <= startTimeUtc)
                                  ||
-                               (a.Start >= endTime && a.End > endTime)
+                               (a.Start >= endTimeUtc && a.End > endTimeUtc)
                         )
                         select a;
 
@@ -956,16 +1001,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                var dateParsed = DateTime.Parse(date).Date;
+                var localDateParsed = DateTime.Parse(date).Date;
+
+                if (localDateParsed.Kind != DateTimeKind.Unspecified)
+                    throw new ArgumentException("'date' must be expressed in local practice time-zone.", "date");
 
                 AppointmentViewModel viewModel = new AppointmentViewModel
                 {
-                    Date = dateParsed,
+                    Date = localDateParsed,
                     Start = start,
                     End = end,
                 };
 
-                DoDateAndTimeValidation(viewModel, this.UserNowGetter(), excludeAppointmentId);
+                this.DoDateAndTimeValidation(viewModel, this.GetPracticeLocalNow(), excludeAppointmentId);
 
                 return this.Json(new
                 {
@@ -975,7 +1023,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        private void DoDateAndTimeValidation(AppointmentViewModel viewModel, DateTime userNow, int? excludeAppointmentId)
+        private void DoDateAndTimeValidation(AppointmentViewModel viewModel, DateTime localNow, int? excludeAppointmentId)
         {
             if (viewModel.Date != viewModel.Date.Date)
                 throw new ArgumentException("viewModel.Date must be the date alone, without time data.");
@@ -983,9 +1031,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
             if (!string.IsNullOrEmpty(viewModel.Start) && !string.IsNullOrEmpty(viewModel.End))
             {
-                var startTime = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.Start);
-                var endTime = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.End);
-
                 var isTimeValid = ValidateTime(
                     this.db,
                     this.Doctor,
@@ -994,9 +1039,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     viewModel.End,
                     this.ModelState,
                     inconsistencyMessages,
-                    userNow);
+                    localNow);
 
-                var isTimeAvailable = IsTimeAvailable(startTime, endTime, this.Doctor.Appointments, excludeAppointmentId);
+                var startTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.Start);
+                var endTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.End);
+
+                var startTimeUtc = ConvertToUtcDateTime(this.Practice, startTimeLocal);
+                var endTimeUtc = ConvertToUtcDateTime(this.Practice, endTimeLocal);
+
+                var isTimeAvailable = IsTimeAvailableUtc(startTimeUtc, endTimeUtc, this.Doctor.Appointments, excludeAppointmentId);
                 if (!isTimeAvailable)
                 {
                     inconsistencyMessages.AddModelError(
@@ -1031,10 +1082,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult GetDatesWithAppointments(int year, int month)
         {
-            var first = new DateTime(year, month, 1);
-            var last = first.AddMonths(1);
+            var localFirst = new DateTime(year, month, 1);
+            var localLast = localFirst.AddMonths(1);
 
-            var result = (from a in db.Appointments where a.Start >= first && a.End < last select a).ToList().Select(a => a.Start.ToString("'d'dd_MM_yyyy")).Distinct().ToArray();
+            var utcFirst = ConvertToUtcDateTime(this.Practice, localFirst);
+            var utcLast = ConvertToUtcDateTime(this.Practice, localLast);
+
+            var result = (from a in db.Appointments
+                          where a.Start >= utcFirst && a.End < utcLast
+                          select a).ToList()
+                .Select(a => ConvertToLocalDateTime(this.Practice, a.Start).ToString("'d'dd_MM_yyyy"))
+                .Distinct().ToArray();
+
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
     }

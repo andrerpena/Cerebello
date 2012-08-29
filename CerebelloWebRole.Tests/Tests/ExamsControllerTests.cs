@@ -13,6 +13,7 @@ using Cerebello;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Tests
 {
@@ -170,17 +171,22 @@ namespace CerebelloWebRole.Tests
             ExamsController controller;
             Patient patient;
             ExaminationRequest examRequest;
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
+
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
+                utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.FirstOrDefault().Practice, localNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 examRequest = new ExaminationRequest
                 {
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
                     MedicalProcedureId = this.MedicalProcedures[0].Id,
@@ -224,6 +230,7 @@ namespace CerebelloWebRole.Tests
                 var obj = db2.ExaminationRequests.Where(x => x.PatientId == patient.Id).FirstOrDefault();
                 Assert.IsNotNull(obj, "Database record was not saved.");
                 Assert.AreEqual("Any text", obj.Text);
+                Assert.AreEqual(utcNow, obj.CreatedOn);
             }
         }
 
@@ -238,17 +245,21 @@ namespace CerebelloWebRole.Tests
             Patient patient;
             ExaminationRequest examRequest;
             bool isDbChangesSaved = false;
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
+                utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.FirstOrDefault().Practice, localNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 examRequest = new ExaminationRequest
                 {
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
                     MedicalProcedureId = this.MedicalProcedures[0].Id,
@@ -311,6 +322,8 @@ namespace CerebelloWebRole.Tests
             ExaminationRequest examRequest;
             ExaminationRequestViewModel viewModel;
             bool isDbChangesSaved = false;
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
@@ -319,11 +332,13 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
+                utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 examRequest = new ExaminationRequest
                 {
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = utcNow,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
                     MedicalProcedureId = this.MedicalProcedures[0].Id,
@@ -385,6 +400,8 @@ namespace CerebelloWebRole.Tests
             ExaminationRequest examRequest;
             ExaminationRequestViewModel viewModel;
             bool isDbChangesSaved = false;
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
@@ -392,11 +409,13 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
+                utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 examRequest = new ExaminationRequest
                 {
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
                     MedicalProcedureId = this.MedicalProcedures[0].Id,
@@ -459,6 +478,8 @@ namespace CerebelloWebRole.Tests
             Patient patient;
             ExaminationRequest examRequest;
             bool isDbChangesSaved = false;
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 08, 16);
             try
             {
                 using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
@@ -468,11 +489,13 @@ namespace CerebelloWebRole.Tests
 
                     var mr = new MockRepository();
                     controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
+                    utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                    controller.UtcNowGetter = () => utcNow;
 
                     // saving the object that will be edited
                     examRequest = db2.ExaminationRequests.CreateObject();
 
-                    examRequest.CreatedOn = DateTime.Now;
+                    examRequest.CreatedOn = utcNow;
                     examRequest.PatientId = patient.Id;
                     examRequest.Text = "Old text";
                     examRequest.MedicalProcedureId = this.MedicalProcedures[2].Id;
@@ -575,6 +598,8 @@ namespace CerebelloWebRole.Tests
             Patient patientDraMarta;
             ExaminationRequest examRequest;
             bool isDbChangesSaved = false;
+            DateTime utcNow;
+            var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
@@ -583,11 +608,13 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
+                utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 examRequest = new ExaminationRequest
                 {
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = utcNow,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
                     MedicalProcedureId = this.MedicalProcedures[0].Id,

@@ -210,6 +210,7 @@ CREATE TABLE [dbo].[Doctor](
 	[MedicalEntityId] [int] NOT NULL,
 	[MedicalEntityJurisdiction] [nvarchar](50) NULL,
 	[MedicalSpecialtyId] [int] NOT NULL,
+	[UrlIdentifier] [varchar](200) NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -460,7 +461,6 @@ GO
 CREATE TABLE [dbo].[Person](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[FullName] [varchar](200) NOT NULL,
-	[UrlIdentifier] [varchar](200) NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[DateOfBirth] [datetime] NOT NULL,
 	[Gender] [smallint] NOT NULL,
@@ -491,6 +491,7 @@ CREATE TABLE [dbo].[Practice](
 	[UrlIdentifier] [varchar](200) NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[OwnerId] [int] NULL,
+	[WindowsTimeZoneId] [varchar](31) NOT NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -719,6 +720,39 @@ CREATE TABLE [dbo].[User](
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_AdministratorId] ON [dbo].[User] 
+(
+	[AdministratorId] ASC
+)
+WHERE ([AdministratorId] IS NOT NULL)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_DoctorId] ON [dbo].[User] 
+(
+	[DoctorId] ASC
+)
+WHERE ([DoctorId] IS NOT NULL)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_PersonId] ON [dbo].[User] 
+(
+	[PersonId] ASC
+)
+WHERE ([PersonId] IS NOT NULL)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE NONCLUSTERED INDEX [IX_User_PracticeId] ON [dbo].[User] 
+(
+	[PracticeId] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_SecretaryId] ON [dbo].[User] 
+(
+	[SecretaryId] ASC
+)
+WHERE ([SecretaryId] IS NOT NULL)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 /****** Object:  ForeignKey [FK_ActiveIngredient_Doctor] ******/
 ALTER TABLE [dbo].[ActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiveIngredient_Doctor] FOREIGN KEY([DoctorId])

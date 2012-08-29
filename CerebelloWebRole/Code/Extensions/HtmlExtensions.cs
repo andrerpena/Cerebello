@@ -124,7 +124,11 @@ namespace CerebelloWebRole.Code.Extensions
                     throw new Exception("cannot resolve enum type");
             }
 
-            var model = ((WebViewPage)html.ViewContext.View).Model;
+            var model = html.ViewData.Model;
+
+            if (model == null)
+                return new MvcHtmlString("");
+
             var modelValue = propertyInfo.GetValue(model, null);
 
             if (modelValue == null)

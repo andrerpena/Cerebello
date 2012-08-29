@@ -125,14 +125,16 @@ namespace Cerebello.Firestarter.Helpers
                 for (var j = 0; j < chosenMiddleNames.Length; j++)
                     chosenMiddleNames[j] = middleNames[random.Next(middleNames.Length)];
 
+                DateTime birthDate = new DateTime(random.Next(1950, 2000), random.Next(1, 13), random.Next(1, 29), 0, 0, 0, DateTimeKind.Utc);
+
                 var patient = new Patient()
                 {
                     Person = new Person()
                     {
                         FullName = firstName + " " + string.Join(" ", chosenMiddleNames),
-                        Gender = (short) gender,
-                        DateOfBirth = new DateTime(random.Next(1950, 2000), random.Next(1, 13), random.Next(1, 29)),
-                        MaritalStatus = (short?) random.Next(0, 4),
+                        Gender = (short)gender,
+                        DateOfBirth = birthDate,
+                        MaritalStatus = (short?)random.Next(0, 4),
                         BirthPlace = "Brasileiro(a)",
                         CPF = "87324128910",
                         CPFOwner = (int)TypeCPFOwner.PatientItself,
@@ -142,17 +144,6 @@ namespace Cerebello.Firestarter.Helpers
 
                     Doctor = doctor
                 };
-
-                var practiceId = doctor.Users.FirstOrDefault().PracticeId;
-
-                var urlId = Firestarter.GetUniquePatientUrlId(db, patient.Person.FullName, practiceId);
-                if (urlId == null)
-                {
-                    throw new Exception(
-                        // Todo: this message is also used in the AuthenticationController.
-                        "Quantidade máxima de homônimos excedida.");
-                }
-                patient.Person.UrlIdentifier = urlId;
 
                 patient.Person.Email = firstName + string.Join("", chosenMiddleNames) + "@gmail.com";
                 patient.Person.Address = new Address()

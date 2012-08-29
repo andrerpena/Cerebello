@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 using System.Web.Mvc;
 using CerebelloWebRole.Code.Validation;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -18,8 +19,6 @@ namespace CerebelloWebRole.Areas.App.Models
 
         public string ImageUrl { get; set; }
 
-        public string UrlIdentifier { get; set; }
-
         [Display(Name = "Administrador(a)")]
         public bool IsAdministrador { get; set; }
 
@@ -30,7 +29,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public bool IsDoctor { get; set; }
 
         // Information of this user when he/she is a medic.
-        // If IsMedic is false, these properties have no meaning.
+        // If IsDoctor is false, these properties have no meaning.
 
         [Display(Name = "CRM")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
@@ -40,12 +39,13 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalSpecialty { get; set; }
 
-        [Display(Name = "Entidade médica")]
+        [Display(Name = "Conselho médico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntity { get; set; }
 
-        [Display(Name = "UF")]
+        [Display(Name = "UF do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string MedicalSpecialtyJurisdiction { get; set; }
+        [EnumDataTypeAttribute(typeof(TypeEstadoBrasileiro))]
+        public int? MedicalEntityJurisdiction { get; set; }
     }
 }

@@ -184,6 +184,7 @@
     <Compile Include="Code\Constants.cs" />
     <Compile Include="Code\Controllers\DoctorController.cs" />
     <Compile Include="Code\Controllers\PracticeController.cs" />
+    <Compile Include="Code\Controllers\RootController.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Controls\CardView\CardView.cs" />
@@ -546,6 +547,7 @@
     <Content Include="Areas\App\Views\ExamResults\Edit.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Shared\DisplayTemplates\AddressViewModel.cshtml" />
+    <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
