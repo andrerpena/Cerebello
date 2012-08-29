@@ -50,19 +50,19 @@
     {
         throw new Exception("ViewBag.MedicalEntityOptions is not of type 'IEnumerable<SelectListItem>'.");
     }
-    
+
     editPanelMedic.AddField(
         m => m.MedicalSpecialty,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalSpecialty,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions)</text>);
-    
+
     editPanelMedic.AddField(
         m => m.MedicalEntity,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
-    
+
     editPanelMedic.AddField(m => m.MedicalSpecialtyJurisdiction);
 }
 @section Scripts {
@@ -127,10 +127,10 @@ Cadastrar um novo usuário
     </div>
     
     <p class="form-title">
-        @Html.LabelFor(model => model.Addresses)
+        @Html.LabelFor(model => model.Address)
     </p>
 
-    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor", "adicionar endereço"))
+    @Html.EditorFor(model => model.Address);
 
     <div class="submit-bar">
         <input type="submit" value="salvar usuário" />

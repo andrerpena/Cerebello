@@ -28,7 +28,7 @@ namespace CerebelloWebRole.Code
                      {
                          Name = doctor.Users.ElementAt(0).Person.FullName,
                          UrlIdentifier = doctor.Users.ElementAt(0).Person.UrlIdentifier,
-                         ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).GravatarEmailHash, GravatarHelper.Size.s32),
+                         ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).Person.EmailGravatarHash, GravatarHelper.Size.s32),
                          CRM = doctor.CRM,
                          MedicalSpecialty = doctor.SYS_MedicalSpecialty.Name
                      };

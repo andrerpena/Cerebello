@@ -344,6 +344,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(AppointmentViewModel formModel)
         {
+            string urlId = null;
+
             // Custom model validation.
             if (formModel.IsGenericAppointment)
             {
@@ -370,6 +372,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (formModel.PatientDateOfBirth == null)
                     ModelState.AddModelError<AppointmentViewModel>(model => model.PatientDateOfBirth, ModelStrings.RequiredValidationMessage);
+
+                // Creating an unique UrlIdentifier for this patient.
+                // This does not consider UrlIdentifier's used by the users of the software.
+                var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
+                urlId = PatientsController.GetUniquePatientUrlId(this.db, formModel.PatientName, practiceId);
+                if (urlId == null)
+                {
+                    this.ModelState.AddModelError(
+                        () => formModel.PatientName,
+                        // Todo: this message is also used in the AuthenticationController.
+                        "Quantidade máxima de homônimos excedida.");
+                }
             }
             else
             {
@@ -447,25 +461,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient.Person.DateOfBirth = formModel.PatientDateOfBirth.Value;
                     patient.Person.CreatedOn = this.UtcNowGetter();
                     patient.Doctor = this.Doctor;
+                    patient.Person.Email = formModel.PatientEmail;
+                    patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail);
 
-                    // Creating an unique UrlIdentifier for this patient.
-                    // This does not consider UrlIdentifier's used by the users of the software.
-                    var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
-
-                    var urlId = PatientsController.GetUniquePatientUrlId(this.db, formModel.PatientName, practiceId);
-                    if (urlId == null)
-                    {
-                        this.ModelState.AddModelError(
-                            () => formModel.PatientName,
-                            // Todo: this message is also used in the AuthenticationController.
-                            "Quantidade máxima de homônimos excedida.");
-                    }
                     patient.Person.UrlIdentifier = urlId;
 
                     appointment.Patient = patient;
-
-                    if (!string.IsNullOrEmpty(formModel.PatientEmail))
-                        appointment.Patient.Person.Emails.Add(new Email() { Address = formModel.PatientEmail });
                 }
                 else
                 {

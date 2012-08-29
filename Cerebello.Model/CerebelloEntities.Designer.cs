@@ -18,16 +18,13 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Address_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Address), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Coverage", "Coverage", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Coverage), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Laboratory_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Laboratory", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Laboratory), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Email_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Email", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Email), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Receipt_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Receipt", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Receipt), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Phone_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Phone", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Phone), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.User), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ReceiptMedicine_Receipt", "Receipt", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Receipt), "ReceiptMedicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ReceiptMedicine), true)]
@@ -60,6 +57,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationResult_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "ExaminationResult", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationResult), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationRequest_SYS_MedicalProcedures11", "SYS_MedicalProcedure", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalProcedure), "ExaminationRequest", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationRequest), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationResult_SYS_MedicalProcedures1", "SYS_MedicalProcedure", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalProcedure), "ExaminationResult", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationResult), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Address_Person1", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), true)]
 
 #endregion
 
@@ -178,22 +176,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Email> Emails
-        {
-            get
-            {
-                if ((_Emails == null))
-                {
-                    _Emails = base.CreateObjectSet<Email>("Emails");
-                }
-                return _Emails;
-            }
-        }
-        private ObjectSet<Email> _Emails;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Laboratory> Laboratories
         {
             get
@@ -238,22 +220,6 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<Person> _People;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Phone> Phones
-        {
-            get
-            {
-                if ((_Phones == null))
-                {
-                    _Phones = base.CreateObjectSet<Phone>("Phones");
-                }
-                return _Phones;
-            }
-        }
-        private ObjectSet<Phone> _Phones;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -771,14 +737,6 @@ namespace Cerebello.Model
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Emails EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToEmails(Email email)
-        {
-            base.AddObject("Emails", email);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the Laboratories EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToLaboratories(Laboratory laboratory)
@@ -800,14 +758,6 @@ namespace Cerebello.Model
         public void AddToPeople(Person person)
         {
             base.AddObject("People", person);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Phones EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToPhones(Phone phone)
-        {
-            base.AddObject("Phones", phone);
         }
     
         /// <summary>
@@ -1459,16 +1409,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Address_Person", "Person")]
-        public Person Person
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Address_Person1", "Person")]
+        public Person Person_1
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Address_Person", "Person").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Address_Person1", "Person").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Address_Person", "Person").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Address_Person1", "Person").Value = value;
             }
         }
         /// <summary>
@@ -1476,17 +1426,17 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Person> PersonReference
+        public EntityReference<Person> Person_1Reference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Address_Person", "Person");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Address_Person1", "Person");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Cerebello.Model.FK_Address_Person", "Person", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Cerebello.Model.FK_Address_Person1", "Person", value);
                 }
             }
         }
@@ -4264,178 +4214,6 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<SYS_MedicalSpecialty>("Cerebello.Model.FK_Doctor_MedicalSpecialty1", "SYS_MedicalSpecialty", value);
-                }
-            }
-        }
-
-        #endregion
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Email")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class Email : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new Email object.
-        /// </summary>
-        /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="address">Initial value of the Address property.</param>
-        /// <param name="personId">Initial value of the PersonId property.</param>
-        public static Email CreateEmail(global::System.Int32 id, global::System.String address, global::System.Int32 personId)
-        {
-            Email email = new Email();
-            email.Id = id;
-            email.Address = address;
-            email.PersonId = personId;
-            return email;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 Id
-        {
-            get
-            {
-                return _Id;
-            }
-            set
-            {
-                if (_Id != value)
-                {
-                    OnIdChanging(value);
-                    ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("Id");
-                    OnIdChanged();
-                }
-            }
-        }
-        private global::System.Int32 _Id;
-        partial void OnIdChanging(global::System.Int32 value);
-        partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Address
-        {
-            get
-            {
-                return _Address;
-            }
-            set
-            {
-                OnAddressChanging(value);
-                ReportPropertyChanging("Address");
-                _Address = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("Address");
-                OnAddressChanged();
-            }
-        }
-        private global::System.String _Address;
-        partial void OnAddressChanging(global::System.String value);
-        partial void OnAddressChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 PersonId
-        {
-            get
-            {
-                return _PersonId;
-            }
-            set
-            {
-                OnPersonIdChanging(value);
-                ReportPropertyChanging("PersonId");
-                _PersonId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("PersonId");
-                OnPersonIdChanged();
-            }
-        }
-        private global::System.Int32 _PersonId;
-        partial void OnPersonIdChanging(global::System.Int32 value);
-        partial void OnPersonIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String GravatarEmailHash
-        {
-            get
-            {
-                return _GravatarEmailHash;
-            }
-            set
-            {
-                OnGravatarEmailHashChanging(value);
-                ReportPropertyChanging("GravatarEmailHash");
-                _GravatarEmailHash = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("GravatarEmailHash");
-                OnGravatarEmailHashChanged();
-            }
-        }
-        private global::System.String _GravatarEmailHash;
-        partial void OnGravatarEmailHashChanging(global::System.String value);
-        partial void OnGravatarEmailHashChanged();
-
-        #endregion
-    
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Email_Person", "Person")]
-        public Person Person
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Email_Person", "Person").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Email_Person", "Person").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Person> PersonReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Email_Person", "Person");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Cerebello.Model.FK_Email_Person", "Person", value);
                 }
             }
         }
@@ -7231,54 +7009,106 @@ namespace Cerebello.Model
         private global::System.String _Profession;
         partial void OnProfessionChanging(global::System.String value);
         partial void OnProfessionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String PhoneCell
+        {
+            get
+            {
+                return _PhoneCell;
+            }
+            set
+            {
+                OnPhoneCellChanging(value);
+                ReportPropertyChanging("PhoneCell");
+                _PhoneCell = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("PhoneCell");
+                OnPhoneCellChanged();
+            }
+        }
+        private global::System.String _PhoneCell;
+        partial void OnPhoneCellChanging(global::System.String value);
+        partial void OnPhoneCellChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Email
+        {
+            get
+            {
+                return _Email;
+            }
+            set
+            {
+                OnEmailChanging(value);
+                ReportPropertyChanging("Email");
+                _Email = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Email");
+                OnEmailChanged();
+            }
+        }
+        private global::System.String _Email;
+        partial void OnEmailChanging(global::System.String value);
+        partial void OnEmailChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String EmailGravatarHash
+        {
+            get
+            {
+                return _EmailGravatarHash;
+            }
+            set
+            {
+                OnEmailGravatarHashChanging(value);
+                ReportPropertyChanging("EmailGravatarHash");
+                _EmailGravatarHash = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("EmailGravatarHash");
+                OnEmailGravatarHashChanged();
+            }
+        }
+        private global::System.String _EmailGravatarHash;
+        partial void OnEmailGravatarHashChanging(global::System.String value);
+        partial void OnEmailGravatarHashChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String PhoneLand
+        {
+            get
+            {
+                return _PhoneLand;
+            }
+            set
+            {
+                OnPhoneLandChanging(value);
+                ReportPropertyChanging("PhoneLand");
+                _PhoneLand = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("PhoneLand");
+                OnPhoneLandChanged();
+            }
+        }
+        private global::System.String _PhoneLand;
+        partial void OnPhoneLandChanging(global::System.String value);
+        partial void OnPhoneLandChanged();
 
         #endregion
     
         #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Address_Person", "Address")]
-        public EntityCollection<Address> Addresses
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Address>("Cerebello.Model.FK_Address_Person", "Address");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Address>("Cerebello.Model.FK_Address_Person", "Address", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Email_Person", "Email")]
-        public EntityCollection<Email> Emails
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Email>("Cerebello.Model.FK_Email_Person", "Email");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Email>("Cerebello.Model.FK_Email_Person", "Email", value);
-                }
-            }
-        }
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -7308,28 +7138,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Phone_Person", "Phone")]
-        public EntityCollection<Phone> Phones
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Phone>("Cerebello.Model.FK_Phone_Person", "Phone");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Phone>("Cerebello.Model.FK_Phone_Person", "Phone", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_User_Person", "User")]
         public EntityCollection<User> Users
         {
@@ -7345,142 +7153,6 @@ namespace Cerebello.Model
                 }
             }
         }
-
-        #endregion
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Phone")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class Phone : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new Phone object.
-        /// </summary>
-        /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="personId">Initial value of the PersonId property.</param>
-        /// <param name="number">Initial value of the Number property.</param>
-        /// <param name="type">Initial value of the Type property.</param>
-        public static Phone CreatePhone(global::System.Int32 id, global::System.Int32 personId, global::System.String number, global::System.Int32 type)
-        {
-            Phone phone = new Phone();
-            phone.Id = id;
-            phone.PersonId = personId;
-            phone.Number = number;
-            phone.Type = type;
-            return phone;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 Id
-        {
-            get
-            {
-                return _Id;
-            }
-            set
-            {
-                if (_Id != value)
-                {
-                    OnIdChanging(value);
-                    ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("Id");
-                    OnIdChanged();
-                }
-            }
-        }
-        private global::System.Int32 _Id;
-        partial void OnIdChanging(global::System.Int32 value);
-        partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 PersonId
-        {
-            get
-            {
-                return _PersonId;
-            }
-            set
-            {
-                OnPersonIdChanging(value);
-                ReportPropertyChanging("PersonId");
-                _PersonId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("PersonId");
-                OnPersonIdChanged();
-            }
-        }
-        private global::System.Int32 _PersonId;
-        partial void OnPersonIdChanging(global::System.Int32 value);
-        partial void OnPersonIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Number
-        {
-            get
-            {
-                return _Number;
-            }
-            set
-            {
-                OnNumberChanging(value);
-                ReportPropertyChanging("Number");
-                _Number = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("Number");
-                OnNumberChanged();
-            }
-        }
-        private global::System.String _Number;
-        partial void OnNumberChanging(global::System.String value);
-        partial void OnNumberChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 Type
-        {
-            get
-            {
-                return _Type;
-            }
-            set
-            {
-                OnTypeChanging(value);
-                ReportPropertyChanging("Type");
-                _Type = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("Type");
-                OnTypeChanged();
-            }
-        }
-        private global::System.Int32 _Type;
-        partial void OnTypeChanging(global::System.Int32 value);
-        partial void OnTypeChanged();
-
-        #endregion
-    
-        #region Navigation Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -7488,16 +7160,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Phone_Person", "Person")]
-        public Person Person
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Address_Person1", "Address")]
+        public Address Address
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Phone_Person", "Person").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Address>("Cerebello.Model.FK_Address_Person1", "Address").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Phone_Person", "Person").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Address>("Cerebello.Model.FK_Address_Person1", "Address").Value = value;
             }
         }
         /// <summary>
@@ -7505,17 +7177,17 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Person> PersonReference
+        public EntityReference<Address> AddressReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_Phone_Person", "Person");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Address>("Cerebello.Model.FK_Address_Person1", "Address");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Cerebello.Model.FK_Phone_Person", "Person", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Address>("Cerebello.Model.FK_Address_Person1", "Address", value);
                 }
             }
         }
@@ -9490,54 +9162,6 @@ namespace Cerebello.Model
         private global::System.Int32 _PersonId;
         partial void OnPersonIdChanging(global::System.Int32 value);
         partial void OnPersonIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String Email
-        {
-            get
-            {
-                return _Email;
-            }
-            set
-            {
-                OnEmailChanging(value);
-                ReportPropertyChanging("Email");
-                _Email = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("Email");
-                OnEmailChanged();
-            }
-        }
-        private global::System.String _Email;
-        partial void OnEmailChanging(global::System.String value);
-        partial void OnEmailChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String GravatarEmailHash
-        {
-            get
-            {
-                return _GravatarEmailHash;
-            }
-            set
-            {
-                OnGravatarEmailHashChanging(value);
-                ReportPropertyChanging("GravatarEmailHash");
-                _GravatarEmailHash = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("GravatarEmailHash");
-                OnGravatarEmailHashChanged();
-            }
-        }
-        private global::System.String _GravatarEmailHash;
-        partial void OnGravatarEmailHashChanging(global::System.String value);
-        partial void OnGravatarEmailHashChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

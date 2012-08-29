@@ -17,8 +17,6 @@ namespace CerebelloWebRole.Code.Validation
     public class UserNameAttribute : RegularExpressionAttribute
     {
         private const string pattern = @"^[^\W\d](?:[_\.\-]?\w){3,}$";
-
-#warning [Resource] This should be store as a resource.
         private static string message = "Nome de usuário não é valido. Tem que ter no mínimo 4 caracteres, começar com letra, "
                         + "e só pode conter letras, números e os caracteres '_', '-' e '.', sendo que esses últimos "
                         + "não podem aparecer em sequência, e nem no final.";

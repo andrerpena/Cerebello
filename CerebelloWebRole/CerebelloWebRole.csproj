@@ -13,7 +13,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -112,6 +112,7 @@
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
+    <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
@@ -142,7 +143,6 @@
     <Compile Include="Areas\App\Controllers\ScheduleController.cs" />
     <Compile Include="Areas\App\Controllers\DoctorsController.cs" />
     <Compile Include="Areas\App\Controllers\PracticeHomeController.cs" />
-    <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\DiagnosisViewModel.cs" />
     <Compile Include="Areas\App\Models\AnamneseViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDocumentsViewModel.cs" />
@@ -156,7 +156,6 @@
     <Compile Include="Areas\App\Models\AppointmentViewModels.cs" />
     <Compile Include="Areas\App\Models\AutocompleteViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigScheduleViewModel.cs" />
-    <Compile Include="Areas\App\Models\EmailViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicineConcentrationViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicinesIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PatientsIndexViewModel.cs" />
@@ -240,6 +239,8 @@
     <Compile Include="Code\Security\SecurityManager.cs" />
     <Compile Include="Code\Security\SecurityToken.cs" />
     <Compile Include="Code\Security\SecurityTokenHelper.cs" />
+    <Compile Include="Code\Validation\EmailAddressAttribute.cs" />
+    <Compile Include="Code\Validation\UrlAttribute.cs" />
     <Compile Include="Code\Validation\UserNameAttribute.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -506,7 +507,7 @@
     <Content Include="Areas\App\Views\Medicines\ActiveIngredientEditor.cshtml" />
     <Content Include="Areas\App\Views\Medicines\Details.cshtml" />
     <Content Include="Areas\App\Views\Receipts\ReceiptMedicineEditor.cshtml" />
-    <Content Include="Areas\App\Views\Shared\AddressEditor.cshtml" />
+    <Content Include="Areas\App\Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Areas\App\Views\Receipts\ReceiptMedicineDetails.cshtml" />
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
@@ -544,7 +545,7 @@
     <Content Include="Areas\App\Views\ExamResults\Details.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\Edit.cshtml" />
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
-    <Content Include="Areas\App\Views\Shared\EmailEditor.cshtml" />
+    <Content Include="Areas\App\Views\Shared\DisplayTemplates\AddressViewModel.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
@@ -555,6 +556,7 @@
     <Content Include="Scripts\jquery.arp.ajax.link.js" />
     <Content Include="Views\Shared\ObjectNotFound_Ajax.cshtml" />
     <None Include="Data\medicines.json" />
+    <Content Include="Views\Shared\EditorTemplates\Phone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

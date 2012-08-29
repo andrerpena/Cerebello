@@ -56,8 +56,9 @@
 
 .cardview .value
 {
+    line-height: 1.2em;
+    margin: 5px 0 5px 160px;
     text-align: left;
-    margin: 6px 0 6px 160px;
 }
 
 .cardview .value a

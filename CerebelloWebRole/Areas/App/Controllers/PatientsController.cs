@@ -49,29 +49,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Profissao = patient.Person.Profession,
                 CoverageText = patient.Coverage != null ? patient.Coverage.Name : "",
                 CPF = patient.Person.CPF,
-
-                //DoctorId = this.Doctor.Id,
-
-                Emails = (from e in patient.Person.Emails
-                          select new EmailViewModel()
-                          {
-                              Id = e.Id,
-                              Address = e.Address
-                          }).ToList(),
-
-                Addresses = (from a in patient.Person.Addresses
-                             select new AddressViewModel()
-                             {
-                                 Id = a.Id,
-                                 CEP = a.CEP,
-                                 City = a.City,
-                                 Complement = a.Complement,
-                                 Neighborhood = a.Neighborhood,
-                                 StateProvince = a.StateProvince,
-                                 Street = a.Street
-                             }).ToList()
+                Email = patient.Person.Email,
+                PhoneCell = patient.Person.PhoneCell,
+                PhoneLand = patient.Person.PhoneLand,
+                Address = new AddressViewModel()
+                {
+                    CEP = patient.Person.Address.CEP,
+                    City = patient.Person.Address.City,
+                    Complement = patient.Person.Address.Complement,
+                    Neighborhood = patient.Person.Address.Neighborhood,
+                    StateProvince = patient.Person.Address.StateProvince,
+                    Street = patient.Person.Address.Street
+                }
             };
-
+            
             if (includeSessions)
             {
                 var eventDates = new List<DateTime>();
@@ -262,6 +253,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             Patient patient = null;
 
+            // Creating an unique UrlIdentifier for this patient.
+            // This does not consider UrlIdentifier's used by the users of the software.
+            var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
+            string urlId = GetUniquePatientUrlId(this.db, formModel.FullName, practiceId);
+            if (urlId == null)
+            {
+                this.ModelState.AddModelError(
+                    () => formModel.FullName,
+                    // Todo: this message is also used in the AuthenticationController.
+                    "Quantidade máxima de homônimos excedida.");
+            }
+
             if (ModelState.IsValid)
             {
                 bool isEditing = formModel.Id != null;
@@ -287,52 +290,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
-
-                // Creating an unique UrlIdentifier for this patient.
-                // This does not consider UrlIdentifier's used by the users of the software.
-                var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
-
-                string urlId = GetUniquePatientUrlId(this.db, formModel.FullName, practiceId);
-                if (urlId == null)
-                {
-                    this.ModelState.AddModelError(
-                        () => formModel.FullName,
-                        // Todo: this message is also used in the AuthenticationController.
-                        "Quantidade máxima de homônimos excedida.");
-                }
+                patient.Person.Email = formModel.Email;
+                patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
+                patient.Person.PhoneLand = formModel.PhoneLand;
+                patient.Person.PhoneCell = formModel.PhoneCell;
                 patient.Person.UrlIdentifier = urlId;
 
-                patient.Person.Addresses.Update(
-                    formModel.Addresses,
-                    (vm, m) => vm.Id == m.Id,
-                    (vm, m) =>
-                    {
-                        m.CEP = vm.CEP;
-                        m.StateProvince = vm.StateProvince;
-                        m.City = vm.City;
-                        m.Complement = vm.Complement;
-                        m.Neighborhood = vm.Neighborhood;
-                        m.StateProvince = vm.StateProvince;
-                        m.Street = vm.Street;
-                    },
-                    (m) => this.db.Addresses.DeleteObject(m)
-                );
+                // handle patient address
+                if (patient.Person.Address == null)
+                    patient.Person.Address = new Address();
 
-                patient.Person.Emails.Update(
-                    formModel.Emails,
-                    (vm, m) => vm.Id == m.Id,
-                    (vm, m) =>
-                    {
-                        m.Address = vm.Address;
-                    },
-                    (m) => this.db.Emails.DeleteObject(m)
-                );
-            }
+                patient.Person.Address.CEP = formModel.Address.CEP;
+                patient.Person.Address.StateProvince = formModel.Address.StateProvince;
+                patient.Person.Address.City = formModel.Address.City;
+                patient.Person.Address.Complement = formModel.Address.Complement;
+                patient.Person.Address.Neighborhood = formModel.Address.Neighborhood;
+                patient.Person.Address.StateProvince = formModel.Address.StateProvince;
+                patient.Person.Address.Street = formModel.Address.Street;
 
-            if (this.ModelState.IsValid)
-            {
                 db.SaveChanges();
-
                 return RedirectToAction("details", new { id = patient.Id });
             }
 
@@ -500,50 +476,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                              }).OrderBy(p => p.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
-        }
-
-        public ActionResult EmailEditor(EmailViewModel viewModel)
-        {
-            return this.View(viewModel);
-        }
-
-        public ActionResult AddressEditor(AddressViewModel viewModel)
-        {
-            // there seems to be a BUG regarding DropdownListFors inside editor templates
-            // and possibly inside collection-editors. This is a workaraound (I'm forcingly
-            // setting the value).
-            // If we go into this more often we can investigate a more elegant solution.
-            ViewBag.UFOptions = new SelectList(new List<SelectListItem>()
-                    {
-                        new SelectListItem() { Text = "Acre", Value="AC"},
-                        new SelectListItem() { Text = "Alagoas", Value="AL"},
-                        new SelectListItem() { Text = "Amapá", Value="AP"},
-                        new SelectListItem() { Text = "Amazonas", Value="AM"},
-                        new SelectListItem() { Text = "Bahia", Value="BA"},
-                        new SelectListItem() { Text = "Ceará", Value="CE"},
-                        new SelectListItem() { Text = "Distrito Federal", Value="DF"},
-                        new SelectListItem() { Text = "Espírito Santo", Value="ES"},
-                        new SelectListItem() { Text = "Goiás", Value="GO"},
-                        new SelectListItem() { Text = "Maranhão", Value="MA"},
-                        new SelectListItem() { Text = "Mato Grosso", Value="MT"},
-                        new SelectListItem() { Text = "Mato Grosso do Sul", Value="MS"},
-                        new SelectListItem() { Text = "Minas Gerais", Value="MG"},
-                        new SelectListItem() { Text = "Pará", Value="PA"},
-                        new SelectListItem() { Text = "Paraiba", Value="PB"},
-                        new SelectListItem() { Text = "Pernambuco", Value="PE"},
-                        new SelectListItem() { Text = "Piauí", Value="PI"},
-                        new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
-                        new SelectListItem() { Text = "Rio Grande do Norte", Value="RN"},
-                        new SelectListItem() { Text = "Rio Grande do Sul", Value="RS"},
-                        new SelectListItem() { Text = "Rondônia", Value="RO"},
-                        new SelectListItem() { Text = "Roraima", Value="RR"},
-                        new SelectListItem() { Text = "Santa Catarina", Value="SC"},
-                        new SelectListItem() { Text = "São Paulo", Value="SP"},
-                        new SelectListItem() { Text = "Sergipe", Value="SE"},
-                        new SelectListItem() { Text = "Tocantins", Value="TO"}
-                    }, "Value", "Text", viewModel.StateProvince);
-
-            return View(viewModel);
         }
     }
 }

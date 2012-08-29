@@ -73,8 +73,8 @@ namespace CerebelloWebRole.Tests.Tests
                 },
                 Doctor = this.db.Doctors.First()
             };
-            patient1.Person.Emails.Add(new Email() { Address = "joao@gmail.com" });
-            patient1.Person.Addresses.Add(new Address()
+            patient1.Person.Email = "joao@gmail.com";
+            patient1.Person.Address = new Address()
             {
                 CEP = "602500330",
                 StateProvince = "RJ",
@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Neighborhood = "Jacarepaguá",
                 Street = "Rua Estrada do Pau Ferro 329",
                 Complement = ""
-            });
+            };
 
             db.Patients.AddObject(patient1);
 
@@ -103,8 +103,8 @@ namespace CerebelloWebRole.Tests.Tests
                 },
                 Doctor = this.db.Doctors.First()
             };
-            patient1.Person.Emails.Add(new Email() { Address = "manuela@gmail.com" });
-            patient1.Person.Addresses.Add(new Address()
+            patient1.Person.Email = "manuela@gmail.com";
+            patient1.Person.Address = new Address()
             {
                 CEP = "602500330",
                 StateProvince = "RJ",
@@ -112,7 +112,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Neighborhood = "Jacarepaguá",
                 Street = "Rua Estrada do Pau Ferro 329",
                 Complement = ""
-            });
+            };
 
             db.Patients.AddObject(patient2);
 

@@ -77,7 +77,7 @@ table.edit-panel > tbody > tr > th
 .edit-panel .small select, .edit-panel .small textarea, .edit-panel .small input[type=text], .edit-panel .small .lookup, .edit-panel .small .lookup-tree
 {
     width: 100%;
-    max-width: 90px;
+    max-width: 110px;
 }
 
 .edit-panel .required 

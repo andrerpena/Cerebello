@@ -1,0 +1,11 @@
+﻿@model CerebelloWebRole.Areas.App.Models.AddressViewModel
+@{
+    var addressCardView = Html.CreateCardView();
+    addressCardView.AddField(model => model.Street, wholeRow: true);
+    addressCardView.AddField(model => model.Complement);
+    addressCardView.AddField(model => model.Neighborhood);
+    addressCardView.AddField(model => model.City);
+    addressCardView.AddField(model => model.StateProvince);
+    addressCardView.AddField(model => model.CEP);
+}
+@addressCardView.GetHtml()

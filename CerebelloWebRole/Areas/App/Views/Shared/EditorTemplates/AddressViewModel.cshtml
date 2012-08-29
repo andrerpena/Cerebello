@@ -1,19 +1,16 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.AddressViewModel
 @{
-    Layout = null;
-
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.CEP, format: @<text> @Html.EditorFor(model => model.CEP)
-    <a class="getCepInfo block-little-link" href="#" style="display:block">Obter endereço</a>
+    <a class="getCepInfo block-little-link" href="#" style="display: block">Obter endereço</a>
     <img class="getCepInfoActivityIndicator" src="/content/images/progress.gif" style="display: none" />
     </text>);
     editPanel.AddField(m => m.StateProvince, format:
-    @<text>
-        @* there seems to be a BUG regarding DropdownListFors inside editor templates
+    @<text> @* there seems to be a BUG regarding DropdownListFors inside editor templates
          and possibly inside collection-editors. This is a workaraound (I'm forcingly
          setting the value).
          If we go into this more often we can investigate a more elegant solution.*@
-        @Html.DropDownListFor(model => model.StateProvince, new SelectList(new List<SelectListItem>()
+    @Html.DropDownListFor(model => model.StateProvince, new SelectList(new List<SelectListItem>()
                         {
                             new SelectListItem() { Text = "Acre", Value="AC"},
                             new SelectListItem() { Text = "Alagoas", Value="AL"},
@@ -42,46 +39,41 @@
                             new SelectListItem() { Text = "Sergipe", Value="SE"},
                             new SelectListItem() { Text = "Tocantins", Value="TO"}
                         }, "Value", "Text", this.Model.StateProvince), "")
-        </text>);
+    </text>);
     editPanel.AddField(m => m.City);
     editPanel.AddField(m => m.Neighborhood);
     editPanel.AddField(m => m.Street);
     editPanel.AddField(m => m.Complement, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
     
 }
-@using (Html.BeginCollectionItem("Addresses"))
-{
-    @Html.HiddenFor(model => model.Id)
-    @editPanel.GetHtml()
-    
-    <script type="text/javascript">
-        (function () {
+@editPanel.GetHtml()
+<script type="text/javascript">
+    (function () {
 
-            var $wrapper = $(".addresses-list .edit-list-item:last-child");
-            var $activityIndicator = $(".getCepInfoActivityIndicator", $wrapper);
+        var $wrapper = $(".addresses-list .edit-list-item:last-child");
+        var $activityIndicator = $(".getCepInfoActivityIndicator", $wrapper);
 
-            // máscaras
-            var $cepInput = $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).CEP']", $wrapper);
-            $cepInput.mask("99999-999");
+        // máscaras
+        var $cepInput = $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).CEP']", $wrapper);
+        $cepInput.mask("99999-999");
 
-            $("a.getCepInfo", $wrapper).bind("click", function (e) {
-                e.preventDefault();
-                $activityIndicator.show();
-                getGetInfo($cepInput.val(), {
-                    success: function (cepInfo) {
-                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
-                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);
-                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Neighborhood']", $wrapper).val(cepInfo.Neighborhood);
-                        $("select[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
-                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Street']", $wrapper).val(cepInfo.Street);
-                        $activityIndicator.hide();
-                    },
-                    error: function () {
-                        $activityIndicator.hide();
-                    }
-                });
+        $("a.getCepInfo", $wrapper).bind("click", function (e) {
+            e.preventDefault();
+            $activityIndicator.show();
+            getGetInfo($cepInput.val(), {
+                success: function (cepInfo) {
+                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
+                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);
+                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Neighborhood']", $wrapper).val(cepInfo.Neighborhood);
+                    $("select[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
+                    $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Street']", $wrapper).val(cepInfo.Street);
+                    $activityIndicator.hide();
+                },
+                error: function () {
+                    $activityIndicator.hide();
+                }
             });
+        });
 
-        })();
-    </script>
-}
+    })();
+</script>

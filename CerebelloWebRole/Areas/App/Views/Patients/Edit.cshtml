@@ -6,11 +6,14 @@
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
-    editPanel.AddField(m => m.DateOfBirth,  CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.DateOfBirth, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
     editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.CPF);
     editPanel.AddField(m => m.Profissao);
+    editPanel.AddField(m => m.Email, wholeRow: true);
+    editPanel.AddField(m => m.PhoneLand, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.PhoneCell, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
 }
 @section Scripts {
     <script type="text/javascript">
@@ -35,7 +38,7 @@
     <link rel="Stylesheet" type="text/css" href="/content/styles/app/patients_edit.css" />
 }
 @section Title {
-    Cadastrar um novo paciente
+Cadastrar um novo paciente
 }
 @section SideBar {
     <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>
@@ -46,15 +49,11 @@
     @editPanel.GetHtml();
 
     <p class="form-title">
-        @Html.LabelFor(model => model.Emails)
+        @Html.LabelFor(model => model.Address)
     </p>
-    @(Html.CollectionEditorFor(m => m.Emails, "EmailEditor", "adicionar e-mail"))
-                        
-    <p class="form-title">
-        @Html.LabelFor(model => model.Addresses)
-    </p>
-    @(Html.CollectionEditorFor(m => m.Addresses, "AddressEditor", "adicionar endereço"))
-        
+    
+    @Html.EditorFor(model => model.Address)
+    
     <div class="submit-bar">
         <input type="submit" value="salvar paciente" />
         <span class="separator">ou</span>

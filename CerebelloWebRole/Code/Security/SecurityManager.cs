@@ -85,18 +85,15 @@ namespace CerebelloWebRole.Code
                     FullName = registrationData.FullName,
                     UrlIdentifier = urlId,
                     CreatedOn = DateTime.Now,
+                    Email = registrationData.EMail,
+                    EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail)
                 },
                 UserName = registrationData.UserName,
                 UserNameNormalized = normalizedUserName,
                 PasswordSalt = passwordSalt,
                 Password = passwordHash,
                 LastActiveOn = DateTime.Now,
-                Email = registrationData.EMail,
             };
-
-            // E-mail is optional.
-            if (!string.IsNullOrEmpty(registrationData.EMail))
-                createdUser.Person.Emails.Add(new Email() { Address = registrationData.EMail });
 
             if (practiceId != null)
                 createdUser.PracticeId = (int)practiceId;
@@ -175,7 +172,7 @@ namespace CerebelloWebRole.Code
             var isEmail = userNameOrEmail.Contains("@");
 
             User user = isEmail ?
-                entities.Users.Where(u => u.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
+                entities.Users.Where(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
                 entities.Users.Where(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault();
 
             if (user == null)
@@ -194,7 +191,7 @@ namespace CerebelloWebRole.Code
                 UserData = new UserData()
                 {
                     Id = user.Id,
-                    Email = user.Email,
+                    Email = user.Person.Email,
                     FullName = user.Person.FullName,
                     IsUsingDefaultPassword = password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
                 }

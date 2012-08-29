@@ -35,44 +35,37 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 UserName = user.UserName,
                 FullName = user.Person.FullName,
                 UrlIdentifier = user.Person.UrlIdentifier,
-                ImageUrl = GravatarHelper.GetGravatarUrl(user.GravatarEmailHash, GravatarHelper.Size.s64),
+                ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s64),
                 Gender = user.Person.Gender,
                 DateOfBirth = user.Person.DateOfBirth,
                 MaritalStatus = user.Person.MaritalStatus,
                 BirthPlace = user.Person.BirthPlace,
                 CPF = user.Person.CPF,
                 Profissao = user.Person.Profession,
+                Email = user.Person.EmailGravatarHash,
 
                 IsAdministrador = user.AdministratorId != null,
                 IsDoctor = user.DoctorId != null,
                 IsSecretary = user.SecretaryId != null,
 
-                Emails = (from e in user.Person.Emails
-                          select new EmailViewModel()
-                          {
-                              Id = e.Id,
-                              Address = e.Address
-                          }).ToList(),
-
-                Addresses = (from a in user.Person.Addresses
-                             select new AddressViewModel()
-                             {
-                                 Id = a.Id,
-                                 CEP = a.CEP,
-                                 City = a.City,
-                                 Complement = a.Complement,
-                                 Neighborhood = a.Neighborhood,
-                                 StateProvince = a.StateProvince,
-                                 Street = a.Street
-                             }).ToList()
+                Address = user.Person.Address == null ? new AddressViewModel() : new AddressViewModel()
+                {
+                    CEP = user.Person.Address.CEP,
+                    City = user.Person.Address.City,
+                    Complement = user.Person.Address.Complement,
+                    Neighborhood = user.Person.Address.Neighborhood,
+                    StateProvince = user.Person.Address.StateProvince,
+                    Street = user.Person.Address.Street
+                }
             };
 
-            if (user.Doctor != null)
+            var userDoctor = user.Doctor;
+            if (userDoctor != null)
             {
-                viewModel.MedicCRM = user.Doctor.CRM;
-                viewModel.MedicalSpecialty = user.Doctor.MedicalSpecialtyId;
-                viewModel.MedicalEntity = user.Doctor.MedicalEntityId;
-                viewModel.MedicalSpecialtyJurisdiction = user.Doctor.MedicalEntityJurisdiction;
+                viewModel.MedicCRM = userDoctor.CRM;
+                viewModel.MedicalSpecialty = userDoctor.MedicalSpecialtyId;
+                viewModel.MedicalEntity = userDoctor.MedicalEntityId;
+                viewModel.MedicalSpecialtyJurisdiction = userDoctor.MedicalEntityJurisdiction;
             }
 
             return viewModel;
@@ -98,13 +91,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         FullName = u.Person.FullName,
                         UrlIdentifier = u.Person.UrlIdentifier,
                     },
-                    u.GravatarEmailHash,
+                    EmailGravatarHash = u.Person.EmailGravatarHash,
                 }).ToList();
 
             foreach (var eachItem in dataCollection)
             {
-                if (!string.IsNullOrEmpty(eachItem.GravatarEmailHash))
-                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.GravatarEmailHash, GravatarHelper.Size.s64);
+                if (!string.IsNullOrEmpty(eachItem.EmailGravatarHash))
+                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.EmailGravatarHash, GravatarHelper.Size.s64);
             }
 
             model.Users = dataCollection.Select(item => item.vm).ToList();
@@ -134,6 +127,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Edit(int? id)
         {
             UserViewModel model = null;
+
+            // ToDo: @masbicudo, eu coloquei essa linha pra evitar um crash na View.
+            // Está certo isso?
+            this.ViewBag.IsEditing = id != null;
 
             if (id != null)
             {
@@ -196,21 +193,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         "Nome de usuário inválido.");
                 }
 
-                var firstEmail = formModel.Emails.FirstOrDefault();
-                string userEmailStr = firstEmail != null ? firstEmail.Address : null;
-
                 var loggedUser = this.GetCurrentUser();
 
                 // Looking for another user with the same UserName or Email.
                 var conflictingData = this.db.Users
                     .Where(u => u.PracticeId == loggedUser.PracticeId)
-                    .Where(u => u.UserName == formModel.UserName || u.Email == userEmailStr)
-                    .Select(u => new { u.UserName, u.Email })
+                    .Where(u => u.UserName == formModel.UserName || u.Person.Email == formModel.Email)
+                    .Select(u => new { u.UserName, u.Person.Email })
                     .ToList();
 
                 // Verifying wich fields are conflicting: Email.
 #warning [Validate] Must validate all emails.
-                bool emailConflict = conflictingData.Any(c => c.Email == userEmailStr);
+                bool emailConflict = conflictingData.Any(c => c.Email == formModel.Email);
 
                 // For every new user we must create a login, with a common
                 // password used the first time the person logs in.
@@ -222,7 +216,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Password = Constants.DEFAULT_PASSWORD,
                     ConfirmPassword = Constants.DEFAULT_PASSWORD,
                     DateOfBirth = formModel.DateOfBirth,
-                    EMail = userEmailStr,
+                    EMail = formModel.Email,
                     FullName = formModel.FullName,
                     Gender = (short)formModel.Gender,
                 };
@@ -281,6 +275,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 user.Person.CreatedOn = DateTime.UtcNow;
                 user.Person.MaritalStatus = formModel.MaritalStatus;
                 user.Person.Profession = formModel.Profissao;
+                user.Person.Email = formModel.Email;
+                user.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
+
+                // handle address
+                if (user.Person.Address == null)
+                    user.Person.Address = new Address();
+
+                user.Person.Address.CEP = formModel.Address.CEP;
+                user.Person.Address.City = formModel.Address.City;
+                user.Person.Address.Complement = formModel.Address.Complement;
+                user.Person.Address.Neighborhood = formModel.Address.Neighborhood;
+                user.Person.Address.StateProvince = formModel.Address.StateProvince;
+                user.Person.Address.Street = formModel.Address.Street;
 
                 var practiceId = this.Practice.Id;
 
@@ -337,31 +344,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     user.Secretary = null;
                 }
-
-                user.Person.Addresses.Update(
-                    formModel.Addresses,
-                    (vm, m) => vm.Id == m.Id,
-                    (vm, m) =>
-                    {
-                        m.CEP = vm.CEP;
-                        m.City = vm.City;
-                        m.Complement = vm.Complement;
-                        m.Neighborhood = vm.Neighborhood;
-                        m.StateProvince = vm.StateProvince;
-                        m.Street = vm.Street;
-                    },
-                    (m) => this.db.Addresses.DeleteObject(m)
-                );
-
-                user.Person.Emails.Update(
-                    formModel.Emails,
-                    (vm, m) => vm.Id == m.Id,
-                    (vm, m) =>
-                    {
-                        m.Address = vm.Address;
-                    },
-                    (m) => this.db.Emails.DeleteObject(m)
-                );
             }
 
             // If ModelState is still valid, save the objects to the database.
@@ -547,11 +529,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 return null;
             }
-        }
-
-        public ActionResult AddressEditor(AddressViewModel viewModel)
-        {
-            return View(viewModel);
         }
     }
 }

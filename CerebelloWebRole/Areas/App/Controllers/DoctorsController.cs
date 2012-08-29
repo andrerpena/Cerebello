@@ -39,7 +39,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var dataCollection = usersThatAreDoctors
                 .Select(u => new
                 {
-                    vm = new DoctorViewModel()
+                    ViewModel = new DoctorViewModel()
                     {
                         Id = u.Id,
                         Name = u.Person.FullName,
@@ -48,9 +48,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         MedicalSpecialty = u.Doctor.SYS_MedicalSpecialty.Name,
                     },
                     MedicalEntityCode = u.Doctor.SYS_MedicalEntity.Code,
-                    u.Doctor.MedicalEntityJurisdiction,
-                    doc = u.Doctor,
-                    u.GravatarEmailHash,
+                    MedicalEntityJurisdiction = u.Doctor.MedicalEntityJurisdiction,
+                    Doctor = u.Doctor,
+                    EmailGravatarHash = u.Person.EmailGravatarHash,
                 })
                 .ToList();
 
@@ -60,18 +60,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // - gravatar image.
             foreach (var eachItem in dataCollection)
             {
-                if (!string.IsNullOrEmpty(eachItem.GravatarEmailHash))
-                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.GravatarEmailHash, GravatarHelper.Size.s64);
+                if (!string.IsNullOrEmpty(eachItem.EmailGravatarHash))
+                    eachItem.ViewModel.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.EmailGravatarHash, GravatarHelper.Size.s64);
 
-                eachItem.vm.MedicalEntity = string.Format(
+                eachItem.ViewModel.MedicalEntity = string.Format(
                     string.IsNullOrEmpty(eachItem.MedicalEntityJurisdiction) ? "{0}" : "{0}-{1}",
                     eachItem.MedicalEntityCode,
                     eachItem.MedicalEntityJurisdiction);
 
-                eachItem.vm.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.doc, userNow, userNow).Item1;
+                eachItem.ViewModel.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.Doctor, userNow, userNow).Item1;
             }
 
-            var doctors = dataCollection.Select(item => item.vm).ToList();
+            var doctors = dataCollection.Select(item => item.ViewModel).ToList();
             return doctors;
         }
     }
