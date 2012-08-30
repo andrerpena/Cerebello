@@ -38,7 +38,7 @@
                             new SelectListItem() { Text = "São Paulo", Value="SP"},
                             new SelectListItem() { Text = "Sergipe", Value="SE"},
                             new SelectListItem() { Text = "Tocantins", Value="TO"}
-                        }, "Value", "Text", this.Model.StateProvince), "")
+                        }, "Value", "Text", this.Model != null ? this.Model.StateProvince : null), "")
     </text>);
     editPanel.AddField(m => m.City);
     editPanel.AddField(m => m.Neighborhood);
@@ -50,7 +50,7 @@
 <script type="text/javascript">
     (function () {
 
-        var $wrapper = $(".addresses-list .edit-list-item:last-child");
+        var $wrapper = $(".edit-panel-wrapper");
         var $activityIndicator = $(".getCepInfoActivityIndicator", $wrapper);
 
         // máscaras
@@ -60,7 +60,7 @@
         $("a.getCepInfo", $wrapper).bind("click", function (e) {
             e.preventDefault();
             $activityIndicator.show();
-            getGetInfo($cepInput.val(), {
+            getGetInfo("@Url.Action("getcepinfo", "patients")", $cepInput.val(), {
                 success: function (cepInfo) {
                     $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
                     $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);

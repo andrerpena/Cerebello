@@ -21,6 +21,7 @@
     cardView.AddField(m => m.PhoneLand);
     cardView.AddField(m => m.PhoneCell);
     cardView.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);
+    cardView.AddField(m => m.Observations, wholeRow: true);
 }
 @section Title {
     Paciente: <b>@Model.FullName</b>
