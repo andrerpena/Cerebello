@@ -380,6 +380,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (formModel.PatientDateOfBirth == null)
                     ModelState.AddModelError<AppointmentViewModel>(model => model.PatientDateOfBirth, ModelStrings.RequiredValidationMessage);
+
+                // Creating an unique UrlIdentifier for this patient.
+                // This does not consider UrlIdentifier's used by the users of the software.
+                var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
+                urlId = PatientsController.GetUniquePatientUrlId(this.db, formModel.PatientName, practiceId);
+                if (urlId == null)
+                {
+                    this.ModelState.AddModelError(
+                        () => formModel.PatientName,
+                        // Todo: this message is also used in the AuthenticationController.
+                        "Quantidade máxima de homônimos excedida.");
+                }
             }
             else
             {
@@ -460,6 +472,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient.Person.Email = formModel.PatientEmail;
                     patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail);
 
+<<<<<<< HEAD
+                    patient.Person.UrlIdentifier = urlId;
+
+=======
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
                     appointment.Patient = patient;
                 }
                 else

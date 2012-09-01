@@ -35,7 +35,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = user.Id,
                 UserName = user.UserName,
                 FullName = user.Person.FullName,
+<<<<<<< HEAD
+                UrlIdentifier = user.Person.UrlIdentifier,
                 ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s64),
+=======
+                ImageUrl = GravatarHelper.GetGravatarUrl(user.GravatarEmailHash, GravatarHelper.Size.s64),
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
                 Gender = user.Person.Gender,
                 DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth),
                 MaritalStatus = user.Person.MaritalStatus,
@@ -62,12 +67,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var userDoctor = user.Doctor;
             if (userDoctor != null)
             {
+<<<<<<< HEAD
                 viewModel.MedicCRM = userDoctor.CRM;
                 viewModel.MedicalSpecialty = userDoctor.MedicalSpecialtyId;
                 viewModel.MedicalEntity = userDoctor.MedicalEntityId;
+                viewModel.MedicalSpecialtyJurisdiction = userDoctor.MedicalEntityJurisdiction;
+=======
+                viewModel.MedicCRM = user.Doctor.CRM;
+                viewModel.MedicalSpecialty = user.Doctor.MedicalSpecialtyId;
+                viewModel.MedicalEntity = user.Doctor.MedicalEntityId;
                 viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
                     typeof(TypeEstadoBrasileiro),
                     user.Doctor.MedicalEntityJurisdiction);
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
             }
 
             return viewModel;
@@ -219,7 +231,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     UserName = formModel.UserName,
                     Password = Constants.DEFAULT_PASSWORD,
                     ConfirmPassword = Constants.DEFAULT_PASSWORD,
+<<<<<<< HEAD
+                    DateOfBirth = formModel.DateOfBirth,
                     EMail = formModel.Email,
+=======
+                    EMail = userEmailStr,
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
                     FullName = formModel.FullName,
                     Gender = (short)formModel.Gender,
                 };

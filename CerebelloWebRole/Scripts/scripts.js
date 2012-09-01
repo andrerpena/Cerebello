@@ -5,3 +5,20 @@ function generateGuid() {
     };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
+
+// gets the cep
+function getGetInfo(url, cep, opts) {
+    $.ajax({
+        url: url,
+        data: { cep: cep },
+        dataType: "json",
+        success: function (e) {
+            var cepInfo = e ? e : {};
+            opts.success(cepInfo);
+        },
+        error: function () {
+            opts.error();
+            alert("Ocorreu um erro ao tentar obter o endereço a partir do CEP");
+        }
+    });
+}

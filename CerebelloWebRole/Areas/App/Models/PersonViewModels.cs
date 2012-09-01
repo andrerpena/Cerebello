@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Mvc;
+using Cerebello.Model;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -13,8 +14,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public PersonViewModel()
         {
-            this.Emails = new List<EmailViewModel>();
-            this.Addresses = new List<AddressViewModel>();
+            this.Address = new AddressViewModel();
         }
 
         /// <summary>
@@ -55,11 +55,21 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Profissão")]
         public String Profissao { get; set; }
 
-        [Display(Name = "E-mails")]
-        public List<EmailViewModel> Emails { get; set; }
+        [Display(Name = "E-mail")]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
+        [EmailAddress]
+        public String Email { get; set; }
 
-        [Display(Name = "Endereços")]
-        public List<AddressViewModel> Addresses { get; set; }
+        [Display(Name = "Telefone fixo")]
+        [UIHint("Phone")]
+        public String PhoneLand { get; set; }
+
+        [Display(Name = "Telefone celular")]
+        [UIHint("Phone")]
+        public String PhoneCell { get; set; }
+
+        [Display(Name = "Endereço")]
+        public AddressViewModel Address { get; set; }
     }
 
     public class CEPInfo

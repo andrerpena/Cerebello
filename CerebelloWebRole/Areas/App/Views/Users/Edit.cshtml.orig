@@ -53,26 +53,50 @@
 
     editPanelMedic.AddField(
         m => m.MedicalSpecialty,
-        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalSpecialty,
+<<<<<<< HEAD
+            (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions)</text>);
+
+=======
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
             "")</text>);
-
+    
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
     editPanelMedic.AddField(
         m => m.MedicalEntity,
-        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
+<<<<<<< HEAD
+            (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions)</text>);
+
+    editPanelMedic.AddField(m => m.MedicalSpecialtyJurisdiction);
+=======
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
             "")</text>);
-
-    editPanelMedic.AddField(
-        m => m.MedicalEntityJurisdiction,
-        format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
+    
+    editPanelMedic.AddField(m => m.MedicalEntityJurisdiction,
+    format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
 }
 @section Scripts {
     <script type="text/javascript">
+        function getGetInfo(cep, opts) {
+            $.ajax({
+                url: "@Url.Action("getcepinfo", "users")",
+                data: { cep: cep },
+                dataType: "json",
+                success: function (e) {
+                    var cepInfo = e ? e : {};
+                    opts.success(cepInfo);
+                },
+                error: function () {
+                    opts.error();
+                    alert("Ocorreu um erro ao tentar obter o endereço a partir do CEP");
+                }
+            });
+        }
+
         $(function() {
             $('#IsDoctor').change(function() {
               if ($(this).is(':checked')) $('#MedicEditPanel').show();

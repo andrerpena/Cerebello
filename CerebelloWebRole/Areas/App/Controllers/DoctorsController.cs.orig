@@ -62,12 +62,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     eachItem.MedicalEntityCode,
                     eachItem.MedicalEntityJurisdiction);
 
+<<<<<<< HEAD
+                eachItem.ViewModel.NextAvailableTime = ScheduleController.FindNextFreeTime(db, eachItem.Doctor, userNow, userNow).Item1;
+=======
                 // It is only possible to determine the next available time if the schedule of the doctor is already configured.
-                if (eachItem.Doctor.CFG_Schedule != null)
+                if (eachItem.doc.CFG_Schedule != null)
                 {
-                    var nextSlotInLocalTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db, eachItem.Doctor, localNow);
-                    eachItem.ViewModel.NextAvailableTime = nextSlotInLocalTime.Item1;
+                    var nextSlotInLocalTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db, eachItem.doc, localNow);
+                    eachItem.vm.NextAvailableTime = nextSlotInLocalTime.Item1;
                 }
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
             }
 
             var doctors = dataCollection.Select(item => item.ViewModel).ToList();

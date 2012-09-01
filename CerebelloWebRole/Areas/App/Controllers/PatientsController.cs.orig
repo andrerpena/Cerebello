@@ -254,6 +254,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             Patient patient = null;
 
+            // Creating an unique UrlIdentifier for this patient.
+            // This does not consider UrlIdentifier's used by the users of the software.
+            var practiceId = this.Doctor.Users.FirstOrDefault().PracticeId;
+            string urlId = GetUniquePatientUrlId(this.db, formModel.FullName, practiceId);
+            if (urlId == null)
+            {
+                this.ModelState.AddModelError(
+                    () => formModel.FullName,
+                    // Todo: this message is also used in the AuthenticationController.
+                    "Quantidade máxima de homônimos excedida.");
+            }
+
             if (ModelState.IsValid)
             {
                 bool isEditing = formModel.Id != null;
@@ -279,13 +291,45 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
+<<<<<<< HEAD
                 patient.Person.Email = formModel.Email;
                 patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
                 patient.Person.PhoneLand = formModel.PhoneLand;
                 patient.Person.PhoneCell = formModel.PhoneCell;
+                patient.Person.UrlIdentifier = urlId;
+
                 // handle patient address
                 if (patient.Person.Address == null)
                     patient.Person.Address = new Address();
+=======
+
+                patient.Person.Addresses.Update(
+                    formModel.Addresses,
+                    (vm, m) => vm.Id == m.Id,
+                    (vm, m) =>
+                    {
+                        m.CEP = vm.CEP;
+                        m.StateProvince = vm.StateProvince;
+                        m.City = vm.City;
+                        m.Complement = vm.Complement;
+                        m.Neighborhood = vm.Neighborhood;
+                        m.StateProvince = vm.StateProvince;
+                        m.Street = vm.Street;
+                    },
+                    (m) => this.db.Addresses.DeleteObject(m)
+                );
+
+                patient.Person.Emails.Update(
+                    formModel.Emails,
+                    (vm, m) => vm.Id == m.Id,
+                    (vm, m) =>
+                    {
+                        m.Address = vm.Address;
+                    },
+                    (m) => this.db.Emails.DeleteObject(m)
+                );
+            }
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
 
                 patient.Person.Address.CEP = formModel.Address.CEP;
                 patient.Person.Address.StateProvince = formModel.Address.StateProvince;

@@ -510,10 +510,6 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="OwnerId" Type="int" />
           <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
-          <Property Name="VerificationDate" Type="datetime" />
-          <Property Name="VerificationToken" Type="varchar" MaxLength="32" />
-          <Property Name="VerificationExpirationDate" Type="datetime" />
-          <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1473,10 +1469,6 @@
           <NavigationProperty Name="Owner" Relationship="Cerebello.Model.FK_Practice_User" FromRole="Practice" ToRole="User" />
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="VerificationDate" />
-          <Property Type="String" Name="VerificationToken" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="VerificationExpirationDate" />
-          <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2345,12 +2337,17 @@
             <ScalarProperty Name="Observations" ColumnName="Observations" />
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
+<<<<<<< HEAD
+=======
+          <EntitySetMapping Name="Phones"><EntityTypeMapping TypeName="Cerebello.Model.Phone"><MappingFragment StoreEntitySet="Phone">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
-            <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
-                <ScalarProperty Name="VerificationExpirationDate" ColumnName="VerificationExpirationDate" />
-                <ScalarProperty Name="VerificationToken" ColumnName="VerificationToken" />
-                <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
-                <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
+            <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
             <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
@@ -2718,7 +2715,12 @@
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="1.5" PointX="12" PointY="20.25" Height="3.5186979166666674" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Laboratory" Width="1.5" PointX="14.25" PointY="22.375" Height="1.9802864583333317" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="1.75" PointX="6" PointY="12.25" Height="3.7109993489583335" IsExpanded="true" />
+<<<<<<< HEAD
         <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="0.75" PointY="11.375" Height="4.6725065104166674" IsExpanded="true" />
+=======
+        <EntityTypeShape EntityType="Cerebello.Model.Person" Width="1.5" PointX="0.75" PointY="11.375" Height="4.0956022135416656" IsExpanded="true" />
+        <EntityTypeShape EntityType="Cerebello.Model.Phone" Width="1.5" PointX="3" PointY="17.25" Height="1.9802864583333353" IsExpanded="true" />
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
         <EntityTypeShape EntityType="Cerebello.Model.Practice" Width="1.5" PointX="9.875" PointY="21" Height="2.3648893229166674" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="8.25" PointY="12.375" Height="2.1725878906249996" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="1.5" PointX="10.5" PointY="12.5" Height="2.1725878906250031" IsExpanded="true" />
@@ -2766,11 +2768,25 @@
           <ConnectorPoint PointX="8.0833333333333339" PointY="13.365143229166666" />
           <ConnectorPoint PointX="8.25" PointY="13.365143229166666" />
         </AssociationConnector>
+<<<<<<< HEAD
         <AssociationConnector Association="Cerebello.Model.FK_User_Person" ManuallyRouted="false">
           <ConnectorPoint PointX="2.65625" PointY="16.047506510416667" />
           <ConnectorPoint PointX="2.65625" PointY="22.28125" />
           <ConnectorPoint PointX="3.125" PointY="22.28125" />
+=======
+        <AssociationConnector Association="Cerebello.Model.FK_Phone_Person" ManuallyRouted="false">
+          <ConnectorPoint PointX="1.5" PointY="15.470602213541666" />
+          <ConnectorPoint PointX="1.5" PointY="18.240143229166669" />
+          <ConnectorPoint PointX="2.5416666666666665" PointY="18.240143229166669" />
+          <ConnectorPoint PointX="2.7083333333333335" PointY="18.240143229166669" />
+          <ConnectorPoint PointX="3" PointY="18.240143229166669" />
+        </AssociationConnector>
+        <AssociationConnector Association="Cerebello.Model.FK_User_Person" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.2499999999999978" PointY="15.470602213541666" />
+          <ConnectorPoint PointX="2.625" PointY="15.845602213541667" />
+          <ConnectorPoint PointX="2.625" PointY="22.63209354036459" />
           <ConnectorPoint PointX="3.125" PointY="22.63209354036459" />
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Practice_User" ManuallyRouted="false">
           <ConnectorPoint PointX="5" PointY="22.189140814017883" />

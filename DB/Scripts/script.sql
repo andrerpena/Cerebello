@@ -20,13 +20,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Address](
+	[Id] [int] NOT NULL,
 	[CEP] [varchar](20) NULL,
 	[City] [varchar](100) NULL,
 	[StateProvince] [varchar](100) NULL,
 	[Neighborhood] [varchar](100) NULL,
 	[Complement] [varchar](50) NULL,
 	[Street] [varchar](100) NULL,
-	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PersonId] [int] NOT NULL,
  CONSTRAINT [PK_Address] PRIMARY KEY CLUSTERED 
 (
@@ -223,9 +223,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Email](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Address] [varchar](200) NOT NULL,
-	[PersonId] [int] NOT NULL,
+	[Id] [int] NOT NULL,
+	[Address] [varchar](200) NULL,
 	[GravatarEmailHash] [varchar](200) NULL,
  CONSTRAINT [PK_Email] PRIMARY KEY CLUSTERED 
 (
@@ -471,23 +470,11 @@ CREATE TABLE [dbo].[Person](
 	[CPFOwner] [smallint] NULL,
 	[Observations] [text] NULL,
 	[Profession] [varchar](100) NULL,
+	[PhoneLand] [varchar](20) NULL,
+	[PhoneCell] [varchar](20) NULL,
+	[Email] [varchar](200) NULL,
+	[EmailGravatarHash] [varchar](200) NULL,
  CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
-)
-GO
-/****** Object:  Table [dbo].[Phone] ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Phone](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[PersonId] [int] NOT NULL,
-	[Number] [varchar](20) NOT NULL,
-	[Type] [int] NOT NULL,
- CONSTRAINT [PK_PersonPhone] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
@@ -726,8 +713,6 @@ CREATE TABLE [dbo].[User](
 	[PasswordSalt] [varchar](50) NOT NULL,
 	[LastActiveOn] [datetime] NULL,
 	[PersonId] [int] NOT NULL,
-	[Email] [varchar](200) NULL,
-	[GravatarEmailHash] [varchar](100) NULL,
 	[DoctorId] [int] NULL,
 	[SecretaryId] [int] NULL,
 	[PracticeId] [int] NOT NULL,
@@ -780,9 +765,8 @@ GO
 ALTER TABLE [dbo].[ActiveIngredient] CHECK CONSTRAINT [FK_ActiveIngredient_Doctor]
 GO
 /****** Object:  ForeignKey [FK_Address_Person] ******/
-ALTER TABLE [dbo].[Address]  WITH NOCHECK ADD  CONSTRAINT [FK_Address_Person] FOREIGN KEY([PersonId])
+ALTER TABLE [dbo].[Address]  WITH NOCHECK ADD  CONSTRAINT [FK_Address_Person] FOREIGN KEY([Id])
 REFERENCES [dbo].[Person] ([Id])
-ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Address] CHECK CONSTRAINT [FK_Address_Person]
 GO
@@ -835,9 +819,8 @@ GO
 ALTER TABLE [dbo].[Doctor] CHECK CONSTRAINT [FK_Doctor_MedicalSpecialty]
 GO
 /****** Object:  ForeignKey [FK_Email_Person] ******/
-ALTER TABLE [dbo].[Email]  WITH NOCHECK ADD  CONSTRAINT [FK_Email_Person] FOREIGN KEY([PersonId])
+ALTER TABLE [dbo].[Email]  WITH NOCHECK ADD  CONSTRAINT [FK_Email_Person] FOREIGN KEY([Id])
 REFERENCES [dbo].[Person] ([Id])
-ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Email] CHECK CONSTRAINT [FK_Email_Person]
 GO
@@ -955,12 +938,6 @@ REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Person]
-GO
-/****** Object:  ForeignKey [FK_Phone_Person] ******/
-ALTER TABLE [dbo].[Phone]  WITH NOCHECK ADD  CONSTRAINT [FK_Phone_Person] FOREIGN KEY([PersonId])
-REFERENCES [dbo].[Person] ([Id])
-GO
-ALTER TABLE [dbo].[Phone] CHECK CONSTRAINT [FK_Phone_Person]
 GO
 /****** Object:  ForeignKey [FK_Practice_User] ******/
 ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_User] FOREIGN KEY([OwnerId])

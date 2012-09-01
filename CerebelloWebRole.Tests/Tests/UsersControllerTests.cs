@@ -119,14 +119,11 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1986, 01, 03),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
+                    Address = new AddressViewModel
                     {
-                        new AddressViewModel
-                        {
-                            Street = "Nome rua",
-                            CEP = "36030-060",
-                            City = "Juiz de Fora",
-                        }
+                        Street = "Nome rua",
+                        CEP = "36030-060",
+                        City = "Juiz de Fora",
                     },
                     IsSecretary = true,
                 });
@@ -171,19 +168,14 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1970, 11, 11),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
-                    {
-                        new AddressViewModel
+                    Address = new AddressViewModel
                         {
                             Street = "Nome rua",
                             CEP = "36000-100",
                             City = "Juiz de Fora",
-                        }
-                    },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    },
+                        },
+                    Email = "new_email_address@not_repeated.com.xpto.br",
+
                     IsSecretary = true,
                 };
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -239,19 +231,14 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1979, 01, 15),
                     MaritalStatus = (int)TypeMaritalStatus.Casado,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
-                    {
-                        new AddressViewModel
+                    Address = new AddressViewModel
                         {
                             Street = "Nome rua",
                             CEP = "37000-200",
                             City = "Juiz de Fora",
-                        }
-                    },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    },
+                        },
+
+                    Email = "new_email_address@not_repeated.com.xpto.br",
                     IsSecretary = true,
                 };
                 Mvc3TestHelper.SetModelStateErrors(controller, data);
@@ -294,19 +281,13 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1986, 01, 03),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
+                    Address = new AddressViewModel
                     {
-                        new AddressViewModel
-                        {
-                            Street = "Nome rua",
-                            CEP = "36030-060",
-                            City = "Juiz de Fora",
-                        }
+                        Street = "Nome rua",
+                        CEP = "36030-060",
+                        City = "Juiz de Fora",
                     },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    },
+                    Email = "new_email_address@not_repeated.com.xpto.br",
                     IsSecretary = true,
                 });
             }
@@ -356,19 +337,13 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1986, 01, 03),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
-                    {
-                        new AddressViewModel
+                    Address = new AddressViewModel
                         {
                             Street = "Nome rua",
                             CEP = "36030-060",
                             City = "Juiz de Fora",
-                        }
-                    },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    }
+                        },
+                    Email = "new_email_address@not_repeated.com.xpto.br"
                 });
             }
 
@@ -417,19 +392,13 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1986, 01, 03),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
-                    {
-                        new AddressViewModel
+                    Address = new AddressViewModel
                         {
                             Street = "Nome rua",
                             CEP = "36030-060",
                             City = "Juiz de Fora",
-                        }
-                    },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    },
+                        },
+                    Email = "new_email_address@not_repeated.com.xpto.br",
                     IsDoctor = true,
                     // Missing all medical information.
                     MedicCRM = "",
@@ -488,19 +457,13 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1986, 01, 03),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
-                    {
-                        new AddressViewModel
+                    Address = new AddressViewModel
                         {
                             Street = "Nome rua",
                             CEP = "36030-060",
                             City = "Juiz de Fora",
-                        }
-                    },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    },
+                        },
+                    Email = "new_email_address@not_repeated.com.xpto.br",
                     IsDoctor = true,
                     MedicCRM = "98237",
                     MedicalEntity = this.db.SYS_MedicalEntity.First().Id,
@@ -549,19 +512,13 @@ namespace CerebelloWebRole.Tests
                     DateOfBirth = new DateTime(1986, 01, 03),
                     MaritalStatus = (int)TypeMaritalStatus.Solteiro,
                     BirthPlace = "Juiz de Fora",
-                    Addresses = new List<AddressViewModel>
-                    {
-                        new AddressViewModel
+                    Address = new AddressViewModel
                         {
                             Street = "Nome rua",
                             CEP = "36030-060",
                             City = "Juiz de Fora",
-                        }
-                    },
-                    Emails = new List<EmailViewModel>
-                    {
-                        new EmailViewModel{ Address = "new_email_address@not_repeated.com.xpto.br", }
-                    },
+                        },
+                    Email = "new_email_address@not_repeated.com.xpto.br"
                 };
                 Mvc3TestHelper.SetModelStateErrors(controller, data);
                 actionResult = controller.Create(data);

@@ -18,6 +18,10 @@
     cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeMaritalStatus))</text>);
     cardView.AddField(m => m.CPF);
     cardView.AddField(m => m.CPFOwner, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeCPFOwner))</text>);
+    cardView.AddField(m => m.PhoneLand);
+    cardView.AddField(m => m.PhoneCell);
+    cardView.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);
+    cardView.AddField(m => m.Observations, wholeRow: true);
 }
 @section Title {
     Paciente: <b>@Model.FullName</b>
@@ -46,20 +50,9 @@
 }
 @cardView.GetHtml()
 <p class="details-subtitle">
-    Endereços:</p>
-@for (var i = 0; i < this.Model.Addresses.Count; i++)
-{
-    var addressCardView = Html.CreateCardView();
-    addressCardView.AddField(m => m.Addresses[i].Street, wholeRow: true);
-    addressCardView.AddField(m => m.Addresses[i].Complement);
-    addressCardView.AddField(m => m.Addresses[i].Neighborhood);
-    addressCardView.AddField(m => m.Addresses[i].City);
-    addressCardView.AddField(m => m.Addresses[i].StateProvince);
-    addressCardView.AddField(m => m.Addresses[i].CEP);
-    
-    @addressCardView.GetHtml()
-}
-
+    @Html.LabelFor(model => model.Address)
+</p>
+@Html.DisplayFor(model => model.Address)
 <p class="details-title">
     Histórico do paciente</p>
 <div class="medical-appointments-panel">

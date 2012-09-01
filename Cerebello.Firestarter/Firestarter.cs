@@ -110,8 +110,6 @@ namespace Cerebello.Firestarter
                 LastActiveOn = DateTime.UtcNow,
                 Password = pwdHash,
                 PasswordSalt = pwdSalt,
-                Email = "masbicudo@gmail.com",
-                GravatarEmailHash = "b209e81c82e45437da92af24ddc97360",
                 Practice = practice,
             };
 
@@ -126,6 +124,8 @@ namespace Cerebello.Firestarter
                 FullName = "Phill Austin",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
+                Email = "masbicudo@gmail.com",
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("masbicudo@gmail.com")
             };
 
             user.Person = person;
@@ -158,10 +158,7 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             // Creating e-mail.
-            user.Person.Emails.Add(new Email()
-            {
-                Address = "masbicudo@gmail.com"
-            });
+            user.Person.Email = "masbicudo@gmail.com";
 
             db.SaveChanges();
 
@@ -176,6 +173,8 @@ namespace Cerebello.Firestarter
                 FullName = "Gregory House",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
+                Email = "andrerpena@gmail.com",
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("andrerpena@gmail.com")
             };
 
             db.People.AddObject(person);
@@ -190,8 +189,6 @@ namespace Cerebello.Firestarter
                 LastActiveOn = DateTime.UtcNow,
                 Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
                 PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
-                Email = "andrerpena@gmail.com",
-                GravatarEmailHash = "574700aef74b21d386ba1250b77d20c6",
                 Practice = practice,
             };
 
@@ -214,7 +211,7 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             user.Doctor = doctor;
-            user.Person.Emails.Add(new Email() { Address = "andrerpena@gmail.com" });
+            user.Person.Email = "andrerpena@gmail.com";
 
             db.SaveChanges();
 
@@ -229,6 +226,8 @@ namespace Cerebello.Firestarter
                 FullName = "Marta Cura",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
+                Email = "martacura@gmail.com",
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("martacura@gmail.com")
             };
 
             db.People.AddObject(person);
@@ -243,7 +242,7 @@ namespace Cerebello.Firestarter
                 LastActiveOn = DateTime.UtcNow,
                 PasswordSalt = "ELc81TnRE+Eb+e5/D69opg==",
                 Password = "lLqJ7FjmEQF7q4rxWIGnX+AXdqQ=",
-                Email = "martacura@gmail.com",
+                
                 Practice = practice,
             };
 
@@ -266,7 +265,6 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             user.Doctor = doctor;
-            user.Person.Emails.Add(new Email() { Address = "martacura@gmail.com" });
 
             db.SaveChanges();
 

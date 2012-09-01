@@ -75,7 +75,7 @@ namespace CerebelloWebRole.Tests
             // Setting user details.
             this.IsAuthenticated = true;
             this.FullName = user.Person.FullName;
-            this.UserNameOrEmail = loginWithUserName ? user.UserName : (user.Email ?? "");
+            this.UserNameOrEmail = loginWithUserName ? user.UserName : user.Person.Email;
             this.Password = CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD;
 
             // Setting DB info.

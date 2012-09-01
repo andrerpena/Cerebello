@@ -9,9 +9,6 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class AddressViewModel
     {
-        [Key]
-        public int? Id { get; set; }
-
         [Display(Name = "Logradouro")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Street { get; set; }

@@ -82,15 +82,25 @@ namespace CerebelloWebRole.Code
                     // The caller of this method must set the property.
                     Gender = registrationData.Gender,
                     FullName = registrationData.FullName,
-                    CreatedOn = utcNow,
+<<<<<<< HEAD
+                    UrlIdentifier = urlId,
+                    CreatedOn = DateTime.Now,
                     Email = registrationData.EMail,
                     EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail)
+=======
+                    CreatedOn = utcNow,
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
                 },
                 UserName = registrationData.UserName,
                 UserNameNormalized = normalizedUserName,
                 PasswordSalt = passwordSalt,
                 Password = passwordHash,
+<<<<<<< HEAD
+                LastActiveOn = DateTime.Now,
+=======
                 LastActiveOn = utcNow,
+                Email = registrationData.EMail,
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
             };
 
             if (practiceId != null)
@@ -152,6 +162,7 @@ namespace CerebelloWebRole.Code
                     FormsAuthentication.SignOut();
                     principal = new AnonymousPrincipal(new GuestIdentity());
                 }
+
             }
             else
                 principal = new AnonymousPrincipal(new GuestIdentity());
@@ -173,8 +184,13 @@ namespace CerebelloWebRole.Code
 
             var isEmail = userNameOrEmail.Contains("@");
 
-            loggedInUser = isEmail ?
+<<<<<<< HEAD
+            User user = isEmail ?
                 entities.Users.Where(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
+=======
+            loggedInUser = isEmail ?
+                entities.Users.Where(u => u.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
                 entities.Users.Where(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault();
 
             if (loggedInUser == null)
@@ -190,9 +206,15 @@ namespace CerebelloWebRole.Code
                 Salt = new Random().Next(0, 2000),
                 UserData = new UserData()
                 {
+<<<<<<< HEAD
+                    Id = user.Id,
+                    Email = user.Person.Email,
+                    FullName = user.Person.FullName,
+=======
                     Id = loggedInUser.Id,
-                    Email = loggedInUser.Person.Email,
+                    Email = loggedInUser.Email,
                     FullName = loggedInUser.Person.FullName,
+>>>>>>> c05275727e44ca5c714f908098dc07ac2d291faf
                     IsUsingDefaultPassword = password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
                 }
             };
