@@ -1,18 +1,25 @@
 ﻿@{
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
     var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     var practiceId = ViewBag.Practice.Id;
 }
 @section MainMenu {
     <ul class="tabNav">
-        <li class="@(controllerName.Equals("practicehome") ? "youarehere" : "")">
+        @if (actionName == "welcome")
+        {
+            <li class="youarehere">
+                <a href="@Url.Action("welcome", "practicehome")" class="no-icon">Bem vindo!</a>
+            </li>
+        }
+        <li class="@(controllerName.Equals("practicehome") && actionName == "index" ? "youarehere" : "")">
             <a href="@Url.Action("Index", "practicehome")" class="home-icon">Início</a> 
         </li>
         <li class="@(controllerName.Equals("doctors") ? "youarehere" : "")">
-            <a href="@Url.Action("Index", "doctors")" class="doctors-icon">Médicos</a> 
+            <a href="@Url.Action("Index", "doctors")" class="doctors-icon">Médicos</a>
         </li>
         <li class="@(controllerName.Equals("users") ? "youarehere" : "")">
-            <a href="@Url.Action("Index", "users")" class="doctors-icon">Usuários</a> 
+            <a href="@Url.Action("Index", "users")" class="doctors-icon">Usuários</a>
         </li>
     </ul>
     <hr />

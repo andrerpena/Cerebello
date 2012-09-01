@@ -505,6 +505,10 @@ CREATE TABLE [dbo].[Practice](
 	[CreatedOn] [datetime] NOT NULL,
 	[OwnerId] [int] NULL,
 	[WindowsTimeZoneId] [varchar](31) NOT NULL,
+	[VerificationDate] [datetime] NULL,
+	[VerificationToken] [varchar](32) NULL,
+	[VerificationExpirationDate] [datetime] NULL,
+	[ShowWelcomeScreen] [bit] NOT NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

@@ -534,6 +534,10 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="OwnerId" Type="int" />
           <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
+          <Property Name="VerificationDate" Type="datetime" />
+          <Property Name="VerificationToken" Type="varchar" MaxLength="32" />
+          <Property Name="VerificationExpirationDate" Type="datetime" />
+          <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1551,6 +1555,10 @@
           <NavigationProperty Name="Owner" Relationship="Cerebello.Model.FK_Practice_User" FromRole="Practice" ToRole="User" />
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="VerificationDate" />
+          <Property Type="String" Name="VerificationToken" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="VerificationExpirationDate" />
+          <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2458,7 +2466,11 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
-            <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
+            <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
+                <ScalarProperty Name="VerificationExpirationDate" ColumnName="VerificationExpirationDate" />
+                <ScalarProperty Name="VerificationToken" ColumnName="VerificationToken" />
+                <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
+                <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
             <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />

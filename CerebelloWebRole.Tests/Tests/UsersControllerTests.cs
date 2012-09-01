@@ -61,7 +61,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -97,7 +97,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -149,7 +149,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                MockRepository mr = new MockRepository();
+                MockRepository mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -218,7 +218,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var marta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 userNameToRepeat = marta.Users.First().UserName;
-                MockRepository mr = new MockRepository();
+                MockRepository mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -273,7 +273,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -334,7 +334,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
@@ -395,7 +395,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
@@ -466,7 +466,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
@@ -526,7 +526,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
@@ -597,7 +597,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
@@ -646,7 +646,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
@@ -698,7 +698,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
@@ -754,7 +754,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var s = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.ToList().Last());
                 userId = s.Users.Single().Id;
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -793,7 +793,7 @@ namespace CerebelloWebRole.Tests
             {
                 var medic = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 userId = medic.Users.Single().Id;
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -831,7 +831,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
                 var admin = this.db.Users.Where(m => m.AdministratorId != null).First();
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 userId = admin.Id;
             }
@@ -878,7 +878,7 @@ namespace CerebelloWebRole.Tests
                 var user = s.Users.Single();
                 userId = user.Id;
 
-                mr = new MockRepository();
+                mr = new MockRepository(true);
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
@@ -924,7 +924,7 @@ namespace CerebelloWebRole.Tests
                 var practice = this.db.Practices.FirstOrDefault();
                 var user = d.Users.Single();
                 userId = user.Id;
-                mr = new MockRepository();
+                mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword(userId);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
@@ -994,7 +994,7 @@ namespace CerebelloWebRole.Tests
                 var user = d.Users.Single();
                 var userId = user.Id;
 
-                mr = new MockRepository();
+                mr = new MockRepository(true);
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
             }
             catch

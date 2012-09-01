@@ -7541,7 +7541,8 @@ namespace Cerebello.Model
         /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="windowsTimeZoneId">Initial value of the WindowsTimeZoneId property.</param>
-        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId)
+        /// <param name="showWelcomeScreen">Initial value of the ShowWelcomeScreen property.</param>
+        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean showWelcomeScreen)
         {
             Practice practice = new Practice();
             practice.Id = id;
@@ -7549,6 +7550,7 @@ namespace Cerebello.Model
             practice.UrlIdentifier = urlIdentifier;
             practice.CreatedOn = createdOn;
             practice.WindowsTimeZoneId = windowsTimeZoneId;
+            practice.ShowWelcomeScreen = showWelcomeScreen;
             return practice;
         }
 
@@ -7701,6 +7703,102 @@ namespace Cerebello.Model
         private global::System.String _WindowsTimeZoneId;
         partial void OnWindowsTimeZoneIdChanging(global::System.String value);
         partial void OnWindowsTimeZoneIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> VerificationDate
+        {
+            get
+            {
+                return _VerificationDate;
+            }
+            set
+            {
+                OnVerificationDateChanging(value);
+                ReportPropertyChanging("VerificationDate");
+                _VerificationDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("VerificationDate");
+                OnVerificationDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _VerificationDate;
+        partial void OnVerificationDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnVerificationDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String VerificationToken
+        {
+            get
+            {
+                return _VerificationToken;
+            }
+            set
+            {
+                OnVerificationTokenChanging(value);
+                ReportPropertyChanging("VerificationToken");
+                _VerificationToken = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("VerificationToken");
+                OnVerificationTokenChanged();
+            }
+        }
+        private global::System.String _VerificationToken;
+        partial void OnVerificationTokenChanging(global::System.String value);
+        partial void OnVerificationTokenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> VerificationExpirationDate
+        {
+            get
+            {
+                return _VerificationExpirationDate;
+            }
+            set
+            {
+                OnVerificationExpirationDateChanging(value);
+                ReportPropertyChanging("VerificationExpirationDate");
+                _VerificationExpirationDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("VerificationExpirationDate");
+                OnVerificationExpirationDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _VerificationExpirationDate;
+        partial void OnVerificationExpirationDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnVerificationExpirationDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean ShowWelcomeScreen
+        {
+            get
+            {
+                return _ShowWelcomeScreen;
+            }
+            set
+            {
+                OnShowWelcomeScreenChanging(value);
+                ReportPropertyChanging("ShowWelcomeScreen");
+                _ShowWelcomeScreen = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ShowWelcomeScreen");
+                OnShowWelcomeScreenChanged();
+            }
+        }
+        private global::System.Boolean _ShowWelcomeScreen;
+        partial void OnShowWelcomeScreenChanging(global::System.Boolean value);
+        partial void OnShowWelcomeScreenChanged();
 
         #endregion
     

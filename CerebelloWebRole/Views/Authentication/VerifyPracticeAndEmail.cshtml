@@ -1,0 +1,64 @@
+﻿@model CerebelloWebRole.Models.VerifyPracticeAndEmailViewModel
+@{
+    ViewBag.Title = "Verifique seu e-mail";
+}
+<div class="authentication-container">
+    <div class="authentication-container-wrapper">
+        <div class="header">
+            <h2>@ViewBag.Title</h2>
+        </div>
+        @if (this.ViewBag.CreatingAccount == true)
+        {
+            <p>
+                A conta para o seu consultório foi criada com sucesso!</p>
+            <p>
+                Agora só falta validar o seu e-mail para poder acessar o seu software de gerenciamento
+                de consultório: o Cerebello.</p>
+            <ul>
+                <li><a href="@Url.Action("VerifyPracticeAndEmail", new { practice = this.Model.Practice })">Entre com o TOKEN que foi enviado
+                    ao seu e-mail manualmente</a></li>
+                <li><a href="@Url.Action("Welcome", "PracticeHome", new { area = "App", practice = this.Model.Practice })">Se já passou
+                    pela verificação, comece agora a usar o seu software.</a></li>
+            </ul>
+        }
+        else
+        {
+            var tokenModelState = this.ViewData.ModelState["Token"];
+            if (tokenModelState != null && tokenModelState.Errors.Any())
+            {
+                @:@Html.ValidationMessage(
+                    "Token",
+                    "O token informado não foi encontrado. "
+                    + "É possível que já tenha sido validado, "
+                    + "ou então o tempo para a validação tenha expirado.")
+                <ul>
+                    <li><a href="@Url.Action("VerifyPracticeAndEmail", new { practice = this.Model.Practice })">Entre com o TOKEN que foi enviado
+                        ao seu e-mail manualmente</a></li>
+                    <li><a href="@Url.Action("Welcome", "PracticeHome", new { area = "App", practice = this.Model.Practice })">Quando tiver passado
+                        pela verificação, comece a usar o seu software.</a></li>
+                </ul>
+            }
+            else
+            {
+                using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
+                {
+                <fieldset>
+                    <div class="controls-wrapper">
+                        @Html.HiddenFor(model => model.Practice)
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Token)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Token, new { @class = "input-xlarge" })
+                            </div>
+                        </div>
+                        <div class="form-actions" style="margin: 0">
+                            <button class="btn btn-primary btn-large" type="submit">
+                                Confirmar e-mail</button>
+                        </div>
+                    </div>
+                </fieldset>
+                }
+            }
+        }
+    </div>
+</div>

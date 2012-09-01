@@ -75,13 +75,42 @@ namespace CerebelloWebRole.Code
             base.OnActionExecuting(filterContext);
 
             var practiceName = this.RouteData.Values["practice"] as string;
+            var controllerName = this.RouteData.Values["controller"] as string;
+            var actionName = this.RouteData.Values["action"] as string;
 
             var userId = this.GetCurrentUserId();
-            var practice = this.db.Users.Where(u => u.Id == userId).First().Practice;
+            var practice = this.db.Users
+                .Where(u => u.Id == userId && u.Practice.UrlIdentifier == practiceName)
+                .Select(u => u.Practice)
+                .SingleOrDefault();
 
-            this.Practice = practice;
-            this.ViewBag.Practice = practice;
-            this.ViewBag.PracticeName = practice.Name;
+            if (practice == null)
+            {
+                filterContext.Result = new HttpUnauthorizedResult();
+                return;
+            }
+            else
+            {
+                this.Practice = practice;
+                this.ViewBag.Practice = practice;
+                this.ViewBag.PracticeName = practice.Name;
+
+                // Redirect to VerifyPracticeAndEmail, if the practice has not been verified yet.
+                if (practice.VerificationDate == null)
+                {
+                    filterContext.Result = this.RedirectToAction("VerifyPracticeAndEmail", "Authentication", new { area = "", practice = practiceName });
+                    return;
+                }
+
+                // Redirect to welcome screen if it was not presented yet.
+                if (this.Practice.ShowWelcomeScreen
+                    && !(controllerName.ToLowerInvariant() == "practicehome"
+                        && actionName.ToLowerInvariant() == "welcome"))
+                {
+                    filterContext.Result = this.RedirectToAction("Welcome", "PracticeHome", new { area = "App", practice = practiceName });
+                    return;
+                }
+            }
         }
     }
 }

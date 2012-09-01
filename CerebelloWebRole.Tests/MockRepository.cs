@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -20,12 +21,13 @@ namespace CerebelloWebRole.Tests
         /// Initializes a new MockRepository with the default configuration:
         /// User = André; Route:Practice = ConsultorioDrHouse; Route:Doctor = GregoryHouse.
         /// </summary>
-        public MockRepository()
+        public MockRepository(bool initForOldTests = false)
         {
-            this.Reset();
+            if (initForOldTests)
+                this.Reset();
         }
 
-        public void Reset()
+        private void Reset()
         {
             // Some old tests need these values to be initialized with default values,
             // because they don't initialize them. These values are incomplete,
@@ -48,9 +50,10 @@ namespace CerebelloWebRole.Tests
         public void SetCurrentUser_Andre_CorrectPassword(int? userId = null)
         {
             // Setting user details.
-            FullName = "André Rodrigues Pena";
-            UserNameOrEmail = "andrerpena@gmail.com";
-            Password = "ph4r40h";
+            this.IsAuthenticated = true;
+            this.FullName = "André Rodrigues Pena";
+            this.UserNameOrEmail = "andrerpena@gmail.com";
+            this.Password = "ph4r40h";
 
             // Setting DB info.
             if (userId.HasValue)
@@ -70,52 +73,89 @@ namespace CerebelloWebRole.Tests
         public void SetCurrentUser_WithDefaultPassword(User user, bool loginWithUserName = false)
         {
             // Setting user details.
-            FullName = user.Person.FullName;
-            UserNameOrEmail = loginWithUserName ? user.UserName : (user.Email ?? "");
-            Password = CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD;
+            this.IsAuthenticated = true;
+            this.FullName = user.Person.FullName;
+            this.UserNameOrEmail = loginWithUserName ? user.UserName : (user.Email ?? "");
+            this.Password = CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD;
 
             // Setting DB info.
-            UserDbId = user.Id;
+            this.UserDbId = user.Id;
+        }
+
+        public void SetCurrentUser(User user, string password)
+        {
+            this.IsAuthenticated = true;
+            this.FullName = user.Person.FullName;
+            this.UserNameOrEmail = user.UserName;
+            this.Password = password;
+            this.UserDbId = user.Id;
         }
 
         public void SetRouteData_ConsultorioDrHourse_GregoryHouse(Type controllerType, string action)
         {
-            RouteData = new RouteData();
+            this.RouteData = new RouteData();
 
             FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
 
-            RouteData.Values["practice"] = "consultoriodrhourse";
-            RouteData.Values["doctor"] = "gregoryhouse";
+            this.RouteData.Values["practice"] = "consultoriodrhourse";
+            this.RouteData.Values["doctor"] = "gregoryhouse";
         }
 
         public void SetRouteData_OutroConsultorio_GregoryHouse(Type controllerType, string action)
         {
-            RouteData = new RouteData();
+            this.RouteData = new RouteData();
 
             FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
 
-            RouteData.Values["practice"] = "outro_consultorio";
-            RouteData.Values["doctor"] = "gregoryhouse";
+            this.RouteData.Values["practice"] = "outro_consultorio";
+            this.RouteData.Values["doctor"] = "gregoryhouse";
         }
 
         public void SetRouteData<T>(Practice p, Doctor d, string action) where T : Controller
         {
             var type = typeof(T);
 
-            SetRouteData(type, p, d, action);
+            this.SetRouteData(type, p, d, action);
         }
 
         public void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
         {
-            RouteData = new RouteData();
+            this.RouteData = new RouteData();
 
             FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
 
             if (p != null)
-                RouteData.Values["practice"] = p.UrlIdentifier;
+                this.RouteData.Values["practice"] = p.UrlIdentifier;
 
             if (d != null)
-                RouteData.Values["doctor"] = d.UrlIdentifier;
+                this.RouteData.Values["doctor"] = d.UrlIdentifier;
+        }
+
+        public void SetRouteData(Type controllerType, string action)
+        {
+            this.RouteData = new RouteData();
+            FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
+        }
+
+        public void SetRouteData(string action, string controller, string area = null, string practice = null)
+        {
+            this.RouteData = new RouteData();
+
+            if (string.IsNullOrEmpty(controller))
+                throw new Exception("'controller' cannot be null nor empty.");
+
+            this.RouteData.Values["controller"] = controller;
+
+            if (area != null)
+                this.RouteData.DataTokens["area"] = area;
+
+            if (string.IsNullOrEmpty(action))
+                throw new Exception("'action' cannot be null nor empty.");
+
+            this.RouteData.Values["action"] = action;
+
+            if (practice != null)
+                this.RouteData.Values["practice"] = practice;
         }
 
         private static void FillRouteData_App_Controller_Action(RouteData routeData, Type controllerType, string action)
@@ -131,9 +171,23 @@ namespace CerebelloWebRole.Tests
             if (matchArea.Success)
                 routeData.DataTokens["area"] = matchArea.Groups["AREA"].Value.ToLowerInvariant();
 
-            if (action != null)
-                routeData.Values["action"] = action;
+            if (string.IsNullOrEmpty(action))
+                throw new Exception("'action' cannot be null nor empty.");
+
+            routeData.Values["action"] = action;
         }
+
+        public void SetRouteData_ControllerAndActionOnly(string controller, string action)
+        {
+            this.RouteData.Values["controller"] = controller;
+            this.RouteData.Values["action"] = action;
+        }
+
+        /// <summary>
+        /// Indicates whether an user is loged-in or not.
+        /// If not, all the other properties related to the user are invalid.
+        /// </summary>
+        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Full name of the logged user.
@@ -165,6 +219,8 @@ namespace CerebelloWebRole.Tests
         /// </summary>
         public class HttpServerUtilityBaseStub : HttpServerUtilityBase
         {
+            // todo: maybe replace this class with a Mock<HttpServerUtilityBase>
+
             /// <summary>
             /// Resolves MapPath
             /// </summary>
@@ -195,8 +251,8 @@ namespace CerebelloWebRole.Tests
         {
             var mock = new Mock<RequestContext>();
 
-            mock.SetupGet(rq => rq.RouteData).Returns(RouteData);
-            mock.SetupGet(m => m.HttpContext).Returns(GetHttpContext());
+            mock.SetupGet(rq => rq.RouteData).Returns(this.RouteData);
+            mock.SetupGet(rq => rq.HttpContext).Returns(this.GetHttpContext());
 
             return mock.Object;
         }
@@ -204,7 +260,7 @@ namespace CerebelloWebRole.Tests
         public HttpRequestBase GetRequest()
         {
             var mock = new Mock<HttpRequestBase>();
-            mock.SetupGet(m => m.IsAuthenticated).Returns(true);
+            mock.SetupGet(m => m.IsAuthenticated).Returns(this.IsAuthenticated);
             mock.SetupGet(m => m.ApplicationPath).Returns("/");
             mock.SetupGet(m => m.Url).Returns(new Uri("http://localhost/unittests", UriKind.Absolute));
             mock.SetupGet(m => m.ServerVariables).Returns(new System.Collections.Specialized.NameValueCollection());
@@ -226,38 +282,47 @@ namespace CerebelloWebRole.Tests
 
             using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
             {
-                User user;
+                Principal principal;
 
-                var securityToken = SecurityManager.AuthenticateUser(
-                    this.UserNameOrEmail,
-                    this.Password,
-                    string.Format("{0}", this.RouteData.Values["practice"]),
-                    db,
-                    out user);
+                if (this.IsAuthenticated)
+                {
+                    User user;
 
-                user.LastActiveOn = DateTime.UtcNow;
+                    var securityToken = SecurityManager.AuthenticateUser(
+                        this.UserNameOrEmail,
+                        this.Password,
+                        string.Format("{0}", this.RouteData.Values["practice"]),
+                        db,
+                        out user);
 
-                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
-                     version: 1,
-                     name: UserNameOrEmail,
-                     issueDate: DateTime.UtcNow,
-                     expiration: DateTime.UtcNow.AddYears(1),
-                     isPersistent: true,
-                     userData: securityToken,
-                     cookiePath: FormsAuthentication.FormsCookiePath);
+                    user.LastActiveOn = DateTime.UtcNow;
 
-                var userData =
-                    new AuthenticatedPrincipal(new FormsIdentity(ticket), new UserData()
-                    {
-                        FullName = FullName,
-                        Email = UserNameOrEmail,
-                        Id = UserDbId,
-                        IsUsingDefaultPassword = Password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
-                    });
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                         version: 1,
+                         name: this.UserNameOrEmail,
+                         issueDate: DateTime.UtcNow,
+                         expiration: DateTime.UtcNow.AddYears(1),
+                         isPersistent: true,
+                         userData: securityToken,
+                         cookiePath: FormsAuthentication.FormsCookiePath);
+
+                    principal =
+                        new AuthenticatedPrincipal(new FormsIdentity(ticket), new UserData()
+                        {
+                            FullName = this.FullName,
+                            Email = this.UserNameOrEmail,
+                            Id = this.UserDbId,
+                            IsUsingDefaultPassword = this.Password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
+                        });
+                }
+                else
+                {
+                    principal = new AnonymousPrincipal(new GuestIdentity());
+                }
 
                 mock.SetupGet(m => m.Request).Returns(GetRequest());
                 mock.SetupGet(m => m.Response).Returns(GetResponse());
-                mock.SetupGet(m => m.User).Returns(userData);
+                mock.SetupGet(m => m.User).Returns(principal);
                 mock.SetupGet(m => m.Server).Returns(new HttpServerUtilityBaseStub());
             }
 
@@ -272,10 +337,50 @@ namespace CerebelloWebRole.Tests
             return mock.Object;
         }
 
-        public void SetRouteData_ControllerAndActionOnly(string controller, string action)
+        /// <summary>
+        /// Mocks the value of HttpContext.Current,
+        /// and returns a disposable object to set it back to null,
+        /// so that one test does not affect the others.
+        /// </summary>
+        /// <returns>Returns the created HttpContext.</returns>
+        public HttpContext SetupHttpContext(Disposer disposer)
         {
-            this.RouteData.Values["controller"] = controller;
-            this.RouteData.Values["action"] = action;
+            var httpContext = this.GetHttpContext();
+            var request = httpContext.Request;
+            var response = httpContext.Response;
+
+            var oldHttpContext = HttpContext.Current;
+            HttpContext.Current = new HttpContext(
+                new HttpRequest("filename", request.Url.AbsoluteUri, request.Url.Query),
+                new HttpResponse(new StreamWriter(response.OutputStream ?? new MemoryStream())));
+
+            disposer.Disposing += new Action(() => { HttpContext.Current = oldHttpContext; });
+
+            return HttpContext.Current;
+        }
+
+        /// <summary>
+        /// Creates a mocked ViewEngine and replaces all the other existing view engines.
+        /// The returned object can be used to configure the new ViewEngine.
+        /// </summary>
+        /// <param name="disposer">Disposer that will be given the task of reverting the actions of this method.</param>
+        /// <returns>Returns an object that can be used to configure the views.</returns>
+        public Mock<IViewEngine> SetupViewEngine(Disposer disposer)
+        {
+            var oldViewEngines = ViewEngines.Engines.ToArray();
+
+            var result = new Mock<IViewEngine>();
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(result.Object);
+
+            disposer.Disposing += new Action(() =>
+            {
+                ViewEngines.Engines.Clear();
+                foreach (var eachViewEngine in oldViewEngines)
+                    ViewEngines.Engines.Add(eachViewEngine);
+            });
+
+            return result;
         }
     }
 }

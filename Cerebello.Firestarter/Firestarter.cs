@@ -338,8 +338,10 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório do Dr. House",
                 UrlIdentifier = "consultoriodrhourse",
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = new DateTime(2007, 07, 03, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
+                VerificationDate = new DateTime(2007, 07, 12, 0, 0, 0, DateTimeKind.Utc),
+                ShowWelcomeScreen = false,
             };
 
             db.Practices.AddObject(practice);
@@ -359,8 +361,10 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório da Dra. Marta",
                 UrlIdentifier = "dramarta",
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = new DateTime(2009, 02, 27, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
+                VerificationDate = new DateTime(2009, 02, 27, 0, 0, 0, DateTimeKind.Utc),
+                ShowWelcomeScreen = false,
             };
 
             db.Practices.AddObject(practice);
@@ -1235,7 +1239,7 @@ GO
                     using (var command = conn.CreateCommand())
                     {
                         command.CommandText =
-                        string.Format(@"CREATE DATABASE CerebelloTEST ON 
+                        string.Format(@"CREATE DATABASE {0} ON 
                     ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\{0}.mdf' )
                      FOR ATTACH ;", dbName);
 

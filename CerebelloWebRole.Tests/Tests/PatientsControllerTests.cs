@@ -56,7 +56,7 @@ namespace CerebelloWebRole.Tests.Tests
             try
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
                 Firestarter.CreateFakePatients(doctor, this.db, 100);
             }
@@ -93,7 +93,7 @@ namespace CerebelloWebRole.Tests.Tests
             try
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
                 Firestarter.CreateFakePatients(doctor, this.db, 200);
             }

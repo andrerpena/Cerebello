@@ -76,8 +76,8 @@ namespace CerebelloWebRole.Code
             }
 
             byte[] encryptedBytes = Obviex.CipherLite.Rijndael.Encrypt(CompressionHelper.BytesToString(buffer),
+                "this is a pass phrase", null, KEY_SIZE, PASSWORD_ITERATIONS, "this is a salt value", HASH_ALGORITHM);
 
- "this is a pass phrase", null, KEY_SIZE, PASSWORD_ITERATIONS, "this is a salt value", HASH_ALGORITHM);
             //SettingHelper.GetSetting("Security.Cipher.PassPhrase"), SettingHelper.GetSetting("Security.Cipher.InitVector"), KEY_SIZE, PASSWORD_ITERATIONS, SettingHelper.GetSetting("Security.Cipher.Salt"), HASH_ALGORITHM);
             byte[] toReturn = new byte[encryptedBytes.Length + 1];
 
