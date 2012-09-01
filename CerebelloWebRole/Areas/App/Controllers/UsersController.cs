@@ -42,7 +42,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 BirthPlace = user.Person.BirthPlace,
                 CPF = user.Person.CPF,
                 Profissao = user.Person.Profession,
-                Email = user.Person.EmailGravatarHash,
+                Email = user.Person.Email,
 
                 IsAdministrador = user.AdministratorId != null,
                 IsDoctor = user.DoctorId != null,

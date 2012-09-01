@@ -217,7 +217,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     };
                     var body = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
 
-                    var toAddress = new MailAddress(user.Email, user.Person.FullName);
+                    var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
                     string subject = "Bem vindo ao Cerebello! Por favor, confirme sua conta.";
 
                     message = this.CreateEmailMessage(toAddress, subject, body, isBodyHtml: true);
