@@ -171,6 +171,8 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 // Setting the BirthDate of the user as a person.
                 user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth);
 
+                user.IsOwner = true;
+
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (registrationData.IsDoctor)
                 {
@@ -229,10 +231,13 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 {
                     if (this.ModelState.IsValid)
                     {
-                        // Saving changes to the DB, and then
-                        // sending the confirmation e-mail to the new user.
+                        // Saving changes to the DB.
                         db.SaveChanges();
 
+                        user.Practice.Owner = user;
+                        db.SaveChanges();
+
+                        // Sending the confirmation e-mail to the new user.
                         this.SendEmail(message);
 
                         // Log the user in.

@@ -9148,7 +9148,8 @@ namespace Cerebello.Model
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="userName">Initial value of the UserName property.</param>
         /// <param name="userNameNormalized">Initial value of the UserNameNormalized property.</param>
-        public static User CreateUser(global::System.Int32 id, global::System.String password, global::System.String passwordSalt, global::System.Int32 personId, global::System.Int32 practiceId, global::System.String userName, global::System.String userNameNormalized)
+        /// <param name="isOwner">Initial value of the IsOwner property.</param>
+        public static User CreateUser(global::System.Int32 id, global::System.String password, global::System.String passwordSalt, global::System.Int32 personId, global::System.Int32 practiceId, global::System.String userName, global::System.String userNameNormalized, global::System.Boolean isOwner)
         {
             User user = new User();
             user.Id = id;
@@ -9158,6 +9159,7 @@ namespace Cerebello.Model
             user.PracticeId = practiceId;
             user.UserName = userName;
             user.UserNameNormalized = userNameNormalized;
+            user.IsOwner = isOwner;
             return user;
         }
 
@@ -9430,6 +9432,30 @@ namespace Cerebello.Model
         private global::System.String _UserNameNormalized;
         partial void OnUserNameNormalizedChanging(global::System.String value);
         partial void OnUserNameNormalizedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsOwner
+        {
+            get
+            {
+                return _IsOwner;
+            }
+            set
+            {
+                OnIsOwnerChanging(value);
+                ReportPropertyChanging("IsOwner");
+                _IsOwner = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsOwner");
+                OnIsOwnerChanged();
+            }
+        }
+        private global::System.Boolean _IsOwner;
+        partial void OnIsOwnerChanging(global::System.Boolean value);
+        partial void OnIsOwnerChanged();
 
         #endregion
     

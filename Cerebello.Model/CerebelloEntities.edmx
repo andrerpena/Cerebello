@@ -634,6 +634,7 @@
           <Property Name="AdministratorId" Type="int" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="UserNameNormalized" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsOwner" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_ActiveIngredient_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
@@ -1530,6 +1531,7 @@
           <NavigationProperty Name="Administrator" Relationship="Cerebello.Model.FK_User_Administrator" FromRole="User" ToRole="Administrator" />
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="UserNameNormalized" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsOwner" Nullable="false" />
         </EntityType>
         <Association Name="FK_Appointment_Doctor">
           <End Role="Doctor" Type="Cerebello.Model.Doctor" Multiplicity="1">
@@ -2374,7 +2376,8 @@
             <ScalarProperty Name="Id" ColumnName="Id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="Cerebello.Model.User"><MappingFragment StoreEntitySet="User">
-            <ScalarProperty Name="UserNameNormalized" ColumnName="UserNameNormalized" />
+            <ScalarProperty Name="IsOwner" ColumnName="IsOwner" />
+                <ScalarProperty Name="UserNameNormalized" ColumnName="UserNameNormalized" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="AdministratorId" ColumnName="AdministratorId" />
             <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />

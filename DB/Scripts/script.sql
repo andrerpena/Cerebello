@@ -719,6 +719,7 @@ CREATE TABLE [dbo].[User](
 	[AdministratorId] [int] NULL,
 	[UserName] [varchar](50) NOT NULL,
 	[UserNameNormalized] [varchar](50) NOT NULL,
+	[IsOwner] [bit] NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

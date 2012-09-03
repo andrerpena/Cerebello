@@ -118,6 +118,8 @@ namespace CerebelloWebRole.Tests
                 Assert.AreEqual(32, savedUser.Practice.VerificationToken.Length);
                 Assert.AreEqual(savedUser.Practice.VerificationDate, null);
                 Assert.AreEqual(utcNow.AddDays(30), savedUser.Practice.VerificationExpirationDate);
+                Assert.IsTrue(savedUser.IsOwner, "Saved user should be the owner of the practice.");
+                Assert.AreEqual(savedUser.Id, savedUser.Practice.OwnerId, "Saved user should be the owner of the practice.");
 
                 // Assert user is logged-in.
                 Assert.IsTrue(
