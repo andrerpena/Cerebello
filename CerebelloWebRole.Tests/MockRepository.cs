@@ -84,6 +84,8 @@ namespace CerebelloWebRole.Tests
 
         public void SetCurrentUser(User user, string password)
         {
+            // todo: this method should check if the password is valid
+
             this.IsAuthenticated = true;
             this.FullName = user.Person.FullName;
             this.UserNameOrEmail = user.UserName;
