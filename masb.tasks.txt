@@ -9,6 +9,23 @@ S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
+    P1 Fazer todas as classes de teste herdarem da classe base de testes, e remover os métodos de inicialização desnecessários.
+
+    P0 Quando um Role de secretária, administrador ou médico é removido o objeto associado ao Role não é deletado.
+
+    P0 Id da tabela Secretary não é Identity auto-increment, mas está sendo usado no software como se fosse.
+    P2 Método MockRepository.SetCurrentUser deve assegurar que password está correto/incorreto, de acordo com objetivo do teste sendo feito.
+
+    P0 Teste: BUG - fazer login com usuário do consultório A, e entrar na URL do consultório B.
+x   P0 Teste: ao criar conta assegurar que o e-mail está sendo enviado, e que o e-mail contém o token.
+x   P0 Teste: ao criar conta assegurar que os campos de verificação estão sendo definidos e salvos no banco.
+x   P0 Teste: ao criar conta assegurar que o usuário que acabou de ser criado seja logado.
+x   P0 Teste: verificar um e-mail usando o token correto: tem que ir para página de boas vindas.
+x   P0 Teste: verificar um e-mail usando um token errado: tem que mostrar mensagem.
+x   P0 Teste: verificar um e-mail sem passar um token: tem que ir para a view de indicar o token manualmente.
+x   P0 Teste: tentar acessar software antes de verificar o e-mail: tem que ir para página de verificação manual.
+x   P0 Teste: primeiro acesso ao software deve ir para a página de boas vindas.
+
     P0 Imagem gigante do gravatar no menu, quando usuário não possui gravatar.
     P0 Médico fica sem imagem quando não possui gravatar, nas listas de médicos.
 

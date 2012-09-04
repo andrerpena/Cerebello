@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Globalization;
+using Moq;
+using System.IO;
 
 namespace CerebelloWebRole.Tests
 {
@@ -19,10 +21,15 @@ namespace CerebelloWebRole.Tests
     {
         public static T CreateControllerForTesting<T>(CerebelloEntities db, MockRepository mr, bool callOnActionExecuting = true) where T : Controller, new()
         {
+            T controller = new T(); // TODO: Initialize to an appropriate value
+            SetupControllerForTesting(controller, db, mr, callOnActionExecuting);
+            return controller;
+        }
+
+        public static void SetupControllerForTesting(Controller controller, CerebelloEntities db, MockRepository mr, bool callOnActionExecuting = true)
+        {
             var routes = new RouteCollection();
             MvcApplication.RegisterRoutes(routes);
-
-            T controller = new T(); // TODO: Initialize to an appropriate value
 
             var privateObject = new PrivateObject(controller);
             privateObject.SetField("db", db);
@@ -30,7 +37,6 @@ namespace CerebelloWebRole.Tests
             if (callOnActionExecuting)
                 privateObject.Invoke("OnActionExecuting", mr.CreateActionExecutingContext());
             controller.Url = new UrlHelper(mr.GetRequestContext(), routes);
-            return controller;
         }
 
         public static ActionResult ActionExecutingAndGetActionResult(Controller controller, MockRepository mr)

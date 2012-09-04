@@ -492,6 +492,10 @@ CREATE TABLE [dbo].[Practice](
 	[CreatedOn] [datetime] NOT NULL,
 	[OwnerId] [int] NULL,
 	[WindowsTimeZoneId] [varchar](31) NOT NULL,
+	[VerificationDate] [datetime] NULL,
+	[VerificationToken] [varchar](32) NULL,
+	[VerificationExpirationDate] [datetime] NULL,
+	[ShowWelcomeScreen] [bit] NOT NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -715,6 +719,7 @@ CREATE TABLE [dbo].[User](
 	[AdministratorId] [int] NULL,
 	[UserName] [varchar](50) NOT NULL,
 	[UserNameNormalized] [varchar](50) NOT NULL,
+	[IsOwner] [bit] NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

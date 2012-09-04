@@ -68,7 +68,7 @@ namespace CerebelloWebRole.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
             }
             catch
@@ -116,7 +116,7 @@ namespace CerebelloWebRole.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
             }
@@ -178,7 +178,7 @@ namespace CerebelloWebRole.Tests
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
 
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                 utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.FirstOrDefault().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
@@ -251,7 +251,7 @@ namespace CerebelloWebRole.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                 utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.FirstOrDefault().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
@@ -330,7 +330,7 @@ namespace CerebelloWebRole.Tests
                 var dramarta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 patientDraMarta = Firestarter.CreateFakePatients(dramarta, this.db).First();
 
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                 utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
@@ -407,7 +407,7 @@ namespace CerebelloWebRole.Tests
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 patient = Firestarter.CreateFakePatients(drandre, this.db).First();
 
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                 utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
@@ -487,7 +487,7 @@ namespace CerebelloWebRole.Tests
                     var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(db2);
                     patient = Firestarter.CreateFakePatients(drandre, db2).First();
 
-                    var mr = new MockRepository();
+                    var mr = new MockRepository(true);
                     controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                     utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
                     controller.UtcNowGetter = () => utcNow;
@@ -553,7 +553,7 @@ namespace CerebelloWebRole.Tests
                 {
                     Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(db2);
 
-                    var mr = new MockRepository();
+                    var mr = new MockRepository(true);
                     controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
 
                     // This must come after database preparation.
@@ -606,7 +606,7 @@ namespace CerebelloWebRole.Tests
                 var dramarta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 patientDraMarta = Firestarter.CreateFakePatients(dramarta, this.db).First();
 
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
                 utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;

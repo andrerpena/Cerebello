@@ -64,7 +64,7 @@ namespace CerebelloWebRole.Tests
                 PatientId = patientId
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Tests
                 Name = "My Model",
                 Text = "This has no references"
             };
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelController = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             int modelId = this.db.ModelMedicalCertificates.First().Id;
@@ -125,7 +125,7 @@ namespace CerebelloWebRole.Tests
                 }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
             var controllerResult = controller.Edit(formModel);
 
@@ -153,7 +153,7 @@ namespace CerebelloWebRole.Tests
                      }
                 }
             };
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelTarget = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
@@ -192,7 +192,7 @@ namespace CerebelloWebRole.Tests
                      new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
                 }
             };
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelTarget = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
@@ -256,7 +256,7 @@ namespace CerebelloWebRole.Tests
                      new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
                 }
             };
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelTarget = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
@@ -302,7 +302,7 @@ namespace CerebelloWebRole.Tests
                      new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
                 }
             };
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelController = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             var certificateModel = this.db.ModelMedicalCertificates.First();
@@ -355,7 +355,7 @@ namespace CerebelloWebRole.Tests
                      new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
                 }
             };
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelController = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
@@ -407,7 +407,7 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             certificateModelcontroller.Edit(formModel);
 
@@ -445,7 +445,7 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             certificateModelcontroller.Edit(formModel);
             var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
@@ -479,7 +479,7 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             certificateModelcontroller.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
@@ -549,7 +549,7 @@ namespace CerebelloWebRole.Tests
                  }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
             certificateModelcontroller.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();

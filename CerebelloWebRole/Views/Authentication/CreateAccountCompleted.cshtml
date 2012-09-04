@@ -1,5 +1,4 @@
 ﻿@{
-    ViewBag.Title = "CreateAccountCompleted";
+    ViewBag.CreatingAccount = true;
 }
-
-<h2>CreateAccountCompleted</h2>
+@Html.Partial("VerifyPracticeAndEmail", (ViewDataDictionary)this.ViewData)

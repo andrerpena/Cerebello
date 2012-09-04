@@ -6,7 +6,7 @@ using System.Web;
 namespace CerebelloWebRole.Code.Security.Principals
 {
     /// <summary>
-    /// User information that is stored in the authenticatiojn 
+    /// User information that is stored in the Authentication cookie.
     /// </summary>
     public class UserData
     {

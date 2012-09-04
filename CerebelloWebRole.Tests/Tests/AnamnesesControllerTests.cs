@@ -67,7 +67,7 @@ namespace CerebelloWebRole.Tests
                    }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
             controller.Create(formModel);
 
@@ -108,7 +108,7 @@ namespace CerebelloWebRole.Tests
                    }
             };
 
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
             controller.Create(formModel);
 
@@ -128,7 +128,7 @@ namespace CerebelloWebRole.Tests
         [TestMethod]
         public void Delete_2_ShouldReturnProperResultWhenNotExisting()
         {
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
             // tries to delete the anamnese
@@ -142,7 +142,7 @@ namespace CerebelloWebRole.Tests
         [TestMethod]
         public void LookupDiagnoses_1_ShouldReturnTheProperResult()
         {
-            var mr = new MockRepository();
+            var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
             // tries to delete the anamnese <== WTF??

@@ -13,7 +13,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -236,7 +236,7 @@
     <Compile Include="Code\Security\Principals\AnonymousPrincipal.cs" />
     <Compile Include="Code\Security\Principals\AuthenticatedPrincipal.cs" />
     <Compile Include="Code\Security\Principals\Principal.cs" />
-    <Compile Include="Code\Security\Principals\UserData.cs" />
+    <Compile Include="Code\Security\UserData.cs" />
     <Compile Include="Code\Security\SecurityManager.cs" />
     <Compile Include="Code\Security\SecurityToken.cs" />
     <Compile Include="Code\Security\SecurityTokenHelper.cs" />
@@ -248,6 +248,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ConfirmationEmailViewModel.cs" />
+    <Compile Include="Models\VerifyPracticeAndEmailViewModel.cs" />
     <Compile Include="Models\CreatePracticeViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\CreateAccountViewModel.cs" />
@@ -533,6 +535,7 @@
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Shared\DisplayTemplates\AddressViewModel.cshtml" />
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
+    <Content Include="Areas\App\Views\PracticeHome\Welcome.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
@@ -543,6 +546,8 @@
     <Content Include="Scripts\jquery.arp.ajax.link.js" />
     <Content Include="Views\Shared\ObjectNotFound_Ajax.cshtml" />
     <None Include="Data\medicines.json" />
+    <Content Include="Views\Authentication\ConfirmationEmail.cshtml" />
+    <Content Include="Views\Authentication\VerifyPracticeAndEmail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Phone.cshtml" />
   </ItemGroup>
   <ItemGroup>

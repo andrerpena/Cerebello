@@ -35,7 +35,13 @@ namespace Cerebello.Firestarter
             var practice = CreatePractice_DrHouse(db);
 
             // Creating person, user and doctor objects to be used by André.
-            var andre = CreateDoctor_Andre(db, entity, specialty, practice);
+            var andre = CreateAdministratorDoctor_Andre(db, entity, specialty, practice);
+
+            // In this case, André is the owner of the account.
+            var user = andre.Users.First();
+            user.IsOwner = true;
+            user.Practice.Owner = user;
+            db.SaveChanges();
 
             return andre;
         }
@@ -53,11 +59,15 @@ namespace Cerebello.Firestarter
             var practice = CreatePractice_DrHouse(db);
 
             // Creating person, user and doctor objects to be used by André.
-            var result = new List<Doctor>
-            {
-                CreateDoctor_Andre(db, entity, specialty, practice),
-                CreateAdministratorDoctor_Miguel(db, entity, specialty, practice),
-            };
+            var andre = CreateAdministratorDoctor_Andre(db, entity, specialty, practice);
+            var miguel = CreateAdministratorDoctor_Miguel(db, entity, specialty, practice);
+            var result = new List<Doctor> { andre, miguel, };
+
+            // In this case, André is the owner of the account.
+            var user = andre.Users.First();
+            user.IsOwner = true;
+            user.Practice.Owner = user;
+            db.SaveChanges();
 
             return result;
         }
@@ -165,7 +175,7 @@ namespace Cerebello.Firestarter
             return doctor;
         }
 
-        public static Doctor CreateDoctor_Andre(CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
+        public static Doctor CreateAdministratorDoctor_Andre(CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
         {
             Person person = new Person()
             {
@@ -215,6 +225,11 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
+            Administrator admin = new Administrator();
+            user.Administrator = admin;
+
+            db.SaveChanges();
+
             return doctor;
         }
 
@@ -242,7 +257,7 @@ namespace Cerebello.Firestarter
                 LastActiveOn = DateTime.UtcNow,
                 PasswordSalt = "ELc81TnRE+Eb+e5/D69opg==",
                 Password = "lLqJ7FjmEQF7q4rxWIGnX+AXdqQ=",
-                
+
                 Practice = practice,
             };
 
@@ -272,7 +287,7 @@ namespace Cerebello.Firestarter
         }
 
         /// <summary>
-        /// Creates the secretary Milena, with Id = 3.
+        /// Creates the secretary Milena.
         /// </summary>
         /// <param name="db"></param>
         /// <param name="practice"></param>
@@ -297,8 +312,6 @@ namespace Cerebello.Firestarter
 
             db.Users.AddObject(user);
 
-            //db.SaveChanges(); // cannot save changes here, because user.Person is not nullable.
-
             // Creating person.
             Person person = new Person()
             {
@@ -313,9 +326,61 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             // Creating secretary.
-            Secretary secreatry = new Secretary()
+            Secretary secreatry = new Secretary
             {
-                Id = 3,
+                Id = 3
+            };
+
+            user.Secretary = secreatry;
+
+            db.SaveChanges();
+
+            return secreatry;
+        }
+
+        /// <summary>
+        /// Creates the secretary Maricleusa.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="practice"></param>
+        /// <returns></returns>
+        public static Secretary CreateSecretary_Maricleusa(CerebelloEntities db, Practice practice, bool useDefaultPassword = false)
+        {
+            var pwdSalt = "HC7p4NIf+1JYZmndKMggog==";
+            var pwdHash = CipherHelper.Hash("mary123", pwdSalt);
+            if (useDefaultPassword)
+                pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
+
+            // Creating user.
+            User user = new User()
+            {
+                UserName = "maricleusa",
+                UserNameNormalized = "maricleusa",
+                LastActiveOn = DateTime.UtcNow,
+                PasswordSalt = pwdSalt,
+                Password = pwdHash,
+                Practice = practice,
+            };
+
+            db.Users.AddObject(user);
+
+            // Creating person.
+            Person person = new Person()
+            {
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
+                FullName = "Maricleusa Souza",
+                Gender = (int)TypeGender.Female,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            user.Person = person;
+
+            db.SaveChanges();
+
+            // Creating secretary.
+            Secretary secreatry = new Secretary
+            {
+                Id = 4
             };
 
             user.Secretary = secreatry;
@@ -336,8 +401,10 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório do Dr. House",
                 UrlIdentifier = "consultoriodrhourse",
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = new DateTime(2007, 07, 03, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
+                VerificationDate = new DateTime(2007, 07, 12, 0, 0, 0, DateTimeKind.Utc),
+                ShowWelcomeScreen = false,
             };
 
             db.Practices.AddObject(practice);
@@ -357,8 +424,10 @@ namespace Cerebello.Firestarter
             {
                 Name = "Consultório da Dra. Marta",
                 UrlIdentifier = "dramarta",
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = new DateTime(2009, 02, 27, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
+                VerificationDate = new DateTime(2009, 02, 27, 0, 0, 0, DateTimeKind.Utc),
+                ShowWelcomeScreen = false,
             };
 
             db.Practices.AddObject(practice);
@@ -1233,7 +1302,7 @@ GO
                     using (var command = conn.CreateCommand())
                     {
                         command.CommandText =
-                        string.Format(@"CREATE DATABASE CerebelloTEST ON 
+                        string.Format(@"CREATE DATABASE {0} ON 
                     ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\{0}.mdf' )
                      FOR ATTACH ;", dbName);
 

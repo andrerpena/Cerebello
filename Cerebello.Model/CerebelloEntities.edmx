@@ -510,6 +510,10 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="OwnerId" Type="int" />
           <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
+          <Property Name="VerificationDate" Type="datetime" />
+          <Property Name="VerificationToken" Type="varchar" MaxLength="32" />
+          <Property Name="VerificationExpirationDate" Type="datetime" />
+          <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -630,6 +634,7 @@
           <Property Name="AdministratorId" Type="int" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="UserNameNormalized" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsOwner" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_ActiveIngredient_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
@@ -1469,6 +1474,10 @@
           <NavigationProperty Name="Owner" Relationship="Cerebello.Model.FK_Practice_User" FromRole="Practice" ToRole="User" />
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="VerificationDate" />
+          <Property Type="String" Name="VerificationToken" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="VerificationExpirationDate" />
+          <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1522,6 +1531,7 @@
           <NavigationProperty Name="Administrator" Relationship="Cerebello.Model.FK_User_Administrator" FromRole="User" ToRole="Administrator" />
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="UserNameNormalized" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsOwner" Nullable="false" />
         </EntityType>
         <Association Name="FK_Appointment_Doctor">
           <End Role="Doctor" Type="Cerebello.Model.Doctor" Multiplicity="1">
@@ -2338,7 +2348,11 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
-            <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
+            <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
+                <ScalarProperty Name="VerificationExpirationDate" ColumnName="VerificationExpirationDate" />
+                <ScalarProperty Name="VerificationToken" ColumnName="VerificationToken" />
+                <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
+                <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
             <ScalarProperty Name="UrlIdentifier" ColumnName="UrlIdentifier" />
@@ -2362,7 +2376,8 @@
             <ScalarProperty Name="Id" ColumnName="Id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="Cerebello.Model.User"><MappingFragment StoreEntitySet="User">
-            <ScalarProperty Name="UserNameNormalized" ColumnName="UserNameNormalized" />
+            <ScalarProperty Name="IsOwner" ColumnName="IsOwner" />
+                <ScalarProperty Name="UserNameNormalized" ColumnName="UserNameNormalized" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="AdministratorId" ColumnName="AdministratorId" />
             <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />

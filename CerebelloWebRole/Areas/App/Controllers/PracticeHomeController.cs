@@ -28,5 +28,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return View(model);
         }
+
+        public ActionResult Welcome()
+        {
+            this.Practice.ShowWelcomeScreen = false;
+
+            this.db.SaveChanges();
+
+            return View();
+        }
     }
 }

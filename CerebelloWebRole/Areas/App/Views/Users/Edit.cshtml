@@ -53,6 +53,7 @@
 
     editPanelMedic.AddField(
         m => m.MedicalSpecialty,
+        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalSpecialty,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
@@ -60,13 +61,15 @@
 
     editPanelMedic.AddField(
         m => m.MedicalEntity,
+        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
             "")</text>);
 
-    editPanelMedic.AddField(m => m.MedicalEntityJurisdiction,
-    format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
+    editPanelMedic.AddField(
+        m => m.MedicalEntityJurisdiction,
+        format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
 }
 @section Scripts {
     <script type="text/javascript">

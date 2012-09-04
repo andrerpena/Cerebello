@@ -10,6 +10,9 @@ using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.Areas.App.Controllers;
+using System.Net;
+using System.IO;
+using System.Net.Mail;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
@@ -47,9 +50,6 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 ViewBag.LoginFailed = true;
                 return View();
             }
-
-#warning Todo seems to be wrong...
-            // TODO: efetuar o login
 
             user.LastActiveOn = this.GetUtcNow();
 
@@ -165,10 +165,13 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     UrlIdentifier = urlPracticeId,
                     CreatedOn = utcNow,
                     WindowsTimeZoneId = timeZoneId,
+                    ShowWelcomeScreen = true,
                 };
 
                 // Setting the BirthDate of the user as a person.
                 user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth);
+
+                user.IsOwner = true;
 
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (registrationData.IsDoctor)
@@ -198,11 +201,60 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 db.Users.AddObject(user);
 
-                // If the ModelState is still valid, then save objects to the database.
-                if (this.ModelState.IsValid)
+                // Creating confirmation email, with the token.
+                MailMessage message;
+
                 {
-                    db.SaveChanges();
-                    return RedirectToAction("createaccountcompleted");
+                    // setting verification info
+                    user.Practice.VerificationToken = Guid.NewGuid().ToString("N");
+                    user.Practice.VerificationExpirationDate = utcNow.AddDays(30);
+
+                    // rendering message body from partial view
+                    var partialViewModel = new ConfirmationEmailViewModel
+                    {
+                        PersonName = user.Person.FullName,
+                        UserName = user.UserName,
+                        Token = user.Practice.VerificationToken,
+                        PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                    };
+                    var body = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
+
+                    var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
+                    string subject = "Bem vindo ao Cerebello! Por favor, confirme sua conta.";
+
+                    message = this.CreateEmailMessage(toAddress, subject, body, isBodyHtml: true);
+                }
+
+                // If the ModelState is still valid, then save objects to the database,
+                // and send confirmation email message to the user.
+                using (message)
+                {
+                    if (this.ModelState.IsValid)
+                    {
+                        // Saving changes to the DB.
+                        db.SaveChanges();
+
+                        user.Practice.Owner = user;
+                        db.SaveChanges();
+
+                        // Sending the confirmation e-mail to the new user.
+                        this.SendEmail(message);
+
+                        // Log the user in.
+                        var loginModel = new LoginViewModel
+                        {
+                            Password = registrationData.Password,
+                            PracticeIdentifier = user.Practice.UrlIdentifier,
+                            RememberMe = false,
+                            UserNameOrEmail = registrationData.UserName,
+                        };
+                        if (!SecurityManager.Login(loginModel, db, out user))
+                        {
+                            throw new Exception("Login cannot fail.");
+                        }
+
+                        return RedirectToAction("CreateAccountCompleted", new { practice = user.Practice.UrlIdentifier });
+                    }
                 }
             }
 
@@ -221,9 +273,59 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             return View(registrationData);
         }
 
-        public ActionResult CreateAccountCompleted()
+        public ActionResult CreateAccountCompleted(string practice)
         {
-            return View();
+            return View(new VerifyPracticeAndEmailViewModel { Practice = practice });
+        }
+
+        [AcceptVerbs(new string[] { "Get", "Post" })]
+        public ActionResult VerifyPracticeAndEmail(string token, string practice)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                var utcNow = this.GetUtcNow();
+
+                // getting practice verification data by token
+                var practiceVerification = this.db.Practices
+                    .Where(p => p.VerificationToken == token)
+                    .Where(p => p.UrlIdentifier == practice)
+                    .SingleOrDefault();
+
+                if (practiceVerification == null)
+                {
+                    this.ModelState.AddModelError("Token", "Token is not valid.");
+                }
+                else
+                {
+                    if (practiceVerification.VerificationExpirationDate == null)
+                        throw new Exception("VerificationExpirationDate must have a value when the practice is being verified.");
+
+                    // setting practice verification data
+                    if (utcNow <= practiceVerification.VerificationExpirationDate)
+                    {
+                        practiceVerification.VerificationDate = utcNow;
+                    }
+                    else
+                    {
+                        this.ModelState.AddModelError("Token", "Token has expired.");
+                    }
+
+                    practiceVerification.VerificationToken = null;
+                    practiceVerification.VerificationExpirationDate = null;
+
+                    // Saving changes.
+                    // Note: even if ModelState.IsValid is false,
+                    // we need to save the changes to invalidate token when it expires.
+                    db.SaveChanges();
+                }
+
+                if (this.ModelState.IsValid)
+                {
+                    return this.RedirectToAction("Welcome", "PracticeHome", new { area = "App", practice = practiceVerification.UrlIdentifier });
+                }
+            }
+
+            return View(new VerifyPracticeAndEmailViewModel { Practice = practice });
         }
     }
 }

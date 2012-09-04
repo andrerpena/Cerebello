@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using Cerebello.Model;
+using Cerebello.Firestarter;
 
 namespace CerebelloWebRole.Tests
 {

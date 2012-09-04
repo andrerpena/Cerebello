@@ -7,17 +7,43 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
-2012-08-## ##:00-##:## (#º##") ##   
+2012-08-## ##:00-##:## (#º##") ##   ######
 
+-- seg #º##" (?º??")
+2012-09-03 15:00-15:30 (0º30")  8   Issue #69: Owner da conta - Ver se está sendo definido na hora de criar a conta.
+2012-09-03 16:00-18:00 (2º00") 10   Issue #69: Owner da conta - Regras da parte de usuários: exclusão e alteração.
+
+-- sab 2º00" (?º??")
+2012-09-01 13:00-14:30 (1º30") 10   Preparando o commit, fazendo merge e push, e correções adicionais depois de dar merge, e testar tudo de novo.
+2012-09-01 00:00-00:30 (0º30")  9   Novos testes para validação de e-mail.
+
+-- sex 11º00" (?º??")
+2012-08-31 18:30-24:00 (5º30")  9   Novos testes para validação de e-mail.
+2012-08-31 12:30-18:00 (5º30")  6   Arquitetura de testes: permitir mockar envio de e-mails e uso de HttpContext.Current.
+
+-- qui 3º00" (?º??")
+2012-08-30 16:30-19:30 (3º00")  8   Arquitetura de testes: permitir mockar renderização de views nos controllers.
+                                    Issue #67: Corrigindo os testes que já existiam.
+
+-- qua 10º00" (?º??")
+2012-08-29 11:00-16:00 (5º00")  8   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
+2012-08-29 16:30-21:30 (5º00")  7   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
+
+-- ter 6º30" (?º??")
+2012-08-28 16:30-23:00 (6º30")  6   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
+
+-- sex 4º00" (?º??")
 2012-08-24 16:30-20:30 (4º00")  7   Issue #65: Mover o UrlIdentifier da pessoa para o médico.
 
+-- qui 4º00" (?º??")
 2012-08-23 21:30-22:00 (1º00")  9   BUG: quando o médico não possui configurações da agenda dá pau pra tudo quanto é lado.
 2012-08-23 19:00-21:00 (2º00")  8   Issue #39: permitir criar médico junto com o consultório.
 2012-08-23 15:00-16:00 (1º00")  5   Issue #39: permitir criar médico junto com o consultório.
 
+-- ter 1º00" (?º??")
 2012-08-21 16:00-17:00 (1º00")  8   Issue #39: permitir criar médico junto com o consultório.
 
--- 1º00" (?º??")
+-- qui 6º40" (?º??")
 2012-08-16 22:30-24:00 (1º30")  6   Preparando commit, mergindo, corrigindo erros pós merge, testando e fazendo commit novamente.
 2012-08-16 22:00-22:30 (0º30") 10   Colocando Unique-Index nas FKs do usuário que devem ser únicos: PersonId, DoctorId, etc..
 2012-08-16 20:40-22:00 (1º20")  8   Verificando interface do software a procura de erros com datas.

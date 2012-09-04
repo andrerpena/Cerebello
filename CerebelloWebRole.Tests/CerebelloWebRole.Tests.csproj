@@ -124,10 +124,15 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyTest.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DbTestBase.cs" />
+    <Compile Include="Disposer.cs" />
     <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="MockExtensions.cs" />
     <Compile Include="Mvc3TestHelper.cs" />
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
     <Compile Include="Tests\AuthenticationControllerTests.cs" />
     <Compile Include="Tests\MedicinesControllerTests.cs" />

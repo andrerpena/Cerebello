@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cerebello;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Tests
 {
@@ -61,7 +62,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -97,7 +98,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -146,7 +147,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                MockRepository mr = new MockRepository();
+                MockRepository mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -210,7 +211,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var marta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 userNameToRepeat = marta.Users.First().UserName;
-                MockRepository mr = new MockRepository();
+                MockRepository mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -260,7 +261,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -315,7 +316,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
@@ -370,7 +371,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
@@ -435,7 +436,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
@@ -489,7 +490,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
@@ -554,7 +555,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
@@ -603,7 +604,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
@@ -655,7 +656,7 @@ namespace CerebelloWebRole.Tests
             try
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
 
@@ -695,6 +696,64 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState must be invalid.");
             Assert.IsFalse(isDbSaved, "DB changes must not be saved.");
         }
+
+        /// <summary>
+        /// Tests the edition of an user, removing the administrator role from the owner of the account.
+        /// This is an invalid operation.
+        /// </summary>
+        [TestMethod]
+        public void Edit_EditOwnerRemovingAdministratorRole()
+        {
+            UsersController controller;
+            UserViewModel vm;
+            bool isDbSaved = false;
+            try
+            {
+                var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
+                var mr = new MockRepository(true);
+                mr.SetCurrentUser(doc[1].Users.First(), "masban");
+
+                vm = UsersController.GetViewModel(doc[0].Users.First(), doc[0].Users.FirstOrDefault().Practice);
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
+            // This is not valid as this user is a doctor, and that property is required for doctors.
+            ActionResult actionResult;
+
+            {
+                // When editing, the user-name cannot be changed. Must set it to null.
+                vm.UserName = null;
+
+                vm.IsAdministrador = false;
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+
+                actionResult = controller.Edit(vm);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            var viewResult = (ViewResult)actionResult;
+            Assert.AreEqual("Edit", viewResult.ViewName);
+            Assert.IsInstanceOfType(viewResult.Model, typeof(UserViewModel));
+            var resultViewModel = (UserViewModel)viewResult.Model;
+            Assert.AreEqual("andrerpena", resultViewModel.UserName);
+            Assert.IsInstanceOfType(controller.ViewBag.MedicalSpecialtyOptions, typeof(IEnumerable<SelectListItem>));
+            Assert.IsInstanceOfType(controller.ViewBag.MedicalEntityOptions, typeof(IEnumerable<SelectListItem>));
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState must be invalid.");
+            Assert.AreEqual(1, controller.ModelState.GetPropertyErrors(() => vm.IsAdministrador).Count);
+
+            Assert.IsFalse(isDbSaved, "DB changes must not be saved.");
+        }
         #endregion
 
         #region Details
@@ -711,7 +770,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var s = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.ToList().Last());
                 userId = s.Users.Single().Id;
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -750,7 +809,7 @@ namespace CerebelloWebRole.Tests
             {
                 var medic = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 userId = medic.Users.Single().Id;
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
             catch
@@ -788,7 +847,7 @@ namespace CerebelloWebRole.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
                 var admin = this.db.Users.Where(m => m.AdministratorId != null).First();
-                var mr = new MockRepository();
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 userId = admin.Id;
             }
@@ -835,7 +894,7 @@ namespace CerebelloWebRole.Tests
                 var user = s.Users.Single();
                 userId = user.Id;
 
-                mr = new MockRepository();
+                mr = new MockRepository(true);
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
@@ -881,7 +940,7 @@ namespace CerebelloWebRole.Tests
                 var practice = this.db.Practices.FirstOrDefault();
                 var user = d.Users.Single();
                 userId = user.Id;
-                mr = new MockRepository();
+                mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword(userId);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
@@ -951,7 +1010,7 @@ namespace CerebelloWebRole.Tests
                 var user = d.Users.Single();
                 var userId = user.Id;
 
-                mr = new MockRepository();
+                mr = new MockRepository(true);
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
             }
             catch
@@ -1018,6 +1077,194 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("changepassword", string.Format("{0}", viewResult.RouteValues["action"]));
         }
 
+        #endregion
+
+        #region Delete
+        [TestMethod]
+        public void Delete_SecretaryDeletedByAdministrator_HappyPath()
+        {
+            UsersController controller;
+            int idToDelete;
+            bool isDbSaved = false;
+            try
+            {
+                var docs = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
+                var mr = new MockRepository(true);
+
+                var secretary1 = Firestarter.CreateSecretary_Milena(db, docs[0].Users.First().Practice);
+                idToDelete = secretary1.Users.First().Id;
+
+                mr.SetCurrentUser(docs[1].Users.First(), "masban");
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
+            // This is not valid as this user is a doctor, and that property is required for doctors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Delete(idToDelete);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(JsonResult));
+            var jsonResult = (JsonResult)actionResult;
+
+            Assert.IsInstanceOfType(jsonResult.Data, typeof(JsonDeleteMessage));
+            var jsonDeleteMsg = (JsonDeleteMessage)jsonResult.Data;
+
+            Assert.IsTrue(jsonDeleteMsg.success, "Must succed when administrator deletes secretary.");
+
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState must be valid.");
+            Assert.IsTrue(isDbSaved, "DB changes must be saved.");
+        }
+
+        [TestMethod]
+        public void Delete_SecretaryDeletedByAnotherSecretary()
+        {
+            UsersController controller;
+            int idToDelete;
+            bool isDbSaved = false;
+            try
+            {
+                var docs = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
+                var mr = new MockRepository(true);
+
+                var secretary1 = Firestarter.CreateSecretary_Milena(db, docs[0].Users.First().Practice);
+                var secretary2 = Firestarter.CreateSecretary_Maricleusa(db, docs[0].Users.First().Practice);
+                idToDelete = secretary2.Users.First().Id;
+
+                mr.SetCurrentUser(secretary1.Users.First(), "milena");
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
+            // This is not valid as this user is a doctor, and that property is required for doctors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Delete(idToDelete);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(JsonResult));
+            var jsonResult = (JsonResult)actionResult;
+
+            Assert.IsInstanceOfType(jsonResult.Data, typeof(JsonDeleteMessage));
+            var jsonDeleteMsg = (JsonDeleteMessage)jsonResult.Data;
+
+            Assert.IsFalse(jsonDeleteMsg.success, "Must not succed... only administrators have the right to delete another user.");
+            Assert.AreEqual("Você não tem permissão para excluir um usuário.", jsonDeleteMsg.text);
+
+            Assert.IsTrue(controller.ModelState.IsValid, "In this case, the model must be Ok... the wrong thing is the logged user.");
+            Assert.IsFalse(isDbSaved, "DB changes must not be saved.");
+        }
+
+        [TestMethod]
+        public void Delete_OwnerDeletedByAdministrator()
+        {
+            UsersController controller;
+            int idToDelete;
+            bool isDbSaved = false;
+            try
+            {
+                var docs = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
+                var mr = new MockRepository(true);
+                idToDelete = docs[0].Users.First().Id;
+
+                mr.SetCurrentUser(docs[1].Users.First(), "masban");
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
+            // This is not valid as this user is a doctor, and that property is required for doctors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Delete(idToDelete);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(JsonResult));
+            var jsonResult = (JsonResult)actionResult;
+
+            Assert.IsInstanceOfType(jsonResult.Data, typeof(JsonDeleteMessage));
+            var jsonDeleteMsg = (JsonDeleteMessage)jsonResult.Data;
+
+            Assert.IsFalse(jsonDeleteMsg.success, "Must not succed when deleting the owner of the account.");
+            Assert.AreEqual("Não é possível excluir o usuário que é proprietário da conta.", jsonDeleteMsg.text);
+
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState must not be valid.");
+            Assert.IsFalse(isDbSaved, "DB changes must not be saved.");
+        }
+
+        [TestMethod]
+        public void Delete_OwnerSelfDelete()
+        {
+            UsersController controller;
+            int idToDelete;
+            bool isDbSaved = false;
+            try
+            {
+                var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                idToDelete = doc.Users.First().Id;
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // Editing the user MedicalEntityJurisdiction, by removing the value.
+            // This is not valid as this user is a doctor, and that property is required for doctors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Delete(idToDelete);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(JsonResult));
+            var jsonResult = (JsonResult)actionResult;
+
+            Assert.IsInstanceOfType(jsonResult.Data, typeof(JsonDeleteMessage));
+            var jsonDeleteMsg = (JsonDeleteMessage)jsonResult.Data;
+
+            Assert.IsFalse(jsonDeleteMsg.success, "Must not succed when deleting the owner of the account.");
+            Assert.AreEqual("Não é possível excluir o usuário que é proprietário da conta.", jsonDeleteMsg.text);
+
+            Assert.IsFalse(controller.ModelState.IsValid, "ModelState must not be valid.");
+            Assert.IsFalse(isDbSaved, "DB changes must not be saved.");
+        }
         #endregion
     }
 }

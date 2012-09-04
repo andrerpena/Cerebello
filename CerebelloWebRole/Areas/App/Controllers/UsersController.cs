@@ -42,7 +42,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 BirthPlace = user.Person.BirthPlace,
                 CPF = user.Person.CPF,
                 Profissao = user.Person.Profession,
-                Email = user.Person.EmailGravatarHash,
+                Email = user.Person.Email,
 
                 IsAdministrador = user.AdministratorId != null,
                 IsDoctor = user.DoctorId != null,
@@ -325,6 +325,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     user.Administrator = null;
                 }
 
+                if (user.IsOwner)
+                {
+                    if (!formModel.IsAdministrador)
+                        this.ModelState.AddModelError(
+                            () => formModel.IsAdministrador,
+                            "Cannot remove administrator role from the owner of the account.");
+                }
+
                 // when the user is a secretary
                 if (formModel.IsSecretary)
                 {
@@ -396,20 +404,50 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var user = db.Users.Where(m => m.Id == id).First();
+                var currentUserId = this.GetCurrentUserId();
+                bool canDeleteUsers = this.db.Users
+                    .Where(u => u.Id == currentUserId)
+                    .Select(u => u.IsOwner || u.Administrator != null)
+                    .SingleOrDefault();
 
-                // delete appointments manulally (SQL Server won't do this automatically)
-                var appointments = user.Appointments.ToList();
-                while (appointments.Any())
+                if (!canDeleteUsers)
                 {
-                    var appointment = appointments.First();
-                    this.db.Appointments.DeleteObject(appointment);
-                    appointments.Remove(appointment);
+                    var message = "Você não tem permissão para excluir um usuário.";
+                    return this.Json(new JsonDeleteMessage { success = false, text = message }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var user = db.Users.Where(m => m.Id == id).First();
+
+                    if (user.IsOwner)
+                    {
+                        this.ModelState.AddModelError("User", "Não é possível excluir o usuário que é proprietário da conta.");
+                    }
+                    else
+                    {
+                        // delete appointments manulally (SQL Server won't do this automatically)
+                        var appointments = user.Appointments.ToList();
+                        while (appointments.Any())
+                        {
+                            var appointment = appointments.First();
+                            this.db.Appointments.DeleteObject(appointment);
+                            appointments.Remove(appointment);
+                        }
+
+                        this.db.Users.DeleteObject(user);
+                    }
                 }
 
-                this.db.Users.DeleteObject(user);
-                this.db.SaveChanges();
-                return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
+                if (this.ModelState.IsValid)
+                {
+                    this.db.SaveChanges();
+                    return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var message = this.ModelState.GetAllErrors().First().Item2.ErrorMessage;
+                    return this.Json(new JsonDeleteMessage { success = false, text = message }, JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception ex)
             {

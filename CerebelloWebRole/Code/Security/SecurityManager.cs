@@ -152,7 +152,6 @@ namespace CerebelloWebRole.Code
                     FormsAuthentication.SignOut();
                     principal = new AnonymousPrincipal(new GuestIdentity());
                 }
-
             }
             else
                 principal = new AnonymousPrincipal(new GuestIdentity());
