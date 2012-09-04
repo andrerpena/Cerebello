@@ -27,6 +27,7 @@
                 }
             });
         });
+
         $(".delete-receipt", $("div[data-val-id='receipt-@Model.Id']")).click(function (e) {
             e.preventDefault();
             var answer = confirm("Deseja realmente excluir esta receita?\nEsta operação não pode ser desfeita.");

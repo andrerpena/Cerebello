@@ -196,6 +196,11 @@ input[type=submit]:hover {
   transition: background-position 0.1s linear;
 }
 
+input[disabled="disabled"], input.disabled
+{
+    opacity: 0.5;
+}
+
 select, input[type=text], textarea
 {
     -moz-box-sizing: border-box;

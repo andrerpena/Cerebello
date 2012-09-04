@@ -34,17 +34,15 @@
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir este paciente?\nTodas as informações relacionadas a este paciente serão excluídas.\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Este paciente foi excluído");
-                        window.location = "@Url.Action("index")";
-                    }
-                    else
-                        alert("Não foi possível excluir este paciente.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.deleteConfirmation({
+                objectType: "paciente",
+                objectName: "@this.Model.FullName",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function(data) {
+                    alert("Este paciente foi excluído");
+                    window.location = "@Url.Action("index")";
+                }
+            });
         });
     </script>
 }

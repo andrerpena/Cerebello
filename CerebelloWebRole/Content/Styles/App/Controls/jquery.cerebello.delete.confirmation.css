@@ -1,0 +1,22 @@
+﻿.delete-confirmation-warning
+{
+    background-color: #FFEDED;
+    border: 1px solid red;
+    line-height: 1.2em;
+    padding: 4px;
+}
+
+.delete-confirmation-title
+{
+    line-height: 1.2em;
+    margin: 15px 0 6px;
+}
+
+.delete-confirmation-text
+{
+    width: 170px;
+}
+
+.delete-confirmation-text {
+    width: 200px;
+}

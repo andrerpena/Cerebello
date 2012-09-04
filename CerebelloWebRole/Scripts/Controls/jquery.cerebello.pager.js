@@ -1,6 +1,6 @@
 ﻿(function ($) {
 
-    //permite transformar um elemento em um paginador com eventos
+    // provides client-side paging
     function Pager(el, options) {
 
         // Defaults:

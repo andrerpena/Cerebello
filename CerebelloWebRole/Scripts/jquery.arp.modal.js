@@ -5,12 +5,17 @@
 
         //Defaults:
         this.defaults = {
+            // url that will return the modal's content
             url: "",
+            // this function allows for manually determining the content of the modal.
+            // this should be set as opposed to 'url' (one or another)
+            buildContent: null,
             title: "",
             data: {},
             ok: function () { },
             cancel: function () { },
             width: 400,
+            // you can set height to null if you want auto-height
             height: 300
         };
 
@@ -18,6 +23,8 @@
         this.opts = $.extend({}, this.defaults, options);
 
         this.$mask = null;
+
+        // this is gonna be initialized further
         this.$el = null;
 
         this.resize = function () {
@@ -53,13 +60,17 @@
             _this.$mask.fadeIn("fast");
 
             // adiciono o popup em si
-            _this.$el = $("<div class='modal'></div>").appendTo(document.body).css({
-                top: $(window).height() / 2 - _this.opts.height / 2,
-                left: $(window).width() / 2 - _this.opts.width / 2,
-                width: _this.opts.width,
-                'min-height': _this.opts.height,
+            _this.$el = $("<div />").addClass("modal").appendTo(document.body).css({
                 'z-index': window._modalZIndex++
             });
+
+            // if width has been specified, sets it
+            if (_this.opts.width)
+                _this.$el.css("width", _this.opts.width);
+
+            // if height has been specified, sets it
+            if (_this.opts.height)
+                _this.$el.css("min-height", _this.opts.height);
 
             var $modalHeader = $("<div class='modal-header'><div class='modal-close'></div><div class='modal-title'>" + _this.opts.title + "</div><div style='clear:both'></div></div>").appendTo(this.$el);
             $(".modal-close", $modalHeader).click(function (e) {
@@ -67,7 +78,7 @@
                 _this.close();
             });
 
-            var modalContent = $("<div class='content'></div>").appendTo(this.$el);
+            var $content = $("<div class='content'></div>").appendTo(this.$el);
 
             this.$el.bind("modal-ok", function (e, data) {
                 _this.opts.ok(data);
@@ -83,15 +94,21 @@
                 _this.resize();
             });
 
-            $.ajax({
-                url: _this.opts.url,
-                data: _this.opts.data,
-                success: function (html) {
-                    _this.$el.show();
-                    modalContent.html(html);
-                    _this.resize();
-                }
-            });
+            if (_this.opts.buildContent) {
+                _this.$el.show();
+                _this.opts.buildContent($content);
+                _this.resize();
+            }
+            else
+                $.ajax({
+                    url: _this.opts.url,
+                    data: _this.opts.data,
+                    success: function (html) {
+                        _this.$el.show();
+                        $content.html(html);
+                        _this.resize();
+                    }
+                });
 
             var resizeTimer;
             $(window).resize(function () {

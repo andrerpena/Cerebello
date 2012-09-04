@@ -4,7 +4,7 @@
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
-    
+
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
     grid.AddField(m => m.FullName, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
     grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, true)</text>, header: "Idade");
@@ -13,19 +13,18 @@
 Prontuário
 }
 @section Styles {
-    <link type="text/css" rel="Stylesheet" href="/content/jquery.jqplot.min.css" />
+    <link type="text/css" rel="Stylesheet" href="/content/styles/app/jquery.jqplot.min.css" />
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("create", "patients")" class="icon-link icon-link-plus">Novo paciente</a></li>
+        <li><a href="@Url.Action("create", "patients")" class="icon-link icon-link-plus">Novo
+            paciente</a></li>
     </ul>
 }
 @section Scripts
 {
-    <script type="text/javascript" src="/scripts/jquery.flot.min.js"></script>
-    <script type="text/javascript" src="/scripts/jquery.flot.stack.min.js"></script>
     <script type="text/javascript">
-        (function () {
+        $(function () {
             var mvcData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.PatientAgeDistribution)));
 
             var male = [];
@@ -39,23 +38,21 @@ Prontuário
                     female.push([mvcData[i].Age, mvcData[i].Count]);
             }
 
-            function plotWithOptions() {
-                $.plot($("#placeholder"), [male, female], {
-                    series: {
-                        stack: 0,
-                        bars: { show: true, barWidth: 0.6 },
-                    },
-                    yaxis: { color: "#cccccc", position: "right", show: false },
-                    xaxis: { color: "#cccccc" },
-                    grid: {
-                        borderColor: "#cccccc",
-                        borderWidth: 0
-                    },
-                    colors: ["#AFC2E0", "pink"]
-                });
-            }
+			$.jqplot($("#placeholder"), [male, female], {
+				series: {
+					stack: 0,
+					bars: { show: true, barWidth: 0.6 },
+				},
+				yaxis: { color: "#cccccc", position: "right", show: false },
+				xaxis: { color: "#cccccc" },
+				grid: {
+					borderColor: "#cccccc",
+					borderWidth: 0
+				},
+				colors: ["#AFC2E0", "pink"]
+			});
             
-            plotWithOptions();
+
         });
     </script>
 }
@@ -66,13 +63,11 @@ Prontuário
 <div class="patients-summary">
     <table>
         <tr>
-            <tr>
-                <td class="header">
-                    Total de pacientes:
-                </td>
-                <td class="value">@Model.TotalPatientsCount
-                </td>
-            </tr>
+            <td class="header">
+                Total de pacientes:
+            </td>
+            <td class="value">@Model.TotalPatientsCount
+            </td>
         </tr>
     </table>
 </div>
