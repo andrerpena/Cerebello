@@ -9,6 +9,14 @@ yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
 2012-08-## ##:00-##:## (#º##") ##   ######
 
+2012-09-12 12:25-14:45 (2º20") 10   Issue #9: Find next deve respeitar Days-off.
+2012-09-12 10:00-11:50 (1º50") 10   Issue #9: Definir dias sem expediente: folgas, férias, etc..
+
+2012-09-11 16:30-20:30 (4º00")  8   Issue #9: Definir dias sem expediente: folgas, férias, etc..
+
+-- qua #º##" (?º??")
+2012-09-05 13:30-15:30 (2º00") 10   Estudando sobre long polling, para fazer um sistema de eventos para o cliente.
+
 -- seg #º##" (?º??")
 2012-09-03 15:00-15:30 (0º30")  8   Issue #69: Owner da conta - Ver se está sendo definido na hora de criar a conta.
 2012-09-03 16:00-18:00 (2º00") 10   Issue #69: Owner da conta - Regras da parte de usuários: exclusão e alteração.

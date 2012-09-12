@@ -641,7 +641,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (localNow > localStartingFrom)
                 localStartingFrom = localNow;
 
-            var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom);
+            var slot = this.FindNextFreeValidTimeInPracticeLocalTime(doctor, db, localNow, localStartingFrom);
+
             return this.Json(new
             {
                 date = slot.Item1.ToString("dd/MM/yyyy"),
@@ -656,6 +657,32 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     | DateTimeHelper.RelativeDateOptions.ReplaceToday
                     | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow)
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        private Tuple<DateTime, DateTime> FindNextFreeValidTimeInPracticeLocalTime(Doctor doctor, CerebelloEntities db, DateTime localNow, DateTime localStartingFrom)
+        {
+            var localStartingFrom2 = localStartingFrom;
+
+            while (true)
+            {
+                var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom2);
+
+                var vm = new AppointmentViewModel
+                {
+                    Date = slot.Item1.Date,
+                    Start = slot.Item1.ToString("HH:mm"),
+                    End = slot.Item2.ToString("HH:mm"),
+                };
+
+                this.DoDateAndTimeValidation(vm, localNow, null);
+
+                if (vm.DateAndTimeValidationState == DateAndTimeValidationState.Passed)
+                {
+                    return slot;
+                }
+
+                localStartingFrom2 = slot.Item2;
+            }
         }
 
         /// <summary>
@@ -678,42 +705,65 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var practice = doctor.Users.FirstOrDefault().Practice;
 
-            var currentDateStartUtc = ConvertToUtcDateTime(practice, startingFromLocalTime.Date);
-            var currentDateEndUtc = currentDateStartUtc.AddDays(1);
-
+            DateTime[] validLocalDates;
+            var currentDateStartLocal = startingFromLocalTime.Date;
             while (true)
             {
-                // take all appointments of that day
-                var appointments = db.Appointments
-                    .Where(a => a.DoctorId == doctor.Id)
-                    .Where(a => a.End >= currentDateStartUtc && a.Start <= currentDateEndUtc)
-                    .OrderBy(a => a.Start)
-                    .ToList();
-
-                var currentDateStartLocal = ConvertToLocalDateTime(practice, currentDateStartUtc);
-                var slots = GetDaySlotsInLocalTime(currentDateStartLocal, doctor)
-                    .Where(s => s.Item1 >= startingFromLocalTime)
-                    .Select(s => new
-                    {
-                        StartUtc = ConvertToUtcDateTime(practice, s.Item1),
-                        EndUtc = ConvertToUtcDateTime(practice, s.Item2)
-                    })
-                    .ToList();
-
-                // Looking for available slots of time in the current day.
-                foreach (var slot in slots)
+                // getting a list of valid dates to look for slots
+                // - days-off are invalid
                 {
-                    if (!IsTimeAvailableUtc(slot.StartUtc, slot.EndUtc, appointments))
-                        continue;
+                    var currentDateEndLocal = currentDateStartLocal.AddDays(30.0);
 
-                    return Tuple.Create(
-                        ConvertToLocalDateTime(practice, slot.StartUtc),
-                        ConvertToLocalDateTime(practice, slot.EndUtc));
-                };
+                    while (true)
+                    {
+                        var daysOffDates = db.CFG_DayOff
+                            .Where(df => df.Date >= currentDateStartLocal && df.Date < currentDateEndLocal)
+                            .Select(df => df.Date)
+                            .ToArray();
 
-                // Moving to the next day.
-                currentDateStartUtc = currentDateEndUtc;
-                currentDateEndUtc = currentDateStartUtc.AddDays(1);
+                        validLocalDates = DateTimeHelper.Range(currentDateStartLocal, 30, d => d.AddDays(1.0)).ToArray();
+                        validLocalDates = validLocalDates.Except(daysOffDates).ToArray();
+
+                        if (validLocalDates.Length > 0)
+                            break;
+
+                        currentDateStartLocal = currentDateEndLocal;
+                    }
+                }
+
+                // For each valid date, we look inside them for available slots.
+                foreach (var eachValidLocalDate in validLocalDates)
+                {
+                    var currentDateStartUtc = ConvertToUtcDateTime(practice, eachValidLocalDate);
+                    var currentDateEndUtc = currentDateStartUtc.AddDays(1.0);
+
+                    // take all appointments of that day
+                    var appointments = db.Appointments
+                        .Where(a => a.DoctorId == doctor.Id)
+                        .Where(a => a.End >= currentDateStartUtc && a.Start <= currentDateEndUtc)
+                        .OrderBy(a => a.Start)
+                        .ToList();
+
+                    var slots = GetDaySlotsInLocalTime(eachValidLocalDate, doctor)
+                        .Where(s => s.Item1 >= startingFromLocalTime)
+                        .Select(s => new
+                        {
+                            StartUtc = ConvertToUtcDateTime(practice, s.Item1),
+                            EndUtc = ConvertToUtcDateTime(practice, s.Item2)
+                        })
+                        .ToList();
+
+                    // Looking for available slots of time in the current day.
+                    foreach (var slot in slots)
+                    {
+                        if (!IsTimeAvailableUtc(slot.StartUtc, slot.EndUtc, appointments))
+                            continue;
+
+                        return Tuple.Create(
+                            ConvertToLocalDateTime(practice, slot.StartUtc),
+                            ConvertToLocalDateTime(practice, slot.EndUtc));
+                    };
+                }
             }
         }
 
@@ -775,19 +825,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             //var doctor = this.Doctor;
 
-            //// Validation: cannot be day-off.
-            //var isDayOff = this.db.DayOffs
-            //    .Where(d => d.DoctorId == doctor.Id)
-            //    .Where(d => d.StartDate <= date && date <= d.EndDate)
-            //    .Any();
+            // Validation: cannot be day-off.
+            var isDayOff = db.CFG_DayOff
+                .Where(d => d.DoctorId == doctor.Id)
+                .Where(d => d.Date == localDate.Date)
+                .Any();
 
-            //if (isDayOff)
-            //{
-            //    inconsistencyMessages.AddModelError<AppointmentViewModel>(
-            //        model => model.Date,
-            //        "O campo '{0}' é inválido. Este dia está no intervalo de férias do médico.");
-            //    hasError = true;
-            //}
+            if (isDayOff)
+            {
+                inconsistencyMessages.AddModelError<AppointmentViewModel>(
+                    model => model.Date,
+                    "O campo '{0}' é inválido. Este dia está no intervalo de dias sem expediente do médico.");
+                hasError = true;
+            }
 
             // Validation: cannot set an appointment date to the past.
             var localStartDate = localDate.Date + DateTimeHelper.GetTimeSpan(startTimeText);

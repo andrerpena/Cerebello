@@ -18,6 +18,14 @@ namespace CerebelloWebRole.Code
         }
 
         // Methods
+
+        public static IEnumerable<DateTime> Range(DateTime start, int count, Func<DateTime, DateTime> nextGetter)
+        {
+            DateTime d = start;
+            for (int i = 0; i < count; i++, d = nextGetter(d))
+                yield return d;
+        }
+
         [Obsolete("This method is not being used. 2012-08-15.", true)]
         public static int CalculateAge(DateTime birth, DateTime now)
         {

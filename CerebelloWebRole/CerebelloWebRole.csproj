@@ -114,6 +114,7 @@
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
     <Compile Include="Areas\App\Models\LookupGriModels\MedicalProceduresLookupGridModel.cs" />
@@ -536,6 +537,7 @@
     <Content Include="Areas\App\Views\Shared\DisplayTemplates\AddressViewModel.cshtml" />
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Welcome.cshtml" />
+    <Content Include="Areas\App\Views\ConfigSchedule\DaysOff.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />

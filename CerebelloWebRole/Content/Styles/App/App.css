@@ -993,6 +993,53 @@ a.gotoPractice
     padding-left: 10px;
 }
 
+/* configurations */
+
+ul.dayoff-list > li
+{
+    background-color: #F5F5F5;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: black;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+ul.dayoff-list a, ul.dayoff-list ul a
+{
+    cursor: pointer;
+}
+
+ul.dayoff-list ul
+{
+    margin-top: 10px;
+}
+
+ul.dayoff-list ul > li
+{
+    background-color: #F0F0F0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: black;
+    padding: 5px;
+    display: inline-block;
+}
+
+ul.dayoff-list .delete
+{
+    color: black;
+    float: right;
+    display: block;
+    cursor: pointer;
+    margin-left: 15px;
+    font-family: Sans-Serif;
+    font-weight: bold;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+
 /* patients */
 
 .appointment-panel-wrapper

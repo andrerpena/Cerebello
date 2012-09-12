@@ -84,6 +84,27 @@ CREATE TABLE [dbo].[Appointment](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+/****** Object:  Table [dbo].[CFG_DayOff] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CFG_DayOff](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Date] [date] NOT NULL,
+	[Description] [nvarchar](200) NOT NULL,
+	[DoctorId] [int] NOT NULL,
+ CONSTRAINT [PK_DayOff] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_DayOff_Date] ON [dbo].[CFG_DayOff] 
+(
+	[Date] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
 /****** Object:  Table [dbo].[CFG_Documents] ******/
 SET ANSI_NULLS ON
 GO
@@ -161,22 +182,6 @@ CREATE TABLE [dbo].[Coverage](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](100) NOT NULL,
  CONSTRAINT [PK_Coverage] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
-)
-GO
-/****** Object:  Table [dbo].[DayOff] ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[DayOff](
-	[Id] [int] NOT NULL,
-	[StartDate] [date] NOT NULL,
-	[EndDate] [date] NOT NULL,
-	[Description] [nvarchar](500) NOT NULL,
- CONSTRAINT [PK_DayOff] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
@@ -788,6 +793,12 @@ ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_Us
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
+GO
+/****** Object:  ForeignKey [FK_CFG_DayOff_Doctor] ******/
+ALTER TABLE [dbo].[CFG_DayOff]  WITH CHECK ADD  CONSTRAINT [FK_CFG_DayOff_Doctor] FOREIGN KEY([DoctorId])
+REFERENCES [dbo].[Doctor] ([Id])
+GO
+ALTER TABLE [dbo].[CFG_DayOff] CHECK CONSTRAINT [FK_CFG_DayOff_Doctor]
 GO
 /****** Object:  ForeignKey [FK_CFG_Documents_Doctor] ******/
 ALTER TABLE [dbo].[CFG_Documents]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_Documents_Doctor] FOREIGN KEY([DoctorId])

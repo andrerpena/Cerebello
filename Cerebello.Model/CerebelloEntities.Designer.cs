@@ -58,6 +58,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationRequest_SYS_MedicalProcedures11", "SYS_MedicalProcedure", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalProcedure), "ExaminationRequest", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationRequest), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationResult_SYS_MedicalProcedures1", "SYS_MedicalProcedure", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalProcedure), "ExaminationResult", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationResult), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Address_Person1", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_CFG_DayOff_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "CFG_DayOff", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.CFG_DayOff), true)]
 
 #endregion
 
@@ -592,22 +593,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<DayOff> DayOffs
-        {
-            get
-            {
-                if ((_DayOffs == null))
-                {
-                    _DayOffs = base.CreateObjectSet<DayOff>("DayOffs");
-                }
-                return _DayOffs;
-            }
-        }
-        private ObjectSet<DayOff> _DayOffs;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<HealthEnsurance> HealthEnsurances
         {
             get
@@ -700,6 +685,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<SYS_MedicalProcedure> _SYS_MedicalProcedure;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<CFG_DayOff> CFG_DayOff
+        {
+            get
+            {
+                if ((_CFG_DayOff == null))
+                {
+                    _CFG_DayOff = base.CreateObjectSet<CFG_DayOff>("CFG_DayOff");
+                }
+                return _CFG_DayOff;
+            }
+        }
+        private ObjectSet<CFG_DayOff> _CFG_DayOff;
 
         #endregion
         #region AddTo Methods
@@ -945,14 +946,6 @@ namespace Cerebello.Model
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the DayOffs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToDayOffs(DayOff dayOff)
-        {
-            base.AddObject("DayOffs", dayOff);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the HealthEnsurances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToHealthEnsurances(HealthEnsurance healthEnsurance)
@@ -998,6 +991,14 @@ namespace Cerebello.Model
         public void AddToSYS_MedicalProcedure(SYS_MedicalProcedure sYS_MedicalProcedure)
         {
             base.AddObject("SYS_MedicalProcedure", sYS_MedicalProcedure);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the CFG_DayOff EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToCFG_DayOff(CFG_DayOff cFG_DayOff)
+        {
+            base.AddObject("CFG_DayOff", cFG_DayOff);
         }
 
         #endregion
@@ -2089,6 +2090,180 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_Appointment_Patient", "Patient", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="CFG_DayOff")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class CFG_DayOff : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new CFG_DayOff object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="date">Initial value of the Date property.</param>
+        /// <param name="description">Initial value of the Description property.</param>
+        /// <param name="doctorId">Initial value of the DoctorId property.</param>
+        public static CFG_DayOff CreateCFG_DayOff(global::System.Int32 id, global::System.DateTime date, global::System.String description, global::System.Int32 doctorId)
+        {
+            CFG_DayOff cFG_DayOff = new CFG_DayOff();
+            cFG_DayOff.Id = id;
+            cFG_DayOff.Date = date;
+            cFG_DayOff.Description = description;
+            cFG_DayOff.DoctorId = doctorId;
+            return cFG_DayOff;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime Date
+        {
+            get
+            {
+                return _Date;
+            }
+            set
+            {
+                OnDateChanging(value);
+                ReportPropertyChanging("Date");
+                _Date = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Date");
+                OnDateChanged();
+            }
+        }
+        private global::System.DateTime _Date;
+        partial void OnDateChanging(global::System.DateTime value);
+        partial void OnDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Description
+        {
+            get
+            {
+                return _Description;
+            }
+            set
+            {
+                OnDescriptionChanging(value);
+                ReportPropertyChanging("Description");
+                _Description = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Description");
+                OnDescriptionChanged();
+            }
+        }
+        private global::System.String _Description;
+        partial void OnDescriptionChanging(global::System.String value);
+        partial void OnDescriptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 DoctorId
+        {
+            get
+            {
+                return _DoctorId;
+            }
+            set
+            {
+                OnDoctorIdChanging(value);
+                ReportPropertyChanging("DoctorId");
+                _DoctorId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("DoctorId");
+                OnDoctorIdChanged();
+            }
+        }
+        private global::System.Int32 _DoctorId;
+        partial void OnDoctorIdChanging(global::System.Int32 value);
+        partial void OnDoctorIdChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_CFG_DayOff_Doctor", "Doctor")]
+        public Doctor Doctor
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_CFG_DayOff_Doctor", "Doctor").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_CFG_DayOff_Doctor", "Doctor").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Doctor> DoctorReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_CFG_DayOff_Doctor", "Doctor");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Doctor>("Cerebello.Model.FK_CFG_DayOff_Doctor", "Doctor", value);
                 }
             }
         }
@@ -3429,139 +3604,6 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="DayOff")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class DayOff : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new DayOff object.
-        /// </summary>
-        /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="startDate">Initial value of the StartDate property.</param>
-        /// <param name="endDate">Initial value of the EndDate property.</param>
-        /// <param name="description">Initial value of the Description property.</param>
-        public static DayOff CreateDayOff(global::System.Int32 id, global::System.DateTime startDate, global::System.DateTime endDate, global::System.String description)
-        {
-            DayOff dayOff = new DayOff();
-            dayOff.Id = id;
-            dayOff.StartDate = startDate;
-            dayOff.EndDate = endDate;
-            dayOff.Description = description;
-            return dayOff;
-        }
-
-        #endregion
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 Id
-        {
-            get
-            {
-                return _Id;
-            }
-            set
-            {
-                if (_Id != value)
-                {
-                    OnIdChanging(value);
-                    ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("Id");
-                    OnIdChanged();
-                }
-            }
-        }
-        private global::System.Int32 _Id;
-        partial void OnIdChanging(global::System.Int32 value);
-        partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.DateTime StartDate
-        {
-            get
-            {
-                return _StartDate;
-            }
-            set
-            {
-                OnStartDateChanging(value);
-                ReportPropertyChanging("StartDate");
-                _StartDate = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("StartDate");
-                OnStartDateChanged();
-            }
-        }
-        private global::System.DateTime _StartDate;
-        partial void OnStartDateChanging(global::System.DateTime value);
-        partial void OnStartDateChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.DateTime EndDate
-        {
-            get
-            {
-                return _EndDate;
-            }
-            set
-            {
-                OnEndDateChanging(value);
-                ReportPropertyChanging("EndDate");
-                _EndDate = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("EndDate");
-                OnEndDateChanged();
-            }
-        }
-        private global::System.DateTime _EndDate;
-        partial void OnEndDateChanging(global::System.DateTime value);
-        partial void OnEndDateChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Description
-        {
-            get
-            {
-                return _Description;
-            }
-            set
-            {
-                OnDescriptionChanging(value);
-                ReportPropertyChanging("Description");
-                _Description = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("Description");
-                OnDescriptionChanged();
-            }
-        }
-        private global::System.String _Description;
-        partial void OnDescriptionChanging(global::System.String value);
-        partial void OnDescriptionChanged();
-
-        #endregion
-    
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Diagnosis")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -4240,6 +4282,28 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<SYS_MedicalSpecialty>("Cerebello.Model.FK_Doctor_MedicalSpecialty1", "SYS_MedicalSpecialty", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_CFG_DayOff_Doctor", "CFG_DayOff")]
+        public EntityCollection<CFG_DayOff> CFG_DayOff
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<CFG_DayOff>("Cerebello.Model.FK_CFG_DayOff_Doctor", "CFG_DayOff");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<CFG_DayOff>("Cerebello.Model.FK_CFG_DayOff_Doctor", "CFG_DayOff", value);
                 }
             }
         }

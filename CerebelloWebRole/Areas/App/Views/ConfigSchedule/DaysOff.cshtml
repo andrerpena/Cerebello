@@ -1,0 +1,142 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ConfigDaysOffViewModel
+@using CerebelloWebRole.Code.Extensions
+@{
+    var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
+}
+@section Title {
+Configurações de dias sem expediente
+}
+@section Styles {
+    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery-ui-overrides.css" />
+}
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.ui.datepicker-pt-BR.js"></script>
+}
+@section SideBar {
+    <ul style="margin-top: 10px;">
+        <li><a href="@Url.Action("edit", "configschedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">
+            Configurações de agenda</a> </li>
+    </ul>
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+    if (ViewBag.ReturnUrl != null)
+    {
+        @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
+    }
+
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.Start)</th>
+            <td class="small">@Html.EditorFor(model => model.Start)</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.End)</th>
+            <td class="small">@Html.EditorFor(model => model.End)</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Description)</th>
+            <td>@Html.TextAreaFor(model => model.Description)</td>
+        </tr>
+    </table>
+    <div class="submit-bar">
+        <input type="submit" value="adicionar intervalo" />
+    </div>
+    
+    if (this.ViewBag.ShowPast != true)
+    { 
+        <a href="@Url.Action("DaysOff", new { showPast = true, returnUrl = this.ViewBag.ReturnUrl })">Mostrar todas as datas, incluindo passadas</a>
+    }
+    else
+    { 
+        <a href="@Url.Action("DaysOff", new { showPast = false, returnUrl = this.ViewBag.ReturnUrl })">Mostrar somente datas presente e futuras</a>
+    }
+}
+    
+<ul class="dayoff-list">
+@foreach (var eachDayOff in this.Model.DaysOff)
+{
+    if (eachDayOff.GroupItems == null || eachDayOff.GroupItems.Count == 0)
+    {
+        <li>
+            <div class="delete" item-id="@eachDayOff.Id">x</div>
+            <span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span> - <span>@eachDayOff.Description</span>
+        </li>
+    }
+    else if (eachDayOff.GroupItems.Count == 1)
+    {
+        var singleItem = eachDayOff.GroupItems.Single();
+        <li>
+            <div class="delete" item-id="@eachDayOff.Id,@(string.Join(",", eachDayOff.GroupItems.Select(gi => gi.Id.ToString())))" >x</div>
+            <a class="expand" group-id="group-@eachDayOff.Id"><span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span> e <span>@singleItem.Date.ToString("dd/MM/yyyy")</span> - <span>@eachDayOff.Description</span></a>
+            <ul id="group-@eachDayOff.Id" style="display: none">
+                <li>
+                    <div class="delete" item-id="@eachDayOff.Id">x</div>
+                    <span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span>
+                </li>
+                @foreach (var eachGroupItem in eachDayOff.GroupItems)
+                {
+                    <li>
+                        <div class="delete" item-id="@eachGroupItem.Id">x</div>
+                        <span>@eachGroupItem.Date.ToString("dd/MM/yyyy")</span>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        var lastItem = eachDayOff.GroupItems.Last();
+        <li>
+            <div class="delete" item-id="@eachDayOff.Id,@(string.Join(",", eachDayOff.GroupItems.Select(gi => gi.Id.ToString())))" >x</div>
+            <a class="expand" group-id="group-@eachDayOff.Id"><span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span> até <span>@lastItem.Date.ToString("dd/MM/yyyy")</span> (<span>@((lastItem.Date - eachDayOff.Date).Days + 1) dias</span>) - <span>@eachDayOff.Description</span></a>
+            <ul id="group-@eachDayOff.Id" style="display: none">
+                <li>
+                    <div class="delete" item-id="@eachDayOff.Id">x</div>
+                    <span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span>
+                </li>
+                @foreach (var eachGroupItem in eachDayOff.GroupItems)
+                {
+                    <li>
+                        <div class="delete" item-id="@eachGroupItem.Id">x</div>
+                        <span>@eachGroupItem.Date.ToString("dd/MM/yyyy")</span>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+}
+</ul>
+<div class="submit-bar">
+    <a href="@cancelUrl">retornar</a>
+</div>
+
+<script type="text/javascript">
+    $("a.expand").click(function (e) {
+        var el = $(this);
+        var elToggle = $("#" + el.attr("group-id"));
+        elToggle.toggle();
+    });
+    $(".delete").click(function (e) {
+    });
+
+    $(".delete").click(function (e) {
+        var el = $(this);
+        var itemsToDelete = el.attr("item-id");
+        e.preventDefault();
+        var answer = confirm("Deseja realmente excluir este(s) dia(s) da lista?\nEsta operação não pode ser desfeita.");
+        if (answer) {
+            $.getJSON("/p/consultoriodrhourse/d/gregoryhouse/configschedule/daysoffdelete?items=" + itemsToDelete, function (data) {
+                if (data.success) {
+                    alert("Data sem expediente excluida.");
+                    el.closest("li").remove();
+                }
+                else
+                    alert("Não foi possível excluir esta anamnese.\n" + "Informações técnicas: " + data.text);
+            });
+        }
+    });
+</script>

@@ -221,8 +221,8 @@
             e.preventDefault();
             
             // marks the selected tab
+            $(this).siblings().removeClass("activated");
             $(this).addClass("activated");
-            $("#generic-appointment-tab").removeClass("activated");
 
             $(".generic-appointment-only").hide();
             $(".first-appointment-only").hide();
@@ -237,8 +237,8 @@
             e.preventDefault();
 
             // marks the selected tab
+            $(this).siblings().removeClass("activated");
             $(this).addClass("activated");
-            $("#medical-appointment-tab").removeClass("activated");
 
             $(".generic-appointment-only").show();
             $(".first-appointment-only").hide();

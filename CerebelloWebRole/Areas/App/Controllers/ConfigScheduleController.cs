@@ -4,6 +4,11 @@ using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Mvc;
+using System.Linq;
+using Cerebello.Model;
+using System;
+using System.Collections.Generic;
+using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -264,6 +269,148 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
                 return this.View(formModel);
+        }
+
+        private ConfigDaysOffViewModel GetDaysOffViewModel(bool showPast)
+        {
+            var currentDate = this.GetPracticeLocalNow().Date;
+
+            var daysOffQuery = db.CFG_DayOff
+                .Where(df => df.DoctorId == this.Doctor.Id);
+
+            if (!showPast)
+            {
+                daysOffQuery = daysOffQuery
+                    .Where(df => df.Date >= currentDate);
+            }
+
+            var daysOff = daysOffQuery
+                .OrderBy(x => x.Date).ToArray();
+
+            var viewModel = new ConfigDaysOffViewModel();
+
+            ConfigDaysOffViewModel.DayOff prevDayOff = null;
+            ConfigDaysOffViewModel.DayOff groupDayOff = null;
+            foreach (var eachDayOff in daysOff)
+            {
+                var dayOffViewModel = new ConfigDaysOffViewModel.DayOff
+                {
+                    Date = eachDayOff.Date,
+                    Description = eachDayOff.Description,
+                    Id = eachDayOff.Id,
+                };
+
+                bool isNewGroup = prevDayOff == null
+                        || dayOffViewModel.Date != prevDayOff.Date.AddDays(1.0)
+                        || dayOffViewModel.Description != prevDayOff.Description;
+
+                if (isNewGroup)
+                {
+                    groupDayOff = dayOffViewModel;
+                    viewModel.DaysOff.Add(dayOffViewModel);
+                }
+                else
+                {
+                    if (groupDayOff.GroupItems == null)
+                        groupDayOff.GroupItems = new List<ConfigDaysOffViewModel.DayOff>();
+
+                    groupDayOff.GroupItems.Add(dayOffViewModel);
+                }
+
+                prevDayOff = dayOffViewModel;
+            }
+
+            return viewModel;
+        }
+
+        [HttpGet]
+        public ActionResult DaysOff(bool? showPast, string returnUrl)
+        {
+            var viewModel = this.GetDaysOffViewModel(showPast ?? false);
+
+            viewModel.Start = this.GetPracticeLocalNow();
+
+            this.ViewBag.ReturnUrl = returnUrl;
+            this.ViewBag.ShowPast = showPast;
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult DaysOff(ConfigDaysOffViewModel formModel, bool? showPast, string returnUrl)
+        {
+            var start = formModel.Start.Date;
+            var end = (formModel.End ?? start).Date;
+
+            // Validando o intervalo:
+            // - verifica se algum dos dias já está sendo usado;
+            // - verifica se a data de início é menor ou igual a de fim.
+            if (start > end)
+            {
+                this.ModelState.AddModelError(() => formModel.End, "Data de fim deve ser maior ou igual a de início.");
+            }
+
+            if (this.db.CFG_DayOff
+                .Where(df => df.DoctorId == this.Doctor.Id)
+                .Where(df => df.Date >= start && df.Date <= end)
+                .Any())
+            {
+                this.ModelState.AddModelError(() => formModel.Start, "Já existe um dia marcado neste intervalo.");
+            }
+
+            // Salvando alterações caso esteja tudo certo.
+            if (this.ModelState.IsValid)
+            {
+                // Adding each day in the date range, to the CFG_DayOff table.
+                for (DateTime i = start; i <= end; i = i.AddDays(1.0))
+                {
+                    this.db.CFG_DayOff.AddObject(new CFG_DayOff
+                    {
+                        Date = i,
+                        Description = formModel.Description,
+                        Doctor = this.Doctor,
+                    });
+                }
+
+                this.db.SaveChanges();
+            }
+
+            // Returning the view with the new elements.
+            var viewModel = GetDaysOffViewModel(showPast ?? false);
+
+            this.ViewBag.ReturnUrl = returnUrl;
+            this.ViewBag.ShowPast = showPast;
+
+            return this.View(viewModel);
+        }
+
+        public JsonResult DaysOffDelete(string items)
+        {
+            try
+            {
+                var ids = items.Split(',').Select(s => int.Parse(s)).ToArray();
+
+                var objs = this.db.CFG_DayOff
+                    .Where(df => ids.Contains(df.Id) && df.DoctorId == this.Doctor.Id)
+                    .Select(df => df.Id)
+                    .ToArray()
+                    .Select(id => new CFG_DayOff { Id = id })
+                    .ToArray();
+
+                foreach (var eachObjToDelete in objs)
+                {
+                    this.db.AttachTo("CFG_DayOff", eachObjToDelete);
+                    this.db.CFG_DayOff.DeleteObject(eachObjToDelete);
+                }
+
+                this.db.SaveChanges();
+
+                return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return this.Json(new JsonDeleteMessage { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
