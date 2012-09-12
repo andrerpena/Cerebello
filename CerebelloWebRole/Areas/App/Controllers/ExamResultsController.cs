@@ -33,7 +33,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var practiceId = this.GetCurrentUser().PracticeId;
+            var practiceId = this.DBUser.PracticeId;
 
             var examResult = db.ExaminationResults
                 .Where(r => r.Id == id)
@@ -62,7 +62,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var practiceId = this.GetCurrentUser().PracticeId;
+                var practiceId = this.DBUser.PracticeId;
 
                 var modelObj = this.db.ExaminationResults
                     .Where(r => r.Id == id)
@@ -102,7 +102,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                var practiceId = this.GetCurrentUser().PracticeId;
+                var practiceId = this.DBUser.PracticeId;
 
                 modelObj = this.db.ExaminationResults
                     .Where(r => r.Id == formModel.Id)
@@ -116,7 +116,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 // Security issue... must check current user practice against the practice of the edited objects.
-                var currentUser = this.GetCurrentUser();
+                var currentUser = this.DBUser;
                 if (currentUser.PracticeId != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
                 {
                     return View("NotFound", formModel);
@@ -161,7 +161,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var practiceId = this.GetCurrentUser().PracticeId;
+                var practiceId = this.DBUser.PracticeId;
 
                 var modelObj = db.ExaminationResults
                     .Where(r => r.Id == id)

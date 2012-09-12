@@ -218,7 +218,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Creating viewmodel.
             AppointmentViewModel viewModel = new AppointmentViewModel();
 
-            int currentUserPracticeId = this.GetCurrentUser().PracticeId;
+            int currentUserPracticeId = this.DBUser.PracticeId;
 
             var patientName = this.db.Patients
                 .Where(p => p.Id == patientId)
@@ -293,7 +293,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var currentUserPracticeId = this.GetCurrentUser().PracticeId;
+            var currentUserPracticeId = this.DBUser.PracticeId;
 
             var appointment = db.Appointments
                 .Where(a => a.Id == id)
@@ -417,12 +417,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     appointment = new Appointment();
                     appointment.CreatedOn = this.UtcNowGetter();
                     appointment.DoctorId = formModel.DoctorId;
-                    appointment.CreatedById = this.GetCurrentUserId();
+                    appointment.CreatedById = this.DBUser.Id;
                     this.db.Appointments.AddObject(appointment);
                 }
                 else
                 {
-                    var currentUserPracticeId = this.GetCurrentUser().PracticeId;
+                    var currentUserPracticeId = this.DBUser.PracticeId;
 
                     appointment = db.Appointments
                         .Where(a => a.Id == formModel.Id)

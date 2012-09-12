@@ -108,6 +108,7 @@
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
+    <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
@@ -131,6 +132,12 @@
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
+    <Compile Include="Code\Chat\ChatMessage.cs" />
+    <Compile Include="Code\Chat\ChatRoom.cs" />
+    <Compile Include="Code\Chat\ChatRoomUsersSubscription.cs" />
+    <Compile Include="Code\Chat\ChatServer.cs" />
+    <Compile Include="Code\Chat\ChatUser.cs" />
+    <Compile Include="Code\Chat\ChatRoomMessagesSubscription.cs" />
     <Compile Include="Code\Controllers\CerebelloController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigDocumentsController.cs" />
@@ -326,6 +333,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.delete.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
     <Content Include="Content\Styles\App\Controls\grid.css" />
@@ -367,6 +375,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.chat.container.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.chat.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.delete.confirmation.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.dropdown.menu.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.lookup.js" />
