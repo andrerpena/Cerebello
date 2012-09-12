@@ -11,22 +11,11 @@ namespace CerebelloWebRole.Code
         public PracticeController()
         {
         }
-
+        
         /// <summary>
-        /// Retorna o usuário atual
+        /// User
         /// </summary>
-        /// <returns></returns>
-        public User GetCurrentUser()
-        {
-            var identity = this.User as AuthenticatedPrincipal;
-            return (User)db.Users.Where(p => p.Id == identity.Profile.Id).First();
-        }
-
-        public int GetCurrentUserId()
-        {
-            var identity = this.User as AuthenticatedPrincipal;
-            return identity.Profile.Id;
-        }
+        public User DBUser { get; private set; }
 
         /// <summary>
         /// Consultório atual
@@ -62,25 +51,21 @@ namespace CerebelloWebRole.Code
             return ConvertToLocalDateTime(this.Practice, this.UtcNowGetter());
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            // Setting a common ViewBag value.
-            this.ViewBag.LocalNow = this.GetPracticeLocalNow();
-
-            base.OnActionExecuted(filterContext);
-        }
-
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
 
+            // setting up user
+            var identity = this.User as AuthenticatedPrincipal;
+            this.DBUser = (User)db.Users.Where(p => p.Id == identity.Profile.Id).First();
+
+            // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
             var controllerName = this.RouteData.Values["controller"] as string;
             var actionName = this.RouteData.Values["action"] as string;
 
-            var userId = this.GetCurrentUserId();
             var practice = this.db.Users
-                .Where(u => u.Id == userId && u.Practice.UrlIdentifier == practiceName)
+                .Where(u => u.Id == this.DBUser.Id && u.Practice.UrlIdentifier == practiceName)
                 .Select(u => u.Practice)
                 .SingleOrDefault();
 
@@ -111,6 +96,9 @@ namespace CerebelloWebRole.Code
                     return;
                 }
             }
+
+            // Setting a common ViewBag value.
+            this.ViewBag.LocalNow = this.GetPracticeLocalNow();
         }
     }
 }

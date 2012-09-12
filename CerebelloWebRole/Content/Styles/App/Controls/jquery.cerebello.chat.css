@@ -1,0 +1,76 @@
+﻿.chat-window 
+{
+    background-color: White;
+    border-color: #D7D7D7;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    bottom: 0;
+    box-shadow: 0 0 1px #CCCCCC;
+    position: fixed;
+    width: 230px;
+}
+
+.chat-window-title
+{
+    background: none repeat scroll 0 0 #F5F5F5;
+    border-bottom: 1px solid #E7E7E7;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 6px;
+    overflow: hidden;
+}
+
+.chat-window-title .text
+{
+    margin-top: 1px;
+}
+
+.chat-window-title .close
+{
+    background-image: url("/Content/Images/App/Icons16/clear.png");
+    float: right;
+    height: 16px;
+    width: 16px;
+}
+
+.chat-window-content
+{
+    
+}
+
+.chat-window-inner-content
+{
+    margin-bottom: 2px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+input.chat-window-text-box
+{
+    width: 100%;
+}
+
+.user-list-item 
+{
+    background-position: 2px center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 3px 0 3px 15px;
+}
+
+.user-list-item.offline
+{
+    background-image: url("/content/images/app/chat/chat-offline.png")
+}
+
+.user-list-item.online
+{
+    background-image: url("/content/images/app/chat/chat-online.png")
+}
+
+.chat-window-text-box-wrapper
+{
+    padding: 2px;
+}

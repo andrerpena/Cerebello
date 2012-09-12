@@ -23,7 +23,7 @@ Prontuário
 }
 @section Scripts
 {
-    <script type="text/javascript">
+    @*<script type="text/javascript">
         $(function () {
             var mvcData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.PatientAgeDistribution)));
 
@@ -54,7 +54,7 @@ Prontuário
             
 
         });
-    </script>
+    </script>*@
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
