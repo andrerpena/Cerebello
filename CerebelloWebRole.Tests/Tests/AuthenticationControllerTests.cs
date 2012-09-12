@@ -21,7 +21,6 @@ namespace CerebelloWebRole.Tests
         [TestInitialize]
         public void InitializeData()
         {
-            Debug.WriteLine("InitializeData");
             Firestarter.ClearAllData(this.db);
             Firestarter.InitializeDatabaseWithSystemData(this.db);
         }
@@ -203,7 +202,7 @@ namespace CerebelloWebRole.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                     return;
                 }
 

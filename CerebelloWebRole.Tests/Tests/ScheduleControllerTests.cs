@@ -7,40 +7,19 @@ using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Tests
 {
     [TestClass]
-    public class ScheduleControllerTests
+    public class ScheduleControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        protected CerebelloEntities db = null;
-
-        [ClassInitialize()]
-        public static void ClassInitialize(TestContext testContext)
+        [TestInitialize]
+        public void InitializeData()
         {
-            DatabaseHelper.AttachCerebelloTestDatabase();
-        }
-
-        [ClassCleanup()]
-        public static void ClassCleanup()
-        {
-            DatabaseHelper.DetachCerebelloTestDatabase();
-        }
-
-        [TestInitialize()]
-        public void TestInitialize()
-        {
-            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
-
             Firestarter.ClearAllData(this.db);
             Firestarter.InitializeDatabaseWithSystemData(this.db);
-        }
-
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-            this.db.Dispose();
         }
         #endregion
 
@@ -965,6 +944,97 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(isDbChanged, "Create actions must not change DB when there is an error.");
         }
 
+        #endregion
+
+        #region FindNextFreeTime
+        [TestMethod]
+        public void FindNextFreeTime_AllSlotsFree_HappyPath()
+        {
+            ScheduleController controller;
+            var utcNow = new DateTime(2012, 09, 12, 18, 00, 00, DateTimeKind.Utc);
+            bool isDbChanged = false;
+            try
+            {
+                var andre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(andre, this.db);
+
+                var mr = new MockRepository();
+                mr.SetCurrentUser_Andre_CorrectPassword();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
+                controller.UtcNowGetter = () => utcNow;
+
+                this.db.SavingChanges += (s, e) => { isDbChanged = true; };
+            }
+            catch (Exception ex)
+            {
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                return;
+            }
+
+            JsonResult jsonResult;
+            {
+                jsonResult = controller.FindNextFreeTime("", "");
+            }
+
+            Assert.IsFalse(isDbChanged, "Database should not be changed.");
+
+            dynamic data = jsonResult.Data;
+            Assert.AreEqual("12/09/2012", data.date);
+            Assert.AreEqual("15:00", data.start);
+            Assert.AreEqual("15:30", data.end);
+            Assert.AreEqual("quarta-feira, hoje", data.dateSpelled);
+        }
+
+        [TestMethod]
+        public void FindNextFreeTime_SkipDoctorVacation_HappyPath()
+        {
+            ScheduleController controller;
+            var utcNow = new DateTime(2012, 09, 12, 18, 00, 00, DateTimeKind.Utc);
+            bool isDbChanged = false;
+            try
+            {
+                var andre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(andre, this.db);
+
+                var daysOff = DateTimeHelper.Range(new DateTime(2012, 09, 01), 30, d => d.AddDays(1.0))
+                    .Select(d => new CFG_DayOff { Date = d, DoctorId = andre.Id, Description = "Férias" })
+                    .ToArray();
+
+                foreach (var eachDayOff in daysOff)
+                    this.db.CFG_DayOff.AddObject(eachDayOff);
+
+                this.db.SaveChanges();
+
+                var mr = new MockRepository();
+                mr.SetCurrentUser_Andre_CorrectPassword();
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
+
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
+                controller.UtcNowGetter = () => utcNow;
+
+                this.db.SavingChanges += (s, e) => { isDbChanged = true; };
+            }
+            catch (Exception ex)
+            {
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                return;
+            }
+
+            JsonResult jsonResult;
+            {
+                jsonResult = controller.FindNextFreeTime("", "");
+            }
+
+            Assert.IsFalse(isDbChanged, "Database should not be changed.");
+
+            dynamic data = jsonResult.Data;
+            Assert.AreEqual("01/10/2012", data.date);
+            Assert.AreEqual("09:00", data.start);
+            Assert.AreEqual("09:30", data.end);
+            Assert.AreEqual("segunda-feira, daqui há 19 dias", data.dateSpelled);
+        }
         #endregion
     }
 }

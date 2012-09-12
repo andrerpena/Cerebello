@@ -9,9 +9,13 @@ yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
 
 2012-08-## ##:00-##:## (#º##") ##   ######
 
+-- qua 5º10" (5º10")
+2012-09-12 15:15-16:00 (0º45") 10   Fazer testes para FindNextFreeTime.
+2012-09-12 14:45-15:00 (0º15") 10   Testar, commitar, merge, testar, commitar.
 2012-09-12 12:25-14:45 (2º20") 10   Issue #9: Find next deve respeitar Days-off.
 2012-09-12 10:00-11:50 (1º50") 10   Issue #9: Definir dias sem expediente: folgas, férias, etc..
 
+-- ter 4º00" (3º12")
 2012-09-11 16:30-20:30 (4º00")  8   Issue #9: Definir dias sem expediente: folgas, férias, etc..
 
 -- qua #º##" (?º??")
