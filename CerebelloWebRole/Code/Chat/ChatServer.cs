@@ -34,50 +34,46 @@ namespace CerebelloWebRole.Code.Chat
         /// A method that will be called when the state of the room changes, that means,
         /// when somebody gets in or out. 
         /// </param>
-        public static void CheckForRoomUsersChanged(int roomId, Action<List<ChatUser>> onRoomChanged, bool noWait = false)
+        public static void WaitForRoomUsersChanged(int roomId, Action<List<ChatUser>> onRoomChanged, bool noWait = false)
         {
             // schedules the passed action for execution as soon as possible by any thread within the 
             // thread pool.
             // this method triggers a NotSupportedException in case of failure.
-            ThreadPool.QueueUserWorkItem(target =>
-            {
-                if (!Rooms.ContainsKey(roomId))
-                    throw new Exception("The room does not exist");
+            if (!Rooms.ContainsKey(roomId))
+                throw new Exception("The room does not exist");
 
-                var room = Rooms[roomId];
+            var room = Rooms[roomId];
 
-                // this code will wait for MAX_WAIT_SECONDS (60 seconds) until some modification
-                // happens in the room (someone enters or leaves). As soon as the room changes,
-                // all users will be notified. In the other hand, if no changes happen in the room
-                // for MAX_WAIT_SECONDS, the current state of the room is passed in to the client any way
+            // this code will wait for MAX_WAIT_SECONDS (60 seconds) until some modification
+            // happens in the room (someone enters or leaves). As soon as the room changes,
+            // all users will be notified. In the other hand, if no changes happen in the room
+            // for MAX_WAIT_SECONDS, the current state of the room is passed in to the client any way
 
-                List<ChatUser> usersInRoom = null;
+            List<ChatUser> usersInRoom = null;
 
-                // this will lock this thread until it's signaled. 
-                var wait = new AutoResetEvent(false);
-                using (room.SubscribeForUsersChange((r, chatUser, action, users) =>
-                    {
-                        usersInRoom = users;
-                        // this will release this Thread
-                        wait.Set();
-                    }))
+            // this will lock this thread until it's signaled. 
+            var wait = new AutoResetEvent(false);
+            using (room.SubscribeForUsersChange((r, chatUser, action, users) =>
                 {
-                    // this thread should get stuck here until wait.Set() is called
-                    wait.WaitOne(noWait ? TimeSpan.FromSeconds(0) : TimeSpan.FromSeconds(MAX_WAIT_SECONDS));
-                };
+                    usersInRoom = users;
+                    // this will release this Thread
+                    wait.Set();
+                }))
+            {
+                // this thread should get stuck here until wait.Set() is called
+                wait.WaitOne(noWait ? TimeSpan.FromSeconds(0) : TimeSpan.FromSeconds(MAX_WAIT_SECONDS));
+            };
 
-                // here, if usersInRoom has been set already, that means there was not changes in the room
-                // in 60 seconds, let's just get the room state and return to the client
+            // here, if usersInRoom has been set already, that means there was not changes in the room
+            // in 60 seconds, let's just get the room state and return to the client
 
-                if (usersInRoom == null)
-                    usersInRoom = room.GetUsers();
+            if (usersInRoom == null)
+                usersInRoom = room.GetUsers();
 
-                onRoomChanged(usersInRoom);
-
-            }, onRoomChanged);
+            onRoomChanged(usersInRoom);
         }
 
-        public static void CheckForNewMessage(int roomId, int myUserId, Action<ChatMessage> onNewMessage)
+        public static void WaitForNewMessage(int roomId, int myUserId, Action<ChatMessage> onNewMessage)
         {
             if (!Rooms.ContainsKey(roomId))
                 throw new Exception("The room does not exist");

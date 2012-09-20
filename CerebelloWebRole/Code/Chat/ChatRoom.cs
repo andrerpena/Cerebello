@@ -139,19 +139,31 @@ namespace CerebelloWebRole.Code.Chat
         /// 
         /// </summary>
         /// <param name="myUserId"></param>
-        /// <param name="timeStamp"></param>
+        /// <param name="timestamp"></param>
         /// <returns></returns>
-        public List<ChatMessage> GetMessages(int myUserId, long? timeStamp = null)
+        public List<ChatMessage> GetMessagesTo(int myUserId, long timestamp)
         {
             lock (messageLock)
             {
-                List<ChatMessage> messages = null;
-                if (!timeStamp.HasValue)
-                    messages = this.Messages.Where(m => m.UserTo.Id == myUserId || m.UserFrom.Id == myUserId).ToList();
-                else
-                    messages = this.Messages.Where(m => m.Timestamp > timeStamp && m.UserTo.Id == myUserId).ToList();
+                return this.Messages.Where(m => m.Timestamp > timestamp && m.UserTo.Id == myUserId).ToList();
+            }
+        }
 
-                return messages;
+        /// <summary>
+        /// Returns all the messages between the two users given, that occurred PRIOR to the passed timeStamp.
+        /// This list is INVERTED to make things easier in the client
+        /// </summary>
+        /// <param name="myUserId"></param>
+        /// <param name="timestamp"></param>
+        /// <returns></returns>
+        public List<ChatMessage> GetMessagesBetween(int myUserId, int otherUserId, long? timestamp = null)
+        {
+            lock (messageLock)
+            {
+                var query = this.Messages.Where(m => (m.UserTo.Id == myUserId && m.UserFrom.Id == otherUserId) || (m.UserTo.Id == otherUserId && m.UserFrom.Id == myUserId));
+                if (timestamp.HasValue)
+                    query = query.Where(m => m.Timestamp < timestamp);
+                return query.OrderBy(m => m.Timestamp).ToList();
             }
         }
 

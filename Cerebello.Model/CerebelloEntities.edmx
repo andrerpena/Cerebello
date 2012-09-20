@@ -14,6 +14,7 @@
           <EntitySet Name="CFG_DayOff" EntityType="cerebelloModel.Store.CFG_DayOff" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CFG_Documents" EntityType="cerebelloModel.Store.CFG_Documents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CFG_Schedule" EntityType="cerebelloModel.Store.CFG_Schedule" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChatMessage" EntityType="cerebelloModel.Store.ChatMessage" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Coverage" EntityType="cerebelloModel.Store.Coverage" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Diagnosis" EntityType="cerebelloModel.Store.Diagnosis" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
@@ -78,6 +79,18 @@
           <AssociationSet Name="FK_CFG_Schedule_Doctor" Association="cerebelloModel.Store.FK_CFG_Schedule_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
             <End Role="CFG_Schedule" EntitySet="CFG_Schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_Practice" Association="cerebelloModel.Store.FK_ChatMessage_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="ChatMessage" EntitySet="ChatMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_User" Association="cerebelloModel.Store.FK_ChatMessage_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChatMessage" EntitySet="ChatMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_User1" Association="cerebelloModel.Store.FK_ChatMessage_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChatMessage" EntitySet="ChatMessage" />
           </AssociationSet>
           <AssociationSet Name="FK_Diagnosis_Anamnese" Association="cerebelloModel.Store.FK_Diagnosis_Anamnese">
             <End Role="Anamnese" EntitySet="Anamnese" />
@@ -332,6 +345,17 @@
           <Property Name="Thursday" Type="bit" Nullable="false" />
           <Property Name="Friday" Type="bit" Nullable="false" />
           <Property Name="Saturday" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChatMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserFromId" Type="int" Nullable="false" />
+          <Property Name="UserToId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Message" Type="varchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="Coverage">
           <Key>
@@ -733,6 +757,42 @@
             </Principal>
             <Dependent Role="CFG_Schedule">
               <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="ChatMessage" Type="cerebelloModel.Store.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_User">
+          <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
+          <End Role="ChatMessage" Type="cerebelloModel.Store.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="UserFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_User1">
+          <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
+          <End Role="ChatMessage" Type="cerebelloModel.Store.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="UserToId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1368,6 +1428,19 @@
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="CFG_DayOff" EntitySet="CFG_DayOff" />
           </AssociationSet>
+          <EntitySet Name="ChatMessages" EntityType="Cerebello.Model.ChatMessage" />
+          <AssociationSet Name="FK_ChatMessage_Practice" Association="Cerebello.Model.FK_ChatMessage_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="ChatMessage" EntitySet="ChatMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_User" Association="Cerebello.Model.FK_ChatMessage_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChatMessage" EntitySet="ChatMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_User1" Association="Cerebello.Model.FK_ChatMessage_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChatMessage" EntitySet="ChatMessages" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1499,6 +1572,7 @@
           <Property Type="String" Name="VerificationToken" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="VerificationExpirationDate" />
           <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
+          <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="Practice" ToRole="ChatMessage" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1553,6 +1627,8 @@
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="UserNameNormalized" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="IsOwner" Nullable="false" />
+          <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_User" FromRole="User" ToRole="ChatMessage" />
+          <NavigationProperty Name="ChatMessages1" Relationship="Cerebello.Model.FK_ChatMessage_User1" FromRole="User" ToRole="ChatMessage" />
         </EntityType>
         <Association Name="FK_Appointment_Doctor">
           <End Role="Doctor" Type="Cerebello.Model.Doctor" Multiplicity="1">
@@ -2313,6 +2389,56 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ChatMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="UserFromId" Nullable="false" />
+          <Property Type="Int32" Name="UserToId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" />
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="ChatMessage" ToRole="Practice" />
+          <NavigationProperty Name="UserFrom" Relationship="Cerebello.Model.FK_ChatMessage_User" FromRole="ChatMessage" ToRole="User" />
+          <NavigationProperty Name="UserTo" Relationship="Cerebello.Model.FK_ChatMessage_User1" FromRole="ChatMessage" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_ChatMessage_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.ChatMessage" Role="ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_User">
+          <End Type="Cerebello.Model.User" Role="User" Multiplicity="1" />
+          <End Type="Cerebello.Model.ChatMessage" Role="ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="UserFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_User1">
+          <End Type="Cerebello.Model.User" Role="User" Multiplicity="1" />
+          <End Type="Cerebello.Model.ChatMessage" Role="ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="UserToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2728,6 +2854,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ChatMessages">
+            <EntityTypeMapping TypeName="Cerebello.Model.ChatMessage">
+              <MappingFragment StoreEntitySet="ChatMessage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="UserToId" ColumnName="UserToId" />
+                <ScalarProperty Name="UserFromId" ColumnName="UserFromId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2762,19 +2900,21 @@
         <EntityTypeShape EntityType="Cerebello.Model.Secretary" Width="1.5" PointX="8" PointY="26.75" Height="1.4033821614583353" IsExpanded="true" />
         <EntityTypeShape EntityType="Cerebello.Model.User" Width="1.875" PointX="3.125" PointY="20.625" Height="4.4802050781250031" IsExpanded="true" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_Doctor" ManuallyRouted="false">
-          <ConnectorPoint PointX="12" PointY="20.4375" />
-          <ConnectorPoint PointX="10.333333333333334" PointY="20.4375" />
-          <ConnectorPoint PointX="10.166666666666666" PointY="20.4375" />
-          <ConnectorPoint PointX="8.2708333333333339" PointY="20.4375" />
-          <ConnectorPoint PointX="8.1041666666666661" PointY="20.4375" />
-          <ConnectorPoint PointX="7.875" PointY="20.4375" />
+          <ConnectorPoint PointX="12" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="10.333333333333334" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="10.166666666666666" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="9.7083333333333339" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="9.4791666666666661" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="8.2708333333333339" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="8.1041666666666661" PointY="20.6006982421875" />
+          <ConnectorPoint PointX="7.875" PointY="20.6006982421875" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_User" ManuallyRouted="false">
-          <ConnectorPoint PointX="5" PointY="24.489882263631959" />
-          <ConnectorPoint PointX="6.072916666666667" PointY="24.489882263631959" />
-          <ConnectorPoint PointX="6.380208333333333" PointY="24.489882263631959" />
-          <ConnectorPoint PointX="7.125" PointY="24.489882263631959" />
-          <ConnectorPoint PointX="7.125" PointY="20.951396484375003" />
+          <ConnectorPoint PointX="5" PointY="24.591222330729167" />
+          <ConnectorPoint PointX="6.072916666666667" PointY="24.591222330729167" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="24.591222330729167" />
+          <ConnectorPoint PointX="7.0625" PointY="24.591222330729167" />
+          <ConnectorPoint PointX="7.0625" PointY="20.951396484375003" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Patient_Coverage" ManuallyRouted="false">
           <ConnectorPoint PointX="5.25" PointY="15.230499674479166" />
@@ -2785,12 +2925,12 @@
           <ConnectorPoint PointX="14.25" PointY="23.365143229166666" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Patient_Doctor" ManuallyRouted="false">
-          <ConnectorPoint PointX="12.78125" PointY="20.25" />
-          <ConnectorPoint PointX="12.78125" PointY="15.540345052083332" />
+          <ConnectorPoint PointX="12.92968625" PointY="20.25" />
+          <ConnectorPoint PointX="12.92968625" PointY="15.540345052083332" />
           <ConnectorPoint PointX="10.333333333333334" PointY="15.540345052083332" />
           <ConnectorPoint PointX="10.166666666666666" PointY="15.540345052083332" />
-          <ConnectorPoint PointX="8.0833333333333339" PointY="15.540345052083332" />
-          <ConnectorPoint PointX="7.916666666666667" PointY="15.540345052083332" />
+          <ConnectorPoint PointX="8.1145833333333339" PointY="15.540345052083332" />
+          <ConnectorPoint PointX="7.947916666666667" PointY="15.540345052083332" />
           <ConnectorPoint PointX="7.75" PointY="15.540345052083332" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Patient_Person" ManuallyRouted="false">
@@ -2804,22 +2944,23 @@
           <ConnectorPoint PointX="8.25" PointY="13.365143229166666" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Person" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.65625" PointY="16.047506510416667" />
+          <ConnectorPoint PointX="2.65625" PointY="15.855205078125" />
           <ConnectorPoint PointX="2.65625" PointY="22.28125" />
           <ConnectorPoint PointX="3.125" PointY="22.28125" />
-          <ConnectorPoint PointX="3.125" PointY="22.63209354036459" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Practice_User" ManuallyRouted="false">
-          <ConnectorPoint PointX="5" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="6.072916666666667" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="6.380208333333333" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="6.979166666666667" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="7.145833333333333" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="8.1041666666666661" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="8.2708333333333339" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="9.5416666666666661" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="9.7083333333333339" PointY="22.189140814017883" />
-          <ConnectorPoint PointX="9.875" PointY="22.189140814017883" />
+          <ConnectorPoint PointX="5" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="6.072916666666667" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="6.979166666666667" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="7.145833333333333" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="8.1041666666666661" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="8.2708333333333339" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="8.9479171666666648" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="9.1145838333333327" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="9.4791666666666661" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="9.6458333333333339" PointY="22.015094440811009" />
+          <ConnectorPoint PointX="9.875" PointY="22.015094440811009" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_ReceiptMedicine_Receipt" ManuallyRouted="false">
           <ConnectorPoint PointX="9.75" PointY="13.427643229166666" />
@@ -2832,25 +2973,28 @@
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Doctor" >
           <ConnectorPoint PointX="13.5" PointY="20.615143229166669" />
           <ConnectorPoint PointX="13.791669166666667" PointY="20.615143229166669" />
-          <ConnectorPoint PointX="13.958335833333335" PointY="20.615143229166669" />
+          <ConnectorPoint PointX="14.083333333333334" PointY="20.615143229166669" />
           <ConnectorPoint PointX="14.25" PointY="20.615143229166669" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Medicine_Doctor" >
-          <ConnectorPoint PointX="13.5" PointY="21.672602256730077" />
-          <ConnectorPoint PointX="13.791669166666667" PointY="21.672602256730077" />
-          <ConnectorPoint PointX="13.958335833333335" PointY="21.672602256730077" />
-          <ConnectorPoint PointX="16.820525847212473" PointY="21.672602256730077" />
-          <ConnectorPoint PointX="16.987192513879137" PointY="21.672602256730077" />
-          <ConnectorPoint PointX="17.483182090272905" PointY="21.672602256730077" />
-          <ConnectorPoint PointX="17.483182090272905" PointY="19.941793619791667" />
+          <ConnectorPoint PointX="13.5" PointY="21.365143229166669" />
+          <ConnectorPoint PointX="13.791669166666667" PointY="21.365143229166669" />
+          <ConnectorPoint PointX="14.083333333333334" PointY="21.365143229166669" />
+          <ConnectorPoint PointX="16.041666666666668" PointY="21.365143229166669" />
+          <ConnectorPoint PointX="16.208333333333332" PointY="21.365143229166669" />
+          <ConnectorPoint PointX="16.78125" PointY="21.365143229166669" />
+          <ConnectorPoint PointX="16.78125" PointY="19.941793619791667" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Medicine_MedicineLaboratory" >
-          <ConnectorPoint PointX="15.75" PointY="23.723567650386521" />
-          <ConnectorPoint PointX="16.903859180545805" PointY="23.723567650386521" />
-          <ConnectorPoint PointX="16.903859180545805" PointY="19.941793619791667" />
+          <ConnectorPoint PointX="15.75" PointY="22.375" />
+          <ConnectorPoint PointX="16.125" PointY="22" />
+          <ConnectorPoint PointX="16.125" PointY="18.470896809895834" />
+          <ConnectorPoint PointX="16.5" PointY="18.470896809895834" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.MedicineActiveIngredient" >
           <ConnectorPoint PointX="15.75" PointY="19.470896809895834" />
+          <ConnectorPoint PointX="16.041666666666668" PointY="19.470896809895834" />
+          <ConnectorPoint PointX="16.208333333333332" PointY="19.470896809895834" />
           <ConnectorPoint PointX="16.5" PointY="19.470896809895834" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_ReceiptMedicine_Medicine" >
@@ -2886,16 +3030,16 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.CFG_Schedule" Width="3.625" PointX="19.75" PointY="12.25" Height="8.3262337239583317" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_Schedule_Doctor" >
-          <ConnectorPoint PointX="13.5" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="13.791669166666667" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="13.958335833333335" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="16.820525847212473" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="16.987192513879137" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="17.399848756939573" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="17.566515423606237" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="20.291666666666668" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="20.458333333333332" PointY="21.326441857531705" />
-          <ConnectorPoint PointX="21.75" PointY="21.326441857531705" />
+          <ConnectorPoint PointX="13.5" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="13.791669166666667" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="14.083333333333334" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="16.041666666666668" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="16.208333333333332" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="16.697916666666668" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="16.864583333333332" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="20.291666666666668" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="20.458333333333332" PointY="21.172712343750003" />
+          <ConnectorPoint PointX="21.75" PointY="21.172712343750003" />
           <ConnectorPoint PointX="21.75" PointY="20.576233723958332" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.SYS_Leaflet" Width="1.5" PointX="3.375" PointY="4.75" Height="1.5956835937500102" />
@@ -2910,40 +3054,40 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.CFG_Documents" Width="1.5" PointX="14.25" PointY="25.875" Height="2.5571907552083246" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_Documents_Doctor" >
-          <ConnectorPoint PointX="12.791706352844237" PointY="24.730205078125003" />
-          <ConnectorPoint PointX="12.791706352844237" PointY="27.153595377604162" />
-          <ConnectorPoint PointX="13.093772343088785" PointY="27.153595377604162" />
-          <ConnectorPoint PointX="13.260439009755453" PointY="27.153595377604162" />
+          <ConnectorPoint PointX="12.770853176422119" PointY="24.730205078125003" />
+          <ConnectorPoint PointX="12.770853176422119" PointY="27.153595377604162" />
+          <ConnectorPoint PointX="13.083345754877724" PointY="27.153595377604162" />
+          <ConnectorPoint PointX="13.250012421544392" PointY="27.153595377604162" />
           <ConnectorPoint PointX="14.25" PointY="27.153595377604162" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.ModelMedicalCertificate" Width="2.125" PointX="17" PointY="25.375" Height="2.172587890625" />
         <EntityTypeShape EntityType="Cerebello.Model.ModelMedicalCertificateField" Width="2.25" PointX="20.25" PointY="25.375" Height="1.7879850260416674" />
         <AssociationConnector Association="Cerebello.Model.FK_ModelMedicalCertificateField_ModelMedicalCertificate" >
           <ConnectorPoint PointX="19.125" PointY="26.268992513020834" />
+          <ConnectorPoint PointX="19.697916666666668" PointY="26.268992513020834" />
+          <ConnectorPoint PointX="19.864583333333332" PointY="26.268992513020834" />
           <ConnectorPoint PointX="20.25" PointY="26.268992513020834" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_ModelMedicalCertificate_Doctor" >
-          <ConnectorPoint PointX="12.364600676422118" PointY="24.730205078125003" />
-          <ConnectorPoint PointX="12.364600676422118" PointY="25.59375" />
-          <ConnectorPoint PointX="12.708373019510903" PointY="25.59375" />
-          <ConnectorPoint PointX="12.875039686177571" PointY="25.59375" />
-          <ConnectorPoint PointX="13.093772343088785" PointY="25.59375" />
-          <ConnectorPoint PointX="13.260439009755453" PointY="25.59375" />
-          <ConnectorPoint PointX="17" PointY="25.59375" />
+          <ConnectorPoint PointX="12.35417408821106" PointY="24.730205078125003" />
+          <ConnectorPoint PointX="12.35417408821106" PointY="25.67435088176271" />
+          <ConnectorPoint PointX="12.687519843088785" PointY="25.67435088176271" />
+          <ConnectorPoint PointX="12.854186509755452" PointY="25.67435088176271" />
+          <ConnectorPoint PointX="13.083345754877724" PointY="25.67435088176271" />
+          <ConnectorPoint PointX="13.250012421544392" PointY="25.67435088176271" />
+          <ConnectorPoint PointX="17" PointY="25.67435088176271" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificate" Width="2" PointX="19.375" PointY="21.875" Height="2.3648893229166674" />
         <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificateField" Width="1.5" PointX="22.125" PointY="22" Height="1.9802864583333246" />
         <AssociationConnector Association="Cerebello.Model.FK_MedicalCertificate_ModelMedicalCertificate" >
-          <ConnectorPoint PointX="17.95809791049361" PointY="25.375" />
-          <ConnectorPoint PointX="17.95809791049361" PointY="23.207322682434917" />
-          <ConnectorPoint PointX="19.375" PointY="23.207322682434917" />
+          <ConnectorPoint PointX="19.125" PointY="27.482687174479167" />
+          <ConnectorPoint PointX="19.78125" PointY="27.482687174479167" />
+          <ConnectorPoint PointX="19.78125" PointY="24.432190755208335" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_MedicalCertificate_Patient" >
           <ConnectorPoint PointX="7.75" PointY="14.452744140624999" />
-          <ConnectorPoint PointX="7.916666666666667" PointY="14.452744140624999" />
-          <ConnectorPoint PointX="8.0833333333333339" PointY="14.452744140624999" />
-          <ConnectorPoint PointX="8.125" PointY="14.452744140624999" />
-          <ConnectorPoint PointX="8.125" PointY="15.307190755208332" />
+          <ConnectorPoint PointX="8" PointY="14.452744140624999" />
+          <ConnectorPoint PointX="8" PointY="15.307190755208332" />
           <ConnectorPoint PointX="10.166666666666666" PointY="15.307190755208332" />
           <ConnectorPoint PointX="10.333333333333334" PointY="15.307190755208332" />
           <ConnectorPoint PointX="13.791669166666667" PointY="15.307190755208332" />
@@ -2969,15 +3113,17 @@
           <ConnectorPoint PointX="10.75" PointY="9.648793945312498" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Doctor" >
-          <ConnectorPoint PointX="12" PointY="22.6151045390625" />
-          <ConnectorPoint PointX="11.625" PointY="22.6151045390625" />
+          <ConnectorPoint PointX="12" PointY="22.696703660156253" />
+          <ConnectorPoint PointX="11.625" PointY="22.696703660156253" />
           <ConnectorPoint PointX="11.625" PointY="20.75" />
           <ConnectorPoint PointX="10.333333333333334" PointY="20.75" />
           <ConnectorPoint PointX="10.166666666666666" PointY="20.75" />
+          <ConnectorPoint PointX="9.7083333333333339" PointY="20.75" />
+          <ConnectorPoint PointX="9.4791666666666661" PointY="20.75" />
           <ConnectorPoint PointX="8.125" PointY="20.75" />
           <ConnectorPoint PointX="8.125" PointY="21.201396484375003" />
-          <ConnectorPoint PointX="7.208333333333333" PointY="21.201396484375003" />
-          <ConnectorPoint PointX="7.041666666666667" PointY="21.201396484375003" />
+          <ConnectorPoint PointX="7.145833333333333" PointY="21.201396484375003" />
+          <ConnectorPoint PointX="6.979166666666667" PointY="21.201396484375003" />
           <ConnectorPoint PointX="6.380208333333333" PointY="21.201396484375003" />
           <ConnectorPoint PointX="6.072916666666667" PointY="21.201396484375003" />
           <ConnectorPoint PointX="5.25" PointY="21.201396484375003" />
@@ -2986,42 +3132,42 @@
           <ConnectorPoint PointX="4.0625" PointY="20.625" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Practice" >
-          <ConnectorPoint PointX="9.875" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="9.7083333333333339" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="9.5416666666666661" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="8.2708333333333339" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="8.1041666666666661" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="7.145833333333333" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="6.979166666666667" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="6.380208333333333" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="6.072916666666667" PointY="21.532070407008941" />
-          <ConnectorPoint PointX="5" PointY="21.532070407008941" />
+          <ConnectorPoint PointX="9.875" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="9.1145838333333327" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="8.9479171666666648" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="8.2708333333333339" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="7.979166666666667" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="7.145833333333333" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="6.979166666666667" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="6.072916666666667" PointY="23.351896198623507" />
+          <ConnectorPoint PointX="5" PointY="23.351896198623507" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Secretary" >
-          <ConnectorPoint PointX="8.09375" PointY="26.75" />
-          <ConnectorPoint PointX="8.09375" PointY="22.888917737738108" />
-          <ConnectorPoint PointX="7.145833333333333" PointY="22.888917737738108" />
-          <ConnectorPoint PointX="6.979166666666667" PointY="22.888917737738108" />
-          <ConnectorPoint PointX="6.380208333333333" PointY="22.888917737738108" />
-          <ConnectorPoint PointX="6.072916666666667" PointY="22.888917737738108" />
-          <ConnectorPoint PointX="5" PointY="22.888917737738108" />
+          <ConnectorPoint PointX="8.0625" PointY="26.75" />
+          <ConnectorPoint PointX="8.0625" PointY="22.68349531971726" />
+          <ConnectorPoint PointX="7.145833333333333" PointY="22.68349531971726" />
+          <ConnectorPoint PointX="6.979166666666667" PointY="22.68349531971726" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="22.68349531971726" />
+          <ConnectorPoint PointX="6.072916666666667" PointY="22.68349531971726" />
+          <ConnectorPoint PointX="5" PointY="22.68349531971726" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.Administrator" Width="1.5" PointX="0.75" PointY="24" Height="1.4033821614583335" />
         <AssociationConnector Association="Cerebello.Model.FK_User_Administrator" >
-          <ConnectorPoint PointX="2.25" PointY="24.5526025390625" />
-          <ConnectorPoint PointX="3.125" PointY="24.5526025390625" />
+          <ConnectorPoint PointX="2.25" PointY="24.701691080729166" />
+          <ConnectorPoint PointX="3.125" PointY="24.701691080729166" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalEntity" Width="1.5" PointX="9.75" PointY="29.5" Height="1.7879850260416674" />
         <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalSpecialty" Width="2" PointX="13.375" PointY="10.375" Height="1.7879850260416674" />
         <AssociationConnector Association="Cerebello.Model.FK_Doctor_MedicalEntity1" >
           <ConnectorPoint PointX="11.25" PointY="30.393992513020834" />
-          <ConnectorPoint PointX="13.177105676422119" PointY="30.393992513020834" />
-          <ConnectorPoint PointX="13.177105676422119" PointY="24.730205078125003" />
+          <ConnectorPoint PointX="13.166679088211058" PointY="30.393992513020834" />
+          <ConnectorPoint PointX="13.166679088211058" PointY="24.730205078125003" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Doctor_MedicalSpecialty1" >
           <ConnectorPoint PointX="13.8750025" PointY="12.162985026041667" />
-          <ConnectorPoint PointX="13.8750025" PointY="22.023803628365037" />
-          <ConnectorPoint PointX="13.5" PointY="22.023803628365037" />
+          <ConnectorPoint PointX="13.8750025" PointY="22.025063871474188" />
+          <ConnectorPoint PointX="13.5" PointY="22.025063871474188" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.HealthEnsurance" Width="1.5" PointX="5.375" PointY="6.75" Height="1.4033821614583246" />
         <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="1.5" PointX="7.375" PointY="0.75" Height="1.5956835937500102" />
@@ -3029,14 +3175,14 @@
         <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="8.25" PointY="24.125" Height="2.3648893229166674" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_Patient" >
           <ConnectorPoint PointX="6.15625" PointY="15.960999348958334" />
-          <ConnectorPoint PointX="6.15625" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="6.213541666666667" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="6.380208333333333" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="7.666666666666667" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="7.833333333333333" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="7.979166666666667" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="8.1458333333333339" PointY="25.489885793274311" />
-          <ConnectorPoint PointX="8.25" PointY="25.489885793274311" />
+          <ConnectorPoint PointX="6.15625" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="6.213541666666667" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="7.666666666666667" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="7.833333333333333" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="7.979166666666667" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="8.1458333333333339" PointY="25.307444661458334" />
+          <ConnectorPoint PointX="8.25" PointY="25.307444661458334" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.ExaminationResult" Width="2.25" PointX="5.125" PointY="26.75" Height="2.3648893229166674" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationResult_Patient" >
@@ -3050,6 +3196,8 @@
           <ConnectorPoint PointX="11.125" PointY="8.25" />
           <ConnectorPoint PointX="10.25" PointY="8.25" />
           <ConnectorPoint PointX="10.25" PointY="20.875" />
+          <ConnectorPoint PointX="9.7083333333333339" PointY="20.875" />
+          <ConnectorPoint PointX="9.4791666666666661" PointY="20.875" />
           <ConnectorPoint PointX="9.0312504999999987" PointY="20.875" />
           <ConnectorPoint PointX="9.0312504999999987" PointY="24.125" />
         </AssociationConnector>
@@ -3058,8 +3206,8 @@
           <ConnectorPoint PointX="9.8125004999999987" PointY="8.25" />
           <ConnectorPoint PointX="7.875" PointY="8.25" />
           <ConnectorPoint PointX="7.875" PointY="12" />
-          <ConnectorPoint PointX="8" PointY="12" />
-          <ConnectorPoint PointX="8" PointY="17.375" />
+          <ConnectorPoint PointX="8.03125" PointY="12" />
+          <ConnectorPoint PointX="8.03125" PointY="17.375" />
           <ConnectorPoint PointX="8.1875" PointY="17.375" />
           <ConnectorPoint PointX="8.1875" PointY="23.875" />
           <ConnectorPoint PointX="8.1458333333333339" PointY="23.875" />
@@ -3075,13 +3223,79 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.CFG_DayOff" Width="1.5" PointX="14.25" PointY="15.5" Height="1.9802864583333246" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_DayOff_Doctor" >
-          <ConnectorPoint PointX="12.3593725" PointY="20.25" />
-          <ConnectorPoint PointX="12.3593725" PointY="16.510315755208328" />
-          <ConnectorPoint PointX="12.697916666666666" PointY="16.510315755208328" />
-          <ConnectorPoint PointX="12.864583333333334" PointY="16.510315755208328" />
+          <ConnectorPoint PointX="12.433590625" PointY="20.25" />
+          <ConnectorPoint PointX="12.433590625" PointY="16.510315755208328" />
+          <ConnectorPoint PointX="12.846352916666666" PointY="16.510315755208328" />
+          <ConnectorPoint PointX="13.013019583333334" PointY="16.510315755208328" />
           <ConnectorPoint PointX="13.791669166666667" PointY="16.510315755208328" />
           <ConnectorPoint PointX="13.958335833333335" PointY="16.510315755208328" />
           <ConnectorPoint PointX="14.25" PointY="16.510315755208328" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Cerebello.Model.ChatMessage" Width="1.5" PointX="17.125" PointY="21.75" Height="2.7494921875000102" />
+        <AssociationConnector Association="Cerebello.Model.FK_ChatMessage_Practice" >
+          <ConnectorPoint PointX="10.750000499999999" PointY="24.518697916666667" />
+          <ConnectorPoint PointX="10.750000499999999" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="12.270840754877726" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="12.437507421544394" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="12.687519843088785" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="12.854186509755452" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="13.083345754877724" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="13.250012421544392" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="16.75" PointY="24.980205078125003" />
+          <ConnectorPoint PointX="16.75" PointY="23.124746093750005" />
+          <ConnectorPoint PointX="17.125" PointY="23.124746093750005" />
+        </AssociationConnector>
+        <AssociationConnector Association="Cerebello.Model.FK_ChatMessage_User" >
+          <ConnectorPoint PointX="5" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="6.072916666666667" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="6.979166666666667" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="7.145833333333333" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="8.1041666666666661" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="8.2708333333333339" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="8.9479171666666648" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="9.1145838333333327" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="9.625" PointY="21.57699296259301" />
+          <ConnectorPoint PointX="9.625" PointY="20" />
+          <ConnectorPoint PointX="10.166666666666666" PointY="20" />
+          <ConnectorPoint PointX="10.333333333333334" PointY="20" />
+          <ConnectorPoint PointX="12.350257291666667" PointY="20" />
+          <ConnectorPoint PointX="12.516923958333335" PointY="20" />
+          <ConnectorPoint PointX="12.846352916666666" PointY="20" />
+          <ConnectorPoint PointX="13.013019583333334" PointY="20" />
+          <ConnectorPoint PointX="13.791669166666667" PointY="20" />
+          <ConnectorPoint PointX="13.958335833333335" PointY="20" />
+          <ConnectorPoint PointX="14" PointY="20" />
+          <ConnectorPoint PointX="14" PointY="21.5" />
+          <ConnectorPoint PointX="16.041666666666668" PointY="21.5" />
+          <ConnectorPoint PointX="16.208333333333332" PointY="21.5" />
+          <ConnectorPoint PointX="17.875" PointY="21.5" />
+          <ConnectorPoint PointX="17.875" PointY="21.75" />
+        </AssociationConnector>
+        <AssociationConnector Association="Cerebello.Model.FK_ChatMessage_User1" >
+          <ConnectorPoint PointX="5" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="6.072916666666667" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="6.380208333333333" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="6.979166666666667" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="7.145833333333333" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="7.979166666666667" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="8.2708333333333339" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="8.9479171666666648" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="9.1145838333333327" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="9.5625" PointY="23.017695759170383" />
+          <ConnectorPoint PointX="9.5625" PointY="19.984375" />
+          <ConnectorPoint PointX="10.166666666666666" PointY="19.984375" />
+          <ConnectorPoint PointX="10.333333333333334" PointY="19.984375" />
+          <ConnectorPoint PointX="12.350257291666667" PointY="19.984375" />
+          <ConnectorPoint PointX="12.516923958333335" PointY="19.984375" />
+          <ConnectorPoint PointX="12.846352916666666" PointY="19.984375" />
+          <ConnectorPoint PointX="13.013019583333334" PointY="19.984375" />
+          <ConnectorPoint PointX="13.9375" PointY="19.984375" />
+          <ConnectorPoint PointX="13.9375" PointY="21.625" />
+          <ConnectorPoint PointX="16.041666666666668" PointY="21.625" />
+          <ConnectorPoint PointX="16.208333333333332" PointY="21.625" />
+          <ConnectorPoint PointX="17.468747999999998" PointY="21.625" />
+          <ConnectorPoint PointX="17.468747999999998" PointY="21.75" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using CerebelloWebRole.Code.Chat;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    public class ChatController : AsyncController
+    public class ChatController : Controller
     {
         /// <summary>
         /// Sets a user offline
@@ -35,105 +36,112 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </param>
         [HttpGet]
         // this is for debug purpose only
-        [AsyncTimeout(int.MaxValue)]
-        public void UserListAsync(int roomId, int userId, bool noWait = false)
+        public JsonResult UserList(int roomId, int userId, bool noWait = false)
         {
-            this.AsyncManager.OutstandingOperations.Increment();
-
             // if either the room or the user is not set up yet, do it
             this.SetupRoomIfNonexisting(roomId);
             this.SetupUserIfNonexisting(roomId, userId);
 
             // updates the status of the current user
             ChatServer.Rooms[roomId].SetUserOnline(userId);
-
+            List<ChatUser> result = new List<ChatUser>();
 
             // this is the async operation
-            ChatServer.CheckForRoomUsersChanged(roomId, users =>
+            ChatServer.WaitForRoomUsersChanged(roomId, users =>
             {
                 // this is necessary to remove the current user from
                 // the buddy list before retrieving
                 var roomUsersExcludingCurrentUser = users.Where(u => u.Id != userId).OrderBy(u => u.Name).ToList();
-                this.AsyncManager.Parameters["users"] = roomUsersExcludingCurrentUser;
-                AsyncManager.OutstandingOperations.Decrement();
+                result = roomUsersExcludingCurrentUser;
             }, noWait);
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
-        public JsonResult UserListCompleted(List<ChatUser> users)
+        public JsonResult GetMessages(int roomId, int myUserId, long? timeStamp = null)
         {
-            return this.Json(users, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        [AsyncTimeout(int.MaxValue)]
-        public void GetMessagesAsync(int roomId, int myUserId, long? timeStamp = null)
-        {
-            this.AsyncManager.OutstandingOperations.Increment();
-
             // if either the room or the user is not set up yet, do it
             this.SetupRoomIfNonexisting(roomId);
             this.SetupUserIfNonexisting(roomId, myUserId);
 
-            var existingMessages = ChatServer.Rooms[roomId].GetMessages(myUserId, timeStamp);
-            // if there are messages aleady, return them
-            if (existingMessages.Any())
+            // Each UserFrom Id has a LIST of messages. Of course
+            // all messages have the same UserTo, of course, myUserId.
+            Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>> messages = new Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>>();
+
+            // possible existing messages
+            var existingMessages = timeStamp.HasValue ? ChatServer.Rooms[roomId].GetMessagesTo(myUserId, timeStamp.Value) : new List<CerebelloWebRole.Code.Chat.ChatMessage>();
+
+            if (timeStamp.HasValue && existingMessages.Any())
             {
-                // it's the first time the user is requesting messages, so return ALL of them, including the ones 
-                // the current user sent him(her)self
-                this.AsyncManager.Parameters["messages"] = existingMessages;
-                this.AsyncManager.Parameters["fromCache"] = true;
-                AsyncManager.OutstandingOperations.Decrement();
+                // makes the messages follow the scructure: Each UserFrom Id has a LIST of messages
+                messages = existingMessages.GroupBy(cm => cm.UserFrom.Id).ToDictionary(g => g.Key.ToString(), g => g.ToList());
             }
             else
             {
                 // .. otherwise, lets WAIT for a new message and return it when it comes
-                ChatServer.CheckForNewMessage(roomId, myUserId, m =>
+                ChatServer.WaitForNewMessage(roomId, myUserId, m =>
                 {
-                    var newMessages = new List<ChatMessage>();
                     if (m != null)
-                        newMessages.Add(m);
-                    // messages will be empty if there's no new message
-                    this.AsyncManager.Parameters["messages"] = newMessages;
-                    AsyncManager.OutstandingOperations.Decrement();
+                        messages.Add(m.UserFrom.Id.ToString(), new List<CerebelloWebRole.Code.Chat.ChatMessage>() { m });
                 });
             }
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="messages"></param>
-        /// <param name="fromCache">
-        /// Indicates whether or not the message is new. New messages (fromCache = false) will
-        /// cause the correspondig chat window to open. Otherwise it won't.
-        /// </param>
-        /// <returns></returns>
-        public JsonResult GetMessagesCompleted(List<ChatMessage> messages, bool? fromCache = false)
-        {
             return this.Json(new
             {
                 Messages = messages,
-                // there's a problem here. Messages that happened to arrive 
-                // exactly in the time window between the time I checked 
-                // and now will not be retrieved.
-                // But I cannot handle all these details now or I'll never
-                // get done with this.
-                // ToDo: fix this
-                Timestamp = DateTime.UtcNow.Ticks.ToString(),
-                FromCache = fromCache
+                Timestamp = DateTime.UtcNow.Ticks.ToString()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetMessageHistory(int roomId, int myUserId, int otherUserId, long? timeStamp = null)
+        {
+            this.SetupRoomIfNonexisting(roomId);
+            this.SetupUserIfNonexisting(roomId, myUserId);
+            this.SetupUserIfNonexisting(roomId, otherUserId);
+
+            // Each UserFrom Id has a LIST of messages. Of course
+            // all messages have the same UserTo, of course, myUserId.
+            Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>> messages = new Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>>();
+            messages.Add(otherUserId.ToString(), ChatServer.Rooms[roomId].GetMessagesBetween(myUserId, otherUserId, timeStamp));
+
+            return this.Json(new
+            {
+                Messages = messages,
+                Timestamp = DateTime.UtcNow.Ticks.ToString()
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public JsonResult NewMessage(int roomId, int myUserId, int otherUserId, string message)
         {
+            if (myUserId == otherUserId)
+                throw new Exception("Cannot send a message to yourself");
+
             //ToDo: store this message in the DB.
             this.SetupRoomIfNonexisting(roomId);
             this.SetupUserIfNonexisting(roomId, myUserId);
             this.SetupUserIfNonexisting(roomId, otherUserId);
 
             ChatServer.Rooms[roomId].AddMessage(myUserId, otherUserId, message);
+
+            // new let's try to persist it
+
+            using (var db = new CerebelloEntities())
+            {
+
+                db.ChatMessages.AddObject(new Cerebello.Model.ChatMessage()
+                {
+                    Date = DateTime.UtcNow,
+                    Message = message,
+                    UserFromId = myUserId,
+                    UserToId = otherUserId,
+                    PracticeId = roomId
+                });
+
+                db.SaveChanges();
+            }
 
             return null;
         }
@@ -144,11 +152,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         public static object roomLock = new Object();
 
+        private static ChatUser GetChatUserFromUser(User u)
+        {
+            return new ChatUser()
+                            {
+                                Id = u.Id,
+                                Name = u.Person.FullName,
+                                Status = ChatUser.StatusType.Offline,
+                                GravatarUrl = GravatarHelper.GetGravatarUrl(u.Person.EmailGravatarHash, GravatarHelper.Size.s32)
+                            };
+        }
+
         /// <summary>
         /// Sets up a room if it does not exist
         /// </summary>
         /// <param name="roomId"></param>
-        public void SetupRoomIfNonexisting(int roomId)
+        private void SetupRoomIfNonexisting(int roomId)
         {
             lock (roomLock)
             {
@@ -167,13 +186,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         // adds users to the room
                         foreach (var u in practiceUsers)
                         {
-                            newChatRoom.Users.Add(u.Id, new ChatUser()
-                            {
-                                Id = u.Id,
-                                Name = u.Person.FullName,
-                                Status = ChatUser.StatusType.Offline
-                            });
+                            newChatRoom.Users.Add(u.Id, GetChatUserFromUser(u));
                         }
+
+                        // now adds conversations to the history
+
+                        newChatRoom.Messages.AddRange((from m in db.ChatMessages
+                                                       where m.PracticeId == roomId
+                                                       orderby m.Date descending
+                                                       select m
+                                                       ).ToList().Select(m => new CerebelloWebRole.Code.Chat.ChatMessage()
+                                                       {
+                                                           UserFrom = GetChatUserFromUser(m.UserTo),
+                                                           UserTo = GetChatUserFromUser(m.UserFrom),
+                                                           Message = m.Message,
+                                                           Timestamp = m.Date.Ticks
+                                                       }).Take(400).AsEnumerable().Reverse());
                     }
                 }
             }
@@ -188,7 +216,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Sets up a room if it does not exist
         /// </summary>
         /// <param name="roomId"></param>
-        public void SetupUserIfNonexisting(int roomId, int userId)
+        private void SetupUserIfNonexisting(int roomId, int userId)
         {
             lock (userLock)
             {

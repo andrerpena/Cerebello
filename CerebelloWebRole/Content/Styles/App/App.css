@@ -441,7 +441,7 @@ fieldset legend
 
 .main
 {
-    margin: 10px auto;
+    margin: 10px auto 30px;
     max-width: 1200px;
     overflow: hidden;
     padding: 0 10px;

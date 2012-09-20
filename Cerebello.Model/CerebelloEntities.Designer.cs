@@ -59,6 +59,9 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationResult_SYS_MedicalProcedures1", "SYS_MedicalProcedure", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalProcedure), "ExaminationResult", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationResult), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Address_Person1", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_CFG_DayOff_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "CFG_DayOff", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.CFG_DayOff), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
 
 #endregion
 
@@ -701,6 +704,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<CFG_DayOff> _CFG_DayOff;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<ChatMessage> ChatMessages
+        {
+            get
+            {
+                if ((_ChatMessages == null))
+                {
+                    _ChatMessages = base.CreateObjectSet<ChatMessage>("ChatMessages");
+                }
+                return _ChatMessages;
+            }
+        }
+        private ObjectSet<ChatMessage> _ChatMessages;
 
         #endregion
         #region AddTo Methods
@@ -999,6 +1018,14 @@ namespace Cerebello.Model
         public void AddToCFG_DayOff(CFG_DayOff cFG_DayOff)
         {
             base.AddObject("CFG_DayOff", cFG_DayOff);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the ChatMessages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToChatMessages(ChatMessage chatMessage)
+        {
+            base.AddObject("ChatMessages", chatMessage);
         }
 
         #endregion
@@ -3488,6 +3515,308 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Doctor>("Cerebello.Model.FK_CFG_Schedule_Doctor", "Doctor", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="ChatMessage")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class ChatMessage : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new ChatMessage object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="userFromId">Initial value of the UserFromId property.</param>
+        /// <param name="userToId">Initial value of the UserToId property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="date">Initial value of the Date property.</param>
+        /// <param name="message">Initial value of the Message property.</param>
+        public static ChatMessage CreateChatMessage(global::System.Int32 id, global::System.Int32 userFromId, global::System.Int32 userToId, global::System.Int32 practiceId, global::System.DateTime date, global::System.String message)
+        {
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.Id = id;
+            chatMessage.UserFromId = userFromId;
+            chatMessage.UserToId = userToId;
+            chatMessage.PracticeId = practiceId;
+            chatMessage.Date = date;
+            chatMessage.Message = message;
+            return chatMessage;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 UserFromId
+        {
+            get
+            {
+                return _UserFromId;
+            }
+            set
+            {
+                OnUserFromIdChanging(value);
+                ReportPropertyChanging("UserFromId");
+                _UserFromId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("UserFromId");
+                OnUserFromIdChanged();
+            }
+        }
+        private global::System.Int32 _UserFromId;
+        partial void OnUserFromIdChanging(global::System.Int32 value);
+        partial void OnUserFromIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 UserToId
+        {
+            get
+            {
+                return _UserToId;
+            }
+            set
+            {
+                OnUserToIdChanging(value);
+                ReportPropertyChanging("UserToId");
+                _UserToId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("UserToId");
+                OnUserToIdChanged();
+            }
+        }
+        private global::System.Int32 _UserToId;
+        partial void OnUserToIdChanging(global::System.Int32 value);
+        partial void OnUserToIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime Date
+        {
+            get
+            {
+                return _Date;
+            }
+            set
+            {
+                OnDateChanging(value);
+                ReportPropertyChanging("Date");
+                _Date = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Date");
+                OnDateChanged();
+            }
+        }
+        private global::System.DateTime _Date;
+        partial void OnDateChanging(global::System.DateTime value);
+        partial void OnDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Message
+        {
+            get
+            {
+                return _Message;
+            }
+            set
+            {
+                OnMessageChanging(value);
+                ReportPropertyChanging("Message");
+                _Message = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Message");
+                OnMessageChanged();
+            }
+        }
+        private global::System.String _Message;
+        partial void OnMessageChanging(global::System.String value);
+        partial void OnMessageChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User", "User")]
+        public User UserFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<User> UserFromReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User")]
+        public User UserTo
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<User> UserToReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User", value);
                 }
             }
         }
@@ -7599,6 +7928,28 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessages
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_Practice", "ChatMessage");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_Practice", "ChatMessage", value);
+                }
+            }
+        }
 
         #endregion
     }
@@ -9755,6 +10106,50 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Administrator>("Cerebello.Model.FK_User_Administrator", "Administrator", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessages
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User", "ChatMessage");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User", "ChatMessage", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User1", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessages1
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User1", "ChatMessage");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User1", "ChatMessage", value);
                 }
             }
         }

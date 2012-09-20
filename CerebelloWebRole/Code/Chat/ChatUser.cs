@@ -33,6 +33,8 @@ namespace CerebelloWebRole.Code.Chat
         /// </summary>
         public string Url { get; set; }
 
+        public string GravatarUrl { get; set; }
+
         /// <summary>
         /// The user's status
         /// </summary>

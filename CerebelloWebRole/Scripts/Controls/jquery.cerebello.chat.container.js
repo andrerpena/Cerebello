@@ -10,7 +10,7 @@
             title: null,
             canClose: true,
             showTextBox: true,
-            onClose: function (chatContainer) { alert("aaa"); }
+            onClose: function (chatContainer) {  }
         };
 
         //Extending options:

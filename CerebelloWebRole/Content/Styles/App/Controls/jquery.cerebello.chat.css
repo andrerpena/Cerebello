@@ -74,3 +74,27 @@ input.chat-window-text-box
 {
     padding: 2px;
 }
+
+.chat-message 
+{
+    border-bottom: 1px solid #EAEAEA;
+    margin: 2px 0 0;
+    overflow: hidden;
+    padding: 3px 0;
+}
+
+.chat-message:last-child
+{
+    border-bottom: none;
+}
+
+.chat-message .chat-gravatar-wrapper
+{
+    float: left;
+}
+
+.chat-message .chat-text-wrapper
+{
+    line-height: 1.2em;
+    margin-left: 40px;
+}

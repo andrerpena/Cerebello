@@ -5,8 +5,7 @@
 
         // Defaults:
         this.defaults = {
-            userId: null,
-            userName: null,
+            user: null,
             roomId: null
         };
 
@@ -17,24 +16,23 @@
         this.$el = null;
 
         // there will be one property on this object for each user in the chat
+        // the property name is the other user id (toStringed)
         this.chatWindows = new Object();
         this.lastMessageCheckTimeStamp = null;
         this.chatContainer = null;
 
-        this.createNewChatWindow = function (otherUserId, otherUserName) {
+        this.createNewChatWindow = function (otherUser) {
             var _this = this;
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
                 roomId: _this.opts.roomId,
-                myUserId: _this.opts.userId,
-                myUserName: _this.opts.userName,
-                otherUserId: otherUserId,
-                otherUserName: otherUserName,
+                myUser: _this.opts.user,
+                otherUser: otherUser,
                 onClose: function () {
-                    delete _this.chatWindows[otherUserId];
+                    delete _this.chatWindows[otherUser.Id];
                 }
             });
-            _this.chatWindows[otherUserId] = newChatWindow;
+            _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
         }
 
         this.getMessages = function () {
@@ -43,25 +41,28 @@
                 url: "/chat/getmessages",
                 data: {
                     roomId: _this.opts.roomId,
-                    myUserId: _this.opts.userId,
+                    myUserId: _this.opts.user.Id,
                     timestamp: _this.lastMessageCheckTimeStamp
                 },
                 success: function (data) {
                     _this.lastMessageCheckTimeStamp = data.Timestamp;
-                    for (var i = 0; i < data.Messages.length; i++) {
-                        if (!data.FromCache) {
-                            // in this case this is new message.
-                            // we have to FORWARD each of the messages to the destination
-                            // window here
-                            if (_this.chatWindows[data.Messages[i].UserFrom.Id])
-                            // if the chat-window already exists for the given user, updates it.
-                                _this.chatWindows[data.Messages[i].UserFrom.Id].addMessage(data.Messages[i].Message);
-                            else {
-                                _this.createNewChatWindow(data.Messages[i].UserFrom.Id, data.Messages[i].UserFrom.Name);
-                            }
+
+                    // this otherUserId is a number toStringed
+                    for (var otherUserId in data.Messages) {
+
+                        // here there's something tricky.
+                        // if the current user does not have a window opened relative to the user that just sent the message, we need 
+                        // to load the history for that user, meaning we will have to return to the server.
+                        // Therefore, it's a little bit easier just to ignore this message and get the WHOLE HISTORY in the server now.
+                        if (!_this.chatWindows[otherUserId])
+                            _this.createNewChatWindow(data.Messages[otherUserId][0].UserFrom);
+
+                        else {
+                            for (var i = 0; i < data.Messages[otherUserId].length; i++)
+                                _this.chatWindows[otherUserId].addMessage(data.Messages[otherUserId][i]);
                         }
-                        // _this.addMessage(data.Messages[i].Message);
                     }
+
                     _this.getMessages();
                 },
                 error: function () {
@@ -79,7 +80,7 @@
                 data: {
                     noWait: noWait,
                     roomId: _this.opts.roomId,
-                    userId: _this.opts.userId
+                    userId: _this.opts.user.Id
                 },
                 success: function (data, s) {
 
@@ -99,7 +100,7 @@
                                     // focus chat-window
                                 }
                                 else
-                                    _this.createNewChatWindow(data[otherUserId].Id, data[otherUserId].Name);
+                                    _this.createNewChatWindow(data[otherUserId]);
                             });
                         })(i);
                     }
@@ -135,14 +136,14 @@
 				    $.get("/chat/setuseroffline",
 					{
 					    roomId: _this.opts.roomId,
-					    userId: _this.opts.userId
+					    userId: _this.opts.user.Id
 					});
 				}
 			);
 
             // first
-	    _this.getUserList(true);
-	    _this.getMessages();
+            _this.getUserList(true);
+            _this.getMessages();
         }
     };
 
