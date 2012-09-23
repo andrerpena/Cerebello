@@ -1104,9 +1104,8 @@ user-select: none;
 
 .new-medical-appointment-panel-wrapper .medical-appointment-details-panel
 {
-    background-color: #E8F2E7;
+    background-color: #F5F5F5;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 4px 4px 4px 4px;
     margin-bottom: 10px;
     padding: 10px 10px 0;
 }

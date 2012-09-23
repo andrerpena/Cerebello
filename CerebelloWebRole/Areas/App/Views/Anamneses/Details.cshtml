@@ -20,38 +20,7 @@
                         </ul>
                   }
             </text>, wholeRow: true);
-        
-        
         @cardView.GetHtml()
-        
-        @*<table class="view-table">
-            <tr>
-                <th>
-                    @Html.LabelFor(model => model.Text)
-                </th>
-                <td>
-                    @Html.DisplayFor(model => model.Text)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.LabelFor(model => model.Diagnoses)
-                </th>
-                <td>
-                    @if (Model.Diagnoses != null)
-                    {
-                        <ul class="string-list">
-                            @foreach (var symptom in Model.Diagnoses)
-                            {
-                                <li>
-                                    @symptom.Text
-                                </li>
-                            }
-                        </ul>
-                    }
-                </td>
-            </tr>
-        </table>*@
     }
     <div class="inline-link-bar">
         <a href="#" class="edit-anamnese inline-link" >Editar anamnese</a>
@@ -67,20 +36,17 @@
                 }
             });
         });
-
+        
         $(".delete-anamnese", $("div[data-val-id='anamnese-@Model.Id']")).click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir esta anamnese?\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Esta anamnese foi excluída");
-                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
-                    }
-                    else
-                        alert("Não foi possível excluir esta anamnese.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.deleteConfirmation({
+                objectType: "anamnese",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Esta anamnese foi excluída");
+                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                }
+            });
         });
     </script>
 </div>

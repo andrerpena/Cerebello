@@ -42,7 +42,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public int PatientCoverageId { get; set; }
 
         [Display(Name = "E-mail")]
-        [EmailAddress]
+        [CerebelloWebRole.Code.Mvc.EmailAddress]
         public string PatientEmail { get; set; }
 
         [Display(Name = "Sexo")]

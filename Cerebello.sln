@@ -1,23 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Cerebello", "Cerebello\Cerebello.ccproj", "{E05B78A9-A9C6-4AE0-8D91-31211E643B19}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Model", "Cerebello.Model\Cerebello.Model.csproj", "{D5F1D306-C581-42FD-935B-72F71B18775D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole", "CerebelloWebRole\CerebelloWebRole.csproj", "{FB7B2DD8-7D48-403E-9422-01176EF59A43}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Anvisa", "Anvisa", "{16D14AC2-D2E3-411F-A649-872C7E43BF51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anvisa.Crawler", "Anvisa.Crawler\Anvisa.Crawler.csproj", "{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Firestarter", "Cerebello.Firestarter\Cerebello.Firestarter.csproj", "{910ADA48-2A68-4783-B70B-314D9BAA1428}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anvisa.Uploader", "Anvisa.Uploader\Anvisa.Uploader.csproj", "{0949C820-C755-4ECB-90EA-40716E29A0AC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8A758F7D-C82A-4010-9E99-621949FCC440}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole.Tests", "CerebelloWebRole.Tests\CerebelloWebRole.Tests.csproj", "{6EE63206-FF20-496B-83F1-232944BE6E97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A012C95-90A6-42E5-A510-1163A86E47B2}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,6 +11,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Local.testsettings = Local.testsettings
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Cerebello", "Cerebello\Cerebello.ccproj", "{E05B78A9-A9C6-4AE0-8D91-31211E643B19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Model", "Cerebello.Model\Cerebello.Model.csproj", "{D5F1D306-C581-42FD-935B-72F71B18775D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole", "CerebelloWebRole\CerebelloWebRole.csproj", "{FB7B2DD8-7D48-403E-9422-01176EF59A43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anvisa.Crawler", "Anvisa.Crawler\Anvisa.Crawler.csproj", "{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Firestarter", "Cerebello.Firestarter\Cerebello.Firestarter.csproj", "{910ADA48-2A68-4783-B70B-314D9BAA1428}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anvisa.Uploader", "Anvisa.Uploader\Anvisa.Uploader.csproj", "{0949C820-C755-4ECB-90EA-40716E29A0AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole.Tests", "CerebelloWebRole.Tests\CerebelloWebRole.Tests.csproj", "{6EE63206-FF20-496B-83F1-232944BE6E97}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -116,7 +116,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E} = {16D14AC2-D2E3-411F-A649-872C7E43BF51}
 		{0949C820-C755-4ECB-90EA-40716E29A0AC} = {16D14AC2-D2E3-411F-A649-872C7E43BF51}
-		{6EE63206-FF20-496B-83F1-232944BE6E97} = {8A758F7D-C82A-4010-9E99-621949FCC440}
 		{4A012C95-90A6-42E5-A510-1163A86E47B2} = {8A758F7D-C82A-4010-9E99-621949FCC440}
+		{6EE63206-FF20-496B-83F1-232944BE6E97} = {8A758F7D-C82A-4010-9E99-621949FCC440}
 	EndGlobalSection
 EndGlobal

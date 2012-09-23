@@ -41,7 +41,7 @@ namespace CerebelloWebRole.Models
         public String Password { get; set; }
 
         [Display(Name = "Confirmação da Senha")]
-        [Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
