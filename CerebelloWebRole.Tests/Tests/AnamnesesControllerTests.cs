@@ -126,7 +126,7 @@ namespace CerebelloWebRole.Tests
         }
 
         [TestMethod]
-        public void Delete_2_ShouldReturnProperResultWhenNotExisting()
+        public void Delete_ShouldReturnProperResultWhenNotExisting()
         {
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
@@ -145,7 +145,6 @@ namespace CerebelloWebRole.Tests
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
-            // tries to delete the anamnese <== WTF??
             var result = controller.LookupDiagnoses("cefaléia", 20, 1);
             var lookupJsonResult = (LookupJsonResult)result.Data;
 

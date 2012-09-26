@@ -36,7 +36,7 @@ namespace CerebelloWebRole.Tests
                         command.ExecuteNonQuery();
                     }
                 }
-                catch (SqlException ex)
+                catch (SqlException)
                 {
                     // probably the database exists already because a previous test failed.. let's move on
                 }

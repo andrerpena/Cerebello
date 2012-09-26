@@ -200,7 +200,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                                 Count = g.Count()
                                             }).ToList();
 
-            model.TotalPatientsCount = this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id).Count();
+            model.TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id);
             return View(model);
         }
 
@@ -213,7 +213,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var patient = (Patient)db.Patients.Where(p => p.Id == id).First();
+            var patient = (Patient)this.db.Patients.First(p => p.Id == id);
             var model = this.GetViewModel(patient, true);
 
             return View(model);
@@ -238,7 +238,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var patient = db.Patients.Where(p => p.Id == id).First();
+                var patient = this.db.Patients.First(p => p.Id == id);
                 viewModel = this.GetViewModel(patient);
 
                 ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
@@ -259,7 +259,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 bool isEditing = formModel.Id != null;
 
                 if (isEditing)
-                    patient = db.Patients.Where(p => p.Id == formModel.Id).First();
+                    patient = this.db.Patients.First(p => p.Id == formModel.Id);
                 else
                 {
                     patient = new Patient();
@@ -302,12 +302,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", formModel);
         }
 
+        /// <summary>
+        /// Deletes a patient
+        /// </summary>
+        /// <remarks>
+        /// Requiriments:
+        ///     - Should delete the patient along with the following associations:
+        ///         - Anamneses
+        /// </remarks>
         [HttpGet]
         public JsonResult Delete(int id)
         {
             try
             {
-                var patient = db.Patients.Where(m => m.Id == id).First();
+                var patient = db.Patients.First(m => m.Id == id);
 
                 // delete receipts manually (SQL Server won't do this automatically)
                 var receipts = patient.Receipts.ToList();
@@ -332,6 +340,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 while (anamneses.Any())
                 {
                     var anamnese = anamneses.First();
+
+                    // deletes diagnoses within the anamnese manually
+                    while (anamnese.Diagnoses.Any())
+                    {
+                        var diagnose = anamnese.Diagnoses.First();
+                        this.db.Diagnoses.DeleteObject(diagnose);
+                    }
+
                     this.db.Anamnese.DeleteObject(anamnese);
                     anamneses.Remove(anamnese);
                 }
@@ -346,13 +362,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        public JsonResult GetCEPInfo(string cep)
+        public JsonResult GetCepInfo(string cep)
         {
             // TODO: Miguel Angelo: copiei este código para o UsersController, deveria ser um método utilitário, ou criar uma classe de base.
 
             try
             {
-                var request = HttpWebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");
+                var request = WebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
 
