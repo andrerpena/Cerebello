@@ -183,8 +183,8 @@ namespace CerebelloWebRole.Tests.Tests
 
             anamnese.Diagnoses.Add(new Diagnosis()
             {
-                 Cid10Name = "Text",
-                 Cid10Code = "Q878"
+                Cid10Name = "Text",
+                Cid10Code = "Q878"
             });
 
             patient.Anamneses.Add(anamnese);
@@ -202,38 +202,32 @@ namespace CerebelloWebRole.Tests.Tests
         {
             PatientsController controller;
             Doctor doctor;
+            Patient patient;
+
             try
             {
                 doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
-            }
-            catch
-            {
-                Assert.Inconclusive("Test initialization has failed.");
-                return;
-            }
 
-            // we now have 1 patient
-            var patient = this.db.Patients.FirstOrDefault();
-            Assert.IsNotNull(patient);
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
 
-            var patientId = patient.Id;
-            
-            var certificateModel = new Cerebello.Model.ModelMedicalCertificate()
+                var certificateModel = new Cerebello.Model.ModelMedicalCertificate()
                 {
-                     DoctorId = doctor.Id,
-                     Name = "model1",
-                     Text = "model1"
+                    DoctorId = doctor.Id,
+                    Name = "model1",
+                    Text = "model1"
                 };
 
-            certificateModel.Fields.Add(new ModelMedicalCertificateField()
+                certificateModel.Fields.Add(new ModelMedicalCertificateField()
                 {
-                     Name = "field1"
+                    Name = "field1"
                 });
 
-            var certificate = new Cerebello.Model.MedicalCertificate()
+                var certificate = new Cerebello.Model.MedicalCertificate()
                 {
                     ModelMedicalCertificate = certificateModel,
                     Patient = patient,
@@ -241,24 +235,74 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = DateTime.UtcNow
                 };
 
-            certificate.Fields.Add(new MedicalCertificateField()
+                certificate.Fields.Add(new MedicalCertificateField()
                 {
-                      Name = "field1",
-                      Value = "value"
+                    Name = "field1",
+                    Value = "value"
                 });
 
-            this.db.MedicalCertificates.AddObject(certificate);
-            this.db.SaveChanges();
-
+                this.db.MedicalCertificates.AddObject(certificate);
+                this.db.SaveChanges();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
 
             controller.Delete(patient.Id);
 
             // this patient must have been deleted
-            patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patient.Id);
             Assert.IsNull(patient);
 
         }
 
+        [TestMethod]
+        public void Delete_WhenTheresAnAppointment()
+        {
+            PatientsController controller;
+            Doctor docAndre;
+            Patient patient;
+
+            try
+            {
+                docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                Firestarter.CreateFakePatients(docAndre, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+                var referenceTime = DateTime.UtcNow;
+
+                var appointment = new Appointment()
+                {
+                    Doctor = docAndre,
+                    CreatedBy = docAndre.Users.First(),
+                    CreatedOn = referenceTime,
+                    PatientId = patient.Id,
+                    Start = referenceTime,
+                    End = referenceTime + TimeSpan.FromMinutes(30)
+                };
+
+                this.db.Appointments.AddObject(appointment);
+                this.db.SaveChanges();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            controller.Delete(patient.Id);
+
+            // this patient must have been deleted
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patient.Id);
+            Assert.IsNull(patient);
+
+        }
 
         #endregion
     }
