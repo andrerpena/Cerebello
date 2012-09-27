@@ -445,8 +445,8 @@ namespace Cerebello.Firestarter
         }
 
         /// <summary>
-        /// Aplica as configuraçoes de dados iniciais quando um médico é criado
-        /// Este método deve ser MANTIDO
+        /// Applies the initial configuration when a doctor is created.
+        /// This method must be kept.
         /// </summary>
         /// <param name="doctor"></param>
         /// <param name="db"></param>

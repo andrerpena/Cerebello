@@ -24,22 +24,26 @@ namespace CerebelloWebRole.Tests
             {
                 conn.Open();
 
-                try
+                using (var command = conn.CreateCommand())
                 {
-                    using (var command = conn.CreateCommand())
+                    var databaseName = "CerebelloTEST";
+
+                    // verify the DB existence prior to creating a new one
+                    command.CommandText = string.Format("SELECT database_id FROM sys.databases WHERE Name = '{0}'", databaseName);
+
+                    object databaseId = command.ExecuteScalar();
+                    if (databaseId == null)
                     {
-                        command.CommandText =
-                        @"CREATE DATABASE CerebelloTEST ON 
-                    ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\cerebelloTEST.mdf' )
-                     FOR ATTACH ;";
+                        // according to stackoverflow it's ok to reuse commands as long as the params are cleared
+                        command.CommandText = string.Format(
+                            @"CREATE DATABASE {0} ON 
+                                    ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\cerebelloTEST.mdf' )
+                                     FOR ATTACH ;", databaseName);
 
                         command.ExecuteNonQuery();
                     }
                 }
-                catch (SqlException)
-                {
-                    // probably the database exists already because a previous test failed.. let's move on
-                }
+
                 conn.Close();
             }
         }

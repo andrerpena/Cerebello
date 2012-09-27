@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Tests
 
             resultView
                 .Setup(x => x.Render(It.IsAny<ViewContext>(), It.IsAny<TextWriter>()))
-                .Callback<ViewContext, TextWriter>((vc, tw) => { tw.Write(viewContentGetter(vc)); });
+                .Callback<ViewContext, TextWriter>((vc, tw) => tw.Write(viewContentGetter(vc)));
 
             var viewEngineResult = new ViewEngineResult(resultView.Object, mock.Object);
 

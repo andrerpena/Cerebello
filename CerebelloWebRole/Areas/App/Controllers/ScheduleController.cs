@@ -262,7 +262,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var endTime2 = endTime;
                 var min = slots.Min(s => (s.Item2 > endTime2 ? s.Item2 - endTime2 : endTime2 - s.Item2));
-                var findMin = slots.Where(s => (s.Item2 > endTime2 ? s.Item2 - endTime2 : endTime2 - s.Item2) == min).FirstOrDefault();
+                var findMin = slots.First(s => (s.Item2 > endTime2 ? s.Item2 - endTime2 : endTime2 - s.Item2) == min);
                 endTime = findMin.Item2;
             }
 
@@ -277,7 +277,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var startTime2 = startTime;
                 var min = slots.Min(s => (s.Item1 > startTime2 ? s.Item1 - startTime2 : startTime2 - s.Item1));
-                var findMin = slots.Where(s => (s.Item1 > startTime2 ? s.Item1 - startTime2 : startTime2 - s.Item1) == min).FirstOrDefault();
+                var findMin = slots.First(s => (s.Item1 > startTime2 ? s.Item1 - startTime2 : startTime2 - s.Item1) == min);
                 startTime = findMin.Item1;
             }
 
@@ -295,10 +295,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var currentUserPracticeId = this.DBUser.PracticeId;
 
-            var appointment = db.Appointments
-                .Where(a => a.Id == id)
-                .Where(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
-                .FirstOrDefault();
+            var appointment = this.db.Appointments
+                .Where(a => a.Id == id).FirstOrDefault(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId);
 
             if (appointment == null)
             {
@@ -424,10 +422,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     var currentUserPracticeId = this.DBUser.PracticeId;
 
-                    appointment = db.Appointments
-                        .Where(a => a.Id == formModel.Id)
-                        .Where(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
-                        .FirstOrDefault();
+                    appointment = this.db.Appointments
+                        .Where(a => a.Id == formModel.Id).FirstOrDefault(a => a.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId);
 
                     // If the appointment does not exist, or does not belongs to the current practice,
                     // it should go to a view indicating that.
@@ -450,13 +446,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     appointment.Type = (int)TypeAppointment.MedicalAppointment;
 
-                    var patient = new Patient();
-                    patient.Person = new Person();
-                    patient.Person.FullName = formModel.PatientName;
-                    patient.Person.Gender = (short)formModel.PatientGender;
-                    patient.Person.DateOfBirth = ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value);
-                    patient.Person.CreatedOn = this.GetUtcNow();
-                    patient.Doctor = this.Doctor;
+                    var patient = new Patient
+                        {
+                            Person =
+                                new Person
+                                    {
+                                        FullName = formModel.PatientName,
+                                        Gender = (short) formModel.PatientGender,
+                                        DateOfBirth =
+                                            ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
+                                        CreatedOn = this.GetUtcNow()
+                                    },
+                            Doctor = this.Doctor
+                        };
+
                     patient.Person.Email = formModel.PatientEmail;
                     patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail);
 
@@ -486,13 +489,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", formModel);
         }
 
+        /// <summary>
+        /// Deletes an appointment
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult Delete(int id)
         {
-            var medicine = db.Appointments.Where(m => m.Id == id).First();
+            var appointment = this.db.Appointments.First(m => m.Id == id);
             try
             {
-                this.db.Appointments.DeleteObject(medicine);
+                this.db.Appointments.DeleteObject(appointment);
                 this.db.SaveChanges();
                 return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }

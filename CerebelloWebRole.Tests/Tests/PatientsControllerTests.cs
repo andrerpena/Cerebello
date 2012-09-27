@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cerebello.Model;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
-using Cerebello.Firestarter.Helpers;
 using System.Web.Mvc;
 using CerebelloWebRole.Areas.App.Models;
 
@@ -75,20 +73,20 @@ namespace CerebelloWebRole.Tests.Tests
                 Page = 1
             });
 
-            Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
+            Assert.IsNotNull(resultAsView);
 
-            Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<PatientViewModel>));
             var model = resultAsView.Model as SearchViewModel<PatientViewModel>;
+            Assert.IsNotNull(model);
 
             Assert.AreEqual(100, model.Count);
-            Assert.AreEqual(CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, model.Objects.Count);
+            Assert.AreEqual(Code.Constants.GRID_PAGE_SIZE, model.Objects.Count);
         }
 
         [TestMethod]
         public void Search_ShouldRespectTheSearchTermWhenItsPresent()
         {
-            PatientsController controller;
+            PatientsController controller = null;
 
             try
             {
@@ -100,7 +98,6 @@ namespace CerebelloWebRole.Tests.Tests
             catch
             {
                 Assert.Inconclusive("Test initialization has failed.");
-                return;
             }
 
             var searchTerm = "an";
@@ -176,6 +173,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var patientId = patient.Id;
 
+            // now, let's add an anamnese
             var anamnese = new Anamnese()
                 {
                     PatientId = patientId,
@@ -197,6 +195,68 @@ namespace CerebelloWebRole.Tests.Tests
             // this patient must have been deleted
             patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
             Assert.IsNull(patient);
+        }
+
+        [TestMethod]
+        public void Delete_WhenTheresAMedicalCertificate()
+        {
+            PatientsController controller;
+            Doctor doctor;
+            try
+            {
+                doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                Firestarter.CreateFakePatients(doctor, this.db, 1);
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            // we now have 1 patient
+            var patient = this.db.Patients.FirstOrDefault();
+            Assert.IsNotNull(patient);
+
+            var patientId = patient.Id;
+            
+            var certificateModel = new Cerebello.Model.ModelMedicalCertificate()
+                {
+                     DoctorId = doctor.Id,
+                     Name = "model1",
+                     Text = "model1"
+                };
+
+            certificateModel.Fields.Add(new ModelMedicalCertificateField()
+                {
+                     Name = "field1"
+                });
+
+            var certificate = new Cerebello.Model.MedicalCertificate()
+                {
+                    ModelMedicalCertificate = certificateModel,
+                    Patient = patient,
+                    Text = "text",
+                    CreatedOn = DateTime.UtcNow
+                };
+
+            certificate.Fields.Add(new MedicalCertificateField()
+                {
+                      Name = "field1",
+                      Value = "value"
+                });
+
+            this.db.MedicalCertificates.AddObject(certificate);
+            this.db.SaveChanges();
+
+
+            controller.Delete(patient.Id);
+
+            // this patient must have been deleted
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            Assert.IsNull(patient);
+
         }
 
 

@@ -335,7 +335,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     appointments.Remove(appointment);
                 }
 
-                // delete anamneses manulally (SQL Server won't do this automatically)
+                // delete anamneses manually (SQL Server won't do this automatically)
                 var anamneses = patient.Anamneses.ToList();
                 while (anamneses.Any())
                 {
@@ -352,6 +352,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     anamneses.Remove(anamnese);
                 }
 
+                // delete medical certificates manually
+                var certificates = patient.MedicalCertificates.ToList();
+                while (certificates.Any())
+                {
+                    var certificate = certificates.First();
+
+                    // deletes fields within the certificate manually
+                    while (certificate.Fields.Any())
+                    {
+                        var field = certificate.Fields.First();
+                        this.db.MedicalCertificateFields.DeleteObject(field);
+                    }
+
+                    this.db.MedicalCertificates.DeleteObject(certificate);
+                    certificates.Remove(certificate);
+                }
+                
                 this.db.Patients.DeleteObject(patient);
                 this.db.SaveChanges();
                 return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);

@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Tests
 
         public void Add(IDisposable disposable)
         {
-            this.Disposing += new Action(() => disposable.Dispose());
+            this.Disposing += new Action(disposable.Dispose);
         }
 
         public event Action Disposing;

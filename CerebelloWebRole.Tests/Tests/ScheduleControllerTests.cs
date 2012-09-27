@@ -429,13 +429,13 @@ namespace CerebelloWebRole.Tests
         public void Create_SaveAppointmentConflictingWithAnother_HappyPath()
         {
             ScheduleController controller;
-            bool isDbChanged = false;
+            var isDbChanged = false;
             AppointmentViewModel vm;
 
             // Dates that will be used by this test.
             // - utcNow and localNow: used to mock Now values from Utc and User point of view.
             // - start and end: start and end time of the appointments that will be created.
-            DateTime utcNow, utcStart, utcEnd;
+            DateTime utcStart, utcEnd;
             var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
@@ -451,7 +451,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.SetupDoctor(docAndre, this.db);
 
                 var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
-                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
                 utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
                 utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
 
@@ -492,7 +492,7 @@ namespace CerebelloWebRole.Tests
                     throw new Exception("The given view-model must be valid for this test.");
 
                 // Events to know if database was changed or not.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+                this.db.SavingChanges += (s, e) => { isDbChanged = true; };
             }
             catch (Exception ex)
             {
@@ -853,10 +853,8 @@ namespace CerebelloWebRole.Tests
             Assert.IsTrue(isDbChanged, "Create actions must change DB.");
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
-                int appointmentsCountAtSameTime = db2.Appointments
-                    .Where(a => a.Start == utcStart)
-                    .Where(a => a.End == utcEnd)
-                    .Count();
+                var appointmentsCountAtSameTime = db2.Appointments
+                    .Where(a => a.Start == utcStart).Count(a => a.End == utcEnd);
 
                 Assert.AreEqual(1, appointmentsCountAtSameTime);
             }
@@ -874,14 +872,12 @@ namespace CerebelloWebRole.Tests
             bool isDbChanged = false;
             AppointmentViewModel vm;
 
-            // Dates that will be used by this test.
-            // - utcNow and localNow: used to mock Now values from Utc and User point of view.
-            // - start and end: start and end time of the appointments that will be created.
-            DateTime utcNow, utcStart, utcEnd;
+            
             var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
             // We know that Dr. House lunch time is from 12:00 until 13:00.
+            // - start and end: start and end time of the appointments that will be created.
             var start = localNow.Date.AddDays(7).AddHours(12); // 2012-07-19 13:00
             var end = start.AddMinutes(30); // 2012-07-19 13:30
 
@@ -891,10 +887,11 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
 
-                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.FirstOrDefault().Practice.WindowsTimeZoneId);
-                utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
-                utcStart = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
-                utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.First().Practice.WindowsTimeZoneId);
+
+                // Dates that will be used by this test.
+                // - utcNow and localNow: used to mock Now values from Utc and User point of view.
+                var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1035,6 +1032,57 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("09:30", data.end);
             Assert.AreEqual("segunda-feira, daqui há 19 dias", data.dateSpelled);
         }
+        #endregion
+
+        #region Delete
+
+        [TestMethod]
+        public void Delete_HappyPath()
+        {
+            ScheduleController controller;
+            Patient patient;
+            Appointment appointment;
+
+            try
+            {
+                // Creating practice and doctor.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+
+                Firestarter.CreateFakePatients(docAndre, db, 1);
+                patient = docAndre.Patients.First();
+
+                var referenceTime = DateTime.UtcNow;
+                appointment = new Appointment()
+                {
+                    Doctor = docAndre,
+                    CreatedBy = docAndre.Users.First(),
+                    CreatedOn = referenceTime,
+                    PatientId = patient.Id,
+                    Start = referenceTime,
+                    End = referenceTime + TimeSpan.FromMinutes(30)
+                };
+
+                this.db.Appointments.AddObject(appointment);
+                this.db.SaveChanges();
+
+                // Creating Asp.Net Mvc mocks.
+                var mr = new MockRepository(true);
+                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+            }
+            catch (Exception ex)
+            {
+                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                return;
+            }
+
+            controller.Delete(appointment.Id);
+
+            var deletedAppointment = this.db.Appointments.FirstOrDefault(a => a.Id == appointment.Id);
+            Assert.IsNull(deletedAppointment);
+        }
+
         #endregion
     }
 }
