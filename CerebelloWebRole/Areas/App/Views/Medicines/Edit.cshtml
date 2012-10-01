@@ -33,9 +33,9 @@
     
     @editPanel.GetHtml()
     
-    <p class="form-title">
+    <h2>
         @Html.LabelFor(model => model.Leaflets)
-    </p>    
+    </h2>    
     
     @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula" ))
     

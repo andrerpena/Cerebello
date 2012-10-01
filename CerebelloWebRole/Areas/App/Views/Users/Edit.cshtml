@@ -103,22 +103,22 @@ Cadastrar um novo usuário
         CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD))
     }
     
-    <p class="form-title">
+    <h2>
         Funções deste usuário
-    </p>
+    </h2>
     
     @editPanelRoles.GetHtml()
     
     <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsDoctor ? "" : "style=\"display: none\""))>
-        <p class="form-title">
+        <h2>
             Informações do médico
-        </p>
+        </h2>
         @editPanelMedic.GetHtml()
     </div>
     
-    <p class="form-title">
+    <h2>
         @Html.LabelFor(model => model.Address)
-    </p>
+    </h2>
 
     @Html.EditorFor(model => model.Address);
 

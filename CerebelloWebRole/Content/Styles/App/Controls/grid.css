@@ -7,14 +7,13 @@
  
  .webgrid-header
  {
-    background-color: #F5F5F5;
     font-weight: bold;
  }
  
  .webgrid-header th
  {
+    border-bottom: 1px dashed #D7D7D7;
     font-weight: bold;
-    border-bottom: 1px solid #D7D7D7;
  }
   
  .webgrid-footer

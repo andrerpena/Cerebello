@@ -9,6 +9,7 @@ namespace CerebelloWebRole.Code
 {
     public class DateTimeHelper
     {
+        [Flags]
         public enum RelativeDateOptions
         {
             ReplaceYesterdayAndTomorrow = 1,
@@ -155,7 +156,7 @@ namespace CerebelloWebRole.Code
                 if (isPast)
                     spelledDate = "há " + spelledDate;
                 else
-                    spelledDate = "daqui há " + spelledDate;
+                    spelledDate = "daqui a " + spelledDate;
 
             return spelledDate;
         }

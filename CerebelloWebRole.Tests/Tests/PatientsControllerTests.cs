@@ -117,13 +117,15 @@ namespace CerebelloWebRole.Tests.Tests
             var model = resultAsView.Model as SearchViewModel<PatientViewModel>;
 
             Assert.AreEqual(matchingPatientsCount, model.Count);
-            Assert.IsTrue(model.Objects.Count >= CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+            Assert.IsTrue(model.Objects.Count >= Code.Constants.GRID_PAGE_SIZE);
         }
 
         [TestMethod]
         public void Delete_HappyPath_WhenTheresNoAssociation()
         {
             PatientsController controller;
+            int patientId;
+            Patient patient;
 
             try
             {
@@ -131,6 +133,11 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+                patientId = patient.Id;
             }
             catch
             {
@@ -138,10 +145,6 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            // we now have 1 patient
-            var patient = this.db.Patients.FirstOrDefault();
-            Assert.IsNotNull(patient);
-            var patientId = patient.Id;
             controller.Delete(patientId);
 
             // this patient must have been deleted
@@ -153,6 +156,8 @@ namespace CerebelloWebRole.Tests.Tests
         public void Delete_HappyPath_WhenTheresAnAnamnese()
         {
             PatientsController controller;
+            int patientId;
+            Patient patient;
 
             try
             {
@@ -160,6 +165,29 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+
+                patientId = patient.Id;
+
+                // now, let's add an anamnese
+                var anamnese = new Anamnese()
+                {
+                    PatientId = patientId,
+                    CreatedOn = DateTime.UtcNow,
+                    Text = "This is my anamnese"
+                };
+
+                anamnese.Diagnoses.Add(new Diagnosis()
+                {
+                    Cid10Name = "Text",
+                    Cid10Code = "Q878"
+                });
+
+                patient.Anamneses.Add(anamnese);
+                this.db.SaveChanges();
             }
             catch
             {
@@ -167,28 +195,172 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            // we now have 1 patient
-            var patient = this.db.Patients.FirstOrDefault();
-            Assert.IsNotNull(patient);
+            controller.Delete(patientId);
 
-            var patientId = patient.Id;
+            // this patient must have been deleted
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            Assert.IsNull(patient);
+        }
 
-            // now, let's add an anamnese
-            var anamnese = new Anamnese()
+        [TestMethod]
+        public void Delete_WhenTheresAReceipt()
+        {
+            PatientsController controller;
+            int patientId;
+            Patient patient;
+
+            try
+            {
+                var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                Firestarter.CreateFakePatients(doctor, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+
+                patientId = patient.Id;
+
+                var medicine = new Medicine()
+                    {
+                        Laboratory = new Laboratory()
+                        {
+                            Name = "Lab1",
+                            Doctor = doctor
+                        },
+                        Name = "Med1",
+                        Doctor = doctor
+                    };
+
+                medicine.ActiveIngredients.Add(new ActiveIngredient()
+                    {
+                        Name = "AI1",
+                        Doctor = doctor
+                    });
+
+                this.db.Medicines.AddObject(medicine);
+
+                // now, let's add an receipt
+                var receipt = new Receipt()
                 {
                     PatientId = patientId,
-                    CreatedOn = DateTime.UtcNow,
-                    Text = "This is my anamnese"
+                    CreatedOn = DateTime.UtcNow
                 };
 
-            anamnese.Diagnoses.Add(new Diagnosis()
-            {
-                Cid10Name = "Text",
-                Cid10Code = "Q878"
-            });
+                receipt.ReceiptMedicines.Add(new ReceiptMedicine()
+                    {
+                        Medicine = medicine,
+                        Quantity = "1 caixa",
+                        Prescription = "toma 1 de manha"
+                    });
 
-            patient.Anamneses.Add(anamnese);
-            this.db.SaveChanges();
+                this.db.Receipts.AddObject(receipt);
+
+                this.db.SaveChanges();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            controller.Delete(patientId);
+
+            // this patient must have been deleted
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            Assert.IsNull(patient);
+        }
+
+        [TestMethod]
+        public void Delete_WhenTheresAnExamRequest()
+        {
+            PatientsController controller;
+            int patientId;
+            Patient patient;
+
+            try
+            {
+                var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                Firestarter.CreateFakePatients(doctor, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+
+                patientId = patient.Id;
+
+                var examRequest = new ExaminationRequest()
+                    {
+                        SYS_MedicalProcedure = new SYS_MedicalProcedure()
+                        {
+                            Code = "mcode",
+                            Name = "mname"
+                        },
+                        PatientId = patientId,
+                        CreatedOn = DateTime.UtcNow
+                    };
+
+                this.db.ExaminationRequests.AddObject(examRequest);
+
+                this.db.SaveChanges();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            controller.Delete(patientId);
+
+            // this patient must have been deleted
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            Assert.IsNull(patient);
+        }
+
+        [TestMethod]
+        public void Delete_WhenTheresAnExamResult()
+        {
+            PatientsController controller;
+            int patientId;
+            Patient patient;
+
+            try
+            {
+                var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                Firestarter.CreateFakePatients(doctor, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+
+                patientId = patient.Id;
+
+                var examResult = new ExaminationResult()
+                {
+                    SYS_MedicalProcedure = new SYS_MedicalProcedure()
+                    {
+                        Code = "mcode",
+                        Name = "mname"
+                    },
+                    PatientId = patientId,
+                    CreatedOn = DateTime.UtcNow,
+                    Text = "tudo deu certo"
+                };
+
+                this.db.ExaminationResults.AddObject(examResult);
+
+                this.db.SaveChanges();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
 
             controller.Delete(patientId);
 

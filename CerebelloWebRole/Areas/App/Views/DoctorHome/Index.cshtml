@@ -1,8 +1,32 @@
-﻿@{
+﻿@model CerebelloWebRole.Areas.App.Models.DoctorHomeViewModel
+@{
     ViewBag.Title = "Index";
     Layout = "~/Areas/App/Views/Shared/_LayoutDoctor.cshtml";
 }
 
 @section Title {
-    Início
+    Médico(a): <b>@Model.DoctorName</b>
 }
+
+<div class="widget">
+    <h2>
+        Próximas consultas agendadas
+    </h2>
+    @if (this.Model.NextAppointments.Count > 0)
+    {
+        <ul class="next-appointments-list">
+        @foreach (var appointment in this.Model.NextAppointments)
+        {
+            <li>
+                <span class="patient"><a href="@Url.Action("details", "patients", new {id = appointment.PatientId})">@appointment.PatientName</a></span>
+                <span class="date-and-time">, @appointment.DateSpelled</span>
+            </li>
+        }
+        </ul>
+    }
+    else
+    {
+        <div class="message">Não existem consultas agendadas para o futuro</div>
+    }
+</div>
+

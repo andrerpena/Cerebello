@@ -15,9 +15,9 @@ if (ViewBag.ReturnUrl != null)
 {
         @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
 }
-    <p class="form-title">
+    <h2>
         Cabeçalho
-    </p>    
+    </h2>    
     <table class="form-table">
         <tr>
             <th>@Html.LabelFor(model => model.Header1)
@@ -33,7 +33,7 @@ if (ViewBag.ReturnUrl != null)
         </tr>
     </table>
     
-    <p class="form-title">
+    <h2>
         Rodapé esquerdo
     </p>    
     <table class="form-table">
@@ -51,9 +51,9 @@ if (ViewBag.ReturnUrl != null)
         </tr>
     </table>
     
-    <p class="form-title">
+    <h2>
         Rodapé direito
-    </p>    
+    </h2>    
     <table class="form-table">
         <tr>
             <th>@Html.LabelFor(model => model.FooterRight1)

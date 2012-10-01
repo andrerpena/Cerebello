@@ -30,9 +30,9 @@ Cadastrar um novo paciente
     @Html.ValidationSummary(false)
     @editPanel.GetHtml();
 
-    <p class="form-title">
+    <h2>
         @Html.LabelFor(model => model.Address)
-    </p>
+    </h2>
     
     @Html.EditorFor(model => model.Address)
     

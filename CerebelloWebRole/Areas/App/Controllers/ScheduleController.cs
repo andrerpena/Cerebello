@@ -308,7 +308,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var appointmentLocalStart = ConvertToLocalDateTime(this.Practice, appointment.Start);
             var appointmentLocalEnd = ConvertToLocalDateTime(this.Practice, appointment.End);
 
-            AppointmentViewModel viewModel = new AppointmentViewModel()
+            var viewModel = new AppointmentViewModel()
             {
                 Id = appointment.Id,
                 Date = appointmentLocalStart.Date,

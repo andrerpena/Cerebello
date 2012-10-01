@@ -10,16 +10,25 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public int? Id { get; set; }
 
+        /// <summary>
+        /// Local time converted date
+        /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Data da consulta")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Date { get; set; }
 
+        /// <summary>
+        /// Local time converted start
+        /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Início")]
         [TimeDataType]
         public string Start { get; set; }
 
+        /// <summary>
+        /// Local time converted end
+        /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Fim")]
         [TimeDataType]
