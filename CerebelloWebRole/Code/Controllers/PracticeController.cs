@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// User
         /// </summary>
-        public User DBUser { get; private set; }
+        public User DbUser { get; private set; }
 
         /// <summary>
         /// Consultório atual
@@ -63,7 +63,7 @@ namespace CerebelloWebRole.Code
 
             // setting up user
             var identity = this.User as AuthenticatedPrincipal;
-            this.DBUser = (User)this.db.Users.First(p => p.Id == identity.Profile.Id);
+            this.DbUser = (User)this.db.Users.First(p => p.Id == identity.Profile.Id);
 
             // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
@@ -71,7 +71,7 @@ namespace CerebelloWebRole.Code
             var actionName = this.RouteData.Values["action"] as string;
 
             var practice = this.db.Users
-                .Where(u => u.Id == this.DBUser.Id && u.Practice.UrlIdentifier == practiceName)
+                .Where(u => u.Id == this.DbUser.Id && u.Practice.UrlIdentifier == practiceName)
                 .Select(u => u.Practice)
                 .SingleOrDefault();
 

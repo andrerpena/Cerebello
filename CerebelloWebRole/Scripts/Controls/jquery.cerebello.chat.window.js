@@ -5,7 +5,7 @@
 
         // Defaults:
         this.defaults = {
-            roomId: null,
+            practice: null,
             myUser: null,
             otherUser: null,
             onClose: function () { }
@@ -56,13 +56,12 @@
             });
             $.ajax({
                 type: "POST",
-                url: "/chat/newmessage",
+                url: "/p/" + _this.opts.practice + "/chat/newmessage",
                 data: {
-                    roomId: _this.opts.roomId,
-                    myUserId: _this.opts.myUser.Id,
                     otherUserId: _this.opts.otherUser.Id,
                     message: messageText
                 },
+                cache: false,
                 success: function () {
                     // fine
                 },
@@ -78,12 +77,11 @@
             $.ajax({
                 type: "GET",
                 async: false,
-                url: "/chat/getmessagehistory",
+                url: "/p/" + _this.opts.practice + "/chat/getmessagehistory",
                 data: {
-                    roomId: _this.opts.roomId,
-                    myUserId: _this.opts.myUser.Id,
                     otherUserId: _this.opts.otherUser.Id
                 },
+                cache: false,
                 success: function (data) {
                     // fine
                     // this otherUserId is a number toStringed

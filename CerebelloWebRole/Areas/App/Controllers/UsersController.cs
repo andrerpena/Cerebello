@@ -197,7 +197,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         "Nome de usuário inválido.");
                 }
 
-                var loggedUser = this.DBUser;
+                var loggedUser = this.DbUser;
 
                 // Looking for another user with the same UserName or Email.
                 var conflictingData = this.db.Users
@@ -404,7 +404,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var currentUserId = this.DBUser.Id;
+                var currentUserId = this.DbUser.Id;
                 bool canDeleteUsers = this.db.Users
                     .Where(u => u.Id == currentUserId)
                     .Select(u => u.IsOwner || u.Administrator != null)
@@ -458,7 +458,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult ChangePassword()
         {
-            var loggedUser = this.DBUser;
+            var loggedUser = this.DbUser;
             var defaultPasswordHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, loggedUser.PasswordSalt);
             bool isDefaultPwd = defaultPasswordHash == loggedUser.Password;
             this.ViewBag.IsDefaultPassword = isDefaultPwd;
@@ -479,7 +479,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (vm.Password != vm.RepeatPassword)
                 this.ModelState.AddModelError(() => vm.RepeatPassword, "A senha desejada deve ser repetida.");
 
-            var loggedUser = this.DBUser;
+            var loggedUser = this.DbUser;
 
             // Checking the current password (the one that will become old)
             // - this is needed to allow the person to go away from the computer...

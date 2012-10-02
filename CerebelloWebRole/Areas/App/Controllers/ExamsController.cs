@@ -99,7 +99,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 // Security issue... must check current user practice against the practice of the edited objects.
-                if (this.DBUser.Practice.Id != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
+                if (this.DbUser.Practice.Id != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
                 {
                     return View("NotFound", formModel);
                 }
@@ -141,7 +141,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var practiceId = this.DBUser.PracticeId;
+                var practiceId = this.DbUser.PracticeId;
 
                 var modelObj = db.ExaminationRequests
                     .Where(m => m.Id == id)

@@ -9,7 +9,7 @@ using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    public class ChatController : Controller
+    public class ChatController : PracticeController
     {
         /// <summary>
         /// Sets a user offline
@@ -19,8 +19,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// off. The good side is that, if the person is really on, he/she will automatically be back on
         /// in a few seconds.
         /// </remarks>
-        public void SetUserOffline(int roomId, int userId)
+        public void SetUserOffline(int userId)
         {
+            var roomId = this.Practice.Id;
+
             if (ChatServer.RoomExists(roomId) && ChatServer.Rooms[roomId].UserExists(userId))
                 ChatServer.Rooms[roomId].SetUserOffline(userId);
         }
@@ -36,14 +38,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </param>
         [HttpGet]
         // this is for debug purpose only
-        public JsonResult UserList(int roomId, int userId, bool noWait = false)
+        public JsonResult UserList(bool noWait = false)
         {
+            var roomId = this.Practice.Id;
+            var myUserId = this.DbUser.Id;
+
             // if either the room or the user is not set up yet, do it
             this.SetupRoomIfNonexisting(roomId);
-            this.SetupUserIfNonexisting(roomId, userId);
+            this.SetupUserIfNonexisting(roomId, myUserId);
 
             // updates the status of the current user
-            ChatServer.Rooms[roomId].SetUserOnline(userId);
+            ChatServer.Rooms[roomId].SetUserOnline(myUserId);
             List<ChatUser> result = new List<ChatUser>();
 
             // this is the async operation
@@ -51,7 +56,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // this is necessary to remove the current user from
                 // the buddy list before retrieving
-                var roomUsersExcludingCurrentUser = users.Where(u => u.Id != userId).OrderBy(u => u.Name).ToList();
+                var roomUsersExcludingCurrentUser = users.Where(u => u.Id != myUserId).OrderBy(u => u.Name).ToList();
                 result = roomUsersExcludingCurrentUser;
             }, noWait);
 
@@ -59,8 +64,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetMessages(int roomId, int myUserId, long? timeStamp = null)
+        public JsonResult GetMessages(long? timeStamp = null)
         {
+            var roomId = this.Practice.Id;
+            var myUserId = this.DbUser.Id;
+
             // if either the room or the user is not set up yet, do it
             this.SetupRoomIfNonexisting(roomId);
             this.SetupUserIfNonexisting(roomId, myUserId);
@@ -95,8 +103,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetMessageHistory(int roomId, int myUserId, int otherUserId, long? timeStamp = null)
+        public JsonResult GetMessageHistory(int otherUserId, long? timeStamp = null)
         {
+            var roomId = this.Practice.Id;
+            var myUserId = this.DbUser.Id;
+
             this.SetupRoomIfNonexisting(roomId);
             this.SetupUserIfNonexisting(roomId, myUserId);
             this.SetupUserIfNonexisting(roomId, otherUserId);
@@ -114,10 +125,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public JsonResult NewMessage(int roomId, int myUserId, int otherUserId, string message)
+        public JsonResult NewMessage(int otherUserId, string message)
         {
+            var myUserId = this.DbUser.Id;
+
             if (myUserId == otherUserId)
                 throw new Exception("Cannot send a message to yourself");
+
+            var roomId = this.Practice.Id;
 
             //ToDo: store this message in the DB.
             this.SetupRoomIfNonexisting(roomId);
@@ -128,20 +143,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // new let's try to persist it
 
-            using (var db = new CerebelloEntities())
+            db.ChatMessages.AddObject(new Cerebello.Model.ChatMessage()
             {
+                Date = DateTime.UtcNow,
+                Message = message,
+                UserFromId = myUserId,
+                UserToId = otherUserId,
+                PracticeId = roomId
+            });
 
-                db.ChatMessages.AddObject(new Cerebello.Model.ChatMessage()
-                {
-                    Date = DateTime.UtcNow,
-                    Message = message,
-                    UserFromId = myUserId,
-                    UserToId = otherUserId,
-                    PracticeId = roomId
-                });
-
-                db.SaveChanges();
-            }
+            db.SaveChanges();
 
             return null;
         }
@@ -172,38 +183,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
             lock (roomLock)
             {
                 // if the given room hasn't been set up yet, it must be done now
-                if (!ChatServer.RoomExists(roomId))
+                if (ChatServer.RoomExists(roomId)) return;
+                // creates the chat room
+                var newChatRoom = new ChatRoom(roomId);
+                ChatServer.Rooms.Add(roomId, newChatRoom);
+
+                // var practiceUsers = practice.Users.OrderBy(u => u.Person.FullName);
+                var practiceUsers = this.db.Users.Where(u => u.PracticeId == roomId).OrderBy(u => u.Person.FullName);
+
+                // adds users to the room
+                foreach (var u in practiceUsers)
                 {
-                    // creates the chat room
-                    var newChatRoom = new ChatRoom(roomId);
-                    ChatServer.Rooms.Add(roomId, newChatRoom);
-
-                    using (var db = new CerebelloEntities())
-                    {
-                        // var practiceUsers = practice.Users.OrderBy(u => u.Person.FullName);
-                        var practiceUsers = db.Users.Where(u => u.PracticeId == roomId).OrderBy(u => u.Person.FullName);
-
-                        // adds users to the room
-                        foreach (var u in practiceUsers)
-                        {
-                            newChatRoom.Users.Add(u.Id, GetChatUserFromUser(u));
-                        }
-
-                        // now adds conversations to the history
-
-                        newChatRoom.Messages.AddRange((from m in db.ChatMessages
-                                                       where m.PracticeId == roomId
-                                                       orderby m.Date descending
-                                                       select m
-                                                       ).ToList().Select(m => new CerebelloWebRole.Code.Chat.ChatMessage()
-                                                       {
-                                                           UserFrom = GetChatUserFromUser(m.UserTo),
-                                                           UserTo = GetChatUserFromUser(m.UserFrom),
-                                                           Message = m.Message,
-                                                           Timestamp = m.Date.Ticks
-                                                       }).Take(400).AsEnumerable().Reverse());
-                    }
+                    newChatRoom.Users.Add(u.Id, GetChatUserFromUser(u));
                 }
+
+                // now adds conversations to the history
+
+                newChatRoom.Messages.AddRange((from m in this.db.ChatMessages
+                                               where m.PracticeId == roomId
+                                               orderby m.Date descending
+                                               select m
+                                              ).ToList().Select(m => new CerebelloWebRole.Code.Chat.ChatMessage()
+                                                  {
+                                                      UserFrom = GetChatUserFromUser(m.UserTo),
+                                                      UserTo = GetChatUserFromUser(m.UserFrom),
+                                                      Message = m.Message,
+                                                      Timestamp = m.Date.Ticks
+                                                  }).Take(400).AsEnumerable().Reverse());
             }
         }
 
@@ -220,20 +226,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             lock (userLock)
             {
-                if (!ChatServer.Rooms[roomId].UserExists(userId))
-                {
-                    using (var db = new CerebelloEntities())
-                    {
-                        var user = db.Users.Include("Person").FirstOrDefault(u => u.Id == userId);
+                if (ChatServer.Rooms[roomId].UserExists(userId)) return;
+                var user = db.Users.Include("Person").FirstOrDefault(u => u.Id == userId);
 
-                        // in the case the current user does not exist, it has been added after the room has been set up.
-                        ChatServer.Rooms[roomId].AddUser(new ChatUser()
-                        {
-                            Id = user.Id,
-                            Name = user.Person.FullName
-                        });
-                    }
-                }
+                // in the case the current user does not exist, it has been added after the room has been set up.
+                ChatServer.Rooms[roomId].AddUser(new ChatUser()
+                    {
+                        Id = user.Id,
+                        Name = user.Person.FullName
+                    });
             }
         }
     }

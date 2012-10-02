@@ -20,7 +20,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var model = new PracticeHomeIndexViewModel();
             model.Doctors = DoctorsController.GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow());
 
-            var currentPracticeId = this.DBUser.PracticeId;
+            var currentPracticeId = this.DbUser.PracticeId;
 
             model.PatientsCount = this.db.Patients
                 .Where(p => p.Doctor.Users.FirstOrDefault().PracticeId == currentPracticeId)

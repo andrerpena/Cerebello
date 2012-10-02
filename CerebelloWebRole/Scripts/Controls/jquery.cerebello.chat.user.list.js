@@ -6,7 +6,7 @@
         // Defaults:
         this.defaults = {
             user: null,
-            roomId: null
+            practice: null
         };
 
         //Extending options:
@@ -25,7 +25,7 @@
             var _this = this;
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
-                roomId: _this.opts.roomId,
+                practice: _this.opts.practice,
                 myUser: _this.opts.user,
                 otherUser: otherUser,
                 onClose: function () {
@@ -38,10 +38,8 @@
         this.getMessages = function () {
             var _this = this;
             $.ajax({
-                url: "/chat/getmessages",
+                url: "/p/" + _this.opts.practice + "/chat/getmessages",
                 data: {
-                    roomId: _this.opts.roomId,
-                    myUserId: _this.opts.user.Id,
                     timestamp: _this.lastMessageCheckTimeStamp
                 },
                 success: function (data) {
@@ -66,6 +64,10 @@
                     _this.getMessages();
                 },
                 error: function () {
+
+                    setTimeout(function () {
+                        _this.getMessages();
+                    }, 20000);
                 }
             });
         }
@@ -76,12 +78,11 @@
             if (noWait == undefined)
                 noWait = false;
             $.ajax({
-                url: "/chat/userlist",
+                url: "/p/" + _this.opts.practice + "/chat/userlist",
                 data: {
                     noWait: noWait,
-                    roomId: _this.opts.roomId,
-                    userId: _this.opts.user.Id
                 },
+                cache: false,
                 success: function (data, s) {
 
                     _this.chatContainer.getContent().html('');
@@ -111,7 +112,9 @@
                 error: function () {
                     // too bad but we can't let the system down, go ahead and try again
                     // there must be some error logging in the server so, let's not handle this here
-                    _this.getUserList();
+                    setTimeout(function () {
+                        _this.getUserList();
+                    }, 20000);
                 }
             });
 
@@ -129,18 +132,7 @@
                 showTextBox: false,
                 canClose: false
             });
-
-            // when te user leaves this page, he/she should be disconnected
-            $(window).unload(
-				function () {
-				    $.get("/chat/setuseroffline",
-					{
-					    roomId: _this.opts.roomId,
-					    userId: _this.opts.user.Id
-					});
-				}
-			);
-
+            
             // first
             _this.getUserList(true);
             _this.getMessages();
