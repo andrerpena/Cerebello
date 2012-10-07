@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ConfigScheduleViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
+    this.ViewBag.Title = "Configurações da agenda · Cerebello";
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }
 @section Title {

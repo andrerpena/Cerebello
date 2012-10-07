@@ -445,6 +445,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
+    <Folder Include="Code\NewFolder1\" />
     <Folder Include="Code\Setup\" />
     <Folder Include="Content\Images\App\Site\" />
     <Folder Include="Resources\" />

@@ -1,5 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ConfigDocumentsViewModel
 @{
+    ViewBag.Title = "Configurações de documentos · Cerebello";
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }
 @section Title {
@@ -35,7 +36,7 @@ if (ViewBag.ReturnUrl != null)
     
     <h2>
         Rodapé esquerdo
-    </p>    
+    </h2>    
     <table class="form-table">
         <tr>
             <th>@Html.LabelFor(model => model.FooterLeft1)
