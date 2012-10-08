@@ -33,7 +33,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var anamnese = db.Anamnese.Where(a => a.Id == id).First();
+            var anamnese = this.db.Anamnese.First(a => a.Id == id);
             return this.View(this.GetViewModel(anamnese));
         }
 
@@ -59,7 +59,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 viewModel = new AnamneseViewModel()
                 {
-                    Id = id,
+                    Id = null,
                     PatientId = patientId
                 };
 
@@ -75,10 +75,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(AnamneseViewModel formModel)
         {
-            Anamnese anamnese = null;
-
             if (this.ModelState.IsValid)
             {
+                Anamnese anamnese = null;
                 if (formModel.Id == null)
                 {
                     anamnese = new Anamnese()
@@ -89,7 +88,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.db.Anamnese.AddObject(anamnese);
                 }
                 else
-                    anamnese = db.Anamnese.Where(a => a.Id == formModel.Id).FirstOrDefault();
+                    anamnese = this.db.Anamnese.FirstOrDefault(a => a.Id == formModel.Id);
 
                 anamnese.Text = formModel.Text;
 
@@ -97,7 +96,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // step 1: add new
                 foreach (var diagnosis in formModel.Diagnoses)
                 {
-                    if (!anamnese.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Cid10Code))
+                    if (anamnese.Diagnoses.All(ans => ans.Cid10Code != diagnosis.Cid10Code))
                         anamnese.Diagnoses.Add(new Diagnosis()
                         {
                             Cid10Code = diagnosis.Cid10Code,
@@ -110,7 +109,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // step 2: remove deleted
                 foreach (var diagnosis in anamnese.Diagnoses)
                 {
-                    if (!formModel.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Cid10Code))
+                    if (formModel.Diagnoses.All(ans => ans.Cid10Code != diagnosis.Cid10Code))
                         harakiriQueue.Enqueue(diagnosis);
                 }
 
@@ -151,8 +150,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult LookupDiagnoses(string term, int pageSize, int pageIndex)
         {
             // read CID10.xml as an embedded resource
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.DtdProcessing = DtdProcessing.Parse;
+            XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Parse};
             XmlReader reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
             XDocument doc = XDocument.Load(reader);
 
@@ -183,7 +181,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var anamnese = db.Anamnese.Where(m => m.Id == id).First();
+                var anamnese = this.db.Anamnese.First(m => m.Id == id);
 
                 // get rid of associations
                 while (anamnese.Diagnoses.Count > 0)

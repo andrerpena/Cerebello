@@ -94,7 +94,7 @@
                     // too bad
                 }
             });
-        }
+        };
     }
 
     // Separate functionality from object creation

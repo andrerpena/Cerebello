@@ -628,7 +628,7 @@ namespace Cerebello.Firestarter.Helpers
             ProcTipo result = null;
             if (createNew)
             {
-                result = new ProcTipo(otherProcTipoInSet: found)
+                result = new ProcTipo(found)
                 {
                     Cbhpm = this,
                     Codigo = code,
@@ -677,7 +677,7 @@ namespace Cerebello.Firestarter.Helpers
             return result;
         }
 
-        public static string GetCodeSimple(string code)
+        private static string GetCodeSimple(string code)
         {
             var match = Regex.Match(code, @"(\d\.\d\d\.\d\d\.\d\d)-\d");
             return match.Groups[1].Value;
@@ -698,17 +698,16 @@ namespace Cerebello.Firestarter.Helpers
                 this.value2 = value2;
             }
 
-            private T1 value1;
-            private T2 value2;
+            private readonly T1 value1;
+            private readonly T2 value2;
 
-            public T1 Value1 { get { return this.value1; } }
-            public T2 Value2 { get { return this.value2; } }
+            private T1 Value1 { get { return this.value1; } }
+            private T2 Value2 { get { return this.value2; } }
 
             public bool Equals(StructTuple<T1, T2> other)
             {
-                if (EqualityComparer<T1>.Default.Equals(this.Value1, other.Value1)) return true;
-                if (EqualityComparer<T2>.Default.Equals(this.Value2, other.Value2)) return true;
-                return false;
+                return EqualityComparer<T1>.Default.Equals(this.Value1, other.Value1)
+                    || EqualityComparer<T2>.Default.Equals(this.Value2, other.Value2);
             }
 
             public override bool Equals(object obj)
@@ -743,17 +742,17 @@ namespace Cerebello.Firestarter.Helpers
                 }
                 else
                 {
-                    var sequences = new string[][]
-                            {
+                    var sequences = new[]
+                        {
                                 new string[] { },
-                                new string[] { "código", "procedimentos", "porte" },
-                                new string[] { "código", "procedimentos", "porte", "custo oper" },
-                                new string[] { "código", "procedimentos", "porte", "custo oper", "porte anest" },
-                                new string[] { "código", "procedimentos", "porte", "custo oper", "nº de aux" },
-                                new string[] { "código", "procedimentos", "porte", "custo oper", "nº de aux", "porte anest" },
-                                new string[] { "código", "procedimentos", "ur", "filme ou doc", "porte", "custo oper" },
-                                new string[] { "código", "procedimentos", "inc", "filme ou doc", "porte", "custo oper" },
-                                new string[] { "código", "procedimentos", "inc", "filme ou doc", "porte", "custo oper", "nº de aux", "porte anest" },
+                                new[] { "código", "procedimentos", "porte" },
+                                new[] { "código", "procedimentos", "porte", "custo oper" },
+                                new[] { "código", "procedimentos", "porte", "custo oper", "porte anest" },
+                                new[] { "código", "procedimentos", "porte", "custo oper", "nº de aux" },
+                                new[] { "código", "procedimentos", "porte", "custo oper", "nº de aux", "porte anest" },
+                                new[] { "código", "procedimentos", "ur", "filme ou doc", "porte", "custo oper" },
+                                new[] { "código", "procedimentos", "inc", "filme ou doc", "porte", "custo oper" },
+                                new[] { "código", "procedimentos", "inc", "filme ou doc", "porte", "custo oper", "nº de aux", "porte anest" },
                             };
 
                     bool isColumnsValid = curPagina.FixColumnsOrder(sequences);
@@ -780,7 +779,7 @@ namespace Cerebello.Firestarter.Helpers
             public int? Numero { get; set; }
 
             public Cbhpm Cbhpm { get; set; }
-            public Capitulo Capitulo { get; set; }
+            public Capitulo Capitulo { get; set; } 
             public ProcTipo ProcTipo { get; set; }
 
             public List<string> Colunas { get; private set; }

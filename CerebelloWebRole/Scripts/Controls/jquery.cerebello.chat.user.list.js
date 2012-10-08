@@ -134,8 +134,10 @@
             });
             
             // first
-            _this.getUserList(true);
-            _this.getMessages();
+            setTimeout(function() {
+                _this.getUserList(true);
+                _this.getMessages();
+            }, 10000);
         }
     };
 

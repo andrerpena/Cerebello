@@ -41,8 +41,6 @@ namespace CerebelloWebRole.Code
                 string.IsNullOrEmpty(doctor.MedicalEntityJurisdiction) ? "{0}" : "{0}-{1}",
                 doctor.SYS_MedicalEntity.Code,
                 doctor.MedicalEntityJurisdiction);
-
-            return;
         }
     }
 }

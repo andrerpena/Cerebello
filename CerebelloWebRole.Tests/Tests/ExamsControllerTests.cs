@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Cerebello;
-using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code;

@@ -55,7 +55,7 @@
                     var $linkCancel = $("<a/>").attr("href", "#").text("cancelar").appendTo($submitBar);
 
                     // will enable the submit button as soon as the correct objectType is typed
-                    $inputText.bind("keyup", function (e) {
+                    $inputText.bind("keyup", function () {
                         if ($inputText.val() == _this.opts.objectType)
                             $inputSubmit.removeAttr("disabled");
                         else

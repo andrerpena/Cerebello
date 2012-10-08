@@ -62,11 +62,11 @@
                         $balloon.hide();
                         $("html").unbind("click", handler);
                     }
-                }
+                };
                 $("html").click("click", handler);
             });
 
-            $(window).resize(function (e) {
+            $(window).resize(function () {
                 $balloon.hide();
             });
         }

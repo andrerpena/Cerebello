@@ -1,36 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Web;
 using System.Web.Security;
-using System.Security.Principal;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Code.Security.Principals;
 using System.Linq;
 using CerebelloWebRole.Models;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Controllers;
 
 namespace CerebelloWebRole.Code
 {
-    public class SecurityManager
+    public static class SecurityManager
     {
-        public static void Logout()
-        {
-            FormsAuthentication.SignOut();
-        }
-
-        public static string GetLoggedUserSecurityToken()
-        {
-            return ((FormsIdentity)HttpContext.Current.User.Identity).Ticket.UserData;
-        }
-
         /// <summary>
         /// Creates a new user and adds it to the storage object context.
         /// </summary>
         /// <param name="createdUser">Output paramater that returns the new user.</param>
         /// <param name="registrationData">Object containing informations about the user to be created.</param>
         /// <param name="db">Storage object context used to add the new user. It won't be saved, just changed.</param>
+        /// <param name="utcNow"> </param>
         /// <param name="practiceId">The id of the practice that the new user belongs to.</param>
         /// <returns>An enumerated value indicating what has happened.</returns>
         public static CreateUserResult CreateUser(out User createdUser, CreateAccountViewModel registrationData, CerebelloEntities db, DateTime utcNow, int? practiceId)
@@ -65,7 +52,7 @@ namespace CerebelloWebRole.Code
 
             bool isUserNameAlreadyInUse =
                 practiceId != null &&
-                db.Users.Where(u => u.UserNameNormalized == normalizedUserName && u.PracticeId == practiceId).Any();
+                db.Users.Any(u => u.UserNameNormalized == normalizedUserName && u.PracticeId == practiceId);
 
             if (isUserNameAlreadyInUse)
             {
@@ -107,22 +94,22 @@ namespace CerebelloWebRole.Code
 
             try
             {
-                string securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, entities, out loggedInUser);
+                var securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, entities, out loggedInUser);
 
-                DateTime expiryDate = DateTime.UtcNow.AddYears(1);
+                var expiryDate = DateTime.UtcNow.AddYears(1);
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
                      1, loginModel.UserNameOrEmail, DateTime.UtcNow, expiryDate, true,
                      securityToken, FormsAuthentication.FormsCookiePath);
 
-                string encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                cookie.Expires = expiryDate;
+                var encryptedTicket = FormsAuthentication.Encrypt(ticket);
+                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+                    {Expires = expiryDate};
 
                 HttpContext.Current.Response.Cookies.Add(cookie);
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // add log information about this exception
                 FormsAuthentication.SignOut();
@@ -133,16 +120,14 @@ namespace CerebelloWebRole.Code
         public static void SetPrincipal()
         {
             Principal principal = null;
-            FormsIdentity identity;
 
             if (HttpContext.Current.Request.IsAuthenticated)
             {
-                identity = (FormsIdentity)HttpContext.Current.User.Identity;
+                FormsIdentity identity = (FormsIdentity)HttpContext.Current.User.Identity;
 
-                UserData userProfile;
                 try
                 {
-                    userProfile = SecurityTokenHelper.FromString(((FormsIdentity)identity).Ticket.UserData).UserData;
+                    UserData userProfile = SecurityTokenHelper.FromString(((FormsIdentity)identity).Ticket.UserData).UserData;
                     // UserHelper.UpdateLastActiveOn(userProfile);
                     principal = new AuthenticatedPrincipal(identity, userProfile);
                 }
@@ -163,8 +148,11 @@ namespace CerebelloWebRole.Code
         /// Authenticates the given user and returns a string corresponding to his/her
         /// identity
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="practiceIdentifier"> </param>
         /// <param name="entities"></param>
+        /// <param name="userNameOrEmail"> </param>
+        /// <param name="password"> </param>
+        /// <param name="loggedInUser"> </param>
         /// <returns></returns>
         public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, CerebelloEntities entities, out User loggedInUser)
         {
@@ -174,8 +162,8 @@ namespace CerebelloWebRole.Code
             var isEmail = userNameOrEmail.Contains("@");
 
             loggedInUser = isEmail ?
-                entities.Users.Where(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault() :
-                entities.Users.Where(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier).FirstOrDefault();
+                entities.Users.FirstOrDefault(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier) :
+                entities.Users.FirstOrDefault(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
 
             if (loggedInUser == null)
                 throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");
@@ -193,7 +181,7 @@ namespace CerebelloWebRole.Code
                     Id = loggedInUser.Id,
                     Email = loggedInUser.Person.Email,
                     FullName = loggedInUser.Person.FullName,
-                    IsUsingDefaultPassword = password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
+                    IsUsingDefaultPassword = password == Constants.DEFAULT_PASSWORD,
                 }
             };
 

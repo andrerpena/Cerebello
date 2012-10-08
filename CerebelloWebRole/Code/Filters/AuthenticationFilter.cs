@@ -31,7 +31,7 @@ namespace CerebelloWebRole.Code.Filters
                                     {
                                         error = true,
                                         errorType = "unauthorized",
-                                        errorMessage = "The current user is not authorized to access the resource"
+                                        errorMessage = "The current user is not authorized to access the resource because it's not authenticated"
                                     },
                                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
                             };

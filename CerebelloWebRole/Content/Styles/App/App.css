@@ -882,7 +882,6 @@ ul.dayoff-list .delete {
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
 }
 
 /* patients */
@@ -1214,7 +1213,6 @@ ul.time-table li {
     position: relative;
     top: 3px;
     width: 16px;
-    background-image: url("/content/images/app/icons16/warning.png");
 }
 
 .string-list li {
@@ -1299,12 +1297,7 @@ div.message-help {
     .top-bar-menu-button.add-new-button {
         background-image: url("/content/images/app/icons16/plus.png");
     }
-
-    .top-bar-menu-button.schedule-button {
-        background-image: url("/content/images/app/icons16/calendar.png");
-    }
-
-
+    
 
 .next-appointments-list {
 }

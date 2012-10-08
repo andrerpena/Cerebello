@@ -22,41 +22,6 @@ Prontuário
             paciente</a></li>
     </ul>
 }
-@section Scripts
-{
-    @*<script type="text/javascript">
-        $(function () {
-            var mvcData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.PatientAgeDistribution)));
-
-            var male = [];
-            var female = [];
-
-            for(var i=0; i< mvcData.length; i++)
-            {
-                if(mvcData[i].Gender == 0)
-                    male.push([mvcData[i].Age, mvcData[i].Count]);
-                else
-                    female.push([mvcData[i].Age, mvcData[i].Count]);
-            }
-
-			$.jqplot($("#placeholder"), [male, female], {
-				series: {
-					stack: 0,
-					bars: { show: true, barWidth: 0.6 },
-				},
-				yaxis: { color: "#cccccc", position: "right", show: false },
-				xaxis: { color: "#cccccc" },
-				grid: {
-					borderColor: "#cccccc",
-					borderWidth: 0
-				},
-				colors: ["#AFC2E0", "pink"]
-			});
-            
-
-        });
-    </script>*@
-}
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
     @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())

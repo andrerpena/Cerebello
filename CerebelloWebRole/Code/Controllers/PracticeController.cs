@@ -1,26 +1,17 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Security;
 using System;
 
 namespace CerebelloWebRole.Code
 {
     public abstract class PracticeController : CerebelloController
     {
-        public PracticeController()
-        {
-        }
-        
-        /// <summary>
-        /// User
-        /// </summary>
-        public User DbUser { get; private set; }
-
         /// <summary>
         /// Consultório atual
         /// </summary>
-        public Practice Practice { get; private set; }
+        protected Practice Practice { get; set; }
 
         /// <summary>
         /// Converts the specified UTC date and time for the location of the current practice.
@@ -28,7 +19,7 @@ namespace CerebelloWebRole.Code
         /// <param name="practice"> </param>
         /// <param name="utcDateTime"></param>
         /// <returns></returns>
-        public static DateTime ConvertToLocalDateTime(Practice practice, DateTime utcDateTime)
+        protected static DateTime ConvertToLocalDateTime(Practice practice, DateTime utcDateTime)
         {
             if (practice == null) throw new ArgumentNullException("practice");
 
@@ -62,8 +53,7 @@ namespace CerebelloWebRole.Code
             base.OnActionExecuting(filterContext);
 
             // setting up user
-            var identity = this.User as AuthenticatedPrincipal;
-            this.DbUser = (User)this.db.Users.First(p => p.Id == identity.Profile.Id);
+            Debug.Assert(this.DbUser != null);
 
             // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
@@ -80,27 +70,25 @@ namespace CerebelloWebRole.Code
                 filterContext.Result = new HttpUnauthorizedResult();
                 return;
             }
-            else
+
+            this.Practice = practice;
+            this.ViewBag.Practice = practice;
+            this.ViewBag.PracticeName = practice.Name;
+
+            // Redirect to VerifyPracticeAndEmail, if the practice has not been verified yet.
+            if (practice.VerificationDate == null)
             {
-                this.Practice = practice;
-                this.ViewBag.Practice = practice;
-                this.ViewBag.PracticeName = practice.Name;
+                filterContext.Result = this.RedirectToAction("VerifyPracticeAndEmail", "Authentication", new { area = "", practice = practiceName });
+                return;
+            }
 
-                // Redirect to VerifyPracticeAndEmail, if the practice has not been verified yet.
-                if (practice.VerificationDate == null)
-                {
-                    filterContext.Result = this.RedirectToAction("VerifyPracticeAndEmail", "Authentication", new { area = "", practice = practiceName });
-                    return;
-                }
-
-                // Redirect to welcome screen if it was not presented yet.
-                if (this.Practice.ShowWelcomeScreen
-                    && !(controllerName.ToLowerInvariant() == "practicehome"
-                        && actionName.ToLowerInvariant() == "welcome"))
-                {
-                    filterContext.Result = this.RedirectToAction("Welcome", "PracticeHome", new { area = "App", practice = practiceName });
-                    return;
-                }
+            // Redirect to welcome screen if it was not presented yet.
+            if (this.Practice.ShowWelcomeScreen
+                && !(controllerName.ToLowerInvariant() == "practicehome"
+                     && actionName.ToLowerInvariant() == "welcome"))
+            {
+                filterContext.Result = this.RedirectToAction("Welcome", "PracticeHome", new { area = "App", practice = practiceName });
+                return;
             }
 
             // Setting a common ViewBag value.

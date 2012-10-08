@@ -225,6 +225,7 @@
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\AuthenticationFilter.cs" />
     <Compile Include="Code\Filters\FirstAccessFilter.cs" />
+    <Compile Include="Code\Filters\PermissionAttribute.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
     <Compile Include="Code\Helpers\AsyncHelper.cs" />
     <Compile Include="Code\Helpers\Cipher.cs" />
