@@ -10,17 +10,12 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
-using CerebelloWebRole.Code.Mvc;
 using HtmlAgilityPack;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PatientsController : DoctorController
     {
-        public PatientsController()
-        {
-        }
-
         private class SessionEvent
         {
             public int Id { get; set; }
@@ -247,18 +242,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(PatientViewModel formModel)
         {
-            Patient patient = null;
-
             if (ModelState.IsValid)
             {
-                bool isEditing = formModel.Id != null;
+                var isEditing = formModel.Id != null;
 
+                Patient patient = null;
                 if (isEditing)
                     patient = this.db.Patients.First(p => p.Id == formModel.Id);
                 else
                 {
-                    patient = new Patient();
-                    patient.Person = new Person();
+                    patient = new Patient {Person = new Person()};
                     this.db.Patients.AddObject(patient);
                 }
 
@@ -274,7 +267,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
-                patient.Person.Email = formModel.Email;
+                patient.Person.Email = !string.IsNullOrEmpty(formModel.Email) ? formModel.Email.ToLower() : null;
                 patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
                 patient.Person.PhoneLand = formModel.PhoneLand;
                 patient.Person.PhoneCell = formModel.PhoneCell;
