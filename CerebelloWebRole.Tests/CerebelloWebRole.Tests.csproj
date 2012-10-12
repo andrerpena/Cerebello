@@ -138,6 +138,7 @@
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
     <Compile Include="Tests\AuthenticationControllerTests.cs" />
+    <Compile Include="Tests\Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Tests\MedicinesControllerTests.cs" />
     <Compile Include="Tests\PatientsControllerTests.cs" />
     <Compile Include="Tests\ScheduleControllerTests.cs" />

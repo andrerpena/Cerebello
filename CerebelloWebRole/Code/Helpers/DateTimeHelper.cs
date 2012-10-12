@@ -257,65 +257,53 @@ namespace CerebelloWebRole.Code
 
 
         /// <summary>
-        /// Converte o DateTime passado em um formato: 12/08/2011 às 13:40h
+        /// Retrieves a person age in words
         /// </summary>
-        [Obsolete("This method is not being used. 2012-08-15.", true)]
-        public static string GetFormattedDateAndTime(DateTime dateTime)
-        {
-            // todo: WTF??? this method is stub.
-            return String.Format("{0} às {1}", dateTime, dateTime);
-        }
-
-        public static string GetShortForMonth(int monthIndex)
-        {
-            return DateTimeHelper.GetShortForMonth(monthIndex, true);
-        }
-
-        public static string GetShortForMonth(int monthIndex, bool includeDotAtTheEnd)
-        {
-            string[] strArray = new string[] { "jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez" };
-            return strArray[monthIndex - 1] + (includeDotAtTheEnd ? "." : "");
-        }
-
-        [Obsolete("This method is not being used. 2012-08-15.", true)]
-        public static int GetPersonAge(DateTime dateOfBirth, DateTime now)
-        {
-            now = now.Date;
-            dateOfBirth = dateOfBirth.Date;
-
-            int age = now.Year - dateOfBirth.Year;
-            if (dateOfBirth > now.AddYears(-age)) age--;
-
-            return age;
-        }
-
+        /// <remarks>
+        /// Requirements:
+        ///     - Triggers an ArgumentException if either datetimes are of local kind
+        ///     - Triggers an ArgumentException if currentDate is greater then dateOfBirth
+        ///     - If short is true, returns only the years
+        ///     - If short is false, returns the years, month and days
+        /// </remarks>
+        /// <param name="dateOfBirth">date of birth (UTC)</param>
+        /// <param name="currentDate">current date (UTC)</param>
+        /// <param name="short">including months and days if false, only years if true. Default: false</param>
+        /// <returns></returns>
         public static String GetPersonAgeInWords(DateTime dateOfBirth, DateTime currentDate, bool @short = false)
         {
-            if (currentDate < dateOfBirth)
-                return "ainda não nascida";
+            if (dateOfBirth.Kind == DateTimeKind.Local)
+                throw new ArgumentException("dateOrBirth is not expected to be local", "dateOfBirth");
 
-            TimeSpan difference = currentDate.Subtract(dateOfBirth);
+            if (currentDate.Kind == DateTimeKind.Local)
+                throw new ArgumentException("currentDate is not expected to be local", "currentDate");
+
+            if (currentDate < dateOfBirth)
+                throw new ArgumentException("currentDate is not expected to be lesser than dateOfBirth", "currentDate");
+
+            var difference = currentDate - dateOfBirth;
             // This is to convert the timespan to datetime object
-            DateTime age = DateTime.MinValue + difference;
+            var age = DateTime.MinValue + difference;
 
             // Min value is 01/01/0001
-            // Actual age is say 24 yrs, 9 months and 3 days represented as timespan
+            // Actual age is say, 24 yrs, 9 months and 3 days represented as timespan
             // Min Value + actual age = 25 yrs , 10 months and 4 days.
             // subtract our addition or 1 on all components to get the actual date.
 
-            int ageInYears = age.Year - 1;
-            int ageInMonths = age.Month - 1;
-            int ageInDays = age.Day - 1;
+            var ageInYears = age.Year - 1;
+            var ageInMonths = age.Month - 1;
+            var ageInDays = age.Day - 1;
 
-            if (@short)
-                return String.Format("{0} anos", ageInYears);
-            else
-                return String.Format("{0} anos, {1} meses and {2} dias", ageInYears, ageInMonths, ageInDays);
-        }
-
-        public static String FormatDate(DateTime date)
-        {
-            return date.Month + "/" + date.Day + "/" + date.Year;
+            return @short ? String.Format("{0} {1}",
+                ageInYears,
+                ageInYears == 1 ? "ano" : "anos")
+            : String.Format("{0} {1}, {2} {3} e {4} {5}",
+                ageInYears,
+                ageInYears == 1 ? "ano" : "anos",
+                ageInMonths,
+                ageInMonths == 1 ? "mês" : "meses",
+                ageInDays,
+                ageInDays == 1 ? "dia" : "dias");
         }
 
         /// <summary>
