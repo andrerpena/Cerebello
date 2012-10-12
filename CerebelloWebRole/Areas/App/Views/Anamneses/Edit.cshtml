@@ -20,7 +20,7 @@
 
         var editPanel = Html.CreateEditPanel();
         editPanel.AddField(m => m.Text, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
-        editPanel.AddField(m => m.Diagnoses, format: @<text>@Html.CollectionEditorInlineFor(m => m.Diagnoses, "DiagnosisEditor", "Adicionar diagnóstico")</text>);
+        editPanel.AddField(m => m.Symptoms, format: @<text>@Html.CollectionEditorInlineFor(m => m.Symptoms, "DiagnosisEditor", "Adicionar sintoma")</text>);
         
         @editPanel.GetHtml()
 

@@ -61,9 +61,9 @@ namespace CerebelloWebRole.Tests
             {
                 PatientId = patientId,
                 Text = "This is my anamnese",
-                Diagnoses = new List<DiagnosisViewModel>() {
-                        new DiagnosisViewModel() { Text = "Text", Cid10Code = "Q878" },
-                        new DiagnosisViewModel() { Text = "Text2", Cid10Code = "Q879" }
+                Symptoms = new List<SymptomViewModel>() {
+                        new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 
@@ -79,11 +79,11 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(1, anamneses.Count);
             Assert.AreEqual(2, diagnoses.Count);
 
-            Assert.AreEqual(formModel.Diagnoses[0].Text, anamneses[0].Diagnoses.ElementAt(0).Cid10Name);
-            Assert.AreEqual(formModel.Diagnoses[0].Cid10Code, anamneses[0].Diagnoses.ElementAt(0).Cid10Code);
+            Assert.AreEqual(formModel.Symptoms[0].Text, anamneses[0].Symptoms.ElementAt(0).Cid10Name);
+            Assert.AreEqual(formModel.Symptoms[0].Cid10Code, anamneses[0].Symptoms.ElementAt(0).Cid10Code);
 
-            Assert.AreEqual(formModel.Diagnoses[1].Text, anamneses[0].Diagnoses.ElementAt(1).Cid10Name);
-            Assert.AreEqual(formModel.Diagnoses[1].Cid10Code, anamneses[0].Diagnoses.ElementAt(1).Cid10Code);
+            Assert.AreEqual(formModel.Symptoms[1].Text, anamneses[0].Symptoms.ElementAt(1).Cid10Name);
+            Assert.AreEqual(formModel.Symptoms[1].Cid10Code, anamneses[0].Symptoms.ElementAt(1).Cid10Code);
         }
 
         #endregion
@@ -102,9 +102,9 @@ namespace CerebelloWebRole.Tests
             {
                 PatientId = patientId,
                 Text = "This is my anamnese",
-                Diagnoses = new List<DiagnosisViewModel>() {
-                        new DiagnosisViewModel() { Text = "Text", Cid10Code = "Q878" },
-                        new DiagnosisViewModel() { Text = "Text2", Cid10Code = "Q879" }
+                Symptoms = new List<SymptomViewModel>() {
+                        new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 

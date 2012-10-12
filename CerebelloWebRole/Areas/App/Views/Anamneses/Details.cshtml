@@ -7,11 +7,11 @@
     {
         var cardView = this.Html.CreateCardView();
         cardView.AddField(model => model.Text, wholeRow: true);
-        cardView.AddField(model => model.Diagnoses,
+        cardView.AddField(model => model.Symptoms,
             @<text>
                 @{
                     <ul class="string-list">
-                            @foreach (var symptom in Model.Diagnoses)
+                            @foreach (var symptom in Model.Symptoms)
                             {
                                 <li>
                                     @symptom.Text (@symptom.Cid10Code)

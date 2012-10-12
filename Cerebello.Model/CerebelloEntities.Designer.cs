@@ -47,7 +47,6 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificate_ModelMedicalCertificate", "ModelMedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.ModelMedicalCertificate), "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificate), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificate_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificate), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificateField_MedicalCertificate", "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.MedicalCertificate), "MedicalCertificateField", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificateField), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "Diagnosi", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Doctor), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
@@ -63,6 +62,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "Symptom", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Symptom), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Diagnosis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
 
 #endregion
 
@@ -721,6 +722,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<ChatMessage> _ChatMessages;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Symptom> Symptoms
+        {
+            get
+            {
+                if ((_Symptoms == null))
+                {
+                    _Symptoms = base.CreateObjectSet<Symptom>("Symptoms");
+                }
+                return _Symptoms;
+            }
+        }
+        private ObjectSet<Symptom> _Symptoms;
 
         #endregion
 
@@ -1028,6 +1045,14 @@ namespace Cerebello.Model
         public void AddToChatMessages(ChatMessage chatMessage)
         {
             base.AddObject("ChatMessages", chatMessage);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Symptoms EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSymptoms(Symptom symptom)
+        {
+            base.AddObject("Symptoms", symptom);
         }
 
         #endregion
@@ -1736,18 +1761,18 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Diagnosi")]
-        public EntityCollection<Diagnosis> Diagnoses
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Symptom")]
+        public EntityCollection<Symptom> Symptoms
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis_Anamnese", "Diagnosi");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Symptom>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Symptom");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis_Anamnese", "Diagnosi", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Symptom>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Symptom", value);
                 }
             }
         }
@@ -3966,14 +3991,16 @@ namespace Cerebello.Model
         /// Create a new Diagnosis object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="anamneseId">Initial value of the AnamneseId property.</param>
         /// <param name="cid10Code">Initial value of the Cid10Code property.</param>
-        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.Int32 anamneseId, global::System.String cid10Code)
+        /// <param name="cid10Name">Initial value of the Cid10Name property.</param>
+        /// <param name="patientId">Initial value of the PatientId property.</param>
+        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.String cid10Code, global::System.String cid10Name, global::System.Int32 patientId)
         {
             Diagnosis diagnosis = new Diagnosis();
             diagnosis.Id = id;
-            diagnosis.AnamneseId = anamneseId;
             diagnosis.Cid10Code = cid10Code;
+            diagnosis.Cid10Name = cid10Name;
+            diagnosis.PatientId = patientId;
             return diagnosis;
         }
 
@@ -4007,30 +4034,6 @@ namespace Cerebello.Model
         private global::System.Int32 _Id;
         partial void OnIdChanging(global::System.Int32 value);
         partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 AnamneseId
-        {
-            get
-            {
-                return _AnamneseId;
-            }
-            set
-            {
-                OnAnamneseIdChanging(value);
-                ReportPropertyChanging("AnamneseId");
-                _AnamneseId = StructuralObject.SetValidValue(value, "AnamneseId");
-                ReportPropertyChanged("AnamneseId");
-                OnAnamneseIdChanged();
-            }
-        }
-        private global::System.Int32 _AnamneseId;
-        partial void OnAnamneseIdChanging(global::System.Int32 value);
-        partial void OnAnamneseIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4083,7 +4086,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.String Cid10Name
         {
@@ -4095,7 +4098,7 @@ namespace Cerebello.Model
             {
                 OnCid10NameChanging(value);
                 ReportPropertyChanging("Cid10Name");
-                _Cid10Name = StructuralObject.SetValidValue(value, true, "Cid10Name");
+                _Cid10Name = StructuralObject.SetValidValue(value, false, "Cid10Name");
                 ReportPropertyChanged("Cid10Name");
                 OnCid10NameChanged();
             }
@@ -4103,6 +4106,30 @@ namespace Cerebello.Model
         private global::System.String _Cid10Name;
         partial void OnCid10NameChanging(global::System.String value);
         partial void OnCid10NameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PatientId
+        {
+            get
+            {
+                return _PatientId;
+            }
+            set
+            {
+                OnPatientIdChanging(value);
+                ReportPropertyChanging("PatientId");
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
+                ReportPropertyChanged("PatientId");
+                OnPatientIdChanged();
+            }
+        }
+        private global::System.Int32 _PatientId;
+        partial void OnPatientIdChanging(global::System.Int32 value);
+        partial void OnPatientIdChanged();
 
         #endregion
 
@@ -4114,16 +4141,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese")]
-        public Anamnese Anamnese
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient")]
+        public Patient Patient
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient").Value = value;
             }
         }
         /// <summary>
@@ -4131,17 +4158,17 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Anamnese> AnamneseReference
+        public EntityReference<Patient> PatientReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient", value);
                 }
             }
         }
@@ -7147,6 +7174,28 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Diagnosis")]
+        public EntityCollection<Diagnosis> Diagnoses
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Diagnosis");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Diagnosis", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -8516,6 +8565,204 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<User>("Cerebello.Model.FK_User_Secretary", "User", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Symptom")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Symptom : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Symptom object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="anamneseId">Initial value of the AnamneseId property.</param>
+        /// <param name="cid10Code">Initial value of the Cid10Code property.</param>
+        public static Symptom CreateSymptom(global::System.Int32 id, global::System.Int32 anamneseId, global::System.String cid10Code)
+        {
+            Symptom symptom = new Symptom();
+            symptom.Id = id;
+            symptom.AnamneseId = anamneseId;
+            symptom.Cid10Code = cid10Code;
+            return symptom;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 AnamneseId
+        {
+            get
+            {
+                return _AnamneseId;
+            }
+            set
+            {
+                OnAnamneseIdChanging(value);
+                ReportPropertyChanging("AnamneseId");
+                _AnamneseId = StructuralObject.SetValidValue(value, "AnamneseId");
+                ReportPropertyChanged("AnamneseId");
+                OnAnamneseIdChanged();
+            }
+        }
+        private global::System.Int32 _AnamneseId;
+        partial void OnAnamneseIdChanging(global::System.Int32 value);
+        partial void OnAnamneseIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Observations
+        {
+            get
+            {
+                return _Observations;
+            }
+            set
+            {
+                OnObservationsChanging(value);
+                ReportPropertyChanging("Observations");
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
+                ReportPropertyChanged("Observations");
+                OnObservationsChanged();
+            }
+        }
+        private global::System.String _Observations;
+        partial void OnObservationsChanging(global::System.String value);
+        partial void OnObservationsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Cid10Code
+        {
+            get
+            {
+                return _Cid10Code;
+            }
+            set
+            {
+                OnCid10CodeChanging(value);
+                ReportPropertyChanging("Cid10Code");
+                _Cid10Code = StructuralObject.SetValidValue(value, false, "Cid10Code");
+                ReportPropertyChanged("Cid10Code");
+                OnCid10CodeChanged();
+            }
+        }
+        private global::System.String _Cid10Code;
+        partial void OnCid10CodeChanging(global::System.String value);
+        partial void OnCid10CodeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Cid10Name
+        {
+            get
+            {
+                return _Cid10Name;
+            }
+            set
+            {
+                OnCid10NameChanging(value);
+                ReportPropertyChanging("Cid10Name");
+                _Cid10Name = StructuralObject.SetValidValue(value, true, "Cid10Name");
+                ReportPropertyChanged("Cid10Name");
+                OnCid10NameChanged();
+            }
+        }
+        private global::System.String _Cid10Name;
+        partial void OnCid10NameChanging(global::System.String value);
+        partial void OnCid10NameChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Anamnese")]
+        public Anamnese Anamnese
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Anamnese> AnamneseReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese", value);
                 }
             }
         }

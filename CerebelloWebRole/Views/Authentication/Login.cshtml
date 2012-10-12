@@ -13,6 +13,9 @@
         {
             <fieldset>
                 <div class="controls-wrapper">
+                    
+                    @Html.ValidationSummary(false)
+
                     <div class="control-group">
                         @Html.LabelFor(model => model.PracticeIdentifier)
                         <div class="controls">

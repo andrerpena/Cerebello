@@ -21,8 +21,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = anamnese.Id,
                 PatientId = anamnese.PatientId,
                 Text = anamnese.Text,
-                Diagnoses = (from s in anamnese.Diagnoses
-                             select new DiagnosisViewModel
+                Symptoms = (from s in anamnese.Symptoms
+                             select new SymptomViewModel
                              {
                                  Text = s.Cid10Name,
                                  Cid10Code = s.Cid10Code
@@ -92,29 +92,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 anamnese.Text = formModel.Text;
 
-                #region Update Diagnoses
+                #region Update Symptomsymptoms
                 // step 1: add new
-                foreach (var diagnosis in formModel.Diagnoses)
+                foreach (var symptom in formModel.Symptoms)
                 {
-                    if (anamnese.Diagnoses.All(ans => ans.Cid10Code != diagnosis.Cid10Code))
-                        anamnese.Diagnoses.Add(new Diagnosis()
+                    if (anamnese.Symptoms.All(ans => ans.Cid10Code != symptom.Cid10Code))
+                        anamnese.Symptoms.Add(new Symptom()
                         {
-                            Cid10Code = diagnosis.Cid10Code,
-                            Cid10Name = diagnosis.Text
+                            Cid10Code = symptom.Cid10Code,
+                            Cid10Name = symptom.Text
                         });
                 }
 
-                Queue<Diagnosis> harakiriQueue = new Queue<Diagnosis>();
+                var harakiriQueue = new Queue<Symptom>();
 
                 // step 2: remove deleted
-                foreach (var diagnosis in anamnese.Diagnoses)
+                foreach (var symptom in anamnese.Symptoms)
                 {
-                    if (formModel.Diagnoses.All(ans => ans.Cid10Code != diagnosis.Cid10Code))
-                        harakiriQueue.Enqueue(diagnosis);
+                    if (formModel.Symptoms.All(ans => ans.Cid10Code != symptom.Cid10Code))
+                        harakiriQueue.Enqueue(symptom);
                 }
 
                 while (harakiriQueue.Count > 0)
-                    this.db.Diagnoses.DeleteObject(harakiriQueue.Dequeue());
+                    this.db.Symptoms.DeleteObject(harakiriQueue.Dequeue());
                 #endregion
 
                 db.SaveChanges();
@@ -184,8 +184,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var anamnese = this.db.Anamnese.First(m => m.Id == id);
 
                 // get rid of associations
-                while (anamnese.Diagnoses.Count > 0)
-                    this.db.Diagnoses.DeleteObject(anamnese.Diagnoses.ElementAt(0));
+                while (anamnese.Symptoms.Count > 0)
+                    this.db.Symptoms.DeleteObject(anamnese.Symptoms.ElementAt(0));
 
                 this.db.Anamnese.DeleteObject(anamnese);
                 this.db.SaveChanges();

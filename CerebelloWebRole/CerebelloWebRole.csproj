@@ -128,6 +128,7 @@
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
+    <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
@@ -143,7 +144,6 @@
     <Compile Include="Areas\App\Models\LookupGriModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
-    <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
     <Compile Include="Code\Chat\ChatRoom.cs" />

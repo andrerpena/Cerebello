@@ -180,7 +180,7 @@ namespace CerebelloWebRole.Tests.Tests
                     Text = "This is my anamnese"
                 };
 
-                anamnese.Diagnoses.Add(new Diagnosis()
+                anamnese.Symptoms.Add(new Symptom()
                 {
                     Cid10Name = "Text",
                     Cid10Code = "Q878"
