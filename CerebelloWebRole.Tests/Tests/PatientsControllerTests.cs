@@ -44,8 +44,6 @@ namespace CerebelloWebRole.Tests.Tests
         }
         #endregion
 
-        #region Search
-
         [TestMethod]
         public void Search_ShouldReturnEverythingInEmptySearch()
         {
@@ -434,12 +432,11 @@ namespace CerebelloWebRole.Tests.Tests
         public void Delete_WhenTheresAnAppointment()
         {
             PatientsController controller;
-            Doctor docAndre;
             Patient patient;
 
             try
             {
-                docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
                 Firestarter.CreateFakePatients(docAndre, this.db, 1);
@@ -476,6 +473,47 @@ namespace CerebelloWebRole.Tests.Tests
 
         }
 
-        #endregion
+        [TestMethod]
+        public void Delete_WhenTheresADiagnosis()
+        {
+            PatientsController controller;
+            Patient patient;
+
+            try
+            {
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                Firestarter.CreateFakePatients(docAndre, this.db, 1);
+
+                // we now have 1 patient
+                patient = this.db.Patients.FirstOrDefault();
+                Assert.IsNotNull(patient);
+                var referenceTime = DateTime.UtcNow;
+
+                var diagnosis = new Diagnosis()
+                {
+                    CreatedOn = referenceTime,
+                    PatientId = patient.Id,
+                    Cid10Code = "QAA",
+                    Cid10Name = "Doença X"
+                };
+
+                this.db.Diagnoses.AddObject(diagnosis);
+                this.db.SaveChanges();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            controller.Delete(patient.Id);
+
+            // this patient must have been deleted
+            patient = this.db.Patients.FirstOrDefault(p => p.Id == patient.Id);
+            Assert.IsNull(patient);
+
+        }
     }
 }

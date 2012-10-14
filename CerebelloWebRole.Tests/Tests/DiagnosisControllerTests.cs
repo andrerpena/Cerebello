@@ -48,7 +48,60 @@ namespace CerebelloWebRole.Tests.Tests
         }
         #endregion
 
-        #region Delete
+        [TestMethod]
+        public void Edit_WhenBothCid10AndNotesAreEmpty()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db, 1);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            var formModel = new DiagnosisViewModel()
+            {
+                PatientId = patientId,
+            };
+
+            var mr = new MockRepository(true);
+            var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
+            controller.Edit(formModel);
+
+            Assert.IsFalse(controller.ModelState.IsValid);
+        }
+
+        [TestMethod]
+        public void Edit_HappyPath()
+        {
+            // obtains a valid patient
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db, 1);
+            this.db.SaveChanges();
+            var patientId = this.db.Patients.First().Id;
+
+            var formModel = new DiagnosisViewModel()
+            {
+                PatientId = patientId,
+                Cid10Code = "CodeX",
+                Cid10Name = "XDesease",
+                Text = "Notes"
+            };
+
+            var mr = new MockRepository(true);
+            var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
+            
+            var referenceTime = DateTime.UtcNow;
+            controller.UtcNowGetter = () => referenceTime;
+
+            controller.Edit(formModel);
+
+            Assert.IsTrue(controller.ModelState.IsValid);
+
+            var diagnosis = this.db.Diagnoses.First();
+            Assert.AreEqual(referenceTime, diagnosis.CreatedOn);
+            Assert.AreEqual(patientId, diagnosis.PatientId);
+            Assert.AreEqual(formModel.Text, diagnosis.Observations);
+            Assert.AreEqual(formModel.Cid10Code, diagnosis.Cid10Code);
+            Assert.AreEqual(formModel.Cid10Name, diagnosis.Cid10Name);
+
+        }
 
         [TestMethod]
         public void Delete_HappyPath()
@@ -96,7 +149,5 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual(false, deleteMessage.success);
             Assert.IsNotNull(deleteMessage.text);
         }
-
-        #endregion
     }
 }

@@ -64,7 +64,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         /// <summary>
         /// Requirements:
-        ///    - The list of diagnoses passed in must be sinchronized with the server
+        ///    - If both the notes and the Cid10Code are null or empty, an error must be added to ModelState
+        ///    - Must properly create a diagnosis for the given patient with the given information
         /// </summary>
         /// <param name="formModel"></param>
         /// <returns></returns>

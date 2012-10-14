@@ -381,6 +381,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     certificates.Remove(certificate);
                 }
 
+                // delete diagnosis manually
+                var diagnosis = patient.Diagnoses.ToList();
+                while (diagnosis.Any())
+                {
+                    var diag = diagnosis.First();
+                    this.db.Diagnoses.DeleteObject(diag);
+                    diagnosis.Remove(diag);
+                }
+
                 // delete appointments manually
                 var appointments = patient.Appointments.ToList();
                 while (appointments.Any())
