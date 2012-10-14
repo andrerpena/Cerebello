@@ -1,10 +1,14 @@
 ﻿// generates a new guid
-function generateGuid() {
-    var S4 = function () {
+function generateGuid(separator) {
+    if (!separator)
+        separator = "-";
+    var hunk = function () {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
-    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+    return (hunk() + hunk() + separator + hunk() + separator + hunk() + separator + hunk() + separator + hunk() + hunk() + hunk());
 }
+
+
 
 // gets the cep
 function getGetInfo(url, cep, opts) {

@@ -50,10 +50,10 @@ namespace CerebelloWebRole.Tests
         #region Edit
 
         [TestMethod]
-        public void Edit_1_CreateDiagnosisIfItDoesNotExist()
+        public void Edit_CreateDiagnosisIfItDoesNotExist()
         {
             // obtains a valid patient
-            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db, 1);
             this.db.SaveChanges();
             var patientId = this.db.Patients.First().Id;
 
@@ -91,7 +91,7 @@ namespace CerebelloWebRole.Tests
         #region Delete
 
         [TestMethod]
-        public void Delete_1_HappyPath()
+        public void Delete_HappyPath()
         {
             // obtains a valid patient
             Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
@@ -145,11 +145,11 @@ namespace CerebelloWebRole.Tests
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
-            var result = controller.LookupDiagnoses("cefaléia", 20, 1);
-            var lookupJsonResult = (LookupJsonResult)result.Data;
+            var result = controller.AutocompleteDiagnoses("cefaléia", 20, 1);
+            var lookupJsonResult = (AutocompleteJsonResult)result.Data;
 
             Assert.AreEqual(9, lookupJsonResult.Count);
-            foreach (CidLookupGridModel item in lookupJsonResult.Rows)
+            foreach (CidAutocompleteGridModel item in lookupJsonResult.Rows)
             {
                 Assert.IsNotNull(item.Cid10Code);
                 Assert.IsFalse(string.IsNullOrEmpty(item.Cid10Name));

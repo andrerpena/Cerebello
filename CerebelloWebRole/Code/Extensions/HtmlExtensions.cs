@@ -149,17 +149,17 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Lookup
         /// </summary>
-        public static MvcHtmlString LookupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
+        public static MvcHtmlString AutocompleteFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
         {
-            return LookupGridFor<TModel, LookupRow, int>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+            return LookupGridFor<TModel, AutocompleteRow, int>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
         }
 
         /// <summary>
         /// Lookup
         /// </summary>
-        public static MvcHtmlString LookupFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
+        public static MvcHtmlString AutocompleteFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
         {
-            return LookupGridFor<TModel, LookupRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+            return LookupGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace CerebelloWebRole.Code.Extensions
             var inputTextId = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : Encode(htmlPrefix + "." + textPropertyInfo.Name);
             var inputTextName = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : (htmlPrefix + "." + textPropertyInfo.Name);
 
-            var options = new LookupOptions()
+            var options = new AutocompleteOptions()
             {
                 contentUrl = actionUrl,
                 inputHiddenId = inputHiddenId,
@@ -220,20 +220,20 @@ namespace CerebelloWebRole.Code.Extensions
 
             // validação das colunas
             if (!options.columns.Contains(options.columnText))
-                throw new Exception(string.Format("O lookup possui configurações inválidas. A coluna de texto não faz parte da lista de colunas. Lookup: '{0}'. Coluna de text: '{1}'", inputTextId, options.columnText));
+                throw new Exception(string.Format("O autocomplete possui configurações inválidas. A coluna de texto não faz parte da lista de colunas. Lookup: '{0}'. Coluna de text: '{1}'", inputTextId, options.columnText));
 
-            scriptTag.InnerHtml = string.Format("$(\"#{0}\").lookup({1});", inputTextId, new JavaScriptSerializer().Serialize(options));
+            scriptTag.InnerHtml = string.Format("$(\"#{0}\").autocomplete({1});", inputTextId, new JavaScriptSerializer().Serialize(options));
 
             // renders
 
             var tagBuilder = new StringBuilder();
 
-            var inputTextClasses = new List<string> { "lookup" };
+            var inputTextClasses = new List<string> { "autocomplete" };
 
             // determines if there's any validation issue
             if ((htmlHelper.ViewData.ModelState[inputTextName] != null && htmlHelper.ViewData.ModelState[inputTextName].Errors.Count > 0) ||
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
-                inputTextClasses.Add("lookup-validation-error");
+                inputTextClasses.Add("autocomplete-validation-error");
 
             tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray()), autocomplete = "off" }));
             tagBuilder.AppendLine();

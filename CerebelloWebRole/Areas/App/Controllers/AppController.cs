@@ -135,7 +135,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var resultCount = finalQuery.Count();
 
-            return Json(new LookupJsonResult()
+            return Json(new AutocompleteJsonResult()
             {
                 Count = resultCount,
                 Rows = new System.Collections.ArrayList(result)

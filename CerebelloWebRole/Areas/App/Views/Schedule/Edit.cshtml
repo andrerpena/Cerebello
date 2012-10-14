@@ -63,7 +63,7 @@
                     <th>@Html.LabelFor(model => model.PatientNameLookup)
                     </th>
                     <td>
-                        @Html.LookupFor(model => model.PatientId, model => model.PatientNameLookup, Url.Action("lookuppatients", "patients"))
+                        @Html.AutocompleteFor(model => model.PatientId, model => model.PatientNameLookup, Url.Action("lookuppatients", "patients"))
                         @if (Model.Id != null)
                         {
                             <a href="@Url.Action("details", "patients", new { id = Model.PatientId })" class="block-little-link">

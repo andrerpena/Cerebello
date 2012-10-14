@@ -130,6 +130,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 eventDates.AddRange(examResultsByDate.Keys);
 
+                // diagnosis
+                var diagnosisByDate =
+                                 (from dvm in
+                                      (from d in patient.Diagnoses
+                                       select new SessionEvent
+                                       {
+                                           LocalDate = ConvertToLocalDateTime(this.Practice, d.CreatedOn),
+                                           Id = d.Id
+                                       })
+                                  group dvm by dvm.LocalDate.Date into g
+                                  select g).ToDictionary(g => g.Key, g => g.ToList());
+
+                eventDates.AddRange(diagnosisByDate.Keys);
+
                 // discover what dates have events
                 eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
 
@@ -147,6 +161,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         MedicalCertificateIds = certificatesByDate.ContainsKey(eventDate) ? certificatesByDate[eventDate].Select(c => c.Id).ToList() : new List<int>(),
                         ExaminationRequestIds = examRequestsByDate.ContainsKey(eventDate) ? examRequestsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
                         ExaminationResultIds = examResultsByDate.ContainsKey(eventDate) ? examResultsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
+                        DiagnosisIds = diagnosisByDate.ContainsKey(eventDate) ? diagnosisByDate[eventDate].Select(v => v.Id).ToList() : new List<int>()
                     });
                 }
 
@@ -427,13 +442,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 baseQuery = baseQuery.Where(l => l.Person.FullName.Contains(term));
 
             var rows = (from p in baseQuery.OrderBy(p => p.Person.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
-                        select new LookupRow
+                        select new AutocompleteRow
                         {
                             Id = p.Id,
                             Value = p.Person.FullName
                         }).ToList();
 
-            var result = new LookupJsonResult()
+            var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(rows),
                 Count = baseQuery.Count()

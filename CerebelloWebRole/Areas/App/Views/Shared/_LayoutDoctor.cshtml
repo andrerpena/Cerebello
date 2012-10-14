@@ -42,10 +42,10 @@
 }
 
 @section TopActions {
-    <input type="text" id="global-search" name="global-search" class="lookup" />
-    <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="lookup" />
+    <input type="text" id="global-search" name="global-search" class="autocomplete" />
+    <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="autocomplete" />
     <script type="text/javascript">
-        $("#global-search").lookup({
+        $("#global-search").autocomplete({
             contentUrl: "@Url.Action("lookupeverything", "app")",
             inputHiddenName: "global-search-hidden",
             ajaxParams: {

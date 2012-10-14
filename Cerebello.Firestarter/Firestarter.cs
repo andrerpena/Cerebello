@@ -1075,7 +1075,7 @@ namespace Cerebello.Firestarter
             }
         }
 
-        static object locker = new object();
+        static readonly object locker = new object();
         static Cbhpm cbhpm;
 
         public static void Initialize_SYS_MedicalProcedures(CerebelloEntities db, string pathOfTxt, int maxCount = int.MaxValue, Action<int, int> progress = null)
@@ -1138,11 +1138,11 @@ namespace Cerebello.Firestarter
             if (repopulateSysTablesWithDefaults)
             {
                 Console.WriteLine("Initialize_SYS_MedicalEntity");
-                Firestarter.Initialize_SYS_MedicalEntity(db);
+                Initialize_SYS_MedicalEntity(db);
                 Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                Firestarter.Initialize_SYS_MedicalEntity(db);
+                Initialize_SYS_MedicalEntity(db);
                 Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                Firestarter.Initialize_SYS_MedicalProcedures(
+                Initialize_SYS_MedicalProcedures(
                     db,
                     Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"));
             }
@@ -1287,8 +1287,7 @@ GO
         internal static bool AttachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
-            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString);
-            sqlConn2.InitialCatalog = "";
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) {InitialCatalog = ""};
             var connStr = sqlConn2.ToString();
             var dbName = sqlConn1.Database;
 
@@ -1326,18 +1325,15 @@ GO
         internal static void DetachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
-            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString);
-            sqlConn2.InitialCatalog = "";
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) {InitialCatalog = ""};
             var connStr = sqlConn2.ToString();
-            var dbName = sqlConn1.Database;
 
             SqlConnection.ClearAllPools();
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn);
-                cmd.CommandText = @"sp_detach_db CerebelloTEST";
+                SqlCommand cmd = new SqlCommand("", conn) {CommandText = @"sp_detach_db CerebelloTEST"};
                 cmd.ExecuteNonQuery();
             }
         }

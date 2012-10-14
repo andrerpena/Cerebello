@@ -105,6 +105,18 @@
                 @Html.Action("details", "examresults", new { id = examResultId })
                 }
             }
+            
+            @if (session.DiagnosisIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Diagnósticos
+                </p>
+                foreach (var diagnosisId in session.DiagnosisIds)
+                {
+                @Html.Action("details", "diagnosis", new { id = diagnosisId })
+                }
+            }
+
             @if (session.MedicalCertificateIds.Count > 0)
             {
                 <p class="subtitle">
@@ -115,6 +127,7 @@
                 @Html.Action("details", "medicalcertificates", new { id = certificateId })
                 }
             }
+            
         </div>
         }
     }
@@ -151,7 +164,7 @@
             </div>
             <!-- diagnosis -->
             <div>
-                <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new { patientId = Model.Id })">Nova diagnose</a>
+                <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new { patientId = Model.Id })">Novo diagnóstico</a>
                 <div class="new-diagnosis-wrapper appointment-panel-wrapper">
                 </div>
             </div>

@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Areas.App.Models
         // Propriedade não está sendo usada?
         //public DateTime? Date { get; set; }
 
-        [Display(Name="Texto")]
+        [Display(Name="Notas")]
         public string Text { get; set; }
 
         [Display(Name="Sintomas")]

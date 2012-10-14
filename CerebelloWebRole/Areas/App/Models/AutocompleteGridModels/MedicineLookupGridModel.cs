@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CerebelloWebRole.Areas.App.Models
 {
     /// <summary>
-    /// GridModel used for displaying medicine lookup
+    /// GridModel used for displaying medicine autocomplete
     /// </summary>
     public class MedicineLookupGridModel
     {

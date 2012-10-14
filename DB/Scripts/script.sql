@@ -213,9 +213,10 @@ GO
 CREATE TABLE [dbo].[Diagnosis](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Observations] [varchar](max) NULL,
-	[Cid10Code] [varchar](10) NOT NULL,
-	[Cid10Name] [varchar](10) NOT NULL,
+	[Cid10Code] [varchar](10) NULL,
+	[Cid10Name] [varchar](100) NULL,
 	[PatientId] [int] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
  CONSTRAINT [PK_Diagnosis2] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

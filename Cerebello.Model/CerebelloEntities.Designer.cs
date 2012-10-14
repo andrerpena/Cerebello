@@ -3991,16 +3991,14 @@ namespace Cerebello.Model
         /// Create a new Diagnosis object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="cid10Code">Initial value of the Cid10Code property.</param>
-        /// <param name="cid10Name">Initial value of the Cid10Name property.</param>
         /// <param name="patientId">Initial value of the PatientId property.</param>
-        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.String cid10Code, global::System.String cid10Name, global::System.Int32 patientId)
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn)
         {
             Diagnosis diagnosis = new Diagnosis();
             diagnosis.Id = id;
-            diagnosis.Cid10Code = cid10Code;
-            diagnosis.Cid10Name = cid10Name;
             diagnosis.PatientId = patientId;
+            diagnosis.CreatedOn = createdOn;
             return diagnosis;
         }
 
@@ -4062,7 +4060,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String Cid10Code
         {
@@ -4074,7 +4072,7 @@ namespace Cerebello.Model
             {
                 OnCid10CodeChanging(value);
                 ReportPropertyChanging("Cid10Code");
-                _Cid10Code = StructuralObject.SetValidValue(value, false, "Cid10Code");
+                _Cid10Code = StructuralObject.SetValidValue(value, true, "Cid10Code");
                 ReportPropertyChanged("Cid10Code");
                 OnCid10CodeChanged();
             }
@@ -4082,30 +4080,6 @@ namespace Cerebello.Model
         private global::System.String _Cid10Code;
         partial void OnCid10CodeChanging(global::System.String value);
         partial void OnCid10CodeChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Cid10Name
-        {
-            get
-            {
-                return _Cid10Name;
-            }
-            set
-            {
-                OnCid10NameChanging(value);
-                ReportPropertyChanging("Cid10Name");
-                _Cid10Name = StructuralObject.SetValidValue(value, false, "Cid10Name");
-                ReportPropertyChanged("Cid10Name");
-                OnCid10NameChanged();
-            }
-        }
-        private global::System.String _Cid10Name;
-        partial void OnCid10NameChanging(global::System.String value);
-        partial void OnCid10NameChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4130,6 +4104,54 @@ namespace Cerebello.Model
         private global::System.Int32 _PatientId;
         partial void OnPatientIdChanging(global::System.Int32 value);
         partial void OnPatientIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Cid10Name
+        {
+            get
+            {
+                return _Cid10Name;
+            }
+            set
+            {
+                OnCid10NameChanging(value);
+                ReportPropertyChanging("Cid10Name");
+                _Cid10Name = StructuralObject.SetValidValue(value, true, "Cid10Name");
+                ReportPropertyChanged("Cid10Name");
+                OnCid10NameChanged();
+            }
+        }
+        private global::System.String _Cid10Name;
+        partial void OnCid10NameChanging(global::System.String value);
+        partial void OnCid10NameChanged();
 
         #endregion
 

@@ -212,7 +212,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             value = l.Name
                         };
 
-            var result = new LookupJsonResult()
+            var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
                 Count = query.Count()
@@ -242,7 +242,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             LaboratoryName = m.Laboratory.Name
                         };
 
-            var result = new LookupJsonResult()
+            var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
                 Count = query.Count()
@@ -281,7 +281,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             LaboratoryName = p.Laboratory.Name
                         }).ToList();
 
-            var result = new LookupJsonResult()
+            var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(rows),
                 Count = baseQuery.Count()

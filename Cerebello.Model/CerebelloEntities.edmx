@@ -375,9 +375,10 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Observations" Type="varchar(max)" />
-          <Property Name="Cid10Code" Type="varchar" Nullable="false" MaxLength="10" />
-          <Property Name="Cid10Name" Type="varchar" Nullable="false" MaxLength="10" />
+          <Property Name="Cid10Code" Type="varchar" MaxLength="10" />
+          <Property Name="Cid10Name" Type="varchar" MaxLength="100" />
           <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -2165,10 +2166,11 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="Observations" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Cid10Code" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Cid10Name" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="String" Name="Cid10Code" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PatientId" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_Diagnosis2_Diagnosis2" FromRole="Diagnosis" ToRole="Patient" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Cid10Name" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_User_Doctor">
           <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="0..1" />
@@ -2810,8 +2812,9 @@
           <EntitySetMapping Name="Diagnoses">
             <EntityTypeMapping TypeName="Cerebello.Model.Diagnosis">
               <MappingFragment StoreEntitySet="Diagnosis">
-                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
                 <ScalarProperty Name="Cid10Name" ColumnName="Cid10Name" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
                 <ScalarProperty Name="Cid10Code" ColumnName="Cid10Code" />
                 <ScalarProperty Name="Observations" ColumnName="Observations" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace CerebelloWebRole.Areas.App.Models
 {
     /// <summary>
-    /// GridModel used for displaying data within the CID lookup
+    /// GridModel used for displaying data within the CID autocomplete
     /// </summary>
-    public class CidLookupGridModel
+    public class CidAutocompleteGridModel
     {
         /// <summary>
         /// Code CID10

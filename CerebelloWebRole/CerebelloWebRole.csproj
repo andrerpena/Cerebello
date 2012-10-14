@@ -121,6 +121,7 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
+    <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
@@ -132,16 +133,16 @@
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\MedicalProceduresLookupGridModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\SysMedicineLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalProceduresLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\SysMedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\PhoneViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\CidAutocompleteGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeUsersViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\MedicineLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
@@ -215,10 +216,10 @@
     <Compile Include="Code\Controls\Grid\Grid.cs" />
     <Compile Include="Code\Controls\Grid\GridField.cs" />
     <Compile Include="Code\Controls\Grid\GridFieldBase.cs" />
-    <Compile Include="Code\Controls\Lookup\Data\LookupJsonResult.cs" />
-    <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
-    <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />
-    <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteJsonResult.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteOptions.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
+    <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
@@ -352,7 +353,7 @@
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
     <Content Include="Content\Styles\App\Controls\grid.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.dropdown.menu.css" />
-    <Content Include="Content\Styles\App\Controls\jquery.cerebello.lookup.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.paginator.css" />
     <Content Include="Content\Styles\App\Controls\media.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
@@ -394,7 +395,7 @@
     <Content Include="Scripts\Controls\jquery.cerebello.chat.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.delete.confirmation.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.dropdown.menu.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.lookup.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
@@ -446,7 +447,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
-    <Folder Include="Code\NewFolder1\" />
     <Folder Include="Code\Setup\" />
     <Folder Include="Content\Images\App\Site\" />
     <Folder Include="Resources\" />
@@ -527,7 +527,7 @@
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\DiagnosisEditor.cshtml" />
+    <Content Include="Areas\App\Views\Anamneses\SymptomEditor.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -564,6 +564,8 @@
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Welcome.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\DaysOff.cshtml" />
+    <Content Include="Areas\App\Views\Diagnosis\Details.cshtml" />
+    <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />

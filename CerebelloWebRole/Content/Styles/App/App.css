@@ -195,7 +195,7 @@ input, textarea {
         padding: 4px;
     }
 
-    input.lookup {
+    input.autocomplete {
         background-image: url("/content/images/app/icons16/search.png");
         background-repeat: no-repeat;
         padding-left: 25px;
@@ -549,7 +549,7 @@ fieldset {
         width: 100%;
     }
 
-    .form-table input[type=text], .form-table select, .form-table textarea, .form-table .lookup {
+    .form-table input[type=text], .form-table select, .form-table textarea, .form-table .autocomplete {
         box-sizing: border-box;
         -ms-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -558,7 +558,7 @@ fieldset {
         max-width: 240px;
     }
 
-    .form-table .large input[type=text], .form-table .large select, .form-table .large textarea, .form-table .large .lookup {
+    .form-table .large input[type=text], .form-table .large select, .form-table .large textarea, .form-table .large .autocomplete {
         max-width: 350px;
     }
 

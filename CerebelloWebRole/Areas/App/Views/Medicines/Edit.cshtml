@@ -13,7 +13,7 @@
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(m => m.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
     editPanel.AddField(m => m.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-        format: @<text>@Html.LookupFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("lookuplaboratories"))</text>);
+        format: @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("lookuplaboratories"))</text>);
     editPanel.AddField(m => m.Usage);
     editPanel.AddField(m => m.ActiveIngredients, format: @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
 }

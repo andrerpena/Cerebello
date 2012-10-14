@@ -43,7 +43,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Text of the examination request.
         /// </summary>
-        [Display(Name = "Texto")]
+        [Display(Name = "Notas")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Text { get; set; }
     }

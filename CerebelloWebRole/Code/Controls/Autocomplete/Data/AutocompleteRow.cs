@@ -6,9 +6,9 @@ using System.Text;
 namespace CerebelloWebRole.Code.Controls
 {
     /// <summary>
-    /// Representa uma linha do lookup
+    /// Representa uma linha do autocomplete
     /// </summary>
-    public class LookupRow
+    public class AutocompleteRow
     {
         /// <summary>
         /// Id

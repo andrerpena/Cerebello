@@ -24,7 +24,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             Code = mp.Code,
                         };
 
-            var result = new LookupJsonResult()
+            var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
                 Count = query.Count()

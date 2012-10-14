@@ -55,26 +55,26 @@ table.edit-panel > tbody > tr > th
     padding: 0;
 }
 
-.edit-panel select, .edit-panel textarea, .edit-panel input[type=text], .edit-panel .lookup, .edit-panel .lookup-tree
+.edit-panel select, .edit-panel textarea, .edit-panel input[type=text], .edit-panel .autocomplete, .edit-panel .lookup-tree
 {
     max-width: 250px;
     width: 100%;
 }
 
-.edit-panel .large select, .edit-panel .large textarea, .edit-panel .large input[type=text], .edit-panel .large .lookup, .edit-panel .large .lookup-tree
+.edit-panel .large select, .edit-panel .large textarea, .edit-panel .large input[type=text], .edit-panel .large .autocomplete, .edit-panel .large .lookup-tree
 {
     width: 100%;
     max-width: 350px;
 }
 
-.edit-panel .x-large select, .edit-panel .x-large textarea, .edit-panel .x-large input[type=text], .edit-panel .x-large .lookup, .edit-panel .x-large .lookup-tree
+.edit-panel .x-large select, .edit-panel .x-large textarea, .edit-panel .x-large input[type=text], .edit-panel .x-large .autocomplete, .edit-panel .x-large .lookup-tree
 {
     width: 100%;
     max-width: 420px;
 }
 
 
-.edit-panel .small select, .edit-panel .small textarea, .edit-panel .small input[type=text], .edit-panel .small .lookup, .edit-panel .small .lookup-tree
+.edit-panel .small select, .edit-panel .small textarea, .edit-panel .small input[type=text], .edit-panel .small .autocomplete, .edit-panel .small .lookup-tree
 {
     width: 100%;
     max-width: 110px;
@@ -107,19 +107,19 @@ table.edit-panel > tbody > tr > th
     padding: 0;
 }
 
-.edit-panel.child-panel textarea, .edit-panel.child-panel input[type=text], .edit-panel.child-panel .lookup
+.edit-panel.child-panel textarea, .edit-panel.child-panel input[type=text], .edit-panel.child-panel .autocomplete
 {
     font-size: 14px;
     height: 26px;
     width: 200px;
 }
 
-.edit-panel.child-panel .large select, .edit-panel.child-panel .large textarea, .edit-panel.child-panel .large input[type=text], .edit-panel.child-panel .large .lookup
+.edit-panel.child-panel .large select, .edit-panel.child-panel .large textarea, .edit-panel.child-panel .large input[type=text], .edit-panel.child-panel .large .autocomplete
 {
     width: 290px;
 }
 
-.edit-panel.child-panel .small select, .edit-panel.child-panel .small textarea, .edit-panel.child-panel .small input[type=text], .edit-panel.child-panel .small .lookup
+.edit-panel.child-panel .small select, .edit-panel.child-panel .small textarea, .edit-panel.child-panel .small input[type=text], .edit-panel.child-panel .small .autocomplete
 {
     width: 90px;
 }
