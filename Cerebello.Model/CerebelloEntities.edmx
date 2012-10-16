@@ -2508,13 +2508,13 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="ContractTypeId" Nullable="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <Property Type="DateTime" Name="IssuanceDate" Nullable="false" />
-          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+          <Property Type="DateTime" Name="IssuanceDate" Nullable="false" Precision="0" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="0" />
           <Property Type="Decimal" Name="Fee" Nullable="false" Precision="16" Scale="2" />
-          <Property Type="DateTime" Name="EndDate" />
+          <Property Type="DateTime" Name="EndDate" Precision="0" />
           <Property Type="String" Name="Text" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="AccountContract" ToRole="Practice" />
           <NavigationProperty Name="SYS_ContractType" Relationship="Cerebello.Model.FK_AccountContract_SYS_ContractType" FromRole="AccountContract" ToRole="SYS_ContractType" />
@@ -2526,7 +2526,7 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="0" />
           <Property Type="Boolean" Name="IsTrial" Nullable="false" />
           <Property Type="String" Name="UrlIdentifier" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -3139,19 +3139,19 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="77">
-        <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="8.75" PointY="14.25" Height="2.7494921874999996" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="1.5" PointX="13.25" PointY="26.125" Height="2.9417936197916674" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="8.5" PointY="19" Height="1.5956835937499978" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="1.5" PointX="3.5" PointY="25.5" Height="3.5186979166666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Laboratory" Width="1.5" PointX="5.75" PointY="46.375" Height="1.9802864583333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="1.75" PointX="10.75" PointY="25.875" Height="3.7109993489583335" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="5.75" PointY="13.375" Height="4.6725065104166674" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Practice" Width="1.5" PointX="11.375" PointY="33" Height="2.3648893229166674" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="13.25" PointY="30.25" Height="2.1725878906249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="1.5" PointX="16.5" PointY="34" Height="2.1725878906250031" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.Secretary" Width="1.5" PointX="6.5" PointY="41.75" Height="1.4033821614583353" IsExpanded="true" />
-        <EntityTypeShape EntityType="Cerebello.Model.User" Width="1.875" PointX="8.75" PointY="31.25" Height="4.4802050781250031" IsExpanded="true" />
+      <Diagram Name="CerebelloEntities" ZoomLevel="21">
+        <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="40.75" PointY="1.375" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="1.5" PointX="29.875" PointY="14.125" Height="2.9417936197916674" IsExpanded="true" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="42.25" PointY="17.375" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="18.875" PointY="21.25" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
+        <EntityTypeShape EntityType="Cerebello.Model.Laboratory" Width="1.5" PointX="23.25" PointY="26.75" Height="1.9802864583333317" IsExpanded="true" FillColor="RoyalBlue" />
+        <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="3.25" PointX="37.625" PointY="19.125" Height="3.7109993489583335" IsExpanded="true" FillColor="LightGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="37.75" PointY="0.5" Height="4.6725065104166674" IsExpanded="true" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.Practice" Width="5.25" PointX="22.75" PointY="7.375" Height="2.3648893229166674" IsExpanded="true" FillColor="Black" />
+        <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="35.25" PointY="26.75" Height="2.1725878906249996" IsExpanded="true" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="2.125" PointX="32.25" PointY="26.375" Height="2.1725878906250031" IsExpanded="true" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Secretary" Width="1.5" PointX="18.125" PointY="3.5" Height="1.4033821614583353" IsExpanded="true" FillColor="Peru" />
+        <EntityTypeShape EntityType="Cerebello.Model.User" Width="3.875" PointX="20.25" PointY="1.25" Height="4.4802050781250031" IsExpanded="true" FillColor="Peru" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_Doctor" ManuallyRouted="false">
           <ConnectorPoint PointX="12" PointY="20.6006982421875" />
           <ConnectorPoint PointX="10.333333333333334" PointY="20.6006982421875" />
@@ -3221,8 +3221,8 @@
           <ConnectorPoint PointX="10.333333333333334" PointY="13.427643229166666" />
           <ConnectorPoint PointX="10.5" PointY="13.427643229166666" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.ActiveIngredient" Width="1.5" PointX="5.75" PointY="37.875" Height="1.9802864583333388" />
-        <EntityTypeShape EntityType="Cerebello.Model.Medicine" Width="1.5" PointX="8" PointY="37.5" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="Cerebello.Model.ActiveIngredient" Width="1.625" PointX="23.25" PointY="24.375" Height="1.9802864583333388" FillColor="RoyalBlue" />
+        <EntityTypeShape EntityType="Cerebello.Model.Medicine" Width="1.5" PointX="25.75" PointY="25.625" Height="2.9417936197916674" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Doctor">
           <ConnectorPoint PointX="13.5" PointY="20.615143229166669" />
           <ConnectorPoint PointX="13.791669166666667" PointY="20.615143229166669" />
@@ -3257,7 +3257,7 @@
           <ConnectorPoint PointX="13.791669166666667" PointY="14.078837890625" />
           <ConnectorPoint PointX="12" PointY="14.078837890625" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Anamnese" Width="1.875" PointX="13.25" PointY="22.25" Height="2.1725878906249996" />
+        <EntityTypeShape EntityType="Cerebello.Model.Anamnese" Width="1.875" PointX="41.75" PointY="19.5" Height="2.1725878906249996" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_Anamnese_Patient">
           <ConnectorPoint PointX="6.875" PointY="12.25" />
           <ConnectorPoint PointX="6.875" PointY="9.5862939453125" />
@@ -3265,9 +3265,9 @@
           <ConnectorPoint PointX="7.958333333333333" PointY="9.5862939453125" />
           <ConnectorPoint PointX="8.125" PointY="9.5862939453125" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_ActiveIngredient" Width="1.5" PointX="0.75" PointY="1.375" Height="1.5956835937499962" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Laboratory" Width="1.5" PointX="0.75" PointY="4.5" Height="1.595683593749996" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Medicine" Width="1.5" PointX="3" PointY="1" Height="1.9802864583333388" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_ActiveIngredient" Width="1.5" PointX="0.5" PointY="0.5" Height="1.5956835937499962" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Laboratory" Width="1.5" PointX="0.5" PointY="3.625" Height="1.595683593749996" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Medicine" Width="1.5" PointX="2.875" PointY="3.25" Height="1.9802864583333388" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_SYS_Medicine_SYS_Laboratory">
           <ConnectorPoint PointX="2.25" PointY="4.40625" />
           <ConnectorPoint PointX="3.15625" PointY="4.40625" />
@@ -3281,7 +3281,7 @@
           <ConnectorPoint PointX="6.9687475" PointY="15.960999348958334" />
           <ConnectorPoint PointX="6.9687475" PointY="17.625" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.CFG_Schedule" Width="3.625" PointX="5.75" PointY="22" Height="8.3262337239583317" />
+        <EntityTypeShape EntityType="Cerebello.Model.CFG_Schedule" Width="3.625" PointX="14.375" PointY="24.375" Height="8.3262337239583317" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_Schedule_Doctor">
           <ConnectorPoint PointX="13.5" PointY="21.172712343750003" />
           <ConnectorPoint PointX="13.791669166666667" PointY="21.172712343750003" />
@@ -3295,17 +3295,17 @@
           <ConnectorPoint PointX="21.75" PointY="21.172712343750003" />
           <ConnectorPoint PointX="21.75" PointY="20.576233723958332" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Leaflet" Width="1.5" PointX="0.75" PointY="6.875" Height="1.5956835937500102" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Leaflet" Width="1.5" PointX="0.5" PointY="6" Height="1.5956835937500102" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.SYS_MedicineLeaflet">
           <ConnectorPoint PointX="3.9375" PointY="4.75" />
           <ConnectorPoint PointX="3.9375" PointY="3.239889322916667" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Leaflet" Width="1.5" PointX="5.75" PointY="56" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="Cerebello.Model.Leaflet" Width="1.5" PointX="28" PointY="25.375" Height="1.7879850260416674" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.MedicineLeaflet">
           <ConnectorPoint PointX="17.5" PointY="13.037985026041667" />
           <ConnectorPoint PointX="17.5" PointY="17" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.CFG_Documents" Width="1.5" PointX="5.75" PointY="52.25" Height="2.5571907552083246" />
+        <EntityTypeShape EntityType="Cerebello.Model.CFG_Documents" Width="1.5" PointX="18.375" PointY="30.125" Height="2.5571907552083246" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_Documents_Doctor">
           <ConnectorPoint PointX="12.770853176422119" PointY="24.730205078125003" />
           <ConnectorPoint PointX="12.770853176422119" PointY="27.153595377604162" />
@@ -3313,8 +3313,8 @@
           <ConnectorPoint PointX="13.250012421544392" PointY="27.153595377604162" />
           <ConnectorPoint PointX="14.25" PointY="27.153595377604162" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.ModelMedicalCertificate" Width="2.125" PointX="5.75" PointY="49.125" Height="2.172587890625" />
-        <EntityTypeShape EntityType="Cerebello.Model.ModelMedicalCertificateField" Width="2.25" PointX="8.625" PointY="49.375" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="Cerebello.Model.ModelMedicalCertificate" Width="2.125" PointX="23.5" PointY="19.625" Height="2.172587890625" FillColor="RoyalBlue" />
+        <EntityTypeShape EntityType="Cerebello.Model.ModelMedicalCertificateField" Width="2.25" PointX="26.375" PointY="19" Height="1.7879850260416674" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_ModelMedicalCertificateField_ModelMedicalCertificate">
           <ConnectorPoint PointX="19.125" PointY="26.268992513020834" />
           <ConnectorPoint PointX="19.697916666666668" PointY="26.268992513020834" />
@@ -3330,8 +3330,8 @@
           <ConnectorPoint PointX="13.250012421544392" PointY="25.67435088176271" />
           <ConnectorPoint PointX="17" PointY="25.67435088176271" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificate" Width="2" PointX="13.25" PointY="37.375" Height="2.3648893229166674" />
-        <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificateField" Width="1.5" PointX="16" PointY="37.75" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificate" Width="2" PointX="34.75" PointY="19.125" Height="2.3648893229166674" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificateField" Width="1.875" PointX="32.25" PointY="18.75" Height="1.9802864583333246" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_MedicalCertificate_ModelMedicalCertificate">
           <ConnectorPoint PointX="19.125" PointY="27.482687174479167" />
           <ConnectorPoint PointX="19.78125" PointY="27.482687174479167" />
@@ -3358,23 +3358,12 @@
           <ConnectorPoint PointX="21.375" PointY="22.990143229166662" />
           <ConnectorPoint PointX="22.125" PointY="22.990143229166662" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Diagnosis" Width="1.5" PointX="16.5" PointY="23.5" Height="2.1725878906249996" />
-        <AssociationConnector Association="Cerebello.Model.FK_User_Doctor">
-          <ConnectorPoint PointX="12" PointY="22.696703660156253" />
-          <ConnectorPoint PointX="11.625" PointY="22.696703660156253" />
-          <ConnectorPoint PointX="13.013019583333334" PointY="20" />
-          <ConnectorPoint PointX="12.846352916666666" PointY="20" />
-          <ConnectorPoint PointX="12.516923958333335" PointY="20" />
-          <ConnectorPoint PointX="9.7083333333333339" PointY="20.75" />
-          <ConnectorPoint PointX="9.4791666666666661" PointY="20.75" />
-          <ConnectorPoint PointX="10.166666666666666" PointY="20" />
-          <ConnectorPoint PointX="8.125" PointY="20" />
-          <ConnectorPoint PointX="7.145833333333333" PointY="21.201396484375003" />
-          <ConnectorPoint PointX="6.979166666666667" PointY="21.201396484375003" />
-          <ConnectorPoint PointX="7.666666666666667" PointY="24.863205778058955" />
-          <ConnectorPoint PointX="6.380208333333333" PointY="24.863205778058955" />
-          <ConnectorPoint PointX="6.072916666666667" PointY="24.863205778058955" />
-          <ConnectorPoint PointX="5" PointY="24.863205778058955" />
+        <EntityTypeShape EntityType="Cerebello.Model.Diagnosis" Width="1.5" PointX="42.25" PointY="14.625" Height="2.1725878906249996" FillColor="ForestGreen" />
+        <AssociationConnector Association="Cerebello.Model.FK_User_Doctor" ManuallyRouted="true">
+          <ConnectorPoint PointX="21.090668008191784" PointY="21.25" />
+          <ConnectorPoint PointX="21.090668008191784" PointY="13.317459663915415" />
+          <ConnectorPoint PointX="21.03128168175304" PointY="13.317459663915415" />
+          <ConnectorPoint PointX="21.03128168175304" PointY="6.3071093750000031" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Practice">
           <ConnectorPoint PointX="9.875" PointY="23.351896198623507" />
@@ -3397,13 +3386,13 @@
           <ConnectorPoint PointX="6.072916666666667" PointY="22.68349531971726" />
           <ConnectorPoint PointX="5" PointY="22.68349531971726" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Administrator" Width="1.5" PointX="6.5" PointY="34.625" Height="1.4033821614583335" />
+        <EntityTypeShape EntityType="Cerebello.Model.Administrator" Width="1.5" PointX="18.125" PointY="1.75" Height="1.4033821614583335" FillColor="Peru" />
         <AssociationConnector Association="Cerebello.Model.FK_User_Administrator">
           <ConnectorPoint PointX="2.25" PointY="24.701691080729166" />
           <ConnectorPoint PointX="3.125" PointY="24.701691080729166" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalEntity" Width="1.5" PointX="1.25" PointY="23.875" Height="1.7879850260416674" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalSpecialty" Width="2" PointX="0.75" PointY="26.875" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalEntity" Width="2.125" PointX="15.625" PointY="16.625" Height="1.7879850260416674" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalSpecialty" Width="2.125" PointX="15.625" PointY="18.75" Height="1.7879850260416674" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_Doctor_MedicalEntity1">
           <ConnectorPoint PointX="11.25" PointY="30.393992513020834" />
           <ConnectorPoint PointX="13.166679088211058" PointY="30.393992513020834" />
@@ -3414,10 +3403,10 @@
           <ConnectorPoint PointX="13.8750025" PointY="22.025063871474188" />
           <ConnectorPoint PointX="13.5" PointY="22.025063871474188" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.HealthEnsurance" Width="1.5" PointX="2.75" PointY="4.75" Height="1.4033821614583246" />
-        <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="1.5" PointX="4.75" PointY="4.75" Height="1.5956835937500102" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="5.75" PointY="0.75" Height="1.5956835937499996" />
-        <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="16.25" PointY="26.625" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="Cerebello.Model.HealthEnsurance" Width="1.625" PointX="8.625" PointY="0.5" Height="1.4033821614583246" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="1.5" PointX="10.875" PointY="0.5" Height="1.5956835937500102" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="6.375" PointY="0.5" Height="1.5956835937499996" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="40.875" PointY="25.375" Height="2.3648893229166674" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_Patient">
           <ConnectorPoint PointX="6.15625" PointY="15.960999348958334" />
           <ConnectorPoint PointX="6.15625" PointY="25.307444661458334" />
@@ -3429,12 +3418,12 @@
           <ConnectorPoint PointX="8.1458333333333339" PointY="25.307444661458334" />
           <ConnectorPoint PointX="8.25" PointY="25.307444661458334" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.ExaminationResult" Width="2.25" PointX="16.25" PointY="30.625" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="Cerebello.Model.ExaminationResult" Width="2.25" PointX="41.75" PointY="22" Height="2.3648893229166674" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationResult_Patient">
           <ConnectorPoint PointX="6.296875" PointY="15.960999348958334" />
           <ConnectorPoint PointX="6.296875" PointY="26.75" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalProcedure" Width="1.5" PointX="14" PointY="18.75" Height="1.9802864583333388" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalProcedure" Width="1.875" PointX="43.625" PointY="25.625" Height="1.9802864583333388" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_SYS_MedicalProcedures11">
           <ConnectorPoint PointX="10.875" PointY="4.8651432291666694" />
           <ConnectorPoint PointX="11.125" PointY="4.8651432291666694" />
@@ -3465,7 +3454,7 @@
           <ConnectorPoint PointX="1.84375" PointY="9.12474609375" />
           <ConnectorPoint PointX="3" PointY="9.12474609375" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.CFG_DayOff" Width="1.5" PointX="5.75" PointY="31" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="Cerebello.Model.CFG_DayOff" Width="1.5" PointX="16.5" PointY="22.125" Height="1.9802864583333246" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_DayOff_Doctor">
           <ConnectorPoint PointX="12.433590625" PointY="20.25" />
           <ConnectorPoint PointX="12.433590625" PointY="16.510315755208328" />
@@ -3475,8 +3464,8 @@
           <ConnectorPoint PointX="13.958335833333335" PointY="16.510315755208328" />
           <ConnectorPoint PointX="14.25" PointY="16.510315755208328" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.AccountContract" Width="1.5" PointX="17.125" PointY="28.625" Height="3.1340950520833246" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_ContractType" Width="1.5" PointX="14.875" PointY="30" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="Cerebello.Model.AccountContract" Width="1.75" PointX="31" PointY="7.75" Height="3.1340950520833246" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_ContractType" Width="1.5" PointX="33.625" PointY="8.25" Height="2.3648893229166674" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_AccountContract_Practice" >
           <ConnectorPoint PointX="11.3359375" PointY="25.095602213541667" />
           <ConnectorPoint PointX="11.3359375" PointY="29.148438749999997" />
@@ -3495,7 +3484,7 @@
           <ConnectorPoint PointX="11.35546875" PointY="28.855466875000005" />
           <ConnectorPoint PointX="11.35546875" PointY="25.095602213541667" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.ChatMessage" Width="1.5" PointX="13.625" PointY="33.5" Height="2.7494921875000102" />
+        <EntityTypeShape EntityType="Cerebello.Model.ChatMessage" Width="1.5" PointX="25.625" PointY="2" Height="2.7494921875000102" FillColor="DimGray" />
         <AssociationConnector Association="Cerebello.Model.FK_ChatMessage_Practice">
           <ConnectorPoint PointX="10.750000499999999" PointY="24.518697916666667" />
           <ConnectorPoint PointX="10.750000499999999" PointY="24.980205078125003" />
@@ -3561,7 +3550,7 @@
           <ConnectorPoint PointX="17.468747999999998" PointY="21.625" />
           <ConnectorPoint PointX="17.468747999999998" PointY="21.75" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Symptom" Width="1.5" PointX="16.5" PointY="20.75" />
+        <EntityTypeShape EntityType="Cerebello.Model.Symptom" Width="1.5" PointX="45" PointY="19.5" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis_Anamnese1" />
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis2_Diagnosis2" />
         </Diagram>
