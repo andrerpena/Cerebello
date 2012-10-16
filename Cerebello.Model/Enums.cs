@@ -8,6 +8,17 @@ using Cerebello.Model;
 // todo: this namespace is wrong... should be Cerebello.Model
 namespace CerebelloWebRole.Models
 {
+    /// <summary>
+    /// Enumeration of all Cerebello usage contract types.
+    /// Each contract type allow very little variation.
+    /// </summary>
+    public enum ContractTypes
+    {
+        TrialContract = 1,
+        MonthlyFeeSubscriptionContract = 2,
+        OneFeeOneYearSubscriptionContract = 3,
+        MonthlyFeeSubscriptionForNewcomersContract = 4,
+    }
 
     public enum TypeMaritalStatus
     {
@@ -59,7 +70,7 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Outro responsável")]
         Other
     }
-    
+
     /// <summary>
     /// Appointment type
     /// </summary>

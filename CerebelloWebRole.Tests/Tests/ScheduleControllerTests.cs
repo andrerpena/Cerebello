@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Tests
         }
         #endregion
 
-        #region Create Visualization
+        #region Create [Get]
         [TestMethod]
         public void CreateView_ViewNew_SpecificTime_HappyPath()
         {
@@ -419,7 +419,7 @@ namespace CerebelloWebRole.Tests
         }
         #endregion
 
-        #region Create
+        #region Create [Post]
         /// <summary>
         /// This test consists of creating an appointment that conflicts in time with another appointment that
         /// already exists in the DB.

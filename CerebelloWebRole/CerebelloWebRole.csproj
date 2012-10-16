@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -63,6 +64,7 @@
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -109,12 +111,15 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigAccountController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
@@ -549,6 +554,10 @@
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Welcome.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\DaysOff.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Index.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\_ViewStart.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
@@ -574,6 +583,10 @@
       <Project>{D5F1D306-C581-42FD-935B-72F71B18775D}</Project>
       <Name>Cerebello.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Profile - MASB\Documents\Visual Studio 2010\Projects\PayPal.ExpressCheckout\PayPal.ExpressCheckout\PayPal.csproj">
+      <Project>{CA380252-2BFE-4717-9CA9-7B71A253CE2C}</Project>
+      <Name>PayPal</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -591,7 +604,7 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
+          <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>

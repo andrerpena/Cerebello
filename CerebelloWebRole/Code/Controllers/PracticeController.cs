@@ -20,6 +20,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Consultório atual
         /// </summary>
+        // todo: this property should be name DBPractice like the DBUser property.
         public Practice Practice { get; private set; }
 
         /// <summary>
@@ -57,8 +58,10 @@ namespace CerebelloWebRole.Code
 
             // setting up user
             var identity = this.User as AuthenticatedPrincipal;
-            this.DBUser = (User)db.Users.Where(p => p.Id == identity.Profile.Id).First();
-
+            this.ViewBag.DBUser =
+            this.DBUser =
+                (User)db.Users.Where(p => p.Id == identity.Profile.Id).First();
+            
             // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
             var controllerName = this.RouteData.Values["controller"] as string;

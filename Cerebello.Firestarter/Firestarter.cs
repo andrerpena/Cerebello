@@ -25,14 +25,14 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Crates a fake user, doctor and practice.
         /// </summary>
-        public static Doctor Create_CrmMg_Psiquiatria_DrHouse_Andre(CerebelloEntities db)
+        public static Doctor Create_CrmMg_Psiquiatria_DrHouse_Andre(CerebelloEntities db, bool useTrialContract = true)
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
             var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
-            var practice = CreatePractice_DrHouse(db);
+            var practice = CreatePractice_DrHouse(db, useTrialContract);
 
             // Creating person, user and doctor objects to be used by André.
             var andre = CreateAdministratorDoctor_Andre(db, entity, specialty, practice);
@@ -49,14 +49,14 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Crates a fake user, doctor and practice.
         /// </summary>
-        public static List<Doctor> Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(CerebelloEntities db)
+        public static List<Doctor> Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(CerebelloEntities db, bool useTrialContract = true)
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
             var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
-            var practice = CreatePractice_DrHouse(db);
+            var practice = CreatePractice_DrHouse(db, useTrialContract);
 
             // Creating person, user and doctor objects to be used by André.
             var andre = CreateAdministratorDoctor_Andre(db, entity, specialty, practice);
@@ -75,14 +75,14 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Crates a fake user, doctor and practice.
         /// </summary>
-        public static Doctor Create_CrmMg_Psiquiatria_DraMarta_Marta(CerebelloEntities db)
+        public static Doctor Create_CrmMg_Psiquiatria_DraMarta_Marta(CerebelloEntities db, bool useTrialContract = true)
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
             var specialty = CreateSpecialty_Psiquiatria(db);
 
             // Creating practice.
-            var practice = CreatePractice_DraMarta(db);
+            var practice = CreatePractice_DraMarta(db, useTrialContract);
 
             var marta = CreateDoctor_MartaCura(db, entity, specialty, practice);
 
@@ -394,8 +394,9 @@ namespace Cerebello.Firestarter
         /// Creates a new practice and returns it.
         /// </summary>
         /// <param name="db"></param>
+        /// <param name="contract"></param>
         /// <returns></returns>
-        public static Practice CreatePractice_DrHouse(CerebelloEntities db)
+        public static Practice CreatePractice_DrHouse(CerebelloEntities db, bool useTrialContract = true)
         {
             var practice = new Practice()
             {
@@ -410,6 +411,10 @@ namespace Cerebello.Firestarter
             db.Practices.AddObject(practice);
 
             db.SaveChanges();
+
+            if (useTrialContract)
+                SetupPracticeWithTrialContract(db, practice);
+
             return practice;
         }
 
@@ -417,8 +422,9 @@ namespace Cerebello.Firestarter
         /// Creates a new practice and returns it.
         /// </summary>
         /// <param name="db"></param>
+        /// <param name="contract"></param>
         /// <returns></returns>
-        public static Practice CreatePractice_DraMarta(CerebelloEntities db)
+        public static Practice CreatePractice_DraMarta(CerebelloEntities db, bool useTrialContract = true)
         {
             var practice = new Practice()
             {
@@ -433,7 +439,37 @@ namespace Cerebello.Firestarter
             db.Practices.AddObject(practice);
 
             db.SaveChanges();
+
+            if (useTrialContract)
+                SetupPracticeWithTrialContract(db, practice);
+
             return practice;
+        }
+
+        /// <summary>
+        /// Sets up a practice's contract with a default trial contract.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="practice"></param>
+        private static AccountContract SetupPracticeWithTrialContract(CerebelloEntities db, Practice practice)
+        {
+            var trialContractType = db.SYS_ContractType.Where(ct => ct.Id == (int)ContractTypes.TrialContract).Single();
+            var accountContract = practice.AccountContract = new AccountContract
+            {
+                ContractTypeId = (int)ContractTypes.TrialContract,
+                IssuanceDate = new DateTime(2012, 01, 25),
+                StartDate = new DateTime(2012, 02, 10),
+                EndDate = null,
+                Fee = 0.00M,
+                SYS_ContractType = trialContractType,
+            };
+            practice.AccountContract.Text = StringHelper.ReflectionReplace(
+                practice.AccountContract.SYS_ContractType.Text,
+                practice.AccountContract);
+
+            db.SaveChanges();
+
+            return practice.AccountContract;
         }
 
         /// <summary>
@@ -498,51 +534,8 @@ namespace Cerebello.Firestarter
                 FooterRight1 = "[Cidade]",
                 FooterRight2 = "[CRM]"
             };
-        }
 
-        public static void SetupUserData(Doctor doctor, CerebelloEntities db)
-        {
-            doctor.CFG_Schedule = new CFG_Schedule()
-            {
-                AppointmentTime = 30,
-                Sunday = false,
-                Monday = true,
-                Tuesday = true,
-                Wednesday = true,
-                Thursday = true,
-                Friday = true,
-                Saturday = false,
-                MondayWorkdayStartTime = "09:00",
-                MondayWorkdayEndTime = "18:00",
-                MondayLunchStartTime = "12:00",
-                MondayLunchEndTime = "13:00",
-                TuesdayWorkdayStartTime = "09:00",
-                TuesdayWorkdayEndTime = "18:00",
-                TuesdayLunchStartTime = "12:00",
-                TuesdayLunchEndTime = "13:00",
-                WednesdayWorkdayStartTime = "09:00",
-                WednesdayWorkdayEndTime = "18:00",
-                WednesdayLunchStartTime = "12:00",
-                WednesdayLunchEndTime = "13:00",
-                ThursdayWorkdayStartTime = "09:00",
-                ThursdayWorkdayEndTime = "18:00",
-                ThursdayLunchStartTime = "12:00",
-                ThursdayLunchEndTime = "13:00",
-                FridayWorkdayStartTime = "09:00",
-                FridayWorkdayEndTime = "18:00",
-                FridayLunchStartTime = "12:00",
-                FridayLunchEndTime = "13:00",
-            };
-
-            doctor.CFG_Documents = new CFG_Documents()
-            {
-                Header1 = doctor.Users.First().Person.FullName,
-                Header2 = "[Especialidade Médica]",
-                FooterLeft1 = "[Endereço]",
-                FooterLeft2 = "[Telefones]",
-                FooterRight1 = "[Cidade]",
-                FooterRight2 = "[CRM]"
-            };
+            db.SaveChanges();
         }
 
         public static Appointment CreateFakeAppointments(CerebelloEntities db, DateTime createdOn, Doctor doc, DateTime start, TimeSpan duration, string desc, User creator = null)
@@ -564,6 +557,294 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             return result;
+        }
+
+        public static void Initialize_SYS_Contracts(CerebelloEntities db)
+        {
+            // Contratos de uso para o Cerebello.com
+            db.SYS_ContractType.AddObject(new SYS_ContractType
+            {
+                Id = (int)ContractTypes.TrialContract,
+                CreatedOn = new DateTime(2012, 09, 18),
+                IsTrial = true,
+                Name = "Contrato de teste",
+                UrlIdentifier = "TrialContract",
+                #region Text
+                Text = @"
+Contrato de teste
+=================
+
+- **Data de expedição:** <%IssuanceDate%>
+
+Software de teste
+-----------------
+
+- **Custo:** não possui nenhum custo.
+- **Validade:** não possui validade.
+
+Limitações
+----------
+
+- **Pacientes:** até 50.
+- **Download de dados:** disponível.
+- **Segurança de dados:** possui toda a segurança de dados relacionada a prontuários eletrônicos:
+    a) protocolo HTTPS;
+    b) download dos dados;
+    c) backup do banco de dados na nuvém;
+
+Upgrade
+-------
+
+Consta na migração deste plano para outro melhor.
+
+- **Sem perda de dados:** é possível escolher se o upgrade deve manter os dados que já foram inseridos.
+- **Sem custo:** a operação de upgrade em si não possui custo.
+- **Qualquer plano:** o upgrade pode ser feito para qualquer outro plano.
+
+",
+                #endregion
+            });
+
+            db.SYS_ContractType.AddObject(new SYS_ContractType
+            {
+                Id = (int)ContractTypes.MonthlyFeeSubscriptionContract,
+                CreatedOn = new DateTime(2012, 09, 18),
+                IsTrial = false,
+                Name = "Contrato de assinatura do plano Básico mensal pré-pago",
+                UrlIdentifier = ContractTypes.MonthlyFeeSubscriptionContract.ToString(),
+                #region Text
+                Text = @"
+Contrato de assinatura do plano Básico mensal pré-pago
+======================================================
+
+- **Data de expedição:** <%IssuanceDate%>
+
+Preço e frequência de cobranças
+-------------------------------
+
+- **Pré-pago:** Cada taxa é cobrada antes de se iniciar o período de uso mensal.
+- **Data de início:** <%StartDate%>.
+- **Frequência de cobrança**: Mensal.
+- **Valor da cobrança**: R$<%Fee%>.
+- **Reajuste da cobrança:**
+    Feita anualmente no dia 01 de janeiro, com variação do 'Valor da cobrança'
+    igual ao da inflação do ano anterior (IPCA).
+
+Cancelamento
+------------
+
+- **Cancelamento:**
+    O software tem suas funcionalidades interrompidas, assim como as cobranças.
+    O usuário ainda poderá logar, para fazer download dos dados,
+    assim como entrar na área de 'Configuração de conta'.
+- **Reativação:**
+    A conta pode ser reativada, num prazo máximo de 6 mêses,
+    após o qual os dados não poderão mais ser recuperados.
+    Em caso de inadimplência, a conta só poderá ser reativada pagando-se o valor da dívida.
+
+- **Cancelamento no tempo de experiência:**
+    O contratante pode cancelar a conta dentro de 7 dias, com reembolso total do valor pago.
+- **Cancelamento por vontade do contratante:**
+    A conta será cancelada ao início do próximo período de uso, sem nenhum custo adicional.
+- **Cancelamento por vontade do contratante com reembolso:**
+    A conta é cancelada imediatamente, com reembolso de 70% do valor proporcional ao restante do período de uso.
+- **Cancelamento por vontade do contratante com faturas atrasadas:**
+    A conta é cancelada imediatamente, devendo pagar o valor proporcional ao tempo de uso,
+    ou então negociar a dívida por um dos canais de negociação.
+
+- **Cancelamento por falta de pagamento:** Na data da cobrança,
+    se a mesma não for paga e já houver 1 fatura atrasada.
+    O contratante deve realizar o pagamento integral das faturas atrasadas.
+
+- **Cancelamento por inobservância do contrato:** A conta pode ser suspensa,
+    quando houver inobservância deste contrato no que diz respeito ao uso do software.
+
+Definições e termos
+-------------------
+
+- **Adimplente:** usuário em dia com todos os pagamentos.
+- **Inadimplente:** usuário que possui faturas atrasadas.
+
+- **Logar:** ato de entrar no software, não necessariamente com acesso a todas as funcionalidades.
+- **Login:** conjunto de informações necessárias para um usuário logar.
+
+",
+                #endregion
+            });
+
+            db.SYS_ContractType.AddObject(new SYS_ContractType
+            {
+                Id = (int)ContractTypes.OneFeeOneYearSubscriptionContract,
+                CreatedOn = new DateTime(2012, 09, 18),
+                IsTrial = false,
+                Name = "Contrato de assinatura do plano Básico com validade de 1 ano",
+                UrlIdentifier = "OneFeeOneYearSubscriptionContract",
+                #region Text
+                Text = @"
+Contrato de assinatura do plano Básico com validade de 1 ano
+============================================================
+
+- **Data de expedição:** <%IssuanceDate%>
+
+Preço e validade
+----------------
+
+- **Data de início:** <%StartDate%>.
+- **Frequência de cobrança**: uma única cobrança.
+- **Data da cobrança**: primeiro dia após o tempo de experiência ('Data de início' mais 7 dias).
+- **Valor da cobrança**: R$<%Fee%>.
+- **Validade:** 1 ano da 'data de início'.
+- **Renovação:** O plano pode ser renovado, observando-se as regras de renovação e migração.
+
+Renovação e migração
+--------------------
+
+- **Termos:**
+    a) Novo contrato: é o contrato que sucede o que está em vias de expirar.
+    b) Antigo contrato: é o contrato atual que está chegando ao fim.
+    c) Renovação: quando o novo contrato e o antigo contrato representam o mesmo plano.
+    d) Imigração: quando o novo contrato representa o plano descrito neste documento,
+        e o antigo contrato representa outro plano.
+    e) Emigração: quando o novo contrato representa outro plano,
+        e o antigo contrato representa o plano descrito neste documento.
+    f) Migração: diz respeito a imigração, emigração ou ambas.
+
+- **Regras gerais:**
+    a) O novo contrato só será realmente firmado na 'Data de início' caso o contratante esteja adimplente.
+    b) Todo o antigo contrato deixa de valer, com exceção das regras aplicadas na seção 'Renovação e migração'.
+        (o que inclui esta regra em sí, portanto ela vale mesmo após o término da validade do contrato)
+
+- **Regras de renovação ou imigração:**
+    a) O intervalo da 'data de expedição' até a 'data de início' do novo contrato pode ser de até 60 dias.
+    b) A 'data de expedição' do novo contrato deve ser menor ou igual à sua 'data de início'.
+
+- **Regras de renovação ou emigração:**
+    a) O uso que está sendo feito do software no momento da mudança de contrato deve ser contemplado
+        pelo novo contrato, caso contrário o novo contrato não será firmado, e a conta cancelada.
+        (e.g. para emigrar para o plano de testes, a conta deve estar dentro do limite da quantidade de pacientes)
+        (e.g. para emigrar para o plano para médicos recém credenciados, o médico deve ser recém credenciado de fato)
+
+Cancelamento
+------------
+
+- **Cancelamento:**
+    O software tem suas funcionalidades interrompidas, assim como as cobranças.
+    O usuário ainda poderá logar, para fazer download dos dados,
+    assim como entrar na área de 'Configuração de conta'.
+- **Reativação:**
+    A conta pode ser reativada, num prazo máximo de 6 mêses,
+    após o qual os dados não poderão mais ser recuperados.
+
+- **Cancelamento antes da data de início:** é como se o contrato nunca tivesse sido feito, não há nenhum custo.
+- **Cancelamento no tempo de experiência:** o contratante pode cancelar a conta dentro de 7 dias.
+- **Cancelamento por vontade do contratante com reembolso:** a conta é cancelada imediatamente,
+    com reembolso de 70% do valor proporcional ao restante do período de uso.
+- **Cancelamento ao fim da validade:** ao final da validade deste contrato,
+    a conta é cancelada se não houver nenhum novo contrato firmado para o período posterior.
+
+- **Cancelamento por inobservância do contrato:** a conta pode ser suspensa, quando houver inobservância deste contrato no que diz respeito ao uso do software.
+
+Definições e termos
+-------------------
+
+- **Adimplente:** usuário em dia com todos os pagamentos.
+- **Inadimplente:** usuário que possui faturas atrasadas.
+
+- **Logar:** ato de entrar no software, não necessariamente com acesso a todas as funcionalidades.
+- **Login:** conjunto de informações necessárias para um usuário logar.
+",
+                #endregion
+            });
+
+            db.SYS_ContractType.AddObject(new SYS_ContractType
+            {
+                Id = (int)ContractTypes.MonthlyFeeSubscriptionForNewcomersContract,
+                CreatedOn = new DateTime(2012, 09, 19),
+                IsTrial = false,
+                Name = "Contrato de assinatura do plano Básico mensal pré-pago para novos médicos",
+                UrlIdentifier = "MonthlyFeeSubscriptionForNewcomersContract",
+                #region Text
+                // nota: poderia ser clínicas recém formadas (verificar pelo CNPJ)
+                // nota: poderia ser para recém formados (verificar pelo diploma)
+                Text = @"
+Contrato de assinatura do plano Básico mensal pré-pago para novos médicos
+=========================================================================
+
+- **Data de expedição:** <%IssuanceDate%>.
+- **Público alvo:**
+    Médicos recém credenciados pelo conselho profissional de sua região.
+    a) 'Data de expedição' limitada a até 6 mêses após a primeira credenciação obtida de um conselho profissional.
+    b) A prova é feita verificando-se o número de registro no conselho profissional.
+    O médico recém credenciado deve ser o proprietário da conta.
+
+Preço e frequência de cobranças
+-------------------------------
+
+- **Pré-pago:** Cada taxa é cobrada antes de se iniciar o período de uso trimestral.
+- **Data de início:** <%StartDate%>.
+- **Frequência de cobrança:** Trimestral.
+- **Valor da cobrança:** R$<%Fee%>.
+- **Reajuste da cobrança:**
+    Feita anualmente no dia 01 de janeiro, com variação do 'Valor da cobrança'
+    igual ao da inflação do ano anterior (IPCA).
+- **Validade:** 2 anos após a 'Data de início' do contrato (equivalente a 8 ciclos de cobrança).
+- **Migração:**
+    Este contrato não pode ser renovado, entretanto pode ser feita a migração para outro plano,
+    observando-se as regras de migração entre ambos os planos.
+
+Cancelamento
+------------
+
+- **Cancelamento:**
+    O software tem suas funcionalidades interrompidas, assim como as cobranças.
+    O usuário ainda poderá logar, para fazer download dos dados,
+    assim como entrar na área de 'Configuração de conta'.
+- **Reativação:**
+    A conta pode ser reativada, num prazo máximo de 6 mêses,
+    após o qual os dados não poderão mais ser recuperados.
+    Em caso de inadimplência, a conta só poderá ser reativada pagando-se o valor total da dívida.
+
+- **Cancelamento no tempo de experiência:**
+    O contratante pode cancelar a conta dentro de 7 dias, com reembolso total do valor pago.
+- **Cancelamento por vontade do contratante:**
+    A conta será cancelada ao início do próximo período de uso, sem nenhum custo adicional.
+- **Cancelamento por vontade do contratante com reembolso:**
+    A conta é cancelada imediatamente, com reembolso de 85% do valor proporcional ao restante do período de uso.
+- **Cancelamento por vontade do contratante com faturas atrasadas:**
+    A conta é cancelada imediatamente, devendo pagar o valor proporcional ao tempo de uso,
+    ou então negociar a dívida por um dos canais de negociação.
+- **Cancelamento ao fim da validade:** ao final da validade deste contrato,
+    a conta é cancelada se não houver nenhum novo contrato firmado para o período posterior.
+
+- **Cancelamento por falta de pagamento:** Na data da cobrança,
+    se a mesma não for paga e já houver 1 faturas atrasadas (lembrando que as faturas são trimestrais).
+    O contratante deve realizar o pagamento integral das faturas atrasadas.
+
+- **Cancelamento por inobservância do contrato:** A conta pode ser cancelada,
+    quando houver inobservância deste contrato no que diz respeito ao uso do software.
+    (e.g. se o usuário não for realmente recém formado/credenciado)
+
+Upgrade
+-------
+
+- **Sem perda de dados:** é possível escolher se o upgrade deve manter os dados que já foram inseridos.
+- **Sem custo:** a operação de upgrade em si não possui custo.
+- **Planos possíveis:** o upgrade pode ser feito para qualquer outro plano pago.
+
+Definições e termos
+-------------------
+
+- **Adimplente:** usuário em dia com todos os pagamentos.
+- **Inadimplente:** usuário que possui faturas atrasadas.
+
+- **Logar:** ato de entrar no software, não necessariamente com acesso a todas as funcionalidades.
+- **Login:** conjunto de informações necessárias para um usuário logar.
+
+",
+                #endregion
+            });
+
+            db.SaveChanges();
         }
 
         public static void Initialize_SYS_MedicalEntity(CerebelloEntities db)

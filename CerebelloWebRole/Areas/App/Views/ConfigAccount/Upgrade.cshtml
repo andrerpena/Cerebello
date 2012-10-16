@@ -1,0 +1,104 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ConfigAccountViewModel
+@{
+    ViewBag.Title = string.Format("Upgrade para {0}", this.Model.Migrations[0].Contract.PlanTitle);
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    var partialViewName = string.Format("{0}Partial", this.Model.Migrations[0].Contract.UrlIdentifier);
+}
+@section Title {
+    @ViewBag.Title
+}
+<div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
+    @Html.Partial(partialViewName)
+</div>
+
+
+<div style="margin: 1em; padding: 1em; border: 1px solid #DDD; overflow: hidden;">
+    <h2 style="margin-bottom: 1em;">
+        Forma de pagamento</h2>
+    <style type="text/css">
+        table.paymethod
+        {
+            display: inline-block;
+            vertical-align: top;
+            margin: 1em;
+            border-top: 4px solid;
+            width: 180px;
+            height: 90px;
+        }
+        
+        .paymethod > tbody > tr > td
+        {
+            width: 180px;
+            height: 90px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .paymethod > tbody > tr > td > div
+        {
+            display: inline-block; /*border: 1px solid black;*/
+        }
+    </style>
+    <table class="paymethod user_select_none" style="border-color: orange;">
+        <tbody>
+            <tr>
+                <td>
+                    <div>
+                        <!-- PayPal Logo -->
+                        <table border="0" cellpadding="0" cellspacing="0" align="center">
+                            <tr>
+                                <td align="center">
+                                    <a href="@(Url.Action("PayPalCheckout"))">
+                                        <img src="https://www.paypal-brasil.com.br/logocenter/util/img/btPagarAgora_1.png"
+                                            border="0" alt="Imagens de solução"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    <a href="#" onclick="javascript:window.open('http://www.paypal-brasil.com.br/popupcheckout/','olcwhatispaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, width=809, height=320');">
+                                        <img src="https://www.paypal-brasil.com.br/logocenter/util/img/btPagarAgora_2.png"
+                                            border="0" alt="Imagens de solução" /></a>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- PayPal Logo -->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="paymethod user_select_none" style="border-color: green;">
+        <tbody>
+            <tr>
+                <td>
+                    <div>
+                        <!-- INICIO FORMULARIO BOTAO PAGSEGURO -->
+                        <form target="pagseguro" action="https://pagseguro.uol.com.br/v2/pre-approvals/request.html"
+                        method="post">
+                        <input type="hidden" name="code" value="432B4F9F7474DC25547D1FB4F0B7AF95" />
+                        <input type="image" src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/assinaturas/120x53-assinar.gif"
+                            name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!" />
+                        </form>
+                        <!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="paymethod user_select_none" style="border-color: blue;">
+        <tbody>
+            <tr>
+                <td>
+                    <div>
+                        <!-- INICIO FORMULARIO BOTAO GOOGLE -->
+                        <form method="POST" action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/1234567890">
+                        <input type="image" name="Google Checkout" alt="Fast checkout through Google" src="https://checkout.google.com/buttons/checkout.gif?merchant_id=&w=168&h=44&style=white&variant=text&loc=pt_BR"
+                            height="44" width="168">
+                        </form>
+                        <!-- FINAL FORMULARIO BOTAO GOOGLE -->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -48,7 +48,8 @@ namespace Cerebello
 
         protected void Application_AuthenticateRequest()
         {
-            SecurityManager.SetPrincipal();
+            var httpContext = new HttpContextWrapper(this.Context);
+            SecurityManager.SetPrincipal(httpContext);
         }
     }
 }

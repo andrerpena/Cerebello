@@ -3,6 +3,7 @@
     var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     var practiceId = ViewBag.Practice.Id;
+    var user = (Cerebello.Model.User)ViewBag.DBUser;
 }
 @section MainMenu {
     <ul class="tabNav">
@@ -21,6 +22,19 @@
         <li class="@(controllerName.Equals("users") ? "youarehere" : "")">
             <a href="@Url.Action("Index", "users")" class="doctors-icon">Usuários</a>
         </li>
+        @if (user.AdministratorId != null)
+        {
+            <li class="header">Configurações</li>
+            <li class="@(controllerName.Equals("configpractice") ? "youarehere" : "")">
+                <a href="@Url.Action("Index", "configpractice")" class="doctors-icon">Config. do consultório</a>
+            </li>
+            if (user.IsOwner)
+            {
+                <li class="@(controllerName.Equals("configaccount") ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "configaccount")" class="doctors-icon">Config. da conta</a>
+                </li>
+            }
+        }
     </ul>
     <hr />
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Linq.Expressions;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
 
 namespace CerebelloWebRole.Code.Controls
 {
@@ -16,6 +15,22 @@ namespace CerebelloWebRole.Code.Controls
             this.Expression = exp;
             this.Header = header;
             this.WholeRow = foreverAlone;
+        }
+
+        public override MvcHtmlString Label(HtmlHelper htmlHelper)
+        {
+            if (this.Header != null)
+                return new MvcHtmlString(this.Header);
+
+            return ((HtmlHelper<TModel>)htmlHelper).LabelFor(this.Expression);
+        }
+
+        public override MvcHtmlString Display(HtmlHelper htmlHelper)
+        {
+            if (this.Format != null)
+                return new MvcHtmlString(this.Format(htmlHelper.ViewData.Model).ToString());
+
+            return ((HtmlHelper<TModel>)htmlHelper).DisplayFor(this.Expression);
         }
     }
 }

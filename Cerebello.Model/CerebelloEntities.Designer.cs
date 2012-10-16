@@ -59,6 +59,9 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ExaminationResult_SYS_MedicalProcedures1", "SYS_MedicalProcedure", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalProcedure), "ExaminationResult", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ExaminationResult), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Address_Person1", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_CFG_DayOff_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "CFG_DayOff", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.CFG_DayOff), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_AccountContract_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.AccountContract), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_AccountContract_SYS_ContractType", "SYS_ContractType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_ContractType), "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.AccountContract), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.AccountContract), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 
 #endregion
 
@@ -701,6 +704,38 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<CFG_DayOff> _CFG_DayOff;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<AccountContract> AccountContracts
+        {
+            get
+            {
+                if ((_AccountContracts == null))
+                {
+                    _AccountContracts = base.CreateObjectSet<AccountContract>("AccountContracts");
+                }
+                return _AccountContracts;
+            }
+        }
+        private ObjectSet<AccountContract> _AccountContracts;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<SYS_ContractType> SYS_ContractType
+        {
+            get
+            {
+                if ((_SYS_ContractType == null))
+                {
+                    _SYS_ContractType = base.CreateObjectSet<SYS_ContractType>("SYS_ContractType");
+                }
+                return _SYS_ContractType;
+            }
+        }
+        private ObjectSet<SYS_ContractType> _SYS_ContractType;
 
         #endregion
         #region AddTo Methods
@@ -1000,6 +1035,22 @@ namespace Cerebello.Model
         {
             base.AddObject("CFG_DayOff", cFG_DayOff);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the AccountContracts EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToAccountContracts(AccountContract accountContract)
+        {
+            base.AddObject("AccountContracts", accountContract);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the SYS_ContractType EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSYS_ContractType(SYS_ContractType sYS_ContractType)
+        {
+            base.AddObject("SYS_ContractType", sYS_ContractType);
+        }
 
         #endregion
     }
@@ -1008,6 +1059,342 @@ namespace Cerebello.Model
     #endregion
     
     #region Entities
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="AccountContract")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class AccountContract : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new AccountContract object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="contractTypeId">Initial value of the ContractTypeId property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
+        /// <param name="startDate">Initial value of the StartDate property.</param>
+        /// <param name="fee">Initial value of the Fee property.</param>
+        /// <param name="text">Initial value of the Text property.</param>
+        public static AccountContract CreateAccountContract(global::System.Int32 id, global::System.Int32 contractTypeId, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime startDate, global::System.Decimal fee, global::System.String text)
+        {
+            AccountContract accountContract = new AccountContract();
+            accountContract.Id = id;
+            accountContract.ContractTypeId = contractTypeId;
+            accountContract.PracticeId = practiceId;
+            accountContract.IssuanceDate = issuanceDate;
+            accountContract.StartDate = startDate;
+            accountContract.Fee = fee;
+            accountContract.Text = text;
+            return accountContract;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 ContractTypeId
+        {
+            get
+            {
+                return _ContractTypeId;
+            }
+            set
+            {
+                OnContractTypeIdChanging(value);
+                ReportPropertyChanging("ContractTypeId");
+                _ContractTypeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ContractTypeId");
+                OnContractTypeIdChanged();
+            }
+        }
+        private global::System.Int32 _ContractTypeId;
+        partial void OnContractTypeIdChanging(global::System.Int32 value);
+        partial void OnContractTypeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime IssuanceDate
+        {
+            get
+            {
+                return _IssuanceDate;
+            }
+            set
+            {
+                OnIssuanceDateChanging(value);
+                ReportPropertyChanging("IssuanceDate");
+                _IssuanceDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IssuanceDate");
+                OnIssuanceDateChanged();
+            }
+        }
+        private global::System.DateTime _IssuanceDate;
+        partial void OnIssuanceDateChanging(global::System.DateTime value);
+        partial void OnIssuanceDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime StartDate
+        {
+            get
+            {
+                return _StartDate;
+            }
+            set
+            {
+                OnStartDateChanging(value);
+                ReportPropertyChanging("StartDate");
+                _StartDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("StartDate");
+                OnStartDateChanged();
+            }
+        }
+        private global::System.DateTime _StartDate;
+        partial void OnStartDateChanging(global::System.DateTime value);
+        partial void OnStartDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal Fee
+        {
+            get
+            {
+                return _Fee;
+            }
+            set
+            {
+                OnFeeChanging(value);
+                ReportPropertyChanging("Fee");
+                _Fee = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Fee");
+                OnFeeChanged();
+            }
+        }
+        private global::System.Decimal _Fee;
+        partial void OnFeeChanging(global::System.Decimal value);
+        partial void OnFeeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> EndDate
+        {
+            get
+            {
+                return _EndDate;
+            }
+            set
+            {
+                OnEndDateChanging(value);
+                ReportPropertyChanging("EndDate");
+                _EndDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EndDate");
+                OnEndDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _EndDate;
+        partial void OnEndDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnEndDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Text
+        {
+            get
+            {
+                return _Text;
+            }
+            set
+            {
+                OnTextChanging(value);
+                ReportPropertyChanging("Text");
+                _Text = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Text");
+                OnTextChanged();
+            }
+        }
+        private global::System.String _Text;
+        partial void OnTextChanging(global::System.String value);
+        partial void OnTextChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_AccountContract_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_AccountContract_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_AccountContract_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_AccountContract_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_AccountContract_Practice", "Practice", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_AccountContract_SYS_ContractType", "SYS_ContractType")]
+        public SYS_ContractType SYS_ContractType
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<SYS_ContractType>("Cerebello.Model.FK_AccountContract_SYS_ContractType", "SYS_ContractType").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<SYS_ContractType>("Cerebello.Model.FK_AccountContract_SYS_ContractType", "SYS_ContractType").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<SYS_ContractType> SYS_ContractTypeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<SYS_ContractType>("Cerebello.Model.FK_AccountContract_SYS_ContractType", "SYS_ContractType");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<SYS_ContractType>("Cerebello.Model.FK_AccountContract_SYS_ContractType", "SYS_ContractType", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Practice_AccountContract", "Practice")]
+        public EntityCollection<Practice> Practices
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Practice>("Cerebello.Model.FK_Practice_AccountContract", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Practice>("Cerebello.Model.FK_Practice_AccountContract", "Practice", value);
+                }
+            }
+        }
+
+        #endregion
+    }
     
     /// <summary>
     /// No Metadata Documentation available.
@@ -7535,6 +7922,30 @@ namespace Cerebello.Model
         private global::System.Boolean _ShowWelcomeScreen;
         partial void OnShowWelcomeScreenChanging(global::System.Boolean value);
         partial void OnShowWelcomeScreenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> ActiveAccountContractId
+        {
+            get
+            {
+                return _ActiveAccountContractId;
+            }
+            set
+            {
+                OnActiveAccountContractIdChanging(value);
+                ReportPropertyChanging("ActiveAccountContractId");
+                _ActiveAccountContractId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ActiveAccountContractId");
+                OnActiveAccountContractIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _ActiveAccountContractId;
+        partial void OnActiveAccountContractIdChanging(Nullable<global::System.Int32> value);
+        partial void OnActiveAccountContractIdChanged();
 
         #endregion
     
@@ -7596,6 +8007,66 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<User>("Cerebello.Model.FK_User_Practice", "User", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_AccountContract_Practice", "AccountContract")]
+        public EntityCollection<AccountContract> AccountContracts
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_Practice", "AccountContract");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_Practice", "AccountContract", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Practice_AccountContract", "AccountContract")]
+        public AccountContract AccountContract
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_Practice_AccountContract", "AccountContract").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_Practice_AccountContract", "AccountContract").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AccountContract> AccountContractReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_Practice_AccountContract", "AccountContract");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountContract>("Cerebello.Model.FK_Practice_AccountContract", "AccountContract", value);
                 }
             }
         }
@@ -8214,6 +8685,214 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<SYS_Medicine>("Cerebello.Model.SYS_MedicineActiveIngredient", "SYS_Medicine", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="SYS_ContractType")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class SYS_ContractType : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new SYS_ContractType object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="name">Initial value of the Name property.</param>
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        /// <param name="isTrial">Initial value of the IsTrial property.</param>
+        /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
+        public static SYS_ContractType CreateSYS_ContractType(global::System.Int32 id, global::System.String name, global::System.DateTime createdOn, global::System.Boolean isTrial, global::System.String urlIdentifier)
+        {
+            SYS_ContractType sYS_ContractType = new SYS_ContractType();
+            sYS_ContractType.Id = id;
+            sYS_ContractType.Name = name;
+            sYS_ContractType.CreatedOn = createdOn;
+            sYS_ContractType.IsTrial = isTrial;
+            sYS_ContractType.UrlIdentifier = urlIdentifier;
+            return sYS_ContractType;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsTrial
+        {
+            get
+            {
+                return _IsTrial;
+            }
+            set
+            {
+                OnIsTrialChanging(value);
+                ReportPropertyChanging("IsTrial");
+                _IsTrial = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsTrial");
+                OnIsTrialChanged();
+            }
+        }
+        private global::System.Boolean _IsTrial;
+        partial void OnIsTrialChanging(global::System.Boolean value);
+        partial void OnIsTrialChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String UrlIdentifier
+        {
+            get
+            {
+                return _UrlIdentifier;
+            }
+            set
+            {
+                OnUrlIdentifierChanging(value);
+                ReportPropertyChanging("UrlIdentifier");
+                _UrlIdentifier = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("UrlIdentifier");
+                OnUrlIdentifierChanged();
+            }
+        }
+        private global::System.String _UrlIdentifier;
+        partial void OnUrlIdentifierChanging(global::System.String value);
+        partial void OnUrlIdentifierChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Text
+        {
+            get
+            {
+                return _Text;
+            }
+            set
+            {
+                OnTextChanging(value);
+                ReportPropertyChanging("Text");
+                _Text = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Text");
+                OnTextChanged();
+            }
+        }
+        private global::System.String _Text;
+        partial void OnTextChanging(global::System.String value);
+        partial void OnTextChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_AccountContract_SYS_ContractType", "AccountContract")]
+        public EntityCollection<AccountContract> AccountContracts
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_SYS_ContractType", "AccountContract");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_SYS_ContractType", "AccountContract", value);
                 }
             }
         }

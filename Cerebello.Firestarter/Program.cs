@@ -572,10 +572,10 @@ namespace Test1
                             Console.WriteLine("    Initialize_SYS_MedicalEntity");
                             Console.WriteLine("    Initialize_SYS_MedicalSpecialty");
                             Console.WriteLine("    Initialize_SYS_MedicalProcedures");
-                            Console.WriteLine("    CreateFakeUserAndPractice_2");
-                            Console.WriteLine("    SetupDoctor");
-                            Console.WriteLine("    SetupUserData");
-                            Console.WriteLine("    CreateFakePatients");
+                            Console.WriteLine("    Initialize_SYS_Contracts");
+                            Console.WriteLine("    Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
+                            Console.WriteLine("    SetupDoctor (for each doctor)");
+                            Console.WriteLine("    CreateFakePatients (for each doctor)");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
@@ -590,38 +590,36 @@ namespace Test1
                             using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                             {
                                 Console.ForegroundColor = ConsoleColor.Gray;
+
+                                // Initializing system tables
                                 Console.WriteLine("Initialize_SYS_MedicalEntity");
                                 Firestarter.Initialize_SYS_MedicalEntity(db);
+
                                 Console.WriteLine("Initialize_SYS_MedicalSpecialty");
                                 Firestarter.Initialize_SYS_MedicalSpecialty(db);
+
                                 Console.WriteLine("Initialize_SYS_MedicalProcedures");
                                 Firestarter.Initialize_SYS_MedicalProcedures(
                                     db,
                                     Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
                                     progress: new Action<int, int>(ConsoleWriteProgressIntInt));
 
-                                Console.WriteLine("CreateFakeUserAndPractice_2");
+                                Console.WriteLine("Initialize_SYS_Contracts");
+                                Firestarter.Initialize_SYS_Contracts(db);
+
+                                // Create practice, contract, doctors and other things
+                                Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
                                 var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
 
-                                db.SaveChanges();
-
+                                // Setup doctor schedule and document templates
                                 Console.WriteLine("SetupDoctor");
                                 foreach (var doctor in listDoctors)
                                     Firestarter.SetupDoctor(doctor, db);
 
-                                db.SaveChanges();
-
-                                Console.WriteLine("SetupUserData");
-                                foreach (var doctor in listDoctors)
-                                    Firestarter.SetupUserData(doctor, db);
-
-                                db.SaveChanges();
-
+                                // Create patients
                                 Console.WriteLine("CreateFakePatients");
                                 foreach (var doctor in listDoctors)
                                     Firestarter.CreateFakePatients(doctor, db);
-
-                                db.SaveChanges();
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");

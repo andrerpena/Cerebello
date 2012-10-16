@@ -143,5 +143,36 @@ namespace CerebelloWebRole.Code
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Replaces fields in the text with the corresponding value in the object.
+        /// Fields are denoted by "&lt;%PropertyPath%&gt;".
+        /// The PropertyPath can contain a property name or a property path using '.' operator.
+        /// </summary>
+        /// <param name="inputText"></param>
+        /// <param name="rootObj"></param>
+        /// <returns></returns>
+        public static string ReflectionReplace(string inputText, object rootObj)
+        {
+            // supported: properties, indirections
+            // unsupported: indexer, dynamic, methods, operators
+
+            var result = Regex.Replace(
+                inputText,
+                @"<%(.*?)%>",
+                m =>
+                {
+                    var propNames = new Queue<string>(m.Groups[1].Value.Split('.'));
+                    object currentObj = rootObj;
+                    while (propNames.Count > 0 && currentObj != null)
+                    {
+                        var propInfo = currentObj.GetType().GetProperty(propNames.Dequeue().Trim());
+                        currentObj = propInfo == null ? null : propInfo.GetValue(currentObj, null);
+                    }
+                    var result2 = string.Format("{0}", currentObj);
+                    return result2;
+                });
+            return result;
+        }
     }
 }
