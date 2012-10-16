@@ -75,6 +75,9 @@
                             _this.lastSelectedText = null;
                             _this.textCache = null;
                             _this.$el.removeClass("changed");
+                            // retrigger the blur event should let other plug-ins like the
+                            // watermark to deal with it their own way
+                            _this.$el.blur();
                         }
                     }
                 }, 200);
