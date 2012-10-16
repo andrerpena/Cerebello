@@ -12,10 +12,10 @@
             searchParamName: 'term',
             pageIndexParamName: 'pageIndex',
             pageSizeParamName: 'pageSize',
-            
+
             pageSize: 5,
             ajaxParams: {},
-            
+
             inputHiddenName: null,
             columnId: "Id",
             columnText: "Value",
@@ -25,7 +25,7 @@
             autoFilterDelay: 1000,
             //events
             change: function () { },
-            formatItem: function () { },
+            formatItem: function () { }
         };
 
         //Extending options:
@@ -38,12 +38,16 @@
         _this.dropdownId = null;
         // this is the "setInterval" handler, used for controlling auto-filter
         _this.intervalHandler = null;
+        _this.textCache = null;
+        _this.lastSelectedText = null;
 
         // jQueries
         _this.$wrapper = null;
         _this.$dropdown = null;
         _this.$pagerWrapper = null;
         _this.$inputHidden = null;
+
+
     }
 
     // Separate functionality from object creation
@@ -53,6 +57,8 @@
 
             var _this = this;
 
+            _this.lastSelectedText = _this.$el.val();
+
             _this.$inputHidden = $("input[name='" + _this.opts.inputHiddenName + "']");
             if (!_this.$inputHidden.length)
                 throw "Couldn't find the $inputHiddenName";
@@ -61,6 +67,17 @@
 
             _this.$el.bind("blur", function (e) {
                 $("tr", _this.$wrapper).removeClass("selected");
+                setTimeout(function () {
+                    if (_this.lastSelectedText != _this.$el.val()) {
+                        if (!_this.$el.is(":focus")) {
+                            _this.$el.val('');
+                            _this.$inputHidden.val('');
+                            _this.lastSelectedText = null;
+                            _this.textCache = null;
+                            _this.$el.removeClass("changed");
+                        }
+                    }
+                }, 200);
             });
 
             _this.$el.bind("keydown", function (e) {
@@ -82,6 +99,7 @@
                         break;
                         // seta pra baixo                                                                                                                                                                           
                     case 40:
+                        e.preventDefault();
                         if (!_this.isDropdownVisible())
                             _this.fetchData(null, function () { _this.focusNextRow(); }, _this.$el.val());
                         else {
@@ -91,6 +109,7 @@
                         break;
                         // seta para cima                                                                                                                                                                                                                        
                     case 38:
+                        e.preventDefault();
                         if (_this.isDropdownCreated()) {
                             _this.showAndFixDropdownPosition();
                             _this.focusPreviousRow();
@@ -109,14 +128,20 @@
             });
 
             _this.$el.bind("keyup", function (e) {
+
+                if (_this.$el.val() != _this.lastSelectedText) {
+                    _this.$el.addClass("changed");
+                } else {
+                    _this.$el.removeClass("changed");
+                }
+
                 if (_this.$el.val() != _this.textCache) {
-                    _this.$inputHidden.val('');
                     _this.opts.change(undefined);
                     if (_this.intervalHandler)
                         clearTimeout(_this.intervalHandler);
-
                     _this.intervalHandler = setTimeout(function () {
-                        _this.fetchData(null, null, _this.$el.val());
+                        if (_this.$el.is(":focus"))
+                            _this.fetchData(null, null, _this.$el.val());
                     }, _this.opts.autoFilterDelay);
                 }
             });
@@ -143,8 +168,12 @@
                 _this.$wrapper = $("<div/>").addClass("autocomplete-wrapper").appendTo(_this.$dropdown);
                 _this.$pagerWrapper = $("<div/>").addClass("lookup-pager-wrapper").appendTo(_this.$dropdown);
 
+                _this.$dropdown.click(function () {
+                    _this.$el.focus();
+                });
+
                 $('html').bind("click", function (e) {
-                    if (!_this.$el.has(e.target).length && !_this.$wrapper.parent().has(e.target).length)
+                    if (!_this.$el.has(e.target).length && _this.$dropdown && !_this.$dropdown.has(e.target).length)
                         _this.$dropdown.hide();
                 });
             }
@@ -238,6 +267,7 @@
                         currentPageIndex: pageIndex,
                         onPageChanged: function (i, onDataReceived) {
                             // ativar o activity indicator
+                            _this.$el.focus();
                             _this.fetchData(i, onDataReceived, searchTerm);
                         }
                     }).data('pager');
@@ -289,14 +319,17 @@
 
         selectCurrentlyFocusedRow: function () {
             var _this = this;
+            _this.$el.removeClass("changed");
             var selectedRow = $("tr.selected", _this.$wrapper);
             var selectedText = $("td", selectedRow).html();
             var selectedId = selectedRow.attr("data-val-id");
+            _this.lastSelectedText = selectedText;
             _this.textCache = selectedText;
             _this.$el.val(selectedText);
             _this.$inputHidden.val(selectedId);
             _this.$dropdown.hide();
             _this.opts.change(selectedRow.data("lookup-row"));
+            _this.$el.focus();
         }
 
     };
@@ -307,7 +340,7 @@
             this.each(function () {
                 var rev = new Autocomplete(this, options);
                 rev.init();
-                $(this).data('lookup', rev);
+                $(this).data('autocomplete', rev);
             });
         }
         return this;

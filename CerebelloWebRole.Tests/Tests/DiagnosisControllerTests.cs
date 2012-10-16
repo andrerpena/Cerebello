@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
@@ -16,7 +13,8 @@ namespace CerebelloWebRole.Tests.Tests
     public class DiagnosisControllerTests
     {
         #region TEST_SETUP
-        protected CerebelloEntities db = null;
+
+        private CerebelloEntities db = null;
 
         [ClassInitialize()]
         public static void ClassInitialize(TestContext testContext)

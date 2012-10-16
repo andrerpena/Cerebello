@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
@@ -74,6 +72,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             if (string.IsNullOrEmpty(formModel.Text) && string.IsNullOrEmpty(formModel.Cid10Code))
                 this.ModelState.AddModelError("", "É necessário preencher um diagnóstico CID-10 ou as notas");
+
+            // we cannot trust that the autocomplete has removed incorrect
+            // value from the client. 
+            if (string.IsNullOrEmpty(formModel.Cid10Code))
+            {
+                // it's necessary to remove this value from the ModelState to
+                // prevent it from "reappearing"
+                // http://stackoverflow.com/questions/9163445/my-html-editors-are-ignoring-any-value-i-set-and-are-always-taking-their-values
+                this.ModelState.Remove("Cid10Name");
+                formModel.Cid10Name = string.Empty;
+            }
 
             if (this.ModelState.IsValid)
             {

@@ -5,7 +5,7 @@
     var editPanel = Html.CreateEditPanel();
     editPanel.AddField(
         m => m.MedicineId,
-        format: @<text>@(Html.LookupGridFor<ReceiptMedicineViewModel, MedicineLookupGridModel, int>(
+        format: @<text>@(Html.LookupGridFor<ReceiptMedicineViewModel, MedicineLookupGridModel, int?>(
             m => m.MedicineId,
             m => m.MedicineText,
             Url.Action("lookupmedication", "medicines"),
