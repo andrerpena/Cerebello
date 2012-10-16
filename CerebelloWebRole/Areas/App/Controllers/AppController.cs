@@ -57,8 +57,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult LookupEverything(string term, int pageSize, int pageIndex, int doctorId)
         {
-            var searchResult = new List<GlobalSearchIntermediateResult>();
-
             // We're gonna add a lot of queries that should result in an UNION statement
 
             var queries = new List<IQueryable<GlobalSearchIntermediateResult>>();
@@ -137,7 +135,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var resultCount = finalQuery.Count();
 
-            return Json(new LookupJsonResult()
+            return Json(new AutocompleteJsonResult()
             {
                 Count = resultCount,
                 Rows = new System.Collections.ArrayList(result)

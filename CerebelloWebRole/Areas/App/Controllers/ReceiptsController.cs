@@ -78,6 +78,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (formModel.ReceiptMedicines == null)
                 this.ModelState.AddModelError("Medicines", "A receita deve ter pelo menos um medicamento");
 
+            // we cannot trust that the autocomplete has removed incorrect
+            // value from the client. 
+            for (var i = 0; i < formModel.ReceiptMedicines.Count; i++)
+            {
+                var medication = formModel.ReceiptMedicines[i];
+                if (medication.MedicineId != null)
+                    continue;
+                // it's necessary to remove this value from the ModelState to
+                // prevent it from "reappearing"
+                // http://stackoverflow.com/questions/9163445/my-html-editors-are-ignoring-any-value-i-set-and-are-always-taking-their-values
+                this.ModelState.Remove(string.Format("ReceiptMedicines[{0}].MedicineId", i));
+                medication.MedicineText = string.Empty;
+            }
+
             if (formModel.Id == null)
             {
                 receipt = new Receipt()
@@ -106,7 +120,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         (vm, m) => vm.Id == m.Id,
                         (vm, m) =>
                         {
-                            m.MedicineId = vm.MedicineId;
+                            m.MedicineId = vm.MedicineId.Value;
                             m.Quantity = vm.Quantity;
                             m.Observations = vm.Observations;
                             m.Prescription = vm.Prescription;

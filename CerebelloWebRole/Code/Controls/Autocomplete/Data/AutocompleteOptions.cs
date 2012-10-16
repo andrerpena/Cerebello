@@ -5,14 +5,16 @@ namespace CerebelloWebRole.Code.Controls
     /// <summary>
     /// Modelo das opções do plug-in do jQuery
     /// </summary>
-    public class LookupOptions
+    public class AutocompleteOptions
     {
-        public LookupOptions()
+        public AutocompleteOptions()
         {
             this.columns = new List<string>();
             this.columnHeaders = new List<string>();
         }
 
+        // ReSharper disable InconsistentNaming
+        // ReSharper disable UnusedAutoPropertyAccessor.Global
         public string contentUrl { get; set; }
         public string inputHiddenId { get; set; }
         public string inputHiddenName { get; set; }
@@ -22,7 +24,9 @@ namespace CerebelloWebRole.Code.Controls
         public string inputTextValue { get; set; }
         public string columnId { get; set; }
         public string columnText { get; set; }
-        public List<string> columns { get; set; }
-        public List<string> columnHeaders { get; set; }
+        public List<string> columns { get; private set; }
+        public List<string> columnHeaders { get; private set; }
+        // ReSharper restore InconsistentNaming
+        // ReSharper restore UnusedAutoPropertyAccessor.Global
     }
 }

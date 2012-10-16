@@ -26,20 +26,18 @@
                 }
             });
         });
-
+        
         $(".delete-examrequest", $("div[data-val-id='examrequest-@Model.Id']")).click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir esta examrequest?\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Esta solicitação de exame foi excluída");
-                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
-                    }
-                    else
-                        alert("Não foi possível excluir esta examrequest.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.deleteConfirmation({
+                objectType: "solicitação de exame",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Esta solicitação de exame foi excluída");
+                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                }
+            });
         });
+
     </script>
 </div>

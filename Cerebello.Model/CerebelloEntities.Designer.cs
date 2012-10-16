@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -46,7 +47,6 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificate_ModelMedicalCertificate", "ModelMedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.ModelMedicalCertificate), "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificate), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificate_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificate), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificateField_MedicalCertificate", "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.MedicalCertificate), "MedicalCertificateField", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificateField), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "Diagnosi", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Doctor), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
@@ -62,6 +62,11 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_AccountContract_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.AccountContract), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_AccountContract_SYS_ContractType", "SYS_ContractType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_ContractType), "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.AccountContract), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.AccountContract), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "Symptom", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Symptom), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Diagnosis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
 
 #endregion
 
@@ -737,7 +742,40 @@ namespace Cerebello.Model
         }
         private ObjectSet<SYS_ContractType> _SYS_ContractType;
 
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<ChatMessage> ChatMessages
+        {
+            get
+            {
+                if ((_ChatMessages == null))
+                {
+                    _ChatMessages = base.CreateObjectSet<ChatMessage>("ChatMessages");
+                }
+                return _ChatMessages;
+            }
+        }
+        private ObjectSet<ChatMessage> _ChatMessages;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Symptom> Symptoms
+        {
+            get
+            {
+                if ((_Symptoms == null))
+                {
+                    _Symptoms = base.CreateObjectSet<Symptom>("Symptoms");
+                }
+                return _Symptoms;
+            }
+        }
+        private ObjectSet<Symptom> _Symptoms;
+
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -1043,7 +1081,15 @@ namespace Cerebello.Model
         {
             base.AddObject("AccountContracts", accountContract);
         }
-    
+
+        /// <summary>
+        /// Deprecated Method for adding a new object to the ChatMessages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToChatMessages(ChatMessage chatMessage)
+        {
+            base.AddObject("ChatMessages", chatMessage);
+        }
+
         /// <summary>
         /// Deprecated Method for adding a new object to the SYS_ContractType EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
@@ -1052,12 +1098,20 @@ namespace Cerebello.Model
             base.AddObject("SYS_ContractType", sYS_ContractType);
         }
 
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Symptoms EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSymptoms(Symptom symptom)
+        {
+            base.AddObject("Symptoms", symptom);
+        }
+
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -1422,7 +1476,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1441,7 +1496,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -1466,7 +1521,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -1490,7 +1545,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -1500,7 +1555,7 @@ namespace Cerebello.Model
         partial void OnDoctorIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -1564,6 +1619,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1590,7 +1646,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1607,7 +1664,7 @@ namespace Cerebello.Model
             {
                 OnCEPChanging(value);
                 ReportPropertyChanging("CEP");
-                _CEP = StructuralObject.SetValidValue(value, true);
+                _CEP = StructuralObject.SetValidValue(value, true, "CEP");
                 ReportPropertyChanged("CEP");
                 OnCEPChanged();
             }
@@ -1631,7 +1688,7 @@ namespace Cerebello.Model
             {
                 OnCityChanging(value);
                 ReportPropertyChanging("City");
-                _City = StructuralObject.SetValidValue(value, true);
+                _City = StructuralObject.SetValidValue(value, true, "City");
                 ReportPropertyChanged("City");
                 OnCityChanged();
             }
@@ -1655,7 +1712,7 @@ namespace Cerebello.Model
             {
                 OnStateProvinceChanging(value);
                 ReportPropertyChanging("StateProvince");
-                _StateProvince = StructuralObject.SetValidValue(value, true);
+                _StateProvince = StructuralObject.SetValidValue(value, true, "StateProvince");
                 ReportPropertyChanged("StateProvince");
                 OnStateProvinceChanged();
             }
@@ -1679,7 +1736,7 @@ namespace Cerebello.Model
             {
                 OnNeighborhoodChanging(value);
                 ReportPropertyChanging("Neighborhood");
-                _Neighborhood = StructuralObject.SetValidValue(value, true);
+                _Neighborhood = StructuralObject.SetValidValue(value, true, "Neighborhood");
                 ReportPropertyChanged("Neighborhood");
                 OnNeighborhoodChanged();
             }
@@ -1703,7 +1760,7 @@ namespace Cerebello.Model
             {
                 OnComplementChanging(value);
                 ReportPropertyChanging("Complement");
-                _Complement = StructuralObject.SetValidValue(value, true);
+                _Complement = StructuralObject.SetValidValue(value, true, "Complement");
                 ReportPropertyChanged("Complement");
                 OnComplementChanged();
             }
@@ -1727,7 +1784,7 @@ namespace Cerebello.Model
             {
                 OnStreetChanging(value);
                 ReportPropertyChanging("Street");
-                _Street = StructuralObject.SetValidValue(value, true);
+                _Street = StructuralObject.SetValidValue(value, true, "Street");
                 ReportPropertyChanged("Street");
                 OnStreetChanged();
             }
@@ -1753,7 +1810,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -1778,7 +1835,7 @@ namespace Cerebello.Model
             {
                 OnPersonIdChanging(value);
                 ReportPropertyChanging("PersonId");
-                _PersonId = StructuralObject.SetValidValue(value);
+                _PersonId = StructuralObject.SetValidValue(value, "PersonId");
                 ReportPropertyChanged("PersonId");
                 OnPersonIdChanged();
             }
@@ -1788,7 +1845,7 @@ namespace Cerebello.Model
         partial void OnPersonIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -1830,6 +1887,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1854,7 +1912,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1873,7 +1932,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -1884,7 +1943,7 @@ namespace Cerebello.Model
         partial void OnIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -1910,6 +1969,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1938,7 +1998,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1957,7 +2018,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -1982,7 +2043,7 @@ namespace Cerebello.Model
             {
                 OnPatientIdChanging(value);
                 ReportPropertyChanging("PatientId");
-                _PatientId = StructuralObject.SetValidValue(value);
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
                 ReportPropertyChanged("PatientId");
                 OnPatientIdChanged();
             }
@@ -2006,7 +2067,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -2030,7 +2091,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, true);
+                _Text = StructuralObject.SetValidValue(value, true, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -2040,7 +2101,7 @@ namespace Cerebello.Model
         partial void OnTextChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -2087,23 +2148,24 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Diagnosi")]
-        public EntityCollection<Diagnosis> Diagnoses
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Symptom")]
+        public EntityCollection<Symptom> Symptoms
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis_Anamnese", "Diagnosi");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Symptom>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Symptom");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis_Anamnese", "Diagnosi", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Symptom>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Symptom", value);
                 }
             }
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2142,7 +2204,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -2161,7 +2224,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -2186,7 +2249,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -2210,7 +2273,7 @@ namespace Cerebello.Model
             {
                 OnCreatedByIdChanging(value);
                 ReportPropertyChanging("CreatedById");
-                _CreatedById = StructuralObject.SetValidValue(value);
+                _CreatedById = StructuralObject.SetValidValue(value, "CreatedById");
                 ReportPropertyChanged("CreatedById");
                 OnCreatedByIdChanged();
             }
@@ -2234,7 +2297,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -2258,7 +2321,7 @@ namespace Cerebello.Model
             {
                 OnPatientIdChanging(value);
                 ReportPropertyChanging("PatientId");
-                _PatientId = StructuralObject.SetValidValue(value);
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
                 ReportPropertyChanged("PatientId");
                 OnPatientIdChanged();
             }
@@ -2282,7 +2345,7 @@ namespace Cerebello.Model
             {
                 OnStartChanging(value);
                 ReportPropertyChanging("Start");
-                _Start = StructuralObject.SetValidValue(value);
+                _Start = StructuralObject.SetValidValue(value, "Start");
                 ReportPropertyChanged("Start");
                 OnStartChanged();
             }
@@ -2306,7 +2369,7 @@ namespace Cerebello.Model
             {
                 OnEndChanging(value);
                 ReportPropertyChanging("End");
-                _End = StructuralObject.SetValidValue(value);
+                _End = StructuralObject.SetValidValue(value, "End");
                 ReportPropertyChanged("End");
                 OnEndChanged();
             }
@@ -2330,7 +2393,7 @@ namespace Cerebello.Model
             {
                 OnTypeChanging(value);
                 ReportPropertyChanging("Type");
-                _Type = StructuralObject.SetValidValue(value);
+                _Type = StructuralObject.SetValidValue(value, "Type");
                 ReportPropertyChanged("Type");
                 OnTypeChanged();
             }
@@ -2354,7 +2417,7 @@ namespace Cerebello.Model
             {
                 OnDescriptionChanging(value);
                 ReportPropertyChanging("Description");
-                _Description = StructuralObject.SetValidValue(value, true);
+                _Description = StructuralObject.SetValidValue(value, true, "Description");
                 ReportPropertyChanged("Description");
                 OnDescriptionChanged();
             }
@@ -2364,7 +2427,7 @@ namespace Cerebello.Model
         partial void OnDescriptionChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -2482,6 +2545,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2512,7 +2576,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -2531,7 +2596,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -2556,7 +2621,7 @@ namespace Cerebello.Model
             {
                 OnDateChanging(value);
                 ReportPropertyChanging("Date");
-                _Date = StructuralObject.SetValidValue(value);
+                _Date = StructuralObject.SetValidValue(value, "Date");
                 ReportPropertyChanged("Date");
                 OnDateChanged();
             }
@@ -2580,7 +2645,7 @@ namespace Cerebello.Model
             {
                 OnDescriptionChanging(value);
                 ReportPropertyChanging("Description");
-                _Description = StructuralObject.SetValidValue(value, false);
+                _Description = StructuralObject.SetValidValue(value, false, "Description");
                 ReportPropertyChanged("Description");
                 OnDescriptionChanged();
             }
@@ -2604,7 +2669,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -2614,7 +2679,7 @@ namespace Cerebello.Model
         partial void OnDoctorIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -2656,6 +2721,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2688,7 +2754,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -2707,7 +2774,7 @@ namespace Cerebello.Model
                 {
                     OnDoctorIdChanging(value);
                     ReportPropertyChanging("DoctorId");
-                    _DoctorId = StructuralObject.SetValidValue(value);
+                    _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                     ReportPropertyChanged("DoctorId");
                     OnDoctorIdChanged();
                 }
@@ -2732,7 +2799,7 @@ namespace Cerebello.Model
             {
                 OnHeader1Changing(value);
                 ReportPropertyChanging("Header1");
-                _Header1 = StructuralObject.SetValidValue(value, false);
+                _Header1 = StructuralObject.SetValidValue(value, false, "Header1");
                 ReportPropertyChanged("Header1");
                 OnHeader1Changed();
             }
@@ -2756,7 +2823,7 @@ namespace Cerebello.Model
             {
                 OnHeader2Changing(value);
                 ReportPropertyChanging("Header2");
-                _Header2 = StructuralObject.SetValidValue(value, false);
+                _Header2 = StructuralObject.SetValidValue(value, false, "Header2");
                 ReportPropertyChanged("Header2");
                 OnHeader2Changed();
             }
@@ -2780,7 +2847,7 @@ namespace Cerebello.Model
             {
                 OnFooterLeft1Changing(value);
                 ReportPropertyChanging("FooterLeft1");
-                _FooterLeft1 = StructuralObject.SetValidValue(value, false);
+                _FooterLeft1 = StructuralObject.SetValidValue(value, false, "FooterLeft1");
                 ReportPropertyChanged("FooterLeft1");
                 OnFooterLeft1Changed();
             }
@@ -2804,7 +2871,7 @@ namespace Cerebello.Model
             {
                 OnFooterLeft2Changing(value);
                 ReportPropertyChanging("FooterLeft2");
-                _FooterLeft2 = StructuralObject.SetValidValue(value, true);
+                _FooterLeft2 = StructuralObject.SetValidValue(value, true, "FooterLeft2");
                 ReportPropertyChanged("FooterLeft2");
                 OnFooterLeft2Changed();
             }
@@ -2828,7 +2895,7 @@ namespace Cerebello.Model
             {
                 OnFooterRight1Changing(value);
                 ReportPropertyChanging("FooterRight1");
-                _FooterRight1 = StructuralObject.SetValidValue(value, false);
+                _FooterRight1 = StructuralObject.SetValidValue(value, false, "FooterRight1");
                 ReportPropertyChanged("FooterRight1");
                 OnFooterRight1Changed();
             }
@@ -2852,7 +2919,7 @@ namespace Cerebello.Model
             {
                 OnFooterRight2Changing(value);
                 ReportPropertyChanging("FooterRight2");
-                _FooterRight2 = StructuralObject.SetValidValue(value, true);
+                _FooterRight2 = StructuralObject.SetValidValue(value, true, "FooterRight2");
                 ReportPropertyChanged("FooterRight2");
                 OnFooterRight2Changed();
             }
@@ -2862,7 +2929,7 @@ namespace Cerebello.Model
         partial void OnFooterRight2Changed();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -2904,6 +2971,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2944,7 +3012,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -2963,7 +3032,7 @@ namespace Cerebello.Model
                 {
                     OnDoctorIdChanging(value);
                     ReportPropertyChanging("DoctorId");
-                    _DoctorId = StructuralObject.SetValidValue(value);
+                    _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                     ReportPropertyChanged("DoctorId");
                     OnDoctorIdChanged();
                 }
@@ -2988,7 +3057,7 @@ namespace Cerebello.Model
             {
                 OnAppointmentTimeChanging(value);
                 ReportPropertyChanging("AppointmentTime");
-                _AppointmentTime = StructuralObject.SetValidValue(value);
+                _AppointmentTime = StructuralObject.SetValidValue(value, "AppointmentTime");
                 ReportPropertyChanged("AppointmentTime");
                 OnAppointmentTimeChanged();
             }
@@ -3012,7 +3081,7 @@ namespace Cerebello.Model
             {
                 OnSundayChanging(value);
                 ReportPropertyChanging("Sunday");
-                _Sunday = StructuralObject.SetValidValue(value);
+                _Sunday = StructuralObject.SetValidValue(value, "Sunday");
                 ReportPropertyChanged("Sunday");
                 OnSundayChanged();
             }
@@ -3036,7 +3105,7 @@ namespace Cerebello.Model
             {
                 OnMondayChanging(value);
                 ReportPropertyChanging("Monday");
-                _Monday = StructuralObject.SetValidValue(value);
+                _Monday = StructuralObject.SetValidValue(value, "Monday");
                 ReportPropertyChanged("Monday");
                 OnMondayChanged();
             }
@@ -3060,7 +3129,7 @@ namespace Cerebello.Model
             {
                 OnTuesdayChanging(value);
                 ReportPropertyChanging("Tuesday");
-                _Tuesday = StructuralObject.SetValidValue(value);
+                _Tuesday = StructuralObject.SetValidValue(value, "Tuesday");
                 ReportPropertyChanged("Tuesday");
                 OnTuesdayChanged();
             }
@@ -3084,7 +3153,7 @@ namespace Cerebello.Model
             {
                 OnWednesdayChanging(value);
                 ReportPropertyChanging("Wednesday");
-                _Wednesday = StructuralObject.SetValidValue(value);
+                _Wednesday = StructuralObject.SetValidValue(value, "Wednesday");
                 ReportPropertyChanged("Wednesday");
                 OnWednesdayChanged();
             }
@@ -3108,7 +3177,7 @@ namespace Cerebello.Model
             {
                 OnThursdayChanging(value);
                 ReportPropertyChanging("Thursday");
-                _Thursday = StructuralObject.SetValidValue(value);
+                _Thursday = StructuralObject.SetValidValue(value, "Thursday");
                 ReportPropertyChanged("Thursday");
                 OnThursdayChanged();
             }
@@ -3132,7 +3201,7 @@ namespace Cerebello.Model
             {
                 OnFridayChanging(value);
                 ReportPropertyChanging("Friday");
-                _Friday = StructuralObject.SetValidValue(value);
+                _Friday = StructuralObject.SetValidValue(value, "Friday");
                 ReportPropertyChanged("Friday");
                 OnFridayChanged();
             }
@@ -3156,7 +3225,7 @@ namespace Cerebello.Model
             {
                 OnSaturdayChanging(value);
                 ReportPropertyChanging("Saturday");
-                _Saturday = StructuralObject.SetValidValue(value);
+                _Saturday = StructuralObject.SetValidValue(value, "Saturday");
                 ReportPropertyChanged("Saturday");
                 OnSaturdayChanged();
             }
@@ -3180,7 +3249,7 @@ namespace Cerebello.Model
             {
                 OnSundayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("SundayWorkdayStartTime");
-                _SundayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _SundayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "SundayWorkdayStartTime");
                 ReportPropertyChanged("SundayWorkdayStartTime");
                 OnSundayWorkdayStartTimeChanged();
             }
@@ -3204,7 +3273,7 @@ namespace Cerebello.Model
             {
                 OnSundayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("SundayWorkdayEndTime");
-                _SundayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _SundayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "SundayWorkdayEndTime");
                 ReportPropertyChanged("SundayWorkdayEndTime");
                 OnSundayWorkdayEndTimeChanged();
             }
@@ -3228,7 +3297,7 @@ namespace Cerebello.Model
             {
                 OnSundayLunchStartTimeChanging(value);
                 ReportPropertyChanging("SundayLunchStartTime");
-                _SundayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _SundayLunchStartTime = StructuralObject.SetValidValue(value, true, "SundayLunchStartTime");
                 ReportPropertyChanged("SundayLunchStartTime");
                 OnSundayLunchStartTimeChanged();
             }
@@ -3252,7 +3321,7 @@ namespace Cerebello.Model
             {
                 OnSundayLunchEndTimeChanging(value);
                 ReportPropertyChanging("SundayLunchEndTime");
-                _SundayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _SundayLunchEndTime = StructuralObject.SetValidValue(value, true, "SundayLunchEndTime");
                 ReportPropertyChanged("SundayLunchEndTime");
                 OnSundayLunchEndTimeChanged();
             }
@@ -3276,7 +3345,7 @@ namespace Cerebello.Model
             {
                 OnMondayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("MondayWorkdayStartTime");
-                _MondayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _MondayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "MondayWorkdayStartTime");
                 ReportPropertyChanged("MondayWorkdayStartTime");
                 OnMondayWorkdayStartTimeChanged();
             }
@@ -3300,7 +3369,7 @@ namespace Cerebello.Model
             {
                 OnMondayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("MondayWorkdayEndTime");
-                _MondayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _MondayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "MondayWorkdayEndTime");
                 ReportPropertyChanged("MondayWorkdayEndTime");
                 OnMondayWorkdayEndTimeChanged();
             }
@@ -3324,7 +3393,7 @@ namespace Cerebello.Model
             {
                 OnMondayLunchStartTimeChanging(value);
                 ReportPropertyChanging("MondayLunchStartTime");
-                _MondayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _MondayLunchStartTime = StructuralObject.SetValidValue(value, true, "MondayLunchStartTime");
                 ReportPropertyChanged("MondayLunchStartTime");
                 OnMondayLunchStartTimeChanged();
             }
@@ -3348,7 +3417,7 @@ namespace Cerebello.Model
             {
                 OnMondayLunchEndTimeChanging(value);
                 ReportPropertyChanging("MondayLunchEndTime");
-                _MondayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _MondayLunchEndTime = StructuralObject.SetValidValue(value, true, "MondayLunchEndTime");
                 ReportPropertyChanged("MondayLunchEndTime");
                 OnMondayLunchEndTimeChanged();
             }
@@ -3372,7 +3441,7 @@ namespace Cerebello.Model
             {
                 OnTuesdayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("TuesdayWorkdayStartTime");
-                _TuesdayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _TuesdayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "TuesdayWorkdayStartTime");
                 ReportPropertyChanged("TuesdayWorkdayStartTime");
                 OnTuesdayWorkdayStartTimeChanged();
             }
@@ -3396,7 +3465,7 @@ namespace Cerebello.Model
             {
                 OnTuesdayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("TuesdayWorkdayEndTime");
-                _TuesdayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _TuesdayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "TuesdayWorkdayEndTime");
                 ReportPropertyChanged("TuesdayWorkdayEndTime");
                 OnTuesdayWorkdayEndTimeChanged();
             }
@@ -3420,7 +3489,7 @@ namespace Cerebello.Model
             {
                 OnTuesdayLunchStartTimeChanging(value);
                 ReportPropertyChanging("TuesdayLunchStartTime");
-                _TuesdayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _TuesdayLunchStartTime = StructuralObject.SetValidValue(value, true, "TuesdayLunchStartTime");
                 ReportPropertyChanged("TuesdayLunchStartTime");
                 OnTuesdayLunchStartTimeChanged();
             }
@@ -3444,7 +3513,7 @@ namespace Cerebello.Model
             {
                 OnTuesdayLunchEndTimeChanging(value);
                 ReportPropertyChanging("TuesdayLunchEndTime");
-                _TuesdayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _TuesdayLunchEndTime = StructuralObject.SetValidValue(value, true, "TuesdayLunchEndTime");
                 ReportPropertyChanged("TuesdayLunchEndTime");
                 OnTuesdayLunchEndTimeChanged();
             }
@@ -3468,7 +3537,7 @@ namespace Cerebello.Model
             {
                 OnWednesdayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("WednesdayWorkdayStartTime");
-                _WednesdayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _WednesdayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "WednesdayWorkdayStartTime");
                 ReportPropertyChanged("WednesdayWorkdayStartTime");
                 OnWednesdayWorkdayStartTimeChanged();
             }
@@ -3492,7 +3561,7 @@ namespace Cerebello.Model
             {
                 OnWednesdayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("WednesdayWorkdayEndTime");
-                _WednesdayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _WednesdayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "WednesdayWorkdayEndTime");
                 ReportPropertyChanged("WednesdayWorkdayEndTime");
                 OnWednesdayWorkdayEndTimeChanged();
             }
@@ -3516,7 +3585,7 @@ namespace Cerebello.Model
             {
                 OnWednesdayLunchStartTimeChanging(value);
                 ReportPropertyChanging("WednesdayLunchStartTime");
-                _WednesdayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _WednesdayLunchStartTime = StructuralObject.SetValidValue(value, true, "WednesdayLunchStartTime");
                 ReportPropertyChanged("WednesdayLunchStartTime");
                 OnWednesdayLunchStartTimeChanged();
             }
@@ -3540,7 +3609,7 @@ namespace Cerebello.Model
             {
                 OnWednesdayLunchEndTimeChanging(value);
                 ReportPropertyChanging("WednesdayLunchEndTime");
-                _WednesdayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _WednesdayLunchEndTime = StructuralObject.SetValidValue(value, true, "WednesdayLunchEndTime");
                 ReportPropertyChanged("WednesdayLunchEndTime");
                 OnWednesdayLunchEndTimeChanged();
             }
@@ -3564,7 +3633,7 @@ namespace Cerebello.Model
             {
                 OnThursdayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("ThursdayWorkdayStartTime");
-                _ThursdayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _ThursdayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "ThursdayWorkdayStartTime");
                 ReportPropertyChanged("ThursdayWorkdayStartTime");
                 OnThursdayWorkdayStartTimeChanged();
             }
@@ -3588,7 +3657,7 @@ namespace Cerebello.Model
             {
                 OnThursdayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("ThursdayWorkdayEndTime");
-                _ThursdayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _ThursdayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "ThursdayWorkdayEndTime");
                 ReportPropertyChanged("ThursdayWorkdayEndTime");
                 OnThursdayWorkdayEndTimeChanged();
             }
@@ -3612,7 +3681,7 @@ namespace Cerebello.Model
             {
                 OnThursdayLunchStartTimeChanging(value);
                 ReportPropertyChanging("ThursdayLunchStartTime");
-                _ThursdayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _ThursdayLunchStartTime = StructuralObject.SetValidValue(value, true, "ThursdayLunchStartTime");
                 ReportPropertyChanged("ThursdayLunchStartTime");
                 OnThursdayLunchStartTimeChanged();
             }
@@ -3636,7 +3705,7 @@ namespace Cerebello.Model
             {
                 OnThursdayLunchEndTimeChanging(value);
                 ReportPropertyChanging("ThursdayLunchEndTime");
-                _ThursdayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _ThursdayLunchEndTime = StructuralObject.SetValidValue(value, true, "ThursdayLunchEndTime");
                 ReportPropertyChanged("ThursdayLunchEndTime");
                 OnThursdayLunchEndTimeChanged();
             }
@@ -3660,7 +3729,7 @@ namespace Cerebello.Model
             {
                 OnFridayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("FridayWorkdayStartTime");
-                _FridayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _FridayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "FridayWorkdayStartTime");
                 ReportPropertyChanged("FridayWorkdayStartTime");
                 OnFridayWorkdayStartTimeChanged();
             }
@@ -3684,7 +3753,7 @@ namespace Cerebello.Model
             {
                 OnFridayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("FridayWorkdayEndTime");
-                _FridayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _FridayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "FridayWorkdayEndTime");
                 ReportPropertyChanged("FridayWorkdayEndTime");
                 OnFridayWorkdayEndTimeChanged();
             }
@@ -3708,7 +3777,7 @@ namespace Cerebello.Model
             {
                 OnFridayLunchStartTimeChanging(value);
                 ReportPropertyChanging("FridayLunchStartTime");
-                _FridayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _FridayLunchStartTime = StructuralObject.SetValidValue(value, true, "FridayLunchStartTime");
                 ReportPropertyChanged("FridayLunchStartTime");
                 OnFridayLunchStartTimeChanged();
             }
@@ -3732,7 +3801,7 @@ namespace Cerebello.Model
             {
                 OnFridayLunchEndTimeChanging(value);
                 ReportPropertyChanging("FridayLunchEndTime");
-                _FridayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _FridayLunchEndTime = StructuralObject.SetValidValue(value, true, "FridayLunchEndTime");
                 ReportPropertyChanged("FridayLunchEndTime");
                 OnFridayLunchEndTimeChanged();
             }
@@ -3756,7 +3825,7 @@ namespace Cerebello.Model
             {
                 OnSaturdayWorkdayStartTimeChanging(value);
                 ReportPropertyChanging("SaturdayWorkdayStartTime");
-                _SaturdayWorkdayStartTime = StructuralObject.SetValidValue(value, true);
+                _SaturdayWorkdayStartTime = StructuralObject.SetValidValue(value, true, "SaturdayWorkdayStartTime");
                 ReportPropertyChanged("SaturdayWorkdayStartTime");
                 OnSaturdayWorkdayStartTimeChanged();
             }
@@ -3780,7 +3849,7 @@ namespace Cerebello.Model
             {
                 OnSaturdayWorkdayEndTimeChanging(value);
                 ReportPropertyChanging("SaturdayWorkdayEndTime");
-                _SaturdayWorkdayEndTime = StructuralObject.SetValidValue(value, true);
+                _SaturdayWorkdayEndTime = StructuralObject.SetValidValue(value, true, "SaturdayWorkdayEndTime");
                 ReportPropertyChanged("SaturdayWorkdayEndTime");
                 OnSaturdayWorkdayEndTimeChanged();
             }
@@ -3804,7 +3873,7 @@ namespace Cerebello.Model
             {
                 OnSaturdayLunchStartTimeChanging(value);
                 ReportPropertyChanging("SaturdayLunchStartTime");
-                _SaturdayLunchStartTime = StructuralObject.SetValidValue(value, true);
+                _SaturdayLunchStartTime = StructuralObject.SetValidValue(value, true, "SaturdayLunchStartTime");
                 ReportPropertyChanged("SaturdayLunchStartTime");
                 OnSaturdayLunchStartTimeChanged();
             }
@@ -3828,7 +3897,7 @@ namespace Cerebello.Model
             {
                 OnSaturdayLunchEndTimeChanging(value);
                 ReportPropertyChanging("SaturdayLunchEndTime");
-                _SaturdayLunchEndTime = StructuralObject.SetValidValue(value, true);
+                _SaturdayLunchEndTime = StructuralObject.SetValidValue(value, true, "SaturdayLunchEndTime");
                 ReportPropertyChanged("SaturdayLunchEndTime");
                 OnSaturdayLunchEndTimeChanged();
             }
@@ -3838,7 +3907,7 @@ namespace Cerebello.Model
         partial void OnSaturdayLunchEndTimeChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -3880,6 +3949,311 @@ namespace Cerebello.Model
         }
 
         #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="ChatMessage")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class ChatMessage : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new ChatMessage object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="userFromId">Initial value of the UserFromId property.</param>
+        /// <param name="userToId">Initial value of the UserToId property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="date">Initial value of the Date property.</param>
+        /// <param name="message">Initial value of the Message property.</param>
+        public static ChatMessage CreateChatMessage(global::System.Int32 id, global::System.Int32 userFromId, global::System.Int32 userToId, global::System.Int32 practiceId, global::System.DateTime date, global::System.String message)
+        {
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.Id = id;
+            chatMessage.UserFromId = userFromId;
+            chatMessage.UserToId = userToId;
+            chatMessage.PracticeId = practiceId;
+            chatMessage.Date = date;
+            chatMessage.Message = message;
+            return chatMessage;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 UserFromId
+        {
+            get
+            {
+                return _UserFromId;
+            }
+            set
+            {
+                OnUserFromIdChanging(value);
+                ReportPropertyChanging("UserFromId");
+                _UserFromId = StructuralObject.SetValidValue(value, "UserFromId");
+                ReportPropertyChanged("UserFromId");
+                OnUserFromIdChanged();
+            }
+        }
+        private global::System.Int32 _UserFromId;
+        partial void OnUserFromIdChanging(global::System.Int32 value);
+        partial void OnUserFromIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 UserToId
+        {
+            get
+            {
+                return _UserToId;
+            }
+            set
+            {
+                OnUserToIdChanging(value);
+                ReportPropertyChanging("UserToId");
+                _UserToId = StructuralObject.SetValidValue(value, "UserToId");
+                ReportPropertyChanged("UserToId");
+                OnUserToIdChanged();
+            }
+        }
+        private global::System.Int32 _UserToId;
+        partial void OnUserToIdChanging(global::System.Int32 value);
+        partial void OnUserToIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value, "PracticeId");
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime Date
+        {
+            get
+            {
+                return _Date;
+            }
+            set
+            {
+                OnDateChanging(value);
+                ReportPropertyChanging("Date");
+                _Date = StructuralObject.SetValidValue(value, "Date");
+                ReportPropertyChanged("Date");
+                OnDateChanged();
+            }
+        }
+        private global::System.DateTime _Date;
+        partial void OnDateChanging(global::System.DateTime value);
+        partial void OnDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Message
+        {
+            get
+            {
+                return _Message;
+            }
+            set
+            {
+                OnMessageChanging(value);
+                ReportPropertyChanging("Message");
+                _Message = StructuralObject.SetValidValue(value, false, "Message");
+                ReportPropertyChanged("Message");
+                OnMessageChanged();
+            }
+        }
+        private global::System.String _Message;
+        partial void OnMessageChanging(global::System.String value);
+        partial void OnMessageChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_ChatMessage_Practice", "Practice", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User", "User")]
+        public User UserFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<User> UserFromReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User")]
+        public User UserTo
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<User> UserToReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -3906,7 +4280,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -3925,7 +4300,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -3950,7 +4325,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -3960,7 +4335,7 @@ namespace Cerebello.Model
         partial void OnNameChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -3986,6 +4361,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4002,19 +4378,20 @@ namespace Cerebello.Model
         /// Create a new Diagnosis object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="anamneseId">Initial value of the AnamneseId property.</param>
-        /// <param name="cid10Code">Initial value of the Cid10Code property.</param>
-        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.Int32 anamneseId, global::System.String cid10Code)
+        /// <param name="patientId">Initial value of the PatientId property.</param>
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn)
         {
             Diagnosis diagnosis = new Diagnosis();
             diagnosis.Id = id;
-            diagnosis.AnamneseId = anamneseId;
-            diagnosis.Cid10Code = cid10Code;
+            diagnosis.PatientId = patientId;
+            diagnosis.CreatedOn = createdOn;
             return diagnosis;
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4033,7 +4410,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -4042,30 +4419,6 @@ namespace Cerebello.Model
         private global::System.Int32 _Id;
         partial void OnIdChanging(global::System.Int32 value);
         partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 AnamneseId
-        {
-            get
-            {
-                return _AnamneseId;
-            }
-            set
-            {
-                OnAnamneseIdChanging(value);
-                ReportPropertyChanging("AnamneseId");
-                _AnamneseId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("AnamneseId");
-                OnAnamneseIdChanged();
-            }
-        }
-        private global::System.Int32 _AnamneseId;
-        partial void OnAnamneseIdChanging(global::System.Int32 value);
-        partial void OnAnamneseIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4082,7 +4435,7 @@ namespace Cerebello.Model
             {
                 OnObservationsChanging(value);
                 ReportPropertyChanging("Observations");
-                _Observations = StructuralObject.SetValidValue(value, true);
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
                 ReportPropertyChanged("Observations");
                 OnObservationsChanged();
             }
@@ -4094,7 +4447,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String Cid10Code
         {
@@ -4106,7 +4459,7 @@ namespace Cerebello.Model
             {
                 OnCid10CodeChanging(value);
                 ReportPropertyChanging("Cid10Code");
-                _Cid10Code = StructuralObject.SetValidValue(value, false);
+                _Cid10Code = StructuralObject.SetValidValue(value, true, "Cid10Code");
                 ReportPropertyChanged("Cid10Code");
                 OnCid10CodeChanged();
             }
@@ -4114,6 +4467,54 @@ namespace Cerebello.Model
         private global::System.String _Cid10Code;
         partial void OnCid10CodeChanging(global::System.String value);
         partial void OnCid10CodeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PatientId
+        {
+            get
+            {
+                return _PatientId;
+            }
+            set
+            {
+                OnPatientIdChanging(value);
+                ReportPropertyChanging("PatientId");
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
+                ReportPropertyChanged("PatientId");
+                OnPatientIdChanged();
+            }
+        }
+        private global::System.Int32 _PatientId;
+        partial void OnPatientIdChanging(global::System.Int32 value);
+        partial void OnPatientIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4130,7 +4531,7 @@ namespace Cerebello.Model
             {
                 OnCid10NameChanging(value);
                 ReportPropertyChanging("Cid10Name");
-                _Cid10Name = StructuralObject.SetValidValue(value, true);
+                _Cid10Name = StructuralObject.SetValidValue(value, true, "Cid10Name");
                 ReportPropertyChanged("Cid10Name");
                 OnCid10NameChanged();
             }
@@ -4140,7 +4541,7 @@ namespace Cerebello.Model
         partial void OnCid10NameChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -4149,16 +4550,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese")]
-        public Anamnese Anamnese
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient")]
+        public Patient Patient
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient").Value = value;
             }
         }
         /// <summary>
@@ -4166,22 +4567,23 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Anamnese> AnamneseReference
+        public EntityReference<Patient> PatientReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Patient", value);
                 }
             }
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4214,7 +4616,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4233,7 +4636,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -4258,7 +4661,7 @@ namespace Cerebello.Model
             {
                 OnCRMChanging(value);
                 ReportPropertyChanging("CRM");
-                _CRM = StructuralObject.SetValidValue(value, false);
+                _CRM = StructuralObject.SetValidValue(value, false, "CRM");
                 ReportPropertyChanged("CRM");
                 OnCRMChanged();
             }
@@ -4282,7 +4685,7 @@ namespace Cerebello.Model
             {
                 OnMedicalEntityIdChanging(value);
                 ReportPropertyChanging("MedicalEntityId");
-                _MedicalEntityId = StructuralObject.SetValidValue(value);
+                _MedicalEntityId = StructuralObject.SetValidValue(value, "MedicalEntityId");
                 ReportPropertyChanged("MedicalEntityId");
                 OnMedicalEntityIdChanged();
             }
@@ -4306,7 +4709,7 @@ namespace Cerebello.Model
             {
                 OnMedicalSpecialtyIdChanging(value);
                 ReportPropertyChanging("MedicalSpecialtyId");
-                _MedicalSpecialtyId = StructuralObject.SetValidValue(value);
+                _MedicalSpecialtyId = StructuralObject.SetValidValue(value, "MedicalSpecialtyId");
                 ReportPropertyChanged("MedicalSpecialtyId");
                 OnMedicalSpecialtyIdChanged();
             }
@@ -4330,7 +4733,7 @@ namespace Cerebello.Model
             {
                 OnMedicalEntityJurisdictionChanging(value);
                 ReportPropertyChanging("MedicalEntityJurisdiction");
-                _MedicalEntityJurisdiction = StructuralObject.SetValidValue(value, true);
+                _MedicalEntityJurisdiction = StructuralObject.SetValidValue(value, true, "MedicalEntityJurisdiction");
                 ReportPropertyChanged("MedicalEntityJurisdiction");
                 OnMedicalEntityJurisdictionChanged();
             }
@@ -4354,7 +4757,7 @@ namespace Cerebello.Model
             {
                 OnUrlIdentifierChanging(value);
                 ReportPropertyChanging("UrlIdentifier");
-                _UrlIdentifier = StructuralObject.SetValidValue(value, false);
+                _UrlIdentifier = StructuralObject.SetValidValue(value, false, "UrlIdentifier");
                 ReportPropertyChanged("UrlIdentifier");
                 OnUrlIdentifierChanged();
             }
@@ -4364,7 +4767,7 @@ namespace Cerebello.Model
         partial void OnUrlIdentifierChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -4696,6 +5099,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4726,7 +5130,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4745,7 +5150,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -4770,7 +5175,7 @@ namespace Cerebello.Model
             {
                 OnPatientIdChanging(value);
                 ReportPropertyChanging("PatientId");
-                _PatientId = StructuralObject.SetValidValue(value);
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
                 ReportPropertyChanged("PatientId");
                 OnPatientIdChanged();
             }
@@ -4794,7 +5199,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, true);
+                _Text = StructuralObject.SetValidValue(value, true, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -4818,7 +5223,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -4842,7 +5247,7 @@ namespace Cerebello.Model
             {
                 OnMedicalProcedureIdChanging(value);
                 ReportPropertyChanging("MedicalProcedureId");
-                _MedicalProcedureId = StructuralObject.SetValidValue(value);
+                _MedicalProcedureId = StructuralObject.SetValidValue(value, "MedicalProcedureId");
                 ReportPropertyChanged("MedicalProcedureId");
                 OnMedicalProcedureIdChanged();
             }
@@ -4852,7 +5257,7 @@ namespace Cerebello.Model
         partial void OnMedicalProcedureIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -4932,6 +5337,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4964,7 +5370,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4983,7 +5390,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5008,7 +5415,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, false);
+                _Text = StructuralObject.SetValidValue(value, false, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -5032,7 +5439,7 @@ namespace Cerebello.Model
             {
                 OnPatientIdChanging(value);
                 ReportPropertyChanging("PatientId");
-                _PatientId = StructuralObject.SetValidValue(value);
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
                 ReportPropertyChanged("PatientId");
                 OnPatientIdChanged();
             }
@@ -5056,7 +5463,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -5080,7 +5487,7 @@ namespace Cerebello.Model
             {
                 OnMedicalProcedureIdChanging(value);
                 ReportPropertyChanging("MedicalProcedureId");
-                _MedicalProcedureId = StructuralObject.SetValidValue(value);
+                _MedicalProcedureId = StructuralObject.SetValidValue(value, "MedicalProcedureId");
                 ReportPropertyChanged("MedicalProcedureId");
                 OnMedicalProcedureIdChanged();
             }
@@ -5090,7 +5497,7 @@ namespace Cerebello.Model
         partial void OnMedicalProcedureIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -5170,6 +5577,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5196,7 +5604,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5215,7 +5624,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5240,7 +5649,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -5250,7 +5659,7 @@ namespace Cerebello.Model
         partial void OnNameChanged();
 
         #endregion
-    
+
     }
     
     /// <summary>
@@ -5279,7 +5688,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5298,7 +5708,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5323,7 +5733,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -5347,7 +5757,7 @@ namespace Cerebello.Model
             {
                 OnDateChanging(value);
                 ReportPropertyChanging("Date");
-                _Date = StructuralObject.SetValidValue(value);
+                _Date = StructuralObject.SetValidValue(value, "Date");
                 ReportPropertyChanged("Date");
                 OnDateChanged();
             }
@@ -5357,7 +5767,7 @@ namespace Cerebello.Model
         partial void OnDateChanged();
 
         #endregion
-    
+
     }
     
     /// <summary>
@@ -5386,7 +5796,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5405,7 +5816,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5430,7 +5841,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -5454,7 +5865,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -5464,7 +5875,7 @@ namespace Cerebello.Model
         partial void OnDoctorIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -5528,6 +5939,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5554,7 +5966,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5573,7 +5986,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5598,7 +6011,7 @@ namespace Cerebello.Model
             {
                 OnDescriptionChanging(value);
                 ReportPropertyChanging("Description");
-                _Description = StructuralObject.SetValidValue(value, true);
+                _Description = StructuralObject.SetValidValue(value, true, "Description");
                 ReportPropertyChanged("Description");
                 OnDescriptionChanged();
             }
@@ -5622,7 +6035,7 @@ namespace Cerebello.Model
             {
                 OnUrlChanging(value);
                 ReportPropertyChanging("Url");
-                _Url = StructuralObject.SetValidValue(value, false);
+                _Url = StructuralObject.SetValidValue(value, false, "Url");
                 ReportPropertyChanged("Url");
                 OnUrlChanged();
             }
@@ -5632,7 +6045,7 @@ namespace Cerebello.Model
         partial void OnUrlChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -5658,6 +6071,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5688,7 +6102,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5707,7 +6122,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5732,7 +6147,7 @@ namespace Cerebello.Model
             {
                 OnModelMedicalCertificateIdChanging(value);
                 ReportPropertyChanging("ModelMedicalCertificateId");
-                _ModelMedicalCertificateId = StructuralObject.SetValidValue(value);
+                _ModelMedicalCertificateId = StructuralObject.SetValidValue(value, "ModelMedicalCertificateId");
                 ReportPropertyChanged("ModelMedicalCertificateId");
                 OnModelMedicalCertificateIdChanged();
             }
@@ -5756,7 +6171,7 @@ namespace Cerebello.Model
             {
                 OnPatientIdChanging(value);
                 ReportPropertyChanging("PatientId");
-                _PatientId = StructuralObject.SetValidValue(value);
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
                 ReportPropertyChanged("PatientId");
                 OnPatientIdChanged();
             }
@@ -5780,7 +6195,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -5804,7 +6219,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, false);
+                _Text = StructuralObject.SetValidValue(value, false, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -5814,7 +6229,7 @@ namespace Cerebello.Model
         partial void OnTextChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -5916,6 +6331,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5944,7 +6360,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -5963,7 +6380,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -5988,7 +6405,7 @@ namespace Cerebello.Model
             {
                 OnMedicalCertificateIdChanging(value);
                 ReportPropertyChanging("MedicalCertificateId");
-                _MedicalCertificateId = StructuralObject.SetValidValue(value);
+                _MedicalCertificateId = StructuralObject.SetValidValue(value, "MedicalCertificateId");
                 ReportPropertyChanged("MedicalCertificateId");
                 OnMedicalCertificateIdChanged();
             }
@@ -6012,7 +6429,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -6036,7 +6453,7 @@ namespace Cerebello.Model
             {
                 OnValueChanging(value);
                 ReportPropertyChanging("Value");
-                _Value = StructuralObject.SetValidValue(value, true);
+                _Value = StructuralObject.SetValidValue(value, true, "Value");
                 ReportPropertyChanged("Value");
                 OnValueChanged();
             }
@@ -6046,7 +6463,7 @@ namespace Cerebello.Model
         partial void OnValueChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -6088,6 +6505,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -6118,7 +6536,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6137,7 +6556,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -6162,7 +6581,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -6186,7 +6605,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -6210,7 +6629,7 @@ namespace Cerebello.Model
             {
                 OnLaboratoryIdChanging(value);
                 ReportPropertyChanging("LaboratoryId");
-                _LaboratoryId = StructuralObject.SetValidValue(value);
+                _LaboratoryId = StructuralObject.SetValidValue(value, "LaboratoryId");
                 ReportPropertyChanged("LaboratoryId");
                 OnLaboratoryIdChanged();
             }
@@ -6234,7 +6653,7 @@ namespace Cerebello.Model
             {
                 OnUsageChanging(value);
                 ReportPropertyChanging("Usage");
-                _Usage = StructuralObject.SetValidValue(value);
+                _Usage = StructuralObject.SetValidValue(value, "Usage");
                 ReportPropertyChanged("Usage");
                 OnUsageChanged();
             }
@@ -6244,7 +6663,7 @@ namespace Cerebello.Model
         partial void OnUsageChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -6390,6 +6809,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -6420,7 +6840,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6439,7 +6860,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -6464,7 +6885,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -6488,7 +6909,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, false);
+                _Text = StructuralObject.SetValidValue(value, false, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -6512,7 +6933,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -6522,7 +6943,7 @@ namespace Cerebello.Model
         partial void OnDoctorIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -6608,6 +7029,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -6636,7 +7058,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6655,7 +7078,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -6680,7 +7103,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -6704,7 +7127,7 @@ namespace Cerebello.Model
             {
                 OnModelMedicalCertificateIdChanging(value);
                 ReportPropertyChanging("ModelMedicalCertificateId");
-                _ModelMedicalCertificateId = StructuralObject.SetValidValue(value);
+                _ModelMedicalCertificateId = StructuralObject.SetValidValue(value, "ModelMedicalCertificateId");
                 ReportPropertyChanged("ModelMedicalCertificateId");
                 OnModelMedicalCertificateIdChanged();
             }
@@ -6714,7 +7137,7 @@ namespace Cerebello.Model
         partial void OnModelMedicalCertificateIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -6756,6 +7179,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -6784,7 +7208,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6803,7 +7228,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -6828,7 +7253,7 @@ namespace Cerebello.Model
             {
                 OnCoverageIdChanging(value);
                 ReportPropertyChanging("CoverageId");
-                _CoverageId = StructuralObject.SetValidValue(value);
+                _CoverageId = StructuralObject.SetValidValue(value, "CoverageId");
                 ReportPropertyChanged("CoverageId");
                 OnCoverageIdChanged();
             }
@@ -6852,7 +7277,7 @@ namespace Cerebello.Model
             {
                 OnRegistrationChanging(value);
                 ReportPropertyChanging("Registration");
-                _Registration = StructuralObject.SetValidValue(value, true);
+                _Registration = StructuralObject.SetValidValue(value, true, "Registration");
                 ReportPropertyChanged("Registration");
                 OnRegistrationChanged();
             }
@@ -6876,7 +7301,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -6900,7 +7325,7 @@ namespace Cerebello.Model
             {
                 OnPersonIdChanging(value);
                 ReportPropertyChanging("PersonId");
-                _PersonId = StructuralObject.SetValidValue(value);
+                _PersonId = StructuralObject.SetValidValue(value, "PersonId");
                 ReportPropertyChanged("PersonId");
                 OnPersonIdChanged();
             }
@@ -6910,7 +7335,7 @@ namespace Cerebello.Model
         partial void OnPersonIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -7158,8 +7583,31 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Diagnosis")]
+        public EntityCollection<Diagnosis> Diagnoses
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Diagnosis");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Diagnosis", value);
+                }
+            }
+        }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7192,7 +7640,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -7211,7 +7660,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -7236,7 +7685,7 @@ namespace Cerebello.Model
             {
                 OnFullNameChanging(value);
                 ReportPropertyChanging("FullName");
-                _FullName = StructuralObject.SetValidValue(value, false);
+                _FullName = StructuralObject.SetValidValue(value, false, "FullName");
                 ReportPropertyChanged("FullName");
                 OnFullNameChanged();
             }
@@ -7260,7 +7709,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -7284,7 +7733,7 @@ namespace Cerebello.Model
             {
                 OnDateOfBirthChanging(value);
                 ReportPropertyChanging("DateOfBirth");
-                _DateOfBirth = StructuralObject.SetValidValue(value);
+                _DateOfBirth = StructuralObject.SetValidValue(value, "DateOfBirth");
                 ReportPropertyChanged("DateOfBirth");
                 OnDateOfBirthChanged();
             }
@@ -7308,7 +7757,7 @@ namespace Cerebello.Model
             {
                 OnGenderChanging(value);
                 ReportPropertyChanging("Gender");
-                _Gender = StructuralObject.SetValidValue(value);
+                _Gender = StructuralObject.SetValidValue(value, "Gender");
                 ReportPropertyChanged("Gender");
                 OnGenderChanged();
             }
@@ -7332,7 +7781,7 @@ namespace Cerebello.Model
             {
                 OnMaritalStatusChanging(value);
                 ReportPropertyChanging("MaritalStatus");
-                _MaritalStatus = StructuralObject.SetValidValue(value);
+                _MaritalStatus = StructuralObject.SetValidValue(value, "MaritalStatus");
                 ReportPropertyChanged("MaritalStatus");
                 OnMaritalStatusChanged();
             }
@@ -7356,7 +7805,7 @@ namespace Cerebello.Model
             {
                 OnBirthPlaceChanging(value);
                 ReportPropertyChanging("BirthPlace");
-                _BirthPlace = StructuralObject.SetValidValue(value, true);
+                _BirthPlace = StructuralObject.SetValidValue(value, true, "BirthPlace");
                 ReportPropertyChanged("BirthPlace");
                 OnBirthPlaceChanged();
             }
@@ -7380,7 +7829,7 @@ namespace Cerebello.Model
             {
                 OnCPFChanging(value);
                 ReportPropertyChanging("CPF");
-                _CPF = StructuralObject.SetValidValue(value, true);
+                _CPF = StructuralObject.SetValidValue(value, true, "CPF");
                 ReportPropertyChanged("CPF");
                 OnCPFChanged();
             }
@@ -7404,7 +7853,7 @@ namespace Cerebello.Model
             {
                 OnCPFOwnerChanging(value);
                 ReportPropertyChanging("CPFOwner");
-                _CPFOwner = StructuralObject.SetValidValue(value);
+                _CPFOwner = StructuralObject.SetValidValue(value, "CPFOwner");
                 ReportPropertyChanged("CPFOwner");
                 OnCPFOwnerChanged();
             }
@@ -7428,7 +7877,7 @@ namespace Cerebello.Model
             {
                 OnObservationsChanging(value);
                 ReportPropertyChanging("Observations");
-                _Observations = StructuralObject.SetValidValue(value, true);
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
                 ReportPropertyChanged("Observations");
                 OnObservationsChanged();
             }
@@ -7452,7 +7901,7 @@ namespace Cerebello.Model
             {
                 OnProfessionChanging(value);
                 ReportPropertyChanging("Profession");
-                _Profession = StructuralObject.SetValidValue(value, true);
+                _Profession = StructuralObject.SetValidValue(value, true, "Profession");
                 ReportPropertyChanged("Profession");
                 OnProfessionChanged();
             }
@@ -7476,7 +7925,7 @@ namespace Cerebello.Model
             {
                 OnPhoneCellChanging(value);
                 ReportPropertyChanging("PhoneCell");
-                _PhoneCell = StructuralObject.SetValidValue(value, true);
+                _PhoneCell = StructuralObject.SetValidValue(value, true, "PhoneCell");
                 ReportPropertyChanged("PhoneCell");
                 OnPhoneCellChanged();
             }
@@ -7500,7 +7949,7 @@ namespace Cerebello.Model
             {
                 OnEmailChanging(value);
                 ReportPropertyChanging("Email");
-                _Email = StructuralObject.SetValidValue(value, true);
+                _Email = StructuralObject.SetValidValue(value, true, "Email");
                 ReportPropertyChanged("Email");
                 OnEmailChanged();
             }
@@ -7524,7 +7973,7 @@ namespace Cerebello.Model
             {
                 OnEmailGravatarHashChanging(value);
                 ReportPropertyChanging("EmailGravatarHash");
-                _EmailGravatarHash = StructuralObject.SetValidValue(value, true);
+                _EmailGravatarHash = StructuralObject.SetValidValue(value, true, "EmailGravatarHash");
                 ReportPropertyChanged("EmailGravatarHash");
                 OnEmailGravatarHashChanged();
             }
@@ -7548,7 +7997,7 @@ namespace Cerebello.Model
             {
                 OnPhoneLandChanging(value);
                 ReportPropertyChanging("PhoneLand");
-                _PhoneLand = StructuralObject.SetValidValue(value, true);
+                _PhoneLand = StructuralObject.SetValidValue(value, true, "PhoneLand");
                 ReportPropertyChanged("PhoneLand");
                 OnPhoneLandChanged();
             }
@@ -7558,7 +8007,7 @@ namespace Cerebello.Model
         partial void OnPhoneLandChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -7644,6 +8093,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7678,7 +8128,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -7697,7 +8148,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -7722,7 +8173,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -7746,7 +8197,7 @@ namespace Cerebello.Model
             {
                 OnUrlIdentifierChanging(value);
                 ReportPropertyChanging("UrlIdentifier");
-                _UrlIdentifier = StructuralObject.SetValidValue(value, false);
+                _UrlIdentifier = StructuralObject.SetValidValue(value, false, "UrlIdentifier");
                 ReportPropertyChanged("UrlIdentifier");
                 OnUrlIdentifierChanged();
             }
@@ -7770,7 +8221,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -7794,7 +8245,7 @@ namespace Cerebello.Model
             {
                 OnOwnerIdChanging(value);
                 ReportPropertyChanging("OwnerId");
-                _OwnerId = StructuralObject.SetValidValue(value);
+                _OwnerId = StructuralObject.SetValidValue(value, "OwnerId");
                 ReportPropertyChanged("OwnerId");
                 OnOwnerIdChanged();
             }
@@ -7818,7 +8269,7 @@ namespace Cerebello.Model
             {
                 OnWindowsTimeZoneIdChanging(value);
                 ReportPropertyChanging("WindowsTimeZoneId");
-                _WindowsTimeZoneId = StructuralObject.SetValidValue(value, false);
+                _WindowsTimeZoneId = StructuralObject.SetValidValue(value, false, "WindowsTimeZoneId");
                 ReportPropertyChanged("WindowsTimeZoneId");
                 OnWindowsTimeZoneIdChanged();
             }
@@ -7842,7 +8293,7 @@ namespace Cerebello.Model
             {
                 OnVerificationDateChanging(value);
                 ReportPropertyChanging("VerificationDate");
-                _VerificationDate = StructuralObject.SetValidValue(value);
+                _VerificationDate = StructuralObject.SetValidValue(value, "VerificationDate");
                 ReportPropertyChanged("VerificationDate");
                 OnVerificationDateChanged();
             }
@@ -7866,7 +8317,7 @@ namespace Cerebello.Model
             {
                 OnVerificationTokenChanging(value);
                 ReportPropertyChanging("VerificationToken");
-                _VerificationToken = StructuralObject.SetValidValue(value, true);
+                _VerificationToken = StructuralObject.SetValidValue(value, true, "VerificationToken");
                 ReportPropertyChanged("VerificationToken");
                 OnVerificationTokenChanged();
             }
@@ -7890,7 +8341,7 @@ namespace Cerebello.Model
             {
                 OnVerificationExpirationDateChanging(value);
                 ReportPropertyChanging("VerificationExpirationDate");
-                _VerificationExpirationDate = StructuralObject.SetValidValue(value);
+                _VerificationExpirationDate = StructuralObject.SetValidValue(value, "VerificationExpirationDate");
                 ReportPropertyChanged("VerificationExpirationDate");
                 OnVerificationExpirationDateChanged();
             }
@@ -7914,7 +8365,7 @@ namespace Cerebello.Model
             {
                 OnShowWelcomeScreenChanging(value);
                 ReportPropertyChanging("ShowWelcomeScreen");
-                _ShowWelcomeScreen = StructuralObject.SetValidValue(value);
+                _ShowWelcomeScreen = StructuralObject.SetValidValue(value, "ShowWelcomeScreen");
                 ReportPropertyChanged("ShowWelcomeScreen");
                 OnShowWelcomeScreenChanged();
             }
@@ -7948,7 +8399,7 @@ namespace Cerebello.Model
         partial void OnActiveAccountContractIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -8032,6 +8483,28 @@ namespace Cerebello.Model
                 }
             }
         }
+
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessages
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_Practice", "ChatMessage");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_Practice", "ChatMessage", value);
+                }
+            }
+        }
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8072,6 +8545,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -8100,7 +8574,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8119,7 +8594,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -8144,7 +8619,7 @@ namespace Cerebello.Model
             {
                 OnPatientIdChanging(value);
                 ReportPropertyChanging("PatientId");
-                _PatientId = StructuralObject.SetValidValue(value);
+                _PatientId = StructuralObject.SetValidValue(value, "PatientId");
                 ReportPropertyChanged("PatientId");
                 OnPatientIdChanged();
             }
@@ -8168,7 +8643,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -8178,7 +8653,7 @@ namespace Cerebello.Model
         partial void OnCreatedOnChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -8242,6 +8717,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -8274,7 +8750,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8293,7 +8770,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -8318,7 +8795,7 @@ namespace Cerebello.Model
             {
                 OnQuantityChanging(value);
                 ReportPropertyChanging("Quantity");
-                _Quantity = StructuralObject.SetValidValue(value, false);
+                _Quantity = StructuralObject.SetValidValue(value, false, "Quantity");
                 ReportPropertyChanged("Quantity");
                 OnQuantityChanged();
             }
@@ -8342,7 +8819,7 @@ namespace Cerebello.Model
             {
                 OnPrescriptionChanging(value);
                 ReportPropertyChanging("Prescription");
-                _Prescription = StructuralObject.SetValidValue(value, false);
+                _Prescription = StructuralObject.SetValidValue(value, false, "Prescription");
                 ReportPropertyChanged("Prescription");
                 OnPrescriptionChanged();
             }
@@ -8366,7 +8843,7 @@ namespace Cerebello.Model
             {
                 OnObservationsChanging(value);
                 ReportPropertyChanging("Observations");
-                _Observations = StructuralObject.SetValidValue(value, true);
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
                 ReportPropertyChanged("Observations");
                 OnObservationsChanged();
             }
@@ -8390,7 +8867,7 @@ namespace Cerebello.Model
             {
                 OnReceiptIdChanging(value);
                 ReportPropertyChanging("ReceiptId");
-                _ReceiptId = StructuralObject.SetValidValue(value);
+                _ReceiptId = StructuralObject.SetValidValue(value, "ReceiptId");
                 ReportPropertyChanged("ReceiptId");
                 OnReceiptIdChanged();
             }
@@ -8414,7 +8891,7 @@ namespace Cerebello.Model
             {
                 OnMedicineIdChanging(value);
                 ReportPropertyChanging("MedicineId");
-                _MedicineId = StructuralObject.SetValidValue(value);
+                _MedicineId = StructuralObject.SetValidValue(value, "MedicineId");
                 ReportPropertyChanged("MedicineId");
                 OnMedicineIdChanged();
             }
@@ -8424,7 +8901,7 @@ namespace Cerebello.Model
         partial void OnMedicineIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -8504,6 +8981,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -8528,7 +9006,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8547,7 +9026,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -8558,7 +9037,7 @@ namespace Cerebello.Model
         partial void OnIdChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -8584,6 +9063,205 @@ namespace Cerebello.Model
         }
 
         #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Symptom")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Symptom : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Symptom object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="anamneseId">Initial value of the AnamneseId property.</param>
+        /// <param name="cid10Code">Initial value of the Cid10Code property.</param>
+        public static Symptom CreateSymptom(global::System.Int32 id, global::System.Int32 anamneseId, global::System.String cid10Code)
+        {
+            Symptom symptom = new Symptom();
+            symptom.Id = id;
+            symptom.AnamneseId = anamneseId;
+            symptom.Cid10Code = cid10Code;
+            return symptom;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 AnamneseId
+        {
+            get
+            {
+                return _AnamneseId;
+            }
+            set
+            {
+                OnAnamneseIdChanging(value);
+                ReportPropertyChanging("AnamneseId");
+                _AnamneseId = StructuralObject.SetValidValue(value, "AnamneseId");
+                ReportPropertyChanged("AnamneseId");
+                OnAnamneseIdChanged();
+            }
+        }
+        private global::System.Int32 _AnamneseId;
+        partial void OnAnamneseIdChanging(global::System.Int32 value);
+        partial void OnAnamneseIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Observations
+        {
+            get
+            {
+                return _Observations;
+            }
+            set
+            {
+                OnObservationsChanging(value);
+                ReportPropertyChanging("Observations");
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
+                ReportPropertyChanged("Observations");
+                OnObservationsChanged();
+            }
+        }
+        private global::System.String _Observations;
+        partial void OnObservationsChanging(global::System.String value);
+        partial void OnObservationsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Cid10Code
+        {
+            get
+            {
+                return _Cid10Code;
+            }
+            set
+            {
+                OnCid10CodeChanging(value);
+                ReportPropertyChanging("Cid10Code");
+                _Cid10Code = StructuralObject.SetValidValue(value, false, "Cid10Code");
+                ReportPropertyChanged("Cid10Code");
+                OnCid10CodeChanged();
+            }
+        }
+        private global::System.String _Cid10Code;
+        partial void OnCid10CodeChanging(global::System.String value);
+        partial void OnCid10CodeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Cid10Name
+        {
+            get
+            {
+                return _Cid10Name;
+            }
+            set
+            {
+                OnCid10NameChanging(value);
+                ReportPropertyChanging("Cid10Name");
+                _Cid10Name = StructuralObject.SetValidValue(value, true, "Cid10Name");
+                ReportPropertyChanged("Cid10Name");
+                OnCid10NameChanged();
+            }
+        }
+        private global::System.String _Cid10Name;
+        partial void OnCid10NameChanging(global::System.String value);
+        partial void OnCid10NameChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Anamnese")]
+        public Anamnese Anamnese
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Anamnese> AnamneseReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese1", "Anamnese", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -8610,7 +9288,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8629,7 +9308,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -8654,7 +9333,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -8664,7 +9343,7 @@ namespace Cerebello.Model
         partial void OnNameChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -8898,6 +9577,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -8926,7 +9606,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8945,7 +9626,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -8970,7 +9651,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -8994,7 +9675,7 @@ namespace Cerebello.Model
             {
                 OnMonthAndDayChanging(value);
                 ReportPropertyChanging("MonthAndDay");
-                _MonthAndDay = StructuralObject.SetValidValue(value);
+                _MonthAndDay = StructuralObject.SetValidValue(value, "MonthAndDay");
                 ReportPropertyChanged("MonthAndDay");
                 OnMonthAndDayChanged();
             }
@@ -9004,7 +9685,7 @@ namespace Cerebello.Model
         partial void OnMonthAndDayChanged();
 
         #endregion
-    
+
     }
     
     /// <summary>
@@ -9031,7 +9712,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9050,7 +9732,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9075,7 +9757,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -9085,7 +9767,7 @@ namespace Cerebello.Model
         partial void OnNameChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -9111,6 +9793,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9137,7 +9820,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9156,7 +9840,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9181,7 +9865,7 @@ namespace Cerebello.Model
             {
                 OnDescriptionChanging(value);
                 ReportPropertyChanging("Description");
-                _Description = StructuralObject.SetValidValue(value, true);
+                _Description = StructuralObject.SetValidValue(value, true, "Description");
                 ReportPropertyChanged("Description");
                 OnDescriptionChanged();
             }
@@ -9205,7 +9889,7 @@ namespace Cerebello.Model
             {
                 OnUrlChanging(value);
                 ReportPropertyChanging("Url");
-                _Url = StructuralObject.SetValidValue(value, false);
+                _Url = StructuralObject.SetValidValue(value, false, "Url");
                 ReportPropertyChanged("Url");
                 OnUrlChanged();
             }
@@ -9215,7 +9899,7 @@ namespace Cerebello.Model
         partial void OnUrlChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -9241,6 +9925,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9267,7 +9952,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9286,7 +9972,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9311,7 +9997,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -9335,7 +10021,7 @@ namespace Cerebello.Model
             {
                 OnCodeChanging(value);
                 ReportPropertyChanging("Code");
-                _Code = StructuralObject.SetValidValue(value, true);
+                _Code = StructuralObject.SetValidValue(value, true, "Code");
                 ReportPropertyChanged("Code");
                 OnCodeChanged();
             }
@@ -9345,7 +10031,7 @@ namespace Cerebello.Model
         partial void OnCodeChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -9371,6 +10057,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9399,7 +10086,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9418,7 +10106,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9443,7 +10131,7 @@ namespace Cerebello.Model
             {
                 OnCodeChanging(value);
                 ReportPropertyChanging("Code");
-                _Code = StructuralObject.SetValidValue(value, false);
+                _Code = StructuralObject.SetValidValue(value, false, "Code");
                 ReportPropertyChanged("Code");
                 OnCodeChanged();
             }
@@ -9467,7 +10155,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -9477,7 +10165,7 @@ namespace Cerebello.Model
         partial void OnNameChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -9525,6 +10213,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9551,7 +10240,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9570,7 +10260,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9595,7 +10285,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -9619,7 +10309,7 @@ namespace Cerebello.Model
             {
                 OnCodeChanging(value);
                 ReportPropertyChanging("Code");
-                _Code = StructuralObject.SetValidValue(value, true);
+                _Code = StructuralObject.SetValidValue(value, true, "Code");
                 ReportPropertyChanged("Code");
                 OnCodeChanged();
             }
@@ -9629,7 +10319,7 @@ namespace Cerebello.Model
         partial void OnCodeChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -9655,6 +10345,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9681,7 +10372,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9700,7 +10392,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9725,7 +10417,7 @@ namespace Cerebello.Model
             {
                 OnLaboratoryIdChanging(value);
                 ReportPropertyChanging("LaboratoryId");
-                _LaboratoryId = StructuralObject.SetValidValue(value);
+                _LaboratoryId = StructuralObject.SetValidValue(value, "LaboratoryId");
                 ReportPropertyChanged("LaboratoryId");
                 OnLaboratoryIdChanged();
             }
@@ -9749,7 +10441,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -9773,7 +10465,7 @@ namespace Cerebello.Model
             {
                 OnDecriptionChanging(value);
                 ReportPropertyChanging("Decription");
-                _Decription = StructuralObject.SetValidValue(value, true);
+                _Decription = StructuralObject.SetValidValue(value, true, "Decription");
                 ReportPropertyChanged("Decription");
                 OnDecriptionChanged();
             }
@@ -9783,7 +10475,7 @@ namespace Cerebello.Model
         partial void OnDecriptionChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -9869,6 +10561,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9907,7 +10600,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9926,7 +10620,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9951,7 +10645,7 @@ namespace Cerebello.Model
             {
                 OnPasswordChanging(value);
                 ReportPropertyChanging("Password");
-                _Password = StructuralObject.SetValidValue(value, false);
+                _Password = StructuralObject.SetValidValue(value, false, "Password");
                 ReportPropertyChanged("Password");
                 OnPasswordChanged();
             }
@@ -9975,7 +10669,7 @@ namespace Cerebello.Model
             {
                 OnPasswordSaltChanging(value);
                 ReportPropertyChanging("PasswordSalt");
-                _PasswordSalt = StructuralObject.SetValidValue(value, false);
+                _PasswordSalt = StructuralObject.SetValidValue(value, false, "PasswordSalt");
                 ReportPropertyChanged("PasswordSalt");
                 OnPasswordSaltChanged();
             }
@@ -9999,7 +10693,7 @@ namespace Cerebello.Model
             {
                 OnLastActiveOnChanging(value);
                 ReportPropertyChanging("LastActiveOn");
-                _LastActiveOn = StructuralObject.SetValidValue(value);
+                _LastActiveOn = StructuralObject.SetValidValue(value, "LastActiveOn");
                 ReportPropertyChanged("LastActiveOn");
                 OnLastActiveOnChanged();
             }
@@ -10023,7 +10717,7 @@ namespace Cerebello.Model
             {
                 OnPersonIdChanging(value);
                 ReportPropertyChanging("PersonId");
-                _PersonId = StructuralObject.SetValidValue(value);
+                _PersonId = StructuralObject.SetValidValue(value, "PersonId");
                 ReportPropertyChanged("PersonId");
                 OnPersonIdChanged();
             }
@@ -10047,7 +10741,7 @@ namespace Cerebello.Model
             {
                 OnDoctorIdChanging(value);
                 ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value);
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
                 ReportPropertyChanged("DoctorId");
                 OnDoctorIdChanged();
             }
@@ -10071,7 +10765,7 @@ namespace Cerebello.Model
             {
                 OnSecretaryIdChanging(value);
                 ReportPropertyChanging("SecretaryId");
-                _SecretaryId = StructuralObject.SetValidValue(value);
+                _SecretaryId = StructuralObject.SetValidValue(value, "SecretaryId");
                 ReportPropertyChanged("SecretaryId");
                 OnSecretaryIdChanged();
             }
@@ -10095,7 +10789,7 @@ namespace Cerebello.Model
             {
                 OnPracticeIdChanging(value);
                 ReportPropertyChanging("PracticeId");
-                _PracticeId = StructuralObject.SetValidValue(value);
+                _PracticeId = StructuralObject.SetValidValue(value, "PracticeId");
                 ReportPropertyChanged("PracticeId");
                 OnPracticeIdChanged();
             }
@@ -10119,7 +10813,7 @@ namespace Cerebello.Model
             {
                 OnAdministratorIdChanging(value);
                 ReportPropertyChanging("AdministratorId");
-                _AdministratorId = StructuralObject.SetValidValue(value);
+                _AdministratorId = StructuralObject.SetValidValue(value, "AdministratorId");
                 ReportPropertyChanged("AdministratorId");
                 OnAdministratorIdChanged();
             }
@@ -10143,7 +10837,7 @@ namespace Cerebello.Model
             {
                 OnUserNameChanging(value);
                 ReportPropertyChanging("UserName");
-                _UserName = StructuralObject.SetValidValue(value, false);
+                _UserName = StructuralObject.SetValidValue(value, false, "UserName");
                 ReportPropertyChanged("UserName");
                 OnUserNameChanged();
             }
@@ -10167,7 +10861,7 @@ namespace Cerebello.Model
             {
                 OnUserNameNormalizedChanging(value);
                 ReportPropertyChanging("UserNameNormalized");
-                _UserNameNormalized = StructuralObject.SetValidValue(value, false);
+                _UserNameNormalized = StructuralObject.SetValidValue(value, false, "UserNameNormalized");
                 ReportPropertyChanged("UserNameNormalized");
                 OnUserNameNormalizedChanged();
             }
@@ -10191,7 +10885,7 @@ namespace Cerebello.Model
             {
                 OnIsOwnerChanging(value);
                 ReportPropertyChanging("IsOwner");
-                _IsOwner = StructuralObject.SetValidValue(value);
+                _IsOwner = StructuralObject.SetValidValue(value, "IsOwner");
                 ReportPropertyChanged("IsOwner");
                 OnIsOwnerChanged();
             }
@@ -10201,7 +10895,7 @@ namespace Cerebello.Model
         partial void OnIsOwnerChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -10437,10 +11131,55 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessages
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User", "ChatMessage");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User", "ChatMessage", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User1", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessages1
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User1", "ChatMessage");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User1", "ChatMessage", value);
+                }
+            }
+        }
 
         #endregion
+
     }
 
     #endregion
-    
+
 }

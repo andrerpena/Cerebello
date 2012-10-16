@@ -12,7 +12,8 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? Id { get; set; }
 
         [Display(Name = "Medicamento")]
-        public int MedicineId { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicineId { get; set; }
 
         [Display(Name = "Medicamento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

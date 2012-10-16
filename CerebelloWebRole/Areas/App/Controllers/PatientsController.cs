@@ -10,17 +10,12 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
-using CerebelloWebRole.Code.Mvc;
 using HtmlAgilityPack;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PatientsController : DoctorController
     {
-        public PatientsController()
-        {
-        }
-
         private class SessionEvent
         {
             public int Id { get; set; }
@@ -135,6 +130,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 eventDates.AddRange(examResultsByDate.Keys);
 
+                // diagnosis
+                var diagnosisByDate =
+                                 (from dvm in
+                                      (from d in patient.Diagnoses
+                                       select new SessionEvent
+                                       {
+                                           LocalDate = ConvertToLocalDateTime(this.Practice, d.CreatedOn),
+                                           Id = d.Id
+                                       })
+                                  group dvm by dvm.LocalDate.Date into g
+                                  select g).ToDictionary(g => g.Key, g => g.ToList());
+
+                eventDates.AddRange(diagnosisByDate.Keys);
+
                 // discover what dates have events
                 eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
 
@@ -152,6 +161,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         MedicalCertificateIds = certificatesByDate.ContainsKey(eventDate) ? certificatesByDate[eventDate].Select(c => c.Id).ToList() : new List<int>(),
                         ExaminationRequestIds = examRequestsByDate.ContainsKey(eventDate) ? examRequestsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
                         ExaminationResultIds = examResultsByDate.ContainsKey(eventDate) ? examResultsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
+                        DiagnosisIds = diagnosisByDate.ContainsKey(eventDate) ? diagnosisByDate[eventDate].Select(v => v.Id).ToList() : new List<int>()
                     });
                 }
 
@@ -166,18 +176,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Index()
         {
-            var model = new PatientsIndexViewModel();
-            model.LastRegisteredPatients = (from p in
-                                                (from Patient patient in db.Patients
-                                                 where patient.DoctorId == this.Doctor.Id
-                                                 select patient).ToList()
-                                            select new PatientViewModel
-                                            {
-                                                Id = p.Id,
-                                                // note: this date is going to be converted in the next statement.
-                                                DateOfBirth = p.Person.DateOfBirth,
-                                                FullName = p.Person.FullName
-                                            }).ToList();
+            var model = new PatientsIndexViewModel
+                {
+                    LastRegisteredPatients = (from p in
+                                                  (from Patient patient in this.db.Patients
+                                                   where patient.DoctorId == this.Doctor.Id
+                                                   select patient).ToList()
+                                              select new PatientViewModel
+                                                  {
+                                                      Id = p.Id,
+                                                      // note: this date is going to be converted in the next statement.
+                                                      DateOfBirth = p.Person.DateOfBirth,
+                                                      FullName = p.Person.FullName
+                                                  }).ToList()
+                };
 
             // Converting dates from the DB that are Utc, to local practice time-zone.
             foreach (var eachPatient in model.LastRegisteredPatients)
@@ -189,7 +201,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                             where p.DoctorId == this.Doctor.Id
                                             group p by new
                                             {
-                                                Gender = p.Person.Gender,
+                                                p.Person.Gender,
                                                 Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, utcNow)
                                             } into g
                                             select g).OrderBy(g => g.Key)
@@ -200,20 +212,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                                 Count = g.Count()
                                             }).ToList();
 
-            model.TotalPatientsCount = this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id).Count();
+            model.TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id);
             return View(model);
-        }
-
-        [ChildActionOnly]
-        public ActionResult LastAddedPatients()
-        {
-            var patients = (from p in db.Patients select p).ToList();
-            return View(patients);
         }
 
         public ActionResult Details(int id)
         {
-            var patient = (Patient)db.Patients.Where(p => p.Id == id).First();
+            var patient = (Patient)this.db.Patients.First(p => p.Id == id);
             var model = this.GetViewModel(patient, true);
 
             return View(model);
@@ -238,7 +243,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var patient = db.Patients.Where(p => p.Id == id).First();
+                var patient = this.db.Patients.First(p => p.Id == id);
                 viewModel = this.GetViewModel(patient);
 
                 ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
@@ -252,18 +257,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(PatientViewModel formModel)
         {
-            Patient patient = null;
-
             if (ModelState.IsValid)
             {
-                bool isEditing = formModel.Id != null;
+                var isEditing = formModel.Id != null;
 
+                Patient patient = null;
                 if (isEditing)
-                    patient = db.Patients.Where(p => p.Id == formModel.Id).First();
+                    patient = this.db.Patients.First(p => p.Id == formModel.Id);
                 else
                 {
-                    patient = new Patient();
-                    patient.Person = new Person();
+                    patient = new Patient {Person = new Person()};
                     this.db.Patients.AddObject(patient);
                 }
 
@@ -279,7 +282,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
-                patient.Person.Email = formModel.Email;
+                patient.Person.Email = !string.IsNullOrEmpty(formModel.Email) ? formModel.Email.ToLower() : null;
                 patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
                 patient.Person.PhoneLand = formModel.PhoneLand;
                 patient.Person.PhoneCell = formModel.PhoneCell;
@@ -302,14 +305,39 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", formModel);
         }
 
+        /// <summary>
+        /// Deletes a patient
+        /// </summary>
+        /// <remarks>
+        /// Requiriments:
+        ///     - Should delete the patient along with the following associations:
+        ///         - Anamneses
+        /// </remarks>
         [HttpGet]
         public JsonResult Delete(int id)
         {
             try
             {
-                var patient = db.Patients.Where(m => m.Id == id).First();
+                var patient = db.Patients.First(m => m.Id == id);
 
-                // delete receipts manually (SQL Server won't do this automatically)
+                // delete anamneses manually
+                var anamneses = patient.Anamneses.ToList();
+                while (anamneses.Any())
+                {
+                    var anamnese = anamneses.First();
+
+                    // deletes diagnoses within the anamnese manually
+                    while (anamnese.Symptoms.Any())
+                    {
+                        var symptom = anamnese.Symptoms.First();
+                        this.db.Symptoms.DeleteObject(symptom);
+                    }
+
+                    this.db.Anamnese.DeleteObject(anamnese);
+                    anamneses.Remove(anamnese);
+                }
+
+                // delete receipts manually
                 var receipts = patient.Receipts.ToList();
                 while (receipts.Any())
                 {
@@ -318,22 +346,57 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     receipts.Remove(receipt);
                 }
 
-                // delete appointments manulally (SQL Server won't do this automatically)
+                // delete exam requests manually
+                var examRequests = patient.ExaminationRequests.ToList();
+                while (examRequests.Any())
+                {
+                    var examRequest = examRequests.First();
+                    this.db.ExaminationRequests.DeleteObject(examRequest);
+                    examRequests.Remove(examRequest);
+                }
+
+                // delete exam results manually
+                var examResults = patient.ExaminationResults.ToList();
+                while (examResults.Any())
+                {
+                    var examResult = examResults.First();
+                    this.db.ExaminationResults.DeleteObject(examResult);
+                    examResults.Remove(examResult);
+                }
+
+                // delete medical certificates manually
+                var certificates = patient.MedicalCertificates.ToList();
+                while (certificates.Any())
+                {
+                    var certificate = certificates.First();
+
+                    // deletes fields within the certificate manually
+                    while (certificate.Fields.Any())
+                    {
+                        var field = certificate.Fields.First();
+                        this.db.MedicalCertificateFields.DeleteObject(field);
+                    }
+
+                    this.db.MedicalCertificates.DeleteObject(certificate);
+                    certificates.Remove(certificate);
+                }
+
+                // delete diagnosis manually
+                var diagnosis = patient.Diagnoses.ToList();
+                while (diagnosis.Any())
+                {
+                    var diag = diagnosis.First();
+                    this.db.Diagnoses.DeleteObject(diag);
+                    diagnosis.Remove(diag);
+                }
+
+                // delete appointments manually
                 var appointments = patient.Appointments.ToList();
                 while (appointments.Any())
                 {
                     var appointment = appointments.First();
                     this.db.Appointments.DeleteObject(appointment);
                     appointments.Remove(appointment);
-                }
-
-                // delete anamneses manulally (SQL Server won't do this automatically)
-                var anamneses = patient.Anamneses.ToList();
-                while (anamneses.Any())
-                {
-                    var anamnese = anamneses.First();
-                    this.db.Anamnese.DeleteObject(anamnese);
-                    anamneses.Remove(anamnese);
                 }
 
                 this.db.Patients.DeleteObject(patient);
@@ -346,13 +409,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        public JsonResult GetCEPInfo(string cep)
+        public JsonResult GetCepInfo(string cep)
         {
             // TODO: Miguel Angelo: copiei este código para o UsersController, deveria ser um método utilitário, ou criar uma classe de base.
 
             try
             {
-                var request = HttpWebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");
+                var request = WebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
 
@@ -376,6 +439,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             catch
             {
+                this.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 return null;
             }
         }
@@ -387,13 +451,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 baseQuery = baseQuery.Where(l => l.Person.FullName.Contains(term));
 
             var rows = (from p in baseQuery.OrderBy(p => p.Person.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
-                        select new LookupRow
+                        select new AutocompleteRow
                         {
                             Id = p.Id,
                             Value = p.Person.FullName
                         }).ToList();
 
-            var result = new LookupJsonResult()
+            var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(rows),
                 Count = baseQuery.Count()

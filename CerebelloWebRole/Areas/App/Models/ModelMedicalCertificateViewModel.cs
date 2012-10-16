@@ -31,7 +31,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Texto da receita
         /// </summary>
-        [Display(Name = "Texto")]
+        [Display(Name = "Notas")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Text { get; set; }
 

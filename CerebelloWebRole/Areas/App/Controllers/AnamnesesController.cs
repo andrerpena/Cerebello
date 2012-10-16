@@ -14,15 +14,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class AnamnesesController : DoctorController
     {
-        private AnamneseViewModel GetViewModel(Anamnese anamnese)
+        private static AnamneseViewModel GetViewModel(Anamnese anamnese)
         {
             return new AnamneseViewModel()
             {
                 Id = anamnese.Id,
                 PatientId = anamnese.PatientId,
                 Text = anamnese.Text,
-                Diagnoses = (from s in anamnese.Diagnoses
-                             select new DiagnosisViewModel
+                Symptoms = (from s in anamnese.Symptoms
+                             select new SymptomViewModel
                              {
                                  Text = s.Cid10Name,
                                  Cid10Code = s.Cid10Code
@@ -33,8 +33,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var anamnese = db.Anamnese.Where(a => a.Id == id).First();
-            return this.View(this.GetViewModel(anamnese));
+            var anamnese = this.db.Anamnese.First(a => a.Id == id);
+            return this.View(GetViewModel(anamnese));
         }
 
         [HttpGet]
@@ -55,11 +55,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             AnamneseViewModel viewModel = null;
 
             if (id != null)
-                viewModel = this.GetViewModel((from a in db.Anamnese where a.Id == id select a).First());
+                viewModel = GetViewModel((from a in db.Anamnese where a.Id == id select a).First());
             else
                 viewModel = new AnamneseViewModel()
                 {
-                    Id = id,
+                    Id = null,
                     PatientId = patientId
                 };
 
@@ -75,10 +75,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(AnamneseViewModel formModel)
         {
-            Anamnese anamnese = null;
-
             if (this.ModelState.IsValid)
             {
+                Anamnese anamnese = null;
                 if (formModel.Id == null)
                 {
                     anamnese = new Anamnese()
@@ -89,39 +88,37 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.db.Anamnese.AddObject(anamnese);
                 }
                 else
-                    anamnese = db.Anamnese.Where(a => a.Id == formModel.Id).FirstOrDefault();
+                    anamnese = this.db.Anamnese.FirstOrDefault(a => a.Id == formModel.Id);
 
                 anamnese.Text = formModel.Text;
 
-                #region Update Diagnoses
+                #region Update Symptomsymptoms
                 // step 1: add new
-                foreach (var diagnosis in formModel.Diagnoses)
+                foreach (var symptom in formModel.Symptoms.Where(symptom => anamnese.Symptoms.All(ans => ans.Cid10Code != symptom.Cid10Code)))
                 {
-                    if (!anamnese.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Cid10Code))
-                        anamnese.Diagnoses.Add(new Diagnosis()
+                    anamnese.Symptoms.Add(new Symptom()
                         {
-                            Cid10Code = diagnosis.Cid10Code,
-                            Cid10Name = diagnosis.Text
+                            Cid10Code = symptom.Cid10Code,
+                            Cid10Name = symptom.Text
                         });
                 }
 
-                Queue<Diagnosis> harakiriQueue = new Queue<Diagnosis>();
+                var harakiriQueue = new Queue<Symptom>();
 
                 // step 2: remove deleted
-                foreach (var diagnosis in anamnese.Diagnoses)
+                foreach (var symptom in anamnese.Symptoms.Where(symptom => formModel.Symptoms.All(ans => ans.Cid10Code != symptom.Cid10Code)))
                 {
-                    if (!formModel.Diagnoses.Any(ans => ans.Cid10Code == diagnosis.Cid10Code))
-                        harakiriQueue.Enqueue(diagnosis);
+                    harakiriQueue.Enqueue(symptom);
                 }
 
                 while (harakiriQueue.Count > 0)
-                    this.db.Diagnoses.DeleteObject(harakiriQueue.Dequeue());
+                    this.db.Symptoms.DeleteObject(harakiriQueue.Dequeue());
                 #endregion
 
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return View("details", this.GetViewModel(anamnese));
+                return View("details", GetViewModel(anamnese));
             }
 
             return View("edit", formModel);
@@ -133,7 +130,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="formModel"></param>
         /// <returns></returns>
-        public ActionResult DiagnosisEditor(DiagnosisViewModel formModel)
+        public ActionResult SymptomEditor(SymptomViewModel formModel)
         {
             return View(formModel);
         }
@@ -143,26 +140,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <remarks>
         /// Requirements:
-        ///     1   Should return a LookupJsonResult serialized in Json containing a the Count of CID-10 entries found
+        ///     1   Should return a AutocompleteJsonResult serialized in Json containing a the Count of CID-10 entries found
         ///         and the list of entries themselves. Each entry has a Value and an Id, the Value is the text, the Id
         ///         is the Cid10 category or sub-category of the condition
         /// </remarks>
         [HttpGet]
-        public JsonResult LookupDiagnoses(string term, int pageSize, int pageIndex)
+        public JsonResult AutocompleteDiagnoses(string term, int pageSize, int pageIndex)
         {
             // read CID10.xml as an embedded resource
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.DtdProcessing = DtdProcessing.Parse;
-            XmlReader reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
-            XDocument doc = XDocument.Load(reader);
+            XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Parse};
+            var reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
+            var doc = XDocument.Load(reader);
 
-            var result = LookupHelper.GetData<CidLookupGridModel>(term, pageSize, pageIndex,
+            var result = AutocompleteHelper.GetData<CidAutocompleteGridModel>(term, pageSize, pageIndex,
                 t =>
                 from e in doc.Descendants()
                 where e.Name == "nome" &&
                 StringHelper.RemoveDiacritics(e.ToString()).ToLower().Contains(StringHelper.RemoveDiacritics(t.ToString()).ToLower()) &&
                 (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
-                select new CidLookupGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
+                select new CidAutocompleteGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -183,11 +179,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var anamnese = db.Anamnese.Where(m => m.Id == id).First();
+                var anamnese = this.db.Anamnese.First(m => m.Id == id);
 
                 // get rid of associations
-                while (anamnese.Diagnoses.Count > 0)
-                    this.db.Diagnoses.DeleteObject(anamnese.Diagnoses.ElementAt(0));
+                while (anamnese.Symptoms.Count > 0)
+                    this.db.Symptoms.DeleteObject(anamnese.Symptoms.ElementAt(0));
 
                 this.db.Anamnese.DeleteObject(anamnese);
                 this.db.SaveChanges();

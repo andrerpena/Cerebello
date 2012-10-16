@@ -27,20 +27,17 @@
                 }
             });
         });
-
+        
         $(".delete-receipt", $("div[data-val-id='receipt-@Model.Id']")).click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir esta receita?\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Esta receita foi excluída");
-                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
-                    }
-                    else
-                        alert("Não foi possível excluir esta receita.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.deleteConfirmation({
+                objectType: "receita",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Esta receita foi excluída");
+                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                }
+            });
         });
     </script>
 </div>

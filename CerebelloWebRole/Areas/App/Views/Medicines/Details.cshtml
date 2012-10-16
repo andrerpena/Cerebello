@@ -1,6 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Medicamento: " + this.Model.Name + " · Cerebello";
 }
 @section Title {
     Medicamento: <b>@Model.Name</b>
@@ -13,17 +13,15 @@
     <script type="text/javascript">
         $("#delete-medication-link").click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir este medicamento?\nTodas as receitas de pacientes associadas com este medicamento perderão esta associação.\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Este medicamento foi excluído");
-                        window.location = "@Url.Action("index")";
-                    }
-                    else
-                        alert("Não foi possível excluir este medicamento.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.deleteConfirmation({
+                objectType: "medicamento",
+                objectName: "@this.Model.Name",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Este medicamento foi excluído");
+                    window.location = "@Url.Action("index")";
+                }
+            });
         });
     </script>
 }
@@ -52,7 +50,7 @@
     </tr>
 </table>
 
-<div class="small-tabs" style="margin:18px 0">
+<div class="small-tabs" style="margin: 18px 0">
     <a href="#" class="activated">Bulas</a>
     <a href="#">Pacientes</a>
 </div>

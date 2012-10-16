@@ -1,0 +1,107 @@
+﻿.autocomplete-wrapper {
+    background-color: white;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+    .autocomplete-wrapper table tr:hover {
+        background-color: #F5F5F5;
+        color: #060606;
+        cursor: pointer;
+    }
+
+    .autocomplete-wrapper table thead tr td {
+        background-color: #F5F5F5;
+        padding: 5px;
+    }
+
+    .autocomplete-wrapper table tbody tr td {
+        max-width: 100px;
+        padding: 6px;
+    }
+
+    .autocomplete-wrapper table {
+        border-collapse: collapse;
+        line-height: 1;
+        width: 100%;
+    }
+
+        .autocomplete-wrapper table tr {
+        }
+
+            .autocomplete-wrapper table tr.selected {
+                background-color: #567899;
+                color: #fff;
+            }
+
+                .autocomplete-wrapper table tr.selected:hover {
+                    cursor: pointer;
+                    background-color: #3875D7;
+                    color: #FFFFFF;
+                }
+
+    .autocomplete-wrapper .no-results-box {
+        background-color: #FFFFED;
+        padding: 10px;
+        text-align: center;
+    }
+
+
+
+.autocomplete.disabled {
+    background-color: #F1F1F1;
+}
+
+.autocomplete {
+}
+    .autocomplete.changed {
+        color: #DD390D;
+    }
+
+    .autocomplete .input-wrapper {
+        overflow: auto;
+        width: auto;
+    }
+
+    .autocomplete .buttons-wrapper {
+        float: right;
+        width: 21px;
+    }
+
+    .autocomplete input[type="text"] {
+        background-color: transparent;
+        margin-top: -1px;
+        vertical-align: top;
+        width: 100% !important;
+    }
+
+    .autocomplete input {
+        display: inline-block;
+    }
+
+    .autocomplete input {
+        -moz-box-sizing: border-box;
+        border: 0 none;
+    }
+
+.autocomplete-validation-error .autocomplete {
+    background-color: #FFEEEE;
+    border: 1px solid #FF0000;
+}
+
+.autocomplete-dropdown {
+    background-color: white;
+    border: 1px solid #D7D7D7;
+    box-shadow: 3px 3px 5px #C1C1C1;
+    display: none;
+    position: absolute;
+    z-index: 100000;
+}
+
+.autocomplete-loading {
+    background-color: #FFFFFF;
+    background-image: url("/content/images/app/controls/lookup/progress.gif");
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    height: 150px;
+}

@@ -13,7 +13,7 @@ namespace Leaflet.Processor
 {
     public class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             List<MedicineRaw> medicines = new JavaScriptSerializer().Deserialize<List<MedicineRaw>>(new StreamReader("medicines.json").ReadToEnd());
 

@@ -1,6 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.PracticeUsersViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Usuários do consultório · Cerebello";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     WebGrid gridUsers = new WebGrid();
@@ -19,9 +19,9 @@ Usuários do consultório
 }
 <div class="users-list">
     <div class="widget">
-        <p class="title">
+        <h2>
             Usuários do sistema
-        </p>
+        </h2>
         @gridUsers.GetHtml(
                     columns: new List<WebGridColumn>() { userNameColumn },
                     displayHeader: true,

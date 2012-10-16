@@ -10,14 +10,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ExamsController : DoctorController
     {
-        //
-        // GET: /App/Exams/
-
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         private ExaminationRequestViewModel GetViewModel(ExaminationRequest examRequest)
         {
             return new ExaminationRequestViewModel()
@@ -57,7 +49,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var modelObj = this.db.ExaminationRequests.Where(r => r.Id == id).FirstOrDefault();
+                var modelObj = this.db.ExaminationRequests.FirstOrDefault(r => r.Id == id);
 
                 // todo: if modelObj is null, we must tell the user that this object does not exist.
 
@@ -99,7 +91,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 // Security issue... must check current user practice against the practice of the edited objects.
-                if (this.DBUser.Practice.Id != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
+                if (this.DbUser.Practice.Id != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
                 {
                     return View("NotFound", formModel);
                 }
@@ -141,7 +133,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var practiceId = this.DBUser.PracticeId;
+                var practiceId = this.DbUser.PracticeId;
 
                 var modelObj = db.ExaminationRequests
                     .Where(m => m.Id == id)

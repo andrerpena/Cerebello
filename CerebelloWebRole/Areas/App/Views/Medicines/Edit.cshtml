@@ -1,15 +1,31 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
+    if (this.Model != null && this.Model.Id.HasValue)
+    {
+        ViewBag.Title = "Editando medicamento: " + this.Model.Name + " · Cerebello";
+    }
+    else
+    {
+        ViewBag.Title = "Novo medicamento · Cerebello";
+    }
+    
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(m => m.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
     editPanel.AddField(m => m.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-        format: @<text>@Html.LookupFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("lookuplaboratories"))</text>);
+        format: @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("lookuplaboratories"))</text>);
     editPanel.AddField(m => m.Usage);
     editPanel.AddField(m => m.ActiveIngredients, format: @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
 }
 @section Title {
-    @ViewBag.Title
+    @if (this.Model != null && this.Model.Id.HasValue)
+    {
+        @:Editando medicamento:  + @this.Model.Name;
+    }
+    else
+    {
+        ViewBag.Title = "Novo medicamento";
+    }
 }
 @section SideBar {
     <a href="#" class="icon-link icon-link-import">Importar da Anvisa</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">
@@ -33,9 +49,9 @@
     
     @editPanel.GetHtml()
     
-    <p class="form-title">
+    <h2>
         @Html.LabelFor(model => model.Leaflets)
-    </p>    
+    </h2>    
     
     @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula" ))
     

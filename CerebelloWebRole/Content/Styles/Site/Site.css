@@ -1,26 +1,21 @@
-body 
-{
-    
+body {
 }
 
-label 
-{
+label {
     margin-bottom: 2px;
     font-weight: bold;
     color: #666666;
 }
 
-label.remember-me 
-{
-    display: inline;
-    font-weight: normal;
-    margin-left: 5px;
-    position: relative;
-    top: 1px;
-}
+    label.remember-me {
+        display: inline;
+        font-weight: normal;
+        margin-left: 5px;
+        position: relative;
+        top: 1px;
+    }
 
-input, textarea
-{
+input, textarea {
     color: #333333;
     font-size: 14px;
     line-height: 19px;
@@ -34,8 +29,7 @@ input, textarea
     padding: 15px 18px;
 }
 
-#top_menu 
-{
+#top_menu {
     float: right;
 }
 
@@ -44,109 +38,111 @@ input, textarea
     color: inherit;
 }
 
-.topbar 
-{
+.topbar {
     background-color: #F8F8F8;
     padding: 10px 0;
     border-bottom: 1px solid #D6D6D6;
 }
 
-.topbar .brand 
-{
-    float: left;
-    margin-top: 2px;
-}
+    .topbar .brand {
+        float: left;
+        margin-top: 2px;
+    }
 
-.topbar .nav
-{
-    margin-bottom: 0;
-}
+    .topbar .nav {
+        margin-bottom: 0;
+    }
 
-.topbar .nav li
-{
-    float: left;
-}
+        .topbar .nav li {
+            float: left;
+        }
 
-.topbar .nav li a 
-{
-    font-size: 13px;
-    line-height: 18px;
-    padding: 4px 10px;
-    text-align: center;
-}
+            .topbar .nav li a {
+                font-size: 13px;
+                line-height: 18px;
+                padding: 4px 10px;
+                text-align: center;
+            }
 
 
-.hero
-{
+.hero {
     background: none repeat scroll 0 0 #F0F0F0;
     border-bottom: 1px solid #E1E1E1;
     border-top: 3px solid #EBEBEB;
     margin-bottom: 30px;
-    padding: 30px 0 0;
+    padding: 15px 0 0;
 }
 
-.hero h1
-{
-    font-size: 40px;
-    letter-spacing: -1px;
-}
+    .hero .big-media {
+        margin-top: 20px;
+    }
 
-.hero .big-media
-{
-    margin-top: 20px;
-}
+        .hero .big-media img {
+            vertical-align: bottom;
+            border: 0 none;
+        }
 
-.hero .big-media img
-{
-    vertical-align: bottom;
-    border: 0 none;
-}
-
-.ac
-{
+.ac {
     text-align: center;
 }
 
-.features p
-{
+.features p {
     font-size: 1.1em;
 }
 
-.authentication-container 
-{
+.authentication-container {
     margin: 50px auto;
     width: 100%;
     max-width: 470px;
 }
 
-.authentication-container .authentication-container-wrapper
-{
-    margin: 0 10px;
-    border: 1px solid #D6D6D6;
+    .authentication-container .authentication-container-wrapper {
+        margin: 0 10px;
+        border: 1px solid #D6D6D6;
+    }
+
+    .authentication-container .authentication-container-wrapper .input-validation-error{
+        
+    }
+
+    .authentication-container .header {
+        background-color: #F5F5F5;
+        overflow: hidden;
+        padding: 6px 18px;
+    }
+
+        .authentication-container .header h2 {
+            color: #555555;
+            float: left;
+            font-size: 18px;
+            text-shadow: 1px 1px 0 #FFFFFF;
+        }
+
+        .authentication-container .header .link {
+            float: right;
+            margin-top: 10px;
+        }
+
+    .authentication-container .controls-wrapper {
+        padding: 20px 30px;
+    }
+
+.validation-summary-errors {
+    background-color: #FFFFE6;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #DD390D;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 10px;
+    padding: 6px 10px;
 }
 
-.authentication-container .header 
-{
-    background-color: #F5F5F5;
-    overflow: hidden;
-    padding: 6px 18px;
-}
+    .validation-summary-errors ul {
+        margin: 0;
+    }
 
-.authentication-container .header h2 
-{
-    color: #555555;
-    float: left;
-    font-size: 18px;
-    text-shadow: 1px 1px 0 #FFFFFF;
-}
-
-.authentication-container .header .link 
-{
-    float: right;
-    margin-top: 10px;
-}
-
-.authentication-container .controls-wrapper
-{
-    padding: 20px 30px;
-}
+        .validation-summary-errors ul li {
+            line-height: 1.2em;
+            margin: 3px 0;
+            list-style: none outside none;
+        }

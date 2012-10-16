@@ -26,19 +26,17 @@
                 }
             });
         });
+        
         $(".delete-medical-certificate", $("div[data-val-id='medical-certificate-@Model.Id']")).click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir este atestado médico?\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Este atestado médico foi excluído");
-                        window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
-                    }
-                    else
-                        alert("Não foi possível excluir est atestado médico.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.deleteConfirmation({
+                objectType: "atestado médico",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Este atestado médico foi excluído");
+                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                }
+            });
         });
     </script>
 </div>

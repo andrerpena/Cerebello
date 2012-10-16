@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
 using CerebelloWebRole.Code.Security;
 
@@ -32,12 +29,30 @@ namespace CerebelloWebRole.Code.Filters
 
                         if (isUsingDefaultPwd && isRedirectNeeded)
                         {
-                            filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary
+                            // if it's an Ajax Request, must return a Json
+                            if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
                             {
-                                { "area", "app" },
-                                { "controller", "users" },
-                                { "action", "changepassword" },
-                            });
+                                filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                                filterContext.Result = new JsonResult
+                                {
+                                    Data = new
+                                    {
+                                        error = true,
+                                        errorType = "unauthorized",
+                                        errorMessage = "The current user is not authorized to access the resource because his/her password has not been reset yet"
+                                    },
+                                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                                };
+                            }
+                            else
+                            {
+                                filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary
+                                {
+                                    { "area", "app" },
+                                    { "controller", "users" },
+                                    { "action", "changepassword" },
+                                });
+                            }
                         }
                     }
                 }

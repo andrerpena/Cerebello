@@ -1,19 +1,19 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Paciente: " + this.Model.FullName + " · Cerebello";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
-    string retornoDateStr = localNow.AddDays(30).ToString("yyyy-MM-dd");
+    var retornoDateStr = localNow.AddDays(30).ToString("yyyy-MM-dd");
 
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text> @(((DateTime)@item.DateOfBirth).ToShortDateString())
-        (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
+    (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
     cardView.AddField(m => m.Profissao);
     cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeMaritalStatus))</text>);
     cardView.AddField(m => m.CPF);
@@ -27,10 +27,7 @@
     Paciente: <b>@Model.FullName</b>
 }
 @section SideBar {
-    <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">
-        Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">
-            Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">
-                Resumo de pacientes</a>
+    <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {
             e.preventDefault();
@@ -38,7 +35,7 @@
                 objectType: "paciente",
                 objectName: "@this.Model.FullName",
                 url: "@Url.Action("delete", new { id = this.Model.Id })",
-                success: function(data) {
+                success: function() {
                     alert("Este paciente foi excluído");
                     window.location = "@Url.Action("index")";
                 }
@@ -47,12 +44,11 @@
     </script>
 }
 @cardView.GetHtml()
-<p class="details-subtitle">
+<h2>
     @Html.LabelFor(model => model.Address)
-</p>
+</h2>
 @Html.DisplayFor(model => model.Address)
-<p class="details-title">
-    Histórico do paciente</p>
+<h2>Histórico do paciente</h2>
 <div class="medical-appointments-panel">
     @if (this.Model.Sessions.Any())
     {
@@ -67,13 +63,13 @@
                 | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
     
         <div class="medical-appointment-panel">
-            <p class="title">
-                    Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
-            </p>
+            <h3>Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
+            </h3>
             @if (session.AnamneseIds.Count > 0)
             {
                 <p class="subtitle">
-                    Anamneses</p>
+                    Anamneses
+                </p>
                 foreach (var anamneseId in session.AnamneseIds)
                 {
                 @Html.Action("details", "anamneses", new { id = anamneseId })
@@ -82,7 +78,8 @@
             @if (session.ReceiptIds.Count > 0)
             {
                 <p class="subtitle">
-                    Receitas</p>
+                    Receitas
+                </p>
                 foreach (var receiptId in session.ReceiptIds)
                 {
                 @Html.Action("details", "receipts", new { id = receiptId })
@@ -91,7 +88,8 @@
             @if (session.ExaminationRequestIds.Count > 0)
             {
                 <p class="subtitle">
-                    Solicitações de exames</p>
+                    Solicitações de exames
+                </p>
                 foreach (var receiptId in session.ExaminationRequestIds)
                 {
                 @Html.Action("details", "exams", new { id = receiptId })
@@ -100,21 +98,36 @@
             @if (session.ExaminationResultIds.Count > 0)
             {
                 <p class="subtitle">
-                    Resultados de exames</p>
+                    Resultados de exames
+                </p>
                 foreach (var examResultId in session.ExaminationResultIds)
                 {
                 @Html.Action("details", "examresults", new { id = examResultId })
                 }
             }
+            
+            @if (session.DiagnosisIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Diagnósticos
+                </p>
+                foreach (var diagnosisId in session.DiagnosisIds)
+                {
+                @Html.Action("details", "diagnosis", new { id = diagnosisId })
+                }
+            }
+
             @if (session.MedicalCertificateIds.Count > 0)
             {
                 <p class="subtitle">
-                    Atestados médicos</p>
+                    Atestados médicos
+                </p>
                 foreach (var certificateId in session.MedicalCertificateIds)
                 {
                 @Html.Action("details", "medicalcertificates", new { id = certificateId })
                 }
             }
+            
         </div>
         }
     }
@@ -122,49 +135,42 @@
     {
         @Html.Message("O paciente não possui histórico")
     }
-    <p class="details-title">
-        Nova consulta</p>
+    <h2>Nova consulta</h2>
     <div class="new-medical-appointment-panel-wrapper">
         <div class="new-medical-appointment-panel">
             <!-- anamnese -->
             <div>
-                <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "anamneses", new { patientId = Model.Id })">
-                    Nova anamnese</a>
+                <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "anamneses", new { patientId = Model.Id })">Nova anamnese</a>
                 <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
                 </div>
             </div>
             <!-- receipt -->
             <div>
-                <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "receipts", new { patientId = Model.Id })">
-                    Nova receita</a>
+                <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "receipts", new { patientId = Model.Id })">Nova receita</a>
                 <div id="new-receipt-wrapper" class="appointment-panel-wrapper">
                 </div>
             </div>
             <!-- exam requirement -->
             <div>
-                <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "exams", new { patientId = Model.Id })">
-                    Nova solicitação de exames</a>
+                <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "exams", new { patientId = Model.Id })">Nova solicitação de exames</a>
                 <div class="new-exams-wrapper appointment-panel-wrapper">
                 </div>
             </div>
             <!-- exam result -->
             <div>
-                <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "examresults", new { patientId = Model.Id })">
-                    Novo resultado de exame</a>
+                <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "examresults", new { patientId = Model.Id })">Novo resultado de exame</a>
                 <div class="new-exam-result-wrapper appointment-panel-wrapper">
                 </div>
             </div>
             <!-- diagnosis -->
             <div>
-                <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new { patientId = Model.Id })">
-                    Nova diagnose</a>
+                <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new { patientId = Model.Id })">Novo diagnóstico</a>
                 <div class="new-diagnosis-wrapper appointment-panel-wrapper">
                 </div>
             </div>
             <!-- medical certificate -->
             <div>
-                <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "medicalcertificates", new { patientId = Model.Id })">
-                    Novo atestado médico</a>
+                <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "medicalcertificates", new { patientId = Model.Id })">Novo atestado médico</a>
                 <div class="medical-certificate-wrapper appointment-panel-wrapper">
                 </div>
             </div>
@@ -175,7 +181,7 @@
         </div>
     </div>
     <script type="text/javascript">
-        $("a.schedule-appointment").click(function (e) {
+        $("a.schedule-appointment").click(function () {
             $.modal({
                 url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
                 title: "Nova consulta",
@@ -185,7 +191,7 @@
                     end: "",
                     doctorId: "",
                     patientId: @(this.Model.Id)
-                },
+                    },
                 width: 480,
                 height: 200
             });
@@ -208,7 +214,7 @@
                     });
                     $this.removeClass("icon-link-loading").addClass("icon-link-plus");
                 },
-                error: function (html) {
+                error: function () {
                     $this.removeClass("icon-link-loading").addClass("icon-link-plus");
                 }
             });

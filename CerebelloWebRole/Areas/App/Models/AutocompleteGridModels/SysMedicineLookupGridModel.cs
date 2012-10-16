@@ -7,7 +7,7 @@ using System.Web.Mvc;
 namespace CerebelloWebRole.Areas.App.Models
 {
     /// <summary>
-    /// GridModel for displaying the SYS_Medicine lookup
+    /// GridModel for displaying the SYS_Medicine autocomplete
     /// </summary>
     public class SysMedicineLookupGridModel
     {

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,9 +13,19 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CipherLite">
@@ -60,10 +72,12 @@
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.1.7.0.0\lib\net35-full\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -88,29 +102,27 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
+    <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigAccountController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
@@ -121,21 +133,22 @@
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
+    <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
+    <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\MedicalProceduresLookupGridModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\SysMedicineLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalProceduresLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\SysMedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\PhoneViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\CidLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\CidAutocompleteGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeUsersViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
-    <Compile Include="Areas\App\Models\LookupGriModels\MedicineLookupGridModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
-    <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
     <Compile Include="Code\Chat\ChatRoom.cs" />
@@ -207,16 +220,17 @@
     <Compile Include="Code\Controls\Grid\Grid.cs" />
     <Compile Include="Code\Controls\Grid\GridField.cs" />
     <Compile Include="Code\Controls\Grid\GridFieldBase.cs" />
-    <Compile Include="Code\Controls\Lookup\Data\LookupJsonResult.cs" />
-    <Compile Include="Code\Controls\Lookup\Data\LookupOptions.cs" />
-    <Compile Include="Code\Controls\Lookup\Data\LookupRow.cs" />
-    <Compile Include="Code\Controls\Lookup\LookupHelper.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteJsonResult.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteOptions.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
+    <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\AuthenticationFilter.cs" />
     <Compile Include="Code\Filters\FirstAccessFilter.cs" />
+    <Compile Include="Code\Filters\PermissionAttribute.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
     <Compile Include="Code\Helpers\AsyncHelper.cs" />
     <Compile Include="Code\Helpers\Cipher.cs" />
@@ -343,7 +357,7 @@
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
     <Content Include="Content\Styles\App\Controls\grid.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.dropdown.menu.css" />
-    <Content Include="Content\Styles\App\Controls\jquery.cerebello.lookup.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.paginator.css" />
     <Content Include="Content\Styles\App\Controls\media.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
@@ -385,7 +399,7 @@
     <Content Include="Scripts\Controls\jquery.cerebello.chat.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.delete.confirmation.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.dropdown.menu.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.lookup.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
@@ -517,7 +531,7 @@
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\DiagnosisEditor.cshtml" />
+    <Content Include="Areas\App\Views\Anamneses\SymptomEditor.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -556,6 +570,8 @@
     <Content Include="Areas\App\Views\ConfigSchedule\DaysOff.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\_ViewStart.cshtml" />
+    <Content Include="Areas\App\Views\Diagnosis\Details.cshtml" />
+    <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
@@ -588,8 +604,13 @@
       <Name>PayPal</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

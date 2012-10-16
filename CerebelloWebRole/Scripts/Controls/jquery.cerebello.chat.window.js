@@ -5,11 +5,9 @@
 
         // Defaults:
         this.defaults = {
-            roomId: null,
-            myUserId: null,
-            myUserName: null,
-            otherUserId: null,
-            otherUserName: null,
+            practice: null,
+            myUser: null,
+            otherUser: null,
             onClose: function () { }
         };
 
@@ -20,25 +18,77 @@
         this.$el = null;
         this.chatContainer = null;
 
+
         this.addMessage = function (message) {
             var _this = this;
-            $("<div/>").addClass("chat-message").text(message).appendTo(_this.chatContainer.$windowInnerContent);
+
+            // gets the last message to see if it's possible to just append the text
+            var $lastMessage = $("div.chat-message:last", _this.chatContainer.$windowInnerContent);
+            if ($lastMessage.length && $lastMessage.attr("data-val-user-from") == message.UserFrom.Id) {
+                // we can just append text then
+                $("<p/>").text(message.Message).appendTo($(".chat-text-wrapper", $lastMessage));
+            }
+            else {
+                // in this case we need to create a whole new message
+                var $chatMessage = $("<div/>").addClass("chat-message").attr("data-val-user-from", message.UserFrom.Id);
+                $chatMessage.appendTo(_this.chatContainer.$windowInnerContent);
+
+                var $gravatarWrapper = $("<div/>").addClass("chat-gravatar-wrapper").appendTo($chatMessage);
+                var $textWrapper = $("<div/>").addClass("chat-text-wrapper").appendTo($chatMessage);
+
+                // add text
+                $("<p/>").text(message.Message).appendTo($textWrapper);
+
+                // add image
+                $("<img/>").attr("src", message.UserFrom.GravatarUrl).appendTo($gravatarWrapper);
+            }
+
+            // scroll to the bottom
+            _this.chatContainer.$windowInnerContent.scrollTop(_this.chatContainer.$windowInnerContent[0].scrollHeight);
         };
 
-        this.sendMessage = function (message) {
+        this.sendMessage = function (messageText) {
             var _this = this;
-            _this.addMessage(message);
+
+            _this.addMessage({
+                UserFrom: _this.opts.myUser,
+                Message: messageText
+            });
             $.ajax({
                 type: "POST",
-                url: "/chat/newmessage",
+                url: "/p/" + _this.opts.practice + "/chat/newmessage",
                 data: {
-                    roomId: _this.opts.roomId,
-                    myUserId: _this.opts.myUserId,
-                    otherUserId: _this.opts.otherUserId,
-                    message: message
+                    otherUserId: _this.opts.otherUser.Id,
+                    message: messageText
                 },
+                cache: false,
                 success: function () {
                     // fine
+                },
+                error: function () {
+                    // too bad
+                }
+            });
+        };
+
+        this.loadHistory = function () {
+            var _this = this;
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                url: "/p/" + _this.opts.practice + "/chat/getmessagehistory",
+                data: {
+                    otherUserId: _this.opts.otherUser.Id
+                },
+                cache: false,
+                success: function (data) {
+                    // fine
+                    // this otherUserId is a number toStringed
+                    for (var otherUserId in data.Messages) {
+                        for (var i = 0; i < data.Messages[otherUserId].length; i++)
+                            _this.addMessage(data.Messages[otherUserId][i], true);
+                    }
                 },
                 error: function () {
                     // too bad
@@ -71,7 +121,10 @@
                 }
             });
 
+            _this.chatContainer.setTitle(_this.opts.otherUser.Name);
             _this.chatContainer.$textBox.focus();
+
+            this.loadHistory();
         }
     };
 

@@ -26,8 +26,8 @@ S   P Desc
     P1 Fazer todas as classes de teste herdarem da classe base de testes, e remover os métodos de inicialização desnecessários.
 
     P0 Quando um Role de secretária, administrador ou médico é removido o objeto associado ao Role não é deletado.
-
     P0 Id da tabela Secretary não é Identity auto-increment, mas está sendo usado no software como se fosse.
+
     P2 Método MockRepository.SetCurrentUser deve assegurar que password está correto/incorreto, de acordo com objetivo do teste sendo feito.
 
     P0 Teste: BUG - fazer login com usuário do consultório A, e entrar na URL do consultório B.

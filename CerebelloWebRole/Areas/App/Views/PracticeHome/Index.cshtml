@@ -1,6 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.PracticeHomeIndexViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Meu consultório médico · Cerebello";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     // creating details CardView
@@ -8,12 +8,12 @@
     cardView.AddField(m => m.PatientsCount);
 }
 @section Title {
-Meu consultório médico
+    Meu consultório médico
 }
 @cardView.GetHtml()
 <div class="widget">
-    <p class="title">
-        Médicos do consultório</p>
+    <h2>
+        Médicos do consultório</h2>
     <div class="doctors-list">
         <ul>
             @foreach (var doctor in Model.Doctors)

@@ -6,6 +6,7 @@
         // Defaults:
         this.defaults = {
             objectType: null,
+            // optional. The name of the specific object being deleted. Like 'Jonas da Silva'
             objectName: null,
             // this can be either a function or an URL
             success: null
@@ -27,13 +28,17 @@
             var _this = this;
 
             $.modal({
-                title: "Excluir " + _this.opts.objectName + "?",
+                title: "Excluir " + (_this.opts.objectName ?  _this.opts.objectName : _this.opts.objectType ) + "?",
                 buildContent: function ($content) {
 
                     // adds the red title box
                     $("<div/>").addClass("delete-confirmation-warning").html("Você está tentando excluir um(a) <b>"
-                    + _this.opts.objectType + "</b> permanentemente (<b>" + _this.opts.objectName
-                     + "</b>). Todos os registros que dependem deste podem ser excluídos também. Esta operação não pode ser desfeita.")
+                    + _this.opts.objectType + "</b> permanentemente" + 
+                    
+                    // optionally adds object name descriptions if it exists
+                    (_this.opts.objectName ? " <b>(" + _this.opts.objectName + ")</b>" : "")
+                    
+                     + ". Todos os registros que dependem deste podem ser excluídos também. Esta operação não pode ser desfeita.")
                         .appendTo($content);
 
                     $("<p/>").addClass("delete-confirmation-title").html("Para prosseguir com a exclusão, digite <b>"
@@ -50,7 +55,7 @@
                     var $linkCancel = $("<a/>").attr("href", "#").text("cancelar").appendTo($submitBar);
 
                     // will enable the submit button as soon as the correct objectType is typed
-                    $inputText.bind("keyup", function (e) {
+                    $inputText.bind("keyup", function () {
                         if ($inputText.val() == _this.opts.objectType)
                             $inputSubmit.removeAttr("disabled");
                         else
@@ -72,6 +77,8 @@
 
                         if (!_this.opts.url)
                             throw "The url property should be set.";
+
+                        $("input, textarea, select", $content).attr("disabled", "disabled");
 
                         $.getJSON(_this.opts.url, function (data) {
                             if (data.success) {

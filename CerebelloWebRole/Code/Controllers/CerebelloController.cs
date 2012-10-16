@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Code
         /// </summary>
         protected CerebelloEntities db = null;
 
-        protected UserInfo userInfo = null;
+        protected User DbUser { get; private set; }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
@@ -36,31 +36,29 @@ namespace CerebelloWebRole.Code
             // Initialize method.
             // The responsability to ensure the user is authenticated and good to go is in the Authorization
             // filter
-            if (this.Request.IsAuthenticated)
-            {
-                var authenticatedPrincipal = this.User as AuthenticatedPrincipal;
+            if (!this.Request.IsAuthenticated)
+                return;
 
-                if (authenticatedPrincipal == null)
-                    throw new Exception("HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
+            var authenticatedPrincipal = this.User as AuthenticatedPrincipal;
 
-                var user = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+            if (authenticatedPrincipal == null)
+                throw new Exception("HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
 
-                if (user != null)
+            this.DbUser = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+
+            if (this.DbUser == null)
+                return;
+
+            // this ViewBag will carry user information to the View
+            this.ViewBag.UserInfo = new UserInfo()
                 {
-                    this.userInfo = new UserInfo()
-                    {
-                        Id = user.Id,
-                        DisplayName = user.Person.FullName,
-                        GravatarEmailHash = user.Person.EmailGravatarHash,
-                        // the following properties will only be set if the current user is a doctor
-                        DoctorId = user.DoctorId,
-                        DoctorUrlIdentifier = user.Doctor != null ? user.Doctor.UrlIdentifier : null
-                    };
-
-                    // this ViewBag will carry user information to the View
-                    this.ViewBag.UserInfo = this.userInfo;
-                }
-            }
+                    Id = this.DbUser.Id,
+                    DisplayName = this.DbUser.Person.FullName,
+                    GravatarEmailHash = this.DbUser.Person.EmailGravatarHash,
+                    // the following properties will only be set if the current user is a doctor
+                    DoctorId = this.DbUser.DoctorId,
+                    DoctorUrlIdentifier = this.DbUser.Doctor != null ? this.DbUser.Doctor.UrlIdentifier : null
+                };
         }
 
         protected override void Dispose(bool disposing)

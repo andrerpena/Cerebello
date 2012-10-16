@@ -50,10 +50,10 @@ namespace CerebelloWebRole.Tests
         #region Edit
 
         [TestMethod]
-        public void Edit_1_CreateDiagnosisIfItDoesNotExist()
+        public void Edit_CreateDiagnosisIfItDoesNotExist()
         {
             // obtains a valid patient
-            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
+            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db, 1);
             this.db.SaveChanges();
             var patientId = this.db.Patients.First().Id;
 
@@ -61,9 +61,9 @@ namespace CerebelloWebRole.Tests
             {
                 PatientId = patientId,
                 Text = "This is my anamnese",
-                Diagnoses = new List<DiagnosisViewModel>() {
-                        new DiagnosisViewModel() { Text = "Text", Cid10Code = "Q878" },
-                        new DiagnosisViewModel() { Text = "Text2", Cid10Code = "Q879" }
+                Symptoms = new List<SymptomViewModel>() {
+                        new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 
@@ -79,11 +79,11 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(1, anamneses.Count);
             Assert.AreEqual(2, diagnoses.Count);
 
-            Assert.AreEqual(formModel.Diagnoses[0].Text, anamneses[0].Diagnoses.ElementAt(0).Cid10Name);
-            Assert.AreEqual(formModel.Diagnoses[0].Cid10Code, anamneses[0].Diagnoses.ElementAt(0).Cid10Code);
+            Assert.AreEqual(formModel.Symptoms[0].Text, anamneses[0].Symptoms.ElementAt(0).Cid10Name);
+            Assert.AreEqual(formModel.Symptoms[0].Cid10Code, anamneses[0].Symptoms.ElementAt(0).Cid10Code);
 
-            Assert.AreEqual(formModel.Diagnoses[1].Text, anamneses[0].Diagnoses.ElementAt(1).Cid10Name);
-            Assert.AreEqual(formModel.Diagnoses[1].Cid10Code, anamneses[0].Diagnoses.ElementAt(1).Cid10Code);
+            Assert.AreEqual(formModel.Symptoms[1].Text, anamneses[0].Symptoms.ElementAt(1).Cid10Name);
+            Assert.AreEqual(formModel.Symptoms[1].Cid10Code, anamneses[0].Symptoms.ElementAt(1).Cid10Code);
         }
 
         #endregion
@@ -91,7 +91,7 @@ namespace CerebelloWebRole.Tests
         #region Delete
 
         [TestMethod]
-        public void Delete_1_HappyPath()
+        public void Delete_HappyPath()
         {
             // obtains a valid patient
             Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db);
@@ -102,9 +102,9 @@ namespace CerebelloWebRole.Tests
             {
                 PatientId = patientId,
                 Text = "This is my anamnese",
-                Diagnoses = new List<DiagnosisViewModel>() {
-                        new DiagnosisViewModel() { Text = "Text", Cid10Code = "Q878" },
-                        new DiagnosisViewModel() { Text = "Text2", Cid10Code = "Q879" }
+                Symptoms = new List<SymptomViewModel>() {
+                        new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 
@@ -126,7 +126,7 @@ namespace CerebelloWebRole.Tests
         }
 
         [TestMethod]
-        public void Delete_2_ShouldReturnProperResultWhenNotExisting()
+        public void Delete_ShouldReturnProperResultWhenNotExisting()
         {
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
@@ -145,12 +145,11 @@ namespace CerebelloWebRole.Tests
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
 
-            // tries to delete the anamnese <== WTF??
-            var result = controller.LookupDiagnoses("cefaléia", 20, 1);
-            var lookupJsonResult = (LookupJsonResult)result.Data;
+            var result = controller.AutocompleteDiagnoses("cefaléia", 20, 1);
+            var lookupJsonResult = (AutocompleteJsonResult)result.Data;
 
             Assert.AreEqual(9, lookupJsonResult.Count);
-            foreach (CidLookupGridModel item in lookupJsonResult.Rows)
+            foreach (CidAutocompleteGridModel item in lookupJsonResult.Rows)
             {
                 Assert.IsNotNull(item.Cid10Code);
                 Assert.IsFalse(string.IsNullOrEmpty(item.Cid10Name));

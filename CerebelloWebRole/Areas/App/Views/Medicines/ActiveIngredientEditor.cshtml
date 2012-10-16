@@ -5,7 +5,7 @@
 @using (Html.BeginCollectionItemInline("ActiveIngredients"))
 {
     @Html.HiddenFor(model => model.ActiveIngredientId)
-    @Html.TextBoxFor(model => model.ActiveIngredientName, new { @class = "lookup" })
+    @Html.TextBoxFor(model => model.ActiveIngredientName, new { @class = "autocomplete" })
     <script type="text/javascript">
             $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).ActiveIngredientName']").autocomplete({
                 source: "@Url.Action("searchactiveingredient", "medicines")",

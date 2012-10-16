@@ -32,11 +32,11 @@ namespace CerebelloWebRole.Code
             string stFormD = original.Normalize(NormalizationForm.FormD);
             StringBuilder sb = new StringBuilder();
 
-            for (int ich = 0; ich < stFormD.Length; ich++)
+            foreach (var t in stFormD)
             {
-                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(t);
                 if (uc != UnicodeCategory.NonSpacingMark)
-                    sb.Append(stFormD[ich]);
+                    sb.Append(t);
             }
 
             return (sb.ToString().Normalize(NormalizationForm.FormC));

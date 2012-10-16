@@ -8,12 +8,12 @@ namespace CerebelloWebRole.Code.Controls
     /// <summary>
     /// Ajuda a realizar operações comuns do Lookup
     /// </summary>
-    public class LookupHelper
+    public class AutocompleteHelper
     {
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete("This is to hard to generalize the lookup logic. This is just making stuff harder to understand. Just do it manually")]
+        [Obsolete("This is to hard to generalize the autocomplete logic. This is just making stuff harder to understand. Just do it manually")]
         public static TModel GetObject<TModel>(int? id, string text, Func<int, TModel> getById, Func<string, TModel> getByText, Func<string, TModel> getNew, bool allowInsertion) where TModel : class
         {
             if (allowInsertion)
@@ -39,8 +39,8 @@ namespace CerebelloWebRole.Code.Controls
             }
         }
 
-        [Obsolete("This is to hard to generalize the lookup logic. This is just making stuff harder to understand. Just do it manually")]
-        public static LookupJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IQueryable<TModel>> getQuery, Func<IQueryable<TModel>, IQueryable<TModel>> orderQueryBy, Func<TModel, object> createRow)
+        [Obsolete("This is to hard to generalize the autocomplete logic. This is just making stuff harder to understand. Just do it manually")]
+        public static AutocompleteJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IQueryable<TModel>> getQuery, Func<IQueryable<TModel>, IQueryable<TModel>> orderQueryBy, Func<TModel, object> createRow)
         {
             if (!pageIndex.HasValue)
                 pageIndex = 1;
@@ -52,7 +52,7 @@ namespace CerebelloWebRole.Code.Controls
             var totalCount = query.Count();
             var pagedResult = orderQueryBy(query).Skip(pageSize * (pageIndex.Value - 1)).Take(pageSize).ToList();
 
-            return new LookupJsonResult()
+            return new AutocompleteJsonResult()
                 {
                     Count = totalCount,
                     Rows = new System.Collections.ArrayList((from r in pagedResult
@@ -60,8 +60,8 @@ namespace CerebelloWebRole.Code.Controls
                 };
         }
 
-        [Obsolete("This is to hard to generalize the lookup logic. This is just making stuff harder to understand. Just do it manually")]
-        public static LookupJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IEnumerable<TModel>> getQuery)
+        [Obsolete("This is to hard to generalize the autocomplete logic. This is just making stuff harder to understand. Just do it manually")]
+        public static AutocompleteJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IEnumerable<TModel>> getQuery)
         {
             if (!pageIndex.HasValue)
                 pageIndex = 1;
@@ -73,7 +73,7 @@ namespace CerebelloWebRole.Code.Controls
             var totalCount = query.Count();
             var pagedResult = query.Skip(pageSize * (pageIndex.Value - 1)).Take(pageSize).ToList();
 
-            return new LookupJsonResult()
+            return new AutocompleteJsonResult()
             {
                 Count = totalCount,
                 Rows = new System.Collections.ArrayList((from r in pagedResult

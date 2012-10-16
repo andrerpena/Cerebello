@@ -57,7 +57,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "E-mail")]
         [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
-        [EmailAddress]
+        [CerebelloWebRole.Code.Mvc.EmailAddress]
         public String Email { get; set; }
 
         [Display(Name = "Telefone fixo")]

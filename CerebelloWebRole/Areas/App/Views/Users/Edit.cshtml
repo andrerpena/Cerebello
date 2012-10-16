@@ -1,7 +1,15 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
-    ViewBag.Title = "Create";
+    if (this.Model != null && this.Model.Id.HasValue)
+    {
+        ViewBag.Title = "Editando usuário: " + this.Model.FullName + " · Cerebello";
+    }
+    else
+    {
+        ViewBag.Title = "Novo usuário · Cerebello";
+    }
+    
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var editPanel = this.Html.CreateEditPanel();
@@ -85,7 +93,14 @@
     <link rel="Stylesheet" type="text/css" href="/content/styles/app/users_edit.css" />
 }
 @section Title {
-Cadastrar um novo usuário
+    @if (this.Model != null && this.Model.Id.HasValue)
+    {
+        @:Editando usuário: <b>@this.Model.FullName</b>
+    }
+    else
+    {
+        @:Novo usuário
+    }
 }
 @section SideBar {
     <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
@@ -103,22 +118,22 @@ Cadastrar um novo usuário
         CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD))
     }
     
-    <p class="form-title">
+    <h2>
         Funções deste usuário
-    </p>
+    </h2>
     
     @editPanelRoles.GetHtml()
     
     <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsDoctor ? "" : "style=\"display: none\""))>
-        <p class="form-title">
+        <h2>
             Informações do médico
-        </p>
+        </h2>
         @editPanelMedic.GetHtml()
     </div>
     
-    <p class="form-title">
+    <h2>
         @Html.LabelFor(model => model.Address)
-    </p>
+    </h2>
 
     @Html.EditorFor(model => model.Address);
 

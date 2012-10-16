@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public AnamneseViewModel()
         {
-            this.Diagnoses = new List<DiagnosisViewModel>();
+            this.Symptoms = new List<SymptomViewModel>();
         }
 
         public int? Id { get; set; }
@@ -19,10 +19,10 @@ namespace CerebelloWebRole.Areas.App.Models
         // Propriedade não está sendo usada?
         //public DateTime? Date { get; set; }
 
-        [Display(Name="Texto")]
+        [Display(Name="Notas")]
         public string Text { get; set; }
 
-        [Display(Name="Diagnósticos")]
-        public List<DiagnosisViewModel> Diagnoses { get; set; }
+        [Display(Name="Sintomas")]
+        public List<SymptomViewModel> Symptoms { get; set; }
     }
 }

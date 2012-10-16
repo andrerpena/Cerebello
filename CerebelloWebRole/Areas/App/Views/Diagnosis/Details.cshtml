@@ -1,0 +1,45 @@
+﻿@model CerebelloWebRole.Areas.App.Models.DiagnosisViewModel
+@{
+    Layout = null;
+}
+<div class="diagnosis-details medical-appointment-details-panel" data-val-id="diagnosis-@Model.Id">
+    @if (Model != null)
+    {
+        var cardView = this.Html.CreateCardView();
+        cardView.AddField(model => model.Cid10Code,
+            @<text>
+                @(!string.IsNullOrEmpty((string) item.Cid10Code) ? item.Cid10Name +  " (" + item.Cid10Code + ")" : "")
+            </text>, wholeRow: true);
+        cardView.AddField(model => model.Text, wholeRow: true);
+
+        @cardView.GetHtml()
+    }
+    <div class="inline-link-bar">
+        <a href="#" class="edit-diagnosis inline-link" >Editar diagnóstico</a>
+        <a href="#" class="delete-diagnosis inline-link" >Excluir diagnóstico</a>
+    </div>
+    <script type="text/javascript">
+        $(".edit-diagnosis", $("div[data-val-id='diagnosis-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("edit", "diagnosis", new { id = Model.Id })",
+                success: function(result) {
+                    $("div[data-val-id='diagnosis-@Model.Id']").replaceWith(result);
+                }
+            });
+        });
+        
+        $(".delete-diagnosis", $("div[data-val-id='diagnosis-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.deleteConfirmation({
+                objectType: "diagnóstico",
+                url: "@Url.Action("delete", "diagnosis", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Esta diagnóstico foi excluído");
+                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                }
+            });
+        });
+
+    </script>
+</div>

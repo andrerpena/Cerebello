@@ -9,9 +9,9 @@ namespace CerebelloWebRole.Code.Controls
     /// <summary>
     /// Representa o retorno JSON de uma chamada Ajax para popular o Lookup
     /// </summary>
-    public class LookupJsonResult
+    public class AutocompleteJsonResult
     {
-        public LookupJsonResult()
+        public AutocompleteJsonResult()
         {
             this.Rows = new ArrayList();
         }
