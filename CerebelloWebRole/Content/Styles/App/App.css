@@ -197,8 +197,8 @@ input, textarea {
 
     input.autocomplete {
         background-image: url("/content/images/app/icons16/search.png");
+        background-position: 0 -3px;
         background-repeat: no-repeat;
-        padding-left: 25px;
     }
 
 .link-button {
