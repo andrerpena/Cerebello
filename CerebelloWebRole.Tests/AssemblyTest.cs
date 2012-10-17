@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests
@@ -13,7 +14,13 @@ namespace CerebelloWebRole.Tests
         {
             if (Interlocked.Increment(ref count) == 1)
             {
-                DatabaseHelper.AttachCerebelloTestDatabase();
+                try
+                {
+                    DatabaseHelper.AttachCerebelloTestDatabase();
+                }
+                catch
+                {
+                }
             }
         }
 
@@ -22,7 +29,13 @@ namespace CerebelloWebRole.Tests
         {
             if (Interlocked.Decrement(ref count) == 0)
             {
-                DatabaseHelper.DetachCerebelloTestDatabase();
+                try
+                {
+                    DatabaseHelper.DetachCerebelloTestDatabase();
+                }
+                catch
+                {
+                }
             }
         }
     }

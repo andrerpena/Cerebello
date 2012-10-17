@@ -88,13 +88,31 @@ namespace CerebelloWebRole.Code
             return CreateUserResult.Ok;
         }
 
-        public static bool Login(LoginViewModel loginModel, CerebelloEntities entities, out User loggedInUser)
+        /// <summary>
+        /// Logs an user in.
+        /// </summary>
+        /// <param name="cookieCollection">
+        /// Cookie collection that is going to hold an encrypted cookie with informations about the user.
+        /// </param>
+        /// <param name="loginModel">
+        /// Model containing login informations such as practice-name, user-name and password.
+        /// </param>
+        /// <param name="db">
+        /// Database context used to get informations about the user.
+        /// No data will be saved to the DB.
+        /// </param>
+        /// <param name="loggedInUser">
+        /// Out parameter returning the database User object representing the logged in user, only if the
+        /// login succeded. Otherwise null.
+        /// </param>
+        /// <returns>Returns whether the login succeded or not.</returns>
+        public static bool Login(HttpCookieCollection cookieCollection, LoginViewModel loginModel, CerebelloEntities db, out User loggedInUser)
         {
             loggedInUser = null;
 
             try
             {
-                var securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, entities, out loggedInUser);
+                var securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, db, out loggedInUser);
 
                 var expiryDate = DateTime.UtcNow.AddYears(1);
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
@@ -105,7 +123,7 @@ namespace CerebelloWebRole.Code
                 HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
                     {Expires = expiryDate};
 
-                HttpContext.Current.Response.Cookies.Add(cookie);
+                cookieCollection.Add(cookie);
 
                 return true;
             }
@@ -117,13 +135,13 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        public static void SetPrincipal()
+        public static void SetPrincipal(HttpContextBase httpContext)
         {
             Principal principal = null;
 
-            if (HttpContext.Current.Request.IsAuthenticated)
+            if (httpContext.Request.IsAuthenticated)
             {
-                FormsIdentity identity = (FormsIdentity)HttpContext.Current.User.Identity;
+                var identity = (FormsIdentity)httpContext.User.Identity;
 
                 try
                 {
@@ -141,7 +159,7 @@ namespace CerebelloWebRole.Code
             else
                 principal = new AnonymousPrincipal(new GuestIdentity());
 
-            HttpContext.Current.User = principal;
+            httpContext.User = principal;
         }
 
         /// <summary>
@@ -149,12 +167,12 @@ namespace CerebelloWebRole.Code
         /// identity
         /// </summary>
         /// <param name="practiceIdentifier"> </param>
-        /// <param name="entities"></param>
+        /// <param name="db"></param>
         /// <param name="userNameOrEmail"> </param>
         /// <param name="password"> </param>
         /// <param name="loggedInUser"> </param>
         /// <returns></returns>
-        public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, CerebelloEntities entities, out User loggedInUser)
+        public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, CerebelloEntities db, out User loggedInUser)
         {
             // Note: this method was setting the user.LastActiveOn property, but now the caller must do this.
             // This is because it is not allowed to use DateTime.Now, because this makes the value not mockable.
@@ -162,8 +180,8 @@ namespace CerebelloWebRole.Code
             var isEmail = userNameOrEmail.Contains("@");
 
             loggedInUser = isEmail ?
-                entities.Users.FirstOrDefault(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier) :
-                entities.Users.FirstOrDefault(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
+                db.Users.FirstOrDefault(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier) :
+                db.Users.FirstOrDefault(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
 
             if (loggedInUser == null)
                 throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Linq.Expressions;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.Code
@@ -17,7 +15,7 @@ namespace CerebelloWebRole.Code
         /// <exception cref="System.ArgumentNullException">Se expression for nulo</exception>
         public static string GetDisplayName<TModel, TProperty>(Expression<Func<TModel, TProperty>> expression)
         {
-            if (((Object) expression) == null)throw new ArgumentNullException("expression");
+            if (((Object)expression) == null) throw new ArgumentNullException("expression");
 
             var propertyInfo = GetPropertyInfoFromMemberExpression(expression);
             var displayAttribute = propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().FirstOrDefault();

@@ -30,7 +30,7 @@ namespace CerebelloWebRole.Code.Mvc
             }
             else
             {
-                itemIndex = GetCollectionItemIndex(collectionIndexFieldName);
+                itemIndex = GetCollectionItemIndex(collectionIndexFieldName, html.ViewContext.HttpContext);
             }
 
             string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
@@ -64,14 +64,14 @@ namespace CerebelloWebRole.Code.Mvc
         /// </summary>
         /// <param name="collectionIndexFieldName"></param>
         /// <returns>a GUID string</returns>
-        private static string GetCollectionItemIndex(string collectionIndexFieldName)
+        private static string GetCollectionItemIndex(string collectionIndexFieldName, HttpContextBase httpContext)
         {
-            Queue<string> previousIndices = (Queue<string>)HttpContext.Current.Items[collectionIndexFieldName];
+            Queue<string> previousIndices = (Queue<string>)httpContext.Items[collectionIndexFieldName];
             if (previousIndices == null)
             {
-                HttpContext.Current.Items[collectionIndexFieldName] = previousIndices = new Queue<string>();
+                httpContext.Items[collectionIndexFieldName] = previousIndices = new Queue<string>();
 
-                string previousIndicesValues = HttpContext.Current.Request[collectionIndexFieldName];
+                string previousIndicesValues = httpContext.Request[collectionIndexFieldName];
                 if (!String.IsNullOrWhiteSpace(previousIndicesValues))
                 {
                     foreach (string index in previousIndicesValues.Split(','))

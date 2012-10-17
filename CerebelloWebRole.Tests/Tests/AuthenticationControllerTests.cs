@@ -122,9 +122,9 @@ namespace CerebelloWebRole.Tests
 
                 // Assert user is logged-in.
                 Assert.IsTrue(
-                    HttpContext.Current.Response.Cookies.Keys.Cast<string>().Contains(".ASPXAUTH"),
+                    controller.HttpContext.Response.Cookies.Keys.Cast<string>().Contains(".ASPXAUTH"),
                     "Authentication cookie should be present in the Response.");
-                var authCookie = HttpContext.Current.Response.Cookies[".ASPXAUTH"];
+                var authCookie = controller.HttpContext.Response.Cookies[".ASPXAUTH"];
                 var ticket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
                 Assert.AreEqual("andré-01", ticket.Name);
                 var token = SecurityTokenHelper.FromString(ticket.UserData);
@@ -490,6 +490,7 @@ namespace CerebelloWebRole.Tests
                 }
 
                 controller = new AuthenticationController();
+                controller.UtcNowGetter = () => utcNow;
                 Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: true);
             }
             catch (Exception ex)
@@ -504,6 +505,8 @@ namespace CerebelloWebRole.Tests
             }
 
             // Asserting.
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+
             Assert.IsNotNull(actionResult);
             Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
             var redirectToRouteResult = (RedirectToRouteResult)actionResult;
@@ -795,7 +798,9 @@ namespace CerebelloWebRole.Tests
                 // however this does not prevent proper operation.
                 var authController = new AuthenticationController();
                 Mvc3TestHelper.SetupControllerForTesting(authController, CreateNewCerebelloEntities(), mr);
+                authController.UtcNowGetter = () => utcNow.AddDays(15.0); // this is up to 30 days
                 authController.VerifyPracticeAndEmail(token, practiceName);
+                Assert.IsTrue(authController.ModelState.IsValid, "Could not validate email.");
 
                 var mockController = new Mock<PracticeController>() { CallBase = true };
                 controller = mockController.Object;
@@ -879,7 +884,7 @@ namespace CerebelloWebRole.Tests
                 outToken = token;
 
                 // Getting the Id of the user that was created, and returning it.
-                var authCookie = HttpContext.Current.Response.Cookies[".ASPXAUTH"];
+                var authCookie = controller.HttpContext.Response.Cookies[".ASPXAUTH"];
                 var ticket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
                 var securityToken = SecurityTokenHelper.FromString(ticket.UserData);
 

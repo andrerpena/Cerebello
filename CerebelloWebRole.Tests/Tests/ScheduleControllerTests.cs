@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Tests
         }
         #endregion
 
-        #region Create Visualization
+        #region Create [Get]
         [TestMethod]
         public void CreateView_ViewNew_SpecificTime_HappyPath()
         {
@@ -419,7 +419,7 @@ namespace CerebelloWebRole.Tests
         }
         #endregion
 
-        #region Create
+        #region Create [Post]
         /// <summary>
         /// This test consists of creating an appointment that conflicts in time with another appointment that
         /// already exists in the DB.
@@ -1030,7 +1030,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("01/10/2012", data.date);
             Assert.AreEqual("09:00", data.start);
             Assert.AreEqual("09:30", data.end);
-            Assert.AreEqual("segunda-feira, daqui há 19 dias", data.dateSpelled);
+            Assert.AreEqual("segunda-feira, daqui a 19 dias", data.dateSpelled);
         }
         #endregion
 

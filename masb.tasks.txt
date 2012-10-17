@@ -9,6 +9,20 @@ S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
+	P1 Existem duas classes EmailAddressAttribute no projeto.
+	
+    P1 Remover os HttpContext.Current da aplicação, e sempre usar o HttpContextBase que está presente no MVC 3.
+    P0 Transformar métodos mockados usando delegates em métodos virtuais, que podem ser facilmente mockados usando o MOQ.
+    P0 Para excluir um conjunto de days-off, não precisa de todos os IDs separados por ',', apenas o primeiro e último no formato "^(\d+)\.\.(\d+)$".
+
+    P1 Quando a conta é excluída, alguém atualizar a página, não pode dar erro.
+    P1 Quando um usuário é excluído, e o usuário atualizar sua página não pode dar erro.
+
+    P0 Criar página de gerenciamento da conta. Só pode ser visível para o owner.
+    P0 Criar tabela de contratos e associar com a conta.
+    P0 Criar botão para fazer upgrade da conta trial para a paga.
+    P0 Criar fluxo de update da conta trial para a paga usando o PayPal.
+
     P1 Fazer todas as classes de teste herdarem da classe base de testes, e remover os métodos de inicialização desnecessários.
 
     P0 Quando um Role de secretária, administrador ou médico é removido o objeto associado ao Role não é deletado.

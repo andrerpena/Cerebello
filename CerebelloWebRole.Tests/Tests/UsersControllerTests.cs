@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
+using Cerebello;
 using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Cerebello;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Mvc;
-using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Tests
 {
@@ -1092,7 +1091,7 @@ namespace CerebelloWebRole.Tests
                 var mr = new MockRepository(true);
 
                 var secretary1 = Firestarter.CreateSecretary_Milena(db, docs[0].Users.First().Practice);
-                idToDelete = secretary1.Users.First().Id;
+                idToDelete = secretary1.Users.Single().Id;
 
                 mr.SetCurrentUser(docs[1].Users.First(), "masban");
 
@@ -1140,9 +1139,9 @@ namespace CerebelloWebRole.Tests
 
                 var secretary1 = Firestarter.CreateSecretary_Milena(db, docs[0].Users.First().Practice);
                 var secretary2 = Firestarter.CreateSecretary_Maricleusa(db, docs[0].Users.First().Practice);
-                idToDelete = secretary2.Users.First().Id;
+                idToDelete = secretary2.Users.Single().Id;
 
-                mr.SetCurrentUser(secretary1.Users.First(), "milena");
+                mr.SetCurrentUser(secretary1.Users.Single(), "milena");
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });

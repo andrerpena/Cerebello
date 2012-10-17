@@ -72,12 +72,17 @@
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.1.7.0.0\lib\net35-full\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
     </Reference>
+    <Reference Include="PayPal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\PayPal-API\PayPal.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -122,12 +127,15 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigAccountController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
     <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
@@ -564,8 +572,12 @@
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Welcome.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\DaysOff.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Index.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\Diagnosis\Details.cshtml" />
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
@@ -613,7 +625,7 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
+          <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>

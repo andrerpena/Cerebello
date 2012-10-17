@@ -5,272 +5,383 @@ dh => horas de duração  dm => minutos de duração
 ee => nível de concentração no trabalho
 desc => descrição do que está sendo feito
 
-yyyy-MM-dd h1:m1-h2:m2 (dhºdm") ee  esc
+yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
-2012-08-## ##:00-##:## (#º##") ##   ######
+2012-10-## ##:00-##:## (#°##") ##   ######
 
--- qua 5º10" (5º10")
-2012-09-12 15:15-16:00 (0º45") 10   Fazer testes para FindNextFreeTime.
-2012-09-12 14:45-15:00 (0º15") 10   Testar, commitar, merge, testar, commitar.
-2012-09-12 12:25-14:45 (2º20") 10   Issue #9: Find next deve respeitar Days-off.
-2012-09-12 10:00-11:50 (1º50") 10   Issue #9: Definir dias sem expediente: folgas, férias, etc..
+-- qua #°##" (#°##")
+2012-10-17 15:30-18:15 (2°45")  8   Corrigindo testes, gerando novo script do banco, e comitando tudo.
+2012-10-17 13:45-14:45 (1°00") 10   Ids autoincremento para Doctor, Administrator e Secretary.
+2012-10-17 12:05-12:45 (0°40") 10   Corrigindo testes depois do merge com coisas do PayPal.
 
--- ter 4º00" (3º12")
-2012-09-11 16:30-20:30 (4º00")  8   Issue #9: Definir dias sem expediente: folgas, férias, etc..
+-- ter 7°20" (#°##")
+2012-10-16 21:30-23:30 (2°00")  7   Corrigindo testes depois do merge com coisas do PayPal.
+2012-10-16 18:30-20:30 (2°00")  9   Corrigindo erros depois do merge com coisas do PayPal.
+                                    Organizei diagrama do modelo do banco de dados.
+2012-10-16 14:45-13:25 (0°40")  9   Commit do projeto do PayPal.
+2012-10-16 12:05-14:45 (2°40") 10   Merge do projeto com o git: paypal, contratos, e algumas correções e melhorias menores.
 
--- qua #º##" (?º??")
-2012-09-05 13:30-15:30 (2º00") 10   Estudando sobre long polling, para fazer um sistema de eventos para o cliente.
+-- seg 4°00" (2°00")
+2012-10-16 20:00-22:00 (2°00")  5   Convertendo o projeto do PayPal, fiz pull do git.
+2012-10-16 16:30-18:30 (2°00")  5   Configurando o VS2012: R#, Azure, atualizações, Tema, desativar intellitrace (melhorar perf.)
 
--- seg #º##" (?º??")
-2012-09-03 15:00-15:30 (0º30")  8   Issue #69: Owner da conta - Ver se está sendo definido na hora de criar a conta.
-2012-09-03 16:00-18:00 (2º00") 10   Issue #69: Owner da conta - Regras da parte de usuários: exclusão e alteração.
+-- dom 1°00" (1°00")
+2012-10-14 16:15-17:15 (1°00") 10   Implementando CreateRecurringPaymentsProfile: completando o modelo.
 
--- sab 2º00" (?º??")
-2012-09-01 13:00-14:30 (1º30") 10   Preparando o commit, fazendo merge e push, e correções adicionais depois de dar merge, e testar tudo de novo.
-2012-09-01 00:00-00:30 (0º30")  9   Novos testes para validação de e-mail.
+-- sab 1°00" (0°54")
+2012-10-13 14:30-15:30 (1°00")  9   Implementando CreateRecurringPaymentsProfile: completando o modelo.
 
--- sex 11º00" (?º??")
-2012-08-31 18:30-24:00 (5º30")  9   Novos testes para validação de e-mail.
-2012-08-31 12:30-18:00 (5º30")  6   Arquitetura de testes: permitir mockar envio de e-mails e uso de HttpContext.Current.
+-- sex 0°35" (0°35")
+2012-10-12 00:00-01:35 (0°35") 10   Implementando CreateRecurringPaymentsProfile: completando o modelo.
 
--- qui 3º00" (?º??")
-2012-08-30 16:30-19:30 (3º00")  8   Arquitetura de testes: permitir mockar renderização de views nos controllers.
+-- qui #°##" (#°##")
+2012-10-11 23:40-24:00 (0°20") 10   Implementando CreateRecurringPaymentsProfile: completando o modelo.
+2012-10-11 18:10-22:40 (4°30")  6   Implementando CreateRecurringPaymentsProfile.
+2012-10-11 14:40-17:40 (3°00")  6   Implementando DoExpressCheckoutPayment.
+2012-10-11 00:00-04:10 (4°10")  9   Tentando fazer o PayPal funcionar com Digital Goods.
+                                    (Veja arquivo: PayPal sandbox links geradores cpf cnpj cartao.txt)
+
+-- qua #°##" (#°##")
+2012-10-10 22:30-23:40 (1°10") 10   Descobri campo faltando para fazer pagamento recorrente: L_BILLINGTYPEn.
+2012-10-10 20:30-21:50 (1°20")  8   Colocando fundos nas contas para testar transações na sandbox.
+2012-10-10 19:00-19:50 (0°50")  8   Configurando os usuários, com dinheiro virtual para poderem gastar.
+                                    (veja "PayPal sandbox links geradores cpf cnpj cartao.txt")
+2012-10-10 18:00-19:00 (1°00")  8   Configurando a sandbox para testar uma compra no paypal.
+2012-10-10 16:50-17:50 (1°00")  9   Achando documentação sobre recurring payments.
+2012-10-10 14:50-16:10 (1°20") 10   Comentando as classes de serialização de NameValueCollection.
+2012-10-10 12:30-14:20 (1°50") 10   Alternativas ao PayPal (achei mais alternativas nacionais: coloquei no arquivo PagamentoOnline.txt)
+
+-- ter #°##" (#°##")
+2012-10-09 23:00-24:00 (1°00")  8   API do PayPal. Testes nas classes de serialização.
+2012-10-09 18:00-22:00 (4°00")  7   API do PayPal. Métodos para fazer pagamentos recorrentes.
+2012-10-09 12:30-16:30 (4°00")  8   API do PayPal. Classes para pagamentos recorrentes.
+
+-- seg #°##" (#°##")
+2012-10-08 15:00-21:00 (6°00")  9   API do PayPal. Classes configuráveis a partir do *.config da aplicação.
+2012-10-08 13:50-14:30 (0°40")  7   API do PayPal. Classes configuráveis a partir do *.config da aplicação.
+
+-- dom 11°30" (#°##")
+2012-10-07 16:30-22:30 (6°00")  5   Reunião na casa do André. (Não consigo mais raciocinar)
+2012-10-07 12:30-15:30 (3°00")  7   API do PayPal. Construindo a parte de request. (Com sono, já to ficando lesado)
+2012-10-07 00:00-02:30 (2°30")  7   API do PayPal. Construindo a parte de request.
+
+-- sab 12°40" (#°##")
+2012-10-06 22:00-24:00 (2°00")  7   API do PayPal. Corrigindo classe de serialização.
+2012-10-06 16:00-21:00 (5°00")  9   API do PayPal. Assegurando as regras dos dados enviados.
+2012-10-06 13:00-15:00 (2°00")  9   API do PayPal. Assegurando as regras dos dados enviados.
+2012-10-06 11:00-12:00 (1°00")  9   API do PayPal. Assegurando as regras dos dados enviados.
+2012-10-06 00:00-02:40 (2°40")  7   Implementando restante da API do Express-Checkout do PayPal.
+
+-- sex 14°30" (#°##")
+2012-10-05 21:00-23:30 (2°30") 10   Copiando a documentação do PayPal para a API em C#. Somente partes sobre 'digital goods' e 'recurring payments'.
+2012-10-05 17:00-21:00 (4°00")  9   Implementando restante da API do Express-Checkout do PayPal.
+2012-10-05 12:00-16:00 (4°00")  9   Implementando restante da API do Express-Checkout do PayPal.
+2012-10-05 00:00-04:00 (4°00")  9   Implementando restante da API do Express-Checkout do PayPal.
+                                    https://www.x.com/developers/paypal/development-and-integration-guides#ec
+                                    https://www.x.com/developers/paypal/documentation-tools/quick-start-guides/paypal-sandbox-getting-started-guide#users
+                                    https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_ECGettingStarted
+                                    https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_testing_SBTestTools
+                                    https://www.paypal-brasil.com.br/x/tutoriais/integracao-avancada-com-express-checkout-em-c/
+                                    https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_ECCustomizing
+                                    https://cms.paypal.com/mx/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_ECRecurringPayments
+                                    API para Express Checkout, sem recursive payments: https://github.com/paypalxbrasil/Express-Checkout.net
+                                    API gerada do paypal (não funcionou aqui): https://www.x.com/developers/paypal/documentation-tools/paypal-sdk-index
+
+-- qui 7°30" (#°##")
+2012-10-04 22:30-24:00 (1°30")  9   Implementando restante da API do Express-Checkout do PayPal.
+2012-10-04 18:20-22:00 (3°40")  6   Estilo da página com novo contrato, e formas de pagamento.
+2012-10-04 16:00-18:20 (2°20")  8   Ajustes na chamada da API.
+
+-- qua 5°45" (#°##")
+2012-10-03 21:00-23:00 (2°00")  8   Chamada de API baseada em chamadas POST com nome valor. (API NVP)
+2012-10-03 18:45-20:45 (2°00")  7   Tela de migração para o contrato pago.
+2012-10-03 18:00-18:45 (0°45") 10   Opção de cancelamento do contrato.
+2012-10-03 17:00-18:00 (1°00")  9   Ajustar estilo das opções do contrato.
+
+-- sex 7°00" (#°##")
+2012-09-28 00:00-07:00 (7°00") ##   Estudando opções do PayPal. Escolhi o Express Checkout.
+
+-- qui 9°20" (#°##")
+2012-09-27 14:40-24:00 (9°20") ##   Estudando o PayPal, de forma geral, procurando artigos e exemplos de implementações.
+                                    Estudando outras opções ao PayPal (veja arquivo PagamentoOnline.txt)
+
+-- qui
+2012-09-20                          Estudando sobre contratos de prestação de serviços, e contratos Saas.
+                                    Baixei vários contratos de serviços e de Saas.
+                                    Escrevendo mais regras nos contratos para gravar no banco.
+
+-- qua 3°30" (3°30")
+2012-09-19 01:00-04:30 (3°30") 10   Escrevendo contratos de assinatura para médicos recém credenciados.
+
+-- ter 5°25" (#°##")
+2012-09-18 16:00-20:00 (4°00") 10   Escrevendo contratos de assinatura trial, mensal e anual.
+2012-09-18 15:00-15:55 (0°55")  4   Criando página de gerenciamento de conta (controller e view).
+2012-09-18 14:00-14:30 (0°30")  7   Somente o owner pode entrar nessa página e ver essa opção.
+
+-- Estudando o PayPal.
+
+-- qua 5°10" (5°10")
+2012-09-12 15:15-16:00 (0°45") 10   Fazer testes para FindNextFreeTime.
+2012-09-12 14:45-15:00 (0°15") 10   Testar, commitar, merge, testar, commitar.
+2012-09-12 12:25-14:45 (2°20") 10   Issue #9: Find next deve respeitar Days-off.
+2012-09-12 10:00-11:50 (1°50") 10   Issue #9: Definir dias sem expediente: folgas, férias, etc..
+
+-- ter 4°00" (3°12")
+2012-09-11 16:30-20:30 (4°00")  8   Issue #9: Definir dias sem expediente: folgas, férias, etc..
+
+-- qua #°##" (?°??")
+2012-09-05 13:30-15:30 (2°00") 10   Estudando sobre long polling, para fazer um sistema de eventos para o cliente.
+
+-- seg #°##" (?°??")
+2012-09-03 15:00-15:30 (0°30")  8   Issue #69: Owner da conta - Ver se está sendo definido na hora de criar a conta.
+2012-09-03 16:00-18:00 (2°00") 10   Issue #69: Owner da conta - Regras da parte de usuários: exclusão e alteração.
+
+-- sab 2°00" (?°??")
+2012-09-01 13:00-14:30 (1°30") 10   Preparando o commit, fazendo merge e push, e correções adicionais depois de dar merge, e testar tudo de novo.
+2012-09-01 00:00-00:30 (0°30")  9   Novos testes para validação de e-mail.
+
+-- sex 11°00" (?°??")
+2012-08-31 18:30-24:00 (5°30")  9   Novos testes para validação de e-mail.
+2012-08-31 12:30-18:00 (5°30")  6   Arquitetura de testes: permitir mockar envio de e-mails e uso de HttpContext.Current.
+
+-- qui 3°00" (?°??")
+2012-08-30 16:30-19:30 (3°00")  8   Arquitetura de testes: permitir mockar renderização de views nos controllers.
                                     Issue #67: Corrigindo os testes que já existiam.
 
--- qua 10º00" (?º??")
-2012-08-29 11:00-16:00 (5º00")  8   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
-2012-08-29 16:30-21:30 (5º00")  7   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
+-- qua 10°00" (?°??")
+2012-08-29 11:00-16:00 (5°00")  8   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
+2012-08-29 16:30-21:30 (5°00")  7   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
 
--- ter 6º30" (?º??")
-2012-08-28 16:30-23:00 (6º30")  6   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
+-- ter 6°30" (?°??")
+2012-08-28 16:30-23:00 (6°30")  6   Issue #67: Ao criar um consultório tem que enviar e-mail de validação do e-mail.
 
--- sex 4º00" (?º??")
-2012-08-24 16:30-20:30 (4º00")  7   Issue #65: Mover o UrlIdentifier da pessoa para o médico.
+-- sex 4°00" (?°??")
+2012-08-24 16:30-20:30 (4°00")  7   Issue #65: Mover o UrlIdentifier da pessoa para o médico.
 
--- qui 4º00" (?º??")
-2012-08-23 21:30-22:00 (1º00")  9   BUG: quando o médico não possui configurações da agenda dá pau pra tudo quanto é lado.
-2012-08-23 19:00-21:00 (2º00")  8   Issue #39: permitir criar médico junto com o consultório.
-2012-08-23 15:00-16:00 (1º00")  5   Issue #39: permitir criar médico junto com o consultório.
+-- qui 4°00" (?°??")
+2012-08-23 21:30-22:00 (1°00")  9   BUG: quando o médico não possui configurações da agenda dá pau pra tudo quanto é lado.
+2012-08-23 19:00-21:00 (2°00")  8   Issue #39: permitir criar médico junto com o consultório.
+2012-08-23 15:00-16:00 (1°00")  5   Issue #39: permitir criar médico junto com o consultório.
 
--- ter 1º00" (?º??")
-2012-08-21 16:00-17:00 (1º00")  8   Issue #39: permitir criar médico junto com o consultório.
+-- ter 1°00" (?°??")
+2012-08-21 16:00-17:00 (1°00")  8   Issue #39: permitir criar médico junto com o consultório.
 
--- qui 6º40" (?º??")
-2012-08-16 22:30-24:00 (1º30")  6   Preparando commit, mergindo, corrigindo erros pós merge, testando e fazendo commit novamente.
-2012-08-16 22:00-22:30 (0º30") 10   Colocando Unique-Index nas FKs do usuário que devem ser únicos: PersonId, DoctorId, etc..
-2012-08-16 20:40-22:00 (1º20")  8   Verificando interface do software a procura de erros com datas.
-2012-08-16 19:00-19:20 (0º20") 10   Verificando interface do software a procura de erros com datas.
-2012-08-16 16:00-18:00 (2º00") 10   Fazendo testes existentes passarem.
-2012-08-16 00:00-01:00 (1º00") 10   Verificando todo o código do projeto em busca de datas e horas.
+-- qui 6°40" (?°??")
+2012-08-16 22:30-24:00 (1°30")  6   Preparando commit, mergindo, corrigindo erros pós merge, testando e fazendo commit novamente.
+2012-08-16 22:00-22:30 (0°30") 10   Colocando Unique-Index nas FKs do usuário que devem ser únicos: PersonId, DoctorId, etc..
+2012-08-16 20:40-22:00 (1°20")  8   Verificando interface do software a procura de erros com datas.
+2012-08-16 19:00-19:20 (0°20") 10   Verificando interface do software a procura de erros com datas.
+2012-08-16 16:00-18:00 (2°00") 10   Fazendo testes existentes passarem.
+2012-08-16 00:00-01:00 (1°00") 10   Verificando todo o código do projeto em busca de datas e horas.
 
--- 10º00" (?º??")
-2012-08-15 22:00-24:00 (2º00")  9   Verificando todo o código do projeto em busca de datas e horas.
-2012-08-15 17:00-22:00 (5º00")  9   Verificando todo o código do projeto em busca de datas e horas.
-2012-08-15 14:00-17:00 (3º00")  7   Localizando inconsistências no uso do ViewModel, e respondendo a issue #71.
+-- 10°00" (?°??")
+2012-08-15 22:00-24:00 (2°00")  9   Verificando todo o código do projeto em busca de datas e horas.
+2012-08-15 17:00-22:00 (5°00")  9   Verificando todo o código do projeto em busca de datas e horas.
+2012-08-15 14:00-17:00 (3°00")  7   Localizando inconsistências no uso do ViewModel, e respondendo a issue #71.
 
--- 6º30" (?º??")
-2012-08-14 14:00-20:30 (6º30")  9   Verificando todo o código do projeto em busca de datas e horas.
+-- 6°30" (?°??")
+2012-08-14 14:00-20:30 (6°30")  9   Verificando todo o código do projeto em busca de datas e horas.
                                     Criar métodos helper para conversão de data UTC para o fuso-horário em que o consultório se encontra.
 
--- 6º00" (?º??")
-2012-08-13 16:00-22:00 (6º00")  6   Criando enums de fuso-horários brasileiros; Verificando se os fuso-horários do Windows estão corretos.
+-- 6°00" (?°??")
+2012-08-13 16:00-22:00 (6°00")  6   Criando enums de fuso-horários brasileiros; Verificando se os fuso-horários do Windows estão corretos.
 
--- 4º30" (?º??")
-2012-08-10 22:00-24:00 (2º00")  5   Pesquisando sobre fuso-horários e como resolver o problema dos fusos.
-2012-08-10 16:30-17:30 (1º00")  8   Melhorias no firestarter.
-2012-08-10 14:30-16:00 (1º30")  8   Issue #28: BUG - A tela de cadastrar nova conta de usuário dá pau quando vc não preenche nada.
+-- 4°30" (?°??")
+2012-08-10 22:00-24:00 (2°00")  5   Pesquisando sobre fuso-horários e como resolver o problema dos fusos.
+2012-08-10 16:30-17:30 (1°00")  8   Melhorias no firestarter.
+2012-08-10 14:30-16:00 (1°30")  8   Issue #28: BUG - A tela de cadastrar nova conta de usuário dá pau quando vc não preenche nada.
 
--- 4º00" (?º??")
-2012-08-09 14:00-18:00 (4º00")  4   Geração de UrlIdentifier para pacientes e melhorias na geração de UrlIdentifiers.
+-- 4°00" (?°??")
+2012-08-09 14:00-18:00 (4°00")  4   Geração de UrlIdentifier para pacientes e melhorias na geração de UrlIdentifiers.
 
--- 4º10" (?º??")
-2012-08-08 14:40-15:40 (1º00") 10   Issue #50: Alterar o collation das colunas diretamente no script de geração do banco, usando regex. FUNCIONOU!
-2012-08-08 12:00-14:40 (2º40")  7   Procurando saber sobre legislação de Prontuários Eletrônicos.
-2012-08-08 00:00-00:20 (0º30") 10   Issue #50: Alterar o collation do banco após criação das tabelas... não funcionou.
+-- 4°10" (?°??")
+2012-08-08 14:40-15:40 (1°00") 10   Issue #50: Alterar o collation das colunas diretamente no script de geração do banco, usando regex. FUNCIONOU!
+2012-08-08 12:00-14:40 (2°40")  7   Procurando saber sobre legislação de Prontuários Eletrônicos.
+2012-08-08 00:00-00:20 (0°30") 10   Issue #50: Alterar o collation do banco após criação das tabelas... não funcionou.
 
--- 8º40" (?º??")
-2012-08-07 22:20-24:00 (1º40")  9   Issue #50: Alterar o collation de todas as colunas do banco após execução do script de criação... não funcionou.
-2012-08-07 22:10-22:20 (0º10") 10   Issue #61: Warning na tela de novo compromisso não desaparece ao procurar por próximo horário livre.
-2012-08-07 19:00-19:20 (0º20") 10   Preparando o commit, mergindo alterações.
-2012-08-07 18:30-19:00 (0º30") 10   Alterações no firestarter.
-2012-08-07 16:30-18:30 (2º00")  8   Executando e corrigindo os testes.
-2012-08-07 12:30-16:30 (4º00")  8   Issue #43 e #44: lookup de procedimentos médicos na requisição e no resultado de exames.
+-- 8°40" (?°??")
+2012-08-07 22:20-24:00 (1°40")  9   Issue #50: Alterar o collation de todas as colunas do banco após execução do script de criação... não funcionou.
+2012-08-07 22:10-22:20 (0°10") 10   Issue #61: Warning na tela de novo compromisso não desaparece ao procurar por próximo horário livre.
+2012-08-07 19:00-19:20 (0°20") 10   Preparando o commit, mergindo alterações.
+2012-08-07 18:30-19:00 (0°30") 10   Alterações no firestarter.
+2012-08-07 16:30-18:30 (2°00")  8   Executando e corrigindo os testes.
+2012-08-07 12:30-16:30 (4°00")  8   Issue #43 e #44: lookup de procedimentos médicos na requisição e no resultado de exames.
 
--- 1º10" (?º??")
-2012-08-06 19:00-19:40 (0º40")  8   Firestarter deve gravar tabela CBHPM no banco.
-2012-08-06 16:50-17:20 (0º30")  8   Firestarter deve gravar tabela CBHPM no banco.
+-- 1°10" (?°??")
+2012-08-06 19:00-19:40 (0°40")  8   Firestarter deve gravar tabela CBHPM no banco.
+2012-08-06 16:50-17:20 (0°30")  8   Firestarter deve gravar tabela CBHPM no banco.
 
--- 6º50" (?º??")
-2012-08-03 16:10-16:30 (0º20")  9   Preparando commit.
-2012-08-03 12:30-16:10 (3º40")  9   Issue #56 e #41: Mensagens iconsistentes da validação da tela de marcar compromissos e consultas; Ícone de warning.
-2012-08-03 00:00-02:50 (2º50")  7   Programa para extrair informações do pdf do CBHPM 6a edição de 2010.
+-- 6°50" (?°??")
+2012-08-03 16:10-16:30 (0°20")  9   Preparando commit.
+2012-08-03 12:30-16:10 (3°40")  9   Issue #56 e #41: Mensagens iconsistentes da validação da tela de marcar compromissos e consultas; Ícone de warning.
+2012-08-03 00:00-02:50 (2°50")  7   Programa para extrair informações do pdf do CBHPM 6a edição de 2010.
 
--- 12º00" (9º18")
-2012-08-02 22:00-24:00 (2º00")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
-2012-08-02 12:30-21:00 (8º30")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
-2012-08-02 00:00-01:30 (1º30")  6   Extrair informações do pdf do CBHPM 6a edição de 2010.
+-- 12°00" (9°18")
+2012-08-02 22:00-24:00 (2°00")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
+2012-08-02 12:30-21:00 (8°30")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
+2012-08-02 00:00-01:30 (1°30")  6   Extrair informações do pdf do CBHPM 6a edição de 2010.
 
--- 8º10" (5º12")
-2012-08-01 23:00-24:00 (1º00")  9   Extrair informações do pdf do CBHPM 6a edição de 2010.
-2012-08-01 12:50-20:00 (7º10")  6   Extrair informações do pdf do CBHPM 6a edição de 2010.
+-- 8°10" (5°12")
+2012-08-01 23:00-24:00 (1°00")  9   Extrair informações do pdf do CBHPM 6a edição de 2010.
+2012-08-01 12:50-20:00 (7°10")  6   Extrair informações do pdf do CBHPM 6a edição de 2010.
 
--- 6º00" (4º48")
-2012-07-31 14:00-20:00 (6º00")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
+-- 6°00" (4°48")
+2012-07-31 14:00-20:00 (6°00")  8   Extrair informações do pdf do CBHPM 6a edição de 2010.
 
--- 2º20" (1º52")
-2012-07-27 16:45-17:40 (0º55")  8   Issue #43: Teste de interface manual, correção de bugs.
-2012-07-27 15:00-16:15 (1º15")  8   Issue #43: Na ficha do paciente, criar uma sessão de resultados de exames só com o texto.
+-- 2°20" (1°52")
+2012-07-27 16:45-17:40 (0°55")  8   Issue #43: Teste de interface manual, correção de bugs.
+2012-07-27 15:00-16:15 (1°15")  8   Issue #43: Na ficha do paciente, criar uma sessão de resultados de exames só com o texto.
 
-2012-07-26 23:00-24:00 (1º00")  7   Adicionando botões para diagnósticos e resultados de exames.
-2012-07-26 16:00-17:45 (1º45")  5   Issue #54: Exceção ao tentar marcar retorno.
-2012-07-26 13:45-15:45 (2º00")  5   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
+2012-07-26 23:00-24:00 (1°00")  7   Adicionando botões para diagnósticos e resultados de exames.
+2012-07-26 16:00-17:45 (1°45")  5   Issue #54: Exceção ao tentar marcar retorno.
+2012-07-26 13:45-15:45 (2°00")  5   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
 
-2012-07-25 15:15-18:30 (3º15")  6   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
+2012-07-25 15:15-18:30 (3°15")  6   Issue #48: Criar uma forma de dar para definir a data/hora do compromisso ao abrir o popup de novo compromisso.
 
-2012-07-24 18:00-18:40 (0º40")  4   Commit, rodando testes e mergindo coisas.
-2012-07-24 17:45-18:00 (0º15")  7   Teste da visualização de novo agendamento fora do horário de expediente do médico.
-2012-07-24 17:20-17:45 (0º25")  7   Teste da visualização de novo agendamento num horário estranho.
-2012-07-24 17:00-17:20 (0º20")  9   Remover localização automática de horário ao abrir a tela de criar agendamento.
-2012-07-24 16:20-17:00 (0º40")  8   Teste para marcação de compromisso no horário de almoço.
-2012-07-24 15:40-16:20 (0º40")  8   Verificar horário de almoço ao marcar compromisso ou consulta. Deve ser possível forçar a marcação.
+2012-07-24 18:00-18:40 (0°40")  4   Commit, rodando testes e mergindo coisas.
+2012-07-24 17:45-18:00 (0°15")  7   Teste da visualização de novo agendamento fora do horário de expediente do médico.
+2012-07-24 17:20-17:45 (0°25")  7   Teste da visualização de novo agendamento num horário estranho.
+2012-07-24 17:00-17:20 (0°20")  9   Remover localização automática de horário ao abrir a tela de criar agendamento.
+2012-07-24 16:20-17:00 (0°40")  8   Teste para marcação de compromisso no horário de almoço.
+2012-07-24 15:40-16:20 (0°40")  8   Verificar horário de almoço ao marcar compromisso ou consulta. Deve ser possível forçar a marcação.
 
-2012-07-23 20:10-20:30 (0º20")  9   Propriedades Date, Start e End devem ser consideradas no hint de inconsistências perto da data.
+2012-07-23 20:10-20:30 (0°20")  9   Propriedades Date, Start e End devem ser consideradas no hint de inconsistências perto da data.
 
--- 5º00
-2012-07-20 20:00-20:15 (0º15") 10   Corrigindo testes que falharam no commit anterior.
-2012-07-20 19:15-19:30 (0º15")  9   Preparando commit.
-2012-07-20 16:00-18:40 (2º40")  5   Teste para salvar compromisso num feriado: deve ser possível fazer isso.
-2012-07-20 15:30-15:40 (0º10") 10   Teste para salvar compromisso no passado: deve ser possível fazer isso.
-2012-07-20 14:00-15:30 (1º30")  7   Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
-2012-07-20 00:00-00:10 (0º10")  9   Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
+-- 5°00
+2012-07-20 20:00-20:15 (0°15") 10   Corrigindo testes que falharam no commit anterior.
+2012-07-20 19:15-19:30 (0°15")  9   Preparando commit.
+2012-07-20 16:00-18:40 (2°40")  5   Teste para salvar compromisso num feriado: deve ser possível fazer isso.
+2012-07-20 15:30-15:40 (0°10") 10   Teste para salvar compromisso no passado: deve ser possível fazer isso.
+2012-07-20 14:00-15:30 (1°30")  7   Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
+2012-07-20 00:00-00:10 (0°10")  9   Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
 
--- 6º00
-2012-07-19 23:20-24:00 (0º40")  9   Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
-2012-07-19 19:50-21:20 (1º30")  9   Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
+-- 6°00
+2012-07-19 23:20-24:00 (0°40")  9   Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
+2012-07-19 19:50-21:20 (1°30")  9   Teste para salvar dois compromissos no mesmo horário: deve ser possível fazer isso.
                                     Infraestrutura para testes do schedule. Tem que poder mockar o valor de 'Now'.
-2012-07-19 16:40-19:50 (3º10")  5   Issue #36: Não está mais sendo possível salvar consultas com horários conflitantes.
-2012-07-19 16:00-16:40 (0º40")  7   Lendo coisas no GitHub, e comentando.
+2012-07-19 16:40-19:50 (3°10")  5   Issue #36: Não está mais sendo possível salvar consultas com horários conflitantes.
+2012-07-19 16:00-16:40 (0°40")  7   Lendo coisas no GitHub, e comentando.
 
--- 7º15
-2012-07-18 19:00-19:10 (0º10") 10   Alterando palavra "commitment" por "appointment".
-2012-07-18 17:50-18:40 (0º50")  6   Preparando commit da issue #35 e #27. Pull e merge foram necessários.
-2012-07-18 17:10-17:35 (0º25")  9   Issue #35: Teste: POST de salvamento com ModelState inválido, deve possuir ViewBag com as opções das combos.
-2012-07-18 16:20-17:10 (0º50")  6   Teste: Edição de usuário médico com sucesso.
-2012-07-18 16:00-16:20 (0º20")  8   Issue #35: A tela de editar usuário dá exceção ao tentar salvar.
-2012-07-18 15:40-16:00 (0º30")  7   Manutenção issue #27 no github.
-2012-07-18 15:00-15:30 (0º30") 10   Teste da visualização de nova consulta com paciente predefinido de outro constultório.
-2012-07-18 14:30-15:00 (0º30")  9   Teste da visualização de nova consulta com paciente predefinido.
-2012-07-18 14:00-14:30 (0º30")  9   Teste da visualização de nova consulta.
-2012-07-18 13:10-13:30 (0º20")  5   BUG: Compromissos não estão aparecendo na agenda. Campo Description está Nullable=false no modelo.
-2012-07-18 12:50-12:50 (0º10")  8   Texto do botão "salvar consulta", agora pode ser "salvar compromisso" dependendo do contexto.
-2012-07-18 12:10-12:40 (0º30")  9   Tela de edição de compromisso não deve possuir as abas de consulta|compromisso.
-2012-07-18 11:50-12:10 (0º20") 10   Edição de um compromisso.
-2012-07-18 11:30-11:50 (0º20") 10   Teste de UI: salvamento e edição de compromissos e consultas, e edição de item inexistente.
-2012-07-18 11:10-11:30 (0º20") 10   Estilo dos compromissos e consultas no calendário.
-2012-07-18 10:50-11:10 (0º20") 10   Quando editar um appointment ou commitment que não existe, deve mostrar uma tela de not-found.
-2012-07-18 10:30-10:50 (0º20")  9   Tem que verificar o practice do médico que está editando o compromisso.
+-- 7°15
+2012-07-18 19:00-19:10 (0°10") 10   Alterando palavra "commitment" por "appointment".
+2012-07-18 17:50-18:40 (0°50")  6   Preparando commit da issue #35 e #27. Pull e merge foram necessários.
+2012-07-18 17:10-17:35 (0°25")  9   Issue #35: Teste: POST de salvamento com ModelState inválido, deve possuir ViewBag com as opções das combos.
+2012-07-18 16:20-17:10 (0°50")  6   Teste: Edição de usuário médico com sucesso.
+2012-07-18 16:00-16:20 (0°20")  8   Issue #35: A tela de editar usuário dá exceção ao tentar salvar.
+2012-07-18 15:40-16:00 (0°30")  7   Manutenção issue #27 no github.
+2012-07-18 15:00-15:30 (0°30") 10   Teste da visualização de nova consulta com paciente predefinido de outro constultório.
+2012-07-18 14:30-15:00 (0°30")  9   Teste da visualização de nova consulta com paciente predefinido.
+2012-07-18 14:00-14:30 (0°30")  9   Teste da visualização de nova consulta.
+2012-07-18 13:10-13:30 (0°20")  5   BUG: Compromissos não estão aparecendo na agenda. Campo Description está Nullable=false no modelo.
+2012-07-18 12:50-12:50 (0°10")  8   Texto do botão "salvar consulta", agora pode ser "salvar compromisso" dependendo do contexto.
+2012-07-18 12:10-12:40 (0°30")  9   Tela de edição de compromisso não deve possuir as abas de consulta|compromisso.
+2012-07-18 11:50-12:10 (0°20") 10   Edição de um compromisso.
+2012-07-18 11:30-11:50 (0°20") 10   Teste de UI: salvamento e edição de compromissos e consultas, e edição de item inexistente.
+2012-07-18 11:10-11:30 (0°20") 10   Estilo dos compromissos e consultas no calendário.
+2012-07-18 10:50-11:10 (0°20") 10   Quando editar um appointment ou commitment que não existe, deve mostrar uma tela de not-found.
+2012-07-18 10:30-10:50 (0°20")  9   Tem que verificar o practice do médico que está editando o compromisso.
 
--- 6º00 (2º32)
-2012-07-17 16:00-18:00 (2º00")  5   Salvamento de compromissos. Na verdade está sendo salvo na tabela de Appointments.
-2012-07-17 15:00-16:00 (1º00")  5   Abas na tela de criação de compromisso, uma para consultas e outra para compromissos diversos.
-2012-07-17 12:00-15:00 (3º00")  4   GitHub - lendo issues, comentando e fechando coisas já prontas.
+-- 6°00 (2°32)
+2012-07-17 16:00-18:00 (2°00")  5   Salvamento de compromissos. Na verdade está sendo salvo na tabela de Appointments.
+2012-07-17 15:00-16:00 (1°00")  5   Abas na tela de criação de compromisso, uma para consultas e outra para compromissos diversos.
+2012-07-17 12:00-15:00 (3°00")  4   GitHub - lendo issues, comentando e fechando coisas já prontas.
 
-2012-07-13 00:00-00:20 (0º25")  8   Preparando o commit.
+2012-07-13 00:00-00:20 (0°25")  8   Preparando o commit.
 
-2012-07-12 23:20-24:00 (0º40")  7   Testando tudo e preparando o commit.
-2012-07-12 23:00-23:20 (0º20")  9   Testes cleanup: dar detach somente se o banco estiver atached.
-2012-07-12 22:35-23:00 (0º25")  9   Testar exclusão de solicitação de exame de outro consultório.
-2012-07-12 21:40-22:35 (0º55")  4   Testar exclusão de solicitação de exame que não existe.
-2012-07-12 19:50-20:40 (0º50")  8   Testar exclusão da solicitação de exame.
-2012-07-12 19:00-19:50 (0º50")  4   Testar edição de solicitação de exame que não existe.
-2012-07-12 18:00-19:00 (1º00")  4   Testar edição de solicitação de exame de outro consultório.
+2012-07-12 23:20-24:00 (0°40")  7   Testando tudo e preparando o commit.
+2012-07-12 23:00-23:20 (0°20")  9   Testes cleanup: dar detach somente se o banco estiver atached.
+2012-07-12 22:35-23:00 (0°25")  9   Testar exclusão de solicitação de exame de outro consultório.
+2012-07-12 21:40-22:35 (0°55")  4   Testar exclusão de solicitação de exame que não existe.
+2012-07-12 19:50-20:40 (0°50")  8   Testar exclusão da solicitação de exame.
+2012-07-12 19:00-19:50 (0°50")  4   Testar edição de solicitação de exame que não existe.
+2012-07-12 18:00-19:00 (1°00")  4   Testar edição de solicitação de exame de outro consultório.
 
-2012-07-11 20:10-20:40 (0º30")  9   Testar edição da solicitação de exame.
-2012-07-11 18:50-19:10 (0º20") 10   Testar criação da solicitação de exame sem texto.
-2012-07-11 17:30-18:50 (1º20")  6   Testar criação da solicitação de exame.
-2012-07-11 14:15-14:30 (0º15")  8   Bug: exceção ao salvar receita inválida.
+2012-07-11 20:10-20:40 (0°30")  9   Testar edição da solicitação de exame.
+2012-07-11 18:50-19:10 (0°20") 10   Testar criação da solicitação de exame sem texto.
+2012-07-11 17:30-18:50 (1°20")  6   Testar criação da solicitação de exame.
+2012-07-11 14:15-14:30 (0°15")  8   Bug: exceção ao salvar receita inválida.
 
-2012-07-09 20:30-21:00 (0º30")  5   Não pode salvar receita sem nenhum medicamento.
-2012-07-09 19:30-20:30 (1º00")  4   Mostrando o conselho médico com a UF - telas início consultório, médicos, e home do médico.
+2012-07-09 20:30-21:00 (0°30")  5   Não pode salvar receita sem nenhum medicamento.
+2012-07-09 19:30-20:30 (1°00")  4   Mostrando o conselho médico com a UF - telas início consultório, médicos, e home do médico.
 
-2012-07-06 01:15-02:15 (0º45")  5   Preparando commit.
+2012-07-06 01:15-02:15 (0°45")  5   Preparando commit.
 
-2012-07-05 23:15-24:00 (0º45")  5   Tela de prontuário: marcar retorno... não tá fechando a janela ao clicar em salvar.
-2012-07-05 20:15-20:30 (0º15") 10   Tela de prontuário: marcar retorno... não consegui salvar ainda.
-2012-07-05 18:00-18:30 (0º30")  9   Tela de prontuário: marcar retorno... não está selecionando o paciente de forma automática.
-2012-07-05 17:30-18:00 (0º30")  7   Tela de novo/editar médico: Campo UF do conselho profissional.
-2012-07-05 15:30-17:15 (2º15")  7   Commit anterior estava com bugs e não passava nos testes. Arrumei tudo!
-2012-07-05 14:30-15:00 (0º30")  8   Console do firestarter agora sabe dar attach no banco quando necessário.
-2012-07-05 14:15-14:30 (0º15")  8   Tela de novo/editar médico: Campo UF do conselho profissional.
-2012-07-05 13:00-14:15 (1º15")  6   Validador de modelo para testes deve preencher a validação de todas as propriedades do modelo.
+2012-07-05 23:15-24:00 (0°45")  5   Tela de prontuário: marcar retorno... não tá fechando a janela ao clicar em salvar.
+2012-07-05 20:15-20:30 (0°15") 10   Tela de prontuário: marcar retorno... não consegui salvar ainda.
+2012-07-05 18:00-18:30 (0°30")  9   Tela de prontuário: marcar retorno... não está selecionando o paciente de forma automática.
+2012-07-05 17:30-18:00 (0°30")  7   Tela de novo/editar médico: Campo UF do conselho profissional.
+2012-07-05 15:30-17:15 (2°15")  7   Commit anterior estava com bugs e não passava nos testes. Arrumei tudo!
+2012-07-05 14:30-15:00 (0°30")  8   Console do firestarter agora sabe dar attach no banco quando necessário.
+2012-07-05 14:15-14:30 (0°15")  8   Tela de novo/editar médico: Campo UF do conselho profissional.
+2012-07-05 13:00-14:15 (1°15")  6   Validador de modelo para testes deve preencher a validação de todas as propriedades do modelo.
 
-2012-07-04 15:15-18:35 (3º20")  5   Tela de prontuário: marcar retorno do paciente.
-2012-07-04 15:00-15:15 (0º15")  6   Tela de marcar compromisso: próximo horário está achando horários no passado.
-2012-07-04 13:30-14:50 (1º20")  9   Tela de marcar compromisso: mostrar erro ao tentar marcar compromisso.
-2012-07-04 10:00-12:10 (2º10")  9   Tela de prontuário: solicitação de exame.
+2012-07-04 15:15-18:35 (3°20")  5   Tela de prontuário: marcar retorno do paciente.
+2012-07-04 15:00-15:15 (0°15")  6   Tela de marcar compromisso: próximo horário está achando horários no passado.
+2012-07-04 13:30-14:50 (1°20")  9   Tela de marcar compromisso: mostrar erro ao tentar marcar compromisso.
+2012-07-04 10:00-12:10 (2°10")  9   Tela de prontuário: solicitação de exame.
 
-2012-07-03 18:30-20:00 (1º30")  9   Tela de prontuário: solicitação de exame.
-2012-07-03 16:30-17:00 (0º30")  6   Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.
-2012-07-03 15:00-15:15 (0º15")  9   Considerar o médico na query para a tela da agenda.
-2012-07-03 14:15-15:00 (0º45")  8   Próximo horário livre na tela de início do consultório.
-2012-07-03 13:15-14:15 (1º00")  8   Extrair lógica de próximo horário livre do ScheduleController. Tem que ser estático e acessível para outros controllers.
-2012-07-03 13:00-13:15 (0º15") 10   Cadastro de compromisso não está considerando o médico na hora de fazer a query.
-2012-07-03 12:30-13:00 (0º30")  9   Entender a lógica de achar o próximo horário livre.
+2012-07-03 18:30-20:00 (1°30")  9   Tela de prontuário: solicitação de exame.
+2012-07-03 16:30-17:00 (0°30")  6   Marcar consulta em um feriado deve apenas gerar um warning, mas não impedir de marcar o compromisso.
+2012-07-03 15:00-15:15 (0°15")  9   Considerar o médico na query para a tela da agenda.
+2012-07-03 14:15-15:00 (0°45")  8   Próximo horário livre na tela de início do consultório.
+2012-07-03 13:15-14:15 (1°00")  8   Extrair lógica de próximo horário livre do ScheduleController. Tem que ser estático e acessível para outros controllers.
+2012-07-03 13:00-13:15 (0°15") 10   Cadastro de compromisso não está considerando o médico na hora de fazer a query.
+2012-07-03 12:30-13:00 (0°30")  9   Entender a lógica de achar o próximo horário livre.
 
-2012-06-30 14:00-17:00 (3º00")  7   Adivinhar quais pacientes comparecerem a quais consultas. (desfiz isso, ficou muito complicado)
-2012-06-30 17:00-18:30 (1º30")  7   Tela de início: total de pacientes, lista de médicos, gráficos (tem que inventar outros gráficos)
+2012-06-30 14:00-17:00 (3°00")  7   Adivinhar quais pacientes comparecerem a quais consultas. (desfiz isso, ficou muito complicado)
+2012-06-30 17:00-18:30 (1°30")  7   Tela de início: total de pacientes, lista de médicos, gráficos (tem que inventar outros gráficos)
 
-2012-06-28 13:20-14:45 (1º25")  7   Teste de criar consultório com UrlIdentifier que já está sendo usado.
-2012-06-28 14:45-15:20 (0º35")  6   Users e Auth controllers estavam fazendo validações com dependências entre si. Tem que validar tudo in-a-row.
-2012-06-28 15:40-16:00 (0º20")  8   Teste de criar novo consultório repetindo full-name de um usuário de outro consultório.
-2012-06-28 16:00-16:25 (0º25")  9   Mais validações com interdependências.
-2012-06-28 16:25-17:15 (0º50")  9   Criação de atributo de DataAnnotation para UserName.
-2012-06-28 17:15-17:55 (0º40")  5   Testes para validação de user-name, na criação de um novo consultório, e também de um novo usuário no consultório.
-2012-06-28 18:00-18:30 (0º30") 10   Rodei todos os testes e corrigi tudo. Falta só 1 de criar novo médico.
-2012-06-28 18:45-19:15 (0º30")  8   Combos de especialidade e conselho profissional na tela de novo/editar usuário que seja médico.
-2012-06-28 19:15-19:15 (0º00")  -   Teste de criação do médico agora tá passando. Todos os testes passam agora.
+2012-06-28 13:20-14:45 (1°25")  7   Teste de criar consultório com UrlIdentifier que já está sendo usado.
+2012-06-28 14:45-15:20 (0°35")  6   Users e Auth controllers estavam fazendo validações com dependências entre si. Tem que validar tudo in-a-row.
+2012-06-28 15:40-16:00 (0°20")  8   Teste de criar novo consultório repetindo full-name de um usuário de outro consultório.
+2012-06-28 16:00-16:25 (0°25")  9   Mais validações com interdependências.
+2012-06-28 16:25-17:15 (0°50")  9   Criação de atributo de DataAnnotation para UserName.
+2012-06-28 17:15-17:55 (0°40")  5   Testes para validação de user-name, na criação de um novo consultório, e também de um novo usuário no consultório.
+2012-06-28 18:00-18:30 (0°30") 10   Rodei todos os testes e corrigi tudo. Falta só 1 de criar novo médico.
+2012-06-28 18:45-19:15 (0°30")  8   Combos de especialidade e conselho profissional na tela de novo/editar usuário que seja médico.
+2012-06-28 19:15-19:15 (0°00")  -   Teste de criação do médico agora tá passando. Todos os testes passam agora.
 
 2012-06-27                          Esqueci de anotar vários horários.
-2012-06-27 15:30-16:00 (0º30")  7   Validação do UserName.
-2012-06-27 17:30-18:00 (0º30")  7   Ordenador de scripts sql. Merge dos scripts.
+2012-06-27 15:30-16:00 (0°30")  7   Validação do UserName.
+2012-06-27 17:30-18:00 (0°30")  7   Ordenador de scripts sql. Merge dos scripts.
 
-2012-06-26 13:30-14:50 (1º10")  9   Firestarter: Inicialização de tabelas do sistema - SYS_MedicalEntity e SYS_MedicalSpecialty.
-2012-06-26 14:50-15:20 (0º30")  9   Alterações no banco seguindo especificação.
-2012-06-26 15:20-16:00 (0º40") 10   Firestarter: opção drop all tables; opção create all tables (usando o script de criação).
-2012-06-26 16:50-17:20 (0º30")  6   Teste de primeiro acesso: testar o filtro ao invés dos controllers em sí.
-2012-06-26 17:20-17:40 (0º20")  8   HtmlHerlper para mostrar caixa de mensagem verdinha.
-2012-06-26 17:40-17:55 (0º15")  8   Mensagem mostrando a senha padrão do usuário na tela de criar usuário.
-2012-06-26 18:00-18:45 (0º45")  8   Tela de criação de uma nova conta no sistema.
-2012-06-26 20:00-20:30 (0º30")  8   Verificar se o UrlIdentifier já existe para o nome da pessoa. Se já existir adicionar um número no final.
+2012-06-26 13:30-14:50 (1°10")  9   Firestarter: Inicialização de tabelas do sistema - SYS_MedicalEntity e SYS_MedicalSpecialty.
+2012-06-26 14:50-15:20 (0°30")  9   Alterações no banco seguindo especificação.
+2012-06-26 15:20-16:00 (0°40") 10   Firestarter: opção drop all tables; opção create all tables (usando o script de criação).
+2012-06-26 16:50-17:20 (0°30")  6   Teste de primeiro acesso: testar o filtro ao invés dos controllers em sí.
+2012-06-26 17:20-17:40 (0°20")  8   HtmlHerlper para mostrar caixa de mensagem verdinha.
+2012-06-26 17:40-17:55 (0°15")  8   Mensagem mostrando a senha padrão do usuário na tela de criar usuário.
+2012-06-26 18:00-18:45 (0°45")  8   Tela de criação de uma nova conta no sistema.
+2012-06-26 20:00-20:30 (0°30")  8   Verificar se o UrlIdentifier já existe para o nome da pessoa. Se já existir adicionar um número no final.
 
-2012-06-25 ??:??-??:?? (?º??")  ?   MockRepository não é mais estático.
-2012-06-25 ??:??-??:?? (?º??")  ?   Pesquisa sobre especialidades e conselhos profissionais segundo o TISS.
+2012-06-25 ??:??-??:?? (?°??")  ?   MockRepository não é mais estático.
+2012-06-25 ??:??-??:?? (?°??")  ?   Pesquisa sobre especialidades e conselhos profissionais segundo o TISS.
 
-2012-06-23 ??:??-??:?? (?º??")  ?   Resolvemos algumas coisas na casa do André.
+2012-06-23 ??:??-??:?? (?°??")  ?   Resolvemos algumas coisas na casa do André.
 
-2012-06-22 17:00-19:50 (2º50")  9   Testes de acesso usando a senha default. Não pode acessar nada no software, somente a tela de trocar senha.
-2012-06-22 15:40-16:54 (1º05")  9   Não permitir usuário com senha padrão usar o software. A única opção é trocar a senha.
+2012-06-22 17:00-19:50 (2°50")  9   Testes de acesso usando a senha default. Não pode acessar nada no software, somente a tela de trocar senha.
+2012-06-22 15:40-16:54 (1°05")  9   Não permitir usuário com senha padrão usar o software. A única opção é trocar a senha.
 
-2012-06-21 16:45-19:00 (2º15")  7   Tela de troca ou definição inicial de senha.
-2012-06-21 16:35-16:45 (0º10")  9   Teste de criação de médico com todas as informações. Ainda não passa, falta gravar a especialidade e o órgão regulador.
-2012-06-21 16:20-16:35 (0º15")  9   Verificação e teste de criação de usuário médico, sem informar o CRM.
-2012-06-21 16:00-16:25 (0º25") 10   Testes de visualização de médico e administrador.
-2012-06-21 15:45-16:00 (0º15") 10   Verificação e teste de função do usuário, tem que ter pelo menos uma: admin, secretária ou médico.
-2012-06-21 15:15-15:45 (0º30")  9   Verificação e teste para criação de usuário sem UserName.
-2012-06-21 13:15-15:15 (2º00")  8   Verificação e testes para username único no consultório.
+2012-06-21 16:45-19:00 (2°15")  7   Tela de troca ou definição inicial de senha.
+2012-06-21 16:35-16:45 (0°10")  9   Teste de criação de médico com todas as informações. Ainda não passa, falta gravar a especialidade e o órgão regulador.
+2012-06-21 16:20-16:35 (0°15")  9   Verificação e teste de criação de usuário médico, sem informar o CRM.
+2012-06-21 16:00-16:25 (0°25") 10   Testes de visualização de médico e administrador.
+2012-06-21 15:45-16:00 (0°15") 10   Verificação e teste de função do usuário, tem que ter pelo menos uma: admin, secretária ou médico.
+2012-06-21 15:15-15:45 (0°30")  9   Verificação e teste para criação de usuário sem UserName.
+2012-06-21 13:15-15:15 (2°00")  8   Verificação e testes para username único no consultório.
 
-2012-06-20 22:00-23:10 (1º10")  8   Comitando alterações, juntando scripts de criação de banco.
-2012-06-20 20:15-21:05 (0º50")  9   Teste de visualizar secretária.
-2012-06-20 19:25-20:15 (0º50")  9   Alterações no FireStarter para facilitar a criação de ambientes de teste.
-2012-06-20 17:10-19:15 (2º05")  8   Entendendo arquitetura de testes.
-2012-06-20 16:00-16:40 (0º40")  6   Teste de criar usuário sem e-mail.
+2012-06-20 22:00-23:10 (1°10")  8   Comitando alterações, juntando scripts de criação de banco.
+2012-06-20 20:15-21:05 (0°50")  9   Teste de visualizar secretária.
+2012-06-20 19:25-20:15 (0°50")  9   Alterações no FireStarter para facilitar a criação de ambientes de teste.
+2012-06-20 17:10-19:15 (2°05")  8   Entendendo arquitetura de testes.
+2012-06-20 16:00-16:40 (0°40")  6   Teste de criar usuário sem e-mail.
 
-2012-06-19 19:10-20:00 (0º50")  5   Bugs nas telas de criação/edição de usuários.
-2012-06-19 18:40-19:10 (0º30")  7   Alterações no firestarter, seleção de conexão e opção para limpar o banco.
-2012-06-19 18:20-18:40 (0º20")  7   Cadastro de usuário com user-name, alteração do banco, modelo.
-2012-06-19 18:00-18:20 (0º20")  8   Login com nome de usuário ou e-mail.
-2012-06-19 16:00-16:20 (0º20")      Almoço.
-2012-06-19 16:20-18:00 (1º40")  8   Verificando se tudo na app está funcionando.
-2012-06-19 12:00-16:00 (4º00")  6   Arrumando os testes para poder comitar.
+2012-06-19 19:10-20:00 (0°50")  5   Bugs nas telas de criação/edição de usuários.
+2012-06-19 18:40-19:10 (0°30")  7   Alterações no firestarter, seleção de conexão e opção para limpar o banco.
+2012-06-19 18:20-18:40 (0°20")  7   Cadastro de usuário com user-name, alteração do banco, modelo.
+2012-06-19 18:00-18:20 (0°20")  8   Login com nome de usuário ou e-mail.
+2012-06-19 16:00-16:20 (0°20")      Almoço.
+2012-06-19 16:20-18:00 (1°40")  8   Verificando se tudo na app está funcionando.
+2012-06-19 12:00-16:00 (4°00")  6   Arrumando os testes para poder comitar.
 
-2012-06-18 19:00-22:00 (3º00")  4   Entendendo o GIT.
+2012-06-18 19:00-22:00 (3°00")  4   Entendendo o GIT.

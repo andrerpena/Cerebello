@@ -45,7 +45,8 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         {
             User user;
 
-            if (!this.ModelState.IsValid || !SecurityManager.Login(loginModel, db, out user))
+            var cookieCollection = this.HttpContext.Response.Cookies;
+            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, db, out user))
             {
                 ViewBag.LoginFailed = true;
                 return View();
@@ -248,7 +249,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                             RememberMe = false,
                             UserNameOrEmail = registrationData.UserName,
                         };
-                        if (!SecurityManager.Login(loginModel, db, out user))
+                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, db, out user))
                         {
                             throw new Exception("Login cannot fail.");
                         }

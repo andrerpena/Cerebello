@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Web.Mvc;
 
 namespace CerebelloWebRole.Code.Controls
 {
-    public class CardViewFieldBase
+    public abstract class CardViewFieldBase
     {
         public Func<dynamic, object> Format { get; set; }
         public String Header { get; set; }
@@ -15,5 +13,8 @@ namespace CerebelloWebRole.Code.Controls
         /// Determina se este campo aparece sozinho na linha
         /// </summary>
         public bool WholeRow { get; set; }
+
+        public abstract MvcHtmlString Label(HtmlHelper htmlHelper);
+        public abstract MvcHtmlString Display(HtmlHelper htmlHelper);
     }
 }

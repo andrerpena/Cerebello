@@ -25,13 +25,13 @@ namespace CerebelloWebRole.Code.Controls
             this.Fields = new List<CardViewFieldBase>();
             this.HtmlHelper = htmlHelper;
             this.FieldsPerRow = fieldsPerRow;
-            this.Model = htmlHelper.ViewData.Model;
+            //this.Model = htmlHelper.ViewData.Model;
         }
 
-        public void Bind(TModel model)
-        {
-            this.Model = model;
-        }
+        //public void Bind(TModel model)
+        //{
+        //    this.Model = model;
+        //}
 
         /// <summary>
         /// </summary>
@@ -95,11 +95,6 @@ namespace CerebelloWebRole.Code.Controls
                 {
                     var field = row[j];
 
-                    var expressionPropertyValue = field.GetType().GetProperty("Expression").GetValue(field, null);
-                    var funcType = expressionPropertyValue.GetType().GetGenericArguments()[0];
-                    var valueType = funcType.GetGenericArguments()[1];
-                    var propertyInfo = (PropertyInfo)((MemberExpression)expressionPropertyValue.GetType().GetProperty("Body").GetValue(expressionPropertyValue, null)).Member;
-
                     var divColumn = new TagBuilder("div");
                     divColumn.AddCssClass("span" + (field.WholeRow ? 1 : this.FieldsPerRow).ToString());
 
@@ -113,27 +108,8 @@ namespace CerebelloWebRole.Code.Controls
                     if (i == 0)
                         tableValueTD.AddCssClass("first");
 
-                    // LabelFor
-                    // public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression);
-                    var labelForMethod =
-                        (from m in
-                             typeof(LabelExtensions).GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                         where m.Name == "LabelFor"
-                         select m).First();
-                    var labelForMethodGeneric = labelForMethod.MakeGenericMethod(this.Model.GetType(), valueType);
-
-                    // DisplayFor
-                    // public static MvcHtmlString DisplayFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression);
-                    //DisplayExtensions.DisplayFor
-                    var displayForMethod =
-                        (from m in
-                             typeof(DisplayExtensions).GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                         where m.Name == "DisplayFor"
-                         select m).First();
-                    var displayForMethodGeneric = displayForMethod.MakeGenericMethod(this.Model.GetType(), valueType);
-
-                    tableHeaderTD.InnerHtml = field.Header != null ? new MvcHtmlString(field.Header).ToString() : labelForMethodGeneric.Invoke(null, new object[] { this.HtmlHelper, expressionPropertyValue }).ToString();
-                    tableValueTD.InnerHtml = field.Format != null ? new MvcHtmlString(field.Format(this.Model).ToString()).ToString() : displayForMethodGeneric.Invoke(null, new object[] { this.HtmlHelper, expressionPropertyValue }).ToString();
+                    tableHeaderTD.InnerHtml = field.Label(this.HtmlHelper).ToString();
+                    tableValueTD.InnerHtml = field.Display(this.HtmlHelper).ToString();
 
                     divColumn.InnerHtml = tableHeaderTD.ToString() + tableValueTD.ToString();
 

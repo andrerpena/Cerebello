@@ -510,13 +510,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.db.SaveChanges();
 
                 // The password has changed, we need to log the user in again.
-                var ok = SecurityManager.Login(new CerebelloWebRole.Models.LoginViewModel
-                {
-                    Password = vm.Password,
-                    PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
-                    RememberMe = false,
-                    UserNameOrEmail = loggedUser.UserName,
-                }, this.db, out user);
+                var ok = SecurityManager.Login(
+                    this.HttpContext.Response.Cookies,
+                    new CerebelloWebRole.Models.LoginViewModel
+                    {
+                        Password = vm.Password,
+                        PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
+                        RememberMe = false,
+                        UserNameOrEmail = loggedUser.UserName,
+                    }, this.db, out user);
 
                 if (!ok || user == null)
                     throw new Exception("This should never happen as the login uses the same data provided by the user.");

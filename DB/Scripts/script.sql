@@ -1,4 +1,24 @@
 
+/****** Object:  Table [dbo].[AccountContract] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AccountContract](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ContractTypeId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
+	[IssuanceDate] [date] NOT NULL,
+	[StartDate] [date] NOT NULL,
+	[Fee] [numeric](16, 2) NOT NULL,
+	[EndDate] [date] NULL,
+	[Text] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_AccountContract] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 /****** Object:  Table [dbo].[ActiveIngredient] ******/
 SET ANSI_NULLS ON
 GO
@@ -40,7 +60,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Administrator](
-	[Id] [int] NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
  CONSTRAINT [PK_Administrator] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -229,28 +249,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Doctor](
-	[Id] [int] NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[CRM] [varchar](50) NOT NULL,
 	[MedicalEntityId] [int] NOT NULL,
 	[MedicalEntityJurisdiction] [nvarchar](50) NULL,
 	[MedicalSpecialtyId] [int] NOT NULL,
 	[UrlIdentifier] [varchar](200) NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
-)
-GO
-/****** Object:  Table [dbo].[Email] ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Email](
-	[Id] [int] NOT NULL,
-	[Address] [varchar](200) NULL,
-	[GravatarEmailHash] [varchar](200) NULL,
- CONSTRAINT [PK_Email] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
@@ -520,6 +525,7 @@ CREATE TABLE [dbo].[Practice](
 	[VerificationToken] [varchar](32) NULL,
 	[VerificationExpirationDate] [datetime] NULL,
 	[ShowWelcomeScreen] [bit] NOT NULL,
+	[ActiveAccountContractId] [int] NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -565,7 +571,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Secretary](
-	[Id] [int] NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
  CONSTRAINT [PK_Secretary] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -598,6 +604,24 @@ CREATE TABLE [dbo].[SYS_ActiveIngredient](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](200) NOT NULL,
  CONSTRAINT [PK_SYS_ActiveIngredient] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+/****** Object:  Table [dbo].[SYS_ContractType] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SYS_ContractType](
+	[Id] [int] NOT NULL,
+	[Name] [varchar](150) NOT NULL,
+	[CreatedOn] [date] NOT NULL,
+	[IsTrial] [bit] NOT NULL,
+	[UrlIdentifier] [nchar](50) NOT NULL,
+	[Text] [nvarchar](max) NULL,
+ CONSTRAINT [PK_SYS_Contract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
@@ -753,9 +777,9 @@ CREATE TABLE [dbo].[User](
 	[Password] [varchar](50) NOT NULL,
 	[PasswordSalt] [varchar](50) NOT NULL,
 	[LastActiveOn] [datetime] NULL,
+	[SecretaryId] [int] NULL,
 	[PersonId] [int] NOT NULL,
 	[DoctorId] [int] NULL,
-	[SecretaryId] [int] NULL,
 	[PracticeId] [int] NOT NULL,
 	[AdministratorId] [int] NULL,
 	[UserName] [varchar](50) NOT NULL,
@@ -800,6 +824,18 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_User_SecretaryId] ON [dbo].[User]
 WHERE ([SecretaryId] IS NOT NULL)
 WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
+/****** Object:  ForeignKey [FK_AccountContract_Practice] ******/
+ALTER TABLE [dbo].[AccountContract]  WITH NOCHECK ADD  CONSTRAINT [FK_AccountContract_Practice] FOREIGN KEY([PracticeId])
+REFERENCES [dbo].[Practice] ([Id])
+GO
+ALTER TABLE [dbo].[AccountContract] CHECK CONSTRAINT [FK_AccountContract_Practice]
+GO
+/****** Object:  ForeignKey [FK_AccountContract_SYS_ContractType] ******/
+ALTER TABLE [dbo].[AccountContract]  WITH NOCHECK ADD  CONSTRAINT [FK_AccountContract_SYS_ContractType] FOREIGN KEY([ContractTypeId])
+REFERENCES [dbo].[SYS_ContractType] ([Id])
+GO
+ALTER TABLE [dbo].[AccountContract] CHECK CONSTRAINT [FK_AccountContract_SYS_ContractType]
+GO
 /****** Object:  ForeignKey [FK_ActiveIngredient_Doctor] ******/
 ALTER TABLE [dbo].[ActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiveIngredient_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
@@ -831,7 +867,7 @@ GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
 GO
 /****** Object:  ForeignKey [FK_CFG_DayOff_Doctor] ******/
-ALTER TABLE [dbo].[CFG_DayOff]  WITH CHECK ADD  CONSTRAINT [FK_CFG_DayOff_Doctor] FOREIGN KEY([DoctorId])
+ALTER TABLE [dbo].[CFG_DayOff]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_DayOff_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_DayOff] CHECK CONSTRAINT [FK_CFG_DayOff_Doctor]
@@ -848,23 +884,23 @@ REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_Schedule] CHECK CONSTRAINT [FK_CFG_Schedule_Doctor]
 GO
+/****** Object:  ForeignKey [FK_ChatMessage_FromUser_User] ******/
+ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_FromUser_User] FOREIGN KEY([UserFromId])
+REFERENCES [dbo].[User] ([Id])
+GO
+ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_FromUser_User]
+GO
 /****** Object:  ForeignKey [FK_ChatMessage_Practice] ******/
-ALTER TABLE [dbo].[ChatMessage]  WITH CHECK ADD  CONSTRAINT [FK_ChatMessage_Practice] FOREIGN KEY([PracticeId])
+ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_Practice]
 GO
-/****** Object:  ForeignKey [FK_ChatMessage_User] ******/
-ALTER TABLE [dbo].[ChatMessage]  WITH CHECK ADD  CONSTRAINT [FK_ChatMessage_User] FOREIGN KEY([UserFromId])
+/****** Object:  ForeignKey [FK_ChatMessage_ToUser_User] ******/
+ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_ToUser_User] FOREIGN KEY([UserToId])
 REFERENCES [dbo].[User] ([Id])
 GO
-ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_User]
-GO
-/****** Object:  ForeignKey [FK_ChatMessage_User1] ******/
-ALTER TABLE [dbo].[ChatMessage]  WITH CHECK ADD  CONSTRAINT [FK_ChatMessage_User1] FOREIGN KEY([UserToId])
-REFERENCES [dbo].[User] ([Id])
-GO
-ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_User1]
+ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_ToUser_User]
 GO
 /****** Object:  ForeignKey [FK_Diagnosis_Anamnese] ******/
 ALTER TABLE [dbo].[Symptom]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
@@ -872,11 +908,11 @@ REFERENCES [dbo].[Anamnese] ([Id])
 GO
 ALTER TABLE [dbo].[Symptom] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
 GO
-/****** Object:  ForeignKey [FK_Diagnosis2_Diagnosis2] ******/
-ALTER TABLE [dbo].[Diagnosis]  WITH CHECK ADD  CONSTRAINT [FK_Diagnosis2_Diagnosis2] FOREIGN KEY([PatientId])
+/****** Object:  ForeignKey [FK_Diagnosis_Patient] ******/
+ALTER TABLE [dbo].[Diagnosis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
-ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis2_Diagnosis2]
+ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis_Patient]
 GO
 /****** Object:  ForeignKey [FK_Doctor_MedicalEntity] ******/
 ALTER TABLE [dbo].[Doctor]  WITH NOCHECK ADD  CONSTRAINT [FK_Doctor_MedicalEntity] FOREIGN KEY([MedicalEntityId])
@@ -889,12 +925,6 @@ ALTER TABLE [dbo].[Doctor]  WITH NOCHECK ADD  CONSTRAINT [FK_Doctor_MedicalSpeci
 REFERENCES [dbo].[SYS_MedicalSpecialty] ([Id])
 GO
 ALTER TABLE [dbo].[Doctor] CHECK CONSTRAINT [FK_Doctor_MedicalSpecialty]
-GO
-/****** Object:  ForeignKey [FK_Email_Person] ******/
-ALTER TABLE [dbo].[Email]  WITH NOCHECK ADD  CONSTRAINT [FK_Email_Person] FOREIGN KEY([Id])
-REFERENCES [dbo].[Person] ([Id])
-GO
-ALTER TABLE [dbo].[Email] CHECK CONSTRAINT [FK_Email_Person]
 GO
 /****** Object:  ForeignKey [FK_ExaminationRequest_Patient] ******/
 ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_Patient] FOREIGN KEY([PatientId])
@@ -1011,11 +1041,17 @@ ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Person]
 GO
-/****** Object:  ForeignKey [FK_Practice_User] ******/
-ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_User] FOREIGN KEY([OwnerId])
+/****** Object:  ForeignKey [FK_Practice_AccountContract] ******/
+ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_AccountContract] FOREIGN KEY([ActiveAccountContractId])
+REFERENCES [dbo].[AccountContract] ([Id])
+GO
+ALTER TABLE [dbo].[Practice] CHECK CONSTRAINT [FK_Practice_AccountContract]
+GO
+/****** Object:  ForeignKey [FK_Practice_Owner_User] ******/
+ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_Owner_User] FOREIGN KEY([OwnerId])
 REFERENCES [dbo].[User] ([Id])
 GO
-ALTER TABLE [dbo].[Practice] CHECK CONSTRAINT [FK_Practice_User]
+ALTER TABLE [dbo].[Practice] CHECK CONSTRAINT [FK_Practice_Owner_User]
 GO
 /****** Object:  ForeignKey [FK_ReceiptMedicine_Medicine] ******/
 ALTER TABLE [dbo].[ReceiptMedicine]  WITH NOCHECK ADD  CONSTRAINT [FK_ReceiptMedicine_Medicine] FOREIGN KEY([MedicineId])
