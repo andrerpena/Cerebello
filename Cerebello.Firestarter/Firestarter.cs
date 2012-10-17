@@ -462,6 +462,7 @@ namespace Cerebello.Firestarter
                 EndDate = null,
                 Fee = 0.00M,
                 SYS_ContractType = trialContractType,
+                Practice = practice,
             };
             practice.AccountContract.Text = StringHelper.ReflectionReplace(
                 practice.AccountContract.SYS_ContractType.Text,
@@ -1629,6 +1630,7 @@ GO
                     Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
                     medicalProceduresMaxCount,
                     progress);
+            Firestarter.Initialize_SYS_Contracts(db);
         }
     }
 }

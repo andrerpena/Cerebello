@@ -266,6 +266,7 @@ namespace CerebelloWebRole.Tests
             mock.SetupGet(m => m.ApplicationPath).Returns("/");
             mock.SetupGet(m => m.Url).Returns(new Uri("http://localhost/unittests", UriKind.Absolute));
             mock.SetupGet(m => m.ServerVariables).Returns(new System.Collections.Specialized.NameValueCollection());
+            mock.SetupGet(m => m.Cookies).Returns(new HttpCookieCollection());
 
             return mock.Object;
         }
@@ -274,6 +275,7 @@ namespace CerebelloWebRole.Tests
         {
             var mock = new Mock<HttpResponseBase>();
             mock.Setup(x => x.ApplyAppPathModifier(Moq.It.IsAny<String>())).Returns((String url) => url);
+            mock.SetupGet(m => m.Cookies).Returns(new HttpCookieCollection());
 
             return mock.Object;
         }

@@ -49,7 +49,6 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_MedicalCertificateField_MedicalCertificate", "MedicalCertificate", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.MedicalCertificate), "MedicalCertificateField", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicalCertificateField), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Doctor), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Administrator", "Administrator", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Administrator), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Doctor_MedicalEntity1", "SYS_MedicalEntity", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalEntity), "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Doctor), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Doctor_MedicalSpecialty1", "SYS_MedicalSpecialty", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_MedicalSpecialty), "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Doctor), true)]
@@ -63,10 +62,11 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_AccountContract_SYS_ContractType", "SYS_ContractType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.SYS_ContractType), "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.AccountContract), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.AccountContract), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_FromUser_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_ToUser_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese1", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "Symptom", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Symptom), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Diagnosis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 
 #endregion
 
@@ -741,7 +741,7 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<SYS_ContractType> _SYS_ContractType;
-
+    
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
@@ -1081,15 +1081,7 @@ namespace Cerebello.Model
         {
             base.AddObject("AccountContracts", accountContract);
         }
-
-        /// <summary>
-        /// Deprecated Method for adding a new object to the ChatMessages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToChatMessages(ChatMessage chatMessage)
-        {
-            base.AddObject("ChatMessages", chatMessage);
-        }
-
+    
         /// <summary>
         /// Deprecated Method for adding a new object to the SYS_ContractType EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
@@ -1097,7 +1089,15 @@ namespace Cerebello.Model
         {
             base.AddObject("SYS_ContractType", sYS_ContractType);
         }
-
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the ChatMessages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToChatMessages(ChatMessage chatMessage)
+        {
+            base.AddObject("ChatMessages", chatMessage);
+        }
+    
         /// <summary>
         /// Deprecated Method for adding a new object to the Symptoms EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
@@ -1148,7 +1148,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1167,7 +1168,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -1192,7 +1193,7 @@ namespace Cerebello.Model
             {
                 OnContractTypeIdChanging(value);
                 ReportPropertyChanging("ContractTypeId");
-                _ContractTypeId = StructuralObject.SetValidValue(value);
+                _ContractTypeId = StructuralObject.SetValidValue(value, "ContractTypeId");
                 ReportPropertyChanged("ContractTypeId");
                 OnContractTypeIdChanged();
             }
@@ -1216,7 +1217,7 @@ namespace Cerebello.Model
             {
                 OnPracticeIdChanging(value);
                 ReportPropertyChanging("PracticeId");
-                _PracticeId = StructuralObject.SetValidValue(value);
+                _PracticeId = StructuralObject.SetValidValue(value, "PracticeId");
                 ReportPropertyChanged("PracticeId");
                 OnPracticeIdChanged();
             }
@@ -1240,7 +1241,7 @@ namespace Cerebello.Model
             {
                 OnIssuanceDateChanging(value);
                 ReportPropertyChanging("IssuanceDate");
-                _IssuanceDate = StructuralObject.SetValidValue(value);
+                _IssuanceDate = StructuralObject.SetValidValue(value, "IssuanceDate");
                 ReportPropertyChanged("IssuanceDate");
                 OnIssuanceDateChanged();
             }
@@ -1264,7 +1265,7 @@ namespace Cerebello.Model
             {
                 OnStartDateChanging(value);
                 ReportPropertyChanging("StartDate");
-                _StartDate = StructuralObject.SetValidValue(value);
+                _StartDate = StructuralObject.SetValidValue(value, "StartDate");
                 ReportPropertyChanged("StartDate");
                 OnStartDateChanged();
             }
@@ -1288,7 +1289,7 @@ namespace Cerebello.Model
             {
                 OnFeeChanging(value);
                 ReportPropertyChanging("Fee");
-                _Fee = StructuralObject.SetValidValue(value);
+                _Fee = StructuralObject.SetValidValue(value, "Fee");
                 ReportPropertyChanged("Fee");
                 OnFeeChanged();
             }
@@ -1312,7 +1313,7 @@ namespace Cerebello.Model
             {
                 OnEndDateChanging(value);
                 ReportPropertyChanging("EndDate");
-                _EndDate = StructuralObject.SetValidValue(value);
+                _EndDate = StructuralObject.SetValidValue(value, "EndDate");
                 ReportPropertyChanged("EndDate");
                 OnEndDateChanged();
             }
@@ -1336,7 +1337,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, false);
+                _Text = StructuralObject.SetValidValue(value, false, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -1346,7 +1347,7 @@ namespace Cerebello.Model
         partial void OnTextChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -1448,6 +1449,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1855,7 +1857,7 @@ namespace Cerebello.Model
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Address_Person1", "Person")]
-        public Person Person_1
+        public Person Person
         {
             get
             {
@@ -1871,7 +1873,7 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Person> Person_1Reference
+        public EntityReference<Person> PersonReference
         {
             get
             {
@@ -4182,16 +4184,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User", "User")]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_FromUser_User", "User")]
         public User UserFrom
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_FromUser_User", "User").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_FromUser_User", "User").Value = value;
             }
         }
         /// <summary>
@@ -4203,13 +4205,13 @@ namespace Cerebello.Model
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_FromUser_User", "User");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User", "User", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_FromUser_User", "User", value);
                 }
             }
         }
@@ -4220,16 +4222,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User1", "User")]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_ToUser_User", "User")]
         public User UserTo
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_ToUser_User", "User").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_ToUser_User", "User").Value = value;
             }
         }
         /// <summary>
@@ -4241,13 +4243,13 @@ namespace Cerebello.Model
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_ChatMessage_ToUser_User", "User");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_User1", "User", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_ToUser_User", "User", value);
                 }
             }
         }
@@ -8389,7 +8391,7 @@ namespace Cerebello.Model
             {
                 OnActiveAccountContractIdChanging(value);
                 ReportPropertyChanging("ActiveAccountContractId");
-                _ActiveAccountContractId = StructuralObject.SetValidValue(value);
+                _ActiveAccountContractId = StructuralObject.SetValidValue(value, "ActiveAccountContractId");
                 ReportPropertyChanged("ActiveAccountContractId");
                 OnActiveAccountContractIdChanged();
             }
@@ -8468,28 +8470,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_AccountContract_Practice", "AccountContract")]
-        public EntityCollection<AccountContract> AccountContracts
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_Practice", "AccountContract");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_Practice", "AccountContract", value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_Practice", "ChatMessage")]
         public EntityCollection<ChatMessage> ChatMessages
         {
@@ -8502,6 +8482,28 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_Practice", "ChatMessage", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_AccountContract_Practice", "AccountContract")]
+        public EntityCollection<AccountContract> AccountContracts
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_Practice", "AccountContract");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<AccountContract>("Cerebello.Model.FK_AccountContract_Practice", "AccountContract", value);
                 }
             }
         }
@@ -9369,6 +9371,7 @@ namespace Cerebello.Model
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -9401,7 +9404,8 @@ namespace Cerebello.Model
         }
 
         #endregion
-        #region Primitive Properties
+
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -9420,7 +9424,7 @@ namespace Cerebello.Model
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -9445,7 +9449,7 @@ namespace Cerebello.Model
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -9469,7 +9473,7 @@ namespace Cerebello.Model
             {
                 OnCreatedOnChanging(value);
                 ReportPropertyChanging("CreatedOn");
-                _CreatedOn = StructuralObject.SetValidValue(value);
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
                 ReportPropertyChanged("CreatedOn");
                 OnCreatedOnChanged();
             }
@@ -9493,7 +9497,7 @@ namespace Cerebello.Model
             {
                 OnIsTrialChanging(value);
                 ReportPropertyChanging("IsTrial");
-                _IsTrial = StructuralObject.SetValidValue(value);
+                _IsTrial = StructuralObject.SetValidValue(value, "IsTrial");
                 ReportPropertyChanged("IsTrial");
                 OnIsTrialChanged();
             }
@@ -9517,7 +9521,7 @@ namespace Cerebello.Model
             {
                 OnUrlIdentifierChanging(value);
                 ReportPropertyChanging("UrlIdentifier");
-                _UrlIdentifier = StructuralObject.SetValidValue(value, false);
+                _UrlIdentifier = StructuralObject.SetValidValue(value, false, "UrlIdentifier");
                 ReportPropertyChanged("UrlIdentifier");
                 OnUrlIdentifierChanged();
             }
@@ -9541,7 +9545,7 @@ namespace Cerebello.Model
             {
                 OnTextChanging(value);
                 ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, true);
+                _Text = StructuralObject.SetValidValue(value, true, "Text");
                 ReportPropertyChanged("Text");
                 OnTextChanged();
             }
@@ -9551,7 +9555,7 @@ namespace Cerebello.Model
         partial void OnTextChanged();
 
         #endregion
-    
+
         #region Navigation Properties
     
         /// <summary>
@@ -10753,30 +10757,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> SecretaryId
-        {
-            get
-            {
-                return _SecretaryId;
-            }
-            set
-            {
-                OnSecretaryIdChanging(value);
-                ReportPropertyChanging("SecretaryId");
-                _SecretaryId = StructuralObject.SetValidValue(value, "SecretaryId");
-                ReportPropertyChanged("SecretaryId");
-                OnSecretaryIdChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _SecretaryId;
-        partial void OnSecretaryIdChanging(Nullable<global::System.Int32> value);
-        partial void OnSecretaryIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.Int32 PracticeId
@@ -10893,6 +10873,30 @@ namespace Cerebello.Model
         private global::System.Boolean _IsOwner;
         partial void OnIsOwnerChanging(global::System.Boolean value);
         partial void OnIsOwnerChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> SecretaryId
+        {
+            get
+            {
+                return _SecretaryId;
+            }
+            set
+            {
+                OnSecretaryIdChanging(value);
+                ReportPropertyChanging("SecretaryId");
+                _SecretaryId = StructuralObject.SetValidValue(value, "SecretaryId");
+                ReportPropertyChanged("SecretaryId");
+                OnSecretaryIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _SecretaryId;
+        partial void OnSecretaryIdChanging(Nullable<global::System.Int32> value);
+        partial void OnSecretaryIdChanged();
 
         #endregion
 
@@ -11062,44 +11066,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary")]
-        public Secretary Secretary
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Secretary> SecretaryReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_User_Administrator", "Administrator")]
         public Administrator Administrator
         {
@@ -11138,18 +11104,18 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User", "ChatMessage")]
-        public EntityCollection<ChatMessage> ChatMessages
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_FromUser_User", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessagesSent
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User", "ChatMessage");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_FromUser_User", "ChatMessage");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User", "ChatMessage", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_FromUser_User", "ChatMessage", value);
                 }
             }
         }
@@ -11160,18 +11126,56 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_User1", "ChatMessage")]
-        public EntityCollection<ChatMessage> ChatMessages1
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ChatMessage_ToUser_User", "ChatMessage")]
+        public EntityCollection<ChatMessage> ChatMessagesReceived
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User1", "ChatMessage");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_ToUser_User", "ChatMessage");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_User1", "ChatMessage", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ChatMessage>("Cerebello.Model.FK_ChatMessage_ToUser_User", "ChatMessage", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary")]
+        public Secretary Secretary
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Secretary> SecretaryReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Secretary>("Cerebello.Model.FK_User_Secretary", "Secretary", value);
                 }
             }
         }

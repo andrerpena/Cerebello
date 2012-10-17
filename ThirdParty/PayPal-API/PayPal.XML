@@ -1,0 +1,1678 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PayPal</name>
+    </assembly>
+    <members>
+        <member name="M:PayPal.EnumHelper.GetAttributeOfType``1(System.Enum)">
+            <summary>
+            Gets an attribute on an enum field value.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute you want to retrieve.</typeparam>
+            <param name="enumValue">The enum value.</param>
+            <returns>The attribute of type TAttribute that exists on the enumValue declaration.</returns>
+        </member>
+        <member name="M:PayPal.EnumHelper.GetAttributeOfType``2(System.String)">
+            <summary>
+            Gets an attribute on an enum field value, using a lamda expression.
+            This is useful, when multiple fileds of the have the same value.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute you want to retrieve.</typeparam>
+            <param name="enumValue">The enum value.</param>
+            <returns>The attribute of type TAttribute that exists on the enumValue declaration.</returns>
+        </member>
+        <member name="T:PayPal.NameValueAttribute">
+            <summary>
+            Attribute used to indicate the properties that can be converted from and into a NameValueCollection.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.Name">
+            <summary>
+            Name of the name-value pair.
+            You can use the KeyOrIndexName of the current object if it is an item of a collection.
+            The KeyOrIndexName is designed by the parent.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.ValueFormat">
+            <summary>
+            Format used to convert the value.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.NameRegex">
+            <summary>
+            Regex used to recognize names that must be loaded in this property.
+            The regex must contain a capture, if KeyOrIndexName has been specified, with the same name.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.KeyOrIndexName">
+            <summary>
+            Used to indicate that the property is a list of items or a dictionary,
+            and to assign a name used to refer to the current element index or key.
+            Each element must be iterated, and child properties saved to the name-value collection.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.CollectionElementType">
+            <summary>
+            Indicates the type of the element that should be created for this collection.
+            If it is left null, then the default element type for that collection will be created,
+            if it can be created.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.CollectionKeyType">
+            <summary>
+            Indicates a type (primitive or string) to be used as key of this dictionary.
+            If it is left null, then the default element type for that dictionary will be used.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.Default">
+            <summary>
+            Default value of property.
+            A missing value when reading, will not touch the property in the object,
+            so it must come initialized with the default value already.
+            When writing, the behavior deppends on WriteDefault property of this attribute,
+            it is used to decide if the property containing a default value should be written or not.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.WriteDefault">
+            <summary>
+            Writes the default value, when saving a name-value collection.
+            This does not affect reading, an empty value is converted to the default value.
+            Atention: If the Default value is Empty, and EmptyIgnore is true,
+            then nothing will be written even if WriteDefault is true.
+            [Default is false]
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.EmptyIgnore">
+            <summary>
+            Indicates whether empty values in the NameValueCollection should be ignored or not.
+            When they are ignored, it is the same as if they were missing,
+            assuming the DefaultValue. In this case, if WriteDefault is true, the default will be
+            written, unless the default is itself an empty value.
+            [Default is true]
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueAttribute.SaveOrder">
+            <summary>
+            Tells the order in which this property must be saved.
+            Negative values come first. [Default is 0]
+            </summary>
+        </member>
+        <member name="T:PayPal.TypeDecisionAttribute">
+            <summary>
+            When a property is of an abstract type, it must be decided what derived class
+            will be created to fill that property.
+            Note that the property must be null, for a decision, otherwise the already
+            existing object will be used.
+            </summary>
+        </member>
+        <member name="M:PayPal.TypeDecisionAttribute.#ctor(System.Int32,System.Type)">
+            <summary>
+            Indicates a type decision, to be made either for the PropertyType or the CollectionElementType.
+            If the type inherits from PropertyType, it will be used for the property.
+            If the type inherits from CollectionElementType, it will be used for the element of the collection.
+            </summary>
+            <param name="evaluationIndex">Attributes are not compiled in order, so this will be used to sort multiple TypeDecisionAttributes.</param>
+            <param name="type"></param>
+        </member>
+        <member name="M:PayPal.TypeDecisionAttribute.Decide(PayPal.NvcConversionContex,System.Object)">
+            <summary>
+            Decides whether the type is to be used or not, based on the passed NameValueCollection.
+            </summary>
+            <param name="context">Context containing the NameValueCollection to analyse.</param>
+            <returns>True to use the type indicated in this attribute; otherwise False.</returns>
+        </member>
+        <member name="P:PayPal.TypeDecisionAttribute.EvaluationIndex">
+            <summary>
+            Attributes are not compiled in order, so this will be used to sort multiple TypeDecisionAttributes.
+            </summary>
+        </member>
+        <member name="P:PayPal.TypeDecisionAttribute.Type">
+            <summary>
+            Type to be used when the Decide method returns true.
+            </summary>
+        </member>
+        <member name="T:PayPal.TypeDecisionDefaultAttribute">
+            <summary>
+            Makes the final type decision, when all other attributes have failed to provide a decision.
+            Note that attributes are evaluated in declaration order, so this one must be the last
+            type decision attribute.
+            Note that the property must be null, for a decision, otherwise the already
+            existing object will be used.
+            </summary>
+        </member>
+        <member name="T:PayPal.TypeDecisionByNameAttribute">
+            <summary>
+            Decides on a type based on whether a given name is found in the NameValueCollection.
+            Note that the property must be null, for a decision, otherwise the already
+            existing object will be used.
+            </summary>
+        </member>
+        <member name="P:PayPal.TypeDecisionByNameAttribute.NameToFind">
+            <summary>
+            Indicates a type decision based on the name of an item in the name value collection.
+            If that name is found, the type indicated in this attribute is used.
+            </summary>
+        </member>
+        <member name="T:PayPal.NvcConversionContex">
+            <summary>
+            Context object used in the conversion process between a NameValueCollection and an arbitrary object.
+            This object must be disposed after using it in a conversion to ensure the conversion is terminated.
+            </summary>
+        </member>
+        <member name="M:PayPal.NvcConversionContex.Dispose">
+            <summary>
+            Terminates the usage of this context, executing all pending operations.
+            </summary>
+        </member>
+        <member name="P:PayPal.NvcConversionContex.Nvc">
+            <summary>
+            NameValueCollection that is being loaded or saved.
+            </summary>
+        </member>
+        <member name="P:PayPal.NvcConversionContex.KeyOrIndexValues">
+            <summary>
+            Dictionary containing the values fo key/index to be replaced in the name of the item.
+            </summary>
+        </member>
+        <member name="P:PayPal.NvcConversionContex.FinalValidations">
+            <summary>
+            Validations that will be executed after everything is done.
+            </summary>
+        </member>
+        <member name="T:PayPal.INameValueConverter">
+            <summary>
+            Represents an object that can save/load properties of a target object into/from a NameValueCollection.
+            </summary>
+        </member>
+        <member name="M:PayPal.INameValueConverter.SaveProperty(PayPal.NvcConversionContex,System.Collections.Specialized.NameValueCollection,System.String,System.Object,System.String)">
+            <summary>
+            Saves a property of the object into the NameValueCollection.
+            </summary>
+            <param name="context">Provides overall information about the saving process.</param>
+            <param name="nvc">An empty NameValueCollection to insert the values into.</param>
+            <param name="name">Name of the entry in the NameValueCollection.</param>
+            <param name="value">Object that is to be converted to string, and then inserted into the NameValueCollection.</param>
+            <param name="format">Format that is to be used in the conversion from object to string.</param>
+            <returns>Returns true when the passed value is a simple value, or false, when it is a complex object.</returns>
+        </member>
+        <member name="M:PayPal.INameValueConverter.LoadProperty(PayPal.NvcConversionContex,System.Object,PayPal.NameValueProperty,System.String,System.String,System.Action@,System.Object@)">
+            <summary>
+            Creates an object to set to a property of the target object,
+            or to insert into a collection of the target object.
+            </summary>
+            <param name="context">Provides the NameValueCollection that is being used to load the object.</param>
+            <param name="target">Target object containing the property.</param>
+            <param name="property">The property that is to be set.</param>
+            <param name="strKeyOrIndex">If we want to insert an object into the collection, we must provide a key/index.</param>
+            <param name="strValue">String representing the value to be set, or inserted into the collection.</param>
+            <param name="rollBack">Rollback action, that can be executed to undo everything this method did.</param>
+            <param name="valueSet">Value that was set to the property, or inserted into the collection.</param>
+            <returns>Returns true when the inserted value a simple object, or false, when it is a complex object.</returns>
+        </member>
+        <member name="T:PayPal.NameValueConverter">
+            <summary>
+            Default implementation of a INameValueConverter.
+            It can convert most primitives, objects and collections with good performance.
+            </summary>
+        </member>
+        <member name="M:PayPal.NameValueConverter.SaveProperty(PayPal.NvcConversionContex,System.Collections.Specialized.NameValueCollection,System.String,System.Object,System.String)">
+            <summary>
+            Saves a property of the object into the NameValueCollection.
+            </summary>
+            <param name="context">Provides overall information about the saving process.</param>
+            <param name="nvc">An empty NameValueCollection to insert the values into.</param>
+            <param name="name">Name of the entry in the NameValueCollection.</param>
+            <param name="value">Object that is to be converted to string, and then inserted into the NameValueCollection.</param>
+            <param name="format">Format that is to be used in the conversion from object to string.</param>
+            <returns>Returns true when the passed value is a simple value, or false, when it is a complex object.</returns>
+        </member>
+        <member name="M:PayPal.NameValueConverter.LoadProperty(PayPal.NvcConversionContex,System.Object,PayPal.NameValueProperty,System.String,System.String,System.Action@,System.Object@)">
+            <summary>
+            Creates an object to set to a property of the target object,
+            or to insert into a collection of the target object.
+            </summary>
+            <param name="context">Provides the NameValueCollection that is being used to load the object.</param>
+            <param name="target">Target object containing the property.</param>
+            <param name="property">The property that is to be set.</param>
+            <param name="strKeyOrIndex">If we want to insert an object into the collection, we must provide a key/index.</param>
+            <param name="strValue">String representing the value to be set, or inserted into the collection.</param>
+            <param name="rollBack">Rollback action, that can be executed to undo everything this method did.</param>
+            <param name="valueSet">Value that was set to the property, or inserted into the collection.</param>
+            <returns>Returns true when the inserted value a simple object, or false, when it is a complex object.</returns>
+        </member>
+        <member name="M:PayPal.NameValueConverter.LoadItemToList(System.Type,System.Collections.IList,System.Boolean,System.Int32,System.String,System.Object@,System.Action@)">
+            <summary>
+            Loads a name/value pair into a IList object.
+            Supports fixed arrays and generic lists.
+            </summary>
+            <param name="itemType"></param>
+            <param name="list"></param>
+            <param name="canExpand"></param>
+            <param name="index"></param>
+            <param name="strValue"></param>
+            <param name="valueSet"></param>
+            <param name="rollBack"></param>
+            <returns></returns>
+        </member>
+        <member name="T:PayPal.NameValueProperty">
+            <summary>
+            Contains informations that can be used in the process of conversion of a property.
+            </summary>
+        </member>
+        <member name="M:PayPal.NameValueProperty.GetTypeToCreateForProperty(PayPal.NvcConversionContex,System.Object)">
+            <summary>
+            Gets a Type that should be used to create a new object populate this property.
+            </summary>
+            <param name="context">Conversion context used in the decision of the correct type to return.</param>
+            <param name="target">Target object that contains the property being loaded.</param>
+            <returns>Returns a Type to be used to populate this property in the given context, for the target object.</returns>
+        </member>
+        <member name="M:PayPal.NameValueProperty.GetTypeToCreateForElement(PayPal.NvcConversionContex,System.Object)">
+            <summary>
+            Gets a Type that should be used to create a new object to insert into the collection
+            hold by this property.
+            </summary>
+            <param name="context">Conversion context used in the decision of the correct type to return.</param>
+            <param name="target">Target object that contains the collection property that will receive the new object.</param>
+            <returns>Returns a Type to be used to insert into the collection property, in the given context, for the target object.</returns>
+        </member>
+        <member name="M:PayPal.NameValueProperty.GetValue(System.Object)">
+            <summary>
+            Gets the value of the property represented by this object, from the given instance.
+            Throws exception if cannot read.
+            </summary>
+            <param name="instance">Instance of the object to get the property value from.</param>
+            <returns>Value of the property.</returns>
+        </member>
+        <member name="M:PayPal.NameValueProperty.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the value of the property represented by this object, in the given instance.
+            Throws exception if cannot write.
+            </summary>
+            <param name="instance">Instance of the object to set the property value to.</param>
+            <param name="value">Value to set the property of the instance to.</param>
+        </member>
+        <member name="P:PayPal.NameValueProperty.Attribute">
+            <summary>
+            NameValueAttribute placed on the property.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.PropertyInfo">
+            <summary>
+            PropertyInfo of the property.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.CollectionElementType">
+            <summary>
+            Element type of the collection, when the property is a collection.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.CollectionKeyType">
+            <summary>
+            Key type of the collection, when the property is a collection.
+            For arrays and lists, this is always typeof(int).
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.IsList">
+            <summary>
+            Whether the property is a list or not.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.IsDictionary">
+            <summary>
+            Whether the property is a dictionary or not.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.PropertyType">
+            <summary>
+            Type returned be the property.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.Name">
+            <summary>
+            Name of the property.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.TypeDecidersForProperty">
+            <summary>
+            TypeDecisionAttributes that are used to decide the Type to use
+            when the property needs to be populated with something.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.TypeDecidersForElement">
+            <summary>
+            Type decision attributes that are used to decide the Type to use
+            when the collection property needs an element to be inserted.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.CanGet">
+            <summary>
+            Returns whether this property has a getter or not.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.CanSet">
+            <summary>
+            Returns whether this property has a setter or not.
+            </summary>
+        </member>
+        <member name="P:PayPal.NameValueProperty.Item(System.Object)">
+            <summary>
+            Gets or sets the value of the property of the instance object.
+            </summary>
+            <param name="instance">Instance containing a property represented by this object, to get or set the value.</param>
+            <returns>Returns the value of the property from the instance object.</returns>
+        </member>
+        <member name="T:PayPal.NameValueConversionCore">
+            <summary>
+            The core of the NameValueCollection conversion.
+            </summary>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.Save(System.Object)">
+            <summary>
+            Saves an object to a NameValueCollection.
+            </summary>
+            <param name="objectToSave">Object to save in a NameValueCollection.</param>
+            <returns>NameValueCollection containing the saved data.</returns>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.SaveTo(System.Object,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Saves an object to a NameValueCollection, without clearing it first.
+            </summary>
+            <param name="objectToSave">Object to save in a NameValueCollection.</param>
+            <param name="destination">NameValueCollection used to save data from objectToSave.</param>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.Load``1(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Loads an object of type T from the nameValueCollection.
+            </summary>
+            <typeparam name="T">Type of the object that will be loaded from the NameValueCollection.</typeparam>
+            <param name="nvcToLoad">NameValueCollection that contains the values to load the object.</param>
+            <returns>Object of type T, loaded from the NameValueCollection.</returns>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.LoadTo(System.Collections.Specialized.NameValueCollection,System.Object)">
+            <summary>
+            Loads data from a NameValueCollection into a target object, without clearing it first.
+            </summary>
+            <param name="nvcToLoad">NameValueCollection that contains the values to load the object.</param>
+            <param name="target">Target object where name-values will be loaded.</param>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.Load(System.Collections.Specialized.NameValueCollection,System.Type)">
+            <summary>
+            Loads an object of passed type from the nameValueCollection.
+            </summary>
+            <param name="nvcToLoad">NameValueCollection that contains the values to load the object.</param>
+            <param name="type">Type of the object that will be loaded from the NameValueCollection.</param>
+            <returns>Object of passed type, loaded from the NameValueCollection.</returns>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.ClearCache">
+            <summary>
+            Clears the static cache of informations about converted types, to free memory.
+            Call this if you don't need to save or load more objects.
+            You can call this while converting... forcing a cache rebuild.
+            </summary>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.InitCache(System.Type)">
+            <summary>
+            Initializes all values needed to make a fast conversion.
+            This caches a lot of things, that would otherwise make the saving or loading processo too slow.
+            </summary>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.SaveCore(PayPal.NvcConversionContex,System.Object)">
+            <summary>
+            Core saving method.
+            </summary>
+            <param name="objectToSave">Object that is being saved. This object must be of type T.</param>
+            <param name="nvc">NameValueCollection that is being loaded.</param>
+            <param name="keyOrIndexValues">Dictionary containing the values fo key/index to be replaced in the name of the item.</param>
+        </member>
+        <member name="M:PayPal.NameValueConversionCore.LoadCore(PayPal.NvcConversionContex,System.Object,System.String,System.String)">
+            <summary>
+            Core loading method.
+            </summary>
+            <param name="obj">Object that is being saved. This object must be of type T.</param>
+            <param name="itemName">Item name of the entry in the NameValueCollection that is to be loaded.</param>
+            <param name="strValue">Item value of the entry in the NameValueCollection that is to be loaded.</param>
+        </member>
+        <member name="T:PayPal.NameValueConversionCore.Cache">
+            <summary>
+            Stores information gathered from a type that can be converted to/from a NameValueCollection.
+            </summary>
+        </member>
+        <member name="T:PayPal.StringValueAttribute">
+            <summary>
+            Atribute that can be used on enum values, to indicate an equivalent string value,
+            when converting a a NameValueCollection.
+            </summary>
+        </member>
+        <member name="M:PayPal.StringValueAttribute.GetStringValue(System.Object)">
+            <summary>
+            Gets the string representation of an enum value.
+            If the enum value does not have a StringValueAttribute, then returns ToString.
+            </summary>
+            <param name="value">Enum value to get the string representation from.</param>
+            <returns>The string representation of the enum value. This will never return null.</returns>
+        </member>
+        <member name="M:PayPal.StringValueAttribute.GetEnumValue(System.String,System.Type)">
+            <summary>
+            Gets an enum value from it's string representation.
+            If no enum values in the type have that string representation, then returns null.
+            </summary>
+            <param name="strValue">String value that represents an enum value.</param>
+            <param name="enumType">Enum type that contains the value represented by the passed string.</param>
+            <returns>Enum value that is represented by the string, or null if not found.</returns>
+        </member>
+        <member name="P:PayPal.StringValueAttribute.StringValue">
+            <summary>
+            String representation of the enum item, that will be used when saving this enum into
+            a NameValueCollection, or when restoring it from the NameValueCollection.
+            </summary>
+        </member>
+        <member name="T:PayPal.StringValueAttribute.EnumCodeMap">
+            <summary>
+            Represents information gathered from an enum type,
+            about the string representations of each enum value.
+            </summary>
+        </member>
+        <member name="T:PayPal.StringValueConverters">
+            <summary>
+            Converts simple values to and from string.
+            This class will be used to convert simple values when saving or restoring an object from a
+            NameValueCollection.
+            </summary>
+        </member>
+        <member name="M:PayPal.StringValueConverters.ConvertTo(System.String,System.Type,System.String@)">
+            <summary>
+            Converts a string to a destination type.
+            </summary>
+            <param name="str">String to convert.</param>
+            <param name="toType">Type that the string is to be converted to.</param>
+            <param name="error">Out parameter returning an error message, if any.</param>
+            <returns>Returns the converted object.</returns>
+        </member>
+        <member name="M:PayPal.StringValueConverters.ConvertFrom(System.Object,System.String,System.String@)">
+            <summary>
+            Converts an object to a string.
+            </summary>
+            <param name="value">Object to convert to string.</param>
+            <param name="format">Format to used for the string conversion.</param>
+            <param name="error">Out parameter returning an error message, if any.</param>
+            <returns>Returns the converted string.</returns>
+        </member>
+        <member name="T:PayPal.NameValueCollectionExtensions">
+            <summary>
+            Extensions to let a NameValueCollection be converted to another type.
+            </summary>
+        </member>
+        <member name="M:PayPal.NameValueCollectionExtensions.CopyTo(System.Collections.Specialized.NameValueCollection,System.Collections.Specialized.NameValueCollection,System.Boolean)">
+            <summary>
+            Copies the entries from nvcSource to nvcTarget.
+            </summary>
+            <param name="nvcSource"></param>
+            <param name="nvcTarget"></param>
+            <param name="replace">When true, if the target already contains the named item, it will be cleared.</param>
+        </member>
+        <member name="M:PayPal.NameValueCollectionExtensions.ToKeyValuePairs(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Enumerates a NameValueCollection using KeyValuePairs, for each key/value pair found.
+            NameValueCollections can store more than one value per key,
+            so this can return multiples repeated keys in a row.
+            </summary>
+            <param name="nvc">NameValueCollection to enumerate name/value pairs.</param>
+            <returns>Enumerable that can enumerate all name/value pairs of the collection.</returns>
+        </member>
+        <member name="M:PayPal.Version940.PayPalMvcExtensions.SetupExpressCheckoutUrls(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutOperation,System.String,System.String)">
+            <summary>
+            Changes the express checkout operation
+            </summary>
+            <param name="controller"></param>
+            <param name="request"></param>
+        </member>
+        <member name="M:PayPal.Version940.PayPalMvcExtensions.SetExpressCheckout(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutOperation,System.String,System.String)">
+            <summary>
+            Set express checkout 
+            </summary>
+            <param name="controller"></param>
+            <param name="operation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PayPal.Version940.PayPalMvcExtensions.RedirectToCheckout(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutResult)">
+            <summary>
+            Redirects the user to the PayPal Express Checkout page, to review the operation details,
+            fill some other informations, select payment option, and approve the payment.
+            </summary>
+            <param name="controller">Controller that is going to do the Redirect.</param>
+            <param name="checkoutResponse">Response of the SetExpressCheckout method, that must be called before this one.</param>
+            <returns>Returns a RedirectResult, that must be returned from the action method, to do the redirect.</returns>
+        </member>
+        <member name="F:PayPal.Version940.AcknowledgementStatus.Success">
+            <summary>
+            Successful operation.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.AcknowledgementStatus.SuccessWithWarning">
+            <summary>
+            Successful operation; however, there are messages returned in the response that you should examine.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.AcknowledgementStatus.Failure">
+            <summary>
+            Operation failed; the response also contains one or more error messages explaining the failure.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.AcknowledgementStatus.FailureWithWarning">
+            <summary>
+            Operation failed and that there are messages returned in the response that you should examine.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalList`1.Parent">
+            <summary>
+            The object to which this list is attatched to.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPal000Credential.ApiUserName">
+            <summary>
+            Required PayPal API user name (this is not a regular PayPal user name).
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPal000Credential.ApiPassword">
+            <summary>
+            Required API password.
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSignatureCredential.ApiSignature">
+            <summary>
+            Required security signature.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSignatureAndAppIdCredential.ApiSignature">
+            <summary>
+            Required security signature.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PaypalOperation.ApiVersion">
+            <summary>
+            The version of the Api that this object is to be used with.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PaypalOperation.Values">
+            <summary>
+            Stores the values saved/loaded during the last save or load operation.
+            </summary>
+        </member>
+        <member name="T:PayPal.Version940.PayPalResult">
+            <summary>
+            Common Response Fields from a PayPal API call.
+            </summary>
+            <remarks>
+            <h2>Common Response Fields</h2>
+            <p>
+                The PayPal API always returns common fields in addition to fields that are specific to
+                the requested PayPal API operation.</p>
+            <h2>Error Responses</h2>
+            <p>
+                If the ACK value is not Success, API response fields may not be returned. An error
+                response has the following general format.</p>
+            <p>
+                Additional pass-through information may appear in the L_ERRORPARAMIDn and
+                L_ERRORPARAMVALUEn fields.</p>
+            <h2>Logging API Operations</h2>
+            <p>
+                You should log basic information from the request and response messages of each PayPal
+                API operation you execute. You must log the Correlation ID from the response message,
+                which identifies the API operation to PayPal and which must be provided to Merchant
+                Technical Support if you need their assistance with a specific transaction.</p>
+            <p>
+                All responses to PayPal API operations contain information that may be useful for
+                debugging purposes. In addition to logging the Correlation ID from the response
+                message, you can log other information, such as the transaction ID and timestamp, to
+                enable you to review a transaction on the PayPal website or through the API. You could
+                implement a scheme that logs the entire request and response in a “verbose” mode;
+                however, you should never log the password from a request.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.Status">
+            <summary>
+            Acknowledgement status.
+            </summary>
+            <remarks>
+            Acknowledgement status, which is one of the following values:
+            - Success indicates a successful operation.
+            - SuccessWithWarning indicates a successful operation; however, there are
+            messages returned in the response that you should examine.
+            - Failure indicates the operation failed; the response also contains one or more error
+            messages explaining the failure.
+            - FailureWithWarning indicates that the operation failed and that there are
+            messages returned in the response that you should examine.
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.CorrelationID">
+            <summary>
+            Correlation ID, which uniquely identifies the transaction to PayPal.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.TimeStamp">
+            <summary>
+            The date and time that the requested API operation was performed.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.Version">
+            <summary>
+            The version of the API.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.Build">
+            <summary>
+            The sub-version of the API.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.Errors">
+            <summary>
+            Errors or warnings.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalResult.Values">
+            <summary>
+            Stores the values saved/loaded during the last save or load operation.
+            </summary>
+        </member>
+        <member name="T:PayPal.Version940.PayPalPaymentShippingInfo">
+            <summary>
+            Shipping information to send to PayPal, for each payment.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentShippingInfo.ShipToName">
+            <summary>
+            Person’s name associated with this shipping address.
+            </summary>
+            <remarks>
+             <p>Person’s name associated with this shipping address. It is required if using a shipping address.
+                You can specify up to 10 payments, where n is a digit between 0 and 9, inclusive.</p>
+             <p>Character length and limitations: 32 single-byte characters</p>
+             <p>SHIPTONAME is deprecated since version 63.0. Use PAYMENTREQUEST_0_SHIPTONAME instead.</p>
+            </remarks>
+        </member>
+        <member name="T:PayPal.Version940.PayPalPaymentRequestBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequestBase.Parent">
+            <summary>
+            The object to which this list is attatched to.
+            </summary>
+        </member>
+        <member name="T:PayPal.Version940.PayPalBasicPaymentRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:PayPal.Version940.PayPalPaymentRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.Shipping">
+            <summary>
+            Shipping information to send to PayPal.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.Action">
+            <summary>
+            How you want to obtain payment.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_PAYMENTACTION</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">PAYMENTACTION</samp><em>(deprecated)</em></b></p>
+             <p>
+                 How you want to obtain payment. When implementing parallel payments, this field
+                 is required and must be set to <samp class="codeph">Order</samp>.
+                 When implementing digital goods, this field is required and must be set to
+                 <samp class="codeph">Sale</samp>. You can specify up to 10 payments, where n is
+                 a digit between 0 and 9, inclusive; except for digital goods, which supports single
+                 payments only. If the transaction does not include a one-time purchase, this field
+                 is ignored. It is one of the following values:</p>
+             <br />
+             <ul>
+                 <li><p><samp class="codeph">Sale</samp>
+                     – This is a final sale for which you are requesting payment (default).</p></li>
+                 <li><p><samp class="codeph">Authorization</samp>
+                     – This payment is a basic authorization subject to settlement with PayPal Authorization
+                     and Capture.</p></li>
+                 <li><p><samp class="codeph">Order</samp>
+                     – This payment is an order authorization subject to settlement with PayPal Authorization
+                     and Capture.</p></li>
+             </ul>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     You cannot set this field to <samp class="codeph">Sale</samp> in
+                     <samp class="codeph">SetExpressCheckout</samp> request and then change the value to
+                     <samp class="codeph">Authorization</samp> or <samp class="codeph">Order</samp> in the
+                     <samp class="codeph">DoExpressCheckoutPayment</samp> request. If you set the field to
+                     <samp class="codeph">Authorization</samp> or
+                     <samp class="codeph">Order</samp> in
+                     <samp class="codeph">SetExpressCheckout</samp>, you may set the field to
+                     <samp class="codeph">Sale</samp>.</p>
+             </div>
+             <p>Character length and limitations: Up to 13 single-byte alphabetic characters</p>
+             <p>
+                 <samp class="codeph">PAYMENTACTION</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_PAYMENTACTION</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.Amount">
+            <summary>
+            Total cost of the transaction to the buyer.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_AMT</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">AMT</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Required)</em> Total cost of the transaction to the buyer. If shipping cost
+                 and tax charges are known, include them in this value. If not, this value should
+                 be the current sub-total of the order. If the transaction includes one or more one-time
+                 purchases, this field must be equal to the sum of the purchases. Set this field
+                 to 0 if the transaction does not include a one-time purchase such as when you set
+                 up a billing agreement for a recurring payment that is not immediately charged.
+                 When the field is set to 0, purchase-specific fields are ignored. You can specify
+                 up to 10 payments, where n is a digit between 0 and 9, inclusive; except for digital
+                 goods, which supports single payments only.</p>
+             <p>
+                 Character length and limitations: Value is a positive number which cannot exceed
+                 $10,000 USD in any currency. It includes no currency symbol. It must have 2 decimal
+                 places, the decimal separator must be a period (.), and the optional thousands separator
+                 must be a comma (,).</p>
+             <p>
+                 <samp class="codeph">AMT</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_AMT</samp> instead.
+             </p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.CurrencyCode">
+            <summary>
+            A 3-character currency code (default is USD).
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_CURRENCYCODE</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">CURRENCYCODE</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> A 3-character currency code (default is USD). You can specify
+                 up to 10 payments, where n is a digit between 0 and 9, inclusive; except for digital
+                 goods, which supports single payments only.</p>
+             <p>
+                 <samp class="codeph">CURRENCYCODE</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_CURRENCYCODE</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.Custom">
+            <summary>
+            A free-form field for your own use.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_CUSTOM</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">CUSTOM</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> A free-form field for your own use. You can specify up to 10
+                 payments, where n is a digit between 0 and 9, inclusive.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     The value you specify is available only if the transaction includes a purchase.
+                     This field is ignored if you set up a billing agreement for a recurring payment
+                     that is not immediately charged.
+                 </p>
+             </div>
+             <p>Character length and limitations: 256 single-byte alphanumeric characters</p>
+             <p>
+                 <samp class="codeph">CUSTOM</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_CUSTOM</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.Description">
+            <summary>
+            Description of items the buyer is purchasing.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_DESC</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">DESC</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> Description of items the buyer is purchasing. You can specify
+                 up to 10 payments, where n is a digit between 0 and 9, inclusive; except for digital
+                 goods, which supports single payments only.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     The value you specify is available only if the transaction includes a purchase.
+                     This field is ignored if you set up a billing agreement for a recurring payment
+                     that is not immediately charged.
+                 </p>
+             </div>
+             <p>Character length and limitations: 127 single-byte alphanumeric characters</p>
+             <p>
+                 <samp class="codeph">DESC</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_DESC</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.InvoiceNum">
+            <summary>
+            Your own invoice or tracking number.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_INVNUM</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">INVNUM</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> Your own invoice or tracking number. You can specify up to 10
+                 payments, where n is a digit between 0 and 9, inclusive; except for digital goods,
+                 which supports single payments only.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     The value you specify is available only if the transaction includes a purchase.
+                     This field is ignored if you set up a billing agreement for a recurring payment
+                     that is not immediately charged.
+                 </p>
+             </div>
+             <p>Character length and limitations: 256 single-byte alphanumeric characters</p>
+             <p>
+                 <samp class="codeph">INVNUM</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_INVNUM</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.ItemAmount">
+            <summary>
+            Sum of cost of all items in this order.
+            A value can be set only when Items collection is empty.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_ITEMAMT</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">ITEMAMT</samp><em>(deprecated)</em></b></p>
+             <p>
+                 Sum of cost of all items in this order. For digital goods, this field is required.
+                 You can specify up to 10 payments, where n is a digit between 0 and 9, inclusive;
+                 except for digital goods, which supports single payments only.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     <samp class="codeph">PAYMENTREQUEST_n_ITEMAMT</samp> is required if you specify
+                     <samp class="codeph">L_PAYMENTREQUEST_n_AMTm</samp>.</p>
+             </div>
+             <p>
+                 Character length and limitations: Value is a positive number which cannot exceed
+                 $10,000 USD in any currency. It includes no currency symbol. It must have 2 decimal
+                 places, the decimal separator must be a period (.), and the optional thousands separator
+                 must be a comma (,).</p>
+             <p>
+                 <samp class="codeph">ITEMAMT</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph"> PAYMENTREQUEST_0_ITEMAMT</samp> instead.</p>
+            <masb>
+                I have seen this being used without specifying any items.
+                That is why this value can be set when there is no element in Items list.
+            </masb>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.NotifyUrl">
+            <summary>
+            Your URL for receiving Instant Payment Notification (IPN) about this transaction.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_NOTIFYURL</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">NOTIFYURL</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> Your URL for receiving Instant Payment Notification (IPN) about
+                 this transaction. If you do not specify this value in the request, the notification
+                 URL from your Merchant Profile is used, if one exists.You can specify up to 10 payments,
+                 where n is a digit between 0 and 9, inclusive; except for digital goods, which supports
+                 single payments only.</p>
+             <div class="important">
+                 <span class="importanttitle">Important:</span><p>
+                     The notify URL applies only to
+                     <samp class="codeph">DoExpressCheckoutPayment</samp>. This value is ignored when set in
+                     <samp class="codeph">SetExpressCheckout</samp> or
+                     <samp class="codeph">GetExpressCheckoutDetails</samp>.</p>
+             </div>
+             <p>Character length and limitations: 2,048 single-byte alphanumeric characters</p>
+             <p>
+                 <samp class="codeph">NOTIFYURL</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_NOTIFYURL</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.ShippingDiscountAmount">
+            <summary>
+            Shipping discount for this order, specified as a negative number.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_SHIPDISCAMT</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">SHIPPINGDISCAMT</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> Shipping discount for this order, specified as a negative number.
+                 You can specify up to 10 payments, where n is a digit between 0 and 9, inclusive.</p>
+             <p>
+                 Character length and limitations: Value is a positive number which cannot exceed
+                 $10,000 USD in any currency. It includes no currency symbol. It must have 2 decimal
+                 places, the decimal separator must be a period (.), and the optional thousands separator
+                 must be a comma (,).
+             </p>
+             <p>
+                 <samp class="codeph">SHIPPINGDISCAMT</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_SHIPPINGDISCAMT</samp> instead.</p>
+            <masb>
+                <p>
+                    I have seen this being sent to PayPal with a '-' sign before the number, in a number of places:
+                    <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECCustomizing">link</a>
+                    <a href="https://cms.paypal.com/fr/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECCustomizing">link</a>
+                    The statement "Value is a positive number which ..." appears to be false.
+                </p>
+                <p>
+                    Also, this seems to affect the total amount, negatively.
+                </p>
+            </masb>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.TaxAmount">
+            <summary>
+            Sum of tax for all items in this order.
+            </summary>
+            <remarks>
+             <h2>Description: PAYMENTREQUEST_0_TAXAMT</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">TAXAMT</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> Sum of tax for all items in this order. You can specify up to
+                 10 payments, where n is a digit between 0 and 9, inclusive; except for digital goods,
+                 which supports single payments only.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     <samp class="codeph">PAYMENTREQUEST_n_TAXAMT</samp> is required if you specify
+                     <samp class="codeph">L_PAYMENTREQUEST_n_TAXAMTm</samp></p>
+             </div>
+             <p>
+                 Character length and limitations: Value is a positive number which cannot exceed
+                 $10,000 USD in any currency. It includes no currency symbol. It must have 2 decimal
+                 places, the decimal separator must be a period (.), and the optional thousands separator
+                 must be a comma (,).</p>
+             <p>
+                 <samp class="codeph">TAXAMT</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">PAYMENTREQUEST_0_TAXAMT</samp> instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.BillingType">
+            <summary>
+            Type of billing agreement.
+            </summary>
+            <remarks>
+              <p>
+                <em>(Required)</em> Type of billing agreement. For recurring payments, this field
+                must be set to <samp class="codeph">RecurringPayments</samp>. In this case, you can
+                specify up to ten billing agreements. Other defined values are not valid.</p>
+              <p>Type of billing agreement for reference transactions. You must have permission
+                from PayPal to use this field. This field must be set to one of the following values:</p>
+              <br />
+              <ul>
+                <li><p>
+                    <samp class="codeph">MerchantInitiatedBilling</samp> - PayPal creates a billing
+                    agreement for each transaction associated with buyer. You must specify version
+                    54.0 or higher to use this option.</p></li>
+                <li><p>
+                    <samp class="codeph">MerchantInitiatedBillingSingleAgreement</samp> - PayPal
+                    creates a single billing agreement for all transactions associated with buyer.
+                    Use this value unless you need per-transaction billing agreements. You must
+                    specify version 58.0 or higher to use this option.</p></li>
+              </ul>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.BillingAgreementDescription">
+            <summary>
+            Description of goods or services associated with the billing agreement.
+            </summary>
+            <remarks>
+             <p>
+                Description of goods or services associated with the billing agreement. This field
+                is required for each recurring payment billing agreement. PayPal recommends that
+                the description contain a brief summary of the billing agreement terms and
+                conditions. For example, buyer is billed at “9.99 per month for 2 years”.</p>
+             <p>
+                Character length and limitations: 127 single-byte alphanumeric characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequest.PlannedAmount">
+            <summary>
+            Hint property to calculate the MaximumAmount, when setting up a billing agreement
+            for a recurring payment, or a non immediately charged payment.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequestItem.Parent">
+            <summary>
+            The object to which this list is attatched to.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequestItem.Description">
+            <summary>
+            Item description.
+            </summary>
+            <remarks>
+             <h2>Description: L_PAYMENTREQUEST_0_DESC0</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">L_DESCn</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional) </em>Item description. You can specify up to 10 payments, where n
+                 is a digit between 0 and 9, inclusive, and m specifies the list item within the
+                 payment; except for digital goods, which supports single payments only. These parameters
+                 must be ordered sequentially beginning with 0 (for example
+                 <samp class="codeph">L_PAYMENTREQUEST_n_DESC0</samp>,
+                 <samp class="codeph">L_PAYMENTREQUEST_n_DESC1</samp>).</p>
+             <p>Character length and limitations: 127 single-byte characters</p>
+             <p>
+                 This field is introduced in version 53.0.
+                 <samp class="codeph">L_DESCn</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">L_PAYMENTREQUEST_0_DESCm</samp> instead.
+             </p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequestItem.Name">
+            <summary>
+            Item name.
+            </summary>
+            <remarks>
+             <h2>Description: L_PAYMENTREQUEST_0_NAME0</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">L_NAMEn</samp><em>(deprecated)</em></b></p>
+             <p>
+                 Item name. This field is required when
+                 <samp class="codeph">L_PAYMENTREQUEST_n_ITEMCATEGORYm</samp>
+                 is passed. You can specify up to 10 payments, where n is a digit between 0 and 9,
+                 inclusive, and m specifies the list item within the payment; except for digital
+                 goods, which supports single payments only. These parameters must be ordered sequentially
+                 beginning with 0 (for example
+                 <samp class="codeph">L_PAYMENTREQUEST_n_NAME0</samp>,
+                 <samp class="codeph">L_PAYMENTREQUEST_n_NAME1</samp>).</p>
+             <p>Character length and limitations: 127 single-byte characters</p>
+             <p>
+                 This field is introduced in version 53.0.
+                 <samp class="codeph">L_NAMEn</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">L_PAYMENTREQUEST_0_NAMEm</samp> instead.
+             </p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequestItem.Quantity">
+            <summary>
+            Item quantity.
+            </summary>
+            <remarks>
+             <h2>Description: L_PAYMENTREQUEST_0_QTY0</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">L_QTYn</samp><em>(deprecated)</em></b></p>
+             <p>
+                 Item quantity. This field is required when
+                 <samp class="codeph">L_PAYMENTREQUEST_n_ITEMCATEGORYm</samp>
+                 is passed. For digital goods (<samp class="codeph">L_PAYMENTREQUEST_n_ITEMCATEGORYm=Digital</samp>),
+                 this field is required. You can specify up to 10 payments, where n is a digit between
+                 0 and 9, inclusive, and m specifies the list item within the payment; except for
+                 digital goods, which only supports single payments. These parameters must be ordered
+                 sequentially beginning with 0 (for example
+                 <samp class="codeph">L_PAYMENTREQUEST_n_QTY0</samp>,
+                 <samp class="codeph">L_PAYMENTREQUEST_n_QTY1</samp>).</p>
+             <p>Character length and limitations: Any positive integer</p>
+             <p>
+                 This field is introduced in version 53.0.
+                 <samp class="codeph">L_QTYn</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">L_PAYMENTREQUEST_0_QTYm</samp> instead.
+             </p>
+            </remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:PayPal.Version940.PayPalPaymentRequestItem.Amount" -->
+        <member name="P:PayPal.Version940.PayPalPaymentRequestItem.TaxAmount">
+            <summary>
+            Item sales tax.
+            </summary>
+            <remarks>
+             <h2>Description: L_PAYMENTREQUEST_0_TAXAMT0</h2>
+             <p><b></b></p>
+             <p><b><samp class="codeph">L_TAXAMTn</samp><em>(deprecated)</em></b></p>
+             <p>
+                 <em>(Optional)</em> Item sales tax. You can specify up to 10 payments, where n is
+                 a digit between 0 and 9, inclusive, and m specifies the list item within the payment;
+                 except for digital goods, which only supports single payments. These parameters
+                 must be ordered sequentially beginning with 0 (for example
+                 <samp class="codeph">L_PAYMENTREQUEST_n_TAXAMT0</samp>,
+                 <samp class="codeph">L_PAYMENTREQUEST_n_TAXAMT1</samp>).</p>
+             <p>
+                 Character length and limitations: Value is a positive number which cannot exceed
+                 $10,000 USD in any currency. It includes no currency symbol. It must have 2 decimal
+                 places, the decimal separator must be a period (.), and the optional thousands separator
+                 must be a comma (,).</p>
+             <p>
+                 <samp class="codeph">L_TAXAMTn</samp> is deprecated since version 63.0.
+                 Use <samp class="codeph">L_PAYMENTREQUEST_0_TAXAMTm</samp> instead.
+             </p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPaymentRequestItem.Category">
+            <summary>
+            Indicates whether an item is digital or physical.
+            </summary>
+            <remarks>
+             <h2>Description: L_PAYMENTREQUEST_0_ITEMCATEGORY0</h2>
+             <p><b></b></p>
+             <p>
+                 Indicates whether an item is digital or physical. For digital goods, this field
+                 is required and must be set to <samp class="codeph">Digital</samp>.
+                 You can specify up to 10 payments, where n is a digit between
+                 0 and 9, inclusive, and m specifies the list item within the payment; except for
+                 digital goods, which only supports single payments. These parameters must be ordered
+                 sequentially beginning with 0 (for example
+                 <samp class="codeph">L_PAYMENTREQUEST_n_ITEMCATEGORY0</samp>,
+                 <samp class="codeph">L_PAYMENTREQUEST_n_ITEMCATEGORY1</samp>).
+                 It is one of the following values:</p>
+             <br />
+             <ul>
+                 <li><p><samp class="codeph">Digital</samp></p></li>
+                 <li><p><samp class="codeph">Physical</samp></p></li>
+             </ul>
+             <p>This field is available since version 65.1.</p>
+            </remarks>
+        </member>
+        <member name="T:PayPal.Version940.PayPalShippingOptions">
+            <summary>
+            Shipping options to send to PayPal.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalShippingOptions.Parent">
+            <summary>
+            The object to which this list is attatched to.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalShippingOptions.NoShipping">
+            <summary>
+            Determines whether or not PayPal displays shipping address fields on the PayPal pages.
+            </summary>
+            <remarks>
+             <h2>Description: NOSHIPPING</h2>
+             <p><b></b></p>
+             <p>
+                 Determines whether or not PayPal displays shipping address fields on the PayPal pages.
+                 For digital goods, this field is required, and you must set it to 1. It is one of
+                 the following values:</p>
+             <br />
+             <ul>
+                 <li><p><samp class="codeph">0</samp> – PayPal displays the shipping address on the PayPal pages.</p></li>
+                 <li><p><samp class="codeph">1</samp> – PayPal does not display shipping address fields whatsoever.</p></li>
+                 <li><p><samp class="codeph">2</samp> – If you do not pass the shipping address, PayPal obtains it from the buyer’s account profile.</p></li>
+             </ul>
+             <p>Character length and limitations: 4 single-byte numeric characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalShippingOptions.AddressOverride">
+            <summary>
+            Determines whether or not the PayPal pages should display the shipping address set by you.
+            </summary>
+            <remarks>
+             <h2>Description: ADDROVERRIDE</h2>
+             <p><b></b></p>
+             <p>
+                 <em>(Optional)</em> Determines whether or not the PayPal pages should display the
+                 shipping address set by you in this SetExpressCheckout request, not the shipping
+                 address on file with PayPal for this buyer. Displaying the PayPal street address
+                 on file does not allow the buyer to edit that address. It is one of the following
+                 values:</p>
+             <br />
+             <ul>
+                 <li><p><samp class="codeph">0</samp> – The PayPal pages should not display the shipping address.</p></li>
+                 <li><p><samp class="codeph">1</samp> – The PayPal pages should display the shipping address.</p></li>
+             </ul>
+             <p>Character length and limitations: 1 single-byte numeric character</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalShippingOptions.RequireConfirmShipping">
+            <summary>
+            Indicates whether or not you require the buyer’s shipping address be a confirmed address.
+            </summary>
+            <remarks>
+             <h2>Description: REQCONFIRMSHIPPING</h2>
+             <p><b></b></p>
+             <p>
+                 Indicates whether or not you require the buyer’s shipping address on file with PayPal
+                 be a confirmed address. For digital goods, this field is required, and you must
+                 set it to 0. It is one of the following values:
+             </p>
+             <br />
+             <ul>
+                 <li><p><samp class="codeph">0</samp> – You do not require the buyer’s shipping address be a confirmed address.</p></li>
+                 <li><p><samp class="codeph">1</samp> – You require the buyer’s shipping address be a confirmed address.</p></li>
+             </ul>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     Setting this field overrides the setting you specified in your Merchant Account
+                     Profile.</p>
+             </div>
+             <p>Character length and limitations: 1 single-byte numeric character</p>
+             <table>
+             </table>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalShippingOptions.ShippingAddressOverride">
+            <summary>
+            Same as AddressOverride.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalShippingOptions.RequireConfirmedAddress">
+            <summary>
+            True when RequireConfirmShipping and not AddressOverride.
+            </summary>
+        </member>
+        <member name="T:PayPal.Version940.PayPalExpressCheckoutOperation">
+            <summary>
+            Common base class for PayPalSetExpressCheckoutOperation and PayPalDoExpressCheckoutPaymentOperation classes.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalExpressCheckoutOperation.DefaultCurrencyCode">
+            <summary>
+            Gets or sets the default currency used for this ExpressCheckout operation.
+            Any payment request that is inserted with an undefined CurrencyCode,
+            will assume that the value is using this default currency.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalExpressCheckoutOperation.AggregatedCurrencyCode">
+            <summary>
+            Gets or sets an aggregated value of all the payment currencies.
+            When multiple currencies are in use, then this returns CurrencyCode.Undefined.
+            If a single currency is in use, it returns that currency.
+            Setting this property changes all the currencies to a single one.
+            </summary>
+        </member>
+        <member name="M:PayPal.Version940.PayPalSetExpressCheckoutOperation.DefaultMaximumAmount(PayPal.Version940.PayPalExpressCheckoutOperation)">
+            <summary>
+            Gets the default value for the MaximumAmount property,
+            to be used by the NameValueConverter.
+            </summary>
+            <param name="obj">Instance to calculate the default MaximumAmount property for.</param>
+            <returns>The default MaximumAmount property for the instance.</returns>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.Method">
+            <summary>
+            Method name: SetExpressCheckout.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.MaximumAmount">
+            <summary>
+            The expected maximum total amount of the complete order, including shipping cost and tax charges.
+            </summary>
+            <remarks>
+             <h2>Description: MAXAMT</h2>
+             <p><b></b></p>
+             <p>
+                 <em>(Optional)</em> The expected maximum total amount of the complete order, including
+                 shipping cost and tax charges. If the transaction includes one or more one-time
+                 purchases, this field is ignored.</p>
+             <p>
+                 For recurring payments, you should pass the expected average transaction amount
+                 (default 25.00). PayPal uses this value to validate the buyer’s funding source.
+             </p>
+             <p>
+                 Character length and limitations: Value is a positive number which cannot exceed
+                 $10,000 USD in any currency. It includes no currency symbol. It must have 2 decimal
+                 places, the decimal separator must be a period (.), and the optional thousands separator
+                 must be a comma (,).</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     This field is required when implementing the Instant Update API callback. PayPal
+                     recommends that the maximum total amount be slightly greater than the sum of the
+                     line-item order details, tax, and the shipping options of greatest value.</p>
+             </div>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.AllowNote">
+            <summary>
+            Allows the user to leave a note.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.BuyerEmailOptinEnable">
+            <summary>
+            Allows user to enter e-mail for additional contact (promotions, etc.)
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.Callback">
+            <summary>
+            (Optional) URL to which the callback request from PayPal is sent. It must start with HTTPS for production integration. It can start with HTTPS or HTTP for sandbox testing.
+            Character length and limitations: 1024 single-byte characters
+            This field is available since version 53.0.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.CallbackVersion">
+            <summary>
+            Version of the callback API. This field is required when implementing the Instant Update Callback API. It must be set to 61.0 or a later version.
+            This field is available since version 61.0.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.ReturnURL">
+            <summary>
+            URL to which the buyer’s browser is returned after choosing to pay with PayPal.
+            </summary>
+            <remarks>
+             <h2>Description: RETURNURL</h2>
+             <p><b></b></p>
+             <p>
+                 <em>(Required)</em> URL to which the buyer’s browser is returned after choosing
+                 to pay with PayPal. For digital goods, you must add JavaScript to this page to close
+                 the in-context experience.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     PayPal recommends that the value be the final review page on which the buyer confirms
+                     the order and payment or billing agreement.</p>
+             </div>
+             <p>Character length and limitations: 2048 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.CancelURL">
+            <summary>
+            URL to which the buyer is returned if the buyer does not approve the use of PayPal to pay you.
+            </summary>
+            <remarks>
+             <h2>Description: CANCELURL</h2>
+             <p><b></b></p>
+             <p>
+                 <em>(Required)</em> URL to which the buyer is returned if the buyer does not approve
+                 the use of PayPal to pay you. For digital goods, you must add JavaScript to this
+                 page to close the in-context experience.</p>
+             <div class="note">
+                 <span class="notetitle">Note:</span><p>
+                     PayPal recommends that the value be the original page on which the buyer chose to
+                     pay with PayPal or establish a billing agreement.</p>
+             </div>
+             <p>Character length and limitations: 2048 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.BankPendingUrl">
+            <summary>
+            (Optional) The URL on the merchant site to transfer to after a bank transfer payment.
+            NOTE:Use this field only if you are using giropay or bank transfer payment methods in Germany.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutOperation.BrandName">
+            <summary>
+            (Optional) A label that overrides the business name in the PayPal account on the PayPal hosted checkout pages.
+            Character length and limitations: 127 single-byte alphanumeric characters
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSetExpressCheckoutResult.Token">
+            <summary>
+            A timestamped token by which you identify to PayPal that you are processing this
+            payment with Express Checkout.
+            </summary>
+            <remarks>
+            <p>
+                A timestamped token by which you identify to PayPal that you are processing this
+                payment with Express Checkout. The token expires after three hours. If you set the
+                token in the SetExpressCheckout request, the value of the token in the response is
+                identical to the value in the request.
+                Character length and limitations: 20 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="T:PayPal.Version940.PayPalExpressCheckoutConfirmation">
+            <summary>
+            Incoming model from PayPal when the user confirms an ExpressCheckout operation,
+            and is returned back to the original site.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalDoExpressCheckoutPaymentOperation.Token">
+            <summary>
+            The timestamped token value that was returned in the SetExpressCheckout
+            response and passed in the GetExpressCheckoutDetails request.
+            </summary>
+            <remarks>
+            <p>
+                (Required) The timestamped token value that was returned in the SetExpressCheckout
+                response and passed in the GetExpressCheckoutDetails request.</p>
+            <p>
+                Character length and limitations: 20 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalDoExpressCheckoutPaymentOperation.PayerId">
+            <summary>
+            Unique PayPal buyer account identification number as returned in the
+            GetExpressCheckoutDetails response.
+            </summary>
+            <remarks>
+            <p>
+                (Required) Unique PayPal buyer account identification number as returned in the
+                GetExpressCheckoutDetails response.</p>
+            <p>
+                Character length and limitations: 13 single-byte alphanumeric characters</p>
+            </remarks>
+        </member>
+        <member name="T:PayPal.Version940.PayPalSubscriberShippingAddress">
+            <summary>
+            Shipping information to send to PayPal for the subscription.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalSubscriberShippingAddress.Name">
+            <summary>
+            Person’s name associated with this shipping address.
+            </summary>
+            <remarks>
+             <p>Person’s name associated with this shipping address. It is required if using a shipping address.
+                You can specify up to 10 payments, where n is a digit between 0 and 9, inclusive.</p>
+             <p>Character length and limitations: 32 single-byte characters</p>
+             <p>SHIPTONAME is deprecated since version 63.0. Use PAYMENTREQUEST_0_SHIPTONAME instead.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPersonName.Salutation">
+            <summary>
+            Buyer’s salutation.
+            </summary>
+            <remarks>
+             <p>(Optional) Buyer’s salutation.</p>
+             <p>Character length and limitations: 20 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPersonName.FirstName">
+            <summary>
+            Buyer’s first name.
+            </summary>
+            <remarks>
+             <p>(Optional) Buyer’s first name.</p>
+             <p>Character length and limitations: 25 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPersonName.MiddleName">
+            <summary>
+            Buyer’s middle name.
+            </summary>
+            <remarks>
+             <p>(Optional) Buyer’s middle name.</p>
+             <p>Character length and limitations: 25 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPersonName.LastName">
+            <summary>
+            Buyer’s last name.
+            </summary>
+            <remarks>
+             <p>(Optional) Buyer’s last name.</p>
+             <p>Character length and limitations: 25 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalPersonName.Suffix">
+            <summary>
+            Buyer’s suffix.
+            </summary>
+            <remarks>
+             <p>(Optional) Buyer’s suffix.</p>
+             <p>Character length and limitations: 12 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="T:PayPal.Version940.PayPalPayerAddress">
+            <summary>
+            Address of the payer.
+            </summary>
+        </member>
+        <member name="P:PayPal.Version940.PayPalScheduleDetails.Description">
+            <summary>
+            Description of the recurring payment.
+            </summary>
+            <remarks>
+             <p>
+             <em>(Required)</em> Description of the recurring payment.
+             </p>
+             <div class="note">
+             <span class="notetitle">Note:</span>
+             <p>
+                 You must ensure that this field matches the corresponding billing agreement
+                 description included in the <samp class="codeph">SetExpressCheckout</samp>
+                 request.</p>
+             </div>
+             <p>Character length and limitations: 127 single-byte alphanumeric characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalScheduleDetails.MaxFailedPayments">
+            <summary>
+            Number of scheduled payments that can fail before the profile is automatically suspended.
+            </summary>
+            <remarks>
+             <p><em>(Optional)</em> Number of scheduled payments that can fail before the profile is
+                automatically suspended. An IPN message is sent to the merchant when the specified
+                number of failed payments is reached.</p>
+             <p>Character length and limitations: Number string representing an integer</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalScheduleDetails.AutoBillOutstandingAmount">
+            <summary>
+            Indicates whether you would like PayPal to automatically bill
+            the outstanding balance amount in the next billing cycle.
+            </summary>
+            <remarks>
+             <p><em>(Optional)</em> Indicates whether you would like PayPal to automatically bill
+                the outstanding balance amount in the next billing cycle. The outstanding balance
+                is the total amount of any previously failed scheduled payments that have yet to be
+                successfully paid. It is one of the following values:</p>
+             <br />
+             <ul>
+                <li><p><samp class="codeph">NoAutoBill</samp> – PayPal does not automatically bill
+                    the outstanding balance.</p></li>
+                <li><p><samp class="codeph">AddToNextBilling</samp> – PayPal automatically bills
+                    the outstanding balance.</p></li></ul>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalRecurringPaymentsProfileDetails.SubscriberName">
+            <summary>
+            Full name of the person receiving the product or service paid for by the recurring payment.
+            </summary>
+            <remarks>
+            <p>
+              (Optional) Full name of the person receiving the product or service paid for by the recurring payment.
+              If not present, the name in the buyer’s PayPal account is used.</p>
+            <p>
+              Character length and limitations: 32 single-byte characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalRecurringPaymentsProfileDetails.BillingStartDate">
+            <summary>
+            The date when billing for this profile begins.
+            </summary>
+            <remarks>
+            <p>
+              (Required) The date when billing for this profile begins.</p>
+            <p>
+              NOTE:The profile may take up to 24 hours for activation.</p>
+            <p>
+              Character length and limitations: Must be a valid date, in UTC/GMT format.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalRecurringPaymentsProfileDetails.ProfileReference">
+            <summary>
+            The merchant’s own unique reference or invoice number.
+            </summary>
+            <remarks>
+            <p>
+              (Optional) The merchant’s own unique reference or invoice number.</p>
+            <p>
+              Character length and limitations: 127 single-byte alphanumeric characters</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalCreateRecurringPaymentsProfileOperation.Token">
+            <summary>
+            A timestamped token, the value of which was returned in the response to the first call to SetExpressCheckout.
+            </summary>
+            <remarks>
+            <p>
+              A timestamped token, the value of which was returned in the response to the first call to SetExpressCheckout.
+              You can also use the token returned in the SetCustomerBillingAgreement response.
+              Either this token or a credit card number is required. If you include both token and credit card number,
+              the token is used and credit card number is ignored Call CreateRecurringPaymentsProfile once for each billing
+              agreement included in SetExpressCheckout request and use the same token for each call.
+              Each CreateRecurringPaymentsProfile request creates a single recurring payments profile.</p>
+            <p>
+              NOTE:Tokens expire after approximately 3 hours.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalCreateRecurringPaymentsProfileResult.ProfileId">
+            <summary>
+            An unique identifier for future reference to the details of this recurring payment.
+            </summary>
+            <remarks>
+             <p>An unique identifier for future reference to the details of this recurring payment.</p>
+             <p>Character length and limitations: Up to 14 single-byte alphanumeric characters.</p>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalCreateRecurringPaymentsProfileResult.ProfileStatus">
+            <summary>
+            Status of the recurring payment profile.
+            </summary>
+            <remarks>
+                  <p>Status of the recurring payment profile.</p>
+             <br />
+             <ul>
+               <li><p><samp class="codeph">ActiveProfile</samp> – The recurring payment profile has
+                    been successfully created and activated for scheduled payments according the
+                    billing instructions from the recurring payments profile.</p></li>
+               <li><p><samp class="codeph">PendingProfile</samp> – The system is in the process of
+                    creating the recurring payment profile. Please check your IPN messages for an
+                    update.</p></li>
+             </ul>
+            </remarks>
+        </member>
+        <member name="P:PayPal.Version940.PayPalApi.EndPoints">
+            <summary>
+            Sets up the end-point URL's used to make requests.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.ApiProtocol.NVP">
+            <summary>
+            Name value pair HTTP/HTTPS POST based protocol.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.ApiProtocol.SOAP">
+            <summary>
+            Simple Object Access Protocol.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.ApiCredentialType.Signature">
+            <summary>
+            Credential that is verified by a signature sent over HTTPS protocol.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.ApiCredentialType.Certificate">
+            <summary>
+            Credential that is verified by using a certificate and a private key to encript data.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.ApiEnvironmentType.Production">
+            <summary>
+            Production is the environment where the application work with real money and users.
+            </summary>
+        </member>
+        <member name="F:PayPal.Version940.ApiEnvironmentType.Sandbox">
+            <summary>
+            Sandbox is a testing environment, where you can test your application using only
+            play-money, and fake users.
+            </summary>
+        </member>
+    </members>
+</doc>

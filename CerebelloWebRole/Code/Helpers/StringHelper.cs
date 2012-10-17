@@ -117,7 +117,7 @@ namespace CerebelloWebRole.Code
         public static string NormalizeUserName(string userName)
         {
             var normalizedString = userName.ToLowerInvariant().Normalize(NormalizationForm.FormD);
-            var result = Regex.Replace(normalizedString, @"\W+", "");
+            var result = Regex.Replace(normalizedString, @"[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}]+", "");
             return result;
         }
 

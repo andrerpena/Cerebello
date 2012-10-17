@@ -11,7 +11,6 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Splits a SQL script containing GO statements.
         /// </summary>
-        /// <param name="db"></param>
         /// <param name="script"></param>
         public static string[] SplitScript(string script)
         {

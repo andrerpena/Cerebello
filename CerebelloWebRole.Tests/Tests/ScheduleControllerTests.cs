@@ -1030,7 +1030,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("01/10/2012", data.date);
             Assert.AreEqual("09:00", data.start);
             Assert.AreEqual("09:30", data.end);
-            Assert.AreEqual("segunda-feira, daqui há 19 dias", data.dateSpelled);
+            Assert.AreEqual("segunda-feira, daqui a 19 dias", data.dateSpelled);
         }
         #endregion
 

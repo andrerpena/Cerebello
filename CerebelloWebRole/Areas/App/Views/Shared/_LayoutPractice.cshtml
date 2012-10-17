@@ -1,9 +1,9 @@
-﻿@{
+﻿@using CerebelloWebRole.Code.Data
+@{
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
     var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
-    var practiceId = ViewBag.Practice.Id;
-    var user = (Cerebello.Model.User)ViewBag.DBUser;
+    var user = (UserInfo)ViewBag.UserInfo;
 }
 @section MainMenu {
     <ul class="tabNav">

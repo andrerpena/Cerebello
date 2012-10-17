@@ -141,7 +141,7 @@ namespace CerebelloWebRole.Code
 
             if (httpContext.Request.IsAuthenticated)
             {
-                identity = (FormsIdentity)httpContext.User.Identity;
+                var identity = (FormsIdentity)httpContext.User.Identity;
 
                 try
                 {

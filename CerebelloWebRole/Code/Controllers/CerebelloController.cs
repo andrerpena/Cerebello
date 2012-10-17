@@ -57,7 +57,9 @@ namespace CerebelloWebRole.Code
                     GravatarEmailHash = this.DbUser.Person.EmailGravatarHash,
                     // the following properties will only be set if the current user is a doctor
                     DoctorId = this.DbUser.DoctorId,
-                    DoctorUrlIdentifier = this.DbUser.Doctor != null ? this.DbUser.Doctor.UrlIdentifier : null
+                    DoctorUrlIdentifier = this.DbUser.Doctor != null ? this.DbUser.Doctor.UrlIdentifier : null,
+                    AdministratorId = this.DbUser.AdministratorId,
+                    IsOwner = this.DbUser.IsOwner,
                 };
         }
 

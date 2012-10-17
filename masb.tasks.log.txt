@@ -7,15 +7,31 @@ desc => descrição do que está sendo feito
 
 yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
-2012-08-## ##:00-##:## (#°##") ##   ######
+2012-10-## ##:00-##:## (#°##") ##   ######
 
--- dom #°##" (#°##")
-2012-10-14 16:15-##:## (#°##") ##   Implementando CreateRecurringPaymentsProfile: completando o modelo.
+-- qua #°##" (#°##")
+2012-10-17 15:30-18:15 (2°45")  8   Corrigindo testes, gerando novo script do banco, e comitando tudo.
+2012-10-17 13:45-14:45 (1°00") 10   Ids autoincremento para Doctor, Administrator e Secretary.
+2012-10-17 12:05-12:45 (0°40") 10   Corrigindo testes depois do merge com coisas do PayPal.
 
--- sab #°##" (#°##")
+-- ter 7°20" (#°##")
+2012-10-16 21:30-23:30 (2°00")  7   Corrigindo testes depois do merge com coisas do PayPal.
+2012-10-16 18:30-20:30 (2°00")  9   Corrigindo erros depois do merge com coisas do PayPal.
+                                    Organizei diagrama do modelo do banco de dados.
+2012-10-16 14:45-13:25 (0°40")  9   Commit do projeto do PayPal.
+2012-10-16 12:05-14:45 (2°40") 10   Merge do projeto com o git: paypal, contratos, e algumas correções e melhorias menores.
+
+-- seg 4°00" (2°00")
+2012-10-16 20:00-22:00 (2°00")  5   Convertendo o projeto do PayPal, fiz pull do git.
+2012-10-16 16:30-18:30 (2°00")  5   Configurando o VS2012: R#, Azure, atualizações, Tema, desativar intellitrace (melhorar perf.)
+
+-- dom 1°00" (1°00")
+2012-10-14 16:15-17:15 (1°00") 10   Implementando CreateRecurringPaymentsProfile: completando o modelo.
+
+-- sab 1°00" (0°54")
 2012-10-13 14:30-15:30 (1°00")  9   Implementando CreateRecurringPaymentsProfile: completando o modelo.
 
--- sex #°##" (#°##")
+-- sex 0°35" (0°35")
 2012-10-12 00:00-01:35 (0°35") 10   Implementando CreateRecurringPaymentsProfile: completando o modelo.
 
 -- qui #°##" (#°##")

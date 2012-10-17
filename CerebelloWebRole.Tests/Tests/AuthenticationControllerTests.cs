@@ -490,6 +490,7 @@ namespace CerebelloWebRole.Tests
                 }
 
                 controller = new AuthenticationController();
+                controller.UtcNowGetter = () => utcNow;
                 Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: true);
             }
             catch (Exception ex)
@@ -504,6 +505,8 @@ namespace CerebelloWebRole.Tests
             }
 
             // Asserting.
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+
             Assert.IsNotNull(actionResult);
             Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
             var redirectToRouteResult = (RedirectToRouteResult)actionResult;
@@ -795,7 +798,9 @@ namespace CerebelloWebRole.Tests
                 // however this does not prevent proper operation.
                 var authController = new AuthenticationController();
                 Mvc3TestHelper.SetupControllerForTesting(authController, CreateNewCerebelloEntities(), mr);
+                authController.UtcNowGetter = () => utcNow.AddDays(15.0); // this is up to 30 days
                 authController.VerifyPracticeAndEmail(token, practiceName);
+                Assert.IsTrue(authController.ModelState.IsValid, "Could not validate email.");
 
                 var mockController = new Mock<PracticeController>() { CallBase = true };
                 controller = mockController.Object;

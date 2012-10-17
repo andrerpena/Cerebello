@@ -69,15 +69,17 @@ namespace CerebelloWebRole.Tests
 
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
+
+            // executing the test
             controller.Create(formModel);
 
             Assert.IsTrue(controller.ModelState.IsValid);
 
             var anamneses = this.db.Anamnese.ToList();
-            var diagnoses = this.db.Diagnoses.ToList();
+            var symptoms = this.db.Symptoms.ToList();
 
             Assert.AreEqual(1, anamneses.Count);
-            Assert.AreEqual(2, diagnoses.Count);
+            Assert.AreEqual(2, symptoms.Count);
 
             Assert.AreEqual(formModel.Symptoms[0].Text, anamneses[0].Symptoms.ElementAt(0).Cid10Name);
             Assert.AreEqual(formModel.Symptoms[0].Cid10Code, anamneses[0].Symptoms.ElementAt(0).Cid10Code);
