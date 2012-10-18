@@ -466,7 +466,6 @@ namespace CerebelloWebRole.Tests
         public void VerifyPracticeAndEmail_ValidToken_ValidPractice_HappyPath()
         {
             AuthenticationController controller;
-            MockRepository mr;
             var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
             string practiceName;
             string token;
@@ -477,12 +476,12 @@ namespace CerebelloWebRole.Tests
                 string password;
                 var userId = CreateAccount_Helper(utcNow, out password, out token);
 
-                mr = new MockRepository();
+                var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
                 using (var db = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -524,18 +523,17 @@ namespace CerebelloWebRole.Tests
         public void VerifyPracticeAndEmail_EmptyToken_ValidPractice_HappyPath()
         {
             AuthenticationController controller;
-            MockRepository mr;
             var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
             string practiceName;
-            string token;
 
             try
             {
                 // Simulating account creation.
                 string password;
+                string token;
                 var userId = CreateAccount_Helper(utcNow, out password, out token);
 
-                mr = new MockRepository();
+                var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
                 using (var db = CreateNewCerebelloEntities())

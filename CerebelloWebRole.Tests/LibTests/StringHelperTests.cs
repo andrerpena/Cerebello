@@ -17,9 +17,12 @@ namespace CerebelloWebRole.Tests
     {
         class TestClass
         {
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
+            // The getters will be accessed via reflection.
             public string Name { get; set; }
             public int Age { get; set; }
             public TestClass Child { get; set; }
+            // ReSharper restore UnusedAutoPropertyAccessor.Local
         }
 
         [TestMethod]

@@ -1368,7 +1368,14 @@ Definições e termos
             if (cbhpm == null)
                 lock (locker)
                     if (cbhpm == null)
-                        cbhpm = Cbhpm.LoadData(pathOfTxt);
+                    {
+                        var cbhpm0 = Cbhpm.LoadData(pathOfTxt);
+
+                        // ensures that the instance returned from LoadData is well written,
+                        // and only then, it assigns the static variable.
+                        System.Threading.Thread.MemoryBarrier();
+                        cbhpm = cbhpm0;
+                    }
 
             var max = Math.Min(maxCount, cbhpm.Items.Values.OfType<Cbhpm.Proc>().Count());
 
@@ -1569,7 +1576,7 @@ GO
         internal static bool AttachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
-            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) {InitialCatalog = ""};
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
             var connStr = sqlConn2.ToString();
             var dbName = sqlConn1.Database;
 
@@ -1607,7 +1614,7 @@ GO
         internal static void DetachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
-            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) {InitialCatalog = ""};
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
             var connStr = sqlConn2.ToString();
 
             SqlConnection.ClearAllPools();
@@ -1615,7 +1622,7 @@ GO
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn) {CommandText = @"sp_detach_db CerebelloTEST"};
+                SqlCommand cmd = new SqlCommand("", conn) { CommandText = @"sp_detach_db CerebelloTEST" };
                 cmd.ExecuteNonQuery();
             }
         }

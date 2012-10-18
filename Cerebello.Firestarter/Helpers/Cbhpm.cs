@@ -72,7 +72,7 @@ namespace Cerebello.Firestarter.Helpers
                 { "inc", @"(?<INC>-|\d+)" },
             };
 
-            var patternProcLine = @"
+            const string patternProcLine = @"
                 ^
                 (?<CODE>\d\.\d\d\.\d\d\.\d\d\-\d)?\s*
                 (?<NAME>.+?)\s*
@@ -918,10 +918,7 @@ namespace Cerebello.Firestarter.Helpers
                 this.Anexos = new List<TextoAnexo>();
 
                 // Adding ProcTipo to the set of items that share the same code.
-                if (otherProcTipoInSet == null)
-                    this.SetOfProcTipos = new HashSet<ProcTipo>();
-                else
-                    this.SetOfProcTipos = otherProcTipoInSet.SetOfProcTipos;
+                this.SetOfProcTipos = otherProcTipoInSet == null ? new HashSet<ProcTipo>() : otherProcTipoInSet.SetOfProcTipos;
 
                 this.SetOfProcTipos.Add(this);
             }
@@ -944,7 +941,7 @@ namespace Cerebello.Firestarter.Helpers
 
             public ProcTipo FindInSetByName(string name)
             {
-                return this.SetOfProcTipos.Where(pt => pt.Nome == name).FirstOrDefault();
+                return this.SetOfProcTipos.FirstOrDefault(pt => pt.Nome == name);
             }
 
             public ICbhpmItem Parent
@@ -1096,8 +1093,6 @@ namespace Cerebello.Firestarter.Helpers
         //        return this.ToString().GetHashCode();
         //    }
         //}
-
-        public static string pathOfTxt { get; set; }
 
         public interface ICbhpmItem
         {

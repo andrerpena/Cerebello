@@ -219,8 +219,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var certificate in certificateModel.MedicalCertificates)
                 {
                     // find the differences between lists
-                    var mustBeAdded = new Queue<ModelMedicalCertificateField>(certificateModel.Fields.Where(cm => !certificate.Fields.Any(c => c.Name.ToLower() == cm.Name.ToLower())).ToList());
-                    var mustBeDeleted = new Queue<MedicalCertificateField>(certificate.Fields.Where(c => !certificateModel.Fields.Any(cm => cm.Name.ToLower() == c.Name.ToLower())).ToList());
+                    var mustBeAdded = new Queue<ModelMedicalCertificateField>(certificateModel.Fields.Where(cm => certificate.Fields.All(c => c.Name.ToLower() != cm.Name.ToLower())).ToList());
+                    var mustBeDeleted = new Queue<MedicalCertificateField>(certificate.Fields.Where(c => certificateModel.Fields.All(cm => cm.Name.ToLower() != c.Name.ToLower())).ToList());
 
                     while (mustBeAdded.Count > 0)
                     {

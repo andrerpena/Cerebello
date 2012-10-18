@@ -197,7 +197,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (findNextAvailable == true)
             {
                 var doctor = this.Doctor;
-                var db = this.db;
 
                 // Determining the date and time to start scanning for a free time slot.
                 DateTime localStartingFrom = localStartTime;
@@ -206,7 +205,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     localStartingFrom = localNow;
 
                 // Finding the next available time slot, and setting the startTime and endTime.
-                var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom);
+                var slot = FindNextFreeTimeInPracticeLocalTime(this.db, doctor, localStartingFrom);
                 localStartTime = slot.Item1;
                 localEndTime = slot.Item2;
             }
@@ -630,7 +629,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult FindNextFreeTime(string date, string time)
         {
             var doctor = this.Doctor;
-            var db = this.db;
 
             var localNow = this.GetPracticeLocalNow();
 
@@ -649,7 +647,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (localNow > localStartingFrom)
                 localStartingFrom = localNow;
 
-            var slot = this.FindNextFreeValidTimeInPracticeLocalTime(doctor, db, localNow, localStartingFrom);
+            var slot = this.FindNextFreeValidTimeInPracticeLocalTime(doctor, localNow, localStartingFrom);
 
             return this.Json(new
             {
@@ -667,13 +665,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        private Tuple<DateTime, DateTime> FindNextFreeValidTimeInPracticeLocalTime(Doctor doctor, CerebelloEntities db, DateTime localNow, DateTime localStartingFrom)
+        private Tuple<DateTime, DateTime> FindNextFreeValidTimeInPracticeLocalTime(Doctor doctor, DateTime localNow, DateTime localStartingFrom)
         {
             var localStartingFrom2 = localStartingFrom;
 
             while (true)
             {
-                var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom2);
+                var slot = FindNextFreeTimeInPracticeLocalTime(this.db, doctor, localStartingFrom2);
 
                 var vm = new AppointmentViewModel
                 {

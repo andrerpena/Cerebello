@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Code
         ///<exception cref="System.ArgumentNullException">If @enum is null</exception>
         public static String GetText(Object @enum)
         {
-            if (@enum == null) throw new ArgumentNullException("@enum");
+            if (@enum == null) throw new ArgumentNullException("enum");
             var enumType = @enum.GetType();
             if (!enumType.IsEnum)
                 throw new ArgumentException("passed object must be an enum");
@@ -71,7 +71,7 @@ namespace CerebelloWebRole.Code
         /// <exception cref="System.ArgumentNullException">Se enumType for nulo</exception>
         public static List<SelectListItem> GetSelectListItems(Type enumType)
         {
-            if (((Object)enumType) == null) throw new ArgumentNullException("aEnumType");
+            if (((Object)enumType) == null) throw new ArgumentNullException("enumType");
             if (!enumType.IsEnum)
                 throw new Exception("Type must be an Enum");
 
