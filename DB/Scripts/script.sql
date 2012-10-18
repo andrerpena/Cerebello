@@ -609,6 +609,22 @@ CREATE TABLE [dbo].[SYS_ActiveIngredient](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+/****** Object:  Table [dbo].[SYS_Cid10] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SYS_Cid10](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](300) NULL,
+	[Cat] [varchar](200) NULL,
+	[SubCat] [varchar](200) NULL,
+ CONSTRAINT [PK_SYS_Cid10] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 /****** Object:  Table [dbo].[SYS_ContractType] ******/
 SET ANSI_NULLS ON
 GO
