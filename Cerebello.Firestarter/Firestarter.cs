@@ -401,7 +401,7 @@ namespace Cerebello.Firestarter
             var practice = new Practice()
             {
                 Name = "Consultório do Dr. House",
-                UrlIdentifier = "consultoriodrhourse",
+                UrlIdentifier = "consultoriodrhouse",
                 CreatedOn = new DateTime(2007, 07, 03, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                 VerificationDate = new DateTime(2007, 07, 12, 0, 0, 0, DateTimeKind.Utc),

@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     /// <summary>
     /// Controller for users in the practice.
-    /// Base URL: http://www.cerebello.com.br/p/consultoriodrhourse/users
+    /// Base URL: http://www.cerebello.com.br/p/consultoriodrhouse/users
     /// </summary>
     public class UsersController : PracticeController
     {
@@ -76,7 +76,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <summary>
         /// Gets informations for the root page of this controller.
         /// This page consists of a list of users.
-        /// URL: http://www.cerebello.com.br/p/consultoriodrhourse/users
+        /// URL: http://www.cerebello.com.br/p/consultoriodrhouse/users
         /// </summary>
         /// <returns></returns>
         public ActionResult Index()
@@ -109,7 +109,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <summary>
         /// Gets informations for the page used to create new users.
         /// This page has no informations at all.
-        /// URL: http://www.cerebello.com.br/p/consultoriodrhourse/users/create
+        /// URL: http://www.cerebello.com.br/p/consultoriodrhouse/users/create
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -180,7 +180,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Note: User name cannot be edited, and should not be validated.
                 this.ModelState.ClearPropertyErrors(() => formModel.UserName);
 
-                user = db.Users.Where(p => p.Id == formModel.Id).First();
+                user = db.Users.First(p => p.Id == formModel.Id);
                 user.Person.FullName = formModel.FullName;
                 user.Person.Gender = (short)formModel.Gender;
 
@@ -192,9 +192,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // UserName must not be null nor empty.
                 if (string.IsNullOrWhiteSpace(formModel.UserName))
                 {
-                    this.ModelState.AddModelError(
-                        () => formModel.UserName,
-                        "Nome de usuário inválido.");
+                    this.ModelState.AddModelError(() => formModel.UserName, "Nome de usuário inválido.");
                 }
 
                 var loggedUser = this.DbUser;
@@ -378,9 +376,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // todo: there is a concurrency problem here.
             int cnt = 2;
-            while (db.Doctors.Where(d => d.UrlIdentifier == urlId
-                && d.Users.FirstOrDefault().PracticeId == practiceId
-                && d.Users.FirstOrDefault().Person.FullName != fullName).Any())
+            while (db.Doctors.Any(d => d.UrlIdentifier == urlId
+                                       && d.Users.FirstOrDefault().PracticeId == practiceId
+                                       && d.Users.FirstOrDefault().Person.FullName != fullName))
             {
                 urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
 
@@ -393,7 +391,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var user = (User)db.Users.Where(p => p.Id == id).First();
+            var user = (User)db.Users.First(p => p.Id == id);
             var model = GetViewModel(user, this.Practice);
 
             return View(model);
@@ -417,7 +415,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    var user = db.Users.Where(m => m.Id == id).First();
+                    var user = db.Users.First(m => m.Id == id);
 
                     if (user.IsOwner)
                     {
@@ -503,7 +501,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var newPasswordHash = CipherHelper.Hash(vm.Password, loggedUser.PasswordSalt);
 
                 // Salvando informações do usuário.
-                var user = this.db.Users.Where(u => u.Id == loggedUser.Id).Single();
+                var user = this.db.Users.Single(u => u.Id == loggedUser.Id);
                 user.Password = newPasswordHash;
                 user.LastActiveOn = this.GetUtcNow();
 
@@ -536,19 +534,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             try
             {
-                var request = HttpWebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");
+                var request = WebRequest.Create("http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do");
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
 
-                using (StreamWriter requestWriter = new StreamWriter(request.GetRequestStream()))
+                using (var requestWriter = new StreamWriter(request.GetRequestStream()))
                     requestWriter.Write(String.Format("relaxation={0}&TipoCep=ALL&semelhante=N&cfm=1&Metodo=listaLogradouro&TipoConsulta=relaxation&StartRow=1&EndRow=10", cep));
 
                 var response = request.GetResponse();
 
-                HtmlDocument document = new HtmlDocument();
+                var document = new HtmlDocument();
                 document.Load(response.GetResponseStream());
 
-                CEPInfo cepInfo = new CEPInfo()
+                var cepInfo = new CEPInfo()
                 {
                     Street = document.DocumentNode.SelectSingleNode("//*[@id='lamina']/div[2]/div[2]/div[2]/div/table[1]/tr/td[1]").InnerText,
                     Neighborhood = document.DocumentNode.SelectSingleNode("//*[@id='lamina']/div[2]/div[2]/div[2]/div/table[1]/tr/td[2]").InnerText,

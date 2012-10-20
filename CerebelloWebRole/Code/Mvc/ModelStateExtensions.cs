@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,7 +31,7 @@ namespace CerebelloWebRole.Code.Mvc
         /// <param name="modelState">ModelState objeto to add the validation message to.</param>
         /// <param name="expression">Expression tree that goes to the property that is not valid.</param>
         /// <param name="errorMessage">Validation message to associate with the property.</param>
-        public static void AddModelError(this ModelStateDictionary modelState, Expression<Func<object>> expression, string errorMessage)
+        public static void AddModelError(this ModelStateDictionary modelState, Expression<Func<object>> expression, [Localizable(true)] string errorMessage)
         {
             // todo: this method should accept a resource name, instead of an error message.
 

@@ -206,24 +206,43 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 MailMessage message;
 
                 {
-                    // setting verification info
-                    user.Practice.VerificationToken = Guid.NewGuid().ToString("N");
-                    user.Practice.VerificationExpirationDate = utcNow.AddDays(30);
+                    TokenId tokenId;
 
-                    // rendering message body from partial view
-                    var partialViewModel = new ConfirmationEmailViewModel
+                    // Setting verification token.
+                    // Note: tokens are safe to save even if validation fails.
+                    using (var db2 = this.CreateNewCerebelloEntities())
+                    {
+                        var token = db2.GLB_Token.CreateObject();
+                        token.Value = Guid.NewGuid().ToString("N");
+                        token.Type = "VerifyPracticeAndEmail";
+                        token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier, user.UserName);
+                        token.ExpirationDate = utcNow.AddDays(30);
+                        db2.GLB_Token.AddObject(token);
+                        db2.SaveChanges();
+
+                        tokenId = new TokenId(token.Id, token.Value);
+                    }
+
+                    // Rendering message bodies from partial view.
+                    var partialViewModel = new EmailViewModel
                     {
                         PersonName = user.Person.FullName,
                         UserName = user.UserName,
-                        Token = user.Practice.VerificationToken,
+                        Token = tokenId.ToString(),
                         PracticeUrlIdentifier = user.Practice.UrlIdentifier,
                     };
-                    var body = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
+                    var bodyText = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
+
+                    partialViewModel.IsBodyHtml = true;
+                    var bodyHtml = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
 
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
-                    string subject = "Bem vindo ao Cerebello! Por favor, confirme sua conta.";
 
-                    message = this.CreateEmailMessage(toAddress, subject, body, isBodyHtml: true);
+                    message = this.CreateEmailMessage(
+                        toAddress,
+                        "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.",
+                        bodyHtml,
+                        bodyText);
                 }
 
                 // If the ModelState is still valid, then save objects to the database,
@@ -249,6 +268,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                             RememberMe = false,
                             UserNameOrEmail = registrationData.UserName,
                         };
+
                         if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, db, out user))
                         {
                             throw new Exception("Login cannot fail.");
@@ -279,54 +299,270 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             return View(new VerifyPracticeAndEmailViewModel { Practice = practice });
         }
 
-        [AcceptVerbs(new string[] { "Get", "Post" })]
-        public ActionResult VerifyPracticeAndEmail(string token, string practice)
+        #region ResetPassword: Request
+        [AcceptVerbs(new[] { "Get", "Post" })]
+        public ActionResult VerifyPracticeAndEmail(VerifyPracticeAndEmailViewModel viewModel, bool allowEditToken = false)
         {
-            if (!string.IsNullOrEmpty(token))
+            this.ViewBag.AllowEditToken = allowEditToken || !this.ModelState.IsValid;
+
+            var utcNow = this.GetUtcNow();
+
+            User user = null;
+
+            // If user is not logged yet, we will use the userName and password to login.
+            if (this.Request.IsAuthenticated)
             {
-                var utcNow = this.GetUtcNow();
+                var authenticatedPrincipal = this.User as AuthenticatedPrincipal;
 
-                // getting practice verification data by token
-                var practiceVerification = this.db.Practices
-                    .Where(p => p.VerificationToken == token)
-                    .Where(p => p.UrlIdentifier == practice)
-                    .SingleOrDefault();
+                if (authenticatedPrincipal == null)
+                    throw new Exception(
+                        "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
 
-                if (practiceVerification == null)
+                user = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+            }
+            else
+            {
+                var loginModel = new LoginViewModel
                 {
-                    this.ModelState.AddModelError("Token", "Token is not valid.");
+                    PracticeIdentifier = viewModel.Practice,
+                    UserNameOrEmail = viewModel.UserNameOrEmail,
+                    Password = viewModel.Password,
+                };
+
+                var cookieCollection = this.HttpContext.Response.Cookies;
+                if (!this.ModelState.IsValid ||
+                    !SecurityManager.Login(cookieCollection, loginModel, this.db, out user))
+                {
+                    ViewBag.LoginFailed = true;
                 }
                 else
                 {
-                    if (practiceVerification.VerificationExpirationDate == null)
-                        throw new Exception("VerificationExpirationDate must have a value when the practice is being verified.");
+                    user.LastActiveOn = this.GetUtcNow();
 
-                    // setting practice verification data
-                    if (utcNow <= practiceVerification.VerificationExpirationDate)
-                    {
-                        practiceVerification.VerificationDate = utcNow;
-                    }
-                    else
-                    {
-                        this.ModelState.AddModelError("Token", "Token has expired.");
-                    }
+                    this.db.SaveChanges();
 
-                    practiceVerification.VerificationToken = null;
-                    practiceVerification.VerificationExpirationDate = null;
-
-                    // Saving changes.
-                    // Note: even if ModelState.IsValid is false,
-                    // we need to save the changes to invalidate token when it expires.
-                    db.SaveChanges();
-                }
-
-                if (this.ModelState.IsValid)
-                {
-                    return this.RedirectToAction("Welcome", "PracticeHome", new { area = "App", practice = practiceVerification.UrlIdentifier });
+                    if (loginModel.Password == Constants.DEFAULT_PASSWORD)
+                        throw new Exception("Cannot create initial user with a default password.");
                 }
             }
 
-            return View(new VerifyPracticeAndEmailViewModel { Practice = practice });
+            if (user == null)
+                this.ModelState.AddModelError(() => viewModel.UserNameOrEmail, "Nome de usuário ou senha incorretos.");
+
+            var tokenId = new TokenId(viewModel.Token);
+
+            // Getting verification token, using the informations.
+            var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.Practice, user.UserName);
+            var token = this.db.GLB_Token.SingleOrDefault(tk =>
+                                                          tk.Id == tokenId.Id
+                                                          && tk.Value == tokenId.Value
+                                                          && tk.Type == "VerifyPracticeAndEmail"
+                                                          && tk.Name == tokenName);
+
+            if (token == null)
+                this.ModelState.AddModelError(() => viewModel.Token, "Token não foi achado.");
+
+            var practice = this.db.Practices
+                .SingleOrDefault(p => p.UrlIdentifier == viewModel.Practice);
+
+            if (practice == null)
+                this.ModelState.AddModelError(() => viewModel.Practice, "Consultório não foi achado.");
+
+            if (token != null && practice != null)
+            {
+                // setting practice verification data
+                if (utcNow <= token.ExpirationDate)
+                {
+                    practice.VerificationDate = utcNow;
+                }
+                else
+                {
+                    this.ModelState.AddModelError(() => viewModel.Token, "Token passou do prazo de validade.");
+                }
+
+                // Destroying token... it has been used with success, and is no longer needed.
+                this.db.GLB_Token.DeleteObject(token);
+
+                // Saving changes.
+                // Note: even if ModelState.IsValid is false,
+                // we need to save the changes to invalidate token when it expires.
+                this.db.SaveChanges();
+            }
+
+            if (this.ModelState.IsValid)
+            {
+                return this.RedirectToAction("Welcome", "PracticeHome",
+                                    new { area = "App", practice = practice.UrlIdentifier });
+            }
+
+            viewModel.Password = ""; // cannot allow password going to the view.
+            return View(viewModel);
         }
+
+        public ActionResult ResetPasswordRequest()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public ActionResult ResetPasswordRequest(ResetPasswordRequestViewModel viewModel)
+        {
+            var user = SecurityManager.GetUser(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+
+            var utcNow = this.GetUtcNow();
+
+            // Creating confirmation email, with the token.
+            MailMessage message;
+
+            #region Creating token and e-mail message
+
+            {
+                // Setting verification token.
+                // Note: tokens are safe to save even if validation fails.
+                TokenId tokenId;
+                using (var db2 = this.CreateNewCerebelloEntities())
+                {
+                    var token = db2.GLB_Token.CreateObject();
+                    token.Value = Guid.NewGuid().ToString("N");
+                    token.Type = "ResetPassword";
+                    token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier,
+                                               user.UserName);
+                    token.ExpirationDate = utcNow.AddDays(30);
+                    db2.GLB_Token.AddObject(token);
+                    db2.SaveChanges();
+
+                    tokenId = new TokenId(token.Id, token.Value);
+                }
+
+                // Rendering message bodies from partial view.
+                var partialViewModel = new EmailViewModel
+                                           {
+                                               PersonName = user.Person.FullName,
+                                               UserName = user.UserName,
+                                               Token = tokenId.ToString(),
+                                               PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                           };
+                var bodyText = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
+
+                partialViewModel.IsBodyHtml = true;
+                var bodyHtml = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
+
+                var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
+
+                message = this.CreateEmailMessage(
+                    toAddress,
+                    "Redefinir conta no Cerebello.",
+                    bodyHtml,
+                    bodyText);
+            }
+
+            #endregion
+
+            // If the ModelState is still valid, then save objects to the database,
+            // and send confirmation email message to the user.
+            using (message)
+            {
+                if (this.ModelState.IsValid)
+                {
+                    // Sending the confirmation e-mail to the new user.
+                    this.SendEmail(message);
+
+                    return RedirectToAction("ResetPasswordEmailSent");
+                }
+            }
+
+            return this.View(viewModel);
+        }
+
+        public ActionResult ResetPasswordManually()
+        {
+            return this.View();
+        }
+
+        public ActionResult ResetPasswordEmailSent()
+        {
+            return this.View();
+        }
+        #endregion
+
+        #region ResetPassword: Action
+        public ActionResult ResetPassword(ResetPasswordViewModel viewModel, bool allowEditToken = false)
+        {
+            this.ViewBag.AllowEditToken = allowEditToken;
+
+            return this.View();
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordViewModel viewModel)
+        {
+            var utcNow = this.GetUtcNow();
+
+            var user = SecurityManager.GetUser(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+
+            if (user != null)
+            {
+                // Getting token information, so that we can locate the token in the database.
+                var tokenInfo = new TokenId(viewModel.Token);
+
+                var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.PracticeIdentifier, user.UserName);
+
+                // Destroying the token.
+                var token = this.db.GLB_Token.SingleOrDefault(tk =>
+                                                              tk.Id == tokenInfo.Id
+                                                              && tk.Value == tokenInfo.Value
+                                                              && tk.ExpirationDate >= utcNow
+                                                              && tk.Type == "ResetPassword"
+                                                              && tk.Name == tokenName);
+
+                if (token != null && this.ModelState.IsValid)
+                {
+                    SecurityManager.SetUserPassword(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail, viewModel.NewPassword);
+
+                    this.db.GLB_Token.DeleteObject(token);
+
+                    this.db.SaveChanges();
+
+                    return this.RedirectToAction("ResetPasswordSuccess");
+                }
+            }
+
+            return this.View(viewModel);
+        }
+
+        public ActionResult ResetPasswordCancel(ResetPasswordViewModel viewModel)
+        {
+            var utcNow = this.GetUtcNow();
+
+            var user = SecurityManager.GetUser(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+
+            if (user != null)
+            {
+                // Getting token information, so that we can locate the token in the database.
+                var tokenInfo = new TokenId(viewModel.Token);
+
+                var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.PracticeIdentifier, user.UserName);
+
+                // Destroying the token.
+                var token = this.db.GLB_Token.SingleOrDefault(tk =>
+                                                              tk.Id == tokenInfo.Id
+                                                              && tk.Value == tokenInfo.Value
+                                                              && tk.ExpirationDate >= utcNow
+                                                              && tk.Type == "ResetPassword"
+                                                              && tk.Name == tokenName);
+
+                this.db.GLB_Token.DeleteObject(token);
+
+                this.db.SaveChanges();
+            }
+
+            return this.View();
+        }
+
+        public ActionResult ResetPasswordSuccess()
+        {
+            return this.View();
+        }
+        #endregion
     }
 }

@@ -61,6 +61,9 @@
     <Reference Include="itextsharp.xtra">
       <HintPath>..\ThirdParty\itextsharp.xtra.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\ThirdParty\JetBrains\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
@@ -271,6 +274,7 @@
     <Compile Include="Code\Security\SecurityManager.cs" />
     <Compile Include="Code\Security\SecurityToken.cs" />
     <Compile Include="Code\Security\SecurityTokenHelper.cs" />
+    <Compile Include="Code\TokenId.cs" />
     <Compile Include="Code\Validation\EmailAddressAttribute.cs" />
     <Compile Include="Code\Validation\UrlAttribute.cs" />
     <Compile Include="Code\Validation\UserNameAttribute.cs" />
@@ -279,7 +283,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ConfirmationEmailViewModel.cs" />
+    <Compile Include="Models\ResetPasswordViewModel.cs" />
+    <Compile Include="Models\EmailViewModel.cs" />
+    <Compile Include="Models\ResetPasswordRequestViewModel.cs" />
     <Compile Include="Models\VerifyPracticeAndEmailViewModel.cs" />
     <Compile Include="Models\CreatePracticeViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -591,6 +597,13 @@
     <Content Include="Views\Authentication\ConfirmationEmail.cshtml" />
     <Content Include="Views\Authentication\VerifyPracticeAndEmail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Phone.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordRequest.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordEmailSent.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordEmail.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordCancel.cshtml" />
+    <Content Include="Views\Authentication\ResetPassword.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordManually.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

@@ -773,6 +773,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<Symptom> _Symptoms;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<GLB_Token> GLB_Token
+        {
+            get
+            {
+                if ((_GLB_Token == null))
+                {
+                    _GLB_Token = base.CreateObjectSet<GLB_Token>("GLB_Token");
+                }
+                return _GLB_Token;
+            }
+        }
+        private ObjectSet<GLB_Token> _GLB_Token;
 
         #endregion
 
@@ -1104,6 +1120,14 @@ namespace Cerebello.Model
         public void AddToSymptoms(Symptom symptom)
         {
             base.AddObject("Symptoms", symptom);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the GLB_Token EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToGLB_Token(GLB_Token gLB_Token)
+        {
+            base.AddObject("GLB_Token", gLB_Token);
         }
 
         #endregion
@@ -5585,6 +5609,166 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="GLB_Token")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class GLB_Token : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new GLB_Token object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="expirationDate">Initial value of the ExpirationDate property.</param>
+        /// <param name="type">Initial value of the Type property.</param>
+        /// <param name="name">Initial value of the Name property.</param>
+        /// <param name="value">Initial value of the Value property.</param>
+        public static GLB_Token CreateGLB_Token(global::System.Int32 id, global::System.DateTime expirationDate, global::System.String type, global::System.String name, global::System.String value)
+        {
+            GLB_Token gLB_Token = new GLB_Token();
+            gLB_Token.Id = id;
+            gLB_Token.ExpirationDate = expirationDate;
+            gLB_Token.Type = type;
+            gLB_Token.Name = name;
+            gLB_Token.Value = value;
+            return gLB_Token;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime ExpirationDate
+        {
+            get
+            {
+                return _ExpirationDate;
+            }
+            set
+            {
+                OnExpirationDateChanging(value);
+                ReportPropertyChanging("ExpirationDate");
+                _ExpirationDate = StructuralObject.SetValidValue(value, "ExpirationDate");
+                ReportPropertyChanged("ExpirationDate");
+                OnExpirationDateChanged();
+            }
+        }
+        private global::System.DateTime _ExpirationDate;
+        partial void OnExpirationDateChanging(global::System.DateTime value);
+        partial void OnExpirationDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Type
+        {
+            get
+            {
+                return _Type;
+            }
+            set
+            {
+                OnTypeChanging(value);
+                ReportPropertyChanging("Type");
+                _Type = StructuralObject.SetValidValue(value, false, "Type");
+                ReportPropertyChanged("Type");
+                OnTypeChanged();
+            }
+        }
+        private global::System.String _Type;
+        partial void OnTypeChanging(global::System.String value);
+        partial void OnTypeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Value
+        {
+            get
+            {
+                return _Value;
+            }
+            set
+            {
+                OnValueChanging(value);
+                ReportPropertyChanging("Value");
+                _Value = StructuralObject.SetValidValue(value, false, "Value");
+                ReportPropertyChanged("Value");
+                OnValueChanged();
+            }
+        }
+        private global::System.String _Value;
+        partial void OnValueChanging(global::System.String value);
+        partial void OnValueChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="HealthEnsurance")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -8303,54 +8487,6 @@ namespace Cerebello.Model
         private Nullable<global::System.DateTime> _VerificationDate;
         partial void OnVerificationDateChanging(Nullable<global::System.DateTime> value);
         partial void OnVerificationDateChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String VerificationToken
-        {
-            get
-            {
-                return _VerificationToken;
-            }
-            set
-            {
-                OnVerificationTokenChanging(value);
-                ReportPropertyChanging("VerificationToken");
-                _VerificationToken = StructuralObject.SetValidValue(value, true, "VerificationToken");
-                ReportPropertyChanged("VerificationToken");
-                OnVerificationTokenChanged();
-            }
-        }
-        private global::System.String _VerificationToken;
-        partial void OnVerificationTokenChanging(global::System.String value);
-        partial void OnVerificationTokenChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.DateTime> VerificationExpirationDate
-        {
-            get
-            {
-                return _VerificationExpirationDate;
-            }
-            set
-            {
-                OnVerificationExpirationDateChanging(value);
-                ReportPropertyChanging("VerificationExpirationDate");
-                _VerificationExpirationDate = StructuralObject.SetValidValue(value, "VerificationExpirationDate");
-                ReportPropertyChanged("VerificationExpirationDate");
-                OnVerificationExpirationDateChanged();
-            }
-        }
-        private Nullable<global::System.DateTime> _VerificationExpirationDate;
-        partial void OnVerificationExpirationDateChanging(Nullable<global::System.DateTime> value);
-        partial void OnVerificationExpirationDateChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

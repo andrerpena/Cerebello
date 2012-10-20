@@ -167,7 +167,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     start = localNow.ToString("HH:mm");
             }
 
-            DateTime localDateAlone = (date ?? localNow).Date;
+            DateTime localDateAlone = date.Value.Date;
 
             //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
@@ -451,7 +451,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 new Person
                                     {
                                         FullName = formModel.PatientName,
-                                        Gender = (short) formModel.PatientGender,
+                                        Gender = (short)formModel.PatientGender,
                                         DateOfBirth =
                                             ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
                                         CreatedOn = this.GetUtcNow()
@@ -711,12 +711,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var practice = doctor.Users.FirstOrDefault().Practice;
 
-            DateTime[] validLocalDates;
             var currentDateStartLocal = startingFromLocalTime.Date;
             while (true)
             {
                 // getting a list of valid dates to look for slots
                 // - days-off are invalid
+                DateTime[] validLocalDates;
                 {
                     var currentDateEndLocal = currentDateStartLocal.AddDays(30.0);
 
@@ -741,7 +741,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var eachValidLocalDate in validLocalDates)
                 {
                     var currentDateStartUtc = ConvertToUtcDateTime(practice, eachValidLocalDate);
-                    var currentDateEndUtc = currentDateStartUtc.AddDays(1.0);
+                    var currentDateEndUtc = ConvertToUtcDateTime(practice, eachValidLocalDate.AddDays(1.0).AddTicks(-1));
 
                     // take all appointments of that day
                     var appointments = db.Appointments

@@ -40,8 +40,51 @@ namespace CerebelloWebRole.Code
             if (practice == null) throw new ArgumentNullException("practice");
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
-            var result = TimeZoneInfo.ConvertTimeToUtc(practiceDateTime, timeZoneInfo);
-            return result;
+            if (timeZoneInfo.IsInvalidTime(practiceDateTime))
+            {
+                var invalidIntervals = timeZoneInfo.GetAdjustmentRules()
+                    .Where(ar => ar.DaylightDelta != TimeSpan.Zero)
+                    .Select(ar => ar.DaylightDelta > TimeSpan.Zero
+                        ? new { Delta = ar.DaylightDelta, Transition = ar.DaylightTransitionStart, Date = ar.DateStart }
+                        : new { Delta = -ar.DaylightDelta, Transition = ar.DaylightTransitionEnd, Date = ar.DateStart })
+                    .Select(x => new { Start = GetTransitionDateTime(x.Transition, x.Date.Year), x.Delta })
+                    .Select(x => new { x.Start, x.Delta, End = (x.Start + x.Delta).AddTicks(-1) })
+                    .Select(x => new { StartExclusive = x.Start.AddTicks(-1), EndExclusive = x.End.AddTicks(1) })
+                    .Where(x => x.StartExclusive < practiceDateTime && x.EndExclusive > practiceDateTime)
+                    .ToList();
+
+                var invalidInterval = invalidIntervals.First();
+
+                var dateTime = practiceDateTime.Day == invalidInterval.StartExclusive.Day
+                                   ? invalidInterval.StartExclusive
+                                   : invalidInterval.EndExclusive;
+
+                var result = TimeZoneInfo.ConvertTimeToUtc(dateTime, timeZoneInfo);
+                return result;
+            }
+            else
+            {
+                var result = TimeZoneInfo.ConvertTimeToUtc(practiceDateTime, timeZoneInfo);
+                return result;
+            }
+        }
+
+        private static DateTime GetTransitionDateTime(TimeZoneInfo.TransitionTime transition, int year)
+        {
+            DateTime date;
+            if (transition.IsFixedDateRule)
+            {
+                date = new DateTime(year, transition.Month, transition.Day) + transition.TimeOfDay.TimeOfDay;
+            }
+            else
+            {
+                date = new DateTime(year, transition.Month, 1);
+                date = date.DayOfWeekFromNow(transition.DayOfWeek, transition.Week - 1);
+                while (date.Month != transition.Month)
+                    date = date.AddDays(-7);
+            }
+            date = date + transition.TimeOfDay.TimeOfDay;
+            return date;
         }
 
         public DateTime GetPracticeLocalNow()
@@ -55,7 +98,7 @@ namespace CerebelloWebRole.Code
 
             // setting up user
             Debug.Assert(this.DbUser != null);
-            
+
             // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
             var controllerName = this.RouteData.Values["controller"] as string;

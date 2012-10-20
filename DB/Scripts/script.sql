@@ -295,6 +295,23 @@ CREATE TABLE [dbo].[ExaminationResult](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+/****** Object:  Table [dbo].[GLB_Token] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[GLB_Token](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [char](32) NOT NULL,
+	[ExpirationDate] [datetime] NOT NULL,
+	[Type] [varchar](50) NOT NULL,
+	[Name] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_Token] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 /****** Object:  Table [dbo].[HealthEnsurance] ******/
 SET ANSI_NULLS ON
 GO
@@ -522,8 +539,6 @@ CREATE TABLE [dbo].[Practice](
 	[OwnerId] [int] NULL,
 	[WindowsTimeZoneId] [varchar](31) NOT NULL,
 	[VerificationDate] [datetime] NULL,
-	[VerificationToken] [varchar](32) NULL,
-	[VerificationExpirationDate] [datetime] NULL,
 	[ShowWelcomeScreen] [bit] NOT NULL,
 	[ActiveAccountContractId] [int] NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 

@@ -1,32 +1,56 @@
-﻿@model CerebelloWebRole.Models.ConfirmationEmailViewModel
+﻿@using CerebelloWebRole.Models
+@model EmailViewModel
 @{
-    var urlWithToken = this.Url.Action("VerifyPracticeAndEmail", "Authentication", new { Model.Token, practice = this.Model.PracticeUrlIdentifier }, "http");
-    var urlWithoutToken = this.Url.Action("VerifyPracticeAndEmail", "Authentication", new { practice = this.Model.PracticeUrlIdentifier }, "http");
+    var urlWithData = this.Url.Action("VerifyPracticeAndEmail", "Authentication",
+        new { Model.Token, practice = this.Model.PracticeUrlIdentifier }, "http");
 }
-<html>
-<body>
-    Olá @Model.PersonName,<br />
-    <p>
-        Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
-        nova conta no cerebello.com, o seu software de gerenciamento de consultório.
-    </p>
-    <p>
-        Por favor, visite o link abaixo para confirmar o seu e-mail e a criação de sua conta.
-    </p>
-    <p>
-        <a href="@urlWithToken">@urlWithToken</a>
-    </p>
-    <p>
-        ... ou então ...</p>
-    <p>
-        visite o link abaixo e entre com o código <span style="color: Blue">@Model.Token</span>
-        na caixa de texto.</p>
-    <p>
-        <a href="@urlWithoutToken">@urlWithoutToken</a>
-    </p>
-    <p>
-        <span style="color: Red">ATENÇÃO: </span>Se a verificação não ocorrer em até 30
-        dias, o processo de cadastro será cancelado.
-    </p>
-</body>
-</html>
+@if (this.Model.IsBodyHtml)
+{
+    <html>
+    <head>
+        <title>E-mail de confirmação</title>
+    </head>
+    <body>
+        Olá @Model.PersonName,<br />
+        <p>
+            Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
+                nova conta no cerebello.com, o seu software de gerenciamento de consultório.
+        </p>
+        <p>
+            Por favor, visite o link seguinte para confirmar o seu e-mail e a criação de sua conta.
+        </p>
+        <p>
+            <a href="@urlWithData">Confirmar meu e-mail</a>
+        </p>
+        <p>
+            <span style="color: Red">ATENÇÃO: </span>Se a verificação não ocorrer em até 30
+                dias, o processo de cadastro será cancelado.
+        </p>
+    </body>
+    </html>
+
+    return;
+}
+E-mail de confirmação
+=====================
+
+Olá @Html.Raw(Model.PersonName),
+
+    Este e-mail está sendo enviado para
+confirmar sua solicitação de criação
+de uma nova conta no cerebello.com,
+o seu software de gerenciamento de
+consultório.
+
+    Por favor, visite o link seguinte
+para confirmar o seu e-mail e a
+criação de sua conta:
+@Html.Raw(urlWithData)
+
+ATENÇÃO: Se a verificação não ocorrer em até 30
+dias, o processo de cadastro será cancelado.
+
+    Se você não requisitou a criação de uma
+conta, ignore este e-mail que nada será feito.
+
+Equipe Cerebello.com
