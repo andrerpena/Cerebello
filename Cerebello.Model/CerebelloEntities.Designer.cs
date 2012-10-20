@@ -789,6 +789,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<GLB_Token> _GLB_Token;
+           
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<SYS_Cid10> SYS_Cid10
+        {
+            get
+            {
+                if ((_SYS_Cid10 == null))
+                {
+                    _SYS_Cid10 = base.CreateObjectSet<SYS_Cid10>("SYS_Cid10");
+                }
+                return _SYS_Cid10;
+            }
+        }
+        private ObjectSet<SYS_Cid10> _SYS_Cid10;
 
         #endregion
 
@@ -1128,6 +1144,14 @@ namespace Cerebello.Model
         public void AddToGLB_Token(GLB_Token gLB_Token)
         {
             base.AddObject("GLB_Token", gLB_Token);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the SYS_Cid10 EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSYS_Cid10(SYS_Cid10 sYS_Cid10)
+        {
+            base.AddObject("SYS_Cid10", sYS_Cid10);
         }
 
         #endregion
@@ -9505,6 +9529,134 @@ namespace Cerebello.Model
                 }
             }
         }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="SYS_Cid10")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class SYS_Cid10 : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new SYS_Cid10 object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        public static SYS_Cid10 CreateSYS_Cid10(global::System.Int32 id)
+        {
+            SYS_Cid10 sYS_Cid10 = new SYS_Cid10();
+            sYS_Cid10.Id = id;
+            return sYS_Cid10;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, true, "Name");
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Cat
+        {
+            get
+            {
+                return _Cat;
+            }
+            set
+            {
+                OnCatChanging(value);
+                ReportPropertyChanging("Cat");
+                _Cat = StructuralObject.SetValidValue(value, true, "Cat");
+                ReportPropertyChanged("Cat");
+                OnCatChanged();
+            }
+        }
+        private global::System.String _Cat;
+        partial void OnCatChanging(global::System.String value);
+        partial void OnCatChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String SubCat
+        {
+            get
+            {
+                return _SubCat;
+            }
+            set
+            {
+                OnSubCatChanging(value);
+                ReportPropertyChanging("SubCat");
+                _SubCat = StructuralObject.SetValidValue(value, true, "SubCat");
+                ReportPropertyChanged("SubCat");
+                OnSubCatChanged();
+            }
+        }
+        private global::System.String _SubCat;
+        partial void OnSubCatChanging(global::System.String value);
+        partial void OnSubCatChanged();
 
         #endregion
 

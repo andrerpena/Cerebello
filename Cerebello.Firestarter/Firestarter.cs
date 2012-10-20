@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
 using System.Text.RegularExpressions;
@@ -558,6 +561,37 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             return result;
+        }
+
+        public static void Initialize_SYS_Cid10(CerebelloEntities db)
+        {
+            // read CID10.xml as an embedded resource
+            XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Parse };
+            var reader = XmlReader.Create(new FileStream(@"CID10.xml", FileMode.Open), settings);
+            var doc = XDocument.Load(reader);
+
+            var cid10nodes = (from e in doc.Descendants()
+                              where
+                                  e.Name == "nome" &&
+                                  (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
+                              select new
+                                  {
+                                      Name = e.Value,
+                                      CodCat = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : null,
+                                      CodSubCat = e.Parent.Attribute("codsubcat") != null ? e.Parent.Attribute("codsubcat").Value : null
+                                  }).ToList();
+
+            foreach (var entry in cid10nodes)
+            {
+                db.SYS_Cid10.AddObject(new SYS_Cid10()
+                    {
+                        Name = entry.Name,
+                        Cat = entry.CodCat ,
+                        SubCat = entry.CodSubCat
+                    });
+            }
+
+            db.SaveChanges();
         }
 
         public static void Initialize_SYS_Contracts(CerebelloEntities db)
@@ -1629,6 +1663,7 @@ GO
 
         public static void InitializeDatabaseWithSystemData(CerebelloEntities db, int medicalProceduresMaxCount = 0, string rootCerebelloPath = null, Action<int, int> progress = null)
         {
+            Firestarter.Initialize_SYS_Cid10(db);
             Firestarter.Initialize_SYS_MedicalEntity(db);
             Firestarter.Initialize_SYS_MedicalSpecialty(db);
             if (medicalProceduresMaxCount > 0)

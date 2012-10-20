@@ -592,6 +592,10 @@ namespace Test1
                                 Console.ForegroundColor = ConsoleColor.Gray;
 
                                 // Initializing system tables
+
+                                Console.WriteLine("Initialize_SYS_Cid10");
+                                Firestarter.Initialize_SYS_Cid10(db);
+
                                 Console.WriteLine("Initialize_SYS_MedicalEntity");
                                 Firestarter.Initialize_SYS_MedicalEntity(db);
 
