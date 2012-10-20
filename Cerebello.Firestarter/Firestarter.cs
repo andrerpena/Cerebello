@@ -404,7 +404,7 @@ namespace Cerebello.Firestarter
             var practice = new Practice()
             {
                 Name = "Consultório do Dr. House",
-                UrlIdentifier = "consultoriodrhourse",
+                UrlIdentifier = "consultoriodrhouse",
                 CreatedOn = new DateTime(2007, 07, 03, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                 VerificationDate = new DateTime(2007, 07, 12, 0, 0, 0, DateTimeKind.Utc),
@@ -1402,7 +1402,14 @@ Definições e termos
             if (cbhpm == null)
                 lock (locker)
                     if (cbhpm == null)
-                        cbhpm = Cbhpm.LoadData(pathOfTxt);
+                    {
+                        var cbhpm0 = Cbhpm.LoadData(pathOfTxt);
+
+                        // ensures that the instance returned from LoadData is well written,
+                        // and only then, it assigns the static variable.
+                        System.Threading.Thread.MemoryBarrier();
+                        cbhpm = cbhpm0;
+                    }
 
             var max = Math.Min(maxCount, cbhpm.Items.Values.OfType<Cbhpm.Proc>().Count());
 

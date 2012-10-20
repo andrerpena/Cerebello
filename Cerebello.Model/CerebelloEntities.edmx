@@ -21,6 +21,7 @@
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationResult" EntityType="cerebelloModel.Store.ExaminationResult" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GLB_Token" EntityType="cerebelloModel.Store.GLB_Token" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="HealthEnsurance" EntityType="cerebelloModel.Store.HealthEnsurance" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Holiday" EntityType="cerebelloModel.Store.Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
@@ -439,6 +440,16 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="GLB_Token">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="char" Nullable="false" MaxLength="32" />
+          <Property Name="ExpirationDate" Type="datetime" Nullable="false" />
+          <Property Name="Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="200" />
+        </EntityType>
         <EntityType Name="HealthEnsurance">
           <Key>
             <PropertyRef Name="Id" />
@@ -573,8 +584,6 @@
           <Property Name="OwnerId" Type="int" />
           <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
           <Property Name="VerificationDate" Type="datetime" />
-          <Property Name="VerificationToken" Type="varchar" MaxLength="32" />
-          <Property Name="VerificationExpirationDate" Type="datetime" />
           <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
           <Property Name="ActiveAccountContractId" Type="int" />
         </EntityType>
@@ -1573,6 +1582,7 @@
             <End Role="Secretary" EntitySet="Secretaries" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="GLB_Token" EntityType="Cerebello.Model.GLB_Token" />
           <EntitySet Name="SYS_Cid10" EntityType="Cerebello.Model.SYS_Cid10" />
           </EntityContainer>
         <EntityType Name="Address">
@@ -1703,8 +1713,6 @@
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="VerificationDate" Precision="3" />
-          <Property Type="String" Name="VerificationToken" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="VerificationExpirationDate" Precision="3" />
           <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
           <Property Type="Int32" Name="ActiveAccountContractId" />
           <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="Practice" ToRole="ChatMessage" />
@@ -2664,6 +2672,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="GLB_Token">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="DateTime" Name="ExpirationDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+        </EntityType>
         <EntityType Name="SYS_Cid10">
           <Key>
             <PropertyRef Name="Id" />
@@ -2744,8 +2762,6 @@
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
                 <ScalarProperty Name="ActiveAccountContractId" ColumnName="ActiveAccountContractId" />
                 <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
-                <ScalarProperty Name="VerificationExpirationDate" ColumnName="VerificationExpirationDate" />
-                <ScalarProperty Name="VerificationToken" ColumnName="VerificationToken" />
                 <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
                 <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3143,6 +3159,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="GLB_Token">
+            <EntityTypeMapping TypeName="Cerebello.Model.GLB_Token">
+              <MappingFragment StoreEntitySet="GLB_Token">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="SYS_Cid10">
             <EntityTypeMapping TypeName="Cerebello.Model.SYS_Cid10">
               <MappingFragment StoreEntitySet="SYS_Cid10">
@@ -3173,7 +3200,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="72">
+      <Diagram Name="CerebelloEntities" ZoomLevel="82">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="39.75" PointY="1.375" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="1.5" PointX="28.875" PointY="14.125" Height="2.9417936197916674" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="41.25" PointY="17.375" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />
@@ -3575,6 +3602,7 @@
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis_Anamnese1" />
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis2_Diagnosis2" />
         <AssociationConnector Association="Cerebello.Model.FK_User_Secretary" />
+        <EntityTypeShape EntityType="Cerebello.Model.GLB_Token" Width="1.5" PointX="0.5" PointY="9.25" FillColor="Khaki" />
         <EntityTypeShape EntityType="Cerebello.Model.SYS_Cid10" Width="1.5" PointX="3.375" PointY="6.375" FillColor="Firebrick" />
         </Diagram>
     </Diagrams>

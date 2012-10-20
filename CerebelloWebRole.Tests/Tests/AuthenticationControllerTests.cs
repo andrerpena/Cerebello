@@ -55,7 +55,7 @@ namespace CerebelloWebRole.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((ConfirmationEmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
 
                     var mhc = mr.SetupHttpContext(disposer);
 
@@ -77,7 +77,7 @@ namespace CerebelloWebRole.Tests
                     vm = new CreateAccountViewModel
                     {
                         UserName = "andré-01",
-                        PracticeName = "consultoriodrhourse_08sd986",
+                        PracticeName = "consultoriodrhouse_08sd986",
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
@@ -102,7 +102,8 @@ namespace CerebelloWebRole.Tests
                 }
 
                 // Getting the user that was saved.
-                var savedUser = this.db.Users.Where(u => u.UserName == "andré-01").Single();
+                var savedUser = this.db.Users.Single(u => u.UserName == "andré-01");
+                var savedToken = this.db.GLB_Token.Single();
 
                 // Assertions.
                 Assert.IsNotNull(actionResult, "The result of the controller method is null.");
@@ -114,9 +115,9 @@ namespace CerebelloWebRole.Tests
 
                 // Assert DB values.
                 Assert.AreEqual(savedUser.UserNameNormalized, "andre01");
-                Assert.AreEqual(32, savedUser.Practice.VerificationToken.Length);
+                Assert.AreEqual(32, savedToken.Value.Length);
                 Assert.AreEqual(savedUser.Practice.VerificationDate, null);
-                Assert.AreEqual(utcNow.AddDays(30), savedUser.Practice.VerificationExpirationDate);
+                Assert.AreEqual(utcNow.AddDays(30), savedToken.ExpirationDate);
                 Assert.IsTrue(savedUser.IsOwner, "Saved user should be the owner of the practice.");
                 Assert.AreEqual(savedUser.Id, savedUser.Practice.OwnerId, "Saved user should be the owner of the practice.");
 
@@ -135,9 +136,9 @@ namespace CerebelloWebRole.Tests
 
                 // Assertion for email.
                 Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
-                var emailViewModel = new ConfirmationEmailViewModel
+                var emailViewModel = new EmailViewModel
                 {
-                    Token = savedUser.Practice.VerificationToken,
+                    Token = savedToken.Value,
                     UserName = savedUser.UserName,
                     PersonName = savedUser.Person.FullName,
                     PracticeUrlIdentifier = savedUser.Practice.UrlIdentifier,
@@ -169,7 +170,7 @@ namespace CerebelloWebRole.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((ConfirmationEmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
 
                     var mhc = mr.SetupHttpContext(disposer);
 
@@ -186,7 +187,7 @@ namespace CerebelloWebRole.Tests
                     vm = new CreateAccountViewModel
                     {
                         UserName = "andré-01",
-                        PracticeName = "consultoriodrhourse_08sd986",
+                        PracticeName = "consultoriodrhouse_08sd986",
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
@@ -255,7 +256,7 @@ namespace CerebelloWebRole.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((ConfirmationEmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
 
                     var mhc = mr.SetupHttpContext(disposer);
 
@@ -333,7 +334,7 @@ namespace CerebelloWebRole.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((ConfirmationEmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
 
                     var mhc = mr.SetupHttpContext(disposer);
 
@@ -351,7 +352,7 @@ namespace CerebelloWebRole.Tests
                     vm = new CreateAccountViewModel
                     {
                         UserName = userName,
-                        PracticeName = "consultoriodrhourse_0832986",
+                        PracticeName = "consultoriodrhouse_0832986",
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
@@ -466,7 +467,6 @@ namespace CerebelloWebRole.Tests
         public void VerifyPracticeAndEmail_ValidToken_ValidPractice_HappyPath()
         {
             AuthenticationController controller;
-            MockRepository mr;
             var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
             string practiceName;
             string token;
@@ -477,12 +477,12 @@ namespace CerebelloWebRole.Tests
                 string password;
                 var userId = CreateAccount_Helper(utcNow, out password, out token);
 
-                mr = new MockRepository();
+                var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
                 using (var db = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -501,7 +501,8 @@ namespace CerebelloWebRole.Tests
 
             ActionResult actionResult;
             {
-                actionResult = controller.VerifyPracticeAndEmail(token, practiceName);
+                actionResult = controller.VerifyPracticeAndEmail(
+                    new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName, });
             }
 
             // Asserting.
@@ -524,18 +525,17 @@ namespace CerebelloWebRole.Tests
         public void VerifyPracticeAndEmail_EmptyToken_ValidPractice_HappyPath()
         {
             AuthenticationController controller;
-            MockRepository mr;
             var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
             string practiceName;
-            string token;
 
             try
             {
                 // Simulating account creation.
                 string password;
+                string token;
                 var userId = CreateAccount_Helper(utcNow, out password, out token);
 
-                mr = new MockRepository();
+                var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
                 using (var db = CreateNewCerebelloEntities())
@@ -558,7 +558,8 @@ namespace CerebelloWebRole.Tests
 
             ActionResult actionResult;
             {
-                actionResult = controller.VerifyPracticeAndEmail(null, practiceName);
+                actionResult = controller.VerifyPracticeAndEmail(
+                    new VerifyPracticeAndEmailViewModel { Practice = practiceName });
             }
 
             // Asserting.
@@ -616,7 +617,8 @@ namespace CerebelloWebRole.Tests
 
             ActionResult actionResult;
             {
-                actionResult = controller.VerifyPracticeAndEmail("Invalid-Token-Value", practiceName);
+                actionResult = controller.VerifyPracticeAndEmail(
+                    new VerifyPracticeAndEmailViewModel { Token = "Invalid-Token-Value", Practice = practiceName });
             }
 
             // Asserting.
@@ -681,7 +683,8 @@ namespace CerebelloWebRole.Tests
 
             ActionResult actionResult;
             {
-                actionResult = controller.VerifyPracticeAndEmail(token, practiceName);
+                actionResult = controller.VerifyPracticeAndEmail(
+                    new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName });
             }
 
             // Asserting.
@@ -799,7 +802,9 @@ namespace CerebelloWebRole.Tests
                 var authController = new AuthenticationController();
                 Mvc3TestHelper.SetupControllerForTesting(authController, CreateNewCerebelloEntities(), mr);
                 authController.UtcNowGetter = () => utcNow.AddDays(15.0); // this is up to 30 days
-                authController.VerifyPracticeAndEmail(token, practiceName);
+                authController.VerifyPracticeAndEmail(
+                    new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName });
+
                 Assert.IsTrue(authController.ModelState.IsValid, "Could not validate email.");
 
                 var mockController = new Mock<PracticeController>() { CallBase = true };
@@ -846,7 +851,7 @@ namespace CerebelloWebRole.Tests
                     "ConfirmationEmail",
                     vc =>
                     {
-                        token = ((ConfirmationEmailViewModel)vc.ViewData.Model).Token;
+                        token = ((EmailViewModel)vc.ViewData.Model).Token;
                         return "Fake e-mail message.";
                     });
 
@@ -866,7 +871,7 @@ namespace CerebelloWebRole.Tests
                 var vm = new CreateAccountViewModel
                 {
                     UserName = "andré-01",
-                    PracticeName = "consultoriodrhourse_08sd986",
+                    PracticeName = "consultoriodrhouse_08sd986",
                     Password = password,
                     ConfirmPassword = password,
                     DateOfBirth = new DateTime(1984, 05, 04),

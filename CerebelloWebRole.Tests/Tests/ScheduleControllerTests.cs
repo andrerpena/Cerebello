@@ -34,7 +34,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -87,7 +87,7 @@ namespace CerebelloWebRole.Tests
                 utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
 
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
@@ -130,7 +130,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -190,7 +190,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start2, TimeSpan.FromHours(5), "After mid-day.");
 
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
@@ -246,7 +246,7 @@ namespace CerebelloWebRole.Tests
                 utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
 
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
@@ -290,7 +290,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -337,7 +337,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating test objects.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Associating DB event.
@@ -386,7 +386,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating test objects.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Associating DB event.
@@ -468,7 +468,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UtcNowGetter = () => utcNow;
@@ -574,7 +574,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
@@ -687,7 +687,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
@@ -792,7 +792,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UtcNowGetter = () => utcNow;
@@ -895,7 +895,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UtcNowGetter = () => utcNow;
@@ -957,7 +957,7 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
                 controller.UtcNowGetter = () => utcNow;
@@ -1006,7 +1006,7 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
                 controller.UtcNowGetter = () => utcNow;
@@ -1068,7 +1068,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
             }
             catch (Exception ex)

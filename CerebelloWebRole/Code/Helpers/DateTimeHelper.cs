@@ -7,7 +7,7 @@ using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Code
 {
-    public class DateTimeHelper
+    public static class DateTimeHelper
     {
         [Flags]
         public enum RelativeDateOptions
@@ -25,6 +25,15 @@ namespace CerebelloWebRole.Code
             DateTime d = start;
             for (int i = 0; i < count; i++, d = nextGetter(d))
                 yield return d;
+        }
+
+        ///<summary>Gets the first week day following a date.</summary>
+        ///<param name="date">The date.</param>
+        ///<param name="dayOfWeek">The day of week to return.</param>
+        ///<returns>The first dayOfWeek day following date, or date if it is on dayOfWeek.</returns>
+        public static DateTime DayOfWeekFromNow(this DateTime date, DayOfWeek dayOfWeek, int count)
+        {
+            return date.AddDays((dayOfWeek < date.DayOfWeek ? 7 : 0) + dayOfWeek - date.DayOfWeek + (7 * count));
         }
 
         [Obsolete("This method is not being used. 2012-08-15.", true)]

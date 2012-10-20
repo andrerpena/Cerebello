@@ -10,6 +10,7 @@ namespace CerebelloWebRole.Code.Mvc
 {
     public static class EntityObjectExtensions
     {
+        [Flags]
         public enum CollectionUpdateStrategy
         {
             Create = 1,
@@ -19,19 +20,30 @@ namespace CerebelloWebRole.Code.Mvc
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="association">Coleção do objeto persistente atual à qual se deseja mesclar os objetos que vieram do ViewModel</param>
-        /// <param name="viewModelCollection">Coleção de objetos que vieram do ViewModel</param>
-        /// <param name="compare">Função comparadora. Exemplo: (telefoneModel, telefoneViewModel) => telefoneModel.Id == telefoneViewModel.Id</param>
+        /// <param name="entityCollection">Coleção do objeto persistente atual à qual se deseja mesclar os objetos que vieram do ViewModel.</param>
+        /// <param name="viewModelCollection">Coleção de objetos que vieram do ViewModel.</param>
+        /// <param name="compare">Função comparadora. Exemplo: (telefoneModel, telefoneViewModel) => telefoneModel.Id == telefoneViewModel.Id.</param>
+        /// <param name="update"> </param>
+        /// <param name="delete"> </param>
+        /// <param name="updateStrategy"> </param>
         [Obsolete("This logic is to complicated and error prone to be encapsulated. Just do it by hand")]
-        public static void Update<TModel, TViewModel>(this EntityCollection<TModel> entityCollection, IEnumerable<TViewModel> viewModelCollection, Func<TViewModel, TModel, bool> compare, Action<TViewModel, TModel> update, Action<TModel> delete, CollectionUpdateStrategy updateStrategy = CollectionUpdateStrategy.Create | CollectionUpdateStrategy.Update) where TModel : EntityObject
+        public static void Update<TModel, TViewModel>(
+            this EntityCollection<TModel> entityCollection,
+            IEnumerable<TViewModel> viewModelCollection,
+            Func<TViewModel, TModel, bool> compare,
+            Action<TViewModel, TModel> update,
+            Action<TModel> delete,
+            CollectionUpdateStrategy updateStrategy = CollectionUpdateStrategy.Create | CollectionUpdateStrategy.Update)
+            where TModel : EntityObject
+            where TViewModel : class
         {
-            Queue<TModel> harakiriQuerue = new Queue<TModel>();
+            var harakiriQuerue = new Queue<TModel>();
 
             // varre todos os elementos atuais do modelo verificando quais alteraram e quais foram deletados
             foreach (TModel modelObject in entityCollection)
             {
                 // verifico se existe view-model corresponde com este objeto
-                var matchingViewModel = viewModelCollection.Where(viewModelObject => compare(viewModelObject, modelObject)).FirstOrDefault();
+                var matchingViewModel = viewModelCollection.FirstOrDefault(viewModelObject => compare(viewModelObject, modelObject));
                 if (matchingViewModel != null)
                 {
                     if ((updateStrategy & CollectionUpdateStrategy.Update) == CollectionUpdateStrategy.Update)
@@ -75,22 +87,29 @@ namespace CerebelloWebRole.Code.Mvc
         /// 
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TAssociationModel"></typeparam>
-        /// <typeparam name="TAssociationViewModel"></typeparam>
-        /// <param name="_this"></param>
-        /// <param name="association">Coleção do objeto persistente atual à qual se deseja mesclar os objetos que vieram do ViewModel</param>
+        /// <typeparam name="TViewModel"> </typeparam>
+        /// <param name="entityCollection">Coleção do objeto persistente atual à qual se deseja mesclar os objetos que vieram do ViewModel</param>
         /// <param name="viewModelCollection">Coleção de objetos que vieram do ViewModel</param>
         /// <param name="compare">Função comparadora. Exemplo: (telefoneModel, telefoneViewModel) => telefoneModel.Id == telefoneViewModel.Id</param>
+        /// <param name="getModel"> </param>
+        /// <param name="onDeleteAction"> </param>
         [Obsolete("This logic is to complicated and error prone to be encapsulated. Just do it by hand")]
-        public static void UpdateManyToMany<TModel, TViewModel>(this EntityCollection<TModel> entityCollection, IEnumerable<TViewModel> viewModelCollection, Func<TViewModel, TModel, bool> compare, Func<TViewModel, TModel> getModel, Action<TModel> onDeleteAction) where TModel : EntityObject
+        public static void UpdateManyToMany<TModel, TViewModel>(
+            this EntityCollection<TModel> entityCollection,
+            IEnumerable<TViewModel> viewModelCollection,
+            Func<TViewModel, TModel, bool> compare,
+            Func<TViewModel, TModel> getModel,
+            Action<TModel> onDeleteAction)
+            where TModel : EntityObject
+            where TViewModel : class
         {
-            Queue<TModel> harakiriQuerue = new Queue<TModel>();
+            var harakiriQuerue = new Queue<TModel>();
 
             // varre todos os elementos atuais do modelo verificando quais alteraram e quais foram deletados
             foreach (TModel modelObject in entityCollection)
             {
                 // verifico se existe view-model corresponde com este objeto
-                var matchingViewModel = viewModelCollection.Where(viewModelObject => compare(viewModelObject, modelObject)).FirstOrDefault();
+                var matchingViewModel = viewModelCollection.FirstOrDefault(viewModelObject => compare(viewModelObject, modelObject));
                 if (matchingViewModel == null)
                     harakiriQuerue.Enqueue(modelObject);
             }

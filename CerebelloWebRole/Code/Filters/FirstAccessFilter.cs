@@ -18,7 +18,7 @@ namespace CerebelloWebRole.Code.Filters
                     {
                         // When the user is accessing the software for the first time,
                         // he/she will be asked to set an access password, at this place:
-                        // http://www.cerebello.com.br/p/consultoriodrhourse/users/changepassword
+                        // http://www.cerebello.com.br/p/consultoriodrhouse/users/changepassword
                         // All other places in the software will redirect the user back to that
                         // place until he/she sets the password.
                         bool isUsingDefaultPwd = authenticatedPrincipal.Profile.IsUsingDefaultPassword;

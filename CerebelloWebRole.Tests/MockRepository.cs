@@ -40,7 +40,7 @@ namespace CerebelloWebRole.Tests
             // The route context is valid by default, for the user André.
             RouteData = new RouteData();
             RouteData.DataTokens["area"] = "App";
-            RouteData.Values["practice"] = "consultoriodrhourse";
+            RouteData.Values["practice"] = "consultoriodrhouse";
             RouteData.Values["doctor"] = "gregoryhouse";
         }
 
@@ -93,13 +93,13 @@ namespace CerebelloWebRole.Tests
             this.UserDbId = user.Id;
         }
 
-        public void SetRouteData_ConsultorioDrHourse_GregoryHouse(Type controllerType, string action)
+        public void SetRouteData_ConsultorioDrHouse_GregoryHouse(Type controllerType, string action)
         {
             this.RouteData = new RouteData();
 
             FillRouteData_App_Controller_Action(this.RouteData, controllerType, action);
 
-            this.RouteData.Values["practice"] = "consultoriodrhourse";
+            this.RouteData.Values["practice"] = "consultoriodrhouse";
             this.RouteData.Values["doctor"] = "gregoryhouse";
         }
 

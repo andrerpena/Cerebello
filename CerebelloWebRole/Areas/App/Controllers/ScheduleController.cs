@@ -167,7 +167,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     start = localNow.ToString("HH:mm");
             }
 
-            DateTime localDateAlone = (date ?? localNow).Date;
+            DateTime localDateAlone = date.Value.Date;
 
             //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
@@ -197,7 +197,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (findNextAvailable == true)
             {
                 var doctor = this.Doctor;
-                var db = this.db;
 
                 // Determining the date and time to start scanning for a free time slot.
                 DateTime localStartingFrom = localStartTime;
@@ -206,7 +205,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     localStartingFrom = localNow;
 
                 // Finding the next available time slot, and setting the startTime and endTime.
-                var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom);
+                var slot = FindNextFreeTimeInPracticeLocalTime(this.db, doctor, localStartingFrom);
                 localStartTime = slot.Item1;
                 localEndTime = slot.Item2;
             }
@@ -452,7 +451,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 new Person
                                     {
                                         FullName = formModel.PatientName,
-                                        Gender = (short) formModel.PatientGender,
+                                        Gender = (short)formModel.PatientGender,
                                         DateOfBirth =
                                             ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
                                         CreatedOn = this.GetUtcNow()
@@ -630,7 +629,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult FindNextFreeTime(string date, string time)
         {
             var doctor = this.Doctor;
-            var db = this.db;
 
             var localNow = this.GetPracticeLocalNow();
 
@@ -649,7 +647,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (localNow > localStartingFrom)
                 localStartingFrom = localNow;
 
-            var slot = this.FindNextFreeValidTimeInPracticeLocalTime(doctor, db, localNow, localStartingFrom);
+            var slot = this.FindNextFreeValidTimeInPracticeLocalTime(doctor, localNow, localStartingFrom);
 
             return this.Json(new
             {
@@ -667,13 +665,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        private Tuple<DateTime, DateTime> FindNextFreeValidTimeInPracticeLocalTime(Doctor doctor, CerebelloEntities db, DateTime localNow, DateTime localStartingFrom)
+        private Tuple<DateTime, DateTime> FindNextFreeValidTimeInPracticeLocalTime(Doctor doctor, DateTime localNow, DateTime localStartingFrom)
         {
             var localStartingFrom2 = localStartingFrom;
 
             while (true)
             {
-                var slot = FindNextFreeTimeInPracticeLocalTime(db, doctor, localStartingFrom2);
+                var slot = FindNextFreeTimeInPracticeLocalTime(this.db, doctor, localStartingFrom2);
 
                 var vm = new AppointmentViewModel
                 {
@@ -713,12 +711,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var practice = doctor.Users.FirstOrDefault().Practice;
 
-            DateTime[] validLocalDates;
             var currentDateStartLocal = startingFromLocalTime.Date;
             while (true)
             {
                 // getting a list of valid dates to look for slots
                 // - days-off are invalid
+                DateTime[] validLocalDates;
                 {
                     var currentDateEndLocal = currentDateStartLocal.AddDays(30.0);
 
@@ -743,7 +741,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var eachValidLocalDate in validLocalDates)
                 {
                     var currentDateStartUtc = ConvertToUtcDateTime(practice, eachValidLocalDate);
-                    var currentDateEndUtc = currentDateStartUtc.AddDays(1.0);
+                    var currentDateEndUtc = ConvertToUtcDateTime(practice, eachValidLocalDate.AddDays(1.0).AddTicks(-1));
 
                     // take all appointments of that day
                     var appointments = db.Appointments
