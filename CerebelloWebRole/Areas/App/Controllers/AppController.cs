@@ -105,7 +105,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var finalQuery = queries[0];
 
-            for (int i = 1; i < queries.Count; i++)
+            for (var i = 1; i < queries.Count; i++)
                 finalQuery = finalQuery.Union(queries[i]);
 
             // returns the URL given a type ("patient", "medicine"...) and an Id

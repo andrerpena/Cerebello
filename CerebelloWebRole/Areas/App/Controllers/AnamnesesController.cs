@@ -147,7 +147,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult AutocompleteDiagnoses(string term, int pageSize, int pageIndex)
         {
-
             IQueryable<SYS_Cid10> baseQuery = this.db.SYS_Cid10;
             if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(c => c.Name.Contains(term));
@@ -156,8 +155,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         orderby c.Name
                         select new
                         {
-                            id = c.Id,
-                            value = c.Name
+                            Cid10Code = c.Id,
+                            Cid10Name = c.Name
                         };
 
             var result = new AutocompleteJsonResult()

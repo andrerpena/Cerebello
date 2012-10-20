@@ -155,8 +155,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         orderby c.Name
                         select new
                         {
-                            id = c.Id,
-                            value = c.Name
+                            Cid10Code = c.Id,
+                            Cid10Name = c.Name
                         };
 
             var result = new AutocompleteJsonResult()
