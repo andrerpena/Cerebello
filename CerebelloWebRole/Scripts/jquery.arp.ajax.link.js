@@ -37,7 +37,7 @@
                 });
             });
         }
-    }
+    };
 
     $.fn.ajaxLink = function (options) {
         if (this.length) {

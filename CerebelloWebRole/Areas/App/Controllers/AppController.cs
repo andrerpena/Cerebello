@@ -93,7 +93,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!string.IsNullOrEmpty(term))
                 laboratoriesQuery = laboratoriesQuery.Where(p => p.Name.Contains(term));
 
-            queries.Add(laboratoriesQuery.Select(l => 
+            queries.Add(laboratoriesQuery.Select(l =>
                         new GlobalSearchIntermediateResult()
                         {
                             Id = l.Id,
@@ -114,11 +114,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     switch (type)
                     {
                         case "patient":
-                            return Url.Action("details", "patients", new { id = id });
+                            return Url.Action("details", "patients", new { id });
                         case "medicine":
-                            return Url.Action("details", "medicines", new { id = id });
+                            return Url.Action("details", "medicines", new { id });
                         case "laboratory":
-                            return Url.Action("details", "laboratories", new { id = id });
+                            return Url.Action("details", "laboratories", new { id });
                         default:
                             throw new Exception("Invalid type");
                     }

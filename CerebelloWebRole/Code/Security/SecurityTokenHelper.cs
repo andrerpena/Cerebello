@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Script.Serialization;
 
 namespace CerebelloWebRole.Code.Security
 {
-    public class SecurityTokenHelper
+    public static class SecurityTokenHelper
     {
         public static string ToString(SecurityToken securityToken)
         {
-            string plainSecurityToken = new JavaScriptSerializer().Serialize(securityToken);
+            var plainSecurityToken = new JavaScriptSerializer().Serialize(securityToken);
             return CipherHelper.EncryptToBase64(plainSecurityToken);
         }
 

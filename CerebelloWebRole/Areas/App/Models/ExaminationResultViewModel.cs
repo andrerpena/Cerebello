@@ -5,10 +5,6 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class ExaminationResultViewModel
     {
-        public ExaminationResultViewModel()
-        {
-        }
-
         /// <summary>
         /// Id of the examination request.
         /// </summary>

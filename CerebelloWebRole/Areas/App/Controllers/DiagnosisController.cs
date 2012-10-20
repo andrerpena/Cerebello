@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Xml;
-using System.Xml.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
 
@@ -26,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(int patientId, string newKey)
+        public ActionResult Create(int patientId)
         {
             return this.Edit(null, patientId);
         }
@@ -150,18 +147,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult AutocompleteDiagnoses(string term, int pageSize, int pageIndex)
         {
-            // read CID10.xml as an embedded resource
-            XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Parse };
-            var reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
-            var doc = XDocument.Load(reader);
+            IQueryable<SYS_Cid10> baseQuery = this.db.SYS_Cid10;
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(c => c.Name.Contains(term));
 
-            var result = AutocompleteHelper.GetData<CidAutocompleteGridModel>(term, pageSize, pageIndex,
-                t =>
-                from e in doc.Descendants()
-                where e.Name == "nome" &&
-                StringHelper.RemoveDiacritics(e.ToString()).ToLower().Contains(StringHelper.RemoveDiacritics(t.ToString()).ToLower()) &&
-                (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
-                select new CidAutocompleteGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
+            var query = from c in baseQuery
+                        orderby c.Name
+                        select new
+                        {
+                            id = c.Id,
+                            value = c.Name
+                        };
+
+            var result = new AutocompleteJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
+                Count = query.Count()
+            };
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }

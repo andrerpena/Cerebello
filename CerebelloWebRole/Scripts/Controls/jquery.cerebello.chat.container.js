@@ -1,5 +1,4 @@
 ﻿(function ($) {
-
     // creates a screen to ask the user for deletion confirmation
     function ChatContainer(options) {
 

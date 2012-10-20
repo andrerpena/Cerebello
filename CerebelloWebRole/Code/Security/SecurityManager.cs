@@ -50,7 +50,7 @@ namespace CerebelloWebRole.Code
             // but that doesn't mean the exact user-name "miguelangelo" is the one I used, in fact it is not.
             var normalizedUserName = StringHelper.NormalizeUserName(registrationData.UserName);
 
-            bool isUserNameAlreadyInUse =
+            var isUserNameAlreadyInUse =
                 practiceId != null &&
                 db.Users.Any(u => u.UserNameNormalized == normalizedUserName && u.PracticeId == practiceId);
 
@@ -145,7 +145,7 @@ namespace CerebelloWebRole.Code
 
                 try
                 {
-                    UserData userProfile = SecurityTokenHelper.FromString(((FormsIdentity)identity).Ticket.UserData).UserData;
+                    var userProfile = SecurityTokenHelper.FromString(((FormsIdentity)identity).Ticket.UserData).UserData;
                     // UserHelper.UpdateLastActiveOn(userProfile);
                     principal = new AuthenticatedPrincipal(identity, userProfile);
                 }

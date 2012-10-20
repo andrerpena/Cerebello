@@ -147,18 +147,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult AutocompleteDiagnoses(string term, int pageSize, int pageIndex)
         {
-            // read CID10.xml as an embedded resource
-            XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Parse};
-            var reader = XmlReader.Create(Server.MapPath(@"~\data\CID10.xml"), settings);
-            var doc = XDocument.Load(reader);
 
-            var result = AutocompleteHelper.GetData<CidAutocompleteGridModel>(term, pageSize, pageIndex,
-                t =>
-                from e in doc.Descendants()
-                where e.Name == "nome" &&
-                StringHelper.RemoveDiacritics(e.ToString()).ToLower().Contains(StringHelper.RemoveDiacritics(t.ToString()).ToLower()) &&
-                (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
-                select new CidAutocompleteGridModel { Cid10Name = e.Value, Cid10Code = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : e.Parent.Attribute("codsubcat").Value });
+            IQueryable<SYS_Cid10> baseQuery = this.db.SYS_Cid10;
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(c => c.Name.Contains(term));
+
+            var query = from c in baseQuery
+                        orderby c.Name
+                        select new
+                        {
+                            id = c.Id,
+                            value = c.Name
+                        };
+
+            var result = new AutocompleteJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
+                Count = query.Count()
+            };
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
