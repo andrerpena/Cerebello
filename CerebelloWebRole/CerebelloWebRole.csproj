@@ -376,7 +376,6 @@
     <Content Include="Content\Styles\Docs\Media.css" />
     <Content Include="Content\Styles\Site\Media.css" />
     <Content Include="Content\Styles\Site\Site.css" />
-    <EmbeddedResource Include="Data\CID10.xml" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
@@ -579,7 +578,6 @@
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
-    <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
