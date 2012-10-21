@@ -224,6 +224,7 @@
     <Compile Include="Code\Controls\EditPanel\EditPanel.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelField.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelFieldBase.cs" />
+    <Compile Include="Code\Controls\EditPanel\EditPanelTextField.cs" />
     <Compile Include="Code\Controls\Grid\Grid.cs" />
     <Compile Include="Code\Controls\Grid\GridField.cs" />
     <Compile Include="Code\Controls\Grid\GridFieldBase.cs" />

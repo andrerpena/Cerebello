@@ -24,7 +24,7 @@
     {
         // If Model is not null, then the user already existed before,
         // we cannot allow the user-name to be edited.
-        editPanel.AddField(m => m.UserName, @<text>@Model.UserName</text>);
+        editPanel.AddTextField(m => m.UserName);
     }
     else
     {

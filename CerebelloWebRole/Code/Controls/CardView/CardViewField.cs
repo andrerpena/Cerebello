@@ -19,18 +19,16 @@ namespace CerebelloWebRole.Code.Controls
 
         public override MvcHtmlString Label(HtmlHelper htmlHelper)
         {
-            if (this.Header != null)
-                return new MvcHtmlString(this.Header);
-
-            return ((HtmlHelper<TModel>)htmlHelper).LabelFor(this.Expression);
+            return this.Header != null
+                ? new MvcHtmlString(this.Header)
+                : ((HtmlHelper<TModel>)htmlHelper).LabelFor(this.Expression);
         }
 
         public override MvcHtmlString Display(HtmlHelper htmlHelper)
         {
-            if (this.Format != null)
-                return new MvcHtmlString(this.Format(htmlHelper.ViewData.Model).ToString());
-
-            return ((HtmlHelper<TModel>)htmlHelper).DisplayFor(this.Expression);
+            return this.Format != null
+                ? new MvcHtmlString(this.Format(htmlHelper.ViewData.Model).ToString())
+                : ((HtmlHelper<TModel>)htmlHelper).DisplayFor(this.Expression);
         }
     }
 }

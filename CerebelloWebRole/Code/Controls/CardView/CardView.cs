@@ -51,16 +51,13 @@ namespace CerebelloWebRole.Code.Controls
             // a primeira coisa a fazer é organizar os campos em rows
             {
                 List<CardViewFieldBase> currentRow = null;
-                for (var i = 0; i < this.Fields.Count; i++)
+                foreach (var field in this.Fields)
                 {
-                    var field = this.Fields[i];
-
                     if (field.WholeRow)
                     {
                         // neste caso o campo ocupa a linha inteira e, se já existe um TR
                         // aberto, eu preciso fechar
-                        currentRow = new List<CardViewFieldBase>();
-                        currentRow.Add(field);
+                        currentRow = new List<CardViewFieldBase> {field};
                         rows.Add(currentRow);
 
                         // setando currentRow para null eu forço outro field
@@ -70,8 +67,7 @@ namespace CerebelloWebRole.Code.Controls
 
                     else if (currentRow == null || currentRow.Count == this.FieldsPerRow)
                     {
-                        currentRow = new List<CardViewFieldBase>();
-                        currentRow.Add(field);
+                        currentRow = new List<CardViewFieldBase> {field};
                         rows.Add(currentRow);
                     }
                     else
@@ -83,7 +79,7 @@ namespace CerebelloWebRole.Code.Controls
             wrapperDiv.AddCssClass("cardview");
             var wrapperDivContentBuilder = new StringBuilder();
 
-            for (int i = 0; i < rows.Count; i++)
+            for (var i = 0; i < rows.Count; i++)
             {
                 var row = rows[i];
 
@@ -91,37 +87,35 @@ namespace CerebelloWebRole.Code.Controls
                 divRow.AddCssClass("row");
                 var divRowContentBuilder = new StringBuilder();
 
-                for (var j = 0; j < row.Count; j++)
+                foreach (var field in row)
                 {
-                    var field = row[j];
-
                     var divColumn = new TagBuilder("div");
-                    divColumn.AddCssClass("span" + (field.WholeRow ? 1 : this.FieldsPerRow).ToString());
+                    divColumn.AddCssClass("span" + (field.WholeRow ? 1 : this.FieldsPerRow));
 
-                    var tableHeaderTD = new TagBuilder("div");
-                    tableHeaderTD.AddCssClass("header");
+                    var tableHeaderTd = new TagBuilder("div");
+                    tableHeaderTd.AddCssClass("header");
                     if (i == 0)
-                        tableHeaderTD.AddCssClass("first");
+                        tableHeaderTd.AddCssClass("first");
 
-                    var tableValueTD = new TagBuilder("div");
-                    tableValueTD.AddCssClass("value");
+                    var tableValueTd = new TagBuilder("div");
+                    tableValueTd.AddCssClass("value");
                     if (i == 0)
-                        tableValueTD.AddCssClass("first");
+                        tableValueTd.AddCssClass("first");
 
-                    tableHeaderTD.InnerHtml = field.Label(this.HtmlHelper).ToString();
-                    tableValueTD.InnerHtml = field.Display(this.HtmlHelper).ToString();
+                    tableHeaderTd.InnerHtml = field.Label(this.HtmlHelper).ToString();
+                    tableValueTd.InnerHtml = field.Display(this.HtmlHelper).ToString();
 
-                    divColumn.InnerHtml = tableHeaderTD.ToString() + tableValueTD.ToString();
+                    divColumn.InnerHtml = tableHeaderTd + tableValueTd.ToString();
 
-                    divRowContentBuilder.Append(divColumn.ToString());
+                    divRowContentBuilder.Append(divColumn);
                 }
 
 
-                if (divRowContentBuilder.Length > 0)
-                {
-                    divRow.InnerHtml = divRowContentBuilder.ToString();
-                    wrapperDivContentBuilder.Append(divRow.ToString());
-                }
+                if (divRowContentBuilder.Length <= 0)
+                    continue;
+
+                divRow.InnerHtml = divRowContentBuilder.ToString();
+                wrapperDivContentBuilder.Append(divRow);
             }
 
             wrapperDiv.InnerHtml = wrapperDivContentBuilder.ToString();

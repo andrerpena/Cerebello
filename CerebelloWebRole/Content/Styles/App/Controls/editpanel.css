@@ -8,11 +8,6 @@
     margin: 6px 0;
  }
 
-.edit-panel
-{
-    
-}
-
 table.edit-panel
 {
     border-collapse: separate;
@@ -122,6 +117,10 @@ table.edit-panel > tbody > tr > th
 .edit-panel.child-panel .small select, .edit-panel.child-panel .small textarea, .edit-panel.child-panel .small input[type=text], .edit-panel.child-panel .small .autocomplete
 {
     width: 90px;
+}
+
+.edit-panel .text-content {
+    padding: 7px 0;
 }
 
 /* search */
