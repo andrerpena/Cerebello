@@ -105,7 +105,7 @@ namespace CerebelloWebRole.Code.Controls
             else
             {
                 TagBuilder noRecords = new TagBuilder("div");
-                noRecords.AddCssClass("message");
+                noRecords.AddCssClass("message-warning");
                 noRecords.SetInnerText("Não existem registros a serem exibidos");
 
                 return new MvcHtmlString(noRecords.ToString());

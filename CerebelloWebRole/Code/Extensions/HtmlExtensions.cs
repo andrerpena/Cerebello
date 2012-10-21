@@ -56,7 +56,7 @@ namespace CerebelloWebRole.Code.Extensions
         public static MvcHtmlString Message(this HtmlHelper htmlHelper, string text)
         {
             var encodedText = HttpUtility.HtmlEncode(text);
-            return new MvcHtmlString(String.Format(@"<div class=""message"">{0}</div>", encodedText));
+            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", encodedText));
         }
 
         /// <summary>
