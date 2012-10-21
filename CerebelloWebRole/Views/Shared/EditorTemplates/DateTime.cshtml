@@ -1,6 +1,6 @@
 ﻿@model Nullable<System.DateTime>
 @{
-    string formattedValue = this.Model.HasValue ? this.Model.Value.ToString(System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern) : null;
+    var formattedValue = this.Model.HasValue ? this.Model.Value.ToString(System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern) : null;
 }
 @Html.TextBox(String.Empty, formattedValue, new { autocomplete = "off" })
 <script type="text/javascript">

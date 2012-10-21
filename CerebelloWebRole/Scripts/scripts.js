@@ -1,4 +1,7 @@
-﻿// generates a new guid
+﻿// setting datepickers to act like brazillian
+$.datepicker.setDefaults($.datepicker.regional["pt-BR"]);
+
+// generates a new guid
 function generateGuid(separator) {
     if (!separator)
         separator = "-";
