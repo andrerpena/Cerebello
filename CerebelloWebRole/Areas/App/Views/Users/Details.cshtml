@@ -14,7 +14,7 @@
     cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
 }
 @section Title {
-    Usuário: <b>@Model.FullName</b>
+    Usuário: @Model.FullName
 }
 @section SideBar {
     <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-user-link">Editar usuário</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>

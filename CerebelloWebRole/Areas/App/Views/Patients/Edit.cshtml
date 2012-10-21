@@ -30,7 +30,7 @@
 @section Title {
     @if (this.Model != null && this.Model.Id.HasValue)
     {
-        @:Editando paciente: <b>@this.Model.FullName</b>
+        @:Editando paciente: @this.Model.FullName
     }
     else
     {

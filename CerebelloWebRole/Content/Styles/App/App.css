@@ -80,6 +80,7 @@ body {
     font-family: Arial, Helvetica;
     font-size: 12px;
     color: #333333;
+    background-color: #FBFBFB;
 }
 
 a {
@@ -306,7 +307,7 @@ input, textarea {
     }
 
         .document .document-header h1 {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.2em;
             margin: 0;
         }
@@ -514,7 +515,7 @@ fieldset {
         }
 
         .tabNav li.youarehere a {
-            background-color: #F5F5F5;
+            background-color: #F2F2F2;
             background-position: 4px 50%;
             color: #DD390D;
             font-weight: bold;
