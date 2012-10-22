@@ -8,12 +8,74 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
     public class DateTimeHelperTests
     {
         [TestMethod]
+        public void ConvertToUtcDateTime_InvalidTimeWhenChangingToDST()
+        {
+            var timeZoneInfo = GetTestTimeZoneInfoWithDst();
+
+            var dateTime = new DateTime(2012, 10, 20, 00, 30, 00);
+            var dateTime2 = DateTimeHelper.ConvertToUtcDateTime(dateTime, timeZoneInfo);
+            Assert.AreEqual(new DateTime(2012, 10, 20, 03, 00, 00), dateTime2);
+        }
+
+        [TestMethod]
+        public void ConvertToUtcDateTime_ConvertToUtcIsDst()
+        {
+            var timeZoneInfo = GetTestTimeZoneInfoWithDst();
+
+            var dateTime = new DateTime(2012, 10, 22, 19, 00, 00);
+            var dateTime2 = DateTimeHelper.ConvertToUtcDateTime(dateTime, timeZoneInfo);
+            Assert.AreEqual(new DateTime(2012, 10, 22, 21, 00, 00), dateTime2);
+        }
+
+        [TestMethod]
+        public void ConvertToUtcDateTime_ConvertToUtcIsNormalTime()
+        {
+            var timeZoneInfo = GetTestTimeZoneInfoWithDst();
+
+            var dateTime = new DateTime(2012, 10, 19, 19, 00, 00);
+            var dateTime2 = DateTimeHelper.ConvertToUtcDateTime(dateTime, timeZoneInfo);
+            Assert.AreEqual(new DateTime(2012, 10, 19, 22, 00, 00), dateTime2);
+        }
+
+        private static TimeZoneInfo GetTestTimeZoneInfoWithDst()
+        {
+            var timeZoneInfo = TimeZoneInfo.CreateCustomTimeZone(
+                "TEST",
+                TimeSpan.FromHours(-3.0),
+                "Test Time Zone",
+                "Test Time Zone",
+                "Test Time Zone Day-light Saving Time",
+                new[]
+                    {
+                        TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(
+                            new DateTime(2012, 01, 01),
+                            new DateTime(2012, 12, 31),
+                            TimeSpan.FromHours(1.0),
+                            TimeZoneInfo.TransitionTime.CreateFloatingDateRule(
+                                new DateTime(1, 1, 1, 00, 00, 00),
+                                10,
+                                3,
+                                DayOfWeek.Saturday
+                                ),
+                            TimeZoneInfo.TransitionTime.CreateFloatingDateRule(
+                                new DateTime(1, 1, 1, 00, 00, 00),
+                                02,
+                                3,
+                                DayOfWeek.Saturday
+                                )
+                            )
+                    });
+            return timeZoneInfo;
+        }
+
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void GetPersonAgeInWords_WhenDateOfBirthIsLocal()
         {
             // this will be local (baam!);
             var dateOfBirth = DateTime.Now.AddYears(-1);
-            var now = DateTime.UtcNow ;
+            var now = DateTime.UtcNow;
 
             // must trigger exception because 
             DateTimeHelper.GetPersonAgeInWords(dateOfBirth, now);
