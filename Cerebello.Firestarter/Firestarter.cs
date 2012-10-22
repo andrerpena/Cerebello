@@ -563,14 +563,14 @@ namespace Cerebello.Firestarter
             return result;
         }
 
-        public static void Initialize_SYS_Cid10(CerebelloEntities db)
+        public static void Initialize_SYS_Cid10(CerebelloEntities db, int maxCount = int.MaxValue, Action<int, int> progress = null)
         {
             // read CID10.xml as an embedded resource
             XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Parse };
             var reader = XmlReader.Create(new FileStream(@"CID10.xml", FileMode.Open), settings);
             var doc = XDocument.Load(reader);
 
-            var cid10nodes = (from e in doc.Descendants()
+            var cid10Nodes = (from e in doc.Descendants()
                               where
                                   e.Name == "nome" &&
                                   (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
@@ -581,15 +581,30 @@ namespace Cerebello.Firestarter
                                       CodSubCat = e.Parent.Attribute("codsubcat") != null ? e.Parent.Attribute("codsubcat").Value : null
                                   }).ToList();
 
-            foreach (var entry in cid10nodes)
+            var max = Math.Min(maxCount, cid10Nodes.Count);
+
+            var count = 0;
+            foreach (var entry in cid10Nodes)
             {
+                if (count >= maxCount)
+                    break;
+
+                if (progress != null) progress(count, max);
+
                 db.SYS_Cid10.AddObject(new SYS_Cid10()
                     {
                         Name = entry.Name,
-                        Cat = entry.CodCat ,
+                        Cat = entry.CodCat,
                         SubCat = entry.CodSubCat
                     });
+
+                if (count % 100 == 0)
+                    db.SaveChanges();
+
+                count++;
             }
+
+            if (progress != null) progress(count, max);
 
             db.SaveChanges();
         }
@@ -1396,8 +1411,6 @@ Definições e termos
 
         public static void Initialize_SYS_MedicalProcedures(CerebelloEntities db, string pathOfTxt, int maxCount = int.MaxValue, Action<int, int> progress = null)
         {
-            progress = progress ?? ((x, y) => { });
-
             // Adding CBHPM medical procedures.
             if (cbhpm == null)
                 lock (locker)
@@ -1419,7 +1432,7 @@ Definições e termos
                 if (count >= maxCount)
                     break;
 
-                progress(count, max);
+                if (progress != null) progress(count, max);
 
                 var item = db.SYS_MedicalProcedure.CreateObject();
                 item.Code = eachCbhpmProc.Codigo;
@@ -1432,7 +1445,7 @@ Definições e termos
                 count++;
             }
 
-            progress(count, max);
+            if (progress != null) progress(count, max);
 
             db.SaveChanges();
         }
@@ -1441,7 +1454,7 @@ Definições e termos
         /// Clears all data in the database.
         /// </summary>
         /// <param name="db"></param>
-        public static void ClearAllData(CerebelloEntities db, bool repopulateSysTablesWithDefaults = false, string rootCerebelloPath = null)
+        public static void ClearAllData(CerebelloEntities db)
         {
             db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
             db.ExecuteStoreCommand(@"sp_MSForEachTable '
@@ -1457,18 +1470,6 @@ Definições e termos
                          IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1 
                          DBCC CHECKIDENT (''?'', RESEED, 0) 
                      ' ");
-
-            if (repopulateSysTablesWithDefaults)
-            {
-                Console.WriteLine("Initialize_SYS_MedicalEntity");
-                Initialize_SYS_MedicalEntity(db);
-                Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                Initialize_SYS_MedicalEntity(db);
-                Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                Initialize_SYS_MedicalProcedures(
-                    db,
-                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"));
-            }
         }
 
         public static void DropAllTables(CerebelloEntities db)
@@ -1659,29 +1660,6 @@ GO
                 SqlCommand cmd = new SqlCommand("", conn) { CommandText = @"sp_detach_db CerebelloTEST" };
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Initializes the database with system data.
-        /// THIS METHOD IS ONLY CALLED FROM UNIT TESTS
-        /// </summary>
-        /// <param name="db"></param>
-        /// <param name="medicalProceduresMaxCount"></param>
-        /// <param name="rootCerebelloPath"></param>
-        /// <param name="progress"></param>
-        public static void InitializeDatabaseWithSystemData(CerebelloEntities db, int medicalProceduresMaxCount = 0, string rootCerebelloPath = null, Action<int, int> progress = null)
-        {
-            // must add Firestarter.Initialize_SYS_Cid10() here. Didn't add because it's too slow and I
-            // have to implement something similar to medicalProceduresMaxCount here
-            Firestarter.Initialize_SYS_MedicalEntity(db);
-            Firestarter.Initialize_SYS_MedicalSpecialty(db);
-            if (medicalProceduresMaxCount > 0)
-                Firestarter.Initialize_SYS_MedicalProcedures(
-                    db,
-                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                    medicalProceduresMaxCount,
-                    progress);
-            Firestarter.Initialize_SYS_Contracts(db);
         }
     }
 }

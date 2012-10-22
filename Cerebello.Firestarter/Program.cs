@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Models;
 using System.IO;
 using System.Text.RegularExpressions;
 using Cerebello.Firestarter.Helpers;
+using System.Linq;
 
 namespace Test1
 {
@@ -26,9 +28,9 @@ namespace Test1
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine(string.Format("DateTime (UTC):   {0}", DateTime.UtcNow));
-                Console.WriteLine(string.Format("DateTime (Local): {0}", DateTime.Now));
-                Console.WriteLine(string.Format("DateTime (?):     {0}", DateTime.Now.ToUniversalTime()));
+                Console.WriteLine("DateTime (UTC):   {0}", DateTime.UtcNow);
+                Console.WriteLine("DateTime (Local): {0}", DateTime.Now);
+                Console.WriteLine("DateTime (?):     {0}", DateTime.Now.ToUniversalTime());
 
                 while (isToChooseDb)
                 {
@@ -50,13 +52,13 @@ namespace Test1
                     // Getting available connections from ConfigurationManager so that user can choose one.
                     Console.WriteLine("Choose connection to use:");
 
-                    Dictionary<string, string> connStr = new Dictionary<string, string>();
+                    var connStr = new Dictionary<string, string>();
                     for (int idxConnStr = 0; idxConnStr < ConfigurationManager.ConnectionStrings.Count; idxConnStr++)
                     {
                         var connStrSettings = ConfigurationManager.ConnectionStrings[idxConnStr];
                         connStr[idxConnStr.ToString()] = connStrSettings.Name;
                         Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write(string.Format("{0}: ", idxConnStr));
+                        Console.Write("{0}: ", idxConnStr);
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine(connStrSettings.Name);
                     }
@@ -129,8 +131,8 @@ namespace Test1
 
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine(string.Format("Current DB: {0}", connName));
-                Console.WriteLine(string.Format("Project Path: {0}", rootCerebelloPath));
+                Console.WriteLine("Current DB: {0}", connName);
+                Console.WriteLine("Project Path: {0}", rootCerebelloPath);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -143,10 +145,7 @@ namespace Test1
                 Console.WriteLine(@"db  - Change database.");
                 Console.WriteLine(@"cls - Clear screen.");
 
-                if (wasAttached)
-                    Console.WriteLine(@"atc - Leaves DB attached when done.");
-                else
-                    Console.WriteLine(@"dtc - Detach DB when done.");
+                Console.WriteLine(wasAttached ? @"atc - Leaves DB attached when done." : @"dtc - Detach DB when done.");
 
                 Console.WriteLine(@"q   - Quit.");
                 Console.WriteLine(@"    Type ? after any option to get help.");
@@ -208,21 +207,10 @@ namespace Test1
 
                     case "crt":
                         {
-                            // ToDo: figure out a way to remove this.. we should have a common path or something
-                            string path = Path.Combine(rootCerebelloPath, @"DB\Scripts");
-
                             try
                             {
-                                if (path != null)
-                                {
-                                    string script = File.ReadAllText(Path.Combine(path, "script.sql"));
-                                    using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
-                                    {
-                                        var script2 = SqlHelper.SetScriptColumnsCollation(script, "Latin1_General_CI_AI");
-                                        // Creating tables.
-                                        Firestarter.ExecuteScript(db, script2);
-                                    }
-                                }
+                                using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                    Program.CreateDatabaseUsingScript(db, rootCerebelloPath);
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -283,8 +271,12 @@ namespace Test1
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
                             Console.WriteLine();
-                            Console.WriteLine("Methods that will be called:");
-                            Console.WriteLine("    InitializeDatabaseWithSystemData");
+                            Console.WriteLine("Gives options to initialize SYS tables:");
+                            Console.WriteLine("1: SYS_MedicalEntity: TISS - Conselhos Profissionais");
+                            Console.WriteLine("2: SYS_MedicalSpecialty: TISS - CBO-S (especialidades)");
+                            Console.WriteLine("3: SYS_MedicalProcedures: CBHPM (procedimentos médicos)");
+                            Console.WriteLine("4: Initialize_SYS_Cid10: CID10");
+                            Console.WriteLine("5: Initialize_SYS_Contracts: SaaS contracts");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
@@ -295,22 +287,36 @@ namespace Test1
 
                     case "sys":
                         {
-                            var optionsSys = new List<int> { 1, 2 };
+                            var defaultOptions = new List<int> { 1, 2, 3, 4, 5 };
+                            var optionsSys = new List<int>(defaultOptions);
                             while (true)
                             {
                                 Console.ForegroundColor = ConsoleColor.Gray;
                                 Console.WriteLine();
-                                Console.WriteLine("DB sys tables will be populated with:");
+
+                                Console.WriteLine("SYS tables will be populated with:");
+
                                 Console.WriteLine(
-                                    string.Format("    ({0}) 1: SYS_MedicalEntity: TISS - Conselhos Profissionais",
-                                    optionsSys.Contains(1) ? 'x' : ' '));
+                                    "    ({0}) 1: SYS_MedicalEntity: TISS - Conselhos Profissionais",
+                                    optionsSys.Contains(1) ? 'x' : ' ');
+
                                 Console.WriteLine(
-                                    string.Format("    ({0}) 2: SYS_MedicalSpecialty: TISS - CBO-S (especialidades)",
-                                    optionsSys.Contains(2) ? 'x' : ' '));
+                                    "    ({0}) 2: SYS_MedicalSpecialty: TISS - CBO-S (especialidades)",
+                                    optionsSys.Contains(2) ? 'x' : ' ');
+
                                 Console.WriteLine(
-                                    string.Format("    ({0}) 3: SYS_MedicalProcedures: CBHPM (procedimentos médicos)",
-                                    optionsSys.Contains(3) ? 'x' : ' '));
+                                    "    ({0}) 3: SYS_MedicalProcedures: CBHPM (procedimentos médicos)",
+                                    optionsSys.Contains(3) ? 'x' : ' ');
                                 Console.WriteLine(@"        CBHPM data come from text file: \DB\cbhpm_2010.txt.");
+
+                                Console.WriteLine(
+                                    "    ({0}) 4: Initialize_SYS_Cid10: CID10",
+                                    optionsSys.Contains(4) ? 'x' : ' ');
+
+                                Console.WriteLine(
+                                    "    ({0}) 5: Initialize_SYS_Contracts: SaaS contracts",
+                                    optionsSys.Contains(4) ? 'x' : ' ');
+
                                 Console.WriteLine();
 
                                 // options related to sys tables
@@ -321,27 +327,16 @@ namespace Test1
 
                                 key1 = Console.ReadKey();
 
-                                if (key1.KeyChar == '1')
+                                int val;
+                                if (int.TryParse(key1.KeyChar.ToString(), out val))
                                 {
-                                    if (optionsSys.Contains(1)) optionsSys.Remove(1);
-                                    else optionsSys.Add(1);
-                                }
-
-                                if (key1.KeyChar == '2')
-                                {
-                                    if (optionsSys.Contains(2)) optionsSys.Remove(2);
-                                    else optionsSys.Add(2);
-                                }
-
-                                if (key1.KeyChar == '3')
-                                {
-                                    if (optionsSys.Contains(3)) optionsSys.Remove(3);
-                                    else optionsSys.Add(3);
+                                    if (optionsSys.Contains(val)) optionsSys.Remove(val);
+                                    else optionsSys.Add(val);
                                 }
 
                                 if (key1.KeyChar == 'D' || key1.KeyChar == 'd')
                                 {
-                                    optionsSys = new List<int> { 1, 2 };
+                                    optionsSys = new List<int>(defaultOptions);
                                 }
 
                                 if (key1.KeyChar == 'N' || key1.KeyChar == 'n')
@@ -351,7 +346,7 @@ namespace Test1
 
                                 if (key1.KeyChar == 'A' || key1.KeyChar == 'a')
                                 {
-                                    optionsSys = new List<int> { 1, 2, 3 };
+                                    optionsSys = Enumerable.Range(1, 9).ToList();
                                 }
 
                                 if (key1.Key == ConsoleKey.Enter)
@@ -378,7 +373,7 @@ namespace Test1
 
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.Write("Continue? (y/n): ");
-                            ConsoleKeyInfo key = default(ConsoleKeyInfo);
+                            var key = default(ConsoleKeyInfo);
                             if (key.KeyChar != 'y' && key.KeyChar != 'n')
                                 key = Console.ReadKey();
                             Console.WriteLine();
@@ -389,20 +384,45 @@ namespace Test1
                                 {
                                     using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                                     {
-                                        Console.WriteLine("Initialize_SYS_MedicalEntity");
-                                        Firestarter.Initialize_SYS_MedicalEntity(db);
-                                        Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                                        Firestarter.Initialize_SYS_MedicalEntity(db);
-                                        Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                                        Firestarter.Initialize_SYS_MedicalProcedures(
-                                            db,
-                                            Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                                            progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                                        if (optionsSys.Contains(1))
+                                        {
+                                            Console.WriteLine("Initialize_SYS_MedicalEntity");
+                                            Firestarter.Initialize_SYS_MedicalEntity(db);
+                                        }
+
+                                        if (optionsSys.Contains(2))
+                                        {
+                                            Console.WriteLine("Initialize_SYS_MedicalSpecialty");
+                                            Firestarter.Initialize_SYS_MedicalEntity(db);
+                                        }
+
+                                        if (optionsSys.Contains(3))
+                                        {
+                                            Console.WriteLine("Initialize_SYS_MedicalProcedures");
+                                            Firestarter.Initialize_SYS_MedicalProcedures(
+                                                    db,
+                                                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
+                                                    progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                                        }
+
+                                        if (optionsSys.Contains(4))
+                                        {
+                                            Console.WriteLine("Initialize_SYS_Cid10");
+                                            Firestarter.Initialize_SYS_Cid10(
+                                                db,
+                                                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                                        }
+
+                                        if (optionsSys.Contains(5))
+                                        {
+                                            Console.WriteLine("Initialize_SYS_Contracts");
+                                            Firestarter.Initialize_SYS_Contracts(db);
+                                        }
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    ConsoleWriteException(ex);
+                                    Program.ConsoleWriteException(ex);
 
                                     Console.ForegroundColor = ConsoleColor.Yellow;
                                     Console.WriteLine("Partially done!");
@@ -571,8 +591,9 @@ namespace Test1
                             Console.WriteLine("Methods that will be called:");
                             Console.WriteLine("    Initialize_SYS_MedicalEntity");
                             Console.WriteLine("    Initialize_SYS_MedicalSpecialty");
-                            Console.WriteLine("    Initialize_SYS_MedicalProcedures");
                             Console.WriteLine("    Initialize_SYS_Contracts");
+                            Console.WriteLine("    Initialize_SYS_Cid10");
+                            Console.WriteLine("    Initialize_SYS_MedicalProcedures");
                             Console.WriteLine("    Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
                             Console.WriteLine("    SetupDoctor (for each doctor)");
                             Console.WriteLine("    CreateFakePatients (for each doctor)");
@@ -592,38 +613,9 @@ namespace Test1
                                 Console.ForegroundColor = ConsoleColor.Gray;
 
                                 // Initializing system tables
+                                InitSysTables(db, rootCerebelloPath);
 
-                                Console.WriteLine("Initialize_SYS_Cid10");
-                                Firestarter.Initialize_SYS_Cid10(db);
-
-                                Console.WriteLine("Initialize_SYS_MedicalEntity");
-                                Firestarter.Initialize_SYS_MedicalEntity(db);
-
-                                Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                                Firestarter.Initialize_SYS_MedicalSpecialty(db);
-
-                                Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                                Firestarter.Initialize_SYS_MedicalProcedures(
-                                    db,
-                                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                                    progress: new Action<int, int>(ConsoleWriteProgressIntInt));
-
-                                Console.WriteLine("Initialize_SYS_Contracts");
-                                Firestarter.Initialize_SYS_Contracts(db);
-
-                                // Create practice, contract, doctors and other things
-                                Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
-                                var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
-
-                                // Setup doctor schedule and document templates
-                                Console.WriteLine("SetupDoctor");
-                                foreach (var doctor in listDoctors)
-                                    Firestarter.SetupDoctor(doctor, db);
-
-                                // Create patients
-                                Console.WriteLine("CreateFakePatients");
-                                foreach (var doctor in listDoctors)
-                                    Firestarter.CreateFakePatients(doctor, db);
+                                OptionP1(db);
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -691,6 +683,81 @@ namespace Test1
 
                         break;
 
+                    case "r?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Resets the current database, to the default working state.");
+                            Console.WriteLine("Work database is dropped, recreated, and populated with p1 option.");
+                            Console.WriteLine("Test database is dropped, recreated, and populated with all SYS tables.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                        }
+
+                        break;
+
+                    case "r":
+                        {
+                            bool isTestDb = connName.ToUpper().Contains("TEST");
+
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine("DB type: {0}", isTestDb ? "TEST" : "WORK");
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("Reset the database (y/n): ");
+                            var userReset = Console.ReadLine();
+                            if (userReset != "y" && userReset != "n")
+                                continue;
+                            bool resetDb = userReset == "y";
+
+                            Console.ForegroundColor = ConsoleColor.Gray;
+
+                            // Doing what the user has told.
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                            {
+                                if (resetDb)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("DropAllTables");
+                                        Firestarter.DropAllTables(db);
+
+                                        Console.WriteLine("CreateDatabaseUsingScript");
+                                        Program.CreateDatabaseUsingScript(db, rootCerebelloPath);
+
+                                        InitSysTables(db, rootCerebelloPath);
+
+                                        if (!isTestDb)
+                                            OptionP1(db);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Program.ConsoleWriteException(ex);
+
+                                        Console.ForegroundColor = ConsoleColor.Yellow;
+                                        Console.WriteLine("Partially done!");
+                                        Console.ForegroundColor = ConsoleColor.White;
+
+                                        break;
+                                    }
+
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("Done!");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("Canceled!");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                            }
+                        }
+
+                        break;
+
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid option.");
@@ -698,6 +765,56 @@ namespace Test1
                         break;
                 }
             }
+        }
+
+        private static void OptionP1(CerebelloEntities db)
+        {
+            // Create practice, contract, doctors and other things
+            Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
+            var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
+
+            // Setup doctor schedule and document templates
+            Console.WriteLine("SetupDoctor");
+            foreach (var doctor in listDoctors)
+                Firestarter.SetupDoctor(doctor, db);
+
+            // Create patients
+            Console.WriteLine("CreateFakePatients");
+            foreach (var doctor in listDoctors)
+                Firestarter.CreateFakePatients(doctor, db);
+        }
+
+        private static void InitSysTables(CerebelloEntities db, string rootCerebelloPath)
+        {
+            Console.WriteLine("Initialize_SYS_MedicalEntity");
+            Firestarter.Initialize_SYS_MedicalEntity(db);
+
+            Console.WriteLine("Initialize_SYS_MedicalSpecialty");
+            Firestarter.Initialize_SYS_MedicalSpecialty(db);
+
+            Console.WriteLine("Initialize_SYS_Contracts");
+            Firestarter.Initialize_SYS_Contracts(db);
+
+            Console.WriteLine("Initialize_SYS_Cid10");
+            Firestarter.Initialize_SYS_Cid10(
+                db,
+                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+
+            Console.WriteLine("Initialize_SYS_MedicalProcedures");
+            Firestarter.Initialize_SYS_MedicalProcedures(
+                db,
+                Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
+                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+        }
+
+        private static void CreateDatabaseUsingScript(CerebelloEntities db, string rootCerebelloPath)
+        {
+            // ToDo: figure out a way to remove this.. we should have a common path or something
+            var path = Path.Combine(rootCerebelloPath, @"DB\Scripts");
+            string script = File.ReadAllText(Path.Combine(path, "script.sql"));
+            var script2 = SqlHelper.SetScriptColumnsCollation(script, "Latin1_General_CI_AI");
+            // Creating tables.
+            Firestarter.ExecuteScript(db, script2);
         }
 
         private static void ConsoleWriteException(Exception ex)
@@ -726,15 +843,18 @@ namespace Test1
                 // stack-trace
                 Console.BackgroundColor = ConsoleColor.DarkRed;
                 int fncLevel = 0;
-                var linesST = Regex.Split(ex1.StackTrace, @"\r\n|\r|\n");
-                foreach (var eachLine in linesST)
+                if (ex1.StackTrace != null)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(string.Format("{0:0000}:", fncLevel++));
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.Write(eachLine);
-                    if (Console.CursorLeft > 0)
-                        Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
+                    var linesStackTrace = Regex.Split(ex1.StackTrace, @"\r\n|\r|\n");
+                    foreach (var eachLine in linesStackTrace)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(string.Format("{0:0000}:", fncLevel++));
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write(eachLine);
+                        if (Console.CursorLeft > 0)
+                            Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
+                    }
                 }
 
                 // inner exception
@@ -758,7 +878,7 @@ namespace Test1
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (x == 0 || x == y || x * 10 / y != (x - 1) * 10 / y)
-                Console.WriteLine(string.Format("{0} of {1} - {2}%", x, y, x * 100 / y));
+                Console.WriteLine(string.Format("    {0} of {1} - {2}%", x, y, x * 100 / y));
             Console.ForegroundColor = oldColor;
         }
     }
