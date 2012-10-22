@@ -1,49 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Cerebello.Model;
+using System.Web.Mvc;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
-using Cerebello.Firestarter.Helpers;
-using System.Web.Mvc;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
-    public class MedicinesControllerTests
+    public class MedicinesControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        protected CerebelloEntities db = null;
-
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            DatabaseHelper.AttachCerebelloTestDatabase();
+            AttachCerebelloTestDatabase();
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            DatabaseHelper.DetachCerebelloTestDatabase();
-        }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
-
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
-        }
-
-        [TestCleanup]
-        public void MyTestCleanup()
-        {
-            this.db.Dispose();
+            DetachCerebelloTestDatabase();
         }
         #endregion
 

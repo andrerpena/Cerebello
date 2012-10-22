@@ -15,11 +15,16 @@ namespace CerebelloWebRole.Tests
     public class ScheduleControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        [TestInitialize]
-        public void InitializeData()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
         {
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
+            AttachCerebelloTestDatabase();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            DetachCerebelloTestDatabase();
         }
         #endregion
 

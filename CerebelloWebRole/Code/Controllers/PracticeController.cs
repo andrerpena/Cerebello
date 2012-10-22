@@ -42,6 +42,16 @@ namespace CerebelloWebRole.Code
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
             if (timeZoneInfo.IsInvalidTime(practiceDateTime))
             {
+                // Determinando o intervalo inexistente, por conta do
+                // adiantamento de horário de verão,
+                // que contém a data e hora passada em practiceDateTime.
+                // e.g. horário é adiantado no dia 2012/10/21 às 00:00 em 1 hora,
+                // então todos os horários no intervalo seguinte são inválidos:
+                // [2012/10/21 00:00:00,0000000 ~ 2012/10/21 01:00:00,0000000[
+                // O intervalo retornado é exclusivo em ambas as pontas,
+                // de forma que as data em ambas as pontas sejam VÁLIDAS.
+                // Então o intervalo de exemplo acima será dado assim:
+                // ]2012/10/20 23:59:59,9999999 ~ 2012/10/21 01:00:00,0000000[
                 var invalidIntervals = timeZoneInfo.GetAdjustmentRules()
                     .Where(ar => ar.DaylightDelta != TimeSpan.Zero)
                     .Select(ar => ar.DaylightDelta > TimeSpan.Zero
@@ -53,12 +63,15 @@ namespace CerebelloWebRole.Code
                     .Where(x => x.StartExclusive < practiceDateTime && x.EndExclusive > practiceDateTime)
                     .ToList();
 
-                var invalidInterval = invalidIntervals.First();
+                // Deve haver apenas um intervalo.
+                var invalidInterval = invalidIntervals.Single();
 
+                // Determinando a ponta do intervalo que está dentro do dia atual, passado em practiceDateTime.
                 var dateTime = practiceDateTime.Day == invalidInterval.StartExclusive.Day
                                    ? invalidInterval.StartExclusive
                                    : invalidInterval.EndExclusive;
 
+                // Convertendo a data para UTC.
                 var result = TimeZoneInfo.ConvertTimeToUtc(dateTime, timeZoneInfo);
                 return result;
             }

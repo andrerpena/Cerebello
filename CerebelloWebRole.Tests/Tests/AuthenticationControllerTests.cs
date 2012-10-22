@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
-using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.Site.Controllers;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Mvc;
@@ -20,11 +16,22 @@ namespace CerebelloWebRole.Tests
     public class AuthenticationControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        [TestInitialize]
-        public void InitializeData()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
         {
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
+            AttachCerebelloTestDatabase();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            DetachCerebelloTestDatabase();
+        }
+
+        [TestInitialize]
+        public override void InitializeDb()
+        {
+            base.InitializeDb();
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
         }
         #endregion
@@ -141,14 +148,15 @@ namespace CerebelloWebRole.Tests
                 Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
                 var emailViewModel = new EmailViewModel
                 {
-                    Token = savedToken.Value,
+                    IsBodyHtml = false,
+                    Token = new TokenId(savedToken.Id, savedToken.Value).ToString(),
                     UserName = savedUser.UserName,
                     PersonName = savedUser.Person.FullName,
                     PracticeUrlIdentifier = savedUser.Practice.UrlIdentifier,
                 };
                 var emailExpected = emailViewModel.ConvertToString("<div>{0}={1}</div>");
                 Assert.AreEqual(emailExpected, emailBody);
-                Assert.AreEqual("Bem vindo ao Cerebello! Por favor, confirme sua conta.", emailSubject);
+                Assert.AreEqual("Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.", emailSubject);
                 Assert.AreEqual("andre@gmail.com", emailToAddress);
             }
         }
@@ -575,6 +583,9 @@ namespace CerebelloWebRole.Tests
             // ATENTION: The value of the token must NEVER go out to a view.
             Assert.AreEqual(null, model.Token);
 
+            // ATENTION: The value of the password must NEVER go out to a view.
+            Assert.AreEqual(null, model.Password);
+
             Assert.AreEqual(practiceName, model.Practice);
         }
 
@@ -634,12 +645,15 @@ namespace CerebelloWebRole.Tests
             // ATENTION: The value of the token must NEVER go out to a view.
             Assert.AreEqual(null, model.Token);
 
+            // ATENTION: The value of the password must NEVER go out to a view.
+            Assert.AreEqual(null, model.Password);
+
             Assert.AreEqual(practiceName, model.Practice);
 
             // Asserting ModelState.
             Assert.IsTrue(controller.ModelState.ContainsKey("Token"), "ModelState must containt an entry for 'Token'.");
             Assert.AreEqual(1, controller.ModelState["Token"].Errors.Count);
-            Assert.AreEqual("Token is not valid.", controller.ModelState["Token"].Errors.First().ErrorMessage);
+            Assert.AreEqual("Token é inválido, não existe, ou passou do prazo de validade.", controller.ModelState["Token"].Errors.First().ErrorMessage);
         }
 
         /// <summary>
@@ -668,7 +682,7 @@ namespace CerebelloWebRole.Tests
                 // Login-in the user that has just been created.
                 using (var db = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -680,7 +694,7 @@ namespace CerebelloWebRole.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                 return;
             }
 
@@ -700,12 +714,15 @@ namespace CerebelloWebRole.Tests
             // ATENTION: The value of the token must NEVER go out to a view.
             Assert.AreEqual(null, model.Token);
 
+            // ATENTION: The value of the password must NEVER go out to a view.
+            Assert.AreEqual(null, model.Password);
+
             Assert.AreEqual(practiceName, model.Practice);
 
             // Asserting ModelState.
             Assert.IsTrue(controller.ModelState.ContainsKey("Token"), "ModelState must containt an entry for 'Token'.");
             Assert.AreEqual(1, controller.ModelState["Token"].Errors.Count);
-            Assert.AreEqual("Token has expired.", controller.ModelState["Token"].Errors.First().ErrorMessage);
+            Assert.AreEqual("Token é inválido, não existe, ou passou do prazo de validade.", controller.ModelState["Token"].Errors.First().ErrorMessage);
         }
         #endregion
 

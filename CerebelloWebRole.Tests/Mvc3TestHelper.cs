@@ -11,6 +11,7 @@ using System.Linq;
 using System.Globalization;
 using Moq;
 using System.IO;
+using CerebelloWebRole.Code.Controllers;
 
 namespace CerebelloWebRole.Tests
 {
@@ -30,6 +31,10 @@ namespace CerebelloWebRole.Tests
         {
             var routes = new RouteCollection();
             MvcApplication.RegisterRoutes(routes);
+
+            var rootController = controller as RootController;
+            if (rootController != null)
+                rootController.CerebelloEntitiesCreator = DbTestBase.CreateNewCerebelloEntities;
 
             var privateObject = new PrivateObject(controller);
             privateObject.SetField("db", db);

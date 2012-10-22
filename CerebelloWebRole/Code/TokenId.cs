@@ -39,5 +39,14 @@ namespace CerebelloWebRole.Code
         {
             return string.Format("{0}-{1}", this.Id, this.Value);
         }
+
+        public static bool IsValid(string tokenIdAndValue)
+        {
+            if (tokenIdAndValue == null)
+                return false;
+
+            var match = Regex.Match(tokenIdAndValue, @"^(?<ID>\d+)-(?<VALUE>[\da-fA-F]{32})$");
+            return match.Success;
+        }
     }
 }

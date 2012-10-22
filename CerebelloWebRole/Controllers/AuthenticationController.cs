@@ -41,7 +41,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 // extract practice name from returnUrl
                 var routeData = RouteHelper.GetRouteDataByUrl("~" + returnUrl);
                 if (routeData.Values.ContainsKey("practice"))
-                    viewModel.PracticeIdentifier = (string) routeData.Values["practice"];
+                    viewModel.PracticeIdentifier = (string)routeData.Values["practice"];
             }
             catch
             {
@@ -374,18 +374,23 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             if (user == null)
                 this.ModelState.AddModelError(() => viewModel.UserNameOrEmail, "Nome de usuário ou senha incorretos.");
 
-            var tokenId = new TokenId(viewModel.Token);
+            var isTokenValid = TokenId.IsValid(viewModel.Token);
+            GLB_Token token = null;
+            if (isTokenValid)
+            {
+                var tokenId = new TokenId(viewModel.Token);
 
-            // Getting verification token, using the informations.
-            var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.Practice, user.UserName);
-            var token = this.db.GLB_Token.SingleOrDefault(tk =>
-                                                          tk.Id == tokenId.Id
-                                                          && tk.Value == tokenId.Value
-                                                          && tk.Type == "VerifyPracticeAndEmail"
-                                                          && tk.Name == tokenName);
+                // Getting verification token, using the informations.
+                var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.Practice, user.UserName);
+                token = this.db.GLB_Token.SingleOrDefault(tk =>
+                                                              tk.Id == tokenId.Id
+                                                              && tk.Value == tokenId.Value
+                                                              && tk.Type == "VerifyPracticeAndEmail"
+                                                              && tk.Name == tokenName);
+            }
 
             if (token == null)
-                this.ModelState.AddModelError(() => viewModel.Token, "Token não foi achado.");
+                isTokenValid = false;
 
             var practice = this.db.Practices
                 .SingleOrDefault(p => p.UrlIdentifier == viewModel.Practice);
@@ -401,9 +406,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     practice.VerificationDate = utcNow;
                 }
                 else
-                {
-                    this.ModelState.AddModelError(() => viewModel.Token, "Token passou do prazo de validade.");
-                }
+                    isTokenValid = false;
 
                 // Destroying token... it has been used with success, and is no longer needed.
                 this.db.GLB_Token.DeleteObject(token);
@@ -414,13 +417,19 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 this.db.SaveChanges();
             }
 
+            if (!isTokenValid)
+            {
+                this.ModelState.AddModelError(() => viewModel.Token, "Token é inválido, não existe, ou passou do prazo de validade.");
+            }
+
             if (this.ModelState.IsValid)
             {
                 return this.RedirectToAction("Welcome", "PracticeHome",
-                                    new { area = "App", practice = practice.UrlIdentifier });
+                                             new { area = "App", practice = practice.UrlIdentifier });
             }
 
-            viewModel.Password = ""; // cannot allow password going to the view.
+            viewModel.Token = null;
+            viewModel.Password = null; // cannot allow password going to the view.
             return View(viewModel);
         }
 

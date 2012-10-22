@@ -20,11 +20,14 @@ namespace CerebelloWebRole.Code.Controllers
                 using (var smtpClient = this.CreateSmtpClient())
                     smtpClient.Send(mm);
             };
+            this.CerebelloEntitiesCreator = () => new CerebelloEntities();
         }
 
         public Func<DateTime> UtcNowGetter { get; set; }
 
         public Action<MailMessage> EmailSender { get; set; }
+
+        public Func<CerebelloEntities> CerebelloEntitiesCreator { get; set; }
 
         /// <summary>
         /// Mockable version of the DateTime.UtcNow property.
@@ -117,7 +120,7 @@ namespace CerebelloWebRole.Code.Controllers
 
         public virtual CerebelloEntities CreateNewCerebelloEntities()
         {
-            return new CerebelloEntities();
+            return this.CerebelloEntitiesCreator();
         }
     }
 }

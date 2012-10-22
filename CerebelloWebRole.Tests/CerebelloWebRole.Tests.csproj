@@ -89,6 +89,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -127,7 +128,6 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyTest.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DbTestBase.cs" />
     <Compile Include="Disposer.cs" />

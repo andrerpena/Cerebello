@@ -16,36 +16,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CerebelloWebRole.Tests
 {
     [TestClass]
-    public class UsersControllerTests
+    public class UsersControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        protected CerebelloEntities db = null;
-
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            DatabaseHelper.AttachCerebelloTestDatabase();
+            AttachCerebelloTestDatabase();
         }
 
-        [ClassCleanup()]
+        [ClassCleanup]
         public static void ClassCleanup()
         {
-            DatabaseHelper.DetachCerebelloTestDatabase();
-        }
-
-        [TestInitialize()]
-        public void TestInitialize()
-        {
-            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
-
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
-        }
-
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-            this.db.Dispose();
+            DetachCerebelloTestDatabase();
         }
         #endregion
 

@@ -1375,6 +1375,11 @@ Definições e termos
 
         public static SYS_MedicalProcedure[] CreateFakeMedicalProcedures(CerebelloEntities db)
         {
+            // Predictable set of medical procedures.
+            // The official set o procedures is much larger, and may change over time.
+            // These fake medical procedures, must not change over time, unless it is of extreme necessity.
+            // Care must be taken so that tests don't break.
+
             var tissConselhoProfissional = new ListOfTuples<string, string>
             {
                 { "4.03.04.36-1", "Hemograma com contagem de plaquetas ou frações" },
