@@ -113,14 +113,7 @@ namespace CerebelloWebRole.Tests
             this.RouteData.Values["doctor"] = "gregoryhouse";
         }
 
-        public void SetRouteData<T>(Practice p, Doctor d, string action) where T : Controller
-        {
-            var type = typeof(T);
-
-            this.SetRouteData(type, p, d, action);
-        }
-
-        public void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
+        private void SetRouteData(Type controllerType, Practice p, Doctor d, string action)
         {
             this.RouteData = new RouteData();
 
@@ -131,6 +124,13 @@ namespace CerebelloWebRole.Tests
 
             if (d != null)
                 this.RouteData.Values["doctor"] = d.UrlIdentifier;
+        }
+
+        public void SetRouteData<T>(Practice p, Doctor d, string action) where T : Controller
+        {
+            var type = typeof(T);
+
+            this.SetRouteData(type, p, d, action);
         }
 
         public void SetRouteData(Type controllerType, string action)

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
+using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.Site.Controllers;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Mvc;
@@ -23,6 +25,7 @@ namespace CerebelloWebRole.Tests
         {
             Firestarter.ClearAllData(this.db);
             Firestarter.InitializeDatabaseWithSystemData(this.db);
+            Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
         }
         #endregion
 

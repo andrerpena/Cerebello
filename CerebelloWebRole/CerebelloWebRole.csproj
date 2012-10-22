@@ -253,6 +253,7 @@
     <Compile Include="Code\Helpers\ImageHelper.cs" />
     <Compile Include="Code\Helpers\MemberExpressionHelper.cs" />
     <Compile Include="Code\Helpers\ExpressionHelper.cs" />
+    <Compile Include="Code\Helpers\RouteHelper.cs" />
     <Compile Include="Code\Helpers\StringHelper.cs" />
     <Compile Include="Code\Helpers\TagsHelper.cs" />
     <Compile Include="Code\Helpers\UrlBuilder.cs" />

@@ -1661,9 +1661,18 @@ GO
             }
         }
 
+        /// <summary>
+        /// Initializes the database with system data.
+        /// THIS METHOD IS ONLY CALLED FROM UNIT TESTS
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="medicalProceduresMaxCount"></param>
+        /// <param name="rootCerebelloPath"></param>
+        /// <param name="progress"></param>
         public static void InitializeDatabaseWithSystemData(CerebelloEntities db, int medicalProceduresMaxCount = 0, string rootCerebelloPath = null, Action<int, int> progress = null)
         {
-            Firestarter.Initialize_SYS_Cid10(db);
+            // must add Firestarter.Initialize_SYS_Cid10() here. Didn't add because it's too slow and I
+            // have to implement something similar to medicalProceduresMaxCount here
             Firestarter.Initialize_SYS_MedicalEntity(db);
             Firestarter.Initialize_SYS_MedicalSpecialty(db);
             if (medicalProceduresMaxCount > 0)

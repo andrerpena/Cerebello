@@ -6,6 +6,7 @@ using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controllers;
+using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
@@ -13,6 +14,7 @@ using CerebelloWebRole.Areas.App.Controllers;
 using System.Net;
 using System.IO;
 using System.Net.Mail;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
@@ -20,10 +22,33 @@ namespace CerebelloWebRole.Areas.Site.Controllers
     {
         private CerebelloEntities db = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Requiriments:
+        ///     - Should populate the practice identifier if it's present in the passed returnUrl
+        /// </remarks>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
-            return View();
+            var viewModel = new LoginViewModel();
+
+            try
+            {
+                // extract practice name from returnUrl
+                var routeData = RouteHelper.GetRouteDataByUrl("~" + returnUrl);
+                if (routeData.Values.ContainsKey("practice"))
+                    viewModel.PracticeIdentifier = (string) routeData.Values["practice"];
+            }
+            catch
+            {
+                // the returnUrl must be invalid, let's just ignore it
+            }
+
+            return View(viewModel);
         }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
@@ -49,7 +74,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, db, out user))
             {
                 ViewBag.LoginFailed = true;
-                return View();
+                return View(loginModel);
             }
 
             user.LastActiveOn = this.GetUtcNow();

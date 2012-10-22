@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cerebello.Firestarter\Cerebello.Firestarter.csproj">
-      <Project>{910ADA48-2A68-4783-B70B-314D9BAA1428}</Project>
+      <Project>{910ada48-2a68-4783-b70b-314d9baa1428}</Project>
       <Name>Cerebello.Firestarter</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cerebello.Model\Cerebello.Model.csproj">
