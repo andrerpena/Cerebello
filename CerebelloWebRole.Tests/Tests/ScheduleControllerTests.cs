@@ -9,7 +9,7 @@ using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CerebelloWebRole.Code;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
     public class ScheduleControllerTests : DbTestBase

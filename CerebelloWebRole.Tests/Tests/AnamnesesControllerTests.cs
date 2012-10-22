@@ -7,7 +7,7 @@ using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
     public class AnamnesesControllerTests : DbTestBase

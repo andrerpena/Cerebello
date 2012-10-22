@@ -13,7 +13,7 @@ using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
     public class UsersControllerTests : DbTestBase

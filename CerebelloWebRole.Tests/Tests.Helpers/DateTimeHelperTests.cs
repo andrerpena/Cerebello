@@ -7,6 +7,7 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
     [TestClass]
     public class DateTimeHelperTests
     {
+        #region ConvertToUtcDateTime
         [TestMethod]
         public void ConvertToUtcDateTime_InvalidTimeWhenChangingToDST()
         {
@@ -67,8 +68,9 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
                     });
             return timeZoneInfo;
         }
+        #endregion
 
-
+        #region GetPersonAgeInWords
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void GetPersonAgeInWords_WhenDateOfBirthIsLocal()
@@ -221,5 +223,6 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
             var result = DateTimeHelper.GetPersonAgeInWords(dateOfBirth, now);
             Assert.AreEqual("0 anos, 0 meses e 2 dias", result);
         }
+        #endregion
     }
 }

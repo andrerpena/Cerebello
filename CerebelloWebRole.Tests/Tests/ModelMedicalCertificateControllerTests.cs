@@ -7,7 +7,7 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     /// <summary>
     ///This is a test class for ModelMedicalCertificateControllerTest and is intended

@@ -1,16 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using Cerebello.Firestarter;
-using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Controllers;
-using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Json;
+﻿using CerebelloWebRole.Code;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CerebelloWebRole.Code;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests.Helpers
 {
     [TestClass]
     public class StringHelperTests

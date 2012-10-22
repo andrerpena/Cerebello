@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -63,7 +64,7 @@ namespace CerebelloWebRole.Tests
             else
             {
                 using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
-                    this.UserDbId = db.Users.Where(u => u.UserName == "andrerpena").Single().Id;
+                    this.UserDbId = db.Users.Single(u => u.UserName == "andrerpena").Id;
             }
         }
 
@@ -76,7 +77,7 @@ namespace CerebelloWebRole.Tests
             this.IsAuthenticated = true;
             this.FullName = user.Person.FullName;
             this.UserNameOrEmail = loginWithUserName ? user.UserName : user.Person.Email;
-            this.Password = CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD;
+            this.Password = Code.Constants.DEFAULT_PASSWORD;
 
             // Setting DB info.
             this.UserDbId = user.Id;
@@ -163,6 +164,7 @@ namespace CerebelloWebRole.Tests
         private static void FillRouteData_App_Controller_Action(RouteData routeData, Type controllerType, string action)
         {
             var matchController = Regex.Match(controllerType.Name, @"(?<CONTROLLER>.*?)Controller");
+            Debug.Assert(controllerType.Namespace != null, "controllerType.Namespace must not be null");
             var matchArea = Regex.Match(controllerType.Namespace, @"Areas\.(?<AREA>.*?)(?=\.Controllers)");
 
             if (matchArea.Success)
@@ -274,7 +276,7 @@ namespace CerebelloWebRole.Tests
         public HttpResponseBase GetResponse()
         {
             var mock = new Mock<HttpResponseBase>();
-            mock.Setup(x => x.ApplyAppPathModifier(Moq.It.IsAny<String>())).Returns((String url) => url);
+            mock.Setup(x => x.ApplyAppPathModifier(It.IsAny<String>())).Returns((String url) => url);
             mock.SetupGet(m => m.Cookies).Returns(new HttpCookieCollection());
 
             return mock.Object;
@@ -301,7 +303,7 @@ namespace CerebelloWebRole.Tests
 
                     user.LastActiveOn = DateTime.UtcNow;
 
-                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                    var ticket = new FormsAuthenticationTicket(
                          version: 1,
                          name: this.UserNameOrEmail,
                          issueDate: DateTime.UtcNow,
@@ -311,12 +313,12 @@ namespace CerebelloWebRole.Tests
                          cookiePath: FormsAuthentication.FormsCookiePath);
 
                     principal =
-                        new AuthenticatedPrincipal(new FormsIdentity(ticket), new UserData()
-                        {
+                        new AuthenticatedPrincipal(new FormsIdentity(ticket), new UserData
+                                                                                  {
                             FullName = this.FullName,
                             Email = this.UserNameOrEmail,
                             Id = this.UserDbId,
-                            IsUsingDefaultPassword = this.Password == CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD,
+                            IsUsingDefaultPassword = this.Password == Code.Constants.DEFAULT_PASSWORD,
                         });
                 }
                 else
@@ -354,11 +356,12 @@ namespace CerebelloWebRole.Tests
             var response = httpContext.Response;
 
             var oldHttpContext = HttpContext.Current;
+            Debug.Assert(request.Url != null, "request.Url must not be null");
             HttpContext.Current = new HttpContext(
                 new HttpRequest("filename", request.Url.AbsoluteUri, request.Url.Query),
                 new HttpResponse(new StreamWriter(response.OutputStream ?? new MemoryStream())));
 
-            disposer.Disposing += new Action(() => { HttpContext.Current = oldHttpContext; });
+            disposer.Disposing += () => { HttpContext.Current = oldHttpContext; };
 
             return HttpContext.Current;
         }
@@ -377,12 +380,12 @@ namespace CerebelloWebRole.Tests
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(result.Object);
 
-            disposer.Disposing += new Action(() =>
-            {
-                ViewEngines.Engines.Clear();
-                foreach (var eachViewEngine in oldViewEngines)
-                    ViewEngines.Engines.Add(eachViewEngine);
-            });
+            disposer.Disposing += () =>
+                {
+                    ViewEngines.Engines.Clear();
+                    foreach (var eachViewEngine in oldViewEngines)
+                        ViewEngines.Engines.Add(eachViewEngine);
+                };
 
             return result;
         }

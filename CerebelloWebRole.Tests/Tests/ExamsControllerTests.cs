@@ -10,7 +10,7 @@ using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
     public class ExamsControllerTests : DbTestBase

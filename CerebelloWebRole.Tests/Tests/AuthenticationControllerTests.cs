@@ -10,7 +10,7 @@ using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
     public class AuthenticationControllerTests : DbTestBase

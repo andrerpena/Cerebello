@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CerebelloWebRole.Tests
 {
@@ -9,7 +7,7 @@ namespace CerebelloWebRole.Tests
     {
         public static string FlattenMessages(this Exception ex, string separator = "\n\n")
         {
-            List<string> messages = new List<string>();
+            var messages = new List<string>();
             var ex1 = ex;
             while (ex1 != null)
             {
