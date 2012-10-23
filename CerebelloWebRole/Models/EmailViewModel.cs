@@ -8,6 +8,9 @@ namespace CerebelloWebRole.Models
 
         public string UserName { get; set; }
 
+        /// <summary>
+        /// Full token in the format Id-Guid.
+        /// </summary>
         public string Token { get; set; }
 
         public string PracticeUrlIdentifier { get; set; }

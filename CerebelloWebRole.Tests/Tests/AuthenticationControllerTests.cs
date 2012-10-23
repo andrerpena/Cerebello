@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
+using Cerebello.Model;
 using CerebelloWebRole.Areas.Site.Controllers;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Mvc;
@@ -12,6 +13,7 @@ using Moq;
 
 namespace CerebelloWebRole.Tests.Tests
 {
+    // ReSharper disable HeuristicUnreachableCode
     [TestClass]
     public class AuthenticationControllerTests : DbTestBase
     {
@@ -49,12 +51,11 @@ namespace CerebelloWebRole.Tests.Tests
             using (var disposer = new Disposer())
             {
                 AuthenticationController controller;
-                bool hasBeenSaved = false;
+                var hasBeenSaved = false;
                 CreateAccountViewModel vm;
 
-                bool wasEmailSent = false;
+                var wasEmailSent = false;
                 string emailBody = null, emailSubject = null, emailToAddress = null;
-                bool isEmailHtml = false;
 
                 var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
 
@@ -65,12 +66,12 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
 
-                    var mhc = mr.SetupHttpContext(disposer);
+                    mr.SetupHttpContext(disposer);
 
                     controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
-                    this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     controller.UtcNowGetter = () => utcNow;
 
@@ -80,7 +81,6 @@ namespace CerebelloWebRole.Tests.Tests
                         emailBody = mm.Body;
                         emailSubject = mm.Subject;
                         emailToAddress = mm.To.Single().Address;
-                        isEmailHtml = mm.IsBodyHtml;
                     };
 
                     // Creating ViewModel, and setting the ModelState of the controller.
@@ -99,7 +99,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                     return;
                 }
 
@@ -136,6 +136,7 @@ namespace CerebelloWebRole.Tests.Tests
                     controller.HttpContext.Response.Cookies.Keys.Cast<string>().Contains(".ASPXAUTH"),
                     "Authentication cookie should be present in the Response.");
                 var authCookie = controller.HttpContext.Response.Cookies[".ASPXAUTH"];
+                Assert.IsNotNull(authCookie, @"Response.Cookies["".ASPXAUTH""] must not be null.");
                 var ticket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
                 Assert.AreEqual("andré-01", ticket.Name);
                 var token = SecurityTokenHelper.FromString(ticket.UserData);
@@ -171,7 +172,7 @@ namespace CerebelloWebRole.Tests.Tests
             using (var disposer = new Disposer())
             {
                 AuthenticationController controller;
-                bool hasBeenSaved = false;
+                var hasBeenSaved = false;
                 CreateAccountViewModel vm;
 
                 try
@@ -181,12 +182,12 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
 
-                    var mhc = mr.SetupHttpContext(disposer);
+                    mr.SetupHttpContext(disposer);
 
                     controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
-                    this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     controller.EmailSender = mm =>
                     {
@@ -227,7 +228,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
 
                 // Getting the user that was saved.
-                var savedUser = this.db.Users.Where(u => u.UserName == "andré-01").Single();
+                var savedUser = this.db.Users.Single(u => u.UserName == "andré-01");
 
                 // Assertions.
                 Assert.IsNotNull(actionResult, "The result of the controller method is null.");
@@ -255,8 +256,7 @@ namespace CerebelloWebRole.Tests.Tests
             using (var disposer = new Disposer())
             {
                 AuthenticationController controller;
-                string practiceName;
-                bool hasBeenSaved = false;
+                var hasBeenSaved = false;
                 CreateAccountViewModel vm;
 
                 try
@@ -267,13 +267,13 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
 
-                    var mhc = mr.SetupHttpContext(disposer);
+                    mr.SetupHttpContext(disposer);
 
                     controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
-                    practiceName = this.db.Practices.Single().UrlIdentifier;
-                    this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+                    var practiceName = this.db.Practices.Single().UrlIdentifier;
+                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     controller.EmailSender = mm =>
                     {
@@ -296,7 +296,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                     return;
                 }
 
@@ -332,9 +332,7 @@ namespace CerebelloWebRole.Tests.Tests
             using (var disposer = new Disposer())
             {
                 AuthenticationController controller;
-                string userFullName;
-                string userName;
-                bool hasBeenSaved = false;
+                var hasBeenSaved = false;
                 CreateAccountViewModel vm;
 
                 try
@@ -345,14 +343,14 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => ((EmailViewModel)vc.ViewData.Model).ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
 
-                    var mhc = mr.SetupHttpContext(disposer);
+                    mr.SetupHttpContext(disposer);
 
                     controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
-                    userFullName = this.db.Users.Single().Person.FullName;
-                    userName = this.db.Users.Single().UserName;
-                    this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+                    var userFullName = this.db.Users.Single().Person.FullName;
+                    var userName = this.db.Users.Single().UserName;
+                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     controller.EmailSender = mm =>
                     {
@@ -375,7 +373,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                     return;
                 }
 
@@ -408,9 +406,9 @@ namespace CerebelloWebRole.Tests.Tests
             using (var disposer = new Disposer())
             {
                 AuthenticationController controller;
-                bool hasBeenSaved = false;
+                var hasBeenSaved = false;
                 CreateAccountViewModel vm;
-                bool hasEmail = false;
+                var hasEmail = false;
                 try
                 {
                     var mr = new MockRepository();
@@ -423,7 +421,7 @@ namespace CerebelloWebRole.Tests.Tests
                     Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
                     controller.EmailSender = mm => { hasEmail = true; };
 
-                    this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     // Creating ViewModel, and setting the ModelState of the controller.
                     vm = new CreateAccountViewModel
@@ -441,7 +439,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                     return;
                 }
 
@@ -491,22 +489,21 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
-                using (var db = CreateNewCerebelloEntities())
+                using (var db2 = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Single(u => u.Id == userId);
+                    var user = db2.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                controller = new AuthenticationController();
-                controller.UtcNowGetter = () => utcNow;
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: true);
+                controller = new AuthenticationController { UtcNowGetter = () => utcNow };
+                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                 return;
             }
 
@@ -549,9 +546,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
-                using (var db = CreateNewCerebelloEntities())
+                using (var db2 = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db2.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -559,11 +556,11 @@ namespace CerebelloWebRole.Tests.Tests
                 }
 
                 controller = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: true);
+                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                 return;
             }
 
@@ -597,7 +594,6 @@ namespace CerebelloWebRole.Tests.Tests
         public void VerifyPracticeAndEmail_InvalidToken_ValidPractice()
         {
             AuthenticationController controller;
-            MockRepository mr;
             var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
             string practiceName;
 
@@ -608,12 +604,12 @@ namespace CerebelloWebRole.Tests.Tests
                 string token;
                 var userId = CreateAccount_Helper(utcNow, out password, out token);
 
-                mr = new MockRepository();
+                var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
-                using (var db = CreateNewCerebelloEntities())
+                using (var db2 = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db2.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -621,11 +617,11 @@ namespace CerebelloWebRole.Tests.Tests
                 }
 
                 controller = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: true);
+                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                 return;
             }
 
@@ -666,7 +662,6 @@ namespace CerebelloWebRole.Tests.Tests
         public void VerifyPracticeAndEmail_ExpiredToken_ValidPractice()
         {
             AuthenticationController controller;
-            MockRepository mr;
             var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
             string practiceName;
             string token;
@@ -677,12 +672,12 @@ namespace CerebelloWebRole.Tests.Tests
                 string password;
                 var userId = CreateAccount_Helper(utcNow.AddDays(-200), out password, out token);
 
-                mr = new MockRepository();
+                var mr = new MockRepository();
 
                 // Login-in the user that has just been created.
-                using (var db = CreateNewCerebelloEntities())
+                using (var db2 = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Single(u => u.Id == userId);
+                    var user = db2.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -690,7 +685,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
 
                 controller = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: true);
+                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
             }
             catch (Exception ex)
             {
@@ -750,22 +745,22 @@ namespace CerebelloWebRole.Tests.Tests
                 mr = new MockRepository();
 
                 // Login-in the user that has just been created.
-                using (var db = CreateNewCerebelloEntities())
+                using (var db2 = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db2.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                var mockController = new Mock<PracticeController>() { CallBase = true };
+                var mockController = new Mock<PracticeController> { CallBase = true };
                 controller = mockController.Object;
                 Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                 return;
             }
 
@@ -806,9 +801,9 @@ namespace CerebelloWebRole.Tests.Tests
                 mr = new MockRepository();
 
                 // Login-in the user that has just been created.
-                using (var db = CreateNewCerebelloEntities())
+                using (var db2 = CreateNewCerebelloEntities())
                 {
-                    var user = db.Users.Where(u => u.Id == userId).Single();
+                    var user = db2.Users.Single(u => u.Id == userId);
                     mr.SetCurrentUser(user, password);
                     mr.SetRouteData("Any", "Practice", null, user.Practice.UrlIdentifier);
 
@@ -827,13 +822,13 @@ namespace CerebelloWebRole.Tests.Tests
 
                 Assert.IsTrue(authController.ModelState.IsValid, "Could not validate email.");
 
-                var mockController = new Mock<PracticeController>() { CallBase = true };
+                var mockController = new Mock<PracticeController> { CallBase = true };
                 controller = mockController.Object;
                 Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed.\n\n{0}", ex.FlattenMessages()));
+                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
                 return;
             }
 
@@ -851,6 +846,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual("App", redirectToRouteResult.RouteValues["area"]);
             Assert.AreEqual(practiceName, redirectToRouteResult.RouteValues["practice"]);
         }
+        #endregion
 
         /// <summary>
         /// Simulates the creation of a new account,
@@ -858,6 +854,8 @@ namespace CerebelloWebRole.Tests.Tests
         /// and mocking everything that is of no interest.
         /// </summary>
         /// <param name="utcNow"></param>
+        /// <param name="password"> </param>
+        /// <param name="outToken"> </param>
         private static int CreateAccount_Helper(DateTime utcNow, out string password, out string outToken)
         {
             using (var disposer = new Disposer())
@@ -875,7 +873,7 @@ namespace CerebelloWebRole.Tests.Tests
                         return "Fake e-mail message.";
                     });
 
-                var mhc = mr.SetupHttpContext(disposer);
+                mr.SetupHttpContext(disposer);
 
                 var controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(db, mr);
 
@@ -910,12 +908,216 @@ namespace CerebelloWebRole.Tests.Tests
 
                 // Getting the Id of the user that was created, and returning it.
                 var authCookie = controller.HttpContext.Response.Cookies[".ASPXAUTH"];
+                Assert.IsNotNull(authCookie, @"Response.Cookies["".ASPXAUTH""] must not be null.");
                 var ticket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
                 var securityToken = SecurityTokenHelper.FromString(ticket.UserData);
 
                 return securityToken.UserData.Id;
             }
         }
+
+        #region Reset passwrod
+        /// <summary>
+        /// Tests whether the reset password request is working.
+        /// To request a password reset, the user needs to enter the practice-name and the user-name/e-mail.
+        /// </summary>
+        [TestMethod]
+        public void ResetPasswordRequest_HappyPath()
+        {
+            using (var disposer = new Disposer())
+            {
+                AuthenticationController controller;
+                var utcNow = new DateTime(2012, 10, 22, 23, 30, 0, DateTimeKind.Utc);
+                var hasBeenSaved = false;
+                var wasEmailSent = false;
+
+                User user;
+                string emailToken = null;
+                string emailBody = null;
+                string emailToAddress = null;
+                string emailSubject = null;
+                try
+                {
+                    user = this.db.Users.Single(x => x.UserName == "andrerpena");
+
+                    var mr = new MockRepository();
+
+                    var mve = mr.SetupViewEngine(disposer);
+                    mve.SetViewContent(
+                        "ResetPasswordEmail",
+                        vc =>
+                        {
+                            emailToken = ((EmailViewModel)vc.ViewData.Model).Token;
+                            return vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>");
+                        });
+
+                    controller = new AuthenticationController { UtcNowGetter = () => utcNow };
+                    Mvc3TestHelper.SetupControllerForTesting(
+                        controller,
+                        this.db,
+                        mr, setupNewDb: db1 => { db1.SavingChanges += (s, e) => hasBeenSaved = true; });
+
+                    controller.EmailSender += mm =>
+                    {
+                        wasEmailSent = true;
+                        emailBody = mm.Body;
+                        emailSubject = mm.Subject;
+                        emailToAddress = mm.To.Single().Address;
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    return;
+                }
+
+                ActionResult actionResult;
+                {
+                    actionResult = controller.ResetPasswordRequest(
+                        new ResetPasswordRequestViewModel
+                            {
+                                PracticeIdentifier = user.Practice.UrlIdentifier,
+                                UserNameOrEmail = user.UserName,
+                            });
+                }
+
+                using (var dbs = CreateNewCerebelloEntities())
+                {
+                    // Asserting.
+                    Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+
+                    Assert.IsNotNull(actionResult);
+                    Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
+                    var redirectToRouteResult = (RedirectToRouteResult)actionResult;
+                    Assert.AreEqual("ResetPasswordEmailSent", redirectToRouteResult.RouteValues["action"]);
+                    Assert.AreEqual(null, redirectToRouteResult.RouteValues["controller"]);
+                    Assert.AreEqual(null, redirectToRouteResult.RouteValues["area"]);
+
+                    // Assert DB values.
+                    Assert.IsTrue(hasBeenSaved, "The database has not been changed. This was supposed to happen.");
+                    var tokenId = new TokenId(emailToken);
+                    var savedToken = dbs.GLB_Token.Single(tk => tk.Id == tokenId.Id);
+                    Assert.AreEqual(32, savedToken.Value.Length);
+                    Assert.AreEqual(tokenId.Value, savedToken.Value);
+                    Assert.AreEqual(utcNow.AddDays(30), savedToken.ExpirationDate);
+
+                    // Assertion for email.
+                    Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
+                    var emailViewModel = new EmailViewModel
+                                             {
+                                                 IsBodyHtml = false,
+                                                 Token = emailToken,
+                                                 UserName = user.UserName,
+                                                 PersonName = user.Person.FullName,
+                                                 PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                             };
+                    var emailExpected = emailViewModel.ConvertToString("<div>{0}={1}</div>");
+                    Assert.AreEqual(emailExpected, emailBody);
+                    Assert.AreEqual("Redefinir senha da conta no Cerebello", emailSubject);
+                    Assert.AreEqual("andrerpena@gmail.com", emailToAddress);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests whether the reset password command is working.
+        /// This is going to test if the user can loggin after the password has been reset.
+        /// The whole process will be simulated, from the passwrod reset request to the login.
+        /// </summary>
+        [TestMethod]
+        public void ResetPassword_HappyPath()
+        {
+            using (var disposer = new Disposer())
+            {
+                var utcNow = new DateTime(2012, 10, 22, 23, 30, 0, DateTimeKind.Utc);
+
+                string emailToken = null;
+                User user;
+                AuthenticationController controller;
+                try
+                {
+                    user = this.db.Users.Single(x => x.UserName == "andrerpena");
+
+                    var mr = new MockRepository();
+
+                    var mve = mr.SetupViewEngine(disposer);
+                    mve.SetViewContent("ResetPasswordEmail",
+                                       vc =>
+                                       {
+                                           emailToken = ((EmailViewModel)vc.ViewData.Model).Token;
+                                           return "Fake e-mail contents!";
+                                       });
+
+                    var controller0 = new AuthenticationController { UtcNowGetter = () => utcNow };
+                    Mvc3TestHelper.SetupControllerForTesting(controller0, this.db, mr);
+
+                    // requesting password reset
+                    controller0.ResetPasswordRequest(
+                        new ResetPasswordRequestViewModel
+                            {
+                                PracticeIdentifier = user.Practice.UrlIdentifier,
+                                UserNameOrEmail = user.UserName,
+                            });
+
+                    var mr1 = new MockRepository();
+                    controller = new AuthenticationController { UtcNowGetter = () => utcNow };
+                    Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr1);
+                }
+                catch (Exception ex)
+                {
+                    Assert.Inconclusive("1st test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    return;
+                }
+
+                // reseting the password
+                ActionResult actionResult;
+                {
+                    actionResult = controller.ResetPassword(
+                        new ResetPasswordViewModel
+                            {
+                                Token = emailToken,
+                                NewPassword = "pharaoh",
+                                ConfirmNewPassword = "pharaoh",
+                                PracticeIdentifier = user.Practice.UrlIdentifier,
+                                UserNameOrEmail = user.UserName,
+                            });
+                }
+
+                // Asserting action result.
+                Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
+                var redirectResult = (RedirectToRouteResult)actionResult;
+                Assert.AreEqual("ResetPasswordSuccess", redirectResult.RouteValues["action"]);
+
+                // Asserting user can login with the new password.
+                ActionResult loginActionResult;
+                try
+                {
+                    var mr2 = new MockRepository();
+                    var controller2 = new AuthenticationController { UtcNowGetter = () => utcNow };
+                    Mvc3TestHelper.SetupControllerForTesting(controller2, this.db, mr2);
+                    loginActionResult = controller2.Login(
+                        new LoginViewModel
+                            {
+                                PracticeIdentifier = user.Practice.UrlIdentifier,
+                                UserNameOrEmail = user.UserName,
+                                Password = "pharaoh",
+                            });
+                }
+                catch (Exception ex)
+                {
+                    Assert.Inconclusive("2nd test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    return;
+                }
+
+                Assert.IsInstanceOfType(loginActionResult, typeof(RedirectToRouteResult));
+                var redirectToRouteResult = (RedirectToRouteResult)loginActionResult;
+                Assert.AreEqual("Index", (string)redirectToRouteResult.RouteValues["action"], ignoreCase: true);
+                Assert.AreEqual("PracticeHome", (string)redirectToRouteResult.RouteValues["controller"], ignoreCase: true);
+                Assert.AreEqual("App", (string)redirectToRouteResult.RouteValues["area"], ignoreCase: true);
+            }
+        }
+
         #endregion
     }
+    // ReSharper restore HeuristicUnreachableCode
 }

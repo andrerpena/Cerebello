@@ -485,7 +485,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 message = this.CreateEmailMessage(
                     toAddress,
-                    "Redefinir conta no Cerebello.",
+                    "Redefinir senha da conta no Cerebello",
                     bodyHtml,
                     bodyText);
             }

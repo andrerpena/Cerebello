@@ -27,17 +27,34 @@ namespace CerebelloWebRole.Tests
             return controller;
         }
 
-        public static void SetupControllerForTesting(Controller controller, CerebelloEntities db, MockRepository mr, bool callOnActionExecuting = true)
+        public static void SetupControllerForTesting(Controller controller, CerebelloEntities mainDb, MockRepository mr, bool callOnActionExecuting = true, Action<CerebelloEntities> setupNewDb = null, bool allowEmailSending = false)
         {
             var routes = new RouteCollection();
             MvcApplication.RegisterRoutes(routes);
 
             var rootController = controller as RootController;
             if (rootController != null)
-                rootController.CerebelloEntitiesCreator = DbTestBase.CreateNewCerebelloEntities;
+            {
+                rootController.CerebelloEntitiesCreator = () =>
+                                                              {
+                                                                  var db = DbTestBase.CreateNewCerebelloEntities();
+                                                                  if (setupNewDb != null)
+                                                                      setupNewDb(db);
+                                                                  return db;
+                                                              };
+
+                if (!allowEmailSending)
+                    rootController.EmailSender = eml =>
+                                                     {
+                                                         // Nothing to do, beacause we don't want to send any e-mail.
+                                                     };
+            }
+
+            if (setupNewDb != null)
+                setupNewDb(mainDb);
 
             var privateObject = new PrivateObject(controller);
-            privateObject.SetField("db", db);
+            privateObject.SetField("db", mainDb);
             privateObject.Invoke("Initialize", mr.GetRequestContext());
             if (callOnActionExecuting)
                 privateObject.Invoke("OnActionExecuting", mr.CreateActionExecutingContext());

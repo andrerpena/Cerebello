@@ -180,7 +180,7 @@ namespace Cerebello.Firestarter
 
         public static Doctor CreateAdministratorDoctor_Andre(CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
         {
-            Person person = new Person()
+            var person = new Person()
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
                 FullName = "Gregory House",
@@ -194,7 +194,7 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            User user = new User()
+            var user = new User()
             {
                 UserName = "andrerpena",
                 UserNameNormalized = "andrerpena",
@@ -209,9 +209,8 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            Doctor doctor = new Doctor()
+            var doctor = new Doctor()
             {
-                Id = 1,
                 CRM = "12345",
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
@@ -228,7 +227,7 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            Administrator admin = new Administrator();
+            var admin = new Administrator();
             user.Administrator = admin;
 
             db.SaveChanges();
