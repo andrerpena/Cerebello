@@ -99,7 +99,7 @@
 
                 // Replace the fields inside text, only if it is a string.
                 if (typeof s == 'string') {
-                    s = s.replace(/{([^}]+)}|{{|}}/g, function (match, propName) {
+                    s = s.replace(/{{|}}|{([^}]+)}/g, function (match, propName) {
                         if (match == "{{" || match == "}}") return match[0];
                         return typeof o[propName] != 'undefined'
                             ? "" + fmt(o[propName], o) // recursivelly replacing formatting fields
