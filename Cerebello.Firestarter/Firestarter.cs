@@ -4,12 +4,9 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
-using System.Text.RegularExpressions;
 using System.Data.SqlClient;
-using System.Data.Common;
 using System.Data.EntityClient;
 using Cerebello.Firestarter.Helpers;
 using System.IO;
@@ -299,7 +296,7 @@ namespace Cerebello.Firestarter
             var pwdSalt = "egt/lzoRIw/M7XJsK3C0jw==";
             var pwdHash = CipherHelper.Hash("milena", pwdSalt);
             if (useDefaultPassword)
-                pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
+                pwdHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, pwdSalt);
 
             // Creating user.
             User user = new User()
@@ -330,7 +327,6 @@ namespace Cerebello.Firestarter
             // Creating secretary.
             Secretary secreatry = new Secretary
             {
-                Id = 3
             };
 
             user.Secretary = secreatry;
@@ -1664,6 +1660,71 @@ GO
                 SqlCommand cmd = new SqlCommand("", conn) { CommandText = @"sp_detach_db CerebelloTEST" };
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public static Practice CreatePractice(CerebelloEntities db, string name, User owner, string urlIdentifier)
+        {
+            var practice = new Practice
+                       {
+                           Name = name,
+                           CreatedOn = DateTime.UtcNow.AddDays(-1),
+                           Owner = owner,
+                           ShowWelcomeScreen = true,
+                           WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
+                           VerificationDate = DateTime.UtcNow,
+                           UrlIdentifier = urlIdentifier,
+                       };
+
+            db.SaveChanges();
+
+            SetupPracticeWithTrialContract(db, practice);
+
+            return practice;
+        }
+
+        public static Secretary CreateSecretary(CerebelloEntities db, Practice practice, string username, string password, string name)
+        {
+            var pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
+            var pwdHash = CipherHelper.Hash(password, pwdSalt);
+            if (string.IsNullOrEmpty(password))
+                pwdHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, pwdSalt);
+
+            // Creating user.
+            var user = new User()
+            {
+                UserName = username,
+                UserNameNormalized = StringHelper.NormalizeUserName(username),
+                LastActiveOn = DateTime.UtcNow,
+                PasswordSalt = pwdSalt,
+                Password = pwdHash,
+                Practice = practice,
+            };
+
+            db.Users.AddObject(user);
+
+            // Creating person.
+            var person = new Person()
+            {
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
+                FullName = name,
+                Gender = (int)TypeGender.Female,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            user.Person = person;
+
+            db.SaveChanges();
+
+            // Creating secretary.
+            var secreatry = new Secretary
+            {
+            };
+
+            user.Secretary = secreatry;
+
+            db.SaveChanges();
+
+            return secreatry;
         }
     }
 }
