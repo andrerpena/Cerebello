@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Data;
@@ -19,17 +20,13 @@ namespace CerebelloWebRole.Code
         /// </summary>
         protected CerebelloEntities db = null;
 
-        protected User DbUser { get; private set; }
+        public User DbUser { get; private set; }
 
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
+        protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
 
-            // this is because of how tests work
-            // if a test controller has been created, this.db has already been populated
-            // otherwise let's create a regular one
-            if (this.db == null)
-                this.db = new CerebelloEntities();
+            this.InitDb();
 
             // Note that this is not CerebelloController responsability to ensure the user is logged in
             // or that the user exists, simply because there's no way to return anything here in the 
@@ -39,12 +36,7 @@ namespace CerebelloWebRole.Code
             if (!this.Request.IsAuthenticated)
                 return;
 
-            var authenticatedPrincipal = this.User as AuthenticatedPrincipal;
-
-            if (authenticatedPrincipal == null)
-                throw new Exception("HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
-
-            this.DbUser = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+            this.InitDbUser(requestContext);
 
             if (this.DbUser == null)
                 return;
@@ -61,6 +53,35 @@ namespace CerebelloWebRole.Code
                     AdministratorId = this.DbUser.AdministratorId,
                     IsOwner = this.DbUser.IsOwner,
                 };
+        }
+
+        internal void InitDb()
+        {
+            // this is because of how tests work
+            // if a test controller has been created, this.db has already been populated
+            // otherwise let's create a regular one
+            // TODO: tests don't need to populate this property anymore, as CreateNewCerebelloEntities is mockable.
+            if (this.db == null)
+                this.db = this.CreateNewCerebelloEntities();
+        }
+
+        internal void InitDbUser(RequestContext requestContext)
+        {
+            if (this.DbUser == null)
+            {
+                if (!requestContext.HttpContext.Request.IsAuthenticated)
+                    return;
+
+                var authenticatedPrincipal = requestContext.HttpContext.User as AuthenticatedPrincipal;
+
+                if (authenticatedPrincipal == null)
+                    throw new Exception(
+                        "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
+
+                var result = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+
+                this.DbUser = result;
+            }
         }
 
         protected override void Dispose(bool disposing)
