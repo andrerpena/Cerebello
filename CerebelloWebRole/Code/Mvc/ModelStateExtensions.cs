@@ -124,5 +124,15 @@ namespace CerebelloWebRole.Code.Mvc
 
             return result;
         }
+
+        /// <summary>
+        /// Creates a string containing the description of all errors in the list.
+        /// </summary>
+        /// <param name="flatErrorList">List of model errors to convert to text.</param>
+        /// <returns>A text containing all errors.</returns>
+        public static string TextMessage(this List<Tuple<string, ModelError>> flatErrorList)
+        {
+            return string.Join("\n", flatErrorList.Select(x => string.Format("{0}: {1}", x.Item1, x.Item2)));
+        }
     }
 }
