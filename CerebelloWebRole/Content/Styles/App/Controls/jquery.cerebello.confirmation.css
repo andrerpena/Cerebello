@@ -1,0 +1,22 @@
+﻿.confirmation-warning
+{
+    background-color: #FFEDED;
+    border: 1px solid red;
+    line-height: 1.2em;
+    padding: 4px;
+}
+
+.confirmation-title
+{
+    line-height: 1.2em;
+    margin: 15px 0 6px;
+}
+
+.confirmation-text
+{
+    width: 170px;
+}
+
+.confirmation-text {
+    width: 200px;
+}
