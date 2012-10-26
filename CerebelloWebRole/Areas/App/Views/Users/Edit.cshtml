@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+@using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
     if (this.Model != null && this.Model.Id.HasValue)
@@ -31,9 +32,9 @@
         throw new Exception("'ViewBag.IsEditing' must be either true or false.");
     }
 
-    editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
-    editPanel.AddField(m => m.DateOfBirth, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.CPF);
@@ -61,7 +62,7 @@
 
     editPanelMedic.AddField(
         m => m.MedicalSpecialty,
-        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+        EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalSpecialty,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
@@ -69,7 +70,7 @@
 
     editPanelMedic.AddField(
         m => m.MedicalEntity,
-        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+        EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
