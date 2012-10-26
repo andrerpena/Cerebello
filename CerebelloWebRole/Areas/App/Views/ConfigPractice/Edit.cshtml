@@ -1,0 +1,31 @@
+﻿@using CerebelloWebRole.Code
+@using CerebelloWebRole.Models
+@model CerebelloWebRole.Areas.App.Models.ConfigPracticeViewModel
+@{
+    ViewBag.Title = "Configurações do consultório";
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+
+    // creating edit panel
+    var editPanel = this.Html.CreateEditPanel();
+    editPanel.AddField(m => m.PracticeName);
+    editPanel.AddField(m => m.PracticeTimeZone, format: @<text>@Html.EnumDropdownListFor(model => model.PracticeTimeZone)</text>);
+}
+@section Title {
+    @ViewBag.Title
+}
+@section SideBar {
+}
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+    @editPanel.GetHtml()
+
+    <div class="submit-bar">
+        <input type="submit" value="salvar configurações" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+
+}

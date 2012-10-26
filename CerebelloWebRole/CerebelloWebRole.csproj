@@ -140,6 +140,7 @@
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigPracticeViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
@@ -592,6 +593,8 @@
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
+    <Content Include="Areas\App\Views\ConfigPractice\Index.cshtml" />
+    <Content Include="Areas\App\Views\ConfigPractice\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

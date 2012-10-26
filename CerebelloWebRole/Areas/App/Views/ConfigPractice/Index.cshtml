@@ -1,0 +1,22 @@
+﻿@using CerebelloWebRole.Code
+@using CerebelloWebRole.Models
+@model CerebelloWebRole.Areas.App.Models.ConfigPracticeViewModel
+@{
+    ViewBag.Title = "Configurações do consultório";
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+
+    // creating details CardView
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(m => m.PracticeName, wholeRow: true);
+    cardView.AddField(m => m.PracticeTimeZone,
+    @<text>@EnumHelper.GetText(@item.PracticeTimeZone, typeof(TypeTimeZone))</text>,
+        wholeRow: true);
+}
+@section Title {
+    @ViewBag.Title
+}
+@section SideBar {
+    <a href="@Url.Action("Edit")" class="icon-link icon-link-home">Editar informações</a>
+}
+
+@cardView.GetHtml()
