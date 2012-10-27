@@ -66,7 +66,7 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
 
                     mr.SetupHttpContext(disposer);
 
@@ -155,7 +155,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PersonName = savedUser.Person.FullName,
                     PracticeUrlIdentifier = savedUser.Practice.UrlIdentifier,
                 };
-                var emailExpected = emailViewModel.ConvertToString("<div>{0}={1}</div>");
+                var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                 Assert.AreEqual(emailExpected, emailBody);
                 Assert.AreEqual("Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.", emailSubject);
                 Assert.AreEqual("andre@gmail.com", emailToAddress);
@@ -182,7 +182,7 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
 
                     mr.SetupHttpContext(disposer);
 
@@ -267,7 +267,7 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
 
                     mr.SetupHttpContext(disposer);
 
@@ -343,7 +343,7 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent(
                         "ConfirmationEmail",
-                        vc => vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>"));
+                        vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
 
                     mr.SetupHttpContext(disposer);
 
@@ -948,7 +948,7 @@ namespace CerebelloWebRole.Tests.Tests
                         vc =>
                         {
                             emailToken = ((EmailViewModel)vc.ViewData.Model).Token;
-                            return vc.ViewData.Model.ConvertToString("<div>{0}={1}</div>");
+                            return vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>");
                         });
 
                     controller = new AuthenticationController { UtcNowGetter = () => utcNow };
@@ -1011,7 +1011,7 @@ namespace CerebelloWebRole.Tests.Tests
                                                  PersonName = user.Person.FullName,
                                                  PracticeUrlIdentifier = user.Practice.UrlIdentifier,
                                              };
-                    var emailExpected = emailViewModel.ConvertToString("<div>{0}={1}</div>");
+                    var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                     Assert.AreEqual(emailExpected, emailBody);
                     Assert.AreEqual("Redefinir senha da conta no Cerebello", emailSubject);
                     Assert.AreEqual("andrerpena@gmail.com", emailToAddress);

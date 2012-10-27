@@ -1,7 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Access;
+using CerebelloWebRole.Code.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -57,7 +60,7 @@ namespace CerebelloWebRole.Tests
             privateObject.SetField("db", mainDb);
             privateObject.Invoke("Initialize", mr.GetRequestContext());
             if (callOnActionExecuting)
-                privateObject.Invoke("OnActionExecuting", mr.CreateActionExecutingContext());
+                ((IActionFilter)controller).OnActionExecuting(mr.CreateActionExecutingContext());
             controller.Url = new UrlHelper(mr.GetRequestContext(), routes);
         }
 
@@ -100,6 +103,98 @@ namespace CerebelloWebRole.Tests
                 var attemptedValue = string.Format(CultureInfo.InvariantCulture, "{0}", rawValue);
                 ms[eachPropInfo.Name].Value = new ValueProviderResult(rawValue, attemptedValue, CultureInfo.InvariantCulture);
             }
+        }
+
+        /// <summary>
+        /// Runs all authorization filters just like MVC does.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="actionName"></param>
+        /// <param name="httpMethod"></param>
+        /// <returns></returns>
+        public static ActionResult RunOnAuthorization(Controller controller, string actionName, string httpMethod = "GET")
+        {
+            // reference: http://haacked.com/archive/2008/08/13/aspnetmvc-filters.aspx
+            // reference: http://www.asp.net/mvc/tutorials/older-versions/controllers-and-routing/understanding-action-filters-cs
+            // Filter execution order: Authorization, Action Execution, Result Execution, Exception Handling
+
+            var controllerDescriptor = new ReflectedControllerDescriptor(controller.GetType());
+            var filters = GetFilters<IAuthorizationFilter>(controller, controllerDescriptor, actionName, httpMethod);
+
+            var authorizationContext = new AuthorizationContext(
+                controller.ControllerContext,
+                controllerDescriptor.FindAction(controller.ControllerContext, actionName));
+
+            foreach (var eachFilter in filters)
+            {
+                eachFilter.OnAuthorization(authorizationContext);
+
+                if (authorizationContext.Result != null)
+                    return authorizationContext.Result;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Runs the action filter's OnActionExecuting methods.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="actionName"></param>
+        /// <param name="httpMethod"></param>
+        /// <returns></returns>
+        public static ActionResult RunOnActionExecuting(Controller controller, string actionName, string httpMethod = "GET")
+        {
+            var controllerDescriptor = new ReflectedControllerDescriptor(controller.GetType());
+            var filters = GetFilters<IActionFilter>(controller, controllerDescriptor, actionName, httpMethod);
+
+            var actionExecutingContext = new ActionExecutingContext(
+                controller.ControllerContext,
+                controllerDescriptor.FindAction(controller.ControllerContext, actionName),
+                new Dictionary<string, object>());
+
+            foreach (var eachFilter in filters)
+            {
+                eachFilter.OnActionExecuting(actionExecutingContext);
+
+                if (actionExecutingContext.Result != null)
+                    return actionExecutingContext.Result;
+            }
+
+            return null;
+        }
+        
+        private static List<T> GetFilters<T>(Controller controller, ControllerDescriptor controllerDescriptor, string actionName, string httpMethod = "GET")
+            where T : class
+        {
+            var allFilters = new List<object>();
+
+            // Getting everything that is supposed to be a filter of some kind.
+            var globalFilters = new GlobalFilterCollection();
+            MvcApplication.RegisterGlobalFilters(globalFilters);
+            allFilters.AddRange(globalFilters);
+
+            allFilters.AddRange(controller.GetType().GetCustomAttributes());
+
+            var controllerContextWithMethodParam = new ControllerContext(
+                new MvcHelper.MockHttpContext { Request2 = new MvcHelper.MockHttpRequest { HttpMethod2 = httpMethod } },
+                new RouteData(),
+                controller);
+            var actionDescriptor = controllerDescriptor.FindAction(controllerContextWithMethodParam, actionName);
+            allFilters.AddRange(actionDescriptor.GetCustomAttributes(true));
+
+            allFilters.Add(controller);
+
+            // Creating the final filters list.
+            // Filters inside Filter objects come first.
+            // Then comes all other filters, including controller
+            // itself (if it inherits from Controller).
+            var mvcFilters = new List<object>();
+            mvcFilters.AddRange(allFilters.OfType<Filter>().OrderBy(f => f.Order).ThenBy(f => f.Scope).Select(f => f.Instance));
+            mvcFilters.AddRange(allFilters.Where(f => f != null && f.GetType() != typeof(Filter)));
+
+            var result = mvcFilters.OfType<T>().ToList();
+            return result;
         }
     }
 }
