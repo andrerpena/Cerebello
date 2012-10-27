@@ -2,6 +2,10 @@
     
     // The actual plugin
     $.notify = function (content, cssClass, timeout) {
+        /// <summary>Shows a client-side content</summary>
+        /// <param name="content" type="Object">May be plain text or a jQuery object</param>
+        /// <param name="cssClass" type="String">Custom CSS class</param>
+        /// <param name="timeout" type="Number">Time until it will close automatically</param>
 
         function closeNotification($notification) {
             $notification.fadeOut("fast", function() {
