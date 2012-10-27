@@ -235,6 +235,7 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
     <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
+    <Compile Include="Code\Extensions\AccessExtensions.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Code\Helpers\ImageHelper.cs" />
     <Compile Include="Code\Helpers\MemberExpressionHelper.cs" />
     <Compile Include="Code\Helpers\ExpressionHelper.cs" />
+    <Compile Include="Code\Helpers\MvcHelper.cs" />
     <Compile Include="Code\Helpers\RouteHelper.cs" />
     <Compile Include="Code\Helpers\StringHelper.cs" />
     <Compile Include="Code\Helpers\TagsHelper.cs" />

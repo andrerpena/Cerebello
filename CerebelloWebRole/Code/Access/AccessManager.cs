@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Access
@@ -114,7 +110,8 @@ namespace CerebelloWebRole.Code.Access
         }
 
         /// <summary>
-        /// Finds out whether user can access the specified action, by looking at PermissionAttribute attributes.
+        /// Finds out whether user can access the specified action.
+        /// At this moment it looks only at PermissionAttribute attributes.
         /// </summary>
         /// <param name="this"></param>
         /// <param name="user"></param>
@@ -131,6 +128,11 @@ namespace CerebelloWebRole.Code.Access
         {
             // TODO: must cache all of these informations
 
+            // TODO: there is much to be improved in this method:
+            // - Use global filters
+            // - Use the controller itself as a filter
+            // - Use attributes that are filters, not only derived from PermissionAttribute.
+
             if (@this == null)
                 throw new ArgumentNullException("this");
 
@@ -145,130 +147,6 @@ namespace CerebelloWebRole.Code.Access
                 || attributes.All(pa => pa.CanAccessResource(user));
 
             return result;
-        }
-
-        /// <summary>
-        /// Returns the attributes places on an action method.
-        /// </summary>
-        /// <param name="this"></param>
-        /// <param name="action"></param>
-        /// <param name="controller"></param>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        public static Attribute[] GetAttributesOfAction(
-            this ControllerContext @this,
-            [AspMvcAction]string action = null,
-            [AspMvcController]string controller = null,
-            string method = "GET")
-        {
-            // TODO: must cache all of these informations
-
-            if (@this == null)
-                throw new ArgumentNullException("this");
-
-            var actionName = action
-                ?? @this.RouteData.GetRequiredString("action");
-
-            var controllerName = controller
-                ?? @this.RouteData.GetRequiredString("controller");
-
-            const bool testable = true;
-            var controllerFactory =
-                testable
-                ? ((ControllerBuilder)typeof(MvcHandler)
-                    .GetProperty("ControllerBuilder", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .GetValue(@this.HttpContext.Handler))
-                    .GetControllerFactory()
-                : ControllerBuilder.Current.GetControllerFactory();
-
-            var otherController = (ControllerBase)controllerFactory
-                .CreateController(
-                    new RequestContext(@this.HttpContext, new RouteData()),
-                    controllerName);
-
-            var controllerDescriptor = new ReflectedControllerDescriptor(
-                otherController.GetType());
-
-            var controllerContextWithMethodParam = new ControllerContext(
-                new MockHttpContextWrapper(
-                    @this.HttpContext.ApplicationInstance.Context,
-                    method),
-                new RouteData(),
-                otherController);
-
-            var actionDescriptor = controllerDescriptor
-                .FindAction(controllerContextWithMethodParam, actionName);
-
-            var attributes = actionDescriptor.GetCustomAttributes(true)
-                .Cast<Attribute>()
-                .ToArray();
-
-            return attributes;
-        }
-
-        /// <summary>
-        /// Checks whether the current user can access an action.
-        /// </summary>
-        /// <param name="this"></param>
-        /// <param name="action"></param>
-        /// <param name="controller"></param>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        public static bool CanAccessAction(
-            this WebViewPage @this,
-            [AspMvcAction]string action = null,
-            [AspMvcController]string controller = null,
-            string method = "GET")
-        {
-            // TODO: must cache all of these informations
-
-            if (@this == null)
-                throw new ArgumentNullException("this");
-
-            var cerebelloController = @this.ViewContext.Controller as CerebelloController;
-
-            if (cerebelloController != null)
-            {
-                cerebelloController.InitDb();
-                cerebelloController.InitDbUser(@this.Request.RequestContext);
-
-                var result = @this.ViewContext.Controller.ControllerContext
-                    .CanAccessAction(cerebelloController.DbUser, action, controller, method);
-
-                return result;
-            }
-
-            return false;
-        }
-
-        class MockHttpContextWrapper : HttpContextWrapper
-        {
-            public MockHttpContextWrapper(HttpContext httpContext, string method)
-                : base(httpContext)
-            {
-                this.request = new MockHttpRequestWrapper(httpContext.Request, method);
-            }
-
-            private readonly HttpRequestBase request;
-            public override HttpRequestBase Request
-            {
-                get { return request; }
-            }
-
-            class MockHttpRequestWrapper : HttpRequestWrapper
-            {
-                public MockHttpRequestWrapper(HttpRequest httpRequest, string httpMethod)
-                    : base(httpRequest)
-                {
-                    this.httpMethod = httpMethod;
-                }
-
-                private readonly string httpMethod;
-                public override string HttpMethod
-                {
-                    get { return httpMethod; }
-                }
-            }
         }
     }
 }
