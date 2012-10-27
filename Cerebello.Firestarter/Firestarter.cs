@@ -1668,12 +1668,30 @@ GO
                        {
                            Name = name,
                            CreatedOn = DateTime.UtcNow.AddDays(-1),
-                           Owner = owner,
                            ShowWelcomeScreen = true,
                            WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                            VerificationDate = DateTime.UtcNow,
                            UrlIdentifier = urlIdentifier,
                        };
+
+            db.Practices.AddObject(practice);
+            db.SaveChanges();
+
+            var sec = owner.Secretary;
+            var adm = owner.Administrator;
+            var doc = owner.Doctor;
+
+            owner.Secretary = null;
+            owner.Administrator = null;
+            owner.Doctor = null;
+
+            practice.Owner = owner;
+            owner.Practice = practice;
+            db.SaveChanges();
+
+            owner.Secretary = sec;
+            owner.Administrator = adm;
+            owner.Doctor = doc;
 
             db.SaveChanges();
 
@@ -1682,7 +1700,7 @@ GO
             return practice;
         }
 
-        public static Secretary CreateSecretary(CerebelloEntities db, Practice practice, string username, string password, string name)
+        public static User CreateUser(CerebelloEntities db, Practice practice, string username, string password, string name)
         {
             var pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
             var pwdHash = CipherHelper.Hash(password, pwdSalt);
@@ -1700,7 +1718,8 @@ GO
                 Practice = practice,
             };
 
-            db.Users.AddObject(user);
+            if (user.Practice != null)
+                db.Users.AddObject(user);
 
             // Creating person.
             var person = new Person()
@@ -1713,18 +1732,10 @@ GO
 
             user.Person = person;
 
-            db.SaveChanges();
+            if (user.Practice != null)
+                db.SaveChanges();
 
-            // Creating secretary.
-            var secreatry = new Secretary
-            {
-            };
-
-            user.Secretary = secreatry;
-
-            db.SaveChanges();
-
-            return secreatry;
+            return user;
         }
     }
 }

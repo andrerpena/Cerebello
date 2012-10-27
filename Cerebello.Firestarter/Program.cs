@@ -693,7 +693,9 @@ namespace Test1
             public void DelDoctor(Doctor doctor) { DelUser(doctor.Users.Single()); }
             public Secretary NewSecretary(Practice practice, string username, string password, string name)
             {
-                return Firestarter.CreateSecretary(db, practice, username, password, name);
+                var user = Firestarter.CreateUser(db, practice, username, password, name);
+                user.Secretary = new Secretary();
+                return user.Secretary;
             }
             public Secretary NewSecretaryTtMilena(Practice practice) { return Firestarter.CreateSecretary_Milena(db, practice); }
             public Secretary SecretaryMilena() { return db.Secretaries.First(x => x.Users.FirstOrDefault().UserName == "milena"); }
@@ -708,6 +710,17 @@ namespace Test1
             public Doctor DoctorById(int id) { return db.Doctors.Single(d => d.Id == id); }
             public Secretary SecretaryById(int id) { return db.Secretaries.Single(d => d.Id == id); }
             public User UserById(int id) { return db.Users.Single(d => d.Id == id); }
+            public User UserNew(string username, string password, string name, string type)
+            {
+                var user = Firestarter.CreateUser(db, null, username, password, name);
+                if (type.Contains("adm"))
+                    user.Administrator = new Administrator();
+                if (type.Contains("sec"))
+                    user.Secretary = new Secretary();
+                if (type.Contains("doc"))
+                    user.Doctor = new Doctor();
+                return user;
+            }
             public Administrator AdministratorById(int id) { return db.Administrators.Single(d => d.Id == id); }
 
             // ReSharper restore UnusedParameter.Local
