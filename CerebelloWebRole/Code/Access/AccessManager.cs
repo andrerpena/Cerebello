@@ -20,6 +20,8 @@ namespace CerebelloWebRole.Code.Access
         {
             public static bool Check(CerebelloEntities db, User op, ActiveIngredient obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          &&
                                          u.Practice.Users.Any(
@@ -28,18 +30,24 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, Address obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.Practice.Users.Any(u2 => u2.Person.Address.Id == obj.Id));
             }
 
             public static bool Check(CerebelloEntities db, User op, Administrator obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.Practice.Users.Any(u2 => u2.AdministratorId == obj.Id));
             }
 
             public static bool Check(CerebelloEntities db, User op, Anamnese obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          &&
                                          u.Practice.Users.Any(
@@ -48,6 +56,8 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, Appointment obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          &&
                                          u.Practice.Users.Any(u2 => u2.Doctor.Appointments.Any(ap => ap.Id == obj.Id)));
@@ -55,6 +65,8 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, CFG_DayOff obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          &&
                                          u.Practice.Users.Any(u2 => u2.Doctor.CFG_DayOff.Any(doff => doff.Id == obj.Id)));
@@ -62,6 +74,8 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, CFG_Documents obj)
             {
+                if (obj == null) return true;
+
                 // Only the doctor can change his documents configuration.
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.DoctorId == obj.DoctorId);
@@ -69,6 +83,8 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, CFG_Schedule obj)
             {
+                if (obj == null) return true;
+
                 // Only the doctor can change his schedule.
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.DoctorId == obj.DoctorId);
@@ -76,6 +92,8 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, ChatMessage obj)
             {
+                if (obj == null) return true;
+
                 // Only the user itself, or admin or owner can see messages.
                 var query = from u in db.Users
                             let u2 = db.Users.FirstOrDefault(u2 => u2.Id == obj.Id)
@@ -91,6 +109,8 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, User obj)
             {
+                if (obj == null) return true;
+
                 // If both users are in the same practice, then they can see each other.
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.Practice.Users.Any(u2 => u2.Id == obj.Id));
@@ -98,12 +118,16 @@ namespace CerebelloWebRole.Code.Access
 
             public static bool Check(CerebelloEntities db, User op, Secretary obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.Practice.Users.Any(u2 => u2.SecretaryId == obj.Id));
             }
 
             public static bool Check(CerebelloEntities db, User op, Doctor obj)
             {
+                if (obj == null) return true;
+
                 return db.Users.Any(u => u.Id == op.Id
                                          && u.Practice.Users.Any(u2 => u2.DoctorId == obj.Id));
             }

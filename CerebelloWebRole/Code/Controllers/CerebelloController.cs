@@ -55,7 +55,7 @@ namespace CerebelloWebRole.Code
                 };
         }
 
-        internal void InitDb()
+        internal CerebelloEntities InitDb()
         {
             // this is because of how tests work
             // if a test controller has been created, this.db has already been populated
@@ -63,6 +63,8 @@ namespace CerebelloWebRole.Code
             // TODO: tests don't need to populate this property anymore, as CreateNewCerebelloEntities is mockable.
             if (this.db == null)
                 this.db = this.CreateNewCerebelloEntities();
+
+            return this.db;
         }
 
         internal void InitDbUser(RequestContext requestContext)
@@ -110,5 +112,10 @@ namespace CerebelloWebRole.Code
         {
             return this.View();
         }
+
+        /// <summary>
+        /// Database object retrieved using the AccessDbObjectAttribute.
+        /// </summary>
+        public object DbObject { get; set; }
     }
 }

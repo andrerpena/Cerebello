@@ -240,6 +240,7 @@
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\AuthenticationFilter.cs" />
+    <Compile Include="Code\Filters\AccessDbObjectAttribute.cs" />
     <Compile Include="Code\Filters\UsersManagementPermissionAttribute.cs" />
     <Compile Include="Code\Filters\UserRolePermissionAttribute.cs" />
     <Compile Include="Code\Filters\IsOwnerPermissionAttribute.cs" />

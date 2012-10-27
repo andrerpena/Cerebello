@@ -130,6 +130,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
+        [AccessDbObject(typeof(User), "id")]
         public ActionResult Edit(int? id)
         {
             UserViewModel model = null;
@@ -169,6 +170,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
+        [AccessDbObject(typeof(User), "id")]
         public ActionResult Edit(UserViewModel formModel)
         {
             var isEditingOrCreating = formModel.Id != null ? 'E' : 'C';

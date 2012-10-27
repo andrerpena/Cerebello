@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Xml;
-using System.Xml.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -22,15 +21,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 PatientId = anamnese.PatientId,
                 Text = anamnese.Text,
                 Symptoms = (from s in anamnese.Symptoms
-                             select new SymptomViewModel
-                             {
-                                 Text = s.Cid10Name,
-                                 Cid10Code = s.Cid10Code
+                            select new SymptomViewModel
+                            {
+                                Text = s.Cid10Name,
+                                Cid10Code = s.Cid10Code
 
-                             }).ToList()
+                            }).ToList()
             };
         }
 
+        [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Details(int id)
         {
             var anamnese = this.db.Anamnese.First(a => a.Id == id);
@@ -50,6 +50,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
+        [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Edit(int? id, int? patientId)
         {
             AnamneseViewModel viewModel = null;
@@ -73,6 +74,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="formModel"></param>
         /// <returns></returns>
         [HttpPost]
+        [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Edit(AnamneseViewModel formModel)
         {
             if (this.ModelState.IsValid)
@@ -180,6 +182,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// 
         /// </summary>
         [HttpGet]
+        [AccessDbObject(typeof(Anamnese), "id")]
         public JsonResult Delete(int id)
         {
             try
