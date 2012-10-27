@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Security;
 using System.Web;
 using System.Web.Mvc;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Access;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 using System.Net;
 using System.IO;
@@ -113,25 +116,31 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [UsersManagementPermission]
         public ActionResult Create()
         {
             return this.Edit((int?)null);
         }
 
         [HttpPost]
+        [UsersManagementPermission]
         public ActionResult Create(UserViewModel viewModel)
         {
             return this.Edit(viewModel);
         }
 
         [HttpGet]
+        [AccessDbObject(typeof(User), "id")]
         public ActionResult Edit(int? id)
         {
             UserViewModel model = null;
 
             // ToDo: @masbicudo, eu coloquei essa linha pra evitar um crash na View.
             // Está certo isso?
-            this.ViewBag.IsEditing = id != null;
+            // @andrerpena: estava correto, alterei o nome da variável para ficar mais claro, pois nem eu entendi direito.
+            // @andrerpena: afinal, se está dentro da action de editar então é pq está esitando, mas na verdade essa
+            // @andrerpena: também é usada para criar um novo carinha.
+            this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
             if (id != null)
             {
@@ -143,7 +152,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 ViewBag.Title = "Novo usuário";
 
-            this.ViewBag.IsEditing = id != null;
+            this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
             ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
@@ -161,11 +170,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
+        [AccessDbObject(typeof(User), "id")]
         public ActionResult Edit(UserViewModel formModel)
         {
-            bool isEditing = formModel.Id != null;
+            var isEditingOrCreating = formModel.Id != null ? 'E' : 'C';
 
-            this.ViewBag.IsEditing = isEditing;
+            this.ViewBag.IsEditingOrCreating = isEditingOrCreating;
 
             var utcNow = this.GetUtcNow();
 
@@ -175,7 +185,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!string.IsNullOrEmpty(formModel.FullName))
                 formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
 
-            if (isEditing)
+            if (isEditingOrCreating == 'E')
             {
                 // Note: User name cannot be edited, and should not be validated.
                 this.ModelState.ClearPropertyErrors(() => formModel.UserName);
@@ -389,15 +399,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return urlId;
         }
 
+        // TODO: add permission attribute ProfileAccessPermission
         public ActionResult Details(int id)
         {
-            var user = (User)db.Users.First(p => p.Id == id);
+            var user = this.db.Users.First(p => p.Id == id);
+
+            // TODO: check user practice
+
             var model = GetViewModel(user, this.Practice);
 
             return View(model);
         }
 
         [HttpGet]
+        [UsersManagementPermission]
         public JsonResult Delete(int id)
         {
             try
@@ -452,7 +467,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.Json(new JsonDeleteMessage { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-
 
         public ActionResult ChangePassword()
         {
@@ -510,7 +524,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // The password has changed, we need to log the user in again.
                 var ok = SecurityManager.Login(
                     this.HttpContext.Response.Cookies,
-                    new CerebelloWebRole.Models.LoginViewModel
+                    new LoginViewModel
                     {
                         Password = vm.Password,
                         PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
@@ -526,7 +540,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return View();
         }
-
 
         public JsonResult GetCEPInfo(string cep)
         {
@@ -560,6 +573,30 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 return null;
             }
+        }
+
+        [UsersManagementPermission]
+        public ActionResult ResetPassword(int id, string typeTextCheck)
+        {
+            // Reseting the password of the user.
+            var user = this.db.Users.SingleOrDefault(u => u.Id == id);
+
+            // This check must be done in all objects, in all actions, in every controller.
+            bool accessDenied = !AccessManager.Reach.Check(db, this.DbUser, user);
+            this.ViewBag.AccessDenied = accessDenied;
+            if (user == null || accessDenied)
+                return new HttpNotFoundResult("User does not exist.");
+
+            if (this.ModelState.IsValid)
+            {
+                SecurityManager.ResetUserPassword(user);
+
+                this.db.SaveChanges();
+
+                return Json(new { success = true, defaultPassword = Constants.DEFAULT_PASSWORD }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { success = false, text = this.ModelState.GetAllErrors().TextMessage() }, JsonRequestBehavior.AllowGet);
         }
     }
 }

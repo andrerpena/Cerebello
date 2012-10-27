@@ -69,6 +69,29 @@ namespace CerebelloWebRole.Tests
         }
 
         /// <summary>
+        /// Sets up Miguel as the current logged user, in a valid sittuation.
+        /// </summary>
+        public void SetCurrentUser_Miguel_CorrectPassword(int? userId = null)
+        {
+            // Setting user details.
+            this.IsAuthenticated = true;
+            this.FullName = "Phill Austin";
+            this.UserNameOrEmail = "masbicudo@gmail.com";
+            this.Password = "masban";
+
+            // Setting DB info.
+            if (userId.HasValue)
+            {
+                this.UserDbId = userId.Value;
+            }
+            else
+            {
+                using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+                    this.UserDbId = db.Users.Single(u => u.UserName == "masbicudo").Id;
+            }
+        }
+
+        /// <summary>
         /// Sets up a User as the current logged user, using the default password.
         /// </summary>
         public void SetCurrentUser_WithDefaultPassword(User user, bool loginWithUserName = false)
@@ -315,11 +338,11 @@ namespace CerebelloWebRole.Tests
                     principal =
                         new AuthenticatedPrincipal(new FormsIdentity(ticket), new UserData
                                                                                   {
-                            FullName = this.FullName,
-                            Email = this.UserNameOrEmail,
-                            Id = this.UserDbId,
-                            IsUsingDefaultPassword = this.Password == Code.Constants.DEFAULT_PASSWORD,
-                        });
+                                                                                      FullName = this.FullName,
+                                                                                      Email = this.UserNameOrEmail,
+                                                                                      Id = this.UserDbId,
+                                                                                      IsUsingDefaultPassword = this.Password == Code.Constants.DEFAULT_PASSWORD,
+                                                                                  });
                 }
                 else
                 {

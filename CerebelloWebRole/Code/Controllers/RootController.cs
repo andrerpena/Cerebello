@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Web.Mvc;
-using System.Net;
-using System.Web.UI.WebControls;
 using Cerebello.Model;
 
 namespace CerebelloWebRole.Code.Controllers
@@ -15,11 +14,13 @@ namespace CerebelloWebRole.Code.Controllers
         public RootController()
         {
             this.UtcNowGetter = () => DateTime.UtcNow;
+
             this.EmailSender = mm =>
             {
                 using (var smtpClient = this.CreateSmtpClient())
                     smtpClient.Send(mm);
             };
+
             this.CerebelloEntitiesCreator = () => new CerebelloEntities();
         }
 

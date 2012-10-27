@@ -4,7 +4,8 @@
 @{
     Layout = null;
 
-    bool isEditing = this.ViewBag.IsEditing == true;
+    // This is going to be either 'C' or 'E'
+    char isEditingOrCreating = (char)this.ViewBag.IsEditingOrCreating;
 
     bool isGenericAppointment = Model.IsGenericAppointment && !Model.PatientFirstAppointment;
     bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
@@ -26,7 +27,7 @@
         @Html.HiddenFor(model => model.DoctorId)
         @Html.HiddenFor(model => model.PatientFirstAppointment)
         
-        if (!isEditing)
+        if (isEditingOrCreating == 'C')
         { 
             <style>
                 /* todo: Must vanish with this style. */
@@ -47,7 +48,7 @@
         @Html.HiddenFor(model => model.IsGenericAppointment)
         
         <table class="form-table">
-            @if (!isEditing || isGenericAppointment)
+            @if (isEditingOrCreating == 'C' || isGenericAppointment)
             {
                 <tr class="generic-appointment-only" style="display: @genericAppointmentOnlyDisplay">
                     <th>@Html.LabelFor(model => model.Description)
@@ -57,7 +58,7 @@
                     </td>
                 </tr>
             }
-            @if (!isEditing || isFirstAppointment || isSubsequentAppointment)
+            @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="subsequent-appointments-only" style="display: @subsequentAppointmentOnlyDisplay">
                     <th>@Html.LabelFor(model => model.PatientNameLookup)
@@ -74,7 +75,7 @@
                     </td>
                 </tr>
             }
-            @if (!isEditing || isFirstAppointment || isSubsequentAppointment)
+            @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
                     <th>@Html.LabelFor(model => model.PatientName)
@@ -206,7 +207,7 @@
         });
 
 //        $("#PatientNameLookup").autocomplete({
-//                source: "@Url.Action("searchpatients", "patients")",
+//                source: "@Url.Action("Search", "Patients")",
 //                select: function(event, ui) {
 //                            $("#PatientId").val(ui.item.id);
 //                        }

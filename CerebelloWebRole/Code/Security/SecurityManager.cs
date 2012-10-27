@@ -233,12 +233,22 @@ namespace CerebelloWebRole.Code
         {
             var user = GetUser(db, practiceIdentifier, userNameOrEmail);
 
+            SetUserPassword(user, password);
+        }
+
+        private static void SetUserPassword(User user, string password)
+        {
             // Password salt and hash.
             string passwordSalt = CipherHelper.GenerateSalt();
             var passwordHash = CipherHelper.Hash(password, passwordSalt);
 
             user.Password = passwordHash;
             user.PasswordSalt = passwordSalt;
+        }
+
+        public static void ResetUserPassword(User user)
+        {
+            SetUserPassword(user, Constants.DEFAULT_PASSWORD);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Tests
 {
     static class ObjectExtensions
     {
-        public static string ConvertToString(this object obj, string format)
+        public static string ConvertObjectToString(this object obj, string format)
         {
             StringBuilder result = new StringBuilder();
             var type = obj.GetType();

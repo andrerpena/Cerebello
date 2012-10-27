@@ -1054,9 +1054,9 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
             RedirectToRouteResult viewResult = (RedirectToRouteResult)result;
             Assert.AreEqual(3, viewResult.RouteValues.Count);
-            Assert.AreEqual("app", string.Format("{0}", viewResult.RouteValues["area"]));
-            Assert.AreEqual("users", string.Format("{0}", viewResult.RouteValues["controller"]));
-            Assert.AreEqual("changepassword", string.Format("{0}", viewResult.RouteValues["action"]));
+            Assert.AreEqual("app", string.Format("{0}", viewResult.RouteValues["area"]), ignoreCase: true);
+            Assert.AreEqual("users", string.Format("{0}", viewResult.RouteValues["controller"]), ignoreCase: true);
+            Assert.AreEqual("changepassword", string.Format("{0}", viewResult.RouteValues["action"]), ignoreCase: true);
         }
 
         #endregion

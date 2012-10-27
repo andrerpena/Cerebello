@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+@using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
     if (this.Model != null && this.Model.Id.HasValue)
@@ -14,13 +15,13 @@
 
     var editPanel = this.Html.CreateEditPanel();
 
-    if (this.ViewBag.IsEditing == false)
+    if (this.ViewBag.IsEditingOrCreating == 'C')
     {
         // If Model is null, then the user is being created now,
         // so we allow the user name to be changed.
-        editPanel.AddField(m => m.UserName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+        editPanel.AddField(m => m.UserName, EditPanelFieldSize.Large);
     }
-    else if (this.ViewBag.IsEditing == true)
+    else if (this.ViewBag.IsEditingOrCreating == 'E')
     {
         // If Model is not null, then the user already existed before,
         // we cannot allow the user-name to be edited.
@@ -28,12 +29,12 @@
     }
     else
     {
-        throw new Exception("'ViewBag.IsEditing' must be either true or false.");
+        throw new Exception("'ViewBag.IsEditingOrCreating' must be either 'E' or 'C'.");
     }
 
-    editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
-    editPanel.AddField(m => m.DateOfBirth, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.CPF);
@@ -61,7 +62,7 @@
 
     editPanelMedic.AddField(
         m => m.MedicalSpecialty,
-        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+        EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalSpecialty,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
@@ -69,7 +70,7 @@
 
     editPanelMedic.AddField(
         m => m.MedicalEntity,
-        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+        EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
             m => m.MedicalEntity,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,

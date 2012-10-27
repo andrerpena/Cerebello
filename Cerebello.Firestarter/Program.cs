@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Reflection;
 using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Models;
@@ -23,6 +24,10 @@ namespace Test1
             string connName = null;
 
             bool wasAttached = false;
+
+            bool showHidden = false;
+
+            Console.BufferWidth = 200;
 
             // New options:
             while (true)
@@ -136,19 +141,25 @@ namespace Test1
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(@"nu  - Create new user.");
-                Console.WriteLine(@"clr - Clear all data.");
-                Console.WriteLine(@"p1  - Populate database with items (type p1? to know more).");
-                Console.WriteLine(@"sys - Initialize DB with system data.");
-                Console.WriteLine(@"drp - Drop all tables and FKs.");
-                Console.WriteLine(@"crt - Create all tables and FKs using script.");
-                Console.WriteLine(@"db  - Change database.");
-                Console.WriteLine(@"cls - Clear screen.");
+                Console.WriteLine(@"r      - Magic option: reset database (differentiates WORK and TEST database).");
+                Console.WriteLine(@"db     - Change database.");
 
-                Console.WriteLine(wasAttached ? @"atc - Leaves DB attached when done." : @"dtc - Detach DB when done.");
+                if (showHidden)
+                {
+                    Console.WriteLine(@"clr    - Clear all data.");
+                    Console.WriteLine(@"p1     - Populate database with items (type p1? to know more).");
+                    Console.WriteLine(@"drp    - Drop all tables and FKs.");
+                    Console.WriteLine(@"crt    - Create all tables and FKs using script.");
+                    Console.WriteLine(@"cls    - Clear screen.");
+                    Console.WriteLine(wasAttached
+                        ? @"atc    - Leaves DB attached when done."
+                        : @"dtc    - Detach DB when done.");
+                }
 
-                Console.WriteLine(@"q   - Quit.");
-                Console.WriteLine(@"    Type ? after any option to get help.");
+                Console.WriteLine(string.Format(@"RETURN - {0} options.", showHidden ? "Hides visible" : "Shows hidden"));
+
+                Console.WriteLine(@"q      - Quit.");
+                Console.WriteLine(@"       Type ? after any option to get help.");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine();
                 Console.Write("What would you like to do with the DB: ");
@@ -156,6 +167,15 @@ namespace Test1
 
                 switch (userOption1.Trim().ToLowerInvariant())
                 {
+                    case "":
+
+                        showHidden = !showHidden;
+
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine(showHidden ? "Complex options: VISIBLE" : "Complex options: HIDDEN");
+
+                        break;
+
                     case "atc?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -165,6 +185,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -182,6 +203,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -201,6 +223,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -234,6 +257,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -267,255 +291,8 @@ namespace Test1
 
                         break;
 
-                    case "sys?":
-                        {
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                            Console.WriteLine();
-                            Console.WriteLine("Gives options to initialize SYS tables:");
-                            Console.WriteLine("1: SYS_MedicalEntity: TISS - Conselhos Profissionais");
-                            Console.WriteLine("2: SYS_MedicalSpecialty: TISS - CBO-S (especialidades)");
-                            Console.WriteLine("3: SYS_MedicalProcedures: CBHPM (procedimentos médicos)");
-                            Console.WriteLine("4: Initialize_SYS_Cid10: CID10");
-                            Console.WriteLine("5: Initialize_SYS_Contracts: SaaS contracts");
-                            Console.WriteLine();
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Press any key to continue.");
-                            Console.ReadKey();
-                        }
-
-                        break;
-
-                    case "sys":
-                        {
-                            var defaultOptions = new List<int> { 1, 2, 3, 4, 5 };
-                            var optionsSys = new List<int>(defaultOptions);
-                            while (true)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Gray;
-                                Console.WriteLine();
-
-                                Console.WriteLine("SYS tables will be populated with:");
-
-                                Console.WriteLine(
-                                    "    ({0}) 1: SYS_MedicalEntity: TISS - Conselhos Profissionais",
-                                    optionsSys.Contains(1) ? 'x' : ' ');
-
-                                Console.WriteLine(
-                                    "    ({0}) 2: SYS_MedicalSpecialty: TISS - CBO-S (especialidades)",
-                                    optionsSys.Contains(2) ? 'x' : ' ');
-
-                                Console.WriteLine(
-                                    "    ({0}) 3: SYS_MedicalProcedures: CBHPM (procedimentos médicos)",
-                                    optionsSys.Contains(3) ? 'x' : ' ');
-                                Console.WriteLine(@"        CBHPM data come from text file: \DB\cbhpm_2010.txt.");
-
-                                Console.WriteLine(
-                                    "    ({0}) 4: Initialize_SYS_Cid10: CID10",
-                                    optionsSys.Contains(4) ? 'x' : ' ');
-
-                                Console.WriteLine(
-                                    "    ({0}) 5: Initialize_SYS_Contracts: SaaS contracts",
-                                    optionsSys.Contains(4) ? 'x' : ' ');
-
-                                Console.WriteLine();
-
-                                // options related to sys tables
-                                Console.WriteLine("Type an option to include or exclude it.");
-                                Console.WriteLine("Type D for default, A for all, and N for none.");
-                                Console.WriteLine("Press enter when ready, or Escape to cancel.");
-                                ConsoleKeyInfo key1 = default(ConsoleKeyInfo);
-
-                                key1 = Console.ReadKey();
-
-                                int val;
-                                if (int.TryParse(key1.KeyChar.ToString(), out val))
-                                {
-                                    if (optionsSys.Contains(val)) optionsSys.Remove(val);
-                                    else optionsSys.Add(val);
-                                }
-
-                                if (key1.KeyChar == 'D' || key1.KeyChar == 'd')
-                                {
-                                    optionsSys = new List<int>(defaultOptions);
-                                }
-
-                                if (key1.KeyChar == 'N' || key1.KeyChar == 'n')
-                                {
-                                    optionsSys = new List<int> { };
-                                }
-
-                                if (key1.KeyChar == 'A' || key1.KeyChar == 'a')
-                                {
-                                    optionsSys = Enumerable.Range(1, 9).ToList();
-                                }
-
-                                if (key1.Key == ConsoleKey.Enter)
-                                {
-                                    break;
-                                }
-
-                                if (key1.Key == ConsoleKey.Escape)
-                                {
-                                    optionsSys = null;
-                                    break;
-                                }
-
-                                Console.WriteLine();
-                            }
-
-                            if (optionsSys == null)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Canceled!");
-                                Console.ForegroundColor = ConsoleColor.White;
-                                break;
-                            }
-
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Continue? (y/n): ");
-                            var key = default(ConsoleKeyInfo);
-                            if (key.KeyChar != 'y' && key.KeyChar != 'n')
-                                key = Console.ReadKey();
-                            Console.WriteLine();
-
-                            if (key.KeyChar == 'y')
-                            {
-                                try
-                                {
-                                    using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
-                                    {
-                                        if (optionsSys.Contains(1))
-                                        {
-                                            Console.WriteLine("Initialize_SYS_MedicalEntity");
-                                            Firestarter.Initialize_SYS_MedicalEntity(db);
-                                        }
-
-                                        if (optionsSys.Contains(2))
-                                        {
-                                            Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                                            Firestarter.Initialize_SYS_MedicalEntity(db);
-                                        }
-
-                                        if (optionsSys.Contains(3))
-                                        {
-                                            Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                                            Firestarter.Initialize_SYS_MedicalProcedures(
-                                                    db,
-                                                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                                                    progress: ConsoleWriteProgressIntInt);
-                                        }
-
-                                        if (optionsSys.Contains(4))
-                                        {
-                                            Console.WriteLine("Initialize_SYS_Cid10");
-                                            Firestarter.Initialize_SYS_Cid10(
-                                                db,
-                                                progress: ConsoleWriteProgressIntInt);
-                                        }
-
-                                        if (optionsSys.Contains(5))
-                                        {
-                                            Console.WriteLine("Initialize_SYS_Contracts");
-                                            Firestarter.Initialize_SYS_Contracts(db);
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Program.ConsoleWriteException(ex);
-
-                                    Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.WriteLine("Partially done!");
-                                    Console.ForegroundColor = ConsoleColor.White;
-
-                                    break;
-                                }
-
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("Done!");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Canceled!");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-                        }
-
-                        break;
-
-                    case "nu?":
-                        {
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                            Console.WriteLine();
-                            Console.WriteLine("No help yet.");
-                            Console.WriteLine();
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Press any key to continue.");
-                            Console.ReadKey();
-                        }
-
-                        break;
-
-                    case "nu":
-                        {
-                            // Asking for user data.
-                            Console.WriteLine("UserName: ");
-                            var userName = Console.ReadLine();
-                            Console.WriteLine("Password: ");
-                            var userPassword = Console.ReadLine();
-                            Console.WriteLine("Email: ");
-                            var userEmail = Console.ReadLine();
-                            Console.WriteLine("Full name (default: =UserName): ");
-                            var userFullName = Console.ReadLine();
-                            if (string.IsNullOrEmpty(userFullName))
-                                userFullName = userName;
-                            Console.WriteLine("Age (default: 30): ");
-                            int userAge;
-                            if (!int.TryParse(Console.ReadLine(), out userAge))
-                                userAge = 30;
-
-                            // Creating user.
-                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
-                            {
-                                var userToCreate = new CreateAccountViewModel
-                                {
-                                    UserName = userName,
-                                    Password = userPassword,
-                                    ConfirmPassword = userPassword,
-                                    EMail = userEmail,
-                                    FullName = userFullName,
-                                    DateOfBirth = DateTime.UtcNow.AddYears(-userAge),
-                                };
-
-                                var utcNow = DateTime.UtcNow;
-
-                                // Verifying user-name.
-                                User user;
-                                var result = CerebelloWebRole.Code.SecurityManager.CreateUser(out user, userToCreate, db, utcNow, null);
-
-                                Console.ForegroundColor = ConsoleColor.Gray;
-                                Console.WriteLine(string.Format("PasswordSalt = \"{0}\";", user.PasswordSalt));
-                                Console.WriteLine(string.Format("Password = \"{0}\";", user.Password));
-
-                                if (result == CerebelloWebRole.Code.Security.CreateUserResult.Ok)
-                                {
-                                    // This does not work because a practice is needed...
-                                    // Implement this when needed... for now, I just need the pwd-salt and pwd-hash.
-                                    //db.SaveChanges();
-                                }
-                                else
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine(string.Format("Failed: {0}", result));
-                                }
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-                        }
-
-                        break;
-
+                                                    progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                                                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
                     case "cls?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -525,6 +302,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -543,6 +321,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -595,12 +374,14 @@ namespace Test1
                             Console.WriteLine("    Initialize_SYS_Cid10");
                             Console.WriteLine("    Initialize_SYS_MedicalProcedures");
                             Console.WriteLine("    Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
+                            Console.WriteLine("    CreateSecretary_Milena");
                             Console.WriteLine("    SetupDoctor (for each doctor)");
                             Console.WriteLine("    CreateFakePatients (for each doctor)");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -644,6 +425,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -673,6 +455,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -694,6 +477,7 @@ namespace Test1
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Press any key to continue.");
                             Console.ReadKey();
+                            Console.WriteLine();
                         }
 
                         break;
@@ -758,6 +542,30 @@ namespace Test1
 
                         break;
 
+                    case "exec":
+
+                        try
+                        {
+                            Console.Write("Command: ");
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                new Exec(db).ExecCommand(0, "", null, new Queue<string>());
+
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Done!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        catch (Exception ex)
+                        {
+                            ConsoleWriteException(ex);
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("Press any key to continue.");
+                        Console.ReadKey();
+                        Console.WriteLine();
+
+                        break;
+
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid option.");
@@ -767,11 +575,171 @@ namespace Test1
             }
         }
 
+
+        private class Exec
+        {
+            private readonly CerebelloEntities db;
+
+            public Exec(CerebelloEntities db)
+            {
+                this.db = db;
+            }
+
+            private static string ReadCommand(Queue<string> commands)
+            {
+                bool empty = commands.Count == 0;
+                if (empty)
+                    foreach (var command in Console.ReadLine().Split(' '))
+                        commands.Enqueue(command);
+
+                string input = commands.Dequeue();
+                var matchStr = Regex.Match(input, @"^\s*""");
+                if (matchStr.Success)
+                    while (!(matchStr = Regex.Match(input, @"^\s*""((\\""|.)*)""\s*$")).Success)
+                        input += " " + commands.Dequeue();
+
+                if (!empty)
+                    Console.WriteLine(input);
+
+                if (matchStr.Success)
+                    input = matchStr.Groups[1].Value.Replace("\\\\", "\\").Replace("\\n", "\n")
+                        .Replace("\\t", "\t").Replace("\\r", "\r").Replace("\\0", "\0").Replace("\\v", "\v");
+
+                return input;
+            }
+
+            /// <summary>
+            /// Executes a command on this class using reflection.
+            /// </summary>
+            /// <param name="level">Level of indentation of the command.</param>
+            /// <param name="prefix">Command prefix, so that if prefix is "New" and user input is "User", the command is "NewUser".</param>
+            /// <param name="outType">Type that should be returned. Only used for numeric litterals.</param>
+            /// <param name="commands">List of commands in the queue.</param>
+            /// <returns></returns>
+            public object ExecCommand(int level, string prefix, Type outType, Queue<string> commands)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                var input = ReadCommand(commands);
+
+                if (input == "null")
+                    return null;
+
+                if (outType == typeof(string))
+                    return input;
+
+                if (outType != null && outType != typeof(string) && outType.IsPrimitive)
+                    try { return Convert.ChangeType(input, outType); }
+                    catch { }
+
+                var command = prefix + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(input);
+                var method = typeof(Exec).GetMethod(command, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
+                if (method != null)
+                {
+                    var listParam = new List<object>();
+                    foreach (var eachParam in method.GetParameters())
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("{0}{1} ", new string(' ', (level + 1) * 4), eachParam.ParameterType.Name);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write("{0}: ", eachParam.Name);
+                        listParam.Add(ExecCommand(level + 1, eachParam.Name, eachParam.ParameterType, commands));
+                    }
+
+                    return method.Invoke(this, listParam.ToArray());
+                }
+
+                if (input == "")
+                    throw new Exception("Invalid input.");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("{0}{1}: ", new string(' ', (level + 1) * 4), command);
+                return this.ExecCommand(level + 1, command, outType, commands);
+            }
+
+            #region Commands called via reflection
+            // ReSharper disable MemberCanBePrivate.Local
+            // ReSharper disable UnusedMember.Local
+            // ReSharper disable UnusedParameter.Local
+
+            public void DelUser(User user)
+            {
+                if (user != null && user.Secretary != null)
+                    db.DeleteObject(user.Secretary);
+                if (user != null && user.Administrator != null)
+                    db.DeleteObject(user.Administrator);
+                if (user != null && user.Doctor != null)
+                    db.DeleteObject(user.Doctor);
+                if (user != null) this.db.DeleteObject(user);
+                db.SaveChanges();
+            }
+            public void DelPractice(Practice practice)
+            {
+                if (practice != null) this.db.DeleteObject(practice);
+                db.SaveChanges();
+            }
+            public void SetOwner(User user)
+            {
+                if (user != null)
+                {
+                    if (user.Practice != null)
+                    {
+                        if (user.Practice.Owner != null) user.Practice.Owner.IsOwner = false;
+                        user.Practice.Owner = user;
+                    }
+                    user.IsOwner = true;
+                }
+                db.SaveChanges();
+            }
+            public void DelSecretary(Secretary secretary) { DelUser(secretary.Users.Single()); }
+            public void DelAdministrator(Administrator administrator) { DelUser(administrator.Users.Single()); }
+            public void DelDoctor(Doctor doctor) { DelUser(doctor.Users.Single()); }
+            public Secretary NewSecretary(Practice practice, string username, string password, string name)
+            {
+                var user = Firestarter.CreateUser(db, practice, username, password, name);
+                user.Secretary = new Secretary();
+                return user.Secretary;
+            }
+            public Secretary NewSecretaryTtMilena(Practice practice) { return Firestarter.CreateSecretary_Milena(db, practice); }
+            public Secretary SecretaryMilena() { return db.Secretaries.First(x => x.Users.FirstOrDefault().UserName == "milena"); }
+            public Practice PracticeNew(string name, User user, string urlId) { return Firestarter.CreatePractice(db, name, user, urlId); }
+            public Practice NewPractice(string name, User user, string urlId) { return Firestarter.CreatePractice(db, name, user, urlId); }
+            public Practice PracticeFirst() { return db.Practices.FirstOrDefault(); }
+            public Practice PracticeDrHouse() { return db.Practices.Single(x => x.UrlIdentifier == "consultoriodrhouse"); }
+            public Practice PracticeByUrlId(string urlIdentifier) { return db.Practices.Single(x => x.UrlIdentifier == urlIdentifier); }
+            public User UserAndre() { return db.Users.Single(x => x.UserName == "andrerpena"); }
+            public User UserMiguel() { return db.Users.Single(x => x.UserName == "masbicudo"); }
+            public User UserOwner(Practice practice) { return practice.Owner; }
+            public Doctor DoctorById(int id) { return db.Doctors.Single(d => d.Id == id); }
+            public Secretary SecretaryById(int id) { return db.Secretaries.Single(d => d.Id == id); }
+            public User UserById(int id) { return db.Users.Single(d => d.Id == id); }
+            public User UserNew(string username, string password, string name, string type)
+            {
+                var user = Firestarter.CreateUser(db, null, username, password, name);
+                if (type.Contains("adm"))
+                    user.Administrator = new Administrator();
+                if (type.Contains("sec"))
+                    user.Secretary = new Secretary();
+                if (type.Contains("doc"))
+                    user.Doctor = new Doctor();
+                return user;
+            }
+            public Administrator AdministratorById(int id) { return db.Administrators.Single(d => d.Id == id); }
+
+            // ReSharper restore UnusedParameter.Local
+            // ReSharper restore UnusedMember.Local
+            // ReSharper restore MemberCanBePrivate.Local
+            #endregion
+        }
+
         private static void OptionP1(CerebelloEntities db)
         {
             // Create practice, contract, doctors and other things
             Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
             var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
+
+            // Create practice, contract, doctors and other things
+            Console.WriteLine("CreateSecretary_Milena");
+            var milena = Firestarter.CreateSecretary_Milena(db, listDoctors[0].Users.First().Practice);
 
             // Setup doctor schedule and document templates
             Console.WriteLine("SetupDoctor");

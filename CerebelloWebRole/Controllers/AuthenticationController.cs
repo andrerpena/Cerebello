@@ -448,9 +448,10 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             // Creating confirmation email, with the token.
             MailMessage message;
 
-            #region Creating token and e-mail message
-
+            if (user.Person.Email != null)
             {
+                #region Creating token and e-mail message
+
                 // Setting verification token.
                 // Note: tokens are safe to save even if validation fails.
                 TokenId tokenId;
@@ -485,12 +486,16 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 message = this.CreateEmailMessage(
                     toAddress,
-                    "Redefinir conta no Cerebello.",
+                    "Redefinir senha da conta no Cerebello",
                     bodyHtml,
                     bodyText);
-            }
 
-            #endregion
+                #endregion
+            }
+            else
+            {
+                return RedirectToAction("ResetPasswordManually");
+            }
 
             // If the ModelState is still valid, then save objects to the database,
             // and send confirmation email message to the user.

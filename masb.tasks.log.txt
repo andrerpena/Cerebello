@@ -9,7 +9,50 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
 2012-10-## ##:00-##:## (#°##") ##   ######
 
--- qua #°##" (#°##")
+-- sab 02°40" (##°##")
+2012-10-27 00:00-02:40 (2°40") 10   Atributo AccessDbObjectAttribute.
+
+-- sex 10°00" (08°00")
+2012-10-26 14:00-00:00 (A°00")  8   Melhorando infra de testes.
+
+-- qui 07°25" (##°##")
+2012-10-25 22:10-24:00 (1°40")  4   Criando telas de configuração do consultório.
+2012-10-25 00:00-05:45 (5°45")  5   Corrigindo o plugin e acabando de fazer o arquivo de pt-BR.js.
+                                    Criei issues de new features no GitHub.
+                                    Revisei todo o trabalho dos últimos dias.
+
+-- qua 10°15" (##°##")
+2012-10-24 23:00-24:00 (1°00")  8   Comitando firestarter, e corrigindo algumas coisas.
+2012-10-24 17:40-18:20 (0°40")  9   Usando os métodos de verificação. Esses métodos devem ser usados na view, e não no controller.
+2012-10-24 15:00-17:00 (2°00")  9   Usando os métodos de verificação. Esses métodos devem ser usados na view, e não no controller.
+2012-10-24 00:00-06:35 (6°35")  9   Método para permitir verificar se um usuário pode acessar uma action, verificando os atributos da action.
+
+-- ter 08°40" (##°##")
+2012-10-23 15:20-24:00 (8°40")  6   
+
+-- seg 10°20" (#°##")
+2012-10-22 19:20-24:00 (4°40")  8   #122: Testes para resetar senha.
+2012-10-22 18:40-19:20 (0°40") 10   #127: Testes para conversão de datas locais em UTC, respeitanto o horário de verão.
+2012-10-22 13:00-18:00 (5°00")  9   Corrigindo testes.
+
+-- sab 4°30" (#°##")
+2012-10-20 13:12-14:00 (0°40") 10   Revendo issues, comentando, etc..
+2012-10-20 03:20-03:50 (0°30") 10   Comitando #127, #122, e mais uma porrada de outras coisas.
+2012-10-20 00:00-03:20 (3°20") 10   Corrigindo problema com transição para o horário de verão. #127.
+
+-- sex 8°00" (#°##")
+2012-10-19 22:00-24:00 (2°00")  8   Enviar e-mail de redefinição de senha.
+2012-10-19 19:30-21:00 (1°30") 10   Enviar e-mail de redefinição de senha.
+2012-10-19 16:30-18:00 (1°30")  9   Resolvendo problemas com e-mail: enviar e-mails em formato texto e html ao mesmo tempo. Evita ser classificado como SPAM.
+2012-10-19 13:00-16:00 (3°00")  8   Enviar e-mail de redefinição de senha: adicionando métodos na classe de autenticação do usuário, para permitir alterar a senha.
+
+-- qui 10°00" (#°##")
+2012-10-18 16:30-23:30 (7°00")  7   Resolvendo problemas com e-mail: refatorando criação de conta para usar a nova tabela GLB_Token.
+2012-10-18 12:00-15:00 (3°00")  9   Enviar e-mail de redefinição de senha: planejar fluxo de telas e fazer as primeiras actions e telas.
+
+-- qua 6°25" (#°##")
+2012-10-17 22:00-24:00 (2°00")  9   Aplicando algumas regras do R#.
+2012-10-17 19:30-21:30 (2°00")  -   Pesquisando sobre CIELO.
 2012-10-17 15:30-18:15 (2°45")  8   Corrigindo testes, gerando novo script do banco, e comitando tudo.
 2012-10-17 13:45-14:45 (1°00") 10   Ids autoincremento para Doctor, Administrator e Secretary.
 2012-10-17 12:05-12:45 (0°40") 10   Corrigindo testes depois do merge com coisas do PayPal.

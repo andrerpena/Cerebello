@@ -140,6 +140,7 @@
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigPracticeViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
+    <Compile Include="Code\Access\AccessManager.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
     <Compile Include="Code\Chat\ChatRoom.cs" />
     <Compile Include="Code\Chat\ChatRoomUsersSubscription.cs" />
@@ -233,10 +235,15 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
     <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
+    <Compile Include="Code\Extensions\AccessExtensions.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\AuthenticationFilter.cs" />
+    <Compile Include="Code\Filters\AccessDbObjectAttribute.cs" />
+    <Compile Include="Code\Filters\UsersManagementPermissionAttribute.cs" />
+    <Compile Include="Code\Filters\UserRolePermissionAttribute.cs" />
+    <Compile Include="Code\Filters\IsOwnerPermissionAttribute.cs" />
     <Compile Include="Code\Filters\FirstAccessFilter.cs" />
     <Compile Include="Code\Filters\PermissionAttribute.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
@@ -253,6 +260,7 @@
     <Compile Include="Code\Helpers\ImageHelper.cs" />
     <Compile Include="Code\Helpers\MemberExpressionHelper.cs" />
     <Compile Include="Code\Helpers\ExpressionHelper.cs" />
+    <Compile Include="Code\Helpers\MvcHelper.cs" />
     <Compile Include="Code\Helpers\RouteHelper.cs" />
     <Compile Include="Code\Helpers\StringHelper.cs" />
     <Compile Include="Code\Helpers\TagsHelper.cs" />
@@ -364,6 +372,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.delete.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
@@ -405,6 +414,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.confirmation.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.container.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.window.js" />
@@ -412,6 +422,7 @@
     <Content Include="Scripts\Controls\jquery.cerebello.dropdown.menu.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
+    <Content Include="Scripts\cerebello.pt-BR.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\jquery-1.8.1.min.js" />
@@ -585,6 +596,8 @@
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
+    <Content Include="Areas\App\Views\ConfigPractice\Index.cshtml" />
+    <Content Include="Areas\App\Views\ConfigPractice\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
