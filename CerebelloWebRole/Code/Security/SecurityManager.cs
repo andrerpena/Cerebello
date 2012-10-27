@@ -212,6 +212,9 @@ namespace CerebelloWebRole.Code
         {
             var isEmail = userNameOrEmail.Contains("@");
 
+            var query =
+                db.Users.Where(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
+
             User loggedInUser = isEmail
                 ? db.Users.FirstOrDefault(
                     u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier)

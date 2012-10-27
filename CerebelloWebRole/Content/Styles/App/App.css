@@ -401,7 +401,6 @@ fieldset {
     margin-bottom: 15px;
     padding: 0 10px;
     position: relative;
-    z-index: 3;
 }
 
     #app-header a {

@@ -1,6 +1,6 @@
 ﻿(function ($) {
 
-    // creates a screen to ask the user for deletion confirmation
+    // creates a chat user-list
     function ChatUserList(options) {
 
         // Defaults:
