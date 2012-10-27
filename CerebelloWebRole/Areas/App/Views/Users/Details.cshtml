@@ -21,7 +21,7 @@
 
     @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("Edit"))
     {
-        <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit"
+        <a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit"
            id="edit-user-link">Editar usuário</a>
     }
 

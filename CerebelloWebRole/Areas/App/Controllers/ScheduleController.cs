@@ -215,7 +215,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             end = localEndTime.ToString("HH:mm");
 
             // Creating viewmodel.
-            AppointmentViewModel viewModel = new AppointmentViewModel();
+            var viewModel = new AppointmentViewModel();
 
             int currentUserPracticeId = this.DbUser.PracticeId;
 
@@ -248,7 +248,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ModelState.Clear();
 
-            this.ViewBag.IsEditing = false;
+            this.ViewBag.IsEditingOrCreating = 'C';
 
             return this.View("Edit", viewModel);
         }
@@ -341,7 +341,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     throw new Exception("Unsupported appointment type.");
             }
 
-            this.ViewBag.IsEditing = true;
+            this.ViewBag.IsEditingOrCreating = 'E';
 
             return View("Edit", viewModel);
         }
@@ -349,8 +349,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(AppointmentViewModel formModel)
         {
-            string urlId = null;
-
             // Custom model validation.
             if (formModel.IsGenericAppointment)
             {
@@ -370,13 +368,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
                 if (string.IsNullOrEmpty(formModel.PatientName))
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientName, ModelStrings.RequiredValidationMessage);
+                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientName,
+                        ModelStrings.RequiredValidationMessage);
 
                 if (formModel.PatientGender == null)
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientGender, ModelStrings.RequiredValidationMessage);
+                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientGender,
+                        ModelStrings.RequiredValidationMessage);
 
                 if (formModel.PatientDateOfBirth == null)
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientDateOfBirth, ModelStrings.RequiredValidationMessage);
+                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientDateOfBirth,
+                        ModelStrings.RequiredValidationMessage);
             }
             else
             {
@@ -384,17 +385,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
                 if (formModel.PatientId == null)
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup, ModelStrings.RequiredValidationMessage);
+                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
+                        ModelStrings.RequiredValidationMessage);
 
                 else
                 {
                     var patient = db.Patients.Where(p => p.Id == formModel.PatientId).FirstOrDefault();
 
                     if (patient == null)
-                        ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup, "O paciente informado não foi encontrado no banco de dados");
+                        ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
+                            "O paciente informado não foi encontrado no banco de dados");
 
                     else if (patient.Person.FullName != formModel.PatientNameLookup)
-                        ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup, "O paciente informado foi encontrado mas o nome não coincide");
+                        ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
+                            "O paciente informado foi encontrado mas o nome não coincide");
                 }
             }
 
@@ -430,8 +434,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         return View("NotFound", formModel);
                 }
 
-                appointment.Start = ConvertToUtcDateTime(this.Practice, formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start));
-                appointment.End = ConvertToUtcDateTime(this.Practice, formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End));
+                appointment.Start = ConvertToUtcDateTime(this.Practice,
+                    formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start));
+                appointment.End = ConvertToUtcDateTime(this.Practice,
+                    formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End));
 
                 // Setting the appointment type and associated properties.
                 // - generic appointment: has description, date and time interval
@@ -479,11 +485,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return this.Json((dynamic)new { status = "error", text = "Não foi possível salvar a consulta. Erro inexperado", details = ex.Message }, JsonRequestBehavior.AllowGet);
+                    return this.Json((dynamic)new { status = "error",
+                        text = "Não foi possível salvar a consulta. Erro inexperado",
+                        details = ex.Message }, JsonRequestBehavior.AllowGet);
                 }
             }
 
-            this.ViewBag.IsEditing = this.RouteData.Values["action"].ToString().ToLowerInvariant() == "edit";
+            this.ViewBag.IsEditingOrCreating = this.RouteData.Values["action"].ToString()
+                .ToLowerInvariant() == "edit" ? 'E' : 'C';
 
             return View("Edit", formModel);
         }

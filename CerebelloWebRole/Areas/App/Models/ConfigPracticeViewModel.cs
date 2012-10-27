@@ -12,6 +12,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public short PracticeTimeZone { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [RegularExpression(@"^\s*[\w\p{P}\d]+(\s+[\w\p{P}\d]+)*\s*$", ErrorMessage = "Nome de consultório precisa conter letras, números, ou alguma pontuação.")]
         [Display(Name = "Nome do consultório")]
         public string PracticeName { get; set; }
     }

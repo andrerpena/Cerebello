@@ -136,7 +136,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // ToDo: @masbicudo, eu coloquei essa linha pra evitar um crash na View.
             // Está certo isso?
-            this.ViewBag.IsEditing = id != null;
+            // @andrerpena: estava correto, alterei o nome da variável para ficar mais claro, pois nem eu entendi direito.
+            // @andrerpena: afinal, se está dentro da action de editar então é pq está esitando, mas na verdade essa
+            // @andrerpena: também é usada para criar um novo carinha.
+            this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
             if (id != null)
             {
@@ -148,7 +151,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 ViewBag.Title = "Novo usuário";
 
-            this.ViewBag.IsEditing = id != null;
+            this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
             ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
@@ -168,9 +171,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(UserViewModel formModel)
         {
-            bool isEditing = formModel.Id != null;
+            var isEditingOrCreating = formModel.Id != null ? 'E' : 'C';
 
-            this.ViewBag.IsEditing = isEditing;
+            this.ViewBag.IsEditingOrCreating = isEditingOrCreating;
 
             var utcNow = this.GetUtcNow();
 
@@ -180,7 +183,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!string.IsNullOrEmpty(formModel.FullName))
                 formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
 
-            if (isEditing)
+            if (isEditingOrCreating == 'E')
             {
                 // Note: User name cannot be edited, and should not be validated.
                 this.ModelState.ClearPropertyErrors(() => formModel.UserName);

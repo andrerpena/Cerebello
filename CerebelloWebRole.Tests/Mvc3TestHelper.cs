@@ -59,8 +59,10 @@ namespace CerebelloWebRole.Tests
             var privateObject = new PrivateObject(controller);
             privateObject.SetField("db", mainDb);
             privateObject.Invoke("Initialize", mr.GetRequestContext());
+
             if (callOnActionExecuting)
                 ((IActionFilter)controller).OnActionExecuting(mr.CreateActionExecutingContext());
+
             controller.Url = new UrlHelper(mr.GetRequestContext(), routes);
         }
 

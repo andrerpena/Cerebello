@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Models;
-using System.Linq;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
     public class ConfigPracticeController : PracticeController
     {
         private ConfigPracticeViewModel ConfigPracticeViewModel()
@@ -45,6 +48,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             if (this.ModelState.IsValid)
             {
+                viewModel.PracticeName = Regex.Replace(viewModel.PracticeName.Trim(), @"\s+", " ");
+
                 this.Practice.Name = viewModel.PracticeName;
                 this.Practice.WindowsTimeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue(
                     (TypeTimeZone)viewModel.PracticeTimeZone).Id;

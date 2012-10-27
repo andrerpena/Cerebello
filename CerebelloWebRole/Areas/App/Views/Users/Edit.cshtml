@@ -15,13 +15,13 @@
 
     var editPanel = this.Html.CreateEditPanel();
 
-    if (this.ViewBag.IsEditing == false)
+    if (this.ViewBag.IsEditingOrCreating == 'C')
     {
         // If Model is null, then the user is being created now,
         // so we allow the user name to be changed.
-        editPanel.AddField(m => m.UserName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+        editPanel.AddField(m => m.UserName, EditPanelFieldSize.Large);
     }
-    else if (this.ViewBag.IsEditing == true)
+    else if (this.ViewBag.IsEditingOrCreating == 'E')
     {
         // If Model is not null, then the user already existed before,
         // we cannot allow the user-name to be edited.
@@ -29,7 +29,7 @@
     }
     else
     {
-        throw new Exception("'ViewBag.IsEditing' must be either true or false.");
+        throw new Exception("'ViewBag.IsEditingOrCreating' must be either 'E' or 'C'.");
     }
 
     editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);

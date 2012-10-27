@@ -59,7 +59,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the ActionResult, and the DB.
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -120,7 +120,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual("12:33", viewModel.Start);
             Assert.AreEqual("13:03", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -162,7 +162,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual("10:07", viewModel.Start);
             Assert.AreEqual("12:42", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -224,7 +224,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual("09:00", viewModel.Start);
             Assert.AreEqual("09:30", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -280,7 +280,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual("09:00", viewModel.Start);
             Assert.AreEqual("09:30", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -322,7 +322,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual("00:00", viewModel.Start);
             Assert.AreEqual("00:30", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -369,7 +369,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(AppointmentViewModel));
             var resultViewModel = (AppointmentViewModel)viewResult.Model;
             Assert.AreEqual(patient.Person.FullName, resultViewModel.PatientNameLookup);
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -418,7 +418,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(AppointmentViewModel));
             var resultViewModel = (AppointmentViewModel)viewResult.Model;
             Assert.AreNotEqual("Pedro Paulo Machado", resultViewModel.PatientNameLookup);
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -527,7 +527,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
-            Assert.AreEqual(controller.ViewBag.IsEditing, null); // when JsonResult there must be no ViewBag
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, null); // when JsonResult there must be no ViewBag
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
@@ -536,8 +536,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 int appointmentsCountAtSameTime = db2.Appointments
                     .Where(a => a.Start == utcStart)
-                    .Where(a => a.End == utcEnd)
-                    .Count();
+                    .Count(a => a.End == utcEnd);
 
                 Assert.AreEqual(2, appointmentsCountAtSameTime);
             }
@@ -851,7 +850,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
-            Assert.AreEqual(controller.ViewBag.IsEditing, null); // when JsonResult there must be no ViewBag
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, null); // when JsonResult there must be no ViewBag
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
@@ -877,7 +876,7 @@ namespace CerebelloWebRole.Tests.Tests
             bool isDbChanged = false;
             AppointmentViewModel vm;
 
-            
+
             var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
@@ -939,7 +938,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual(DateAndTimeValidationState.Failed, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should be invalid.");
 
             // Verifying the DB.
