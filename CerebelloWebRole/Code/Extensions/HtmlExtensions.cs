@@ -1,16 +1,16 @@
-﻿using System.Text;
-using System.Web.Mvc;
-using System.Linq.Expressions;
-using System;
-using System.Reflection;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using System.Web.Mvc.Html;
-using System.Web;
-using System.Web.Script.Serialization;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Areas.App.Models;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
+using System.Web.Script.Serialization;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code.Controls;
 
 namespace CerebelloWebRole.Code.Extensions
 {
@@ -56,7 +56,7 @@ namespace CerebelloWebRole.Code.Extensions
         public static MvcHtmlString Message(this HtmlHelper htmlHelper, string text)
         {
             var encodedText = HttpUtility.HtmlEncode(text);
-            return new MvcHtmlString(String.Format(@"<div class=""message"">{0}</div>", encodedText));
+            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", encodedText));
         }
 
         /// <summary>
@@ -104,6 +104,7 @@ namespace CerebelloWebRole.Code.Extensions
         }
 
         public static MvcHtmlString EnumDisplayFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+            where TModel : class
         {
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
 
@@ -337,7 +338,7 @@ namespace CerebelloWebRole.Code.Extensions
 
         public abstract class CollectionItemScopeBase<TModel> : IDisposable
         {
-            protected readonly HtmlHelper<TModel> html;
+            private readonly HtmlHelper<TModel> _html;
             private readonly string _previousPrefix;
 
             /// <summary>
@@ -355,10 +356,9 @@ namespace CerebelloWebRole.Code.Extensions
             /// <summary>
             /// Starts the collection item scope
             /// </summary>
-            public CollectionItemScopeBase(HtmlHelper<TModel> html, string collectionName)
+            protected CollectionItemScopeBase(HtmlHelper<TModel> html, string collectionName)
             {
-                this.html = html;
-                this.WriteBegin(this.html);
+                this.WriteBegin(html);
 
                 string collectionIndexFieldName = String.Format("{0}.Index", collectionName);
                 string itemIndex = GetCollectionItemIndex(collectionIndexFieldName, html.ViewContext.HttpContext);
@@ -372,11 +372,13 @@ namespace CerebelloWebRole.Code.Extensions
                     { "autocomplete", "off" }
                 });
 
-                this.html.ViewData.Add(new KeyValuePair<string, object>("collectionIndex", itemIndex));
-                this.html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
+                html.ViewData.Add(new KeyValuePair<string, object>("collectionIndex", itemIndex));
+                html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
 
-                _previousPrefix = this.html.ViewData.TemplateInfo.HtmlFieldPrefix;
-                this.html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
+                _previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
+                html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
+
+                this._html = html;
             }
 
             /// <summary>
@@ -384,8 +386,8 @@ namespace CerebelloWebRole.Code.Extensions
             /// </summary>
             public void Dispose()
             {
-                this.html.ViewData.TemplateInfo.HtmlFieldPrefix = _previousPrefix;
-                this.WriteEnd(this.html);
+                this._html.ViewData.TemplateInfo.HtmlFieldPrefix = this._previousPrefix;
+                this.WriteEnd(this._html);
             }
         }
 
@@ -395,15 +397,15 @@ namespace CerebelloWebRole.Code.Extensions
 
             public override void WriteBegin(HtmlHelper<TModel> html)
             {
-                this.html.ViewContext.Writer.WriteLine("<li class=\"edit-list-item\">");
-                this.html.ViewContext.Writer.WriteLine("<div class=\"remove-button\" onclick=\"$(this).closest('.edit-list-item').remove()\"></div>");
-                this.html.ViewContext.Writer.WriteLine("<div class=\"edit-list-item-wrapper\">");
+                html.ViewContext.Writer.WriteLine("<li class=\"edit-list-item\">");
+                html.ViewContext.Writer.WriteLine("<div class=\"remove-button\" onclick=\"$(this).closest('.edit-list-item').remove()\"></div>");
+                html.ViewContext.Writer.WriteLine("<div class=\"edit-list-item-wrapper\">");
             }
 
             public override void WriteEnd(HtmlHelper<TModel> html)
             {
-                this.html.ViewContext.Writer.WriteLine("</div>");
-                this.html.ViewContext.Writer.WriteLine("</li>");
+                html.ViewContext.Writer.WriteLine("</div>");
+                html.ViewContext.Writer.WriteLine("</li>");
             }
         }
 
@@ -413,13 +415,13 @@ namespace CerebelloWebRole.Code.Extensions
 
             public override void WriteBegin(HtmlHelper<TModel> html)
             {
-                this.html.ViewContext.Writer.WriteLine("<li class=\"edit-list-item\">");
+                html.ViewContext.Writer.WriteLine("<li class=\"edit-list-item\">");
             }
 
             public override void WriteEnd(HtmlHelper<TModel> html)
             {
-                this.html.ViewContext.Writer.WriteLine("<span onclick=\"$(this).closest('li').remove()\" class=\"close-collection-item\"></span>");
-                this.html.ViewContext.Writer.WriteLine("</li>");
+                html.ViewContext.Writer.WriteLine("<span onclick=\"$(this).closest('li').remove()\" class=\"close-collection-item\"></span>");
+                html.ViewContext.Writer.WriteLine("</li>");
             }
         }
     }

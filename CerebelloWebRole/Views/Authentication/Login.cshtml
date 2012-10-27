@@ -1,19 +1,18 @@
 ﻿@model CerebelloWebRole.Models.LoginViewModel
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Login · Cerebello";
 }
 <div class="authentication-container">
     <div class="authentication-container-wrapper">
         <div class="header">
-            <h2>
-                Login no Cerebello</h2>
+            <h2>Login no Cerebello</h2>
             <a href="@Url.Action("createaccount")" class="link">Criar uma conta</a>
         </div>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
         {
             <fieldset>
                 <div class="controls-wrapper">
-                    
+
                     @Html.ValidationSummary(false)
 
                     <div class="control-group">
@@ -33,13 +32,13 @@
                         <div class="controls">
                             @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
                             <p>
-                                <a href="#">Esqueceu sua senha?</a>
+                                <a href="@Url.Action("ResetPasswordRequest")" title="Se você esqueceu sua senha clique aqui para criar uma nova senha.">Esqueceu sua senha?</a>
                             </p>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            @Html.CheckBoxFor(model => model.RememberMe) @Html.LabelFor(model => model.RememberMe, new { @class="remember-me" })
+                            @Html.CheckBoxFor(model => model.RememberMe) @Html.LabelFor(model => model.RememberMe, new { @class = "remember-me" })
                         </div>
                     </div>
                 </div>

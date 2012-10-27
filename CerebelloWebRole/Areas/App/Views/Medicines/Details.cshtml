@@ -3,7 +3,7 @@
     ViewBag.Title = "Medicamento: " + this.Model.Name + " · Cerebello";
 }
 @section Title {
-    Medicamento: <b>@Model.Name</b>
+    Medicamento: @Model.Name
 }
 @section SideBar {
     <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar medicamento</a>

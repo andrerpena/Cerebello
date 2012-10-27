@@ -13,39 +13,22 @@ using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
-    public class UsersControllerTests
+    public class UsersControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        protected CerebelloEntities db = null;
-
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            DatabaseHelper.AttachCerebelloTestDatabase();
+            AttachCerebelloTestDatabase();
         }
 
-        [ClassCleanup()]
+        [ClassCleanup]
         public static void ClassCleanup()
         {
-            DatabaseHelper.DetachCerebelloTestDatabase();
-        }
-
-        [TestInitialize()]
-        public void TestInitialize()
-        {
-            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
-
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
-        }
-
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-            this.db.Dispose();
+            DetachCerebelloTestDatabase();
         }
         #endregion
 
@@ -1071,9 +1054,9 @@ namespace CerebelloWebRole.Tests
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
             RedirectToRouteResult viewResult = (RedirectToRouteResult)result;
             Assert.AreEqual(3, viewResult.RouteValues.Count);
-            Assert.AreEqual("app", string.Format("{0}", viewResult.RouteValues["area"]));
-            Assert.AreEqual("users", string.Format("{0}", viewResult.RouteValues["controller"]));
-            Assert.AreEqual("changepassword", string.Format("{0}", viewResult.RouteValues["action"]));
+            Assert.AreEqual("app", string.Format("{0}", viewResult.RouteValues["area"]), ignoreCase: true);
+            Assert.AreEqual("users", string.Format("{0}", viewResult.RouteValues["controller"]), ignoreCase: true);
+            Assert.AreEqual("changepassword", string.Format("{0}", viewResult.RouteValues["action"]), ignoreCase: true);
         }
 
         #endregion

@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                modelObj = this.db.ExaminationRequests.Where(r => r.Id == formModel.Id).FirstOrDefault();
+                modelObj = this.db.ExaminationRequests.FirstOrDefault(r => r.Id == formModel.Id);
 
                 // If modelObj is null, we must tell the user that this object does not exist.
                 if (modelObj == null)

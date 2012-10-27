@@ -54,9 +54,6 @@
 
 .autocomplete {
 }
-    .autocomplete.changed {
-        color: #DD390D;
-    }
 
     .autocomplete .input-wrapper {
         overflow: auto;

@@ -50,7 +50,7 @@ namespace CerebelloWebRole.Code
             // but that doesn't mean the exact user-name "miguelangelo" is the one I used, in fact it is not.
             var normalizedUserName = StringHelper.NormalizeUserName(registrationData.UserName);
 
-            bool isUserNameAlreadyInUse =
+            var isUserNameAlreadyInUse =
                 practiceId != null &&
                 db.Users.Any(u => u.UserNameNormalized == normalizedUserName && u.PracticeId == practiceId);
 
@@ -115,13 +115,12 @@ namespace CerebelloWebRole.Code
                 var securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, db, out loggedInUser);
 
                 var expiryDate = DateTime.UtcNow.AddYears(1);
-                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                var ticket = new FormsAuthenticationTicket(
                      1, loginModel.UserNameOrEmail, DateTime.UtcNow, expiryDate, true,
                      securityToken, FormsAuthentication.FormsCookiePath);
 
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
-                    {Expires = expiryDate};
+                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) { Expires = expiryDate };
 
                 cookieCollection.Add(cookie);
 
@@ -145,7 +144,7 @@ namespace CerebelloWebRole.Code
 
                 try
                 {
-                    UserData userProfile = SecurityTokenHelper.FromString(((FormsIdentity)identity).Ticket.UserData).UserData;
+                    var userProfile = SecurityTokenHelper.FromString(((FormsIdentity)identity).Ticket.UserData).UserData;
                     // UserHelper.UpdateLastActiveOn(userProfile);
                     principal = new AuthenticatedPrincipal(identity, userProfile);
                 }
@@ -177,11 +176,7 @@ namespace CerebelloWebRole.Code
             // Note: this method was setting the user.LastActiveOn property, but now the caller must do this.
             // This is because it is not allowed to use DateTime.Now, because this makes the value not mockable.
 
-            var isEmail = userNameOrEmail.Contains("@");
-
-            loggedInUser = isEmail ?
-                db.Users.FirstOrDefault(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier) :
-                db.Users.FirstOrDefault(u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
+            loggedInUser = GetUser(db, practiceIdentifier, userNameOrEmail);
 
             if (loggedInUser == null)
                 throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");
@@ -191,7 +186,7 @@ namespace CerebelloWebRole.Code
             if (loggedInUser.Password != passwordHash)
                 throw new Exception("Password [" + password + "] is invalid");
 
-            SecurityToken securityToken = new SecurityToken()
+            var securityToken = new SecurityToken
             {
                 Salt = new Random().Next(0, 2000),
                 UserData = new UserData()
@@ -204,6 +199,56 @@ namespace CerebelloWebRole.Code
             };
 
             return SecurityTokenHelper.ToString(securityToken);
+        }
+
+        /// <summary>
+        /// Gets an user given user name or email, and the practice identifier.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="practiceIdentifier"></param>
+        /// <param name="userNameOrEmail"></param>
+        /// <returns></returns>
+        public static User GetUser(CerebelloEntities db, string practiceIdentifier, string userNameOrEmail)
+        {
+            var isEmail = userNameOrEmail.Contains("@");
+
+            User loggedInUser = isEmail
+                ? db.Users.FirstOrDefault(
+                    u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier)
+                : db.Users.FirstOrDefault(
+                    u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
+
+            return loggedInUser;
+        }
+
+        /// <summary>
+        /// Sets the password of an user.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="practiceIdentifier"></param>
+        /// <param name="userNameOrEmail"></param>
+        /// <param name="password"></param>
+        /// <param name="token"></param>
+        public static void SetUserPassword(CerebelloEntities db, string practiceIdentifier, string userNameOrEmail, string password)
+        {
+            var user = GetUser(db, practiceIdentifier, userNameOrEmail);
+
+            SetUserPassword(user, password);
+        }
+
+        private static void SetUserPassword(User user, string password)
+        {
+            // Password salt and hash.
+            string passwordSalt = CipherHelper.GenerateSalt();
+            var passwordHash = CipherHelper.Hash(password, passwordSalt);
+
+            user.Password = passwordHash;
+            user.PasswordSalt = passwordSalt;
+        }
+
+        public static void ResetUserPassword(User user)
+        {
+            SetUserPassword(user, Constants.DEFAULT_PASSWORD);
         }
     }
 }

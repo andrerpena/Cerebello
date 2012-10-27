@@ -33,7 +33,7 @@
                 }
             });
             _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
-        }
+        };
 
         this.getMessages = function () {
             var _this = this;
@@ -64,19 +64,21 @@
                     _this.getMessages();
                 },
                 error: function () {
-
+                    // in this case, we not doing anything, just trying again.
+                    // the funtion getUserList is responsible for warning the user.
                     setTimeout(function () {
                         _this.getMessages();
-                    }, 20000);
+                    }, 10000);
                 }
             });
-        }
+        };
 
         this.getUserList = function (noWait) {
             var _this = this;
 
             if (noWait == undefined)
                 noWait = false;
+
             $.ajax({
                 url: "/p/" + _this.opts.practice + "/chat/userlist",
                 data: {
@@ -109,16 +111,29 @@
                     _this.getUserList();
                 },
 
-                error: function () {
-                    // too bad but we can't let the system down, go ahead and try again
-                    // there must be some error logging in the server so, let's not handle this here
-                    setTimeout(function () {
-                        _this.getUserList();
-                    }, 20000);
+                error: function (e) {
+
+                    var errorMessage;
+
+                    switch (e.status) {
+                        case 403:
+                            errorMessage = "Seu usuário não está logado ou não possui permissão para acessar o bate-papo no momento.";
+                            _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
+                            break;
+                        case 500:
+                            errorMessage = "Ocorreu um erro ao tentar carregar o bate-papo.";
+                            _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
+                            break;
+                        default:
+                            // chances are that the user just clicked a link. When you click a link
+                            // the pending ajaxes break and we'll just hide the window
+                            _this.chatContainer.setVisible(false);
+                    }
                 }
+
             });
 
-        }
+        };
     }
 
     // Separate functionality from object creation
@@ -132,12 +147,9 @@
                 showTextBox: false,
                 canClose: false
             });
-            
-            // first
-            setTimeout(function() {
-                _this.getUserList(true);
-                _this.getMessages();
-            }, 10000);
+
+            _this.getUserList(true);
+            _this.getMessages();
         }
     };
 

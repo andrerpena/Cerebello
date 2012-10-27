@@ -34,11 +34,6 @@
     width: 16px;
 }
 
-.chat-window-content
-{
-    
-}
-
 .chat-window-inner-content
 {
     margin-bottom: 2px;
@@ -97,4 +92,8 @@ input.chat-window-text-box
 {
     line-height: 1.2em;
     margin-left: 40px;
+}
+
+.chat-window-content .message-warning {
+    margin: 0
 }

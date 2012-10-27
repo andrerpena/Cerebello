@@ -200,7 +200,7 @@ namespace CerebelloWebRole.Code.Chat
         /// <returns></returns>
         public ChatRoomUsersSubscription SubscribeForUsersChange(Action<int, ChatUser, ChatUser.StatusType, List<ChatUser>> onUserStatusChanged)
         {
-            if (onUserStatusChanged == null) throw new ArgumentNullException("onRoomChanged");
+            if (onUserStatusChanged == null) throw new ArgumentNullException("onUserStatusChanged");
             return new ChatRoomUsersSubscription(this, onUserStatusChanged);
         }
 
@@ -228,7 +228,7 @@ namespace CerebelloWebRole.Code.Chat
         /// <returns></returns>
         public ChatRoomMessagesSubscription SubscribeForMessagesChange(Action<int, ChatUser, ChatUser, ChatMessage> onNewMessage)
         {
-            if (onNewMessage == null) throw new ArgumentNullException("onRoomChanged");
+            if (onNewMessage == null) throw new ArgumentNullException("onNewMessage");
             return new ChatRoomMessagesSubscription(this, onNewMessage);
         }
 

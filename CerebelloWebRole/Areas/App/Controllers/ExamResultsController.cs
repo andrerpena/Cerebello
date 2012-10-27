@@ -106,8 +106,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 modelObj = this.db.ExaminationResults
                     .Where(r => r.Id == formModel.Id)
-                    .Where(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
-                    .FirstOrDefault();
+                    .FirstOrDefault(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId);
 
                 // If modelObj is null, we must tell the user that this object does not exist.
                 if (modelObj == null)

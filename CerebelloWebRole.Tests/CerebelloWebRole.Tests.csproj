@@ -89,6 +89,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -127,20 +128,23 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyTest.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DbTestBase.cs" />
     <Compile Include="Disposer.cs" />
     <Compile Include="ExceptionHelper.cs" />
-    <Compile Include="LibTests\StringHelperTests.cs" />
+    <Compile Include="Tests.Helpers\StringHelperTests.cs" />
     <Compile Include="MockExtensions.cs" />
     <Compile Include="Mvc3TestHelper.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Tests.Self\Mvc3HelperTests.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
     <Compile Include="Tests\AuthenticationControllerTests.cs" />
+    <Compile Include="Tests\ConfigPracticeControllerTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\DiagnosisControllerTests.cs" />
-    <Compile Include="Tests\Helpers\DateTimeHelperTests.cs" />
+    <Compile Include="Tests.Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Tests\MedicinesControllerTests.cs" />
     <Compile Include="Tests\PatientsControllerTests.cs" />
     <Compile Include="Tests\ScheduleControllerTests.cs" />
@@ -154,7 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cerebello.Firestarter\Cerebello.Firestarter.csproj">
-      <Project>{910ADA48-2A68-4783-B70B-314D9BAA1428}</Project>
+      <Project>{910ada48-2a68-4783-b70b-314d9baa1428}</Project>
       <Name>Cerebello.Firestarter</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cerebello.Model\Cerebello.Model.csproj">
@@ -198,6 +202,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

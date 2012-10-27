@@ -24,7 +24,7 @@
     cardView.AddField(m => m.Observations, wholeRow: true);
 }
 @section Title {
-    Paciente: <b>@Model.FullName</b>
+    Paciente: @Model.FullName
 }
 @section SideBar {
     <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>

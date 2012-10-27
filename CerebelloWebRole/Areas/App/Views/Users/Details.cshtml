@@ -1,5 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
 @using CerebelloWebRole.Code.Extensions
+@using CerebelloWebRole.Code.Access
 @{
     ViewBag.Title = "Usuário: " + this.Model.FullName + " · Cerebello";
     ViewBag.Watermark = "Pesquisar pelo nome do usuário";
@@ -14,24 +15,61 @@
     cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
 }
 @section Title {
-    Usuário: <b>@Model.FullName</b>
+    Usuário: @Model.FullName
 }
 @section SideBar {
-    <a href="@Url.Action("edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-user-link">Editar usuário</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
-    <script type="text/javascript">
-        $("#delete-user-link").click(function (e) {
-            e.preventDefault();
-            $.deleteConfirmation({
-                objectType: "usuário",
-                objectName: "@this.Model.FullName",
-                url: "@Url.Action("delete", new { id = this.Model.Id })",
-                success: function (data) {
-                    alert("Este usuário foi excluído");
-                    window.location = "@Url.Action("index")";
-                }
+
+    @if (this.CanAccessAction("Edit"))
+    {
+        <a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit"
+           id="edit-user-link">Editar usuário</a>
+    }
+
+    @if (this.CanAccessAction("Delete"))
+    {
+        <a href="#" class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a>
+    }
+
+    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
+
+    @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("ResetPassword"))
+    {
+        <a href="#" class="icon-link icon-reset-password" id="reset-password-link">Resetar senha</a>
+    }
+
+    @if (this.CanAccessAction("Delete"))
+    {
+        <script type="text/javascript">
+            $("#delete-user-link").click(function (e) {
+                e.preventDefault();
+                $.confirmation(cerebello.res.deleteConfirmation, {
+                    objectType: "usuário",
+                    objectName: "@this.Model.FullName",
+                    url: "@Url.Action("Delete", new { id = this.Model.Id })",
+                    success: function (data) {
+                        window.location = "@Url.Action("index")";
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+    }
+
+    @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("ResetPassword"))
+    {
+        <script type="text/javascript">
+            $("#reset-password-link").click(function (e) {
+                e.preventDefault();
+                $.confirmation(cerebello.res.resetPasswordConfirmation, {
+                    objectType: "usuário",
+                    objectName: "@this.Model.FullName",
+                    url: "@Url.Action("ResetPassword", new { id = this.Model.Id })",
+                    success: function (data) {
+                        window.location = "@Url.Action("Details", new { id = this.Model.Id })";
+                    }
+                });
+            });
+        </script>
+    }
 }
 
 @cardView.GetHtml()

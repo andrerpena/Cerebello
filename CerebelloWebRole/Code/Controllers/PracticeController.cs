@@ -40,8 +40,7 @@ namespace CerebelloWebRole.Code
             if (practice == null) throw new ArgumentNullException("practice");
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
-            var result = TimeZoneInfo.ConvertTimeToUtc(practiceDateTime, timeZoneInfo);
-            return result;
+            return DateTimeHelper.ConvertToUtcDateTime(practiceDateTime, timeZoneInfo);
         }
 
         public DateTime GetPracticeLocalNow()
@@ -55,7 +54,7 @@ namespace CerebelloWebRole.Code
 
             // setting up user
             Debug.Assert(this.DbUser != null);
-            
+
             // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
             var controllerName = this.RouteData.Values["controller"] as string;

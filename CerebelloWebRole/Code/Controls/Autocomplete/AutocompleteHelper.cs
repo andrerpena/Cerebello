@@ -8,58 +8,8 @@ namespace CerebelloWebRole.Code.Controls
     /// <summary>
     /// Ajuda a realizar operações comuns do Lookup
     /// </summary>
-    public class AutocompleteHelper
+    public static class AutocompleteHelper
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        [Obsolete("This is to hard to generalize the autocomplete logic. This is just making stuff harder to understand. Just do it manually")]
-        public static TModel GetObject<TModel>(int? id, string text, Func<int, TModel> getById, Func<string, TModel> getByText, Func<string, TModel> getNew, bool allowInsertion) where TModel : class
-        {
-            if (allowInsertion)
-            {
-                if (string.IsNullOrEmpty(text))
-                    return null;
-
-                if (id.HasValue)
-                    return getById(id.Value);
-
-                var @object = getByText(text);
-                if (@object == null)
-                    @object = getNew(text);
-
-                return @object;
-            }
-            else
-            {
-                if (id.HasValue)
-                    return getById(id.Value);
-
-                return null;
-            }
-        }
-
-        [Obsolete("This is to hard to generalize the autocomplete logic. This is just making stuff harder to understand. Just do it manually")]
-        public static AutocompleteJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IQueryable<TModel>> getQuery, Func<IQueryable<TModel>, IQueryable<TModel>> orderQueryBy, Func<TModel, object> createRow)
-        {
-            if (!pageIndex.HasValue)
-                pageIndex = 1;
-
-            if (term == null)
-                term = string.Empty;
-
-            var query = getQuery(term);
-            var totalCount = query.Count();
-            var pagedResult = orderQueryBy(query).Skip(pageSize * (pageIndex.Value - 1)).Take(pageSize).ToList();
-
-            return new AutocompleteJsonResult()
-                {
-                    Count = totalCount,
-                    Rows = new System.Collections.ArrayList((from r in pagedResult
-                                                             select createRow(r)).ToList())
-                };
-        }
-
         [Obsolete("This is to hard to generalize the autocomplete logic. This is just making stuff harder to understand. Just do it manually")]
         public static AutocompleteJsonResult GetData<TModel>(string term, int pageSize, int? pageIndex, Func<string, IEnumerable<TModel>> getQuery)
         {
@@ -68,6 +18,8 @@ namespace CerebelloWebRole.Code.Controls
 
             if (term == null)
                 term = string.Empty;
+
+            if (getQuery == null) throw new ArgumentNullException("getQuery");
 
             var query = getQuery(term);
             var totalCount = query.Count();

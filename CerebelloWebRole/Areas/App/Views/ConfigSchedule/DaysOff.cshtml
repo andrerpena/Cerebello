@@ -7,12 +7,9 @@
 @section Title {
 Configurações de dias sem expediente
 }
-@section Styles {
-    <link rel="Stylesheet" type="text/css" href="/content/styles/app/jquery-ui-overrides.css" />
-}
 @section Scripts {
     <script type="text/javascript" src="/Scripts/fullcalendar.min.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery.ui.datepicker-pt-BR.js"></script>
+    
 }
 @section SideBar {
     <ul style="margin-top: 10px;">
@@ -130,7 +127,7 @@ Configurações de dias sem expediente
         e.preventDefault();
         var answer = confirm("Deseja realmente excluir este(s) dia(s) da lista?\nEsta operação não pode ser desfeita.");
         if (answer) {
-            $.getJSON("/p/consultoriodrhourse/d/gregoryhouse/configschedule/daysoffdelete?items=" + itemsToDelete, function (data) {
+            $.getJSON("/p/consultoriodrhouse/d/gregoryhouse/configschedule/daysoffdelete?items=" + itemsToDelete, function (data) {
                 if (data.success) {
                     alert("Data sem expediente excluida.");
                     el.closest("li").remove();

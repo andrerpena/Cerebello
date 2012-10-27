@@ -17,7 +17,6 @@
         });
     };
 
-    $.datepicker.setDefaults($.datepicker.regional["pt-BR"]);
     $(".datepicker").datepicker({
         showOtherMonths: false,
         selectOtherMonths: false,

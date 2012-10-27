@@ -21,6 +21,7 @@
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationResult" EntityType="cerebelloModel.Store.ExaminationResult" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GLB_Token" EntityType="cerebelloModel.Store.GLB_Token" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="HealthEnsurance" EntityType="cerebelloModel.Store.HealthEnsurance" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Holiday" EntityType="cerebelloModel.Store.Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
@@ -40,6 +41,7 @@
           <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Symptom" EntityType="cerebelloModel.Store.Symptom" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SYS_Cid10" EntityType="cerebelloModel.Store.SYS_Cid10" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ContractType" EntityType="cerebelloModel.Store.SYS_ContractType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Holiday" EntityType="cerebelloModel.Store.SYS_Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Laboratory" EntityType="cerebelloModel.Store.SYS_Laboratory" store:Type="Tables" Schema="dbo" />
@@ -438,6 +440,16 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="GLB_Token">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="char" Nullable="false" MaxLength="32" />
+          <Property Name="ExpirationDate" Type="datetime" Nullable="false" />
+          <Property Name="Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="200" />
+        </EntityType>
         <EntityType Name="HealthEnsurance">
           <Key>
             <PropertyRef Name="Id" />
@@ -572,8 +584,6 @@
           <Property Name="OwnerId" Type="int" />
           <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
           <Property Name="VerificationDate" Type="datetime" />
-          <Property Name="VerificationToken" Type="varchar" MaxLength="32" />
-          <Property Name="VerificationExpirationDate" Type="datetime" />
           <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
           <Property Name="ActiveAccountContractId" Type="int" />
         </EntityType>
@@ -618,6 +628,15 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="SYS_Cid10">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" MaxLength="200" />
+          <Property Name="Cat" Type="varchar" MaxLength="100" />
+          <Property Name="SubCat" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="SYS_ContractType">
           <Key>
@@ -1563,6 +1582,8 @@
             <End Role="Secretary" EntitySet="Secretaries" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="GLB_Token" EntityType="Cerebello.Model.GLB_Token" />
+          <EntitySet Name="SYS_Cid10" EntityType="Cerebello.Model.SYS_Cid10" />
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1692,8 +1713,6 @@
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="VerificationDate" Precision="3" />
-          <Property Type="String" Name="VerificationToken" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="VerificationExpirationDate" Precision="3" />
           <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
           <Property Type="Int32" Name="ActiveAccountContractId" />
           <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="Practice" ToRole="ChatMessage" />
@@ -2653,6 +2672,25 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="GLB_Token">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="DateTime" Name="ExpirationDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SYS_Cid10">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Cat" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SubCat" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2724,8 +2762,6 @@
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
                 <ScalarProperty Name="ActiveAccountContractId" ColumnName="ActiveAccountContractId" />
                 <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
-                <ScalarProperty Name="VerificationExpirationDate" ColumnName="VerificationExpirationDate" />
-                <ScalarProperty Name="VerificationToken" ColumnName="VerificationToken" />
                 <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
                 <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3123,6 +3159,27 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="GLB_Token">
+            <EntityTypeMapping TypeName="Cerebello.Model.GLB_Token">
+              <MappingFragment StoreEntitySet="GLB_Token">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Cid10">
+            <EntityTypeMapping TypeName="Cerebello.Model.SYS_Cid10">
+              <MappingFragment StoreEntitySet="SYS_Cid10">
+                <ScalarProperty Name="SubCat" ColumnName="SubCat" />
+                <ScalarProperty Name="Cat" ColumnName="Cat" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3269,9 +3326,9 @@
           <ConnectorPoint PointX="7.958333333333333" PointY="9.5862939453125" />
           <ConnectorPoint PointX="8.125" PointY="9.5862939453125" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_ActiveIngredient" Width="1.5" PointX="0.5" PointY="0.5" Height="1.5956835937499962" FillColor="Firebrick" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Laboratory" Width="1.5" PointX="0.5" PointY="3.625" Height="1.595683593749996" FillColor="Firebrick" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Medicine" Width="1.5" PointX="2.875" PointY="3.25" Height="1.9802864583333388" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_ActiveIngredient" Width="2.125" PointX="2.25" PointY="0.5" Height="1.5956835937499962" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Laboratory" Width="1.5" PointX="2.875" PointY="3" Height="1.595683593749996" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Medicine" Width="1.5" PointX="0.5" PointY="2.625" Height="1.9802864583333388" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_SYS_Medicine_SYS_Laboratory">
           <ConnectorPoint PointX="2.25" PointY="4.40625" />
           <ConnectorPoint PointX="3.15625" PointY="4.40625" />
@@ -3299,7 +3356,7 @@
           <ConnectorPoint PointX="21.75" PointY="21.172712343750003" />
           <ConnectorPoint PointX="21.75" PointY="20.576233723958332" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Leaflet" Width="1.5" PointX="0.5" PointY="6" Height="1.5956835937500102" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Leaflet" Width="1.5" PointX="2.875" PointY="5.25" Height="1.5956835937500102" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.SYS_MedicineLeaflet">
           <ConnectorPoint PointX="3.9375" PointY="4.75" />
           <ConnectorPoint PointX="3.9375" PointY="3.239889322916667" />
@@ -3396,7 +3453,7 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.HealthEnsurance" Width="1.625" PointX="8.375" PointY="0.5" Height="1.4033821614583246" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="1.5" PointX="10.625" PointY="0.5" Height="1.5956835937500102" FillColor="DimGray" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="6.125" PointY="0.5" Height="1.5956835937499996" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="0.5" PointY="11.25" Height="1.5956835937499996" FillColor="Firebrick" />
         <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="39.875" PointY="25.375" Height="2.3648893229166674" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_Patient">
           <ConnectorPoint PointX="6.15625" PointY="15.960999348958334" />
@@ -3545,6 +3602,8 @@
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis_Anamnese1" />
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis2_Diagnosis2" />
         <AssociationConnector Association="Cerebello.Model.FK_User_Secretary" />
+        <EntityTypeShape EntityType="Cerebello.Model.GLB_Token" Width="1.5" PointX="5.625" PointY="0.5" FillColor="Khaki" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_Cid10" Width="1.5" PointX="0.5" PointY="8.125" FillColor="Firebrick" />
         </Diagram>
     </Diagrams>
   </Designer>

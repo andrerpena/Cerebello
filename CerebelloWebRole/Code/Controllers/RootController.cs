@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
-using System.Net.Mail;
-using System.Web.Mvc;
 using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Web.Mvc;
+using Cerebello.Model;
 
 namespace CerebelloWebRole.Code.Controllers
 {
@@ -11,16 +14,21 @@ namespace CerebelloWebRole.Code.Controllers
         public RootController()
         {
             this.UtcNowGetter = () => DateTime.UtcNow;
+
             this.EmailSender = mm =>
             {
                 using (var smtpClient = this.CreateSmtpClient())
                     smtpClient.Send(mm);
             };
+
+            this.CerebelloEntitiesCreator = () => new CerebelloEntities();
         }
 
         public Func<DateTime> UtcNowGetter { get; set; }
 
         public Action<MailMessage> EmailSender { get; set; }
+
+        public Func<CerebelloEntities> CerebelloEntitiesCreator { get; set; }
 
         /// <summary>
         /// Mockable version of the DateTime.UtcNow property.
@@ -37,39 +45,49 @@ namespace CerebelloWebRole.Code.Controllers
         /// <param name="viewName">The name of the partial view to render.</param>
         /// <param name="model">The model objeto to pass to the partial view.</param>
         /// <returns>The string rendered from the partial view.</returns>
-        protected string RenderPartialViewToString(string viewName, object model = null)
+        protected string RenderPartialViewToString(
+            [JetBrains.Annotations.AspMvcView][JetBrains.Annotations.AspMvcPartialView] string viewName,
+            object model = null)
         {
             var viewData = new ViewDataDictionary(model);
             var tempData = new TempDataDictionary();
-            ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
-            using (StringWriter sw = new StringWriter())
+            var viewResult = ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
+            using (var sw = new StringWriter())
             {
-                ViewContext viewContext = new ViewContext(this.ControllerContext, viewResult.View, viewData, tempData, sw);
+                var viewContext = new ViewContext(this.ControllerContext, viewResult.View, viewData, tempData, sw);
                 viewResult.View.Render(viewContext, sw);
                 return sw.GetStringBuilder().ToString();
             }
         }
 
         /// <summary>
-        /// Creates an e-mail message. The 'From' address is fixed, and is valid in the Smtp server used by the 'SendEmail' method.
+        /// Creates an e-mail message.
+        /// The 'From' address is fixed, and is valid in the Smtp server used by the 'SendEmail' method.
         /// </summary>
         /// <param name="toAddress">Address to send the message to.</param>
         /// <param name="subject">Subject of the message.</param>
-        /// <param name="body">Body of the message. When 'isBodyHtml' parameter is true, this may contain Html, otherwise text only.</param>
-        /// <param name="isBodyHtml">Defines whether the 'body' parameter contains Html or is pure text.</param>
+        /// <param name="bodyHtml">Body of the message in Html format.</param>
+        /// <param name="bodyText">Body of the message in plain text format.</param>
         /// <returns>Returns a 'MailMessage' that can be sent using the 'SendEmail' method.</returns>
-        protected MailMessage CreateEmailMessage(MailAddress toAddress, string subject, string body, bool isBodyHtml)
+        protected MailMessage CreateEmailMessage(
+            MailAddress toAddress,
+            [Localizable(true)] string subject,
+            [Localizable(true)] string bodyHtml,
+            [Localizable(true)] string bodyText)
         {
-            MailMessage message;
-            message = new MailMessage
-            {
-                Subject = subject,
-                Body = body
-            };
-            message.To.Add(toAddress);
-            message.From = new MailAddress("mig.ang.san.bic@gmail.com", "www.cerebello.com");
-            message.IsBodyHtml = isBodyHtml;
-            return message;
+            if (string.IsNullOrEmpty(bodyText))
+                throw new ArgumentException("bodyText must be provided.", "bodyText");
+
+            // NOTE: The string "mig.ang.san.bic@gmail.com" is repeated in other place.
+            var fromAddress = new MailAddress("mig.ang.san.bic@gmail.com", "www.cerebello.com");
+            var mailMessage = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyText.Trim() };
+
+            // Adding Html body.
+            if (!string.IsNullOrWhiteSpace(bodyHtml))
+                mailMessage.AlternateViews.Add(
+                    AlternateView.CreateAlternateViewFromString(bodyHtml.Trim(), new ContentType(MediaTypeNames.Text.Html)));
+
+            return mailMessage;
         }
 
         /// <summary>
@@ -99,6 +117,11 @@ namespace CerebelloWebRole.Code.Controllers
             };
 
             return smtpClient;
+        }
+
+        public virtual CerebelloEntities CreateNewCerebelloEntities()
+        {
+            return this.CerebelloEntitiesCreator();
         }
     }
 }

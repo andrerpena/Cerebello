@@ -11,7 +11,11 @@ namespace CerebelloWebRole.Code.Controls
     /// </summary>
     public class EditPanelField<TModel, TValue> : EditPanelFieldBase
     {
+
+// ReSharper disable MemberCanBePrivate.Global
+        // this member is accessed via reflaction and being public makes it easier
         public Expression<Func<TModel, TValue>> Expression { get; set; }
+// ReSharper restore MemberCanBePrivate.Global
 
         public EditPanelField(Expression<Func<TModel, TValue>> exp, EditPanelFieldSize size = EditPanelFieldSize.Default, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool foreverAlone = false)
         {

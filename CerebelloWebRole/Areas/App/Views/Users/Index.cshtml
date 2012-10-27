@@ -13,14 +13,16 @@
 Usuários do consultório
 }
 @section SideBar {
-    <ul>
-        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo usuário</a></li>
-    </ul>
+    @if (this.CanAccessAction("Create"))
+    {
+        <ul>
+            <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo usuário</a></li>
+        </ul>
+    }
 }
 <div class="users-list">
     <div class="widget">
-        <h2>
-            Usuários do sistema
+        <h2>Usuários do sistema
         </h2>
         @gridUsers.GetHtml(
                     columns: new List<WebGridColumn>() { userNameColumn },

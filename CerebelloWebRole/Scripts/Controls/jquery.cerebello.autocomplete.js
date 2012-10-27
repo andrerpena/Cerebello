@@ -22,7 +22,7 @@
             columns: ["Value"],
             columnHeaders: ["Valor"],
             // time until it will filter automatically
-            autoFilterDelay: 1000,
+            autoFilterDelay: 500,
             //events
             change: function () { },
             formatItem: function () { }
@@ -39,7 +39,6 @@
         // this is the "setInterval" handler, used for controlling auto-filter
         _this.intervalHandler = null;
         _this.textCache = null;
-        _this.lastSelectedText = null;
 
         // jQueries
         _this.$wrapper = null;
@@ -57,8 +56,6 @@
 
             var _this = this;
 
-            _this.lastSelectedText = _this.$el.val();
-
             _this.$inputHidden = $("input[name='" + _this.opts.inputHiddenName + "']");
             if (!_this.$inputHidden.length)
                 throw "Couldn't find the $inputHiddenName";
@@ -67,20 +64,6 @@
 
             _this.$el.bind("blur", function (e) {
                 $("tr", _this.$wrapper).removeClass("selected");
-                setTimeout(function () {
-                    if (_this.lastSelectedText != _this.$el.val()) {
-                        if (!_this.$el.is(":focus")) {
-                            _this.$el.val('');
-                            _this.$inputHidden.val('');
-                            _this.lastSelectedText = null;
-                            _this.textCache = null;
-                            _this.$el.removeClass("changed");
-                            // retrigger the blur event should let other plug-ins like the
-                            // watermark to deal with it their own way
-                            _this.$el.blur();
-                        }
-                    }
-                }, 200);
             });
 
             _this.$el.bind("keydown", function (e) {
@@ -131,13 +114,7 @@
             });
 
             _this.$el.bind("keyup", function (e) {
-
-                if (_this.$el.val() != _this.lastSelectedText) {
-                    _this.$el.addClass("changed");
-                } else {
-                    _this.$el.removeClass("changed");
-                }
-
+                
                 if (_this.$el.val() != _this.textCache) {
                     _this.opts.change(undefined);
                     if (_this.intervalHandler)
@@ -268,10 +245,10 @@
                         count: data.Count,
                         rowsPerPage: _this.opts.pageSize,
                         currentPageIndex: pageIndex,
-                        onPageChanged: function (i, onDataReceived) {
+                        onPageChanged: function (i, onDataReceived2) {
                             // ativar o activity indicator
                             _this.$el.focus();
-                            _this.fetchData(i, onDataReceived, searchTerm);
+                            _this.fetchData(i, onDataReceived2, searchTerm);
                         }
                     }).data('pager');
 
@@ -326,7 +303,6 @@
             var selectedRow = $("tr.selected", _this.$wrapper);
             var selectedText = $("td", selectedRow).html();
             var selectedId = selectedRow.attr("data-val-id");
-            _this.lastSelectedText = selectedText;
             _this.textCache = selectedText;
             _this.$el.val(selectedText);
             _this.$inputHidden.val(selectedId);

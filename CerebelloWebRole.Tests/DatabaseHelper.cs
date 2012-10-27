@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using Cerebello.Model;
-using Cerebello.Firestarter;
 
 namespace CerebelloWebRole.Tests
 {
@@ -15,7 +10,7 @@ namespace CerebelloWebRole.Tests
     public class DatabaseHelper
     {
         /// <summary>
-        /// Attaches the test database and clears all data
+        /// Attaches the test database and clears all data.
         /// </summary>
         public static void AttachCerebelloTestDatabase()
         {
@@ -49,15 +44,7 @@ namespace CerebelloWebRole.Tests
         }
 
         /// <summary>
-        /// Clears all test database data
-        /// </summary>
-        [Obsolete("This is now in the 'FireStarter' class.")]
-        public static void ClearAllData()
-        {
-        }
-
-        /// <summary>
-        /// Detaches the test database
+        /// Detaches the test database.
         /// </summary>
         public static void DetachCerebelloTestDatabase()
         {
@@ -82,15 +69,6 @@ namespace CerebelloWebRole.Tests
                     cmd.ExecuteNonQuery();
                 }
             }
-        }
-
-        /// <summary>
-        /// Returns a test object context
-        /// </summary>
-        /// <returns></returns>
-        public static CerebelloEntities GetTestObjectContext()
-        {
-            return new CerebelloEntities("name=TestDBEF");
         }
     }
 }

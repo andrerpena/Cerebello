@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
-using System.Text.RegularExpressions;
 using System.Data.SqlClient;
-using System.Data.Common;
 using System.Data.EntityClient;
 using Cerebello.Firestarter.Helpers;
 using System.IO;
@@ -177,7 +177,7 @@ namespace Cerebello.Firestarter
 
         public static Doctor CreateAdministratorDoctor_Andre(CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
         {
-            Person person = new Person()
+            var person = new Person()
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
                 FullName = "Gregory House",
@@ -191,7 +191,7 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            User user = new User()
+            var user = new User()
             {
                 UserName = "andrerpena",
                 UserNameNormalized = "andrerpena",
@@ -206,9 +206,8 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            Doctor doctor = new Doctor()
+            var doctor = new Doctor()
             {
-                Id = 1,
                 CRM = "12345",
                 SYS_MedicalSpecialty = specialty,
                 SYS_MedicalEntity = entity,
@@ -225,7 +224,7 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            Administrator admin = new Administrator();
+            var admin = new Administrator();
             user.Administrator = admin;
 
             db.SaveChanges();
@@ -297,7 +296,7 @@ namespace Cerebello.Firestarter
             var pwdSalt = "egt/lzoRIw/M7XJsK3C0jw==";
             var pwdHash = CipherHelper.Hash("milena", pwdSalt);
             if (useDefaultPassword)
-                pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
+                pwdHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, pwdSalt);
 
             // Creating user.
             User user = new User()
@@ -328,7 +327,6 @@ namespace Cerebello.Firestarter
             // Creating secretary.
             Secretary secreatry = new Secretary
             {
-                Id = 3
             };
 
             user.Secretary = secreatry;
@@ -401,7 +399,7 @@ namespace Cerebello.Firestarter
             var practice = new Practice()
             {
                 Name = "Consultório do Dr. House",
-                UrlIdentifier = "consultoriodrhourse",
+                UrlIdentifier = "consultoriodrhouse",
                 CreatedOn = new DateTime(2007, 07, 03, 0, 0, 0, DateTimeKind.Utc),
                 WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                 VerificationDate = new DateTime(2007, 07, 12, 0, 0, 0, DateTimeKind.Utc),
@@ -558,6 +556,52 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             return result;
+        }
+
+        public static void Initialize_SYS_Cid10(CerebelloEntities db, int maxCount = int.MaxValue, Action<int, int> progress = null)
+        {
+            // read CID10.xml as an embedded resource
+            XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Parse };
+            var reader = XmlReader.Create(new FileStream(@"CID10.xml", FileMode.Open), settings);
+            var doc = XDocument.Load(reader);
+
+            var cid10Nodes = (from e in doc.Descendants()
+                              where
+                                  e.Name == "nome" &&
+                                  (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
+                              select new
+                                  {
+                                      Name = e.Value,
+                                      CodCat = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : null,
+                                      CodSubCat = e.Parent.Attribute("codsubcat") != null ? e.Parent.Attribute("codsubcat").Value : null
+                                  }).ToList();
+
+            var max = Math.Min(maxCount, cid10Nodes.Count);
+
+            var count = 0;
+            foreach (var entry in cid10Nodes)
+            {
+                if (count >= maxCount)
+                    break;
+
+                if (progress != null) progress(count, max);
+
+                db.SYS_Cid10.AddObject(new SYS_Cid10()
+                    {
+                        Name = entry.Name,
+                        Cat = entry.CodCat,
+                        SubCat = entry.CodSubCat
+                    });
+
+                if (count % 100 == 0)
+                    db.SaveChanges();
+
+                count++;
+            }
+
+            if (progress != null) progress(count, max);
+
+            db.SaveChanges();
         }
 
         public static void Initialize_SYS_Contracts(CerebelloEntities db)
@@ -1326,6 +1370,11 @@ Definições e termos
 
         public static SYS_MedicalProcedure[] CreateFakeMedicalProcedures(CerebelloEntities db)
         {
+            // Predictable set of medical procedures.
+            // The official set o procedures is much larger, and may change over time.
+            // These fake medical procedures, must not change over time, unless it is of extreme necessity.
+            // Care must be taken so that tests don't break.
+
             var tissConselhoProfissional = new ListOfTuples<string, string>
             {
                 { "4.03.04.36-1", "Hemograma com contagem de plaquetas ou frações" },
@@ -1362,13 +1411,18 @@ Definições e termos
 
         public static void Initialize_SYS_MedicalProcedures(CerebelloEntities db, string pathOfTxt, int maxCount = int.MaxValue, Action<int, int> progress = null)
         {
-            progress = progress ?? ((x, y) => { });
-
             // Adding CBHPM medical procedures.
             if (cbhpm == null)
                 lock (locker)
                     if (cbhpm == null)
-                        cbhpm = Cbhpm.LoadData(pathOfTxt);
+                    {
+                        var cbhpm0 = Cbhpm.LoadData(pathOfTxt);
+
+                        // ensures that the instance returned from LoadData is well written,
+                        // and only then, it assigns the static variable.
+                        System.Threading.Thread.MemoryBarrier();
+                        cbhpm = cbhpm0;
+                    }
 
             var max = Math.Min(maxCount, cbhpm.Items.Values.OfType<Cbhpm.Proc>().Count());
 
@@ -1378,7 +1432,7 @@ Definições e termos
                 if (count >= maxCount)
                     break;
 
-                progress(count, max);
+                if (progress != null) progress(count, max);
 
                 var item = db.SYS_MedicalProcedure.CreateObject();
                 item.Code = eachCbhpmProc.Codigo;
@@ -1391,7 +1445,7 @@ Definições e termos
                 count++;
             }
 
-            progress(count, max);
+            if (progress != null) progress(count, max);
 
             db.SaveChanges();
         }
@@ -1400,7 +1454,7 @@ Definições e termos
         /// Clears all data in the database.
         /// </summary>
         /// <param name="db"></param>
-        public static void ClearAllData(CerebelloEntities db, bool repopulateSysTablesWithDefaults = false, string rootCerebelloPath = null)
+        public static void ClearAllData(CerebelloEntities db)
         {
             db.ExecuteStoreCommand(@"EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
             db.ExecuteStoreCommand(@"sp_MSForEachTable '
@@ -1416,18 +1470,6 @@ Definições e termos
                          IF OBJECTPROPERTY(object_id(''?''), ''TableHasIdentity'') = 1 
                          DBCC CHECKIDENT (''?'', RESEED, 0) 
                      ' ");
-
-            if (repopulateSysTablesWithDefaults)
-            {
-                Console.WriteLine("Initialize_SYS_MedicalEntity");
-                Initialize_SYS_MedicalEntity(db);
-                Console.WriteLine("Initialize_SYS_MedicalSpecialty");
-                Initialize_SYS_MedicalEntity(db);
-                Console.WriteLine("Initialize_SYS_MedicalProcedures");
-                Initialize_SYS_MedicalProcedures(
-                    db,
-                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"));
-            }
         }
 
         public static void DropAllTables(CerebelloEntities db)
@@ -1569,7 +1611,7 @@ GO
         internal static bool AttachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
-            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) {InitialCatalog = ""};
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
             var connStr = sqlConn2.ToString();
             var dbName = sqlConn1.Database;
 
@@ -1607,7 +1649,7 @@ GO
         internal static void DetachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
-            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) {InitialCatalog = ""};
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
             var connStr = sqlConn2.ToString();
 
             SqlConnection.ClearAllPools();
@@ -1615,22 +1657,85 @@ GO
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn) {CommandText = @"sp_detach_db CerebelloTEST"};
+                SqlCommand cmd = new SqlCommand("", conn) { CommandText = @"sp_detach_db CerebelloTEST" };
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public static void InitializeDatabaseWithSystemData(CerebelloEntities db, int medicalProceduresMaxCount = 0, string rootCerebelloPath = null, Action<int, int> progress = null)
+        public static Practice CreatePractice(CerebelloEntities db, string name, User owner, string urlIdentifier)
         {
-            Firestarter.Initialize_SYS_MedicalEntity(db);
-            Firestarter.Initialize_SYS_MedicalSpecialty(db);
-            if (medicalProceduresMaxCount > 0)
-                Firestarter.Initialize_SYS_MedicalProcedures(
-                    db,
-                    Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                    medicalProceduresMaxCount,
-                    progress);
-            Firestarter.Initialize_SYS_Contracts(db);
+            var practice = new Practice
+                       {
+                           Name = name,
+                           CreatedOn = DateTime.UtcNow.AddDays(-1),
+                           ShowWelcomeScreen = true,
+                           WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
+                           VerificationDate = DateTime.UtcNow,
+                           UrlIdentifier = urlIdentifier,
+                       };
+
+            db.Practices.AddObject(practice);
+            db.SaveChanges();
+
+            var sec = owner.Secretary;
+            var adm = owner.Administrator;
+            var doc = owner.Doctor;
+
+            owner.Secretary = null;
+            owner.Administrator = null;
+            owner.Doctor = null;
+
+            practice.Owner = owner;
+            owner.Practice = practice;
+            db.SaveChanges();
+
+            owner.Secretary = sec;
+            owner.Administrator = adm;
+            owner.Doctor = doc;
+
+            db.SaveChanges();
+
+            SetupPracticeWithTrialContract(db, practice);
+
+            return practice;
+        }
+
+        public static User CreateUser(CerebelloEntities db, Practice practice, string username, string password, string name)
+        {
+            var pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
+            var pwdHash = CipherHelper.Hash(password, pwdSalt);
+            if (string.IsNullOrEmpty(password))
+                pwdHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, pwdSalt);
+
+            // Creating user.
+            var user = new User()
+            {
+                UserName = username,
+                UserNameNormalized = StringHelper.NormalizeUserName(username),
+                LastActiveOn = DateTime.UtcNow,
+                PasswordSalt = pwdSalt,
+                Password = pwdHash,
+                Practice = practice,
+            };
+
+            if (user.Practice != null)
+                db.Users.AddObject(user);
+
+            // Creating person.
+            var person = new Person()
+            {
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
+                FullName = name,
+                Gender = (int)TypeGender.Female,
+                CreatedOn = DateTime.UtcNow,
+            };
+
+            user.Person = person;
+
+            if (user.Practice != null)
+                db.SaveChanges();
+
+            return user;
         }
     }
 }

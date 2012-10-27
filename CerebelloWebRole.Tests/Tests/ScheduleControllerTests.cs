@@ -9,17 +9,22 @@ using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CerebelloWebRole.Code;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
     public class ScheduleControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        [TestInitialize]
-        public void InitializeData()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
         {
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
+            AttachCerebelloTestDatabase();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            DetachCerebelloTestDatabase();
         }
         #endregion
 
@@ -34,7 +39,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -54,7 +59,7 @@ namespace CerebelloWebRole.Tests
 
             // Verifying the ActionResult, and the DB.
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -87,7 +92,7 @@ namespace CerebelloWebRole.Tests
                 utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
 
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
@@ -115,7 +120,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("12:33", viewModel.Start);
             Assert.AreEqual("13:03", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -130,7 +135,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -157,7 +162,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("10:07", viewModel.Start);
             Assert.AreEqual("12:42", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -190,7 +195,7 @@ namespace CerebelloWebRole.Tests
                 Firestarter.CreateFakeAppointments(this.db, utcNow, docAndre, start2, TimeSpan.FromHours(5), "After mid-day.");
 
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
@@ -219,7 +224,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("09:00", viewModel.Start);
             Assert.AreEqual("09:30", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -246,7 +251,7 @@ namespace CerebelloWebRole.Tests
                 utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
 
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 controller.UtcNowGetter = () => utcNow;
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
@@ -275,7 +280,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("09:00", viewModel.Start);
             Assert.AreEqual("09:30", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -290,7 +295,7 @@ namespace CerebelloWebRole.Tests
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
@@ -317,7 +322,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual("00:00", viewModel.Start);
             Assert.AreEqual("00:30", viewModel.End);
 
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -337,7 +342,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating test objects.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Associating DB event.
@@ -364,7 +369,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(AppointmentViewModel));
             var resultViewModel = (AppointmentViewModel)viewResult.Model;
             Assert.AreEqual(patient.Person.FullName, resultViewModel.PatientNameLookup);
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -386,7 +391,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating test objects.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Associating DB event.
@@ -413,7 +418,7 @@ namespace CerebelloWebRole.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(AppointmentViewModel));
             var resultViewModel = (AppointmentViewModel)viewResult.Model;
             Assert.AreNotEqual("Pedro Paulo Machado", resultViewModel.PatientNameLookup);
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
         }
@@ -468,7 +473,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UtcNowGetter = () => utcNow;
@@ -522,7 +527,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
-            Assert.AreEqual(controller.ViewBag.IsEditing, null); // when JsonResult there must be no ViewBag
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, null); // when JsonResult there must be no ViewBag
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
@@ -531,8 +536,7 @@ namespace CerebelloWebRole.Tests
             {
                 int appointmentsCountAtSameTime = db2.Appointments
                     .Where(a => a.Start == utcStart)
-                    .Where(a => a.End == utcEnd)
-                    .Count();
+                    .Count(a => a.End == utcEnd);
 
                 Assert.AreEqual(2, appointmentsCountAtSameTime);
             }
@@ -574,7 +578,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
@@ -687,7 +691,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 // Mocking 'Now' values.
@@ -792,7 +796,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UtcNowGetter = () => utcNow;
@@ -846,7 +850,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(DateAndTimeValidationState.Warning, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
-            Assert.AreEqual(controller.ViewBag.IsEditing, null); // when JsonResult there must be no ViewBag
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, null); // when JsonResult there must be no ViewBag
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the DB.
@@ -872,7 +876,7 @@ namespace CerebelloWebRole.Tests
             bool isDbChanged = false;
             AppointmentViewModel vm;
 
-            
+
             var localNow = new DateTime(2012, 07, 19, 12, 00, 00, 000);
 
             // Setting Now to be on an thursday, mid day.
@@ -895,7 +899,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
 
                 controller.UtcNowGetter = () => utcNow;
@@ -934,7 +938,7 @@ namespace CerebelloWebRole.Tests
             Assert.AreEqual(DateAndTimeValidationState.Failed, vm.DateAndTimeValidationState);
 
             // Verifying the controller.
-            Assert.AreEqual(controller.ViewBag.IsEditing, false);
+            Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should be invalid.");
 
             // Verifying the DB.
@@ -957,7 +961,7 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
                 controller.UtcNowGetter = () => utcNow;
@@ -1006,7 +1010,7 @@ namespace CerebelloWebRole.Tests
 
                 var mr = new MockRepository();
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
                 controller.UtcNowGetter = () => utcNow;
@@ -1068,7 +1072,7 @@ namespace CerebelloWebRole.Tests
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
-                mr.SetRouteData_ConsultorioDrHourse_GregoryHouse(typeof(ScheduleController), "Create");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
             }
             catch (Exception ex)

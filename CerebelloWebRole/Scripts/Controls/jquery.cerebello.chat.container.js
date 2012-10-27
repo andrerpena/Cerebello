@@ -1,9 +1,8 @@
 ﻿(function ($) {
-
-    // creates a screen to ask the user for deletion confirmation
     function ChatContainer(options) {
-
-        // Defaults:
+        /// <summary>This is a window container, responsible for hosting both the users list and the chat window </summary>
+        /// <param name="options" type=""></param>
+        
         this.defaults = {
             objectType: null,
             objectName: null,
@@ -56,9 +55,9 @@
                 });
 
             }
+
             $("<div/>").addClass("text").text(_this.opts.title).appendTo(_this.$windowTitle);
-
-
+            
             // content
             var $windowContent = $("<div/>").addClass("chat-window-content").appendTo(_this.$window);
             _this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo($windowContent);
@@ -92,8 +91,17 @@
         setTitle: function (title) {
             var _this = this;
             $("div[class=text]", _this.$windowTitle).text(title);
-        }
+        },
 
+        setVisible: function (visible) {
+            /// <summary>Sets the window visible or not</summary>
+            /// <param name="visible" type="Boolean">Whether it's visible</param>
+            var _this = this;
+            if (visible)
+                _this.$window.show();
+            else
+                _this.$window.hide();
+        }
     };
 
     // The actual plugin

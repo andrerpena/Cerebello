@@ -61,6 +61,9 @@
     <Reference Include="itextsharp.xtra">
       <HintPath>..\ThirdParty\itextsharp.xtra.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\ThirdParty\JetBrains\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
@@ -137,6 +140,7 @@
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigPracticeViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
@@ -154,6 +158,7 @@
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
+    <Compile Include="Code\Access\AccessManager.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
     <Compile Include="Code\Chat\ChatRoom.cs" />
     <Compile Include="Code\Chat\ChatRoomUsersSubscription.cs" />
@@ -221,6 +226,7 @@
     <Compile Include="Code\Controls\EditPanel\EditPanel.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelField.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelFieldBase.cs" />
+    <Compile Include="Code\Controls\EditPanel\EditPanelTextField.cs" />
     <Compile Include="Code\Controls\Grid\Grid.cs" />
     <Compile Include="Code\Controls\Grid\GridField.cs" />
     <Compile Include="Code\Controls\Grid\GridFieldBase.cs" />
@@ -229,10 +235,15 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
     <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
+    <Compile Include="Code\Extensions\AccessExtensions.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\AuthenticationFilter.cs" />
+    <Compile Include="Code\Filters\AccessDbObjectAttribute.cs" />
+    <Compile Include="Code\Filters\UsersManagementPermissionAttribute.cs" />
+    <Compile Include="Code\Filters\UserRolePermissionAttribute.cs" />
+    <Compile Include="Code\Filters\IsOwnerPermissionAttribute.cs" />
     <Compile Include="Code\Filters\FirstAccessFilter.cs" />
     <Compile Include="Code\Filters\PermissionAttribute.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
@@ -249,6 +260,8 @@
     <Compile Include="Code\Helpers\ImageHelper.cs" />
     <Compile Include="Code\Helpers\MemberExpressionHelper.cs" />
     <Compile Include="Code\Helpers\ExpressionHelper.cs" />
+    <Compile Include="Code\Helpers\MvcHelper.cs" />
+    <Compile Include="Code\Helpers\RouteHelper.cs" />
     <Compile Include="Code\Helpers\StringHelper.cs" />
     <Compile Include="Code\Helpers\TagsHelper.cs" />
     <Compile Include="Code\Helpers\UrlBuilder.cs" />
@@ -271,6 +284,7 @@
     <Compile Include="Code\Security\SecurityManager.cs" />
     <Compile Include="Code\Security\SecurityToken.cs" />
     <Compile Include="Code\Security\SecurityTokenHelper.cs" />
+    <Compile Include="Code\TokenId.cs" />
     <Compile Include="Code\Validation\EmailAddressAttribute.cs" />
     <Compile Include="Code\Validation\UrlAttribute.cs" />
     <Compile Include="Code\Validation\UserNameAttribute.cs" />
@@ -279,7 +293,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ConfirmationEmailViewModel.cs" />
+    <Compile Include="Models\ResetPasswordViewModel.cs" />
+    <Compile Include="Models\EmailViewModel.cs" />
+    <Compile Include="Models\ResetPasswordRequestViewModel.cs" />
     <Compile Include="Models\VerifyPracticeAndEmailViewModel.cs" />
     <Compile Include="Models\CreatePracticeViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -356,6 +372,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.delete.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
@@ -376,7 +393,6 @@
     <Content Include="Content\Styles\Docs\Media.css" />
     <Content Include="Content\Styles\Site\Media.css" />
     <Content Include="Content\Styles\Site\Site.css" />
-    <EmbeddedResource Include="Data\CID10.xml" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
@@ -398,6 +414,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.confirmation.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.container.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.window.js" />
@@ -405,6 +422,7 @@
     <Content Include="Scripts\Controls\jquery.cerebello.dropdown.menu.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
+    <Content Include="Scripts\cerebello.pt-BR.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\jquery-1.8.1.min.js" />
@@ -578,8 +596,9 @@
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
+    <Content Include="Areas\App\Views\ConfigPractice\Index.cshtml" />
+    <Content Include="Areas\App\Views\ConfigPractice\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
-    <EmbeddedResource Include="Data\CID10.dtd" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
@@ -591,6 +610,13 @@
     <Content Include="Views\Authentication\ConfirmationEmail.cshtml" />
     <Content Include="Views\Authentication\VerifyPracticeAndEmail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Phone.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordRequest.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordEmailSent.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordEmail.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordCancel.cshtml" />
+    <Content Include="Views\Authentication\ResetPassword.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordManually.cshtml" />
+    <Content Include="Views\Authentication\ResetPasswordSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

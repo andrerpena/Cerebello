@@ -5,46 +5,27 @@ using Cerebello.Firestarter;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CerebelloWebRole.Code.Mvc;
-using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
-    public class ExamsControllerTests
+    public class ExamsControllerTests : DbTestBase
     {
         #region TEST_SETUP
-        protected CerebelloEntities db = null;
-
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            DatabaseHelper.AttachCerebelloTestDatabase();
+            AttachCerebelloTestDatabase();
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            DatabaseHelper.DetachCerebelloTestDatabase();
-        }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
-
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
-
-            this.MedicalProcedures = Firestarter.CreateFakeMedicalProcedures(this.db);
-        }
-
-        [TestCleanup]
-        public void MyTestCleanup()
-        {
-            this.db.Dispose();
+            DetachCerebelloTestDatabase();
         }
         #endregion
 
@@ -76,12 +57,13 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
+                var medicalProc = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 var viewModel = new ExaminationRequestViewModel
                 {
                     PatientId = patient.Id,
                     Notes = "Any text",
-                    MedicalProcedureId = this.MedicalProcedures[0].Id,
-                    MedicalProcedureText = this.MedicalProcedures[0].Name,
+                    MedicalProcedureId = medicalProc.Id,
+                    MedicalProcedureText = medicalProc.Name,
                 };
 
                 actionResult = controller.Create(viewModel);
@@ -179,12 +161,13 @@ namespace CerebelloWebRole.Tests
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
+                var medicalProc = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 examRequest = new ExaminationRequest
                 {
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureId = this.MedicalProcedures[0].Id,
+                    MedicalProcedureId = medicalProc.Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -199,13 +182,14 @@ namespace CerebelloWebRole.Tests
             ActionResult actionResult;
 
             {
+                var medicalProc = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.01.03.23-4");
                 var viewModel = new ExaminationRequestViewModel
                 {
                     Id = examRequest.Id,
                     PatientId = patient.Id,
                     Notes = "Any text",
-                    MedicalProcedureId = this.MedicalProcedures[1].Id, // editing value: old = 0; new = 1
-                    MedicalProcedureText = this.MedicalProcedures[1].Name,
+                    MedicalProcedureId = medicalProc.Id, // editing value: old = "4.03.04.36-1"; new = "4.01.03.23-4"
+                    MedicalProcedureText = medicalProc.Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -252,12 +236,13 @@ namespace CerebelloWebRole.Tests
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
+                var medicalProc = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 examRequest = new ExaminationRequest
                 {
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureId = this.MedicalProcedures[0].Id,
+                    MedicalProcedureId = medicalProc.Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -331,12 +316,13 @@ namespace CerebelloWebRole.Tests
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
+                var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 examRequest = new ExaminationRequest
                 {
                     CreatedOn = utcNow,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
-                    MedicalProcedureId = this.MedicalProcedures[0].Id,
+                    MedicalProcedureId = medicalProc0.Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -348,13 +334,14 @@ namespace CerebelloWebRole.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
 
                 // Creating view-model and setting up controller ModelState based on the view-model.
+                var medicalProc1 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.01.03.55-2");
                 viewModel = new ExaminationRequestViewModel
                 {
                     Id = examRequest.Id,
                     PatientId = patientDraMarta.Id,
                     Notes = "New text",
-                    MedicalProcedureId = this.MedicalProcedures[2].Id,
-                    MedicalProcedureText = this.MedicalProcedures[2].Name,
+                    MedicalProcedureId = medicalProc1.Id,
+                    MedicalProcedureText = medicalProc1.Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -408,12 +395,13 @@ namespace CerebelloWebRole.Tests
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
+                var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 examRequest = new ExaminationRequest
                 {
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureId = this.MedicalProcedures[0].Id,
+                    MedicalProcedureId = medicalProc0.Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -425,13 +413,14 @@ namespace CerebelloWebRole.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
 
                 // Creating view-model and setting up controller ModelState based on the view-model.
+                var medicalProc1 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.01.03.23-4");
                 viewModel = new ExaminationRequestViewModel
                 {
                     Id = 19837,
                     PatientId = patient.Id,
                     Notes = "New text",
-                    MedicalProcedureId = this.MedicalProcedures[1].Id,
-                    MedicalProcedureText = this.MedicalProcedures[1].Name,
+                    MedicalProcedureId = medicalProc1.Id,
+                    MedicalProcedureText = medicalProc1.Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -488,12 +477,14 @@ namespace CerebelloWebRole.Tests
                     controller.UtcNowGetter = () => utcNow;
 
                     // saving the object that will be edited
+                    var medicalProc1 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.01.03.55-2");
+
                     examRequest = db2.ExaminationRequests.CreateObject();
 
                     examRequest.CreatedOn = utcNow;
                     examRequest.PatientId = patient.Id;
                     examRequest.Text = "Old text";
-                    examRequest.MedicalProcedureId = this.MedicalProcedures[2].Id;
+                    examRequest.MedicalProcedureId = medicalProc1.Id;
 
                     db2.ExaminationRequests.AddObject(examRequest);
                     db2.SaveChanges();
@@ -607,12 +598,13 @@ namespace CerebelloWebRole.Tests
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
+                var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 examRequest = new ExaminationRequest
                 {
                     CreatedOn = utcNow,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
-                    MedicalProcedureId = this.MedicalProcedures[0].Id,
+                    MedicalProcedureId = medicalProc0.Id,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -647,7 +639,5 @@ namespace CerebelloWebRole.Tests
             Assert.IsFalse(isDbChangesSaved, "Database changes were saved, but they should not.");
         }
         #endregion
-
-        public SYS_MedicalProcedure[] MedicalProcedures { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,7 +31,7 @@ namespace CerebelloWebRole.Code.Mvc
         /// <param name="modelState">ModelState objeto to add the validation message to.</param>
         /// <param name="expression">Expression tree that goes to the property that is not valid.</param>
         /// <param name="errorMessage">Validation message to associate with the property.</param>
-        public static void AddModelError(this ModelStateDictionary modelState, Expression<Func<object>> expression, string errorMessage)
+        public static void AddModelError(this ModelStateDictionary modelState, Expression<Func<object>> expression, [Localizable(true)] string errorMessage)
         {
             // todo: this method should accept a resource name, instead of an error message.
 
@@ -122,6 +123,16 @@ namespace CerebelloWebRole.Code.Mvc
                     result.Add(new Tuple<string, ModelError>(eachModelState.Key, eachModelError));
 
             return result;
+        }
+
+        /// <summary>
+        /// Creates a string containing the description of all errors in the list.
+        /// </summary>
+        /// <param name="flatErrorList">List of model errors to convert to text.</param>
+        /// <returns>A text containing all errors.</returns>
+        public static string TextMessage(this List<Tuple<string, ModelError>> flatErrorList)
+        {
+            return string.Join("\n", flatErrorList.Select(x => string.Format("{0}: {1}", x.Item1, x.Item2)));
         }
     }
 }

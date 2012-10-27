@@ -6,21 +6,21 @@ using System.Threading;
 
 namespace CerebelloWebRole.Code.Chat
 {
-    public class ChatServer
+    public static class ChatServer
     {
-        public const int MAX_WAIT_SECONDS = 30;
+        private const int MAX_WAIT_SECONDS = 30;
 
         static ChatServer()
         {
             Rooms = new Dictionary<int, ChatRoom>();
         }
 
-        public static Dictionary<int, ChatRoom> Rooms { get; set; }
+        public static Dictionary<int, ChatRoom> Rooms { get; private set; }
 
         /// <summary>
         /// Returns whether or not the given room
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="roomId"> </param>
         public static bool RoomExists(int roomId)
         {
             return Rooms.ContainsKey(roomId);
@@ -34,6 +34,7 @@ namespace CerebelloWebRole.Code.Chat
         /// A method that will be called when the state of the room changes, that means,
         /// when somebody gets in or out. 
         /// </param>
+        /// <param name="noWait"> </param>
         public static void WaitForRoomUsersChanged(int roomId, Action<List<ChatUser>> onRoomChanged, bool noWait = false)
         {
             // schedules the passed action for execution as soon as possible by any thread within the 
@@ -86,12 +87,10 @@ namespace CerebelloWebRole.Code.Chat
             using (room.SubscribeForMessagesChange((r, userFrom, userTo, message) =>
                 {
                     // all messages destinated to the given user must be considered
-                    if (userTo.Id == myUserId)
-                    {
-                        onNewMessage(message);
-                        wait.Set();
-                    }
-
+                    if (userTo.Id != myUserId)
+                        return;
+                    onNewMessage(message);
+                    wait.Set();
                 }))
             {
                 // this thread should get stuck here until wait.Set() is called
@@ -99,7 +98,7 @@ namespace CerebelloWebRole.Code.Chat
             };
 
             // this newMessage can be null, meaning that there's no new message
-            onNewMessage(newMessage);
+            onNewMessage(null);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Cerebello.Model;
@@ -146,6 +147,7 @@ namespace Cerebello.Firestarter.Helpers
                 };
 
                 patient.Person.Email = firstName + string.Join("", chosenMiddleNames) + "@gmail.com";
+                Debug.Assert(patient.Person.Address == null);
                 patient.Person.Address = new Address()
                 {
                     CEP = random.Next(36000000, 37000000).ToString(),

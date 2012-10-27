@@ -13,7 +13,7 @@
     background-color: White;
     box-shadow: 0 0 4px #626262;
     display: none;
-    position: absolute;
+    position: fixed;
 }
 
 .modal .modal-header

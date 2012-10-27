@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Cerebello.Firestarter;
-using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Json;
@@ -10,39 +9,26 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
-    public class DiagnosisControllerTests
+    public class DiagnosisControllerTests : DbTestBase
     {
         #region TEST_SETUP
-
-        private CerebelloEntities db = null;
-
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            DatabaseHelper.AttachCerebelloTestDatabase();
+            AttachCerebelloTestDatabase();
         }
 
-        [ClassCleanup()]
+        [ClassCleanup]
         public static void ClassCleanup()
         {
-            DatabaseHelper.DetachCerebelloTestDatabase();
+            DetachCerebelloTestDatabase();
         }
 
-        [TestInitialize()]
-        public void TestInitialize()
+        [TestInitialize]
+        public override void InitializeDb()
         {
-            this.db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
-
-            Firestarter.ClearAllData(this.db);
-            Firestarter.InitializeDatabaseWithSystemData(this.db);
+            base.InitializeDb();
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-            this.db.SaveChanges();
-        }
-
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-            this.db.Dispose();
         }
         #endregion
 
@@ -84,7 +70,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
-            
+
             var referenceTime = DateTime.UtcNow;
             controller.UtcNowGetter = () => referenceTime;
 
