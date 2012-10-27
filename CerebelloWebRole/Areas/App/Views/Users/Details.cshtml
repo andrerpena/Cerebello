@@ -19,7 +19,7 @@
 }
 @section SideBar {
 
-    @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("Edit"))
+    @if (this.CanAccessAction("Edit"))
     {
         <a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit"
            id="edit-user-link">Editar usuário</a>
