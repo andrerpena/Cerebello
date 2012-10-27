@@ -402,7 +402,7 @@ namespace Test1
                                             Firestarter.Initialize_SYS_MedicalProcedures(
                                                     db,
                                                     Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                                                    progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                                                    progress: ConsoleWriteProgressIntInt);
                                         }
 
                                         if (optionsSys.Contains(4))
@@ -410,7 +410,7 @@ namespace Test1
                                             Console.WriteLine("Initialize_SYS_Cid10");
                                             Firestarter.Initialize_SYS_Cid10(
                                                 db,
-                                                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                                                progress: ConsoleWriteProgressIntInt);
                                         }
 
                                         if (optionsSys.Contains(5))

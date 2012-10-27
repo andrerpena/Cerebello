@@ -567,18 +567,28 @@ namespace Cerebello.Firestarter
         {
             // read CID10.xml as an embedded resource
             XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Parse };
-            var reader = XmlReader.Create(new FileStream(@"CID10.xml", FileMode.Open), settings);
-            var doc = XDocument.Load(reader);
+            XDocument xmlDocument = null;
 
-            var cid10Nodes = (from e in doc.Descendants()
+            using (var xmlFileStream = new FileStream(@"CID10.xml", FileMode.Open, FileAccess.Read))
+                using (var reader = XmlReader.Create(xmlFileStream, settings))
+                    xmlDocument = XDocument.Load(reader);
+
+            var cid10Nodes = (from e in xmlDocument.Descendants()
                               where
                                   e.Name == "nome" &&
-                                  (e.Parent.Attribute("codcat") != null || e.Parent.Attribute("codsubcat") != null)
+                                  (e.Parent.Attribute("codcat") != null ||
+                                   e.Parent.Attribute("codsubcat") != null)
                               select new
                                   {
                                       Name = e.Value,
-                                      CodCat = e.Parent.Attribute("codcat") != null ? e.Parent.Attribute("codcat").Value : null,
-                                      CodSubCat = e.Parent.Attribute("codsubcat") != null ? e.Parent.Attribute("codsubcat").Value : null
+                                      CodCat =
+                                  e.Parent.Attribute("codcat") != null
+                                      ? e.Parent.Attribute("codcat").Value
+                                      : null,
+                                      CodSubCat =
+                                  e.Parent.Attribute("codsubcat") != null
+                                      ? e.Parent.Attribute("codsubcat").Value
+                                      : null
                                   }).ToList();
 
             var max = Math.Min(maxCount, cid10Nodes.Count);
