@@ -8,6 +8,7 @@ using CerebelloWebRole.Code;
 using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Access;
+using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 using System.Net;
@@ -359,6 +360,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Saving all the changes.
                 db.SaveChanges();
 
+                // Making user available in the Chat
+                ChatServerHelper.SetupUserIfNonexisting(this.db, this.Practice.Id, user.Id);
+
                 return RedirectToAction("details", new { id = user.Id });
             }
 
@@ -423,6 +427,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     .Select(u => u.IsOwner || u.Administrator != null)
                     .SingleOrDefault();
 
+                User user;
                 if (!canDeleteUsers)
                 {
                     var message = "Você não tem permissão para excluir um usuário.";
@@ -430,7 +435,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    var user = db.Users.First(m => m.Id == id);
+                    user = this.db.Users.First(m => m.Id == id);
 
                     if (user.IsOwner)
                     {
@@ -438,7 +443,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     }
                     else
                     {
-                        // delete appointments manulally (SQL Server won't do this automatically)
+                        // delete appointments manually (SQL Server won't do this automatically)
                         var appointments = user.Appointments.ToList();
                         while (appointments.Any())
                         {
@@ -447,13 +452,37 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             appointments.Remove(appointment);
                         }
 
+                        // delete chat messages received manually
+                        var chatMessagesReceived = user.ChatMessagesReceived.ToList();
+                        while (chatMessagesReceived.Any())
+                        {
+                            var chatMessageReceived = chatMessagesReceived.First();
+                            this.db.ChatMessages.DeleteObject(chatMessageReceived);
+                            chatMessagesReceived.Remove(chatMessageReceived);
+                        }
+
+                        // delete chat messages sent manually
+                        var chatMessagesSent = user.ChatMessagesSent.ToList();
+                        while (chatMessagesSent.Any())
+                        {
+                            var chatMessageSent = chatMessagesSent.First();
+                            this.db.ChatMessages.DeleteObject(chatMessageSent);
+                            chatMessagesSent.Remove(chatMessageSent);
+                        }
+
                         this.db.Users.DeleteObject(user);
                     }
                 }
 
                 if (this.ModelState.IsValid)
                 {
+                    // I need to store the user I as it's going to be deleted
+                    var userIdBackup = user.Id;
                     this.db.SaveChanges();
+
+                    // Makes user unavailable in the Chat
+                    ChatServerHelper.RemoveUserIfExisting(this.Practice.Id, userIdBackup);
+
                     return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
                 }
                 else

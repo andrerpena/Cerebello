@@ -36,17 +36,18 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         {
             var viewModel = new LoginViewModel();
 
-            try
-            {
-                // extract practice name from returnUrl
-                var routeData = RouteHelper.GetRouteDataByUrl("~" + returnUrl);
-                if (routeData.Values.ContainsKey("practice"))
-                    viewModel.PracticeIdentifier = (string)routeData.Values["practice"];
-            }
-            catch
-            {
-                // the returnUrl must be invalid, let's just ignore it
-            }
+            if (!string.IsNullOrEmpty(returnUrl))
+                try
+                {
+                    // extract practice name from returnUrl
+                    var routeData = RouteHelper.GetRouteDataByUrl("~" + returnUrl);
+                    if (routeData.Values.ContainsKey("practice"))
+                        viewModel.PracticeIdentifier = (string)routeData.Values["practice"];
+                }
+                catch
+                {
+                    // the returnUrl must be invalid, let's just ignore it
+                }
 
             return View(viewModel);
         }

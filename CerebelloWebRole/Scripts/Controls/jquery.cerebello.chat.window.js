@@ -39,7 +39,7 @@
                 $("<p/>").text(message.Message).appendTo($textWrapper);
 
                 // add image
-                $("<img/>").attr("src", message.UserFrom.GravatarUrl).appendTo($gravatarWrapper);
+                $("<img/>").attr("src", decodeURI(message.UserFrom.GravatarUrl)).appendTo($gravatarWrapper);
             }
 
             // scroll to the bottom

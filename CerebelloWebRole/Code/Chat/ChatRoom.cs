@@ -74,10 +74,7 @@ namespace CerebelloWebRole.Code.Chat
             lock (usersInRoomLock)
             {
                 if (user == null) throw new ArgumentNullException("user");
-
-                if (this.Users.ContainsKey(user.Id))
-                    throw new Exception("User already existis in the room. User id:" + user.Id);
-
+                
                 this.Users.Remove(user.Id);
                 this.NotifyUsersChanged();
             }

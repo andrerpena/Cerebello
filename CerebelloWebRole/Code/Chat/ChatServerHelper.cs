@@ -19,7 +19,11 @@ namespace CerebelloWebRole.Code.Chat
         /// </summary>
         private static readonly object roomLock = new Object();
 
-
+        /// <summary>
+        /// Creates a chat user for the given User
+        /// </summary>
+        /// <param name="u"></param>
+        /// <returns></returns>
         private static ChatUser GetChatUserFromUser(User u)
         {
             return new ChatUser()
@@ -43,18 +47,13 @@ namespace CerebelloWebRole.Code.Chat
             lock (userLock)
             {
                 if (!ChatServer.RoomExists(roomId))
-                    throw new Exception("Room does not exist. Room Id: " + roomId);
+                    SetupRoomIfNonexisting(db, roomId);
 
                 if (ChatServer.Rooms[roomId].UserExists(userId))
                     return ChatServer.Rooms[roomId].Users[userId];
 
                 var user = db.Users.Include("Person").FirstOrDefault(u => u.Id == userId);
-
-                var newUser = new ChatUser()
-                    {
-                        Id = user.Id,
-                        Name = user.Person.FullName
-                    };
+                var newUser = GetChatUserFromUser(user);
 
                 // in the case the current user does not exist, it has been added after the room has been set up.
                 ChatServer.Rooms[roomId].AddUser(newUser);
@@ -62,6 +61,25 @@ namespace CerebelloWebRole.Code.Chat
             }
         }
 
+        /// <summary>
+        /// Removes the user from the chat room if it exists
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="roomId"></param>
+        /// <param name="userId"></param>
+        public static void RemoveUserIfExisting(int roomId, int userId)
+        {
+            lock (userLock)
+            {
+                if (!ChatServer.RoomExists(roomId))
+                    // Maybe I should raise an exception here but.. let's just return
+                    return;
+
+                if (ChatServer.Rooms[roomId].UserExists(userId))
+                    ChatServer.Rooms[roomId].RemoveUser(ChatServer.Rooms[roomId].Users[userId]);
+            }
+        }
+        
         /// <summary>
         /// Sets up a room if it does not exist
         /// </summary>

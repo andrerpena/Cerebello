@@ -288,11 +288,7 @@ namespace Test1
                                 }
                             }
                         }
-
                         break;
-
-                                                    progress: new Action<int, int>(ConsoleWriteProgressIntInt));
-                                                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
                     case "cls?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
