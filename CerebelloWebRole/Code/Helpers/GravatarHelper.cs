@@ -13,10 +13,27 @@ namespace CerebelloWebRole.Code
 
         public static String GetGravatarUrl(String gravatarEMailHash, Size size)
         {
+            string sizeAsString;
+            // this code CAN BE BETTER. I'm jot not feeling like fixing it right now
+            switch (size)
+            {
+                case Size.s24:
+                    sizeAsString = "24";
+                    break;
+                case Size.s32:
+                    sizeAsString = "32";
+                    break;
+                case Size.s64:
+                    sizeAsString = "64";
+                    break;
+                case Size.s128:
+                    sizeAsString = "128";
+                    break;
+                default:
+                    throw new Exception("Size not supported");
+            }
 
-
-            String sizeString = size == Size.s32 ? "32" : size == Size.s64 ? "64" : "128";
-            return "http://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeString + GravatarHelper.Ampersand + "d=identicon" + GravatarHelper.Ampersand + "r=PG&d=mm";
+            return "http://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + GravatarHelper.Ampersand + "d=identicon" + GravatarHelper.Ampersand + "r=PG&d=mm";
         }
 
         // Create an md5 sum string of this string
@@ -70,6 +87,7 @@ namespace CerebelloWebRole.Code
 
         public enum Size
         {
+            s24,
             s32,
             s64,
             s128
