@@ -66,18 +66,18 @@
             /// <param name="data" type="Object">Messages</param>
             // this otherUserId is a number toStringed
             var _this = this;
-            for (var otherUserId in data.Messages) {
+            for (var otherUserId in data) {
 
                 // here there's something tricky.
                 // if the current user does not have a window opened relative to the user that just sent the message, we need 
                 // to load the history for that user, meaning we will have to return to the server.
                 // Therefore, it's a little bit easier just to ignore this message and get the WHOLE HISTORY in the server now.
                 if (!_this.chatWindows[otherUserId])
-                    _this.createNewChatWindow(data.Messages[otherUserId][0].UserFrom);
+                    _this.createNewChatWindow(data[otherUserId][0].UserFrom);
 
                 else {
-                    for (var i = 0; i < data.Messages[otherUserId].length; i++)
-                        _this.chatWindows[otherUserId].addMessage(data.Messages[otherUserId][i]);
+                    for (var i = 0; i < data[otherUserId].length; i++)
+                        _this.chatWindows[otherUserId].addMessage(data[otherUserId][i]);
                 }
             }
         };
@@ -97,7 +97,7 @@
 
             $.addLongPollingListener("chat", function (event) {
                 // success
-                if (event.EventKey == "messages")
+                if (event.EventKey == "new-messages")
                     _this.processMessagesAjaxResult(event.Data);
                 else if (event.EventKey == "user-list")
                     _this.processUserListAjaxResult(event.Data);

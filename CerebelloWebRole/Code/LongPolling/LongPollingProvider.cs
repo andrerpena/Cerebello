@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Code.LongPolling
 {
     public abstract class LongPollingProvider
     {
-        public const int WAIT_TIMEOUT = 1000000;
+        public const int WAIT_TIMEOUT = 30000;
         
         /// <summary>
         /// 
@@ -18,6 +18,6 @@ namespace CerebelloWebRole.Code.LongPolling
         /// <param name="timestamp"></param>
         /// <param name="db"></param>
         /// <param name="onEvents"></param>
-        public abstract List<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, CerebelloEntities db);
+        public abstract IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, CerebelloEntities db);
     }
 }

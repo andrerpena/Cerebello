@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using CerebelloWebRole.Code.Chat;
-using Cerebello.Model;
 using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -113,8 +110,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Each UserFrom Id has a LIST of messages. Of course
             // all messages have the same UserTo, of course, myUserId.
-            Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>> messages = new Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>>();
-            messages.Add(otherUserId.ToString(), ChatServer.Rooms[roomId].GetMessagesBetween(myUserId, otherUserId, timeStamp));
+            Dictionary<string, List<ChatMessage>> messages = new Dictionary<string, List<ChatMessage>>
+                {
+                    {otherUserId.ToString(), ChatServer.Rooms[roomId].GetMessagesBetween(myUserId, otherUserId, timeStamp)}
+                };
 
             return this.Json(new
             {

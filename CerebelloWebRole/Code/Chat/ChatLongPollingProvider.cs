@@ -47,19 +47,24 @@ namespace CerebelloWebRole.Code.Chat
                 };
         }
 
-        public override List<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, [NotNull] CerebelloEntities db)
+        public override IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, [NotNull] CerebelloEntities db)
         {
             if (db == null) throw new ArgumentNullException("db");
 
-            ChatServerHelper.SetupRoomIfNonexisting(db, practiceId);
+            var chatRoom = ChatServerHelper.SetupRoomIfNonexisting(db, practiceId);
             ChatServerHelper.SetupUserIfNonexisting(db, practiceId, userId);
+            chatRoom.SetUserOnline(userId);
+
 
             var events = new List<LongPollingEvent>();
 
             // First, see if there are existing messages, in this case we're gonna
             // just return them
             var existingMessages = ChatServer.Rooms[practiceId].GetMessagesTo(userId, timestamp);
-            if (existingMessages.Any())
+            // the reason why this "timestamp > 0" is that timestamp is 0 when it's the first time user
+            // user is requesting messages. But I don't want to send old messages to the user as if they were
+            // new
+            if (existingMessages.Any() && timestamp > 0)
                 events.Add(this.GetLongPollingEventForMessages(existingMessages));
 
             // now, see if the users list changed since last time
@@ -74,7 +79,7 @@ namespace CerebelloWebRole.Code.Chat
                 var wait = new AutoResetEvent(false);
 
                 var roomChangeSubscription =
-                    ChatServer.Rooms[practiceId].SubscribeForUsersChange((r, chatUser, action, users) =>
+                    ChatServer.Rooms[practiceId].SubscribeForUsersChange((r, users) =>
                         {
                             events.Add(this.GetLongPollingEventForRoomUsersChanged(users, userId));
                             wait.Set();

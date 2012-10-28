@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Code.Chat
         /// Time after which the user is considered inactive and elegible for 
         /// removal (in seconds)
         /// </summary>
-        private const int INACTIVITY_TOLERANCE = 30;
+        private const int INACTIVITY_TOLERANCE = 40;
 
         readonly object usersInRoomLock = new object();
         readonly object messageLock = new object();
@@ -62,7 +62,7 @@ namespace CerebelloWebRole.Code.Chat
 
                 this.Users.Add(user.Id, user);
                 // I'm infering he/she is online now by the usage of this method. I'm not sure this will work
-                this.NotifyUsersChanged(this.Users[user.Id], ChatUser.StatusType.Online);
+                this.NotifyUsersChanged();
             }
         }
 
@@ -79,7 +79,7 @@ namespace CerebelloWebRole.Code.Chat
                     throw new Exception("User already existis in the room. User id:" + user.Id);
 
                 this.Users.Remove(user.Id);
-                this.NotifyUsersChanged(this.Users[user.Id], ChatUser.StatusType.Offline);
+                this.NotifyUsersChanged();
             }
         }
 
@@ -112,7 +112,7 @@ namespace CerebelloWebRole.Code.Chat
                 if (this.Users[userId].Status == ChatUser.StatusType.Online)
                     return;
                 this.Users[userId].Status = ChatUser.StatusType.Online;
-                this.NotifyUsersChanged(this.Users[userId], ChatUser.StatusType.Online);
+                this.NotifyUsersChanged();
             }
         }
 
@@ -131,7 +131,7 @@ namespace CerebelloWebRole.Code.Chat
                 if (user.Status == ChatUser.StatusType.Offline)
                     return;
                 user.Status = ChatUser.StatusType.Offline;
-                this.NotifyUsersChanged(user, ChatUser.StatusType.Offline);
+                this.NotifyUsersChanged();
             }
         }
 
@@ -209,14 +209,14 @@ namespace CerebelloWebRole.Code.Chat
         /// <summary>
         /// Event that is triggered when a room changed
         /// </summary>
-        public event Action<int, ChatUser, ChatUser.StatusType, List<ChatUser>> UserStatusChanged;
+        public event Action<int, List<ChatUser>> UserStatusChanged;
 
         /// <summary>
         /// This method is supposed to be used inside a 'using' clause.
         /// </summary>
         /// <param name="onUserStatusChanged"></param>
         /// <returns></returns>
-        public ChatRoomUsersSubscription SubscribeForUsersChange(Action<int, ChatUser, ChatUser.StatusType, List<ChatUser>> onUserStatusChanged)
+        public ChatRoomUsersSubscription SubscribeForUsersChange(Action<int, List<ChatUser>> onUserStatusChanged)
         {
             if (onUserStatusChanged == null) throw new ArgumentNullException("onUserStatusChanged");
             return new ChatRoomUsersSubscription(this, onUserStatusChanged);
@@ -227,12 +227,12 @@ namespace CerebelloWebRole.Code.Chat
         /// </summary>
         /// <param name="user"></param>
         /// <param name="status"></param>
-        private void NotifyUsersChanged(ChatUser user, ChatUser.StatusType status)
+        private void NotifyUsersChanged()
         {
             this.lastTimeRoomChanged = DateTime.UtcNow.Ticks;
             var usersList = this.GetUsers();
             if (this.UserStatusChanged != null)
-                this.UserStatusChanged(this.Id, user, status, usersList);
+                this.UserStatusChanged(this.Id, usersList);
         }
 
         /// <summary>

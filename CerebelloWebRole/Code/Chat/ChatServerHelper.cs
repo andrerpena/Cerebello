@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Cerebello.Model;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Chat
 {
@@ -19,7 +20,7 @@ namespace CerebelloWebRole.Code.Chat
         private static readonly object roomLock = new Object();
 
 
-        public static ChatUser GetChatUserFromUser(User u)
+        private static ChatUser GetChatUserFromUser(User u)
         {
             return new ChatUser()
                 {
@@ -36,19 +37,28 @@ namespace CerebelloWebRole.Code.Chat
         /// <param name="db"></param>
         /// <param name="roomId"></param>
         /// <param name="userId"></param>
-        public static void SetupUserIfNonexisting(CerebelloEntities db, int roomId, int userId)
+        public static ChatUser SetupUserIfNonexisting([NotNull] CerebelloEntities db, int roomId, int userId)
         {
+            if (db == null) throw new ArgumentNullException("db");
             lock (userLock)
             {
-                if (ChatServer.Rooms[roomId].UserExists(userId)) return;
+                if (!ChatServer.RoomExists(roomId))
+                    throw new Exception("Room does not exist. Room Id: " + roomId);
+
+                if (ChatServer.Rooms[roomId].UserExists(userId))
+                    return ChatServer.Rooms[roomId].Users[userId];
+
                 var user = db.Users.Include("Person").FirstOrDefault(u => u.Id == userId);
 
+                var newUser = new ChatUser()
+                    {
+                        Id = user.Id,
+                        Name = user.Person.FullName
+                    };
+
                 // in the case the current user does not exist, it has been added after the room has been set up.
-                ChatServer.Rooms[roomId].AddUser(new ChatUser()
-                {
-                    Id = user.Id,
-                    Name = user.Person.FullName
-                });
+                ChatServer.Rooms[roomId].AddUser(newUser);
+                return newUser;
             }
         }
 
@@ -57,13 +67,14 @@ namespace CerebelloWebRole.Code.Chat
         /// </summary>
         /// <param name="db"></param>
         /// <param name="roomId"></param>
-        public static void SetupRoomIfNonexisting(CerebelloEntities db, int roomId)
+        public static ChatRoom SetupRoomIfNonexisting([NotNull] CerebelloEntities db, int roomId)
         {
-            
+            if (db == null) throw new ArgumentNullException("db");
             lock (roomLock)
             {
                 // if the given room hasn't been set up yet, it must be done now
-                if (ChatServer.RoomExists(roomId)) return;
+                if (ChatServer.RoomExists(roomId))
+                    return ChatServer.Rooms[roomId];
                 // creates the chat room
                 var newChatRoom = new ChatRoom(roomId);
                 ChatServer.Rooms.Add(roomId, newChatRoom);
@@ -90,6 +101,8 @@ namespace CerebelloWebRole.Code.Chat
                                                   Message = m.Message,
                                                   Timestamp = m.Date.Ticks
                                               }).Take(400).AsEnumerable().Reverse());
+
+                return newChatRoom;
             }
         }
     }
