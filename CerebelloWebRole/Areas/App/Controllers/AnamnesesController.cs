@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -77,11 +78,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Edit(AnamneseViewModel formModel)
         {
+            Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
             if (this.ModelState.IsValid)
             {
                 Anamnese anamnese = null;
                 if (formModel.Id == null)
                 {
+
                     anamnese = new Anamnese()
                     {
                         CreatedOn = this.GetUtcNow(),
@@ -90,7 +93,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.db.Anamnese.AddObject(anamnese);
                 }
                 else
-                    anamnese = this.db.Anamnese.FirstOrDefault(a => a.Id == formModel.Id);
+                    anamnese = this.db.Anamnese.First(a => a.Id == formModel.Id);
 
                 anamnese.Text = formModel.Text;
 

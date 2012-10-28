@@ -15,10 +15,11 @@ namespace CerebelloWebRole.Code.Chat
         /// Time after which the user is considered inactive and elegible for 
         /// removal (in seconds)
         /// </summary>
-        public const int INACTIVITY_TOLERANCE = 30;
+        private const int INACTIVITY_TOLERANCE = 30;
 
-        object usersInRoomLock = new object();
-        object messageLock = new object();
+        readonly object usersInRoomLock = new object();
+        readonly object messageLock = new object();
+        private long lastTimeRoomChanged = DateTime.UtcNow.Ticks;
 
         public ChatRoom(int id)
         {
@@ -45,7 +46,7 @@ namespace CerebelloWebRole.Code.Chat
         /// Chat room Id. 
         /// This Id corresponds to the Practice Id
         /// </summary>
-        public int Id { get; set; }
+        private int Id { get; set; }
 
         /// <summary>
         /// Adds a user to the room
@@ -60,6 +61,25 @@ namespace CerebelloWebRole.Code.Chat
                     throw new Exception("User already existis in the room. User id:" + user.Id);
 
                 this.Users.Add(user.Id, user);
+                // I'm infering he/she is online now by the usage of this method. I'm not sure this will work
+                this.NotifyUsersChanged(this.Users[user.Id], ChatUser.StatusType.Online);
+            }
+        }
+
+        /// <summary>
+        /// Removes a user from the room
+        /// </summary>
+        public void RemoveUser(ChatUser user)
+        {
+            lock (usersInRoomLock)
+            {
+                if (user == null) throw new ArgumentNullException("user");
+
+                if (this.Users.ContainsKey(user.Id))
+                    throw new Exception("User already existis in the room. User id:" + user.Id);
+
+                this.Users.Remove(user.Id);
+                this.NotifyUsersChanged(this.Users[user.Id], ChatUser.StatusType.Offline);
             }
         }
 
@@ -89,11 +109,10 @@ namespace CerebelloWebRole.Code.Chat
                 this.Users[userId].LastActiveOn = DateTime.UtcNow;
 
                 // if this user wasn't online previously, make it online and tell everyone
-                if (this.Users[userId].Status != ChatUser.StatusType.Online)
-                {
-                    this.Users[userId].Status = ChatUser.StatusType.Online;
-                    this.NotifyUsersChanged(this.Users[userId], ChatUser.StatusType.Online);
-                }
+                if (this.Users[userId].Status == ChatUser.StatusType.Online)
+                    return;
+                this.Users[userId].Status = ChatUser.StatusType.Online;
+                this.NotifyUsersChanged(this.Users[userId], ChatUser.StatusType.Online);
             }
         }
 
@@ -109,11 +128,10 @@ namespace CerebelloWebRole.Code.Chat
 
                 var user = this.Users[userId];
 
-                if (user.Status != ChatUser.StatusType.Offline)
-                {
-                    user.Status = ChatUser.StatusType.Offline;
-                    this.NotifyUsersChanged(user, ChatUser.StatusType.Offline);
-                }
+                if (user.Status == ChatUser.StatusType.Offline)
+                    return;
+                user.Status = ChatUser.StatusType.Offline;
+                this.NotifyUsersChanged(user, ChatUser.StatusType.Offline);
             }
         }
 
@@ -211,6 +229,7 @@ namespace CerebelloWebRole.Code.Chat
         /// <param name="status"></param>
         private void NotifyUsersChanged(ChatUser user, ChatUser.StatusType status)
         {
+            this.lastTimeRoomChanged = DateTime.UtcNow.Ticks;
             var usersList = this.GetUsers();
             if (this.UserStatusChanged != null)
                 this.UserStatusChanged(this.Id, user, status, usersList);
@@ -235,13 +254,22 @@ namespace CerebelloWebRole.Code.Chat
         /// <summary>
         /// Notifies subscribers that a new Message has arrived
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="status"></param>
+        /// <param name="userFrom"></param>
+        /// <param name="userTo"></param>
         private void NotifyNewMessage(ChatUser userFrom, ChatUser userTo, ChatMessage message)
         {
-            var usersList = this.GetUsers();
             if (this.MessagesChanged != null)
                 this.MessagesChanged(this.Id, userFrom, userTo, message);
+        }
+
+        /// <summary>
+        /// Indicates whether or not the users in this room changed since the given timestamp
+        /// </summary>
+        /// <param name="timestamp"></param>
+        /// <returns></returns>
+        public bool HasChangedSince(long timestamp)
+        {
+            return this.lastTimeRoomChanged > timestamp;
         }
     }
 }

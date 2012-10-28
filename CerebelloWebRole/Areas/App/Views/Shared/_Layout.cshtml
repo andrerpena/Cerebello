@@ -49,6 +49,7 @@
     <script src="@Url.Content("~/Scripts/jquery.arp.caret.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.arp.watermark.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.arp.modal.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.longpolling.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.chat.container.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.chat.window.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.chat.user.list.js")" type="text/javascript"></script>
@@ -70,6 +71,8 @@
                 },
                 practice: "@this.ViewBag.Practice.UrlIdentifier"
             });
+
+            $.startLongPolling("@Url.Action("GetEvents", "LongPolling")");
         });
     </script>
 

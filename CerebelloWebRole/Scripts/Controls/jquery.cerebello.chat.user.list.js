@@ -35,104 +35,51 @@
             _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
         };
 
-        this.getMessages = function () {
+        this.processUserListAjaxResult = function (data) {
+            /// <summary>Handles the list of users coming from the server</summary>
+            /// <param name="data" type="Array">List of users</param>
             var _this = this;
-            $.ajax({
-                url: "/p/" + _this.opts.practice + "/chat/getmessages",
-                data: {
-                    timestamp: _this.lastMessageCheckTimeStamp
-                },
-                success: function (data) {
-                    _this.lastMessageCheckTimeStamp = data.Timestamp;
+            _this.chatContainer.getContent().html('');
+            for (var i = 0; i < data.length; i++) {
+                var $user = $("<div/>").addClass("user-list-item").attr("data-val-id", data[i].Id).text(data[i].Name).appendTo(_this.chatContainer.getContent());
+                if (data[i].Status == 0)
+                    $user.addClass("offline");
+                else
+                    $user.addClass("online");
 
-                    // this otherUserId is a number toStringed
-                    for (var otherUserId in data.Messages) {
-
-                        // here there's something tricky.
-                        // if the current user does not have a window opened relative to the user that just sent the message, we need 
-                        // to load the history for that user, meaning we will have to return to the server.
-                        // Therefore, it's a little bit easier just to ignore this message and get the WHOLE HISTORY in the server now.
-                        if (!_this.chatWindows[otherUserId])
-                            _this.createNewChatWindow(data.Messages[otherUserId][0].UserFrom);
-
-                        else {
-                            for (var i = 0; i < data.Messages[otherUserId].length; i++)
-                                _this.chatWindows[otherUserId].addMessage(data.Messages[otherUserId][i]);
+                // I must clusure the 'i'
+                (function (otherUserId) {
+                    // handles clicking in a user. Starts up a new chat session
+                    $user.click(function () {
+                        if (_this.chatWindows[data[otherUserId].Id]) {
+                            // focus chat-window
                         }
-                    }
-
-                    _this.getMessages();
-                },
-                error: function () {
-                    // in this case, we not doing anything, just trying again.
-                    // the funtion getUserList is responsible for warning the user.
-                    setTimeout(function () {
-                        _this.getMessages();
-                    }, 10000);
-                }
-            });
+                        else
+                            _this.createNewChatWindow(data[otherUserId]);
+                    });
+                })(i);
+            }
         };
 
-        this.getUserList = function (noWait) {
+        this.processMessagesAjaxResult = function (data) {
+            /// <summary>Handles the list of messages coming from the server</summary>
+            /// <param name="data" type="Object">Messages</param>
+            // this otherUserId is a number toStringed
             var _this = this;
+            for (var otherUserId in data.Messages) {
 
-            if (noWait == undefined)
-                noWait = false;
+                // here there's something tricky.
+                // if the current user does not have a window opened relative to the user that just sent the message, we need 
+                // to load the history for that user, meaning we will have to return to the server.
+                // Therefore, it's a little bit easier just to ignore this message and get the WHOLE HISTORY in the server now.
+                if (!_this.chatWindows[otherUserId])
+                    _this.createNewChatWindow(data.Messages[otherUserId][0].UserFrom);
 
-            $.ajax({
-                url: "/p/" + _this.opts.practice + "/chat/userlist",
-                data: {
-                    noWait: noWait,
-                },
-                cache: false,
-                success: function (data, s) {
-
-                    _this.chatContainer.getContent().html('');
-                    for (var i = 0; i < data.length; i++) {
-                        var $user = $("<div/>").addClass("user-list-item").attr("data-val-id", data[i].Id).text(data[i].Name).appendTo(_this.chatContainer.getContent());
-                        if (data[i].Status == 0)
-                            $user.addClass("offline");
-                        else
-                            $user.addClass("online");
-
-                        // I must clusure the 'i'
-                        (function (otherUserId) {
-                            // handles clicking in a user. Starts up a new chat session
-                            $user.click(function () {
-                                if (_this.chatWindows[data[otherUserId].Id]) {
-                                    // focus chat-window
-                                }
-                                else
-                                    _this.createNewChatWindow(data[otherUserId]);
-                            });
-                        })(i);
-                    }
-
-                    _this.getUserList();
-                },
-
-                error: function (e) {
-
-                    var errorMessage;
-
-                    switch (e.status) {
-                        case 403:
-                            errorMessage = "Seu usuário não está logado ou não possui permissão para acessar o bate-papo no momento.";
-                            _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
-                            break;
-                        case 500:
-                            errorMessage = "Ocorreu um erro ao tentar carregar o bate-papo.";
-                            _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
-                            break;
-                        default:
-                            // chances are that the user just clicked a link. When you click a link
-                            // the pending ajaxes break and we'll just hide the window
-                            _this.chatContainer.setVisible(false);
-                    }
+                else {
+                    for (var i = 0; i < data.Messages[otherUserId].length; i++)
+                        _this.chatWindows[otherUserId].addMessage(data.Messages[otherUserId][i]);
                 }
-
-            });
-
+            }
         };
     }
 
@@ -148,8 +95,16 @@
                 canClose: false
             });
 
-            _this.getUserList(true);
-            _this.getMessages();
+            $.addLongPollingListener("chat", function (event) {
+                // success
+                if (event.EventKey == "messages")
+                    _this.processMessagesAjaxResult(event.Data);
+                else if (event.EventKey == "user-list")
+                    _this.processUserListAjaxResult(event.Data);
+            },
+            function () {
+                // error
+            });
         }
     };
 

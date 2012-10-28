@@ -134,6 +134,7 @@
     <Compile Include="Areas\App\Controllers\ConfigAccountController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
+    <Compile Include="Areas\App\Controllers\LongPollingController.cs" />
     <Compile Include="Areas\App\Controllers\MedicalProceduresController.cs" />
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
@@ -159,10 +160,12 @@
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
     <Compile Include="Code\Access\AccessManager.cs" />
+    <Compile Include="Code\Chat\ChatLongPollingProvider.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
     <Compile Include="Code\Chat\ChatRoom.cs" />
     <Compile Include="Code\Chat\ChatRoomUsersSubscription.cs" />
     <Compile Include="Code\Chat\ChatServer.cs" />
+    <Compile Include="Code\Chat\ChatServerHelper.cs" />
     <Compile Include="Code\Chat\ChatUser.cs" />
     <Compile Include="Code\Chat\ChatRoomMessagesSubscription.cs" />
     <Compile Include="Code\Controllers\CerebelloController.cs" />
@@ -268,6 +271,8 @@
     <Compile Include="Code\IndexViewModel.cs" />
     <Compile Include="Code\iText\PdfHeaderFooter.cs" />
     <Compile Include="Code\Json\JsonDeleteMessage.cs" />
+    <Compile Include="Code\LongPolling\LongPollingEvent.cs" />
+    <Compile Include="Code\LongPolling\LongPollingProvider.cs" />
     <Compile Include="Code\Mvc\CollectionEditingHtmlExtensions.cs" />
     <Compile Include="Code\Mvc\DataTypes\DateOfBirthDataType.cs" />
     <Compile Include="Code\Mvc\DataTypes\EmailDataType.cs" />
@@ -372,6 +377,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.notify.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.delete.confirmation.css" />
@@ -414,6 +420,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.longPolling.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.notify.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.confirmation.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.container.js" />

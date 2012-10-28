@@ -43,7 +43,7 @@ namespace CerebelloWebRole.Code
             // Normalizing user name.
             // The normalized user-name will be used to discover if another user with the same user-name already exists.
             // This is a security measure. This makes it very difficult to guess what a person's user name may be.
-            // You can only login with the exact user name that you provided the first time,
+            // You can only login with the exact user name that you provided the first timestamp,
             // but if someone tries to register a similar user name just to know if that one is the one you used...
             // the attacker won't be sure... because it could be any other variation.
             // e.g. I register user-name "Miguel.Angelo"... the attacker tries to register "miguelangelo", he'll be denied...

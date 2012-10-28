@@ -14,12 +14,6 @@ using iTextSharp.text.pdf;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>
-    /// 
-    /// </remarks>
     public class MedicalCertificatesController : DoctorController
     {
         public ActionResult Details(int id)
