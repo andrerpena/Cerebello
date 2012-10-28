@@ -102,8 +102,25 @@
                 else if (event.EventKey == "user-list")
                     _this.processUserListAjaxResult(event.Data);
             },
-            function () {
-                // error
+            function (e) {
+                
+                var errorMessage;
+
+                switch (e.status) {
+                    case 403:
+                        errorMessage = "Seu usuário não está logado ou não possui permissão para acessar o bate-papo no momento.";
+                        _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
+                        break;
+                    case 500:
+                        errorMessage = "Ocorreu um erro ao tentar carregar o bate-papo.";
+                        _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
+                        break;
+                    default:
+                        // chances are that the user just clicked a link. When you click a link
+                        // the pending ajaxes break and we'll just hide the window
+                        _this.chatContainer.setVisible(false);
+                }
+
             });
         }
     };
