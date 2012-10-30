@@ -80,11 +80,15 @@ namespace CerebelloWebRole.Models
 
         [Display(Name = "Especialidade")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public int? MedicalSpecialty { get; set; }
+        public int? MedicalSpecialtyId { get; set; }
+
+        [Display(Name = "Especialidade")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string MedicalSpecialtyName { get; set; }
 
         [Display(Name = "Conselho médico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public int? MedicalEntity { get; set; }
+        public int? MedicalEntityId { get; set; }
 
         [Display(Name = "Estado do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

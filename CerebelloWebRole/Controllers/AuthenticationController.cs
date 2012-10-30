@@ -140,7 +140,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             // Note: Url identifier for the name of the user, don't need any verification.
             // The name of the user must be unique inside a practice, not the entire database.
 
-            bool alreadyExistsPracticeId = db.Practices.Where(p => p.UrlIdentifier == urlPracticeId).Any();
+            bool alreadyExistsPracticeId = this.db.Practices.Any(p => p.UrlIdentifier == urlPracticeId);
 
             if (alreadyExistsPracticeId)
             {
@@ -176,8 +176,9 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             {
                 // Removing validation error of medic properties, because this user is not a medic.
                 this.ModelState.ClearPropertyErrors(() => registrationData.MedicCRM);
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntity);
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityId);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialtyId);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialtyName);
                 this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityJurisdiction);
             }
 
@@ -208,9 +209,17 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     if (user.Doctor == null)
                         user.Doctor = db.Doctors.CreateObject();
 
+                    var ms = this.db.SYS_MedicalSpecialty
+                        .Single(ms1 => ms1.Id == registrationData.MedicalSpecialtyId);
+
+                    var me = this.db.SYS_MedicalEntity
+                        .Single(me1 => me1.Id == registrationData.MedicalEntityId);
+
                     user.Doctor.CRM = registrationData.MedicCRM;
-                    user.Doctor.MedicalSpecialtyId = registrationData.MedicalSpecialty ?? 0;
-                    user.Doctor.MedicalEntityId = registrationData.MedicalEntity ?? 0;
+                    user.Doctor.MedicalSpecialtyCode = ms.Code;
+                    user.Doctor.MedicalSpecialtyName = ms.Name;
+                    user.Doctor.MedicalEntityCode = me.Code;
+                    user.Doctor.MedicalEntityName = me.Name;
                     user.Doctor.MedicalEntityJurisdiction = registrationData.MedicalEntityJurisdiction.ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.

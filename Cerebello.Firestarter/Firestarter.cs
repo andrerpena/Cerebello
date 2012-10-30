@@ -29,7 +29,7 @@ namespace Cerebello.Firestarter
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
-            var specialty = CreateSpecialty_Psiquiatria(db);
+            var specialty = GetSpecialty_Psiquiatra(db);
 
             // Creating practice.
             var practice = CreatePractice_DrHouse(db, useTrialContract);
@@ -53,7 +53,7 @@ namespace Cerebello.Firestarter
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
-            var specialty = CreateSpecialty_Psiquiatria(db);
+            var specialty = GetSpecialty_Psiquiatra(db);
 
             // Creating practice.
             var practice = CreatePractice_DrHouse(db, useTrialContract);
@@ -79,7 +79,7 @@ namespace Cerebello.Firestarter
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
-            var specialty = CreateSpecialty_Psiquiatria(db);
+            var specialty = GetSpecialty_Psiquiatra(db);
 
             // Creating practice.
             var practice = CreatePractice_DraMarta(db, useTrialContract);
@@ -89,15 +89,10 @@ namespace Cerebello.Firestarter
             return marta;
         }
 
-        public static SYS_MedicalSpecialty CreateSpecialty_Psiquiatria(CerebelloEntities db)
+        public static SYS_MedicalSpecialty GetSpecialty_Psiquiatra(CerebelloEntities db)
         {
-            var specialty = new SYS_MedicalSpecialty()
-            {
-                Name = "Psiquiatria"
-            };
-
-            db.SYS_MedicalSpecialty.AddObject(specialty);
-            return specialty;
+            var result = db.SYS_MedicalSpecialty.Single(s => s.Name == "Psiquiatra");
+            return result;
         }
 
         public static SYS_MedicalEntity GetMedicalEntity_Crm(CerebelloEntities db)
@@ -147,8 +142,10 @@ namespace Cerebello.Firestarter
             {
                 Id = 2,
                 CRM = "98765",
-                SYS_MedicalSpecialty = specialty,
-                SYS_MedicalEntity = entity,
+                MedicalSpecialtyCode = specialty.Code,
+                MedicalSpecialtyName = specialty.Name,
+                MedicalEntityCode = entity.Code,
+                MedicalEntityName = entity.Name,
                 MedicalEntityJurisdiction = "MG",
                 UrlIdentifier = "phillaustin",
             };
@@ -209,8 +206,10 @@ namespace Cerebello.Firestarter
             var doctor = new Doctor()
             {
                 CRM = "12345",
-                SYS_MedicalSpecialty = specialty,
-                SYS_MedicalEntity = entity,
+                MedicalSpecialtyCode = specialty.Code,
+                MedicalSpecialtyName = specialty.Name,
+                MedicalEntityCode = entity.Code,
+                MedicalEntityName = entity.Name,
                 MedicalEntityJurisdiction = "MG",
                 UrlIdentifier = "gregoryhouse",
             };
@@ -268,8 +267,10 @@ namespace Cerebello.Firestarter
             {
                 Id = 4,
                 CRM = "74653",
-                SYS_MedicalSpecialty = specialty,
-                SYS_MedicalEntity = entity,
+                MedicalSpecialtyCode = specialty.Code,
+                MedicalSpecialtyName = specialty.Name,
+                MedicalEntityCode = entity.Code,
+                MedicalEntityName = entity.Name,
                 MedicalEntityJurisdiction = "MG",
                 UrlIdentifier = "martacura",
             };
@@ -565,8 +566,8 @@ namespace Cerebello.Firestarter
             XDocument xmlDocument = null;
 
             using (var xmlFileStream = new FileStream(@"CID10.xml", FileMode.Open, FileAccess.Read))
-                using (var reader = XmlReader.Create(xmlFileStream, settings))
-                    xmlDocument = XDocument.Load(reader);
+            using (var reader = XmlReader.Create(xmlFileStream, settings))
+                xmlDocument = XDocument.Load(reader);
 
             var cid10Nodes = (from e in xmlDocument.Descendants()
                               where

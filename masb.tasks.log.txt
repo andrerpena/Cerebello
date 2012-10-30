@@ -9,6 +9,12 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
 2012-10-## ##:00-##:## (#°##") ##   ######
 
+-- seg 06°30" (##°##")
+2012-10-29 23:20-23:50 (0°30") 10   Cadastrando issues encontradas, e comentando o andamento das que estão sendo desenvolvidas.
+2012-10-29 20:00-23:00 (3°00")  8   #125: Refatorando, corrigindo testes, e navegando na GUI para averiguar tudo.
+2012-10-29 16:20-19:00 (2°40")  9   #125: Tabelas SYS_MedicalProcedure, SYS_MedicalEntity e SYS_MedicalSpecialty devem possuir referências fracas
+2012-10-29 15:20-15:40 (0°20") 10   Páginas para plugins jQuery na wiki.
+
 -- sab 02°40" (##°##")
 2012-10-27 00:00-02:40 (2°40") 10   Atributo AccessDbObjectAttribute.
 

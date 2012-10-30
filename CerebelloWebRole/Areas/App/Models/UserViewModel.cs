@@ -30,17 +30,21 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicCRM { get; set; }
 
-        [Display(Name = "Especialidade")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public int? MedicalSpecialty { get; set; }
-
-        [Display(Name = "Conselho médico")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public int? MedicalEntity { get; set; }
-
         [Display(Name = "Estado do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataTypeAttribute(typeof(TypeEstadoBrasileiro))]
         public int? MedicalEntityJurisdiction { get; set; }
+
+        [Display(Name = "Especialidade")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicalSpecialtyId { get; set; }
+
+        [Display(Name = "Especialidade")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string MedicalSpecialtyName { get; set; }
+
+        [Display(Name = "Conselho médico")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? MedicalEntityId { get; set; }
     }
 }

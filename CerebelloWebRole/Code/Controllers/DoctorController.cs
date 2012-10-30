@@ -31,7 +31,7 @@ namespace CerebelloWebRole.Code
                     UrlIdentifier = doctor.UrlIdentifier,
                     ImageUrl = GravatarHelper.GetGravatarUrl(doctor.Users.ElementAt(0).Person.EmailGravatarHash, GravatarHelper.Size.s32),
                     CRM = doctor.CRM,
-                    MedicalSpecialty = doctor.SYS_MedicalSpecialty.Name,
+                    MedicalSpecialty = doctor.MedicalSpecialtyName,
                     IsScheduleConfigured = doctor.CFG_Schedule != null,
                 };
 
@@ -39,7 +39,7 @@ namespace CerebelloWebRole.Code
 
             doc.MedicalEntity = string.Format(
                 string.IsNullOrEmpty(doctor.MedicalEntityJurisdiction) ? "{0}" : "{0}-{1}",
-                doctor.SYS_MedicalEntity.Code,
+                doctor.MedicalEntityCode,
                 doctor.MedicalEntityJurisdiction);
         }
     }

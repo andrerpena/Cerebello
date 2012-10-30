@@ -32,7 +32,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="user">User object to be used as source of values.</param>
         /// <returns>A new UserViewModel with informations copied from the User object.</returns>
-        public static UserViewModel GetViewModel(User user, Practice practice)
+        public static UserViewModel GetViewModel(User user, Practice practice, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty)
         {
             var viewModel = new UserViewModel()
             {
@@ -67,8 +67,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (userDoctor != null)
             {
                 viewModel.MedicCRM = userDoctor.CRM;
-                viewModel.MedicalSpecialty = userDoctor.MedicalSpecialtyId;
-                viewModel.MedicalEntity = userDoctor.MedicalEntityId;
+                viewModel.MedicalSpecialtyId = medicalSpecialty.Id;
+                viewModel.MedicalSpecialtyName = medicalSpecialty.Name;
+                viewModel.MedicalEntityId = medicalEntity.Id;
                 viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
                     typeof(TypeEstadoBrasileiro),
                     user.Doctor.MedicalEntityJurisdiction);
@@ -145,8 +146,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var user = db.Users.Where(p => p.Id == id).First();
-                model = GetViewModel(user, this.Practice);
+                var user = this.db.Users.First(p => p.Id == id);
+
+                SYS_MedicalEntity medicalEntity;
+                SYS_MedicalSpecialty medicalSpecialty;
+                GetDoctorEntityAndSpecialty(this.db, user, out medicalEntity, out medicalSpecialty);
+
+                model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
 
                 ViewBag.Title = "Alterando usuário: " + model.FullName;
             }
@@ -168,6 +174,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .ToList();
 
             return View("Edit", model);
+        }
+
+        public static void GetDoctorEntityAndSpecialty(CerebelloEntities db, User user, out SYS_MedicalEntity medicalEntity, out SYS_MedicalSpecialty medicalSpecialty)
+        {
+            medicalEntity = user.Doctor == null ? null
+                : (db.SYS_MedicalEntity.FirstOrDefault(me => me.Name == user.Doctor.MedicalEntityName)
+                ?? db.SYS_MedicalEntity.FirstOrDefault(me => me.Code == user.Doctor.MedicalEntityCode));
+
+            medicalSpecialty = user.Doctor == null ? null
+                : (db.SYS_MedicalSpecialty.FirstOrDefault(me => me.Name == user.Doctor.MedicalSpecialtyName)
+                // Note: Code has dupplicates in the database.
+                ?? db.SYS_MedicalSpecialty.FirstOrDefault(me => me.Code == user.Doctor.MedicalSpecialtyCode));
         }
 
         [HttpPost]
@@ -259,8 +277,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // Removing validation error of medic properties, because this user is not a medic.
                 this.ModelState.ClearPropertyErrors(() => formModel.MedicCRM);
-                this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntity);
-                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialty);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntityId);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialtyId);
+                this.ModelState.ClearPropertyErrors(() => formModel.MedicalSpecialtyName);
                 this.ModelState.ClearPropertyErrors(() => formModel.MedicalEntityJurisdiction);
             }
 
@@ -298,8 +317,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         user.Doctor = db.Doctors.CreateObject();
 
                     user.Doctor.CRM = formModel.MedicCRM;
-                    user.Doctor.MedicalSpecialtyId = formModel.MedicalSpecialty ?? 0;
-                    user.Doctor.MedicalEntityId = formModel.MedicalEntity ?? 0;
+
+                    if (formModel.MedicalEntityId != null)
+                    {
+                        var me = this.db.SYS_MedicalEntity.First(me1 => me1.Id == formModel.MedicalEntityId);
+                        user.Doctor.MedicalEntityCode = me.Code;
+                        user.Doctor.MedicalEntityName = me.Name;
+                    }
+
+                    if (formModel.MedicalSpecialtyId != null)
+                    {
+                        var ms = this.db.SYS_MedicalSpecialty.First(ms1 => ms1.Id == formModel.MedicalSpecialtyId);
+                        user.Doctor.MedicalSpecialtyCode = ms.Code;
+                        user.Doctor.MedicalSpecialtyName = ms.Name;
+                    }
 
                     if (formModel.MedicalEntityJurisdiction != null)
                         user.Doctor.MedicalEntityJurisdiction = ((TypeEstadoBrasileiro)formModel.MedicalEntityJurisdiction.Value).ToString();
@@ -410,7 +441,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // TODO: check user practice
 
-            var model = GetViewModel(user, this.Practice);
+            SYS_MedicalEntity medicalEntity;
+            SYS_MedicalSpecialty medicalSpecialty;
+            GetDoctorEntityAndSpecialty(this.db, user, out medicalEntity, out medicalSpecialty);
+
+            var model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
 
             return View(model);
         }

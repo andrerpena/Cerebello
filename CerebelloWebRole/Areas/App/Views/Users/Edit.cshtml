@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
@@ -10,7 +11,7 @@
     {
         ViewBag.Title = "Novo usuário · Cerebello";
     }
-    
+
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var editPanel = this.Html.CreateEditPanel();
@@ -61,18 +62,22 @@
     }
 
     editPanelMedic.AddField(
-        m => m.MedicalSpecialty,
+        m => m.MedicalSpecialtyId,
         EditPanelFieldSize.Large,
-        format: @<text>@Html.DropDownListFor(
-            m => m.MedicalSpecialty,
-            (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
-            "")</text>);
+        format: @<text>@(Html.LookupGridFor<UserViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+                                m => m.MedicalSpecialtyId,
+                                m => m.MedicalSpecialtyName,
+                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
+                                pm => pm.Id,
+                                pm => pm.Name,
+                                pm => pm.Code))
+                             </text>);
 
     editPanelMedic.AddField(
-        m => m.MedicalEntity,
+        m => m.MedicalEntityId,
         EditPanelFieldSize.Large,
         format: @<text>@Html.DropDownListFor(
-            m => m.MedicalEntity,
+            m => m.MedicalEntityId,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
             "")</text>);
 
@@ -82,11 +87,14 @@
 }
 @section Scripts {
     <script type="text/javascript">
-        $(function() {
-            $('#IsDoctor').change(function() {
-              if ($(this).is(':checked')) $('#MedicEditPanel').show();
-              else $('#MedicEditPanel').hide();
+        $(function () {
+            $('#IsDoctor').change(function () {
+                if ($(this).is(':checked')) $('#MedicEditPanel').show();
+                else $('#MedicEditPanel').hide();
             });
+
+            if ($('#IsDoctor').is(':checked')) $('#MedicEditPanel').show();
+            else $('#MedicEditPanel').hide();
         });
     </script>
 }

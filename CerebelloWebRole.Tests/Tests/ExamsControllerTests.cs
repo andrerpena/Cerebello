@@ -62,8 +62,8 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     Notes = "Any text",
-                    MedicalProcedureId = medicalProc.Id,
-                    MedicalProcedureText = medicalProc.Name,
+                    MedicalProcedureCode = medicalProc.Code,
+                    MedicalProcedureName  = medicalProc.Name,
                 };
 
                 actionResult = controller.Create(viewModel);
@@ -129,7 +129,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
             Assert.AreEqual(
                 1,
-                controller.ModelState.GetPropertyErrors(() => viewModel.MedicalProcedureText).Count(),
+                controller.ModelState.GetPropertyErrors(() => viewModel.MedicalProcedureName).Count(),
                 "ModelState should contain one validation message.");
 
             // Verifying the database: cannot save the changes.
@@ -167,7 +167,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureId = medicalProc.Id,
+                    MedicalProcedureCode = medicalProc.Code,
+                    MedicalProcedureName = medicalProc.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -188,8 +189,8 @@ namespace CerebelloWebRole.Tests.Tests
                     Id = examRequest.Id,
                     PatientId = patient.Id,
                     Notes = "Any text",
-                    MedicalProcedureId = medicalProc.Id, // editing value: old = "4.03.04.36-1"; new = "4.01.03.23-4"
-                    MedicalProcedureText = medicalProc.Name,
+                    MedicalProcedureCode = medicalProc.Code, // editing value: old = "4.03.04.36-1"; new = "4.01.03.23-4"
+                    MedicalProcedureName = medicalProc.Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -242,7 +243,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureId = medicalProc.Id,
+                    MedicalProcedureCode = medicalProc.Code,
+                    MedicalProcedureName = medicalProc.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -283,7 +285,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
             Assert.AreEqual(
                 1,
-                controller.ModelState.GetPropertyErrors(() => viewModel.MedicalProcedureText).Count(),
+                controller.ModelState.GetPropertyErrors(() => viewModel.MedicalProcedureName).Count(),
                 "ModelState should contain one validation message.");
 
             // Verifying the database: cannot save the changes.
@@ -322,7 +324,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = utcNow,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
-                    MedicalProcedureId = medicalProc0.Id,
+                    MedicalProcedureCode = medicalProc0.Code,
+                    MedicalProcedureName = medicalProc0.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -340,8 +343,8 @@ namespace CerebelloWebRole.Tests.Tests
                     Id = examRequest.Id,
                     PatientId = patientDraMarta.Id,
                     Notes = "New text",
-                    MedicalProcedureId = medicalProc1.Id,
-                    MedicalProcedureText = medicalProc1.Name,
+                    MedicalProcedureCode = medicalProc1.Code,
+                    MedicalProcedureName = medicalProc1.Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -401,7 +404,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureId = medicalProc0.Id,
+                    MedicalProcedureCode = medicalProc0.Code,
+                    MedicalProcedureName = medicalProc0.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
@@ -419,8 +423,8 @@ namespace CerebelloWebRole.Tests.Tests
                     Id = 19837,
                     PatientId = patient.Id,
                     Notes = "New text",
-                    MedicalProcedureId = medicalProc1.Id,
-                    MedicalProcedureText = medicalProc1.Name,
+                    MedicalProcedureCode = medicalProc1.Code,
+                    MedicalProcedureName = medicalProc1.Name,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -484,7 +488,8 @@ namespace CerebelloWebRole.Tests.Tests
                     examRequest.CreatedOn = utcNow;
                     examRequest.PatientId = patient.Id;
                     examRequest.Text = "Old text";
-                    examRequest.MedicalProcedureId = medicalProc1.Id;
+                    examRequest.MedicalProcedureCode = medicalProc1.Code;
+                    examRequest.MedicalProcedureName= medicalProc1.Name;
 
                     db2.ExaminationRequests.AddObject(examRequest);
                     db2.SaveChanges();
@@ -604,7 +609,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = utcNow,
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
-                    MedicalProcedureId = medicalProc0.Id,
+                    MedicalProcedureCode = medicalProc0.Code,
+                    MedicalProcedureName= medicalProc0.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();

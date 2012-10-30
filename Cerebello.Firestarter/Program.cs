@@ -247,6 +247,23 @@ namespace Test1
 
                         break;
 
+                    case "size?":
+
+                        break;
+
+                    case "size":
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                        {
+                            Console.WriteLine("SYS_MedicalEntity: Code.Length: min={0}; max={1}", db.SYS_MedicalEntity.Min(x => x.Code.Length), db.SYS_MedicalEntity.Max(x => x.Code.Length));
+                            Console.WriteLine("SYS_MedicalEntity: Name.Length: min={0}; max={1}", db.SYS_MedicalEntity.Min(x => x.Name.Length), db.SYS_MedicalEntity.Max(x => x.Name.Length));
+                            Console.WriteLine("SYS_MedicalProcedure: Code.Length: min={0}; max={1}", db.SYS_MedicalProcedure.Min(x => x.Code.Length), db.SYS_MedicalProcedure.Max(x => x.Code.Length));
+                            Console.WriteLine("SYS_MedicalProcedure: Name.Length: min={0}; max={1}", db.SYS_MedicalProcedure.Min(x => x.Name.Length), db.SYS_MedicalProcedure.Max(x => x.Name.Length));
+                            Console.WriteLine("SYS_MedicalSpecialty: Code.Length: min={0}; max={1}", db.SYS_MedicalSpecialty.Min(x => x.Code.Length), db.SYS_MedicalSpecialty.Max(x => x.Code.Length));
+                            Console.WriteLine("SYS_MedicalSpecialty: Name.Length: min={0}; max={1}", db.SYS_MedicalSpecialty.Min(x => x.Name.Length), db.SYS_MedicalSpecialty.Max(x => x.Name.Length));
+                        }
+
+                        break;
+
                     case "drp?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;

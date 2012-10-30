@@ -385,9 +385,10 @@ namespace CerebelloWebRole.Tests.Tests
                     IsDoctor = true,
                     // Missing all medical information.
                     MedicCRM = "",
-                    MedicalEntity = null,
+                    MedicalEntityId = null,
                     MedicalEntityJurisdiction = null,
-                    MedicalSpecialty = null,
+                    MedicalSpecialtyId = null,
+                    MedicalSpecialtyName = null,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
@@ -403,7 +404,7 @@ namespace CerebelloWebRole.Tests.Tests
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual("Edit", viewResult.ViewName);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
-            Assert.AreEqual(4, controller.ModelState.GetAllErrors().Count, "ModelState should contain one validation message.");
+            Assert.AreEqual(5, controller.ModelState.GetAllErrors().Count, "ModelState should contain validation messages.");
         }
 
         /// <summary>
@@ -449,8 +450,9 @@ namespace CerebelloWebRole.Tests.Tests
                     Email = "new_email_address@not_repeated.com.xpto.br",
                     IsDoctor = true,
                     MedicCRM = "98237",
-                    MedicalEntity = this.db.SYS_MedicalEntity.First().Id,
-                    MedicalSpecialty = this.db.SYS_MedicalSpecialty.First().Id,
+                    MedicalEntityId = this.db.SYS_MedicalEntity.First().Id,
+                    MedicalSpecialtyId = this.db.SYS_MedicalSpecialty.First().Id,
+                    MedicalSpecialtyName = this.db.SYS_MedicalSpecialty.First().Name,
                 });
             }
 
@@ -539,7 +541,11 @@ namespace CerebelloWebRole.Tests.Tests
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
+
+                SYS_MedicalEntity medicalEntity;
+                SYS_MedicalSpecialty medicalSpecialty;
+                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
@@ -588,7 +594,11 @@ namespace CerebelloWebRole.Tests.Tests
                 doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
+
+                SYS_MedicalEntity medicalEntity;
+                SYS_MedicalSpecialty medicalSpecialty;
+                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
@@ -640,7 +650,11 @@ namespace CerebelloWebRole.Tests.Tests
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice);
+
+                SYS_MedicalEntity medicalEntity;
+                SYS_MedicalSpecialty medicalSpecialty;
+                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
@@ -695,7 +709,10 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 mr.SetCurrentUser(doc[1].Users.First(), "masban");
 
-                vm = UsersController.GetViewModel(doc[0].Users.First(), doc[0].Users.FirstOrDefault().Practice);
+                SYS_MedicalEntity medicalEntity;
+                SYS_MedicalSpecialty medicalSpecialty;
+                UsersController.GetDoctorEntityAndSpecialty(this.db, doc[0].Users.First(), out medicalEntity, out medicalSpecialty);
+                vm = UsersController.GetViewModel(doc[0].Users.First(), doc[0].Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });

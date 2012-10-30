@@ -251,10 +251,12 @@ GO
 CREATE TABLE [dbo].[Doctor](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[CRM] [varchar](50) NOT NULL,
-	[MedicalEntityId] [int] NOT NULL,
 	[MedicalEntityJurisdiction] [nvarchar](50) NULL,
-	[MedicalSpecialtyId] [int] NOT NULL,
 	[UrlIdentifier] [varchar](200) NOT NULL,
+	[MedicalEntityCode] [nvarchar](7) NOT NULL,
+	[MedicalEntityName] [nvarchar](55) NOT NULL,
+	[MedicalSpecialtyCode] [nvarchar](7) NOT NULL,
+	[MedicalSpecialtyName] [nvarchar](71) NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -269,9 +271,10 @@ GO
 CREATE TABLE [dbo].[ExaminationRequest](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PatientId] [int] NOT NULL,
-	[MedicalProcedureId] [int] NOT NULL,
 	[Text] [nvarchar](max) NULL,
 	[CreatedOn] [datetime] NOT NULL,
+	[MedicalProcedureCode] [nchar](12) NOT NULL,
+	[MedicalProcedureName] [nvarchar](310) NOT NULL,
  CONSTRAINT [PK_ExaminationRequest] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -285,10 +288,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ExaminationResult](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[MedicalProcedureId] [int] NOT NULL,
 	[Text] [nvarchar](max) NOT NULL,
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
+	[MedicalProcedureCode] [nchar](12) NOT NULL,
+	[MedicalProcedureName] [nvarchar](310) NOT NULL,
  CONSTRAINT [PK_ExaminationResult] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -745,7 +749,7 @@ GO
 CREATE TABLE [dbo].[SYS_MedicalSpecialty](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](100) NOT NULL,
-	[Code] [nvarchar](50) NULL,
+	[Code] [nvarchar](10) NULL,
  CONSTRAINT [PK_MedicalSpecialty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -945,41 +949,17 @@ REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis_Patient]
 GO
-/****** Object:  ForeignKey [FK_Doctor_MedicalEntity] ******/
-ALTER TABLE [dbo].[Doctor]  WITH NOCHECK ADD  CONSTRAINT [FK_Doctor_MedicalEntity] FOREIGN KEY([MedicalEntityId])
-REFERENCES [dbo].[SYS_MedicalEntity] ([Id])
-GO
-ALTER TABLE [dbo].[Doctor] CHECK CONSTRAINT [FK_Doctor_MedicalEntity]
-GO
-/****** Object:  ForeignKey [FK_Doctor_MedicalSpecialty] ******/
-ALTER TABLE [dbo].[Doctor]  WITH NOCHECK ADD  CONSTRAINT [FK_Doctor_MedicalSpecialty] FOREIGN KEY([MedicalSpecialtyId])
-REFERENCES [dbo].[SYS_MedicalSpecialty] ([Id])
-GO
-ALTER TABLE [dbo].[Doctor] CHECK CONSTRAINT [FK_Doctor_MedicalSpecialty]
-GO
 /****** Object:  ForeignKey [FK_ExaminationRequest_Patient] ******/
 ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_Patient]
 GO
-/****** Object:  ForeignKey [FK_ExaminationRequest_SYS_MedicalProcedures] ******/
-ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_SYS_MedicalProcedures] FOREIGN KEY([MedicalProcedureId])
-REFERENCES [dbo].[SYS_MedicalProcedure] ([Id])
-GO
-ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_SYS_MedicalProcedures]
-GO
 /****** Object:  ForeignKey [FK_ExaminationResult_Patient] ******/
 ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationResult_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
-GO
-/****** Object:  ForeignKey [FK_ExaminationResult_SYS_MedicalProcedures] ******/
-ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationResult_SYS_MedicalProcedures] FOREIGN KEY([MedicalProcedureId])
-REFERENCES [dbo].[SYS_MedicalProcedure] ([Id])
-GO
-ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_SYS_MedicalProcedures]
 GO
 /****** Object:  ForeignKey [FK_Laboratory_Doctor] ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])

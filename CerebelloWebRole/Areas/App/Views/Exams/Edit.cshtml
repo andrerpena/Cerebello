@@ -21,11 +21,11 @@
     
         var editPanel = Html.CreateEditPanel();
         editPanel.AddField(
-            m => m.MedicalProcedureId,
+            m => m.MedicalProcedureCode,
             CerebelloWebRole.Code.Controls.EditPanelFieldSize.XLarge,
-            format: @<text>@(Html.LookupGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, int>(
-                m => m.MedicalProcedureId,
-                m => m.MedicalProcedureText,
+            format: @<text>@(Html.LookupGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, string>(
+                m => m.MedicalProcedureCode,
+                m => m.MedicalProcedureName,
                 Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
                 pm => pm.Id,
                 pm => pm.Name,

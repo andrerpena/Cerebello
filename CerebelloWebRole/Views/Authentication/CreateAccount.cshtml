@@ -1,4 +1,6 @@
-﻿@model CerebelloWebRole.Models.CreateAccountViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Models
+@model CerebelloWebRole.Models.CreateAccountViewModel
 @{
     ViewBag.Title = "Login";
 
@@ -15,14 +17,22 @@
     }
 }
 @section Scripts {
+    <script src="@Url.Content("~/Scripts/scripts.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.autocomplete.js")" type="text/javascript"></script>
     <script type="text/javascript">
-        $(function() {
-            $('#IsDoctor').change(function() {
+        $(function () {
+            $('#IsDoctor').change(function () {
                 if ($(this).is(':checked')) $('.doctor-info').show();
                 else $('.doctor-info').hide();
             });
+            if ($('#IsDoctor').is(':checked')) $('.doctor-info').show();
+            else $('.doctor-info').hide();
         });
     </script>
+}
+@section Header
+{
+    <link href="@Url.Content("~/Content/Styles/Site/Controls/jquery.cerebello.autocomplete.css")" rel="stylesheet" type="text/css" />
 }
 <div class="authentication-container">
     <div class="authentication-container-wrapper">
@@ -73,10 +83,10 @@
                         </div>
                     </div>
                     <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                        @Html.LabelFor(model => model.MedicalEntity)
+                        @Html.LabelFor(model => model.MedicalEntityId)
                         <div class="controls">
                             @Html.DropDownListFor(
-                                m => m.MedicalEntity,
+                                m => m.MedicalEntityId,
                                 (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
                                 "")
                         </div>
@@ -94,16 +104,20 @@
                         </div>
                     </div>
                     <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                        @Html.LabelFor(model => model.MedicalSpecialty)
+                        @Html.LabelFor(model => model.MedicalSpecialtyId)
                         <div class="controls">
-                            @Html.DropDownListFor(
-                                m => m.MedicalSpecialty,
-                                (IEnumerable<SelectListItem>)this.ViewBag.MedicalSpecialtyOptions,
-                                "")
+                            @(Html.LookupGridFor<CreateAccountViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+                                m => m.MedicalSpecialtyId,
+                                m => m.MedicalSpecialtyName,
+                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
+                                pm => pm.Id,
+                                pm => pm.Name,
+                                pm => pm.Code
+                            ))
                         </div>
                     </div>
                     <hr />
-                    @*Properties of the user as an user*@
+                    @* Properties of the user as an user *@
                     <div class="control-group">
                         @Html.LabelFor(model => model.UserName)
                         <div class="controls">

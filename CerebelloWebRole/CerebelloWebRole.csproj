@@ -14,7 +14,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -129,6 +129,7 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
+    <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigAccountController.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Areas\App\Controllers\UsersController.cs" />
     <Compile Include="Areas\App\Models\AddressViewModel.cs" />
     <Compile Include="Areas\App\Models\AnvisaImportViewModel.cs" />
+    <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalSpecialtiesLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigPracticeViewModel.cs" />
@@ -397,6 +399,7 @@
     <Content Include="Content\Styles\App\Controls\cardview.css" />
     <Content Include="Content\Styles\Docs\Docs.css" />
     <Content Include="Content\Styles\Docs\Media.css" />
+    <Content Include="Content\Styles\Site\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\Site\Media.css" />
     <Content Include="Content\Styles\Site\Site.css" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />

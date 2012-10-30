@@ -25,9 +25,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = examResult.Id,
                 PatientId = examResult.PatientId,
                 Text = examResult.Text,
-                MedicalProcedureId = examResult.MedicalProcedureId,
-                MedicalProcedureCode = examResult.SYS_MedicalProcedure.Code,
-                MedicalProcedureText = examResult.SYS_MedicalProcedure.Name,
+                MedicalProcedureCode = examResult.MedicalProcedureCode,
+                MedicalProcedureName = examResult.MedicalProcedureName,
             };
         }
 
@@ -126,8 +125,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 modelObj.Text = formModel.Text;
 
             // Only sets the MedicalProcedureId when MedicalProcedureText is not null.
-            if (!string.IsNullOrEmpty(formModel.MedicalProcedureText))
-                modelObj.MedicalProcedureId = formModel.MedicalProcedureId;
+            if (!string.IsNullOrEmpty(formModel.MedicalProcedureName))
+            {
+                modelObj.MedicalProcedureCode = formModel.MedicalProcedureCode;
+                modelObj.MedicalProcedureName = formModel.MedicalProcedureName;
+            }
 
             if (this.ModelState.IsValid)
             {

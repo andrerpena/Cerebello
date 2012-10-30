@@ -274,14 +274,18 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var examRequest = new ExaminationRequest()
                     {
-                        SYS_MedicalProcedure = new SYS_MedicalProcedure()
-                        {
-                            Code = "mcode",
-                            Name = "mname"
-                        },
+                        MedicalProcedureCode = "mcode",
+                        MedicalProcedureName = "mname",
                         PatientId = patientId,
                         CreatedOn = DateTime.UtcNow
                     };
+
+                this.db.SYS_MedicalProcedure.AddObject(
+                    new SYS_MedicalProcedure()
+                        {
+                            Code = "mcode",
+                            Name = "mname"
+                        });
 
                 this.db.ExaminationRequests.AddObject(examRequest);
 
@@ -322,15 +326,19 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var examResult = new ExaminationResult()
                 {
-                    SYS_MedicalProcedure = new SYS_MedicalProcedure()
-                    {
-                        Code = "mcode",
-                        Name = "mname"
-                    },
+                    MedicalProcedureCode = "mcode",
+                    MedicalProcedureName = "mname",
                     PatientId = patientId,
                     CreatedOn = DateTime.UtcNow,
                     Text = "tudo deu certo"
                 };
+
+                this.db.SYS_MedicalProcedure.AddObject(
+                    new SYS_MedicalProcedure()
+                        {
+                            Code = "mcode",
+                            Name = "mname"
+                        });
 
                 this.db.ExaminationResults.AddObject(examResult);
 

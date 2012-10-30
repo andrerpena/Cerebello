@@ -208,8 +208,9 @@ namespace CerebelloWebRole.Tests.Tests
                         Gender = (short)TypeGender.Male,
                         IsDoctor = true,
                         MedicCRM = "98237",
-                        MedicalEntity = this.db.SYS_MedicalEntity.First().Id,
-                        MedicalSpecialty = this.db.SYS_MedicalSpecialty.First().Id,
+                        MedicalEntityId = this.db.SYS_MedicalEntity.First().Id,
+                        MedicalSpecialtyId = this.db.SYS_MedicalSpecialty.First().Id,
+                        MedicalSpecialtyName = this.db.SYS_MedicalSpecialty.First().Name,
                     };
                     Mvc3TestHelper.SetModelStateErrors(controller, vm);
                 }
