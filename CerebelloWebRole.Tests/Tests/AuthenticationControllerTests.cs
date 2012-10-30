@@ -130,6 +130,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Assert.AreEqual(utcNow.AddDays(30), savedToken.ExpirationDate);
                 Assert.IsTrue(savedUser.IsOwner, "Saved user should be the owner of the practice.");
                 Assert.AreEqual(savedUser.Id, savedUser.Practice.OwnerId, "Saved user should be the owner of the practice.");
+                Assert.IsNotNull(savedUser.Administrator, "Practice owner must be administrator.");
 
                 // Assert user is logged-in.
                 Assert.IsTrue(
@@ -196,6 +197,8 @@ namespace CerebelloWebRole.Tests.Tests
                     };
 
                     // Creating ViewModel, and setting the ModelState of the controller.
+                    var me = Firestarter.GetMedicalEntity_Psicologia(this.db);
+                    var ms = Firestarter.GetMedicalSpecialty_Psiquiatra(this.db);
                     vm = new CreateAccountViewModel
                     {
                         UserName = "andré-01",
@@ -208,9 +211,10 @@ namespace CerebelloWebRole.Tests.Tests
                         Gender = (short)TypeGender.Male,
                         IsDoctor = true,
                         MedicCRM = "98237",
-                        MedicalEntityId = this.db.SYS_MedicalEntity.First().Id,
-                        MedicalSpecialtyId = this.db.SYS_MedicalSpecialty.First().Id,
-                        MedicalSpecialtyName = this.db.SYS_MedicalSpecialty.First().Name,
+                        MedicalEntityId = me.Id,
+                        MedicalSpecialtyId = ms.Id,
+                        MedicalSpecialtyName = ms.Name,
+                        MedicalEntityJurisdiction = TypeEstadoBrasileiro.RJ,
                     };
                     Mvc3TestHelper.SetModelStateErrors(controller, vm);
                 }
@@ -239,6 +243,20 @@ namespace CerebelloWebRole.Tests.Tests
                 Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
                 Assert.IsTrue(hasBeenSaved, "The database should be changed, but it was not.");
                 Assert.AreEqual(savedUser.UserNameNormalized, "andre01");
+
+                // Assert database.
+                using (var dba = CreateNewCerebelloEntities())
+                {
+                    var user = dba.Users.Single(u => u.UserName == "andré-01");
+                    Assert.IsNotNull(user.Doctor);
+                    Assert.AreEqual("98237", user.Doctor.CRM);
+                    Assert.AreEqual("CRP", user.Doctor.MedicalEntityCode);
+                    Assert.AreEqual("Conselho Regional de Psicologia", user.Doctor.MedicalEntityName);
+                    Assert.AreEqual("RJ", user.Doctor.MedicalEntityJurisdiction);
+                    Assert.AreEqual("2231.53", user.Doctor.MedicalSpecialtyCode);
+                    Assert.AreEqual("Psiquiatra", user.Doctor.MedicalSpecialtyName);
+                    Assert.IsNotNull(user.Administrator, "Practice owner must be administrator.");
+                }
 
                 // Assert user is logged-in: this is already done in CreateAccount_HappyPath.
 

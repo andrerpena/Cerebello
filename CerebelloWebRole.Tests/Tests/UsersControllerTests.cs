@@ -47,9 +47,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -83,9 +83,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -129,12 +129,12 @@ namespace CerebelloWebRole.Tests.Tests
             try
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                MockRepository mr = new MockRepository(true);
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -193,12 +193,12 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var marta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 userNameToRepeat = marta.Users.First().UserName;
-                MockRepository mr = new MockRepository(true);
+                var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -246,9 +246,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -302,9 +302,9 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -357,9 +357,9 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -423,9 +423,9 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -479,9 +479,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -547,11 +547,11 @@ namespace CerebelloWebRole.Tests.Tests
                 UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
 
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+                this.db.SavingChanges += (s, e) => { isDbSaved = true; };
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -575,6 +575,81 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsTrue(isDbSaved, "DB changes must be saved.");
+        }
+
+        /// <summary>
+        /// Tests the edition of an user that is a doctor.
+        /// This is a valid operation and should complete without exceptions,
+        /// and without validation errors.
+        /// </summary>
+        [TestMethod]
+        public void Edit_EditDoctor_HappyPath()
+        {
+            UsersController controller;
+            UserViewModel vm;
+            bool isDbSaved = false;
+            try
+            {
+                var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                var mr = new MockRepository(true);
+                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+
+                SYS_MedicalEntity medicalEntity;
+                SYS_MedicalSpecialty medicalSpecialty;
+                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
+
+                this.db.SavingChanges += (s, e) => { isDbSaved = true; };
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            // Editing the user FullName.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                // When editing, the user-name cannot be changed. Must set it to null.
+                var me = Firestarter.GetMedicalEntity_Fono(this.db);
+                var ms = Firestarter.GetMedicalSpecialty_Fonoaudiólogo(this.db);
+
+                vm.UserName = null;
+
+                vm.FullName = "Andre R. Pena";
+
+                vm.MedicalEntityJurisdiction = (int)TypeEstadoBrasileiro.GO;
+                vm.MedicCRM = "131192";
+                vm.MedicalEntityId = me.Id;
+                vm.MedicalSpecialtyId = ms.Id;
+                vm.MedicalSpecialtyName = ms.Name;
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+
+                actionResult = controller.Edit(vm);
+            }
+
+            // Verifying the ActionResult, and the DB.
+            // - The controller ModelState must have no validation errors related to e-mail.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
+            Assert.IsTrue(isDbSaved, "DB changes must be saved.");
+
+            // Assert database.
+            using (var dba = CreateNewCerebelloEntities())
+            {
+                var user = dba.Users.Single(u => u.Person.FullName == "Andre R. Pena");
+                Assert.IsNotNull(user.Doctor);
+                Assert.AreEqual("131192", user.Doctor.CRM);
+                Assert.AreEqual("CRFA", user.Doctor.MedicalEntityCode);
+                Assert.AreEqual("Conselho Regional de Fonoaudiologia", user.Doctor.MedicalEntityName);
+                Assert.AreEqual("GO", user.Doctor.MedicalEntityJurisdiction);
+                Assert.AreEqual("2238.10", user.Doctor.MedicalSpecialtyCode);
+                Assert.AreEqual("Fonoaudiólogo", user.Doctor.MedicalSpecialtyName);
+            }
+
         }
 
         /// <summary>
@@ -602,9 +677,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -658,9 +733,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -717,9 +792,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -772,9 +847,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Firestarter has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -811,9 +886,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -850,9 +925,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 userId = admin.Id;
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -899,9 +974,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -945,9 +1020,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1012,9 +1087,9 @@ namespace CerebelloWebRole.Tests.Tests
                 mr = new MockRepository(true);
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1053,9 +1128,9 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetRouteData<T>(practice, docToView, action);
                 controller = Mvc3TestHelper.CreateControllerForTesting<T>(this.db, mr, callOnActionExecuting: false);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1098,9 +1173,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1146,9 +1221,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1192,9 +1267,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1236,9 +1311,9 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
                 this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 

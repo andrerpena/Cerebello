@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Transactions;
 using Cerebello.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -77,5 +79,13 @@ namespace CerebelloWebRole.Tests
         {
             return new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF));
         }
+
+        [DebuggerStepThrough]
+        protected static void InconclusiveInit(Exception ex)
+        {
+            Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
+                                ex.GetType().Name, ex.Message, ex.StackTrace);
+        }
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.SqlClient;
 
 namespace CerebelloWebRole.Tests
@@ -15,31 +14,26 @@ namespace CerebelloWebRole.Tests
         public static void AttachCerebelloTestDatabase()
         {
             // attaches the database
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TestDBServer"].ConnectionString))
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TestDBServer"].ConnectionString))
             {
                 conn.Open();
 
-                using (var command = conn.CreateCommand())
-                {
-                    var databaseName = "CerebelloTEST";
+                var cmd = new SqlCommand(string.Format(@"
+    Declare @found_dn_name varchar(200)
+    SELECT DISTINCT @found_dn_name=name
+        FROM sys.sysdatabases
+        WHERE name = '{0}'
+    if (@found_dn_name is null)
+    begin
+        USE master
+		CREATE DATABASE {0}
+			ON (FILENAME = N'{1}')
+			FOR ATTACH
+    end
+", "CerebelloTEST", @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\cerebelloTEST.mdf"), conn);
 
-                    // verify the DB existence prior to creating a new one
-                    command.CommandText = string.Format("SELECT database_id FROM sys.databases WHERE Name = '{0}'", databaseName);
-
-                    object databaseId = command.ExecuteScalar();
-                    if (databaseId == null)
-                    {
-                        // according to stackoverflow it's ok to reuse commands as long as the params are cleared
-                        command.CommandText = string.Format(
-                            @"CREATE DATABASE {0} ON 
-                                    ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\cerebelloTEST.mdf' )
-                                     FOR ATTACH ;", databaseName);
-
-                        command.ExecuteNonQuery();
-                    }
-                }
-
-                conn.Close();
+                using (cmd)
+                    cmd.ExecuteNonQuery();
             }
         }
 
@@ -50,24 +44,26 @@ namespace CerebelloWebRole.Tests
         {
             SqlConnection.ClearAllPools();
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TestDBServer"].ConnectionString))
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TestDBServer"].ConnectionString))
             {
                 conn.Open();
 
-                SqlCommand cmdExists = new SqlCommand("", conn);
-                cmdExists.CommandText = string.Format(
-                    "SELECT db_id(N'{0}')",
-                    "CerebelloTEST");
+                var cmd = new SqlCommand(string.Format(@"
+    Declare @found_dn_name varchar(200)
+    SELECT DISTINCT @found_dn_name=name
+        FROM sys.sysdatabases
+        WHERE name = '{0}'
+    if (not @found_dn_name is null)
+    begin
+        USE master
+        ALTER DATABASE {0}
+           SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+        EXEC sp_detach_db @dbname = '{0}', @skipchecks = 'true'
+    end
+", "CerebelloTEST"), conn);
 
-                var dbExists = cmdExists.ExecuteScalar();
-
-                if (!(dbExists == null || dbExists is DBNull))
-                {
-                    SqlCommand cmd = new SqlCommand("", conn);
-                    cmd.CommandText = "sp_detach_db CerebelloTEST";
-
+                using (cmd)
                     cmd.ExecuteNonQuery();
-                }
             }
         }
     }

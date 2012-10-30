@@ -29,7 +29,7 @@ namespace Cerebello.Firestarter
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
-            var specialty = GetSpecialty_Psiquiatra(db);
+            var specialty = GetMedicalSpecialty_Psiquiatra(db);
 
             // Creating practice.
             var practice = CreatePractice_DrHouse(db, useTrialContract);
@@ -53,7 +53,7 @@ namespace Cerebello.Firestarter
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
-            var specialty = GetSpecialty_Psiquiatra(db);
+            var specialty = GetMedicalSpecialty_Psiquiatra(db);
 
             // Creating practice.
             var practice = CreatePractice_DrHouse(db, useTrialContract);
@@ -79,7 +79,7 @@ namespace Cerebello.Firestarter
         {
             // Creating data infrastructure.
             var entity = GetMedicalEntity_Crm(db);
-            var specialty = GetSpecialty_Psiquiatra(db);
+            var specialty = GetMedicalSpecialty_Psiquiatra(db);
 
             // Creating practice.
             var practice = CreatePractice_DraMarta(db, useTrialContract);
@@ -89,15 +89,31 @@ namespace Cerebello.Firestarter
             return marta;
         }
 
-        public static SYS_MedicalSpecialty GetSpecialty_Psiquiatra(CerebelloEntities db)
+        public static SYS_MedicalSpecialty GetMedicalSpecialty_Psiquiatra(CerebelloEntities db)
         {
             var result = db.SYS_MedicalSpecialty.Single(s => s.Name == "Psiquiatra");
             return result;
         }
 
+        public static SYS_MedicalSpecialty GetMedicalSpecialty_Fonoaudiólogo(CerebelloEntities db)
+        {
+            var result = db.SYS_MedicalSpecialty.Single(s => s.Name == "Fonoaudiólogo");
+            return result;
+        }
+
         public static SYS_MedicalEntity GetMedicalEntity_Crm(CerebelloEntities db)
         {
-            return db.SYS_MedicalEntity.Where(me => me.Code == "CRM").Single();
+            return db.SYS_MedicalEntity.Single(me => me.Code == "CRM");
+        }
+
+        public static SYS_MedicalEntity GetMedicalEntity_Psicologia(CerebelloEntities db)
+        {
+            return db.SYS_MedicalEntity.Single(me => me.Code == "CRP");
+        }
+
+        public static SYS_MedicalEntity GetMedicalEntity_Fono(CerebelloEntities db)
+        {
+            return db.SYS_MedicalEntity.Single(me => me.Code == "CRFA");
         }
 
         public static Doctor CreateAdministratorDoctor_Miguel(CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice, bool useDefaultPassword = false)

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests
@@ -51,8 +48,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -81,8 +77,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -112,8 +107,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -144,8 +138,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -174,8 +167,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -205,8 +197,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -238,8 +229,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -279,8 +269,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -317,8 +306,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -355,8 +343,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                    ex.GetType().Name, ex.Message, ex.StackTrace);
+                InconclusiveInit(ex);
                 return;
             }
 

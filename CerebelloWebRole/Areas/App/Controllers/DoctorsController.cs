@@ -41,10 +41,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         CRM = u.Doctor.CRM,
                         MedicalSpecialty = u.Doctor.MedicalSpecialtyName,
                     },
-                    MedicalEntityCode = u.Doctor.MedicalEntityCode,
-                    MedicalEntityJurisdiction = u.Doctor.MedicalEntityJurisdiction,
-                    Doctor = u.Doctor,
-                    EmailGravatarHash = u.Person.EmailGravatarHash,
+                    u.Doctor.MedicalEntityCode,
+                    u.Doctor.MedicalEntityJurisdiction,
+                    u.Doctor,
+                    u.Person.EmailGravatarHash,
                 })
                 .ToList();
 
