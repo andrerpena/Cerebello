@@ -6,7 +6,7 @@
     @if (Model != null)
     {
         var cardView = this.Html.CreateCardView();
-        cardView.AddField(model => model.MedicalProcedureText, wholeRow: true);
+        cardView.AddField(model => model.MedicalProcedureName, wholeRow: true);
         cardView.AddField(model => model.MedicalProcedureCode, wholeRow: true);
         cardView.AddField(model => model.Text, wholeRow: true);
 
@@ -20,7 +20,7 @@
         $(".edit-examresult", $("div[data-val-id='examresult-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.ajax({
-                url: "@Url.Action("edit", "examresults", new { id = Model.Id })",
+                url: "@Url.Action("Edit", "ExamResults", new { id = Model.Id })",
                 success: function (result) {
                     $("div[data-val-id='examresult-@Model.Id']").replaceWith(result);
                 }
@@ -31,10 +31,10 @@
             e.preventDefault();
             $.deleteConfirmation({
                 objectType: "resultado de exame",
-                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                url: "@Url.Action("Delete", new { id = this.Model.Id })",
                 success: function (data) {
                     alert("Este resultado de exame foi excluído");
-                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                    window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
                 }
             });
         });

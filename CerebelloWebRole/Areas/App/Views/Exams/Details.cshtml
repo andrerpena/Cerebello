@@ -6,35 +6,35 @@
     @if (Model != null)
     {
         var cardView = this.Html.CreateCardView();
-        cardView.AddField(model => model.MedicalProcedureText, wholeRow: true);
+        cardView.AddField(model => model.MedicalProcedureName, wholeRow: true);
         cardView.AddField(model => model.MedicalProcedureCode, wholeRow: true);
         cardView.AddField(model => model.Notes, wholeRow: true);
 
         @cardView.GetHtml()
     }
     <div class="inline-link-bar">
-        <a href="#" class="edit-examrequest inline-link" >Editar solicitação de exame</a>
-        <a href="#" class="delete-examrequest inline-link" >Excluir solicitação de exame</a>
+        <a href="#" class="edit-examrequest inline-link">Editar solicitação de exame</a>
+        <a href="#" class="delete-examrequest inline-link">Excluir solicitação de exame</a>
     </div>
     <script type="text/javascript">
         $(".edit-examrequest", $("div[data-val-id='examrequest-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.ajax({
-                url: "@Url.Action("edit", "exams", new { id = Model.Id })",
-                success: function(result) {
+                url: "@Url.Action("Edit", "Exams", new { id = Model.Id })",
+                success: function (result) {
                     $("div[data-val-id='examrequest-@Model.Id']").replaceWith(result);
                 }
             });
         });
-        
+
         $(".delete-examrequest", $("div[data-val-id='examrequest-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.deleteConfirmation({
                 objectType: "solicitação de exame",
-                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                url: "@Url.Action("Delete", new { id = this.Model.Id })",
                 success: function (data) {
                     alert("Esta solicitação de exame foi excluída");
-                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                    window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
                 }
             });
         });

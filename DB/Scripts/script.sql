@@ -273,7 +273,7 @@ CREATE TABLE [dbo].[ExaminationRequest](
 	[PatientId] [int] NOT NULL,
 	[Text] [nvarchar](max) NULL,
 	[CreatedOn] [datetime] NOT NULL,
-	[MedicalProcedureCode] [nchar](12) NOT NULL,
+	[MedicalProcedureCode] [nchar](12) NULL,
 	[MedicalProcedureName] [nvarchar](310) NOT NULL,
  CONSTRAINT [PK_ExaminationRequest] PRIMARY KEY CLUSTERED 
 (
@@ -291,7 +291,7 @@ CREATE TABLE [dbo].[ExaminationResult](
 	[Text] [nvarchar](max) NOT NULL,
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
-	[MedicalProcedureCode] [nchar](12) NOT NULL,
+	[MedicalProcedureCode] [nchar](12) NULL,
 	[MedicalProcedureName] [nvarchar](310) NOT NULL,
  CONSTRAINT [PK_ExaminationResult] PRIMARY KEY CLUSTERED 
 (

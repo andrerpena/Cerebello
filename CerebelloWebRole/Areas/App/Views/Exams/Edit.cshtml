@@ -15,59 +15,65 @@
 <div class="examrequest-edit appointment-panel" data-val-id="examrequest-@examRequestId">
     @using (Html.BeginForm(null, null, FormMethod.Post))
     {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+        using (Html.BeginScope("ExamRequest"))
+        {
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.PatientId)
+            @Html.HiddenFor(model => model.Id)
     
-        var editPanel = Html.CreateEditPanel();
-        editPanel.AddField(
-            m => m.MedicalProcedureCode,
-            CerebelloWebRole.Code.Controls.EditPanelFieldSize.XLarge,
-            format: @<text>@(Html.LookupGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, string>(
-                m => m.MedicalProcedureCode,
-                m => m.MedicalProcedureName,
-                Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
-                pm => pm.Id,
-                pm => pm.Name,
-                pm => pm.Code
-            ))</text>);
+            var editPanel = Html.CreateEditPanel();
+            editPanel.AddField(
+                m => m.MedicalProcedureId,
+                CerebelloWebRole.Code.Controls.EditPanelFieldSize.XLarge,
+                format: @<text>
+                            @(Html.LookupGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, int?>(
+                                    m => m.MedicalProcedureId,
+                                    m => m.MedicalProcedureName,
+                                    Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
+                                    pm => pm.Id,
+                                    pm => pm.Name,
+                                    pm => pm.Code
+                            ))
+                            @Html.HiddenFor(m => m.MedicalProcedureCode)
+                        </text>);
         
-        editPanel.AddField(
-            m => m.Notes,
-            CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-            format: @<text>@Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
+            editPanel.AddField(
+                m => m.Notes,
+                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+                format: @<text>@Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
         
-        @editPanel.GetHtml()
+            @editPanel.GetHtml()
         
-        <div class="inline-link-bar">
-        </div>
+            <div class="inline-link-bar">
+            </div>
     
-        <div class="submit-bar">
-            <input type="submit" value="salvar solicitação de exame" />
-            <span class="separator">ou</span>
-            <a href="#" class="cancel">cancelar</a>
-        </div>
-    }
+            <div class="submit-bar">
+                <input type="submit" value="salvar solicitação de exame" />
+                <span class="separator">ou</span>
+                <a href="#" class="cancel">cancelar</a>
+            </div>
+        }
 
-    <script type="text/javascript">
-        (function() {
-            var $container = $("div[data-val-id='examrequest-@examRequestId']");
-            $('form', $container).ajaxForm({
-                success: function (result) {
-                    $container.replaceWith(result);
-                }
-            });
-            $('a.cancel', $container).click(function(e) {
-                e.preventDefault();
-                @if (Model.Id != null)
-                {
-                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
-                }
-                else
-                {
-                    @:$container.remove();
-                }
-            });
-        })();
-    </script>
+        <script type="text/javascript">
+            (function() {
+                var $container = $("div[data-val-id='examrequest-@examRequestId']");
+                $('form', $container).ajaxForm({
+                    success: function (result) {
+                        $container.replaceWith(result);
+                    }
+                });
+                $('a.cancel', $container).click(function(e) {
+                    e.preventDefault();
+                    @if (Model.Id != null)
+                    {
+                        @:$.ajax({url: "@(Url.Action("Details", new { id = Model.Id }))", success: function(result) { $container.replaceWith(result); }});   
+                    }
+                    else
+                    {
+                        @:$container.remove();
+                    }
+                });
+            })();
+        </script>
+    }
 </div>

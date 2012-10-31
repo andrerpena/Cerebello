@@ -20,7 +20,7 @@
 
 @using (Html.BeginCollectionItem("ReceiptMedicines"))
 {
-    @Html.HiddenFor(model => model.Id);                                  
+    @Html.HiddenFor(model => model.Id);
     <div class="edit-list-item-wrapper">
         @editPanel.GetHtml()
     </div>

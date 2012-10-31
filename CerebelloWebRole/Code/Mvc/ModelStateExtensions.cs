@@ -4,11 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Web.Mvc;
-using CerebelloWebRole.Code;
 
-namespace CerebelloWebRole.Code.Mvc
+namespace CerebelloWebRole.Code
 {
     public static class ModelStateExtensions
     {

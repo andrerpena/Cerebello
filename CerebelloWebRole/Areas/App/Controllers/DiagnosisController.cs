@@ -29,9 +29,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(DiagnosisViewModel viewModel)
+        public ActionResult Create(DiagnosisViewModel[] diagnosis)
         {
-            return this.Edit(viewModel);
+            return this.Edit(diagnosis);
         }
 
         public ActionResult Details(int id)
@@ -65,13 +65,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="formModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(DiagnosisViewModel formModel)
+        public ActionResult Edit(DiagnosisViewModel[] diagnosis)
         {
+            var formModel = diagnosis[0];
+
             if (string.IsNullOrEmpty(formModel.Text) && string.IsNullOrEmpty(formModel.Cid10Code))
                 this.ModelState.AddModelError("", "É necessário preencher um diagnóstico CID-10 ou as notas");
 
             // we cannot trust that the autocomplete has removed incorrect
-            // value from the client. 
+            // value from the client.
             if (string.IsNullOrEmpty(formModel.Cid10Code))
             {
                 // it's necessary to remove this value from the ModelState to
@@ -83,29 +85,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (this.ModelState.IsValid)
             {
-                Diagnosis diagnosis = null;
+                Diagnosis dbObject = null;
                 if (formModel.Id == null)
                 {
-                    diagnosis = new Diagnosis()
+                    dbObject = new Diagnosis()
                     {
                         CreatedOn = this.GetUtcNow(),
                         PatientId = formModel.PatientId.Value
                     };
-                    this.db.Diagnoses.AddObject(diagnosis);
+                    this.db.Diagnoses.AddObject(dbObject);
                 }
                 else
-                    diagnosis = this.db.Diagnoses.First(a => a.Id == formModel.Id);
+                    dbObject = this.db.Diagnoses.First(a => a.Id == formModel.Id);
 
-                diagnosis.Observations = formModel.Text;
-                diagnosis.Cid10Code = formModel.Cid10Code;
-                diagnosis.Cid10Name = formModel.Cid10Name;
+                dbObject.Observations = formModel.Text;
+                dbObject.Cid10Code = formModel.Cid10Code;
+                dbObject.Cid10Name = formModel.Cid10Name;
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return View("details", GetViewModel(diagnosis));
+                return View("Details", GetViewModel(dbObject));
             }
 
-            return View("edit", formModel);
+            return View("Edit", formModel);
         }
 
         /// <summary>

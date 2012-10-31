@@ -10,36 +10,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ExamResultsController : DoctorController
     {
-        //
-        // GET: /App/Exams/
-
-        public ActionResult Index()
+        private static ExaminationResultViewModel GetViewModel(ExaminationResult examResult)
         {
-            return View();
-        }
-
-        private ExaminationResultViewModel GetViewModel(ExaminationResult examResult)
-        {
-            return new ExaminationResultViewModel()
-            {
-                Id = examResult.Id,
-                PatientId = examResult.PatientId,
-                Text = examResult.Text,
-                MedicalProcedureCode = examResult.MedicalProcedureCode,
-                MedicalProcedureName = examResult.MedicalProcedureName,
-            };
+            return new ExaminationResultViewModel
+                       {
+                           Id = examResult.Id,
+                           PatientId = examResult.PatientId,
+                           Text = examResult.Text,
+                           MedicalProcedureCode = examResult.MedicalProcedureCode,
+                           MedicalProcedureName = examResult.MedicalProcedureName,
+                       };
         }
 
         public ActionResult Details(int id)
         {
             var practiceId = this.DbUser.PracticeId;
 
-            var examResult = db.ExaminationResults
+            var examResult = this.db.ExaminationResults
                 .Where(r => r.Id == id)
-                .Where(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
-                .First();
+                .First(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId);
 
-            return this.View(this.GetViewModel(examResult));
+            return this.View(GetViewModel(examResult));
         }
 
         [HttpGet]
@@ -49,15 +40,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(ExaminationResultViewModel viewModel)
+        public ActionResult Create(ExaminationResultViewModel[] examResult)
         {
-            return this.Edit(viewModel);
+            return this.Edit(examResult);
         }
 
         [HttpGet]
         public ActionResult Edit(int? id, int? patientId)
         {
-            ExaminationResultViewModel viewModel = null;
+            ExaminationResultViewModel viewModel;
 
             if (id != null)
             {
@@ -65,80 +56,96 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 var modelObj = this.db.ExaminationResults
                     .Where(r => r.Id == id)
-                    .Where(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
-                    .FirstOrDefault();
+                    .FirstOrDefault(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId);
 
                 // todo: if modelObj is null, we must tell the user that this object does not exist.
 
-                viewModel = this.GetViewModel(modelObj);
+                viewModel = GetViewModel(modelObj);
             }
             else
             {
-                viewModel = new ExaminationResultViewModel()
-                {
-                    Id = id,
-                    PatientId = patientId
-                };
+                viewModel = new ExaminationResultViewModel
+                                {
+                                    Id = null,
+                                    PatientId = patientId
+                                };
             }
 
             return View("Edit", viewModel);
         }
 
         [HttpPost]
-        public ActionResult Edit(ExaminationResultViewModel formModel)
+        public ActionResult Edit(ExaminationResultViewModel[] examResult)
         {
-            ExaminationResult modelObj = null;
+            ExaminationResult dbObject;
+
+            var formModel = examResult[0];
 
             if (formModel.Id == null)
             {
-                modelObj = new ExaminationResult
+                dbObject = new ExaminationResult
                 {
                     CreatedOn = this.GetUtcNow(),
                     PatientId = formModel.PatientId.Value,
                 };
 
-                this.db.ExaminationResults.AddObject(modelObj);
+                this.db.ExaminationResults.AddObject(dbObject);
             }
             else
             {
                 var practiceId = this.DbUser.PracticeId;
 
-                modelObj = this.db.ExaminationResults
+                dbObject = this.db.ExaminationResults
                     .Where(r => r.Id == formModel.Id)
                     .FirstOrDefault(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId);
 
                 // If modelObj is null, we must tell the user that this object does not exist.
-                if (modelObj == null)
+                if (dbObject == null)
                 {
                     return View("NotFound", formModel);
                 }
 
                 // Security issue... must check current user practice against the practice of the edited objects.
                 var currentUser = this.DbUser;
-                if (currentUser.PracticeId != modelObj.Patient.Doctor.Users.FirstOrDefault().PracticeId)
+                if (currentUser.PracticeId != dbObject.Patient.Doctor.Users.First().PracticeId)
                 {
                     return View("NotFound", formModel);
                 }
             }
 
             if (!string.IsNullOrEmpty(formModel.Text))
-                modelObj.Text = formModel.Text;
+                dbObject.Text = formModel.Text;
 
             // Only sets the MedicalProcedureId when MedicalProcedureText is not null.
-            if (!string.IsNullOrEmpty(formModel.MedicalProcedureName))
+            if (formModel.MedicalProcedureId != null || !string.IsNullOrEmpty(formModel.MedicalProcedureName))
             {
-                modelObj.MedicalProcedureCode = formModel.MedicalProcedureCode;
-                modelObj.MedicalProcedureName = formModel.MedicalProcedureName;
+                var mp = this.db.SYS_MedicalProcedure.SingleOrDefault(mp1 => mp1.Id == formModel.MedicalProcedureId && mp1.Name == formModel.MedicalProcedureName)
+                         ?? this.db.SYS_MedicalProcedure.FirstOrDefault(mp1 => mp1.Name == formModel.MedicalProcedureName);
+
+                if (mp != null)
+                {
+                    // This means that the user selected something that is in the SYS_MedicalProcedure.
+                    dbObject.MedicalProcedureCode = mp.Code;
+                    dbObject.MedicalProcedureName = mp.Name;
+                }
+                else
+                {
+                    // This means that user edited the procedure name to something that is not in the SYS_MedicalProcedure.
+                    dbObject.MedicalProcedureCode = null;
+                    dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
+
+                    this.ModelState.Remove(() => formModel.MedicalProcedureId);
+                }
             }
 
             if (this.ModelState.IsValid)
             {
                 db.SaveChanges();
 
-                return View("details", this.GetViewModel(modelObj));
+                return View("Details", GetViewModel(dbObject));
             }
 
-            return View("edit", formModel);
+            return View("Edit", formModel);
         }
 
         /// <summary>
@@ -164,10 +171,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var practiceId = this.DbUser.PracticeId;
 
-                var modelObj = db.ExaminationResults
+                var modelObj = this.db.ExaminationResults
                     .Where(r => r.Id == id)
-                    .Where(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId)
-                    .FirstOrDefault();
+                    .FirstOrDefault(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId);
 
                 // If exam does not exist, return message telling this.
                 if (modelObj == null)

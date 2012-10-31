@@ -301,6 +301,18 @@ namespace CerebelloWebRole.Code.Extensions
         }
 
         /// <summary>
+        /// Begins a scope by inserting either a previously used .Index hidden field value for it or a new one.
+        /// </summary>
+        /// <param name="collectionName">The name of the scope from the Model that owns this item.</param>
+        public static IDisposable BeginScope<TModel>(this HtmlHelper<TModel> html, string collectionName)
+        {
+            if (String.IsNullOrEmpty(collectionName))
+                throw new ArgumentException("collectionName is null or empty.", "collectionName");
+
+            return new ItemScope<TModel>(html, collectionName);
+        }
+
+        /// <summary>
         /// Begins a collection item by inserting either a previously used .Index hidden field value for it or a new one.
         /// </summary>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
@@ -360,9 +372,9 @@ namespace CerebelloWebRole.Code.Extensions
             {
                 this.WriteBegin(html);
 
-                string collectionIndexFieldName = String.Format("{0}.Index", collectionName);
-                string itemIndex = GetCollectionItemIndex(collectionIndexFieldName, html.ViewContext.HttpContext);
-                string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
+                var collectionIndexFieldName = String.Format("{0}.Index", collectionName);
+                var itemIndex = GetCollectionItemIndex(collectionIndexFieldName, html.ViewContext.HttpContext);
+                var collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
 
                 var indexField = new TagBuilder("input");
                 indexField.MergeAttributes(new Dictionary<string, string>() {
@@ -372,10 +384,10 @@ namespace CerebelloWebRole.Code.Extensions
                     { "autocomplete", "off" }
                 });
 
-                html.ViewData.Add(new KeyValuePair<string, object>("collectionIndex", itemIndex));
+                html.ViewData.Add("collectionIndex", itemIndex);
                 html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
 
-                _previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
+                this._previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
                 html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
 
                 this._html = html;
@@ -388,6 +400,19 @@ namespace CerebelloWebRole.Code.Extensions
             {
                 this._html.ViewData.TemplateInfo.HtmlFieldPrefix = this._previousPrefix;
                 this.WriteEnd(this._html);
+            }
+        }
+
+        public class ItemScope<TModel> : CollectionItemScopeBase<TModel>
+        {
+            public ItemScope(HtmlHelper<TModel> html, string collectionName) : base(html, collectionName) { }
+
+            public override void WriteBegin(HtmlHelper<TModel> html)
+            {
+            }
+
+            public override void WriteEnd(HtmlHelper<TModel> html)
+            {
             }
         }
 

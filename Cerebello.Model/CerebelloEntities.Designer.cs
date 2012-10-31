@@ -5140,15 +5140,13 @@ namespace Cerebello.Model
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
-        /// <param name="medicalProcedureCode">Initial value of the MedicalProcedureCode property.</param>
         /// <param name="medicalProcedureName">Initial value of the MedicalProcedureName property.</param>
-        public static ExaminationRequest CreateExaminationRequest(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureCode, global::System.String medicalProcedureName)
+        public static ExaminationRequest CreateExaminationRequest(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureName)
         {
             ExaminationRequest examinationRequest = new ExaminationRequest();
             examinationRequest.Id = id;
             examinationRequest.PatientId = patientId;
             examinationRequest.CreatedOn = createdOn;
-            examinationRequest.MedicalProcedureCode = medicalProcedureCode;
             examinationRequest.MedicalProcedureName = medicalProcedureName;
             return examinationRequest;
         }
@@ -5259,7 +5257,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String MedicalProcedureCode
         {
@@ -5271,7 +5269,7 @@ namespace Cerebello.Model
             {
                 OnMedicalProcedureCodeChanging(value);
                 ReportPropertyChanging("MedicalProcedureCode");
-                _MedicalProcedureCode = StructuralObject.SetValidValue(value, false, "MedicalProcedureCode");
+                _MedicalProcedureCode = StructuralObject.SetValidValue(value, true, "MedicalProcedureCode");
                 ReportPropertyChanged("MedicalProcedureCode");
                 OnMedicalProcedureCodeChanged();
             }
@@ -5367,16 +5365,14 @@ namespace Cerebello.Model
         /// <param name="text">Initial value of the Text property.</param>
         /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
-        /// <param name="medicalProcedureCode">Initial value of the MedicalProcedureCode property.</param>
         /// <param name="medicalProcedureName">Initial value of the MedicalProcedureName property.</param>
-        public static ExaminationResult CreateExaminationResult(global::System.Int32 id, global::System.String text, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureCode, global::System.String medicalProcedureName)
+        public static ExaminationResult CreateExaminationResult(global::System.Int32 id, global::System.String text, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureName)
         {
             ExaminationResult examinationResult = new ExaminationResult();
             examinationResult.Id = id;
             examinationResult.Text = text;
             examinationResult.PatientId = patientId;
             examinationResult.CreatedOn = createdOn;
-            examinationResult.MedicalProcedureCode = medicalProcedureCode;
             examinationResult.MedicalProcedureName = medicalProcedureName;
             return examinationResult;
         }
@@ -5487,7 +5483,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String MedicalProcedureCode
         {
@@ -5499,7 +5495,7 @@ namespace Cerebello.Model
             {
                 OnMedicalProcedureCodeChanging(value);
                 ReportPropertyChanging("MedicalProcedureCode");
-                _MedicalProcedureCode = StructuralObject.SetValidValue(value, false, "MedicalProcedureCode");
+                _MedicalProcedureCode = StructuralObject.SetValidValue(value, true, "MedicalProcedureCode");
                 ReportPropertyChanged("MedicalProcedureCode");
                 OnMedicalProcedureCodeChanged();
             }

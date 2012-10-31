@@ -15,51 +15,54 @@
 <div class="diagnosis-edit appointment-panel" data-val-id="diagnosis-@examRequestId">
     @using (Html.BeginForm(null, null, FormMethod.Post))
     {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
-    
-        var editPanel = Html.CreateEditPanel();
-        editPanel.AddField(
-            m => m.Cid10Code,
-            format: @<text>@(Html.LookupGridFor<DiagnosisViewModel, CidAutocompleteGridModel, string>(m => m.Cid10Code, m => m.Cid10Name, Url.Action("AutocompleteDiagnoses"), gm => gm.Cid10Code, gm => gm.Cid10Name, gm => gm.Cid10Code ))</text>);
-        
-        editPanel.AddField(
-            m => m.Text,
-            CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-            format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
-        
-        @editPanel.GetHtml()
-        
-        <div class="inline-link-bar">
-        </div>
-    
-        <div class="submit-bar">
-            <input type="submit" value="salvar diagnóstico" />
-            <span class="separator">ou</span>
-            <a href="#" class="cancel">cancelar</a>
-        </div>
-    }
+        using (Html.BeginScope("Diagnosis"))
+        {
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.PatientId)
+            @Html.HiddenFor(model => model.Id)
 
-    <script type="text/javascript">
-        (function() {
-            var $container = $("div[data-val-id='diagnosis-@examRequestId']");
-            $('form', $container).ajaxForm({
-                success: function (result) {
-                    $container.replaceWith(result);
-                }
-            });
-            $('a.cancel', $container).click(function(e) {
-                e.preventDefault();
-                @if (Model.Id != null)
-                {
-                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
-                }
-                else
-                {
-                    @:$container.remove();
-                }
-            });
-        })();
-    </script>
+            var editPanel = Html.CreateEditPanel();
+            editPanel.AddField(
+                m => m.Cid10Code,
+                format: @<text>@(Html.LookupGridFor<DiagnosisViewModel, CidAutocompleteGridModel, string>(m => m.Cid10Code, m => m.Cid10Name, Url.Action("AutocompleteDiagnoses"), gm => gm.Cid10Code, gm => gm.Cid10Name, gm => gm.Cid10Code))</text>);
+
+            editPanel.AddField(
+                m => m.Text,
+                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+                format: @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+
+            @editPanel.GetHtml()
+
+            <div class="inline-link-bar">
+            </div>
+
+            <div class="submit-bar">
+                <input type="submit" value="salvar diagnóstico" />
+                <span class="separator">ou</span>
+                <a href="#" class="cancel">cancelar</a>
+            </div>
+        }
+
+        <script type="text/javascript">
+            (function() {
+                var $container = $("div[data-val-id='diagnosis-@examRequestId']");
+                $('form', $container).ajaxForm({
+                    success: function(result) {
+                        $container.replaceWith(result);
+                    }
+                });
+                $('a.cancel', $container).click(function(e) {
+                    e.preventDefault();
+                    @if (Model.Id != null)
+                    {
+                        @:$.ajax({url: "@Url.Action("details", new {id = Model.Id})", success: function(result) { $container.replaceWith(result); }});   
+                    }
+                    else
+                    {
+                        @:$container.remove();
+                    }
+                });
+            })();
+        </script>
+    }
 </div>

@@ -414,7 +414,7 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar(max)" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="MedicalProcedureCode" Type="nchar" Nullable="false" MaxLength="12" />
+          <Property Name="MedicalProcedureCode" Type="nchar" MaxLength="12" />
           <Property Name="MedicalProcedureName" Type="nvarchar" Nullable="false" MaxLength="310" />
         </EntityType>
         <EntityType Name="ExaminationResult">
@@ -425,7 +425,7 @@
           <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="MedicalProcedureCode" Type="nchar" Nullable="false" MaxLength="12" />
+          <Property Name="MedicalProcedureCode" Type="nchar" MaxLength="12" />
           <Property Name="MedicalProcedureName" Type="nvarchar" Nullable="false" MaxLength="310" />
         </EntityType>
         <EntityType Name="GLB_Token">
@@ -2302,7 +2302,7 @@
           <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_ExaminationRequest_Patient" FromRole="ExaminationRequest" ToRole="Patient" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
-          <Property Type="String" Name="MedicalProcedureCode" Nullable="false" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="MedicalProcedureCode" MaxLength="12" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="MedicalProcedureName" Nullable="false" MaxLength="310" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_ExaminationRequest_Patient">
@@ -2326,7 +2326,7 @@
           <Property Type="Int32" Name="PatientId" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_ExaminationResult_Patient" FromRole="ExaminationResult" ToRole="Patient" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
-          <Property Type="String" Name="MedicalProcedureCode" Nullable="false" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="MedicalProcedureCode" MaxLength="12" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="MedicalProcedureName" Nullable="false" MaxLength="310" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_ExaminationResult_Patient">

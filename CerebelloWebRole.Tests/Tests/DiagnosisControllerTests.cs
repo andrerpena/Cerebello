@@ -40,14 +40,14 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
             var patientId = this.db.Patients.First().Id;
 
-            var formModel = new DiagnosisViewModel()
-            {
-                PatientId = patientId,
-            };
+            var formModel = new DiagnosisViewModel
+                                {
+                                    PatientId = patientId,
+                                };
 
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
-            controller.Edit(formModel);
+            controller.Edit(new[] { formModel });
 
             Assert.IsFalse(controller.ModelState.IsValid);
         }
@@ -60,13 +60,13 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
             var patientId = this.db.Patients.First().Id;
 
-            var formModel = new DiagnosisViewModel()
-            {
-                PatientId = patientId,
-                Cid10Code = "CodeX",
-                Cid10Name = "XDesease",
-                Text = "Notes"
-            };
+            var formModel = new DiagnosisViewModel
+                                {
+                                    PatientId = patientId,
+                                    Cid10Code = "CodeX",
+                                    Cid10Name = "XDesease",
+                                    Text = "Notes"
+                                };
 
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
@@ -74,7 +74,7 @@ namespace CerebelloWebRole.Tests.Tests
             var referenceTime = DateTime.UtcNow;
             controller.UtcNowGetter = () => referenceTime;
 
-            controller.Edit(formModel);
+            controller.Edit(new[] { formModel });
 
             Assert.IsTrue(controller.ModelState.IsValid);
 
@@ -95,17 +95,17 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
             var patientId = this.db.Patients.First().Id;
 
-            var formModel = new DiagnosisViewModel()
-            {
-                PatientId = patientId,
-                Text = "This is my diagnosis",
-                Cid10Code = "Q878",
-                Cid10Name = "Doença X"
-            };
+            var formModel = new DiagnosisViewModel
+                                {
+                                    PatientId = patientId,
+                                    Text = "This is my diagnosis",
+                                    Cid10Code = "Q878",
+                                    Cid10Name = "Doença X"
+                                };
 
             var mr = new MockRepository(true);
             var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
-            controller.Create(formModel);
+            controller.Create(new[] { formModel });
 
             Assert.IsTrue(controller.ModelState.IsValid);
 
@@ -114,7 +114,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // tries to delete the anamnese
             var result = controller.Delete(newlyCreatedDiagnosis.Id);
-            JsonDeleteMessage deleteMessage = (JsonDeleteMessage)result.Data;
+            var deleteMessage = (JsonDeleteMessage)result.Data;
 
             Assert.AreEqual(true, deleteMessage.success);
             Assert.AreEqual(0, this.db.Anamnese.Count());
@@ -128,7 +128,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // tries to delete the anamnese
             var result = controller.Delete(999);
-            JsonDeleteMessage deleteMessage = (JsonDeleteMessage)result.Data;
+            var deleteMessage = (JsonDeleteMessage)result.Data;
 
             Assert.AreEqual(false, deleteMessage.success);
             Assert.IsNotNull(deleteMessage.text);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
@@ -47,9 +48,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -62,11 +63,11 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     Notes = "Any text",
-                    MedicalProcedureCode = medicalProc.Code,
-                    MedicalProcedureName  = medicalProc.Name,
+                    MedicalProcedureId = medicalProc.Id,
+                    MedicalProcedureName = "Hemograma com contagem de plaquetas ou frações (eritrograma, leucograma, plaquetas)",
                 };
 
-                actionResult = controller.Create(viewModel);
+                actionResult = controller.Create(new[] { viewModel });
             }
 
             // Verifying the ActionResult.
@@ -77,6 +78,16 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the database.
             Assert.IsTrue(this.db.ExaminationRequests.Any(x => x.PatientId == patient.Id), "Database record was not saved.");
+
+            // Verifying the database.
+            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            {
+                var obj = db2.ExaminationRequests.FirstOrDefault(x => x.PatientId == patient.Id);
+                Assert.IsNotNull(obj, "Database record was not saved.");
+                Assert.AreEqual("Any text", obj.Text);
+                Assert.AreEqual("4.03.04.36-1", obj.MedicalProcedureCode);
+                Assert.AreEqual("Hemograma com contagem de plaquetas ou frações (eritrograma, leucograma, plaquetas)", obj.MedicalProcedureName);
+            }
         }
 
         /// <summary>
@@ -95,11 +106,11 @@ namespace CerebelloWebRole.Tests.Tests
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -116,7 +127,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
 
-                actionResult = controller.Create(viewModel);
+                actionResult = controller.Create(new[] { viewModel });
             }
 
             // Verifying the ActionResult, and the DB.
@@ -125,7 +136,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsNotNull(actionResult, "The result of the controller method is null.");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual("edit", viewResult.ViewName);
+            Assert.AreEqual("edit", viewResult.ViewName, ignoreCase: true);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should not be valid.");
             Assert.AreEqual(
                 1,
@@ -157,7 +168,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.FirstOrDefault().Practice, localNow);
+                Debug.Assert(doctor != null, "doctor must not be null");
+                utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.First().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
@@ -175,7 +187,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive(string.Format("Test initialization has failed. {0}", ex.Message));
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -189,13 +201,13 @@ namespace CerebelloWebRole.Tests.Tests
                     Id = examRequest.Id,
                     PatientId = patient.Id,
                     Notes = "Any text",
-                    MedicalProcedureCode = medicalProc.Code, // editing value: old = "4.03.04.36-1"; new = "4.01.03.23-4"
-                    MedicalProcedureName = medicalProc.Name,
+                    MedicalProcedureId = medicalProc.Id, // editing value: old = "4.03.04.36-1"; new = "4.01.03.23-4"
+                    MedicalProcedureName = "Eletrencefalograma em vigília, e sono espontâneo ou induzido",
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
 
-                actionResult = controller.Edit(viewModel);
+                actionResult = controller.Edit(new[] { viewModel });
             }
 
             // Verifying the ActionResult.
@@ -207,10 +219,12 @@ namespace CerebelloWebRole.Tests.Tests
             // Verifying the database.
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
-                var obj = db2.ExaminationRequests.Where(x => x.PatientId == patient.Id).FirstOrDefault();
+                var obj = db2.ExaminationRequests.FirstOrDefault(x => x.PatientId == patient.Id);
                 Assert.IsNotNull(obj, "Database record was not saved.");
                 Assert.AreEqual("Any text", obj.Text);
                 Assert.AreEqual(utcNow, obj.CreatedOn);
+                Assert.AreEqual("4.01.03.23-4", obj.MedicalProcedureCode);
+                Assert.AreEqual("Eletrencefalograma em vigília, e sono espontâneo ou induzido", obj.MedicalProcedureName);
             }
         }
 
@@ -224,8 +238,7 @@ namespace CerebelloWebRole.Tests.Tests
             ExamsController controller;
             Patient patient;
             ExaminationRequest examRequest;
-            bool isDbChangesSaved = false;
-            DateTime utcNow;
+            var isDbChangesSaved = false;
             var localNow = new DateTime(2012, 08, 16);
             try
             {
@@ -233,28 +246,26 @@ namespace CerebelloWebRole.Tests.Tests
                 patient = Firestarter.CreateFakePatients(doctor, this.db).First();
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.FirstOrDefault().Practice, localNow);
+                Debug.Assert(doctor != null, "doctor must not be null");
+                var utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.First().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
-                var medicalProc = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
                 examRequest = new ExaminationRequest
                 {
                     CreatedOn = utcNow,
                     PatientId = patient.Id,
                     Text = "Old text",
-                    MedicalProcedureCode = medicalProc.Code,
-                    MedicalProcedureName = medicalProc.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
 
                 // this must come last... after database preparation.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -272,7 +283,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
 
-                actionResult = controller.Edit(viewModel);
+                actionResult = controller.Edit(new[] { viewModel });
             }
 
             // Verifying the ActionResult, and the DB.
@@ -300,38 +311,36 @@ namespace CerebelloWebRole.Tests.Tests
         public void Edit_3_EditExamFromAnotherPractice()
         {
             ExamsController controller;
-            Patient patientDraMarta;
-            ExaminationRequest examRequest;
             ExaminationRequestViewModel viewModel;
-            bool isDbChangesSaved = false;
-            DateTime utcNow;
+            var isDbChangesSaved = false;
             var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var dramarta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
-                patientDraMarta = Firestarter.CreateFakePatients(dramarta, this.db).First();
+                var patientDraMarta = Firestarter.CreateFakePatients(dramarta, this.db).First();
 
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                Debug.Assert(drandre != null, "drandre must not be null");
+                var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
-                examRequest = new ExaminationRequest
-                {
-                    CreatedOn = utcNow,
-                    PatientId = patientDraMarta.Id,
-                    Text = "Old text",
-                    MedicalProcedureCode = medicalProc0.Code,
-                    MedicalProcedureName = medicalProc0.Name,
-                };
+                var examRequest = new ExaminationRequest
+                                      {
+                                          CreatedOn = utcNow,
+                                          PatientId = patientDraMarta.Id,
+                                          Text = "Old text",
+                                          MedicalProcedureCode = medicalProc0.Code,
+                                          MedicalProcedureName = medicalProc0.Name,
+                                      };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
 
                 // This must come last... after database preparation.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
 
                 // Define André as the logged user, he cannot edit Marta's patients.
                 mr.SetCurrentUser_Andre_CorrectPassword();
@@ -349,16 +358,16 @@ namespace CerebelloWebRole.Tests.Tests
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
             // Editing an examination request that does not belong to the current user's practice.
             // This is not allowed and must throw an exception.
             // note: this is not a validation error, this is a malicious attack...
-            ActionResult actionResult = controller.Edit(viewModel);
+            ActionResult actionResult = controller.Edit(new[] { viewModel });
 
             // Verifying the ActionResult, and the DB.
             // - The result must be a ViewResult, with the name "Edit".
@@ -367,7 +376,6 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual("NotFound", viewResult.ViewName);
-            Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
 
             // Verifying the database: cannot save the changes.
             Assert.IsFalse(isDbChangesSaved, "Database changes were saved, but they should not.");
@@ -381,37 +389,35 @@ namespace CerebelloWebRole.Tests.Tests
         public void Edit_4_EditExamThatDoesNotExist()
         {
             ExamsController controller;
-            Patient patient;
-            ExaminationRequest examRequest;
             ExaminationRequestViewModel viewModel;
-            bool isDbChangesSaved = false;
-            DateTime utcNow;
+            var isDbChangesSaved = false;
             var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
-                patient = Firestarter.CreateFakePatients(drandre, this.db).First();
+                var patient = Firestarter.CreateFakePatients(drandre, this.db).First();
 
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                Debug.Assert(drandre != null, "drandre must not be null");
+                var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
-                examRequest = new ExaminationRequest
-                {
-                    CreatedOn = utcNow,
-                    PatientId = patient.Id,
-                    Text = "Old text",
-                    MedicalProcedureCode = medicalProc0.Code,
-                    MedicalProcedureName = medicalProc0.Name,
-                };
+                var examRequest = new ExaminationRequest
+                                      {
+                                          CreatedOn = utcNow,
+                                          PatientId = patient.Id,
+                                          Text = "Old text",
+                                          MedicalProcedureCode = medicalProc0.Code,
+                                          MedicalProcedureName = medicalProc0.Name,
+                                      };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
 
                 // This must come last... after database preparation.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
 
                 // Define André as the logged user.
                 mr.SetCurrentUser_Andre_CorrectPassword();
@@ -429,16 +435,16 @@ namespace CerebelloWebRole.Tests.Tests
 
                 Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
             // Editing an examination request that does not belong to the current user's practice.
             // This is not allowed and must throw an exception.
             // note: this is not a validation error, this is a malicious attack...
-            ActionResult actionResult = controller.Edit(viewModel);
+            ActionResult actionResult = controller.Edit(new[] { viewModel });
 
             // Verifying the ActionResult, and the DB.
             // - The result must be a ViewResult, with the name "Edit".
@@ -447,7 +453,6 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
             var viewResult = (ViewResult)actionResult;
             Assert.AreEqual("NotFound", viewResult.ViewName);
-            Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
 
             // Verifying the database: cannot save the changes.
             Assert.IsFalse(isDbChangesSaved, "Database changes were saved, but they should not.");
@@ -465,8 +470,7 @@ namespace CerebelloWebRole.Tests.Tests
             ExamsController controller;
             Patient patient;
             ExaminationRequest examRequest;
-            bool isDbChangesSaved = false;
-            DateTime utcNow;
+            var isDbChangesSaved = false;
             var localNow = new DateTime(2012, 08, 16);
             try
             {
@@ -477,7 +481,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                     var mr = new MockRepository(true);
                     controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                    utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                    Debug.Assert(drandre != null, "drandre must not be null");
+                    var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
                     controller.UtcNowGetter = () => utcNow;
 
                     // saving the object that will be edited
@@ -489,21 +494,21 @@ namespace CerebelloWebRole.Tests.Tests
                     examRequest.PatientId = patient.Id;
                     examRequest.Text = "Old text";
                     examRequest.MedicalProcedureCode = medicalProc1.Code;
-                    examRequest.MedicalProcedureName= medicalProc1.Name;
+                    examRequest.MedicalProcedureName = medicalProc1.Name;
 
                     db2.ExaminationRequests.AddObject(examRequest);
                     db2.SaveChanges();
 
                     // This must come last... after database preparation.
-                    this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                    this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
 
                     // Define André as the logged user, he cannot edit Marta's patients.
                     mr.SetCurrentUser_Andre_CorrectPassword();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -524,7 +529,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Verifying the database.
             using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
             {
-                var obj = db2.ExaminationRequests.Where(x => x.PatientId == patient.Id).FirstOrDefault();
+                var obj = db2.ExaminationRequests.FirstOrDefault(x => x.PatientId == patient.Id);
                 Assert.IsNull(obj, "Database record was not deleted.");
             }
         }
@@ -548,15 +553,15 @@ namespace CerebelloWebRole.Tests.Tests
                     controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
 
                     // This must come after database preparation.
-                    this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                    this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
 
                     // Define André as the logged user, he cannot edit Marta's patients.
                     mr.SetCurrentUser_Andre_CorrectPassword();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -586,20 +591,19 @@ namespace CerebelloWebRole.Tests.Tests
         public void Delete_3_ExamFromAnotherPractice()
         {
             ExamsController controller;
-            Patient patientDraMarta;
             ExaminationRequest examRequest;
-            bool isDbChangesSaved = false;
-            DateTime utcNow;
+            var isDbChangesSaved = false;
             var localNow = new DateTime(2012, 08, 16);
             try
             {
                 var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var dramarta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
-                patientDraMarta = Firestarter.CreateFakePatients(dramarta, this.db).First();
+                var patientDraMarta = Firestarter.CreateFakePatients(dramarta, this.db).First();
 
                 var mr = new MockRepository(true);
                 controller = Mvc3TestHelper.CreateControllerForTesting<ExamsController>(this.db, mr);
-                utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.FirstOrDefault().Practice, localNow);
+                Debug.Assert(drandre != null, "drandre must not be null");
+                var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
                 controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
@@ -610,20 +614,20 @@ namespace CerebelloWebRole.Tests.Tests
                     PatientId = patientDraMarta.Id,
                     Text = "Old text",
                     MedicalProcedureCode = medicalProc0.Code,
-                    MedicalProcedureName= medicalProc0.Name,
+                    MedicalProcedureName = medicalProc0.Name,
                 };
                 this.db.ExaminationRequests.AddObject(examRequest);
                 this.db.SaveChanges();
 
                 // This must come last... after database preparation.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChangesSaved = true; });
+                this.db.SavingChanges += (s, e) => { isDbChangesSaved = true; };
 
                 // Define André as the logged user, he cannot edit Marta's patients.
                 mr.SetCurrentUser_Andre_CorrectPassword();
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 

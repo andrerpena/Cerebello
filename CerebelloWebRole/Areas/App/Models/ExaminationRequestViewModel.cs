@@ -5,10 +5,6 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class ExaminationRequestViewModel
     {
-        public ExaminationRequestViewModel()
-        {
-        }
-
         /// <summary>
         /// Id of the examination request.
         /// </summary>
@@ -20,11 +16,11 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? PatientId { get; set; }
 
         /// <summary>
-        /// Code of the medical procedure.
+        /// Id of the medical procedure.
         /// </summary>
-        [Display(Name = "Código do procedimento")]
+        [Display(Name = "Procedimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string MedicalProcedureCode { get; set; }
+        public int? MedicalProcedureId { get; set; }
 
         /// <summary>
         /// Name of the medical procedure.
@@ -32,6 +28,12 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Procedimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalProcedureName { get; set; }
+
+        /// <summary>
+        /// Code of the medical procedure.
+        /// </summary>
+        [Display(Name = "Código do procedimento")]
+        public string MedicalProcedureCode { get; set; }
 
         /// <summary>
         /// Notes for the examination request.

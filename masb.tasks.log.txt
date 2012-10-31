@@ -9,7 +9,14 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
 2012-10-## ##:00-##:## (#°##") ##   ######
 
--- ter 06°30" (##°##")
+-- qua ##°##" (##°##")
+2012-10-30 00:00-01:00 (1°00") 10   #125: testes para a criação de requisições de exame: verificar se o código foi gravado.
+
+-- ter ##°##" (##°##")
+2012-10-30 21:30-24:00 (2°30")  9   #146: Alguns lookups na tela de paciente não funcionam
+                                    #125: testes para a criação de requisições de exame: verificar se o código foi gravado.
+2012-10-30 17:00-19:00 (2°00") 10   #146: Alguns lookups na tela de paciente não funcionam
+2012-10-30 15:45-16:30 (0°45") 10   #125: testes e refatoração. Corrigi problema de "cannot open database" nos testes.
 2012-10-30 14:00-15:45 (1°45") 10   #125: testes e refatoração. Corrigi problema de "cannot open database" nos testes.
 2012-10-30 12:30-13:00 (0°30") 10   #125: testes.
 
