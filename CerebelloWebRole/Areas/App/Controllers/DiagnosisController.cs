@@ -91,7 +91,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     dbObject = new Diagnosis()
                     {
                         CreatedOn = this.GetUtcNow(),
-                        PatientId = formModel.PatientId.Value
+                        PatientId = formModel.PatientId.Value,
+                        PracticeId = this.DbUser.PracticeId,
                     };
                     this.db.Diagnoses.AddObject(dbObject);
                 }

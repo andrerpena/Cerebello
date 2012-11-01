@@ -40,8 +40,8 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -93,9 +93,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
                 controller.UtcNowGetter = () => utcNow;
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -136,8 +136,8 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -196,9 +196,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
                 controller.UtcNowGetter = () => utcNow;
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -252,9 +252,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
                 controller.UtcNowGetter = () => utcNow;
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -296,8 +296,8 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.SetupDoctor(docAndre, this.db);
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -343,10 +343,8 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating test objects.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
-
-                // Associating DB event.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -392,10 +390,8 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating test objects.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
-
-                // Associating DB event.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
             }
             catch
             {
@@ -474,7 +470,9 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 controller.UtcNowGetter = () => utcNow;
 
@@ -495,9 +493,6 @@ namespace CerebelloWebRole.Tests.Tests
 
                 if (!controller.ModelState.IsValid)
                     throw new Exception("The given view-model must be valid for this test.");
-
-                // Events to know if database was changed or not.
-                this.db.SavingChanges += (s, e) => { isDbChanged = true; };
             }
             catch (Exception ex)
             {
@@ -579,7 +574,8 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 // Mocking 'Now' values.
                 controller.UtcNowGetter = () => utcNow;
@@ -601,9 +597,6 @@ namespace CerebelloWebRole.Tests.Tests
 
                 if (!controller.ModelState.IsValid)
                     throw new Exception("The given view-model must be valid for this test.");
-
-                // Events to know if database was changed or not.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch (Exception ex)
             {
@@ -692,7 +685,8 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 // Mocking 'Now' values.
                 controller.UtcNowGetter = () => utcNow;
@@ -714,9 +708,6 @@ namespace CerebelloWebRole.Tests.Tests
 
                 if (!controller.ModelState.IsValid)
                     throw new Exception("The given view-model must be valid for this test.");
-
-                // Events to know if database was changed or not.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch (Exception ex)
             {
@@ -797,7 +788,8 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 controller.UtcNowGetter = () => utcNow;
 
@@ -818,9 +810,6 @@ namespace CerebelloWebRole.Tests.Tests
 
                 if (!controller.ModelState.IsValid)
                     throw new Exception("The given view-model must be valid for this test.");
-
-                // Events to know if database was changed or not.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch (Exception ex)
             {
@@ -900,7 +889,8 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 controller.UtcNowGetter = () => utcNow;
 
@@ -912,9 +902,6 @@ namespace CerebelloWebRole.Tests.Tests
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
-
-                // Events to know if database was changed or not.
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbChanged = true; });
             }
             catch (Exception ex)
             {
@@ -963,14 +950,14 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
+                controller = mr.CreateController<ScheduleController>(
+                    callOnActionExecuting: true,
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
                 controller.UtcNowGetter = () => utcNow;
-
-                this.db.SavingChanges += (s, e) => { isDbChanged = true; };
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -1000,7 +987,13 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.SetupDoctor(andre, this.db);
 
                 var daysOff = DateTimeHelper.Range(new DateTime(2012, 09, 01), 30, d => d.AddDays(1.0))
-                    .Select(d => new CFG_DayOff { Date = d, DoctorId = andre.Id, Description = "Férias" })
+                    .Select(d => new CFG_DayOff
+                                     {
+                                         Date = d,
+                                         DoctorId = andre.Id,
+                                         Description = "Férias",
+                                         PracticeId = andre.PracticeId,
+                                     })
                     .ToArray();
 
                 foreach (var eachDayOff in daysOff)
@@ -1012,10 +1005,10 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "FindNextFreeTime");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr, callOnActionExecuting: true);
+                controller = mr.CreateController<ScheduleController>(
+                    callOnActionExecuting: true,
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbChanged = true; });
                 controller.UtcNowGetter = () => utcNow;
-
-                this.db.SavingChanges += (s, e) => { isDbChanged = true; };
             }
             catch (Exception ex)
             {
@@ -1064,7 +1057,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = referenceTime,
                     PatientId = patient.Id,
                     Start = referenceTime,
-                    End = referenceTime + TimeSpan.FromMinutes(30)
+                    End = referenceTime + TimeSpan.FromMinutes(30),
+                    PracticeId = docAndre.PracticeId,
                 };
 
                 this.db.Appointments.AddObject(appointment);
@@ -1073,7 +1067,7 @@ namespace CerebelloWebRole.Tests.Tests
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
-                controller = Mvc3TestHelper.CreateControllerForTesting<ScheduleController>(this.db, mr);
+                controller = mr.CreateController<ScheduleController>();
             }
             catch (Exception ex)
             {

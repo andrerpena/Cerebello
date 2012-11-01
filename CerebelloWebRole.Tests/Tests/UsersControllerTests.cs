@@ -45,7 +45,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -130,7 +130,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -194,7 +194,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var marta = Firestarter.Create_CrmMg_Psiquiatria_DraMarta_Marta(this.db);
                 userNameToRepeat = marta.Users.First().UserName;
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -244,7 +244,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -300,7 +300,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -355,7 +355,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -421,7 +421,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -476,8 +476,8 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { hasBeenSaved = true; });
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
             }
             catch (Exception ex)
             {
@@ -540,14 +540,13 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
 
-                SYS_MedicalEntity medicalEntity;
-                SYS_MedicalSpecialty medicalSpecialty;
-                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doc);
+                var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doc);
+
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
-
-                this.db.SavingChanges += (s, e) => { isDbSaved = true; };
             }
             catch (Exception ex)
             {
@@ -592,14 +591,12 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
 
-                SYS_MedicalEntity medicalEntity;
-                SYS_MedicalSpecialty medicalSpecialty;
-                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doc);
+                var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doc);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
-
-                this.db.SavingChanges += (s, e) => { isDbSaved = true; };
             }
             catch (Exception ex)
             {
@@ -668,14 +665,12 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
 
-                SYS_MedicalEntity medicalEntity;
-                SYS_MedicalSpecialty medicalSpecialty;
-                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doc);
+                var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doc);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
-
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {
@@ -724,14 +719,12 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doc = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
 
-                SYS_MedicalEntity medicalEntity;
-                SYS_MedicalSpecialty medicalSpecialty;
-                UsersController.GetDoctorEntityAndSpecialty(this.db, doc.Users.First(), out medicalEntity, out medicalSpecialty);
+                var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doc);
+                var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doc);
                 vm = UsersController.GetViewModel(doc.Users.First(), doc.Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
-
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {
@@ -784,13 +777,12 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 mr.SetCurrentUser(doc[1].Users.First(), "masban");
 
-                SYS_MedicalEntity medicalEntity;
-                SYS_MedicalSpecialty medicalSpecialty;
-                UsersController.GetDoctorEntityAndSpecialty(this.db, doc[0].Users.First(), out medicalEntity, out medicalSpecialty);
+                var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doc[0]);
+                var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doc[0]);
                 vm = UsersController.GetViewModel(doc[0].Users.First(), doc[0].Users.FirstOrDefault().Practice, medicalEntity, medicalSpecialty);
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {
@@ -845,7 +837,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var s = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.ToList().Last());
                 userId = s.Users.Single().Id;
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -884,7 +876,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var medic = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 userId = medic.Users.Single().Id;
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
             }
             catch (Exception ex)
             {
@@ -922,7 +914,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
                 var admin = this.db.Users.Where(m => m.AdministratorId != null).First();
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
+                controller = mr.CreateController<UsersController>();
                 userId = admin.Id;
             }
             catch (Exception ex)
@@ -972,7 +964,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_WithDefaultPassword(user, loginWithUserName: true);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
+                controller = mr.CreateController<UsersController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -985,7 +977,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             {
                 actionResult =
-                    Mvc3TestHelper.ActionExecutingAndGetActionResult(controller, mr)
+                    Mvc3TestHelper.RunOnActionExecuting(controller, mr)
                     ?? controller.ChangePassword();
             }
 
@@ -1018,7 +1010,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword(userId);
                 mr.SetRouteData<UsersController>(practice, null, "changepassword");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr, callOnActionExecuting: false);
+                controller = mr.CreateController<UsersController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -1046,7 +1038,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                 actionResult =
                     authContext.Result
-                    ?? Mvc3TestHelper.ActionExecutingAndGetActionResult(controller, mr)
+                    ?? Mvc3TestHelper.RunOnActionExecuting(controller, mr)
                     ?? controller.ChangePassword();
             }
 
@@ -1126,7 +1118,7 @@ namespace CerebelloWebRole.Tests.Tests
             try
             {
                 mr.SetRouteData<T>(practice, docToView, action);
-                controller = Mvc3TestHelper.CreateControllerForTesting<T>(this.db, mr, callOnActionExecuting: false);
+                controller = mr.CreateController<T>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -1165,13 +1157,13 @@ namespace CerebelloWebRole.Tests.Tests
                 var docs = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(this.db);
                 var mr = new MockRepository(true);
 
-                var secretary1 = Firestarter.CreateSecretary_Milena(db, docs[0].Users.First().Practice);
+                var secretary1 = Firestarter.CreateSecretary_Milena(this.db, docs[0].Users.First().Practice);
                 idToDelete = secretary1.Users.Single().Id;
 
                 mr.SetCurrentUser(docs[1].Users.First(), "masban");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db1 => db1.SavingChanges += (s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {
@@ -1218,8 +1210,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                 mr.SetCurrentUser(secretary1.Users.Single(), "milena");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db1 => db1.SavingChanges += (s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {
@@ -1264,8 +1256,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                 mr.SetCurrentUser(docs[1].Users.First(), "masban");
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {
@@ -1308,8 +1300,8 @@ namespace CerebelloWebRole.Tests.Tests
                 var mr = new MockRepository(true);
                 idToDelete = doc.Users.First().Id;
 
-                controller = Mvc3TestHelper.CreateControllerForTesting<UsersController>(this.db, mr);
-                this.db.SavingChanges += new EventHandler((s, e) => { isDbSaved = true; });
+                controller = mr.CreateController<UsersController>(
+                    setupNewDb: db => db.SavingChanges += (s, e) => { isDbSaved = true; });
             }
             catch (Exception ex)
             {

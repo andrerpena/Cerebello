@@ -709,7 +709,7 @@ namespace Test1
             public Secretary NewSecretary(Practice practice, string username, string password, string name)
             {
                 var user = Firestarter.CreateUser(db, practice, username, password, name);
-                user.Secretary = new Secretary();
+                user.Secretary = new Secretary { PracticeId = user.PracticeId };
                 return user.Secretary;
             }
             public Secretary NewSecretaryTtMilena(Practice practice) { return Firestarter.CreateSecretary_Milena(db, practice); }
@@ -729,11 +729,11 @@ namespace Test1
             {
                 var user = Firestarter.CreateUser(db, null, username, password, name);
                 if (type.Contains("adm"))
-                    user.Administrator = new Administrator();
+                    user.Administrator = new Administrator { PracticeId = user.PracticeId };
                 if (type.Contains("sec"))
-                    user.Secretary = new Secretary();
+                    user.Secretary = new Secretary { PracticeId = user.PracticeId };
                 if (type.Contains("doc"))
-                    user.Doctor = new Doctor();
+                    user.Doctor = new Doctor { PracticeId = user.PracticeId };
                 return user;
             }
             public Administrator AdministratorById(int id) { return db.Administrators.Single(d => d.Id == id); }

@@ -46,7 +46,7 @@ namespace CerebelloWebRole.Tests.Tests
                                 };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
+            var controller = mr.CreateController<DiagnosisController>();
             controller.Edit(new[] { formModel });
 
             Assert.IsFalse(controller.ModelState.IsValid);
@@ -69,7 +69,7 @@ namespace CerebelloWebRole.Tests.Tests
                                 };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
+            var controller = mr.CreateController<DiagnosisController>();
 
             var referenceTime = DateTime.UtcNow;
             controller.UtcNowGetter = () => referenceTime;
@@ -79,7 +79,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsTrue(controller.ModelState.IsValid);
 
             var diagnosis = this.db.Diagnoses.First();
-            Assert.AreEqual(referenceTime, diagnosis.CreatedOn);
+            Assert.AreEqual(0, (referenceTime.Ticks - diagnosis.CreatedOn.Ticks) / 100000);
             Assert.AreEqual(patientId, diagnosis.PatientId);
             Assert.AreEqual(formModel.Text, diagnosis.Observations);
             Assert.AreEqual(formModel.Cid10Code, diagnosis.Cid10Code);
@@ -104,7 +104,7 @@ namespace CerebelloWebRole.Tests.Tests
                                 };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
+            var controller = mr.CreateController<DiagnosisController>();
             controller.Create(new[] { formModel });
 
             Assert.IsTrue(controller.ModelState.IsValid);
@@ -124,7 +124,7 @@ namespace CerebelloWebRole.Tests.Tests
         public void Delete_ShouldReturnProperResultWhenNotExisting()
         {
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<DiagnosisController>(this.db, mr);
+            var controller = mr.CreateController<DiagnosisController>();
 
             // tries to delete the anamnese
             var result = controller.Delete(999);

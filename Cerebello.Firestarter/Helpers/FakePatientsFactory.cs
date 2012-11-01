@@ -140,10 +140,12 @@ namespace Cerebello.Firestarter.Helpers
                         CPF = "87324128910",
                         CPFOwner = (int)TypeCPFOwner.PatientItself,
                         Profession = professions[random.Next(professions.Length)],
-                        CreatedOn = DateTime.UtcNow
+                        CreatedOn = DateTime.UtcNow,
+                        PracticeId = doctor.PracticeId,
                     },
 
-                    Doctor = doctor
+                    Doctor = doctor,
+                    PracticeId = doctor.PracticeId,
                 };
 
                 patient.Person.Email = firstName + string.Join("", chosenMiddleNames) + "@gmail.com";
@@ -155,7 +157,8 @@ namespace Cerebello.Firestarter.Helpers
                     City = "Juiz de Fora",
                     Neighborhood = "Centro",
                     Street = "Rua " + middleNames[random.Next(middleNames.Length)] + " " + middleNames[random.Next(middleNames.Length)],
-                    Complement = ""
+                    Complement = "",
+                    PracticeId = doctor.PracticeId,
                 };
 
                 result.Add(patient);

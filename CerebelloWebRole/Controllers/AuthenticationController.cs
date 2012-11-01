@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Security;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
-using CerebelloWebRole.Areas.App.Controllers;
-using System.Net;
-using System.IO;
-using System.Net.Mail;
-using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.Site.Controllers
 {
@@ -54,8 +50,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
-            if (this.db == null)
-                this.db = new CerebelloEntities();
+            this.db = this.CreateNewCerebelloEntities();
 
             base.Initialize(requestContext);
         }
@@ -72,7 +67,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             User user;
 
             var cookieCollection = this.HttpContext.Response.Cookies;
-            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, db, out user))
+            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, db.Users, out user))
             {
                 ViewBag.LoginFailed = true;
                 return View(loginModel);
@@ -153,7 +148,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
             // Creating the new user.
             User user;
-            var result = SecurityManager.CreateUser(out user, registrationData, db, utcNow, null);
+            var result = SecurityManager.CreateUser(out user, registrationData, db.Users, utcNow, null);
 
             if (result == CreateUserResult.InvalidUserNameOrPassword)
             {
@@ -224,7 +219,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This is the first doctor, so there will be no conflicts.
-                    string urlId = UsersController.GetUniqueDoctorUrlId(this.db, registrationData.FullName, null);
+                    string urlId = UsersController.GetUniqueDoctorUrlId(this.db.Doctors, registrationData.FullName, null);
                     if (urlId == null)
                     {
                         this.ModelState.AddModelError(
@@ -290,6 +285,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                         db.SaveChanges();
 
                         user.Practice.Owner = user;
+                        user.Person.PracticeId = user.PracticeId;
                         db.SaveChanges();
 
                         // Sending the confirmation e-mail to the new user.
@@ -304,7 +300,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                             UserNameOrEmail = registrationData.UserName,
                         };
 
-                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, db, out user))
+                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, db.Users, out user))
                         {
                             throw new Exception("Login cannot fail.");
                         }
@@ -366,7 +362,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 var cookieCollection = this.HttpContext.Response.Cookies;
                 if (!this.ModelState.IsValid ||
-                    !SecurityManager.Login(cookieCollection, loginModel, this.db, out user))
+                    !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user))
                 {
                     ViewBag.LoginFailed = true;
                 }
@@ -451,7 +447,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         [HttpPost]
         public ActionResult ResetPasswordRequest(ResetPasswordRequestViewModel viewModel)
         {
-            var user = SecurityManager.GetUser(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+            var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 
             var utcNow = this.GetUtcNow();
 
@@ -547,7 +543,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         {
             var utcNow = this.GetUtcNow();
 
-            var user = SecurityManager.GetUser(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+            var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 
             if (user != null)
             {
@@ -566,7 +562,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 if (token != null && this.ModelState.IsValid)
                 {
-                    SecurityManager.SetUserPassword(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail, viewModel.NewPassword);
+                    SecurityManager.SetUserPassword(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail, viewModel.NewPassword);
 
                     this.db.GLB_Token.DeleteObject(token);
 
@@ -583,7 +579,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
         {
             var utcNow = this.GetUtcNow();
 
-            var user = SecurityManager.GetUser(this.db, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+            var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 
             if (user != null)
             {

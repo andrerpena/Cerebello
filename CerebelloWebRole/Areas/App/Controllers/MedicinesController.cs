@@ -135,7 +135,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     medicine = db.Medicines.Where(m => m.Id == formModel.Id).First();
                 else
                 {
-                    medicine = new Medicine();
+                    medicine = new Medicine { PracticeId = this.DbUser.PracticeId, };
                     this.db.Medicines.AddObject(medicine);
                 }
 
@@ -149,7 +149,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     medicine.Laboratory = new Laboratory()
                     {
                         Name = formModel.LaboratoryName,
-                        Doctor = this.Doctor
+                        Doctor = this.Doctor,
+                        PracticeId = this.DbUser.PracticeId,
                     };
 
                 medicine.ActiveIngredients.Update(
@@ -328,12 +329,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             model.Count = query.Count();
             model.Objects = (from m in query
-                              select new MedicineViewModel()
-                              {
-                                  Id = m.Id,
-                                  Name = m.Name,
-                                  LaboratoryName = m.Laboratory.Name
-                              }).OrderBy(p => p.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+                             select new MedicineViewModel()
+                             {
+                                 Id = m.Id,
+                                 Name = m.Name,
+                                 LaboratoryName = m.Laboratory.Name
+                             }).OrderBy(p => p.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
         }

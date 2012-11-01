@@ -28,6 +28,7 @@ CREATE TABLE [dbo].[ActiveIngredient](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](200) NOT NULL,
 	[DoctorId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_ActiveIngredient] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -48,6 +49,7 @@ CREATE TABLE [dbo].[Address](
 	[Complement] [varchar](50) NULL,
 	[Street] [varchar](100) NULL,
 	[PersonId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Address] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -61,6 +63,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Administrator](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Administrator] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -77,6 +80,7 @@ CREATE TABLE [dbo].[Anamnese](
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[Text] [text] NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Anamnese] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -98,6 +102,7 @@ CREATE TABLE [dbo].[Appointment](
 	[PatientId] [int] NOT NULL,
 	[Type] [int] NOT NULL,
 	[Description] [nvarchar](max) NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -114,6 +119,7 @@ CREATE TABLE [dbo].[CFG_DayOff](
 	[Date] [date] NOT NULL,
 	[Description] [nvarchar](200) NOT NULL,
 	[DoctorId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_DayOff] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -138,6 +144,7 @@ CREATE TABLE [dbo].[CFG_Documents](
 	[FooterLeft2] [varchar](200) NULL,
 	[FooterRight1] [varchar](200) NOT NULL,
 	[FooterRight2] [varchar](200) NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_CFG_Documents] PRIMARY KEY CLUSTERED 
 (
 	[DoctorId] ASC
@@ -187,6 +194,7 @@ CREATE TABLE [dbo].[CFG_Schedule](
 	[Thursday] [bit] NOT NULL,
 	[Friday] [bit] NOT NULL,
 	[Saturday] [bit] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_CFG_Schedule_1] PRIMARY KEY CLUSTERED 
 (
 	[DoctorId] ASC
@@ -237,6 +245,7 @@ CREATE TABLE [dbo].[Diagnosis](
 	[Cid10Name] [varchar](100) NULL,
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Diagnosis2] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -257,6 +266,7 @@ CREATE TABLE [dbo].[Doctor](
 	[MedicalEntityName] [nvarchar](55) NOT NULL,
 	[MedicalSpecialtyCode] [nvarchar](7) NOT NULL,
 	[MedicalSpecialtyName] [nvarchar](71) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -275,6 +285,7 @@ CREATE TABLE [dbo].[ExaminationRequest](
 	[CreatedOn] [datetime] NOT NULL,
 	[MedicalProcedureCode] [nchar](12) NULL,
 	[MedicalProcedureName] [nvarchar](310) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_ExaminationRequest] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -293,6 +304,7 @@ CREATE TABLE [dbo].[ExaminationResult](
 	[CreatedOn] [datetime] NOT NULL,
 	[MedicalProcedureCode] [nchar](12) NULL,
 	[MedicalProcedureName] [nvarchar](310) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_ExaminationResult] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -316,14 +328,15 @@ CREATE TABLE [dbo].[GLB_Token](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[HealthEnsurance] ******/
+/****** Object:  Table [dbo].[HealthInsurance] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[HealthEnsurance](
+CREATE TABLE [dbo].[HealthInsurance](
 	[Id] [int] NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_HealthEnsurance] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -354,6 +367,7 @@ CREATE TABLE [dbo].[Laboratory](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](200) NOT NULL,
 	[DoctorId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_MedicineLaboratory] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -369,6 +383,7 @@ CREATE TABLE [dbo].[Leaflet](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Description] [varchar](200) NULL,
 	[Url] [varchar](200) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_MedicineLeaflet] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -386,6 +401,7 @@ CREATE TABLE [dbo].[MedicalCertificate](
 	[ModelMedicalCertificateId] [int] NULL,
 	[PatientId] [int] NOT NULL,
 	[Text] [text] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_MedicalCertificate] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -402,6 +418,7 @@ CREATE TABLE [dbo].[MedicalCertificateField](
 	[MedicalCertificateId] [int] NOT NULL,
 	[Name] [varchar](50) NOT NULL,
 	[Value] [varchar](50) NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_MedicalCertificateField] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -419,6 +436,7 @@ CREATE TABLE [dbo].[Medicine](
 	[DoctorId] [int] NOT NULL,
 	[LaboratoryId] [int] NULL,
 	[Usage] [smallint] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Medicine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -465,6 +483,7 @@ CREATE TABLE [dbo].[ModelMedicalCertificate](
 	[Name] [varchar](100) NOT NULL,
 	[Text] [text] NOT NULL,
 	[DoctorId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_ModelMedicalCertificate] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -480,6 +499,7 @@ CREATE TABLE [dbo].[ModelMedicalCertificateField](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](100) NOT NULL,
 	[ModelMedicalCertificateId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_ModelMedicalCertificateField] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -497,6 +517,7 @@ CREATE TABLE [dbo].[Patient](
 	[Registration] [varchar](100) NULL,
 	[DoctorId] [int] NOT NULL,
 	[PersonId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Patient] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -524,6 +545,7 @@ CREATE TABLE [dbo].[Person](
 	[PhoneCell] [varchar](20) NULL,
 	[Email] [varchar](200) NULL,
 	[EmailGravatarHash] [varchar](200) NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -560,6 +582,7 @@ CREATE TABLE [dbo].[Receipt](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Receipt] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -578,6 +601,7 @@ CREATE TABLE [dbo].[ReceiptMedicine](
 	[Observations] [text] NULL,
 	[ReceiptId] [int] NOT NULL,
 	[MedicineId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_ReceiptMedicine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -591,6 +615,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Secretary](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Secretary] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -608,6 +633,7 @@ CREATE TABLE [dbo].[Symptom](
 	[Observations] [varchar](200) NULL,
 	[Cid10Code] [varchar](10) NOT NULL,
 	[Cid10Name] [varchar](100) NULL,
+	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Diagnosis] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -721,6 +747,16 @@ CREATE TABLE [dbo].[SYS_MedicalEntity](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Code] ON [dbo].[SYS_MedicalEntity] 
+(
+	[Code] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Name] ON [dbo].[SYS_MedicalEntity] 
+(
+	[Name] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
 /****** Object:  Table [dbo].[SYS_MedicalProcedure] ******/
 SET ANSI_NULLS ON
 GO
@@ -735,6 +771,11 @@ CREATE TABLE [dbo].[SYS_MedicalProcedure](
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
+GO
+CREATE NONCLUSTERED INDEX [IX_SYS_MedicalProcedure_Name] ON [dbo].[SYS_MedicalProcedure] 
+(
+	[Name] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalProcedures_Code] ON [dbo].[SYS_MedicalProcedure] 
 (
@@ -755,6 +796,16 @@ CREATE TABLE [dbo].[SYS_MedicalSpecialty](
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
+GO
+CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Code] ON [dbo].[SYS_MedicalSpecialty] 
+(
+	[Code] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Name] ON [dbo].[SYS_MedicalSpecialty] 
+(
+	[Name] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 /****** Object:  Table [dbo].[SYS_Medicine] ******/
 SET ANSI_NULLS ON
@@ -924,12 +975,6 @@ ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_Fr
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_FromUser_User]
-GO
-/****** Object:  ForeignKey [FK_ChatMessage_Practice] ******/
-ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_Practice] FOREIGN KEY([PracticeId])
-REFERENCES [dbo].[Practice] ([Id])
-GO
-ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_Practice]
 GO
 /****** Object:  ForeignKey [FK_ChatMessage_ToUser_User] ******/
 ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_ToUser_User] FOREIGN KEY([UserToId])

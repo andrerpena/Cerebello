@@ -55,7 +55,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Street = patient.Person.Address.Street
                 }
             };
-            
+
             if (includeSessions)
             {
                 var eventDates = new List<DateTime>();
@@ -266,7 +266,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient = this.db.Patients.First(p => p.Id == formModel.Id);
                 else
                 {
-                    patient = new Patient {Person = new Person()};
+                    patient = new Patient
+                                  {
+                                      Person = new Person { PracticeId = this.DbUser.PracticeId, },
+                                      PracticeId = this.DbUser.PracticeId,
+                                  };
                     this.db.Patients.AddObject(patient);
                 }
 
@@ -288,7 +292,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.PhoneCell = formModel.PhoneCell;
                 // handle patient address
                 if (patient.Person.Address == null)
-                    patient.Person.Address = new Address();
+                    patient.Person.Address = new Address { PracticeId = this.DbUser.PracticeId, };
 
                 patient.Person.Address.CEP = formModel.Address.CEP;
                 patient.Person.Address.StateProvince = formModel.Address.StateProvince;
@@ -439,7 +443,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             catch
             {
-                this.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                this.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return null;
             }
         }

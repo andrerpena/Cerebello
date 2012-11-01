@@ -47,7 +47,7 @@ namespace CerebelloWebRole.Code.Chat
                 };
         }
 
-        public override IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, [NotNull] CerebelloEntities db)
+        public override IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, [NotNull] CerebelloEntitiesAccessFilterWrapper db)
         {
             if (db == null) throw new ArgumentNullException("db");
 

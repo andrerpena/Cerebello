@@ -84,7 +84,7 @@ namespace CerebelloWebRole.Tests
         protected static void InconclusiveInit(Exception ex)
         {
             Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                                ex.GetType().Name, ex.Message, ex.StackTrace);
+                                ex.GetType().Name, ex.FlattenMessages(), ex.StackTrace);
         }
 
     }

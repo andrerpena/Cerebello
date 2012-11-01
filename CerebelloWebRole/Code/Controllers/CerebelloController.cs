@@ -18,7 +18,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Object context used throughout all the controller
         /// </summary>
-        protected CerebelloEntities db = null;
+        protected CerebelloEntitiesAccessFilterWrapper db = null;
 
         public User DbUser { get; private set; }
 
@@ -55,14 +55,14 @@ namespace CerebelloWebRole.Code
                 };
         }
 
-        internal CerebelloEntities InitDb()
+        internal CerebelloEntitiesAccessFilterWrapper InitDb()
         {
             // this is because of how tests work
             // if a test controller has been created, this.db has already been populated
             // otherwise let's create a regular one
             // TODO: tests don't need to populate this property anymore, as CreateNewCerebelloEntities is mockable.
             if (this.db == null)
-                this.db = this.CreateNewCerebelloEntities();
+                this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities());
 
             return this.db;
         }
@@ -80,7 +80,7 @@ namespace CerebelloWebRole.Code
                     throw new Exception(
                         "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
 
-                var result = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+                var result = this.db.SetCurrentUserById(authenticatedPrincipal.Profile.Id);
 
                 this.DbUser = result;
             }

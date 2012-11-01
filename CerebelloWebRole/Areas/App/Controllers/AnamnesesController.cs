@@ -31,7 +31,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             };
         }
 
-        [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Details(int id)
         {
             var anamnese = this.db.Anamnese.First(a => a.Id == id);
@@ -51,7 +50,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Edit(int? id, int? patientId)
         {
             AnamneseViewModel viewModel = null;
@@ -75,7 +73,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="formModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [AccessDbObject(typeof(Anamnese), "id")]
         public ActionResult Edit(AnamneseViewModel formModel)
         {
             Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
@@ -85,10 +82,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (formModel.Id == null)
                 {
 
-                    anamnese = new Anamnese()
+                    anamnese = new Anamnese
                     {
                         CreatedOn = this.GetUtcNow(),
-                        PatientId = formModel.PatientId.Value
+                        PatientId = formModel.PatientId.Value,
+                        PracticeId = this.DbUser.PracticeId,
                     };
                     this.db.Anamnese.AddObject(anamnese);
                 }
@@ -104,7 +102,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     anamnese.Symptoms.Add(new Symptom()
                         {
                             Cid10Code = symptom.Cid10Code,
-                            Cid10Name = symptom.Text
+                            Cid10Name = symptom.Text,
+                            PracticeId = this.DbUser.PracticeId,
                         });
                 }
 
@@ -185,7 +184,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// 
         /// </summary>
         [HttpGet]
-        [AccessDbObject(typeof(Anamnese), "id")]
         public JsonResult Delete(int id)
         {
             try

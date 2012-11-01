@@ -41,7 +41,7 @@ namespace CerebelloWebRole.Code.Chat
         /// <param name="db"></param>
         /// <param name="roomId"></param>
         /// <param name="userId"></param>
-        public static ChatUser SetupUserIfNonexisting([NotNull] CerebelloEntities db, int roomId, int userId)
+        public static ChatUser SetupUserIfNonexisting([NotNull] CerebelloEntitiesAccessFilterWrapper db, int roomId, int userId)
         {
             if (db == null) throw new ArgumentNullException("db");
             lock (userLock)
@@ -85,7 +85,7 @@ namespace CerebelloWebRole.Code.Chat
         /// </summary>
         /// <param name="db"></param>
         /// <param name="roomId"></param>
-        public static ChatRoom SetupRoomIfNonexisting([NotNull] CerebelloEntities db, int roomId)
+        public static ChatRoom SetupRoomIfNonexisting([NotNull] CerebelloEntitiesAccessFilterWrapper db, int roomId)
         {
             if (db == null) throw new ArgumentNullException("db");
             lock (roomLock)

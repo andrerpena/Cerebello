@@ -146,7 +146,8 @@ namespace Cerebello.Firestarter
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
                 Email = "masbicudo@gmail.com",
-                EmailGravatarHash = GravatarHelper.GetGravatarHash("masbicudo@gmail.com")
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("masbicudo@gmail.com"),
+                PracticeId = practice.Id,
             };
 
             user.Person = person;
@@ -164,6 +165,7 @@ namespace Cerebello.Firestarter
                 MedicalEntityName = entity.Name,
                 MedicalEntityJurisdiction = "MG",
                 UrlIdentifier = "phillaustin",
+                PracticeId = practice.Id,
             };
 
             user.Doctor = doctor;
@@ -174,6 +176,7 @@ namespace Cerebello.Firestarter
             Administrator admin = new Administrator()
             {
                 Id = 2,
+                PracticeId = practice.Id,
             };
 
             user.Administrator = admin;
@@ -197,7 +200,8 @@ namespace Cerebello.Firestarter
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
                 Email = "andrerpena@gmail.com",
-                EmailGravatarHash = GravatarHelper.GetGravatarHash("andrerpena@gmail.com")
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("andrerpena@gmail.com"),
+                PracticeId = practice.Id,
             };
 
             db.People.AddObject(person);
@@ -228,6 +232,7 @@ namespace Cerebello.Firestarter
                 MedicalEntityName = entity.Name,
                 MedicalEntityJurisdiction = "MG",
                 UrlIdentifier = "gregoryhouse",
+                PracticeId = practice.Id,
             };
 
             db.Doctors.AddObject(doctor);
@@ -239,7 +244,10 @@ namespace Cerebello.Firestarter
 
             db.SaveChanges();
 
-            var admin = new Administrator();
+            var admin = new Administrator
+                            {
+                                PracticeId = practice.Id,
+                            };
             user.Administrator = admin;
 
             db.SaveChanges();
@@ -256,7 +264,8 @@ namespace Cerebello.Firestarter
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
                 Email = "martacura@gmail.com",
-                EmailGravatarHash = GravatarHelper.GetGravatarHash("martacura@gmail.com")
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("martacura@gmail.com"),
+                PracticeId = practice.Id,
             };
 
             db.People.AddObject(person);
@@ -289,6 +298,7 @@ namespace Cerebello.Firestarter
                 MedicalEntityName = entity.Name,
                 MedicalEntityJurisdiction = "MG",
                 UrlIdentifier = "martacura",
+                PracticeId = practice.Id,
             };
 
             db.Doctors.AddObject(doctor);
@@ -335,6 +345,7 @@ namespace Cerebello.Firestarter
                 FullName = "Menininha Santos",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
+                PracticeId = practice.Id,
             };
 
             user.Person = person;
@@ -344,6 +355,7 @@ namespace Cerebello.Firestarter
             // Creating secretary.
             Secretary secreatry = new Secretary
             {
+                PracticeId = practice.Id,
             };
 
             user.Secretary = secreatry;
@@ -386,6 +398,7 @@ namespace Cerebello.Firestarter
                 FullName = "Maricleusa Souza",
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
+                PracticeId = practice.Id,
             };
 
             user.Person = person;
@@ -395,7 +408,8 @@ namespace Cerebello.Firestarter
             // Creating secretary.
             Secretary secreatry = new Secretary
             {
-                Id = 4
+                Id = 4,
+                PracticeId = practice.Id,
             };
 
             user.Secretary = secreatry;
@@ -539,6 +553,8 @@ namespace Cerebello.Firestarter
                 FridayWorkdayEndTime = "18:00",
                 FridayLunchStartTime = "12:00",
                 FridayLunchEndTime = "13:00",
+
+                PracticeId = doctor.PracticeId,
             };
 
             doctor.CFG_Documents = new CFG_Documents()
@@ -548,7 +564,9 @@ namespace Cerebello.Firestarter
                 FooterLeft1 = "[Endereço]",
                 FooterLeft2 = "[Telefones]",
                 FooterRight1 = "[Cidade]",
-                FooterRight2 = "[CRM]"
+                FooterRight2 = "[CRM]",
+
+                PracticeId = doctor.PracticeId,
             };
 
             db.SaveChanges();
@@ -568,6 +586,8 @@ namespace Cerebello.Firestarter
                 Start = start,
                 End = start + duration,
                 Description = desc,
+
+                PracticeId = doc.PracticeId,
             });
 
             db.SaveChanges();
@@ -1755,6 +1775,7 @@ GO
                 FullName = name,
                 Gender = (int)TypeGender.Female,
                 CreatedOn = DateTime.UtcNow,
+                PracticeId = practice.Id,
             };
 
             user.Person = person;

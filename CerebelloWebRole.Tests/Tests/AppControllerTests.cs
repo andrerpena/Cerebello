@@ -40,6 +40,8 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void LookupEverything_1_ShouldSearchPatients()
         {
+            var doctor = this.db.Doctors.First();
+
             // create some fake patients
             // patient 1
             Patient patient1 = new Patient()
@@ -54,9 +56,11 @@ namespace CerebelloWebRole.Tests.Tests
                     CPF = "87324128910",
                     CPFOwner = (int)TypeCPFOwner.PatientItself,
                     Profession = "Encarregado de Obras",
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    PracticeId = doctor.PracticeId,
                 },
-                Doctor = this.db.Doctors.First()
+                Doctor = doctor,
+                PracticeId = doctor.PracticeId,
             };
             patient1.Person.Email = "joao@gmail.com";
             patient1.Person.Address = new Address()
@@ -66,7 +70,8 @@ namespace CerebelloWebRole.Tests.Tests
                 City = "Rio de Janeiro",
                 Neighborhood = "Jacarepaguá",
                 Street = "Rua Estrada do Pau Ferro 329",
-                Complement = ""
+                Complement = "",
+                PracticeId = doctor.PracticeId,
             };
 
             db.Patients.AddObject(patient1);
@@ -83,9 +88,10 @@ namespace CerebelloWebRole.Tests.Tests
                     CPF = "87324128910",
                     CPFOwner = (int)TypeCPFOwner.PatientItself,
                     Profession = "Encarregado de Obras",
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    PracticeId = doctor.PracticeId,
                 },
-                Doctor = this.db.Doctors.First()
+                Doctor = doctor
             };
             patient1.Person.Email = "manuela@gmail.com";
             patient1.Person.Address = new Address()
@@ -95,7 +101,8 @@ namespace CerebelloWebRole.Tests.Tests
                 City = "Rio de Janeiro",
                 Neighborhood = "Jacarepaguá",
                 Street = "Rua Estrada do Pau Ferro 329",
-                Complement = ""
+                Complement = "",
+                PracticeId = doctor.PracticeId,
             };
 
             db.Patients.AddObject(patient2);
@@ -103,7 +110,7 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<AppController>(this.db, mr);
+            var controller = mr.CreateController<AppController>();
             var controllerResult = controller.LookupEverything("Joao", 20, 1, this.db.Doctors.First().Id);
 
             var controllerResultAsLookupResult = (AutocompleteJsonResult)controllerResult.Data;
@@ -116,4 +123,3 @@ namespace CerebelloWebRole.Tests.Tests
         }
     }
 }
-

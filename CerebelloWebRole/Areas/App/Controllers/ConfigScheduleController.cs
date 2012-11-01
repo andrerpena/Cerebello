@@ -212,7 +212,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (config == null)
                 {
-                    config = new Cerebello.Model.CFG_Schedule();
+                    config = new Cerebello.Model.CFG_Schedule { PracticeId = this.DbUser.PracticeId, };
                     this.Doctor.CFG_Schedule = config;
                 }
 
@@ -369,6 +369,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         Date = i,
                         Description = formModel.Description,
                         Doctor = this.Doctor,
+                        PracticeId = this.DbUser.PracticeId,
                     });
                 }
 
@@ -399,7 +400,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 foreach (var eachObjToDelete in objs)
                 {
-                    this.db.AttachTo("CFG_DayOff", eachObjToDelete);
+                    this.db.CFG_DayOff.Attach(eachObjToDelete);
+                    //old code: this.db.AttachTo("CFG_DayOff", eachObjToDelete);
                     this.db.CFG_DayOff.DeleteObject(eachObjToDelete);
                 }
 

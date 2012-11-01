@@ -415,7 +415,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (formModel.Id == null)
                 {
-                    appointment = new Appointment();
+                    appointment = new Appointment { PracticeId = this.DbUser.PracticeId, };
                     appointment.CreatedOn = this.UtcNowGetter();
                     appointment.DoctorId = formModel.DoctorId;
                     appointment.CreatedById = this.DbUser.Id;
@@ -460,9 +460,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                         Gender = (short)formModel.PatientGender,
                                         DateOfBirth =
                                             ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
-                                        CreatedOn = this.GetUtcNow()
+                                        CreatedOn = this.GetUtcNow(),
+                                        PracticeId = this.DbUser.PracticeId,
                                     },
-                            Doctor = this.Doctor
+                            Doctor = this.Doctor,
+                            PracticeId = this.DbUser.PracticeId,
                         };
 
                     patient.Person.Email = formModel.PatientEmail;
@@ -711,7 +713,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </param>
         /// <returns></returns>
         public static Tuple<DateTime, DateTime> FindNextFreeTimeInPracticeLocalTime(
-            CerebelloEntities db,
+            CerebelloEntitiesAccessFilterWrapper db,
             Doctor doctor,
             DateTime startingFromLocalTime)
         {
@@ -806,7 +808,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         private static bool ValidateTime(
-            CerebelloEntities db,
+            CerebelloEntitiesAccessFilterWrapper db,
             Doctor doctor,
             DateTime localDate,
             string startTimeText,

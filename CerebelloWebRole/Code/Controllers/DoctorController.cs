@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -21,8 +22,9 @@ namespace CerebelloWebRole.Code
             // the doctor being visualized (not the user as a doctor)
             var doctor = this.db.Doctors.Include("Users").Include("Users.Person").FirstOrDefault(d => d.UrlIdentifier == doctorIdentifier);
 
-            if (doctor == null)
-                return;
+            Debug.Assert(doctor != null, "doctor must not be null");
+            //if (doctor == null)
+            //    return;
 
             this.Doctor = doctor;
             var doc = new DoctorViewModel()

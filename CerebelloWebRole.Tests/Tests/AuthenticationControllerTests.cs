@@ -70,8 +70,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                     mr.SetupHttpContext(disposer);
 
-                    controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
-                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
+                    controller = mr.CreateController<AuthenticationController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
                     controller.UtcNowGetter = () => utcNow;
 
@@ -187,8 +187,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                     mr.SetupHttpContext(disposer);
 
-                    controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
-                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
+                    controller = mr.CreateController<AuthenticationController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
                     controller.EmailSender = mm =>
                     {
@@ -280,7 +280,6 @@ namespace CerebelloWebRole.Tests.Tests
 
                 try
                 {
-                    Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                     var mr = new MockRepository();
 
                     var mve = mr.SetupViewEngine(disposer);
@@ -290,9 +289,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                     mr.SetupHttpContext(disposer);
 
-                    controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                    controller = mr.CreateController<AuthenticationController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
                     var practiceName = this.db.Practices.Single().UrlIdentifier;
-                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     controller.EmailSender = mm =>
                     {
@@ -356,7 +355,6 @@ namespace CerebelloWebRole.Tests.Tests
 
                 try
                 {
-                    Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                     var mr = new MockRepository();
 
                     var mve = mr.SetupViewEngine(disposer);
@@ -366,10 +364,10 @@ namespace CerebelloWebRole.Tests.Tests
 
                     mr.SetupHttpContext(disposer);
 
-                    controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(this.db, mr);
+                    controller = mr.CreateController<AuthenticationController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
                     var userFullName = this.db.Users.Single().Person.FullName;
                     var userName = this.db.Users.Single().UserName;
-                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
 
                     controller.EmailSender = mm =>
                     {
@@ -436,11 +434,10 @@ namespace CerebelloWebRole.Tests.Tests
                     var mve = mr.SetupViewEngine(disposer);
                     mve.SetViewContent("ConfirmationEmail", vc => "<html>Test e-mail string.</html>");
 
-                    controller = new AuthenticationController();
-                    Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
-                    controller.EmailSender = mm => { hasEmail = true; };
+                    controller = mr.CreateController<AuthenticationController>(
+                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
-                    this.db.SavingChanges += (s, e) => { hasBeenSaved = true; };
+                    controller.EmailSender = mm => { hasEmail = true; };
 
                     // Creating ViewModel, and setting the ModelState of the controller.
                     vm = new CreateAccountViewModel
@@ -517,8 +514,8 @@ namespace CerebelloWebRole.Tests.Tests
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                controller = new AuthenticationController { UtcNowGetter = () => utcNow };
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
+                controller = mr.CreateController<AuthenticationController>();
+                controller.UtcNowGetter = () => utcNow;
             }
             catch (Exception ex)
             {
@@ -574,8 +571,7 @@ namespace CerebelloWebRole.Tests.Tests
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                controller = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
+                controller = mr.CreateController<AuthenticationController>();
             }
             catch (Exception ex)
             {
@@ -635,8 +631,7 @@ namespace CerebelloWebRole.Tests.Tests
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                controller = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
+                controller = mr.CreateController<AuthenticationController>();
             }
             catch (Exception ex)
             {
@@ -703,8 +698,7 @@ namespace CerebelloWebRole.Tests.Tests
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                controller = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr);
+                controller = mr.CreateController<AuthenticationController>();
             }
             catch (Exception ex)
             {
@@ -773,9 +767,7 @@ namespace CerebelloWebRole.Tests.Tests
                     practiceName = user.Practice.UrlIdentifier;
                 }
 
-                var mockController = new Mock<PracticeController> { CallBase = true };
-                controller = mockController.Object;
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: false);
+                controller = mr.CreateController<PracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -785,7 +777,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             ActionResult actionResult;
             {
-                actionResult = Mvc3TestHelper.ActionExecutingAndGetActionResult(controller, mr);
+                actionResult = Mvc3TestHelper.RunOnActionExecuting(controller, mr);
             }
 
             // Asserting.
@@ -833,17 +825,14 @@ namespace CerebelloWebRole.Tests.Tests
                 // Note: the following AuthenticationController is being
                 // setup with an invalid MockRepository for it,
                 // however this does not prevent proper operation.
-                var authController = new AuthenticationController();
-                Mvc3TestHelper.SetupControllerForTesting(authController, CreateNewCerebelloEntities(), mr);
+                var authController = mr.CreateController<AuthenticationController>();
                 authController.UtcNowGetter = () => utcNow.AddDays(15.0); // this is up to 30 days
                 authController.VerifyPracticeAndEmail(
                     new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName });
 
                 Assert.IsTrue(authController.ModelState.IsValid, "Could not validate email.");
 
-                var mockController = new Mock<PracticeController> { CallBase = true };
-                controller = mockController.Object;
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, callOnActionExecuting: false);
+                controller = mr.CreateController<PracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -853,7 +842,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             ActionResult actionResult;
             {
-                actionResult = Mvc3TestHelper.ActionExecutingAndGetActionResult(controller, mr);
+                actionResult = Mvc3TestHelper.RunOnActionExecuting(controller, mr);
             }
 
             // Asserting.
@@ -894,7 +883,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                 mr.SetupHttpContext(disposer);
 
-                var controller = Mvc3TestHelper.CreateControllerForTesting<AuthenticationController>(db, mr);
+                var controller = mr.CreateController<AuthenticationController>();
 
                 controller.UtcNowGetter = () => utcNow;
 
@@ -970,11 +959,9 @@ namespace CerebelloWebRole.Tests.Tests
                             return vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>");
                         });
 
-                    controller = new AuthenticationController { UtcNowGetter = () => utcNow };
-                    Mvc3TestHelper.SetupControllerForTesting(
-                        controller,
-                        this.db,
-                        mr, setupNewDb: db1 => { db1.SavingChanges += (s, e) => hasBeenSaved = true; });
+                    controller = mr.CreateController<AuthenticationController>(
+                        setupNewDb: db1 => { db1.SavingChanges += (s, e) => hasBeenSaved = true; });
+                    controller.UtcNowGetter = () => utcNow;
 
                     controller.EmailSender += mm =>
                     {
@@ -1067,8 +1054,8 @@ namespace CerebelloWebRole.Tests.Tests
                                            return "Fake e-mail contents!";
                                        });
 
-                    var controller0 = new AuthenticationController { UtcNowGetter = () => utcNow };
-                    Mvc3TestHelper.SetupControllerForTesting(controller0, this.db, mr);
+                    var controller0 = mr.CreateController<AuthenticationController>();
+                    controller0.UtcNowGetter = () => utcNow;
 
                     // requesting password reset
                     controller0.ResetPasswordRequest(
@@ -1079,8 +1066,8 @@ namespace CerebelloWebRole.Tests.Tests
                             });
 
                     var mr1 = new MockRepository();
-                    controller = new AuthenticationController { UtcNowGetter = () => utcNow };
-                    Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr1);
+                    controller = mr1.CreateController<AuthenticationController>();
+                    controller.UtcNowGetter = () => utcNow;
                 }
                 catch (Exception ex)
                 {
@@ -1112,8 +1099,8 @@ namespace CerebelloWebRole.Tests.Tests
                 try
                 {
                     var mr2 = new MockRepository();
-                    var controller2 = new AuthenticationController { UtcNowGetter = () => utcNow };
-                    Mvc3TestHelper.SetupControllerForTesting(controller2, this.db, mr2);
+                    var controller2 = mr2.CreateController<AuthenticationController>();
+                    controller2.UtcNowGetter = () => utcNow;
                     loginActionResult = controller2.Login(
                         new LoginViewModel
                             {

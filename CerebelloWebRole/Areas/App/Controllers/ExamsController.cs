@@ -78,6 +78,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     CreatedOn = this.GetUtcNow(),
                     PatientId = formModel.PatientId.Value,
+                    PracticeId = this.DbUser.PracticeId,
                 };
 
                 this.db.ExaminationRequests.AddObject(dbObject);

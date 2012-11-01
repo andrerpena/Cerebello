@@ -8,10 +8,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Cerebello;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Code.Security.Principals;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace CerebelloWebRole.Tests
@@ -321,7 +324,7 @@ namespace CerebelloWebRole.Tests
                         this.UserNameOrEmail,
                         this.Password,
                         string.Format("{0}", this.RouteData.Values["practice"]),
-                        db,
+                        db.Users,
                         out user);
 
                     user.LastActiveOn = DateTime.UtcNow;
@@ -411,6 +414,47 @@ namespace CerebelloWebRole.Tests
                 };
 
             return result;
+        }
+
+        public TController CreateController<TController>(bool callOnActionExecuting = true, Action<CerebelloEntities> setupNewDb = null, bool allowEmailSending = false)
+            where TController : Controller
+        {
+            var mockController = new Mock<TController> { CallBase = true };
+            var controller = mockController.Object;
+            this.SetupController(controller, callOnActionExecuting, setupNewDb, allowEmailSending);
+            return controller;
+        }
+
+        private void SetupController(Controller controller, bool callOnActionExecuting = true, Action<CerebelloEntities> setupNewDb = null, bool allowEmailSending = false)
+        {
+            var routes = new RouteCollection();
+            MvcApplication.RegisterRoutes(routes);
+
+            var rootController = controller as RootController;
+            if (rootController != null)
+            {
+                rootController.CerebelloEntitiesCreator = () =>
+                {
+                    var db = DbTestBase.CreateNewCerebelloEntities();
+                    if (setupNewDb != null)
+                        setupNewDb(db);
+                    return db;
+                };
+
+                if (!allowEmailSending)
+                    rootController.EmailSender = eml =>
+                    {
+                        // Nothing to do, beacause we don't want to send any e-mail.
+                    };
+            }
+
+            var privateObject = new PrivateObject(controller);
+            privateObject.Invoke("Initialize", this.GetRequestContext());
+
+            if (callOnActionExecuting)
+                ((IActionFilter)controller).OnActionExecuting(this.CreateActionExecutingContext());
+
+            controller.Url = new UrlHelper(this.GetRequestContext(), routes);
         }
     }
 }

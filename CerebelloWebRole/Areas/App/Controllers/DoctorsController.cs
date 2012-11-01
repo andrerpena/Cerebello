@@ -24,7 +24,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(model);
         }
 
-        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntities db, Practice practice, DateTime localNow)
+        public static List<DoctorViewModel> GetDoctorViewModelsFromPractice(CerebelloEntitiesAccessFilterWrapper db, Practice practice, DateTime localNow)
         {
             var usersThatAreDoctors = db.Users
                 .Where(u => u.PracticeId == practice.Id)

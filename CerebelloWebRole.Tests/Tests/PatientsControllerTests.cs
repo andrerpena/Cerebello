@@ -35,12 +35,12 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 100);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 200);
             }
             catch
@@ -111,7 +111,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
 
                 // we now have 1 patient
@@ -143,7 +143,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
 
                 // we now have 1 patient
@@ -157,13 +157,15 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patientId,
                     CreatedOn = DateTime.UtcNow,
-                    Text = "This is my anamnese"
+                    Text = "This is my anamnese",
+                    PracticeId = doctor.PracticeId,
                 };
 
                 anamnese.Symptoms.Add(new Symptom()
                 {
                     Cid10Name = "Text",
-                    Cid10Code = "Q878"
+                    Cid10Code = "Q878",
+                    PracticeId = doctor.PracticeId,
                 });
 
                 patient.Anamneses.Add(anamnese);
@@ -193,7 +195,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
 
                 // we now have 1 patient
@@ -210,13 +212,15 @@ namespace CerebelloWebRole.Tests.Tests
                             Doctor = doctor
                         },
                         Name = "Med1",
-                        Doctor = doctor
+                        Doctor = doctor,
+                        PracticeId = doctor.PracticeId,
                     };
 
                 medicine.ActiveIngredients.Add(new ActiveIngredient()
                     {
                         Name = "AI1",
-                        Doctor = doctor
+                        Doctor = doctor,
+                        PracticeId = doctor.PracticeId,
                     });
 
                 this.db.Medicines.AddObject(medicine);
@@ -225,14 +229,16 @@ namespace CerebelloWebRole.Tests.Tests
                 var receipt = new Receipt()
                 {
                     PatientId = patientId,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    PracticeId = doctor.PracticeId,
                 };
 
                 receipt.ReceiptMedicines.Add(new ReceiptMedicine()
                     {
                         Medicine = medicine,
                         Quantity = "1 caixa",
-                        Prescription = "toma 1 de manha"
+                        Prescription = "toma 1 de manha",
+                        PracticeId = doctor.PracticeId,
                     });
 
                 this.db.Receipts.AddObject(receipt);
@@ -263,7 +269,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
 
                 // we now have 1 patient
@@ -277,7 +283,8 @@ namespace CerebelloWebRole.Tests.Tests
                         MedicalProcedureCode = "mcode",
                         MedicalProcedureName = "mname",
                         PatientId = patientId,
-                        CreatedOn = DateTime.UtcNow
+                        CreatedOn = DateTime.UtcNow,
+                        PracticeId = doctor.PracticeId,
                     };
 
                 this.db.SYS_MedicalProcedure.AddObject(
@@ -315,7 +322,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
 
                 // we now have 1 patient
@@ -330,7 +337,8 @@ namespace CerebelloWebRole.Tests.Tests
                     MedicalProcedureName = "mname",
                     PatientId = patientId,
                     CreatedOn = DateTime.UtcNow,
-                    Text = "tudo deu certo"
+                    Text = "tudo deu certo",
+                    PracticeId = doctor.PracticeId,
                 };
 
                 this.db.SYS_MedicalProcedure.AddObject(
@@ -368,7 +376,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(doctor, this.db, 1);
 
                 // we now have 1 patient
@@ -379,12 +387,14 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     DoctorId = doctor.Id,
                     Name = "model1",
-                    Text = "model1"
+                    Text = "model1",
+                    PracticeId = doctor.PracticeId,
                 };
 
                 certificateModel.Fields.Add(new ModelMedicalCertificateField()
                 {
-                    Name = "field1"
+                    Name = "field1",
+                    PracticeId = doctor.PracticeId,
                 });
 
                 var certificate = new Cerebello.Model.MedicalCertificate()
@@ -392,13 +402,15 @@ namespace CerebelloWebRole.Tests.Tests
                     ModelMedicalCertificate = certificateModel,
                     Patient = patient,
                     Text = "text",
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    PracticeId = doctor.PracticeId,
                 };
 
                 certificate.Fields.Add(new MedicalCertificateField()
                 {
                     Name = "field1",
-                    Value = "value"
+                    Value = "value",
+                    PracticeId = doctor.PracticeId,
                 });
 
                 this.db.MedicalCertificates.AddObject(certificate);
@@ -428,7 +440,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(docAndre, this.db, 1);
 
                 // we now have 1 patient
@@ -443,7 +455,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = referenceTime,
                     PatientId = patient.Id,
                     Start = referenceTime,
-                    End = referenceTime + TimeSpan.FromMinutes(30)
+                    End = referenceTime + TimeSpan.FromMinutes(30),
+                    PracticeId = docAndre.PracticeId,
                 };
 
                 this.db.Appointments.AddObject(appointment);
@@ -473,7 +486,7 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
-                controller = Mvc3TestHelper.CreateControllerForTesting<PatientsController>(this.db, mr);
+                controller = mr.CreateController<PatientsController>();
                 Firestarter.CreateFakePatients(docAndre, this.db, 1);
 
                 // we now have 1 patient
@@ -486,7 +499,8 @@ namespace CerebelloWebRole.Tests.Tests
                     CreatedOn = referenceTime,
                     PatientId = patient.Id,
                     Cid10Code = "QAA",
-                    Cid10Name = "Doença X"
+                    Cid10Name = "Doença X", // x-men!
+                    PracticeId = docAndre.PracticeId,
                 };
 
                 this.db.Diagnoses.AddObject(diagnosis);

@@ -51,7 +51,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -69,7 +69,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Text = "This has no references"
             };
             var mr = new MockRepository(true);
-            var certificateModelController = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelController = mr.CreateController<ModelMedicalCertificatesController>();
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             int modelId = this.db.ModelMedicalCertificates.First().Id;
 
@@ -81,7 +81,7 @@ namespace CerebelloWebRole.Tests.Tests
                 PatientId = 9999
             };
 
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -112,7 +112,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             var controllerResult = controller.Edit(formModel);
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
@@ -140,7 +140,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
             var mr = new MockRepository(true);
-            var certificateModelTarget = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelTarget = mr.CreateController<ModelMedicalCertificatesController>();
             var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
 
@@ -152,7 +152,7 @@ namespace CerebelloWebRole.Tests.Tests
                 PatientId = patientId
             };
 
-            var target = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var target = mr.CreateController<MedicalCertificatesController>();
             var result = target.Edit(formModel);
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
@@ -179,7 +179,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
             var mr = new MockRepository(true);
-            var certificateModelTarget = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelTarget = mr.CreateController<ModelMedicalCertificatesController>();
             var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
 
@@ -195,7 +195,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
 
-            var target = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var target = mr.CreateController<MedicalCertificatesController>();
             var result = target.Edit(formModel);
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
@@ -217,7 +217,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
 
-            target = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            target = mr.CreateController<MedicalCertificatesController>();
             result = target.Edit(formModel);
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
@@ -243,7 +243,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
             var mr = new MockRepository(true);
-            var certificateModelTarget = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelTarget = mr.CreateController<ModelMedicalCertificatesController>();
             var certificateModelResult = certificateModelTarget.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
 
@@ -259,7 +259,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
 
-            var target = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var target = mr.CreateController<MedicalCertificatesController>();
             var result = target.Edit(formModel);
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
@@ -290,7 +290,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var certificateModelController = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelController = mr.CreateController<ModelMedicalCertificatesController>();
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             var certificateModel = this.db.ModelMedicalCertificates.First();
 
@@ -305,7 +305,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
 
-            var certificateController = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var certificateController = mr.CreateController<MedicalCertificatesController>();
             var certificateControllerResult = certificateController.Edit(formModel);
             var certificate = this.db.MedicalCertificates.First();
 
@@ -313,7 +313,7 @@ namespace CerebelloWebRole.Tests.Tests
             var result = certificateController.Delete(certificateModel.Id);
             JsonDeleteMessage deleteMessage = (JsonDeleteMessage)result.Data;
 
-            Assert.AreEqual(true, deleteMessage.success);
+            Assert.AreEqual(true, deleteMessage.success, "deleteMessage.success must be true");
             Assert.AreEqual(0, this.db.MedicalCertificates.Count());
         }
 
@@ -343,7 +343,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
             var mr = new MockRepository(true);
-            var certificateModelController = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelController = mr.CreateController<ModelMedicalCertificatesController>();
             var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.First().Id;
 
@@ -359,7 +359,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
             };
 
-            var certificateController = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var certificateController = mr.CreateController<MedicalCertificatesController>();
             var certificateControllerResult = certificateController.Edit(formModel);
 
             Assert.IsInstanceOfType(certificateControllerResult, typeof(ViewResult));
@@ -395,7 +395,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelcontroller = mr.CreateController<ModelMedicalCertificatesController>();
             certificateModelcontroller.Edit(formModel);
 
             // create a certificate
@@ -404,7 +404,7 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
 
             var patientId = this.db.Patients.First().Id;
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             var controllerResult = controller.MedicalCertificateFieldsEditor(null, 37);
 
             // obtaining the view-model
@@ -433,7 +433,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelcontroller = mr.CreateController<ModelMedicalCertificatesController>();
             certificateModelcontroller.Edit(formModel);
             var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
 
@@ -443,7 +443,7 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
 
             var patientId = this.db.Patients.First().Id;
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, null);
 
             // obtaining the view-model
@@ -467,7 +467,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelcontroller = mr.CreateController<ModelMedicalCertificatesController>();
             certificateModelcontroller.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
 
@@ -482,7 +482,7 @@ namespace CerebelloWebRole.Tests.Tests
                  }
             };
 
-            certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            certificateModelcontroller = mr.CreateController<ModelMedicalCertificatesController>();
             certificateModelcontroller.Edit(certificateModelFormModel);
             var anotherModelId = this.db.ModelMedicalCertificates.Select(m => m.Id).ToList().AsEnumerable().Reverse().First();
 
@@ -493,7 +493,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var patientId = this.db.Patients.First().Id;
 
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
             {
                 // both EXISTING
@@ -537,7 +537,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var certificateModelcontroller = Mvc3TestHelper.CreateControllerForTesting<ModelMedicalCertificatesController>(this.db, mr);
+            var certificateModelcontroller = mr.CreateController<ModelMedicalCertificatesController>();
             certificateModelcontroller.Edit(certificateModelFormModel);
             var modelId = this.db.ModelMedicalCertificates.Select(m => m.Id).First();
 
@@ -548,7 +548,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var patientId = this.db.Patients.First().Id;
 
-            var controller = Mvc3TestHelper.CreateControllerForTesting<MedicalCertificatesController>(this.db, mr);
+            var controller = mr.CreateController<MedicalCertificatesController>();
             MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
             {
                 // both EXISTING

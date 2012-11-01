@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
+            var controller = mr.CreateController<AnamnesesController>();
 
             // executing the test
             controller.Create(formModel);
@@ -97,7 +97,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
+            var controller = mr.CreateController<AnamnesesController>();
             controller.Create(formModel);
 
             Assert.IsTrue(controller.ModelState.IsValid);
@@ -117,7 +117,7 @@ namespace CerebelloWebRole.Tests.Tests
         public void Delete_ShouldReturnProperResultWhenNotExisting()
         {
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
+            var controller = mr.CreateController<AnamnesesController>();
 
             // tries to delete the anamnese
             var result = controller.Delete(999);
@@ -131,7 +131,7 @@ namespace CerebelloWebRole.Tests.Tests
         public void LookupDiagnoses_1_ShouldReturnTheProperResult()
         {
             var mr = new MockRepository(true);
-            var controller = Mvc3TestHelper.CreateControllerForTesting<AnamnesesController>(this.db, mr);
+            var controller = mr.CreateController<AnamnesesController>();
 
             var result = controller.AutocompleteDiagnoses("cefaléia", 20, 1);
             var lookupJsonResult = (AutocompleteJsonResult)result.Data;

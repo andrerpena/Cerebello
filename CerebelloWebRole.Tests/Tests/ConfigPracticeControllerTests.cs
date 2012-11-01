@@ -43,8 +43,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Index");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -72,8 +71,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Miguel_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Index");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -102,8 +100,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser(milena.Users.Single(), "milena");
                 mr.SetRouteData("Index", "ConfigPractice", "App", "consultoriodrhouse");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -133,8 +130,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -162,8 +158,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Miguel_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -192,8 +187,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser(milena.Users.Single(), "milena");
                 mr.SetRouteData("Edit", "ConfigPractice", "App", "consultoriodrhouse");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -224,8 +218,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -264,8 +257,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Andre_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -301,8 +293,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser_Miguel_CorrectPassword();
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -338,8 +329,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetCurrentUser(milena.Users.Single(), "milena");
                 mr.SetRouteData("Edit", "ConfigPractice", "App", "consultoriodrhouse");
 
-                controller = new ConfigPracticeController();
-                Mvc3TestHelper.SetupControllerForTesting(controller, this.db, mr, false);
+                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {

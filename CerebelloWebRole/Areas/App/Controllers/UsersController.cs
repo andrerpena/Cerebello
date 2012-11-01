@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Objects;
 using System.Linq;
 using System.ServiceModel.Security;
 using System.Web;
@@ -7,7 +8,6 @@ using System.Web.Mvc;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Access;
 using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
@@ -132,7 +132,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        [AccessDbObject(typeof(User), "id")]
         public ActionResult Edit(int? id)
         {
             UserViewModel model = null;
@@ -148,9 +147,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var user = this.db.Users.First(p => p.Id == id);
 
-                SYS_MedicalEntity medicalEntity;
-                SYS_MedicalSpecialty medicalSpecialty;
-                GetDoctorEntityAndSpecialty(this.db, user, out medicalEntity, out medicalSpecialty);
+                var medicalEntity = GetDoctorEntity(this.db.SYS_MedicalEntity, user.Doctor);
+                var medicalSpecialty = GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, user.Doctor);
 
                 model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
 
@@ -176,20 +174,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", model);
         }
 
-        public static void GetDoctorEntityAndSpecialty(CerebelloEntities db, User user, out SYS_MedicalEntity medicalEntity, out SYS_MedicalSpecialty medicalSpecialty)
+        public static SYS_MedicalEntity GetDoctorEntity(IObjectSet<SYS_MedicalEntity> dbSet, Doctor doctor)
         {
-            medicalEntity = user.Doctor == null ? null
-                : (db.SYS_MedicalEntity.FirstOrDefault(me => me.Name == user.Doctor.MedicalEntityName)
-                ?? db.SYS_MedicalEntity.FirstOrDefault(me => me.Code == user.Doctor.MedicalEntityCode));
+            var result = doctor == null ? null
+                : (dbSet.FirstOrDefault(me => me.Name == doctor.MedicalEntityName && me.Code == doctor.MedicalEntityCode)
+                ?? dbSet.FirstOrDefault(me => me.Name == doctor.MedicalEntityName)
+                ?? dbSet.FirstOrDefault(me => me.Code == doctor.MedicalEntityCode));
+            return result;
+        }
 
-            medicalSpecialty = user.Doctor == null ? null
-                : (db.SYS_MedicalSpecialty.FirstOrDefault(me => me.Name == user.Doctor.MedicalSpecialtyName)
+        public static SYS_MedicalSpecialty GetDoctorSpecialty(IObjectSet<SYS_MedicalSpecialty> dbSet, Doctor doctor)
+        {
+            var result = doctor == null ? null
+                : (dbSet.FirstOrDefault(ms => ms.Name == doctor.MedicalSpecialtyName && ms.Code == doctor.MedicalSpecialtyCode)
+                ?? dbSet.FirstOrDefault(ms => ms.Name == doctor.MedicalSpecialtyName)
                 // Note: Code has dupplicates in the database.
-                ?? db.SYS_MedicalSpecialty.FirstOrDefault(me => me.Code == user.Doctor.MedicalSpecialtyCode));
+                ?? dbSet.FirstOrDefault(ms => ms.Code == doctor.MedicalSpecialtyCode));
+            return result;
         }
 
         [HttpPost]
-        [AccessDbObject(typeof(User), "id")]
         public ActionResult Edit(UserViewModel formModel)
         {
             var isEditingOrCreating = formModel.Id != null ? 'E' : 'C';
@@ -253,7 +257,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // Creating the new user.
                 // The user belongs to the same practice as the logged user.
-                var result = SecurityManager.CreateUser(out user, userData, this.db, utcNow, loggedUser.PracticeId);
+                var result = SecurityManager.CreateUser(out user, userData, this.db.Users, utcNow, loggedUser.PracticeId);
 
                 if (result == CreateUserResult.UserNameAlreadyInUse)
                 {
@@ -297,7 +301,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // handle address
                 if (user.Person.Address == null)
-                    user.Person.Address = new Address();
+                    user.Person.Address = new Address { PracticeId = this.DbUser.PracticeId, };
 
                 user.Person.Address.CEP = formModel.Address.CEP;
                 user.Person.Address.City = formModel.Address.City;
@@ -314,7 +318,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
-                        user.Doctor = db.Doctors.CreateObject();
+                        user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
 
                     user.Doctor.CRM = formModel.MedicCRM;
 
@@ -337,7 +341,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This does not consider UrlIdentifier's used by other kinds of objects.
-                    string urlId = GetUniqueDoctorUrlId(this.db, formModel.FullName, practiceId);
+                    string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, practiceId);
                     if (urlId == null)
                     {
                         this.ModelState.AddModelError(
@@ -358,7 +362,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (formModel.IsAdministrador)
                 {
                     if (user.Administrator == null)
-                        user.Administrator = db.Administrators.CreateObject();
+                        user.Administrator = new Administrator { PracticeId = this.DbUser.PracticeId, };
                 }
                 else
                 {
@@ -377,7 +381,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (formModel.IsSecretary)
                 {
                     if (user.Secretary == null)
-                        user.Secretary = db.Secretaries.CreateObject();
+                        user.Secretary = new Secretary { PracticeId = this.DbUser.PracticeId, };
                 }
                 else
                 {
@@ -412,7 +416,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", formModel);
         }
 
-        public static string GetUniqueDoctorUrlId(CerebelloEntities db, string fullName, int? practiceId)
+        public static string GetUniqueDoctorUrlId(IObjectSet<Doctor> dbDoctorsSet, string fullName, int? practiceId)
         {
             // todo: this piece of code is very similar to SetPatientUniqueUrlIdentifier.
 
@@ -421,7 +425,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // todo: there is a concurrency problem here.
             int cnt = 2;
-            while (db.Doctors.Any(d => d.UrlIdentifier == urlId
+            while (dbDoctorsSet.Any(d => d.UrlIdentifier == urlId
                                        && d.Users.FirstOrDefault().PracticeId == practiceId
                                        && d.Users.FirstOrDefault().Person.FullName != fullName))
             {
@@ -439,11 +443,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var user = this.db.Users.First(p => p.Id == id);
 
-            // TODO: check user practice
-
-            SYS_MedicalEntity medicalEntity;
-            SYS_MedicalSpecialty medicalSpecialty;
-            GetDoctorEntityAndSpecialty(this.db, user, out medicalEntity, out medicalSpecialty);
+            var medicalEntity = GetDoctorEntity(this.db.SYS_MedicalEntity, user.Doctor);
+            var medicalSpecialty = GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, user.Doctor);
 
             var model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
 
@@ -594,7 +595,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
                         RememberMe = false,
                         UserNameOrEmail = loggedUser.UserName,
-                    }, this.db, out user);
+                    }, this.db.Users, out user);
 
                 if (!ok || user == null)
                     throw new Exception("This should never happen as the login uses the same data provided by the user.");
@@ -645,10 +646,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Reseting the password of the user.
             var user = this.db.Users.SingleOrDefault(u => u.Id == id);
 
-            // This check must be done in all objects, in all actions, in every controller.
-            bool accessDenied = !AccessManager.Reach.Check(db, this.DbUser, user);
-            this.ViewBag.AccessDenied = accessDenied;
-            if (user == null || accessDenied)
+            if (user == null)
                 return new HttpNotFoundResult("User does not exist.");
 
             if (this.ModelState.IsValid)

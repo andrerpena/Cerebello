@@ -194,7 +194,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     certificateModel = db.ModelMedicalCertificates.Where(m => m.Id == formModel.Id).First();
                 else
                 {
-                    certificateModel = new ModelMedicalCertificate();
+                    certificateModel = new ModelMedicalCertificate { PracticeId = this.DbUser.PracticeId, };
                     this.db.ModelMedicalCertificates.AddObject(certificateModel);
                 }
 
@@ -227,7 +227,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         var toBeAdded = mustBeAdded.Dequeue();
                         certificate.Fields.Add(new MedicalCertificateField()
                         {
-                            Name = toBeAdded.Name
+                            Name = toBeAdded.Name,
+                            PracticeId = this.DbUser.PracticeId,
                         });
                     }
 
