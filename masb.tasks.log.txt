@@ -9,8 +9,13 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
 2012-10-## ##:00-##:## (#°##") ##   ######
 
+-- qui ##°##" (##°##")
+2012-11-01 03:00-03:10 (0°10") 10   Commit.
+2012-11-01 00:00-03:00 (3°00") 10   #120: Correção dos testes, por conta da introdução do PracticeId em todas as tabelas.
+
 -- qua ##°##" (##°##")
-2012-10-30 00:00-01:00 (1°00") 10   #125: testes para a criação de requisições de exame: verificar se o código foi gravado.
+2012-10-31 19:40-24:00 (4°20")  7   #120: Criar um wrapper do CerebelloEntities que já filtra todos os objetos.
+2012-10-31 00:00-01:00 (1°00") 10   #125: testes para a criação de requisições de exame: verificar se o código foi gravado.
 
 -- ter ##°##" (##°##")
 2012-10-30 21:30-24:00 (2°30")  9   #146: Alguns lookups na tela de paciente não funcionam
