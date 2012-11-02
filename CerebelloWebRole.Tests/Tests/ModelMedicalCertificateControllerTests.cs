@@ -280,7 +280,7 @@ namespace CerebelloWebRole.Tests.Tests
             var patientId = this.db.Patients.First().Id;
 
             // obtains a valid certificate model
-            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            var certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
                 Text = "This is a reference: <%FIELD_1%>",
@@ -312,9 +312,10 @@ namespace CerebelloWebRole.Tests.Tests
 
             // tries to delete the certificate
             var jsonResult = certificateModelController.Delete(certificateModel.Id);
+
             JsonDeleteMessage deleteMessage = (JsonDeleteMessage)jsonResult.Data;
 
-            Assert.AreEqual(true, deleteMessage.success);
+            Assert.AreEqual(true, deleteMessage.success, "deleteMessage.success must be true");
             Assert.AreEqual(null, certificate.ModelMedicalCertificate);
             Assert.AreEqual(0, this.db.ModelMedicalCertificateFields.Count());
         }

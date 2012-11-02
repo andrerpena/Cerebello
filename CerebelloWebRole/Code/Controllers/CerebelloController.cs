@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -60,9 +61,8 @@ namespace CerebelloWebRole.Code
             // this is because of how tests work
             // if a test controller has been created, this.db has already been populated
             // otherwise let's create a regular one
-            // TODO: tests don't need to populate this property anymore, as CreateNewCerebelloEntities is mockable.
-            if (this.db == null)
-                this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities());
+            Debug.Assert(this.db == null, "this.db must be null");
+            this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities());
 
             return this.db;
         }

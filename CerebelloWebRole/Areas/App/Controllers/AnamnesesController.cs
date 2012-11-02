@@ -157,7 +157,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var query = from c in baseQuery
                         orderby c.Name
-                        select new
+                        select new // CidAutocompleteGridModel
                         {
                             Cid10Code = c.Id,
                             Cid10Name = c.Name
