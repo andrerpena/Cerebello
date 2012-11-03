@@ -453,57 +453,46 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var currentUserId = this.DbUser.Id;
-                bool canDeleteUsers = this.db.Users
-                    .Where(u => u.Id == currentUserId)
-                    .Select(u => u.IsOwner || u.Administrator != null)
-                    .SingleOrDefault();
+                var user = this.db.Users.First(m => m.Id == id);
 
-                User user;
-                if (!canDeleteUsers)
+                if (user.IsOwner)
                 {
-                    var message = "Você não tem permissão para excluir um usuário.";
-                    return this.Json(new JsonDeleteMessage { success = false, text = message }, JsonRequestBehavior.AllowGet);
+                    this.ModelState.AddModelError("id", "Não é possível excluir o usuário que é proprietário da conta.");
+                }
+                else if (id == this.DbUser.Id)
+                {
+                    this.ModelState.AddModelError("id", "Não é possível remover a si mesmo.");
                 }
                 else
                 {
-                    user = this.db.Users.First(m => m.Id == id);
-
-                    if (user.IsOwner)
+                    // delete appointments manually (SQL Server won't do this automatically)
+                    var appointments = user.Appointments.ToList();
+                    while (appointments.Any())
                     {
-                        this.ModelState.AddModelError("User", "Não é possível excluir o usuário que é proprietário da conta.");
+                        var appointment = appointments.First();
+                        this.db.Appointments.DeleteObject(appointment);
+                        appointments.Remove(appointment);
                     }
-                    else
+
+                    // delete chat messages received manually
+                    var chatMessagesReceived = user.ChatMessagesReceived.ToList();
+                    while (chatMessagesReceived.Any())
                     {
-                        // delete appointments manually (SQL Server won't do this automatically)
-                        var appointments = user.Appointments.ToList();
-                        while (appointments.Any())
-                        {
-                            var appointment = appointments.First();
-                            this.db.Appointments.DeleteObject(appointment);
-                            appointments.Remove(appointment);
-                        }
-
-                        // delete chat messages received manually
-                        var chatMessagesReceived = user.ChatMessagesReceived.ToList();
-                        while (chatMessagesReceived.Any())
-                        {
-                            var chatMessageReceived = chatMessagesReceived.First();
-                            this.db.ChatMessages.DeleteObject(chatMessageReceived);
-                            chatMessagesReceived.Remove(chatMessageReceived);
-                        }
-
-                        // delete chat messages sent manually
-                        var chatMessagesSent = user.ChatMessagesSent.ToList();
-                        while (chatMessagesSent.Any())
-                        {
-                            var chatMessageSent = chatMessagesSent.First();
-                            this.db.ChatMessages.DeleteObject(chatMessageSent);
-                            chatMessagesSent.Remove(chatMessageSent);
-                        }
-
-                        this.db.Users.DeleteObject(user);
+                        var chatMessageReceived = chatMessagesReceived.First();
+                        this.db.ChatMessages.DeleteObject(chatMessageReceived);
+                        chatMessagesReceived.Remove(chatMessageReceived);
                     }
+
+                    // delete chat messages sent manually
+                    var chatMessagesSent = user.ChatMessagesSent.ToList();
+                    while (chatMessagesSent.Any())
+                    {
+                        var chatMessageSent = chatMessagesSent.First();
+                        this.db.ChatMessages.DeleteObject(chatMessageSent);
+                        chatMessagesSent.Remove(chatMessageSent);
+                    }
+
+                    this.db.Users.DeleteObject(user);
                 }
 
                 if (this.ModelState.IsValid)
