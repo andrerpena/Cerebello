@@ -61,8 +61,8 @@ namespace CerebelloWebRole.Code
             // this is because of how tests work
             // if a test controller has been created, this.db has already been populated
             // otherwise let's create a regular one
-            Debug.Assert(this.db == null, "this.db must be null");
-            this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities());
+            if (this.db == null)
+                this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities());
 
             return this.db;
         }

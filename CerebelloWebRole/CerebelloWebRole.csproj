@@ -132,7 +132,7 @@
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
-    <Compile Include="Code\Access\FilteredObjectSet.cs" />
+    <Compile Include="Code\Access\FilteredObjectSetWrapper.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />

@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Objects;
+using System.IO;
 using System.Linq;
-using System.ServiceModel.Security;
-using System.Web;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using CerebelloWebRole.Code;
-using CerebelloWebRole.Areas.App.Models;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Mvc;
-using System.Net;
-using System.IO;
-using HtmlAgilityPack;
 using CerebelloWebRole.Code.Json;
-using System.Text.RegularExpressions;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
+using HtmlAgilityPack;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
