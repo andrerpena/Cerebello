@@ -370,7 +370,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     if (!formModel.IsAdministrador)
                         this.ModelState.AddModelError(
                             () => formModel.IsAdministrador,
-                            "Cannot remove administrator role from the owner of the account.");
+                            "Não é possível remover o papel de administrador do proprietário da conta.");
                 }
 
                 // when the user is a secretary
