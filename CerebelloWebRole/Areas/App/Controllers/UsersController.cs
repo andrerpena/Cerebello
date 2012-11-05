@@ -388,6 +388,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // If ModelState is still valid, save the objects to the database.
             if (this.ModelState.IsValid)
             {
+                if (formModel.Id == null)
+                {
+                    // this notification will automatically be added whithin the
+                    // same TRANSACTION that will save the user. That is, it's not going
+                    // to be placed if an error occur
+                    this.db.Notifications.AddObject(new Notification()
+                        {
+                            CreatedOn = this.GetUtcNow(),
+                            PracticeId = this.Practice.Id,
+                            UserId = this.DbUser.Id,
+                            Text =
+                                string.Format(
+                                    "O usuário {0} foi criado com successo. A senha padrão é: 123abc. O usuário terá a oportunidade de modificar esta senha no primeiro acesso",
+                                    user.UserName)
+                        });
+                }
+
                 // Saving all the changes.
                 db.SaveChanges();
 
