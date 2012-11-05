@@ -33,13 +33,14 @@ namespace CerebelloWebRole.Code.Notifications
 
             if (user.Secretary != null)
             {
-                var now = utcNowGetter();
-                var timeThreshold = now.AddMinutes(20);
+                var utcNow = utcNowGetter();
+                var timeThresholdMin = utcNow.AddMinutes(-30);
+                var timeThresholdMax = utcNow.AddMinutes(10);
 
                 // in this case this user is a secretary
                 var scheduledAppointments =
                     db.Appointments.Include("Doctor").Include("Patient").
-                       Where(a => a.Start >= now && a.Start < timeThreshold && a.Status == AppointmentStatus.Undefined && a.IsPolled == polled).ToList();
+                       Where(a => a.Start >= timeThresholdMin && a.Start < timeThresholdMax && a.Status == AppointmentStatus.Undefined && a.IsPolled == polled).ToList();
 
                 if (scheduledAppointments.Any())
                 {
