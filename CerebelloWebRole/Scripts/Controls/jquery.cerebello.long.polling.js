@@ -4,7 +4,7 @@
         /// <summary>Adds a listener to the long polling</summary>
         /// <param name="providerName" type="String">Provider name</param>
         /// <param name="success" type="Function">Handler that will be called when there are new events</param>
-        /// <param name="error" type="Function"> Handler that will be called when an error ocurred processing the request.</param>
+        /// <param name="error" type="Function"> Handler that will be called when an error ocurred processing the request. (optional)</param>
         if (!$._longPollingData)
             $._longPollingData = {
                 listeners: new Object(),
@@ -39,11 +39,15 @@
                     $._longPollingData.lastFetchTimeStamp = data.Timestamp;
                     for (var i = 0; i < data.Events.length; i++) {
                         var event = data.Events[i];
-                        var listener = $._longPollingData.listeners[event.ProviderName].success;
-                        try {
-                            listener(event);
-                        } catch(ex) {
-                            throw "Long polling listener triggered an Exception: " + ex;
+                        if (!$._longPollingData.listeners[event.ProviderName])
+                            throw "Long polling server sent a message but there is no client listener. Provider name: " + event.ProviderName;
+                        else {
+                            var listener = $._longPollingData.listeners[event.ProviderName].success;
+                            try {
+                                listener(event);
+                            } catch(ex) {
+                                throw "Long polling listener triggered an Exception: " + ex;
+                            }
                         }
                     };
                     doLongPollingRequest();

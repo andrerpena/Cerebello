@@ -4,26 +4,40 @@
     width: 250px;
 }
 
-.notifications-wrapper .notification {
-    background-color: #DD390D;
-    color: white;
-    line-height: 1.2em;
-    margin-bottom: 10px;
-    overflow: hidden;
-    padding: 10px;
-}
+    .notifications-wrapper .notification {
+        background-color: #DD390D;
+        color: white;
+        line-height: 1.2em;
+        margin-bottom: 10px;
+        overflow: hidden;
+        padding: 10px;
+    }
 
-.notifications-wrapper .notification .close {
-    background-image: url("/content/images/app/icons16/clear-white.png");
-    background-position: 0 -3px;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    float: right;
-    height: 16px;
-    width: 16px;
-}
+        .notifications-wrapper .notification .close {
+            background-image: url("/content/images/app/icons16/clear-white.png");
+            background-position: 0 -3px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            float: right;
+            height: 16px;
+            width: 16px;
+        }
 
-.notifications-wrapper .notification a {
-    text-decoration: underline;
-    color: white;
-}
+        .notifications-wrapper .notification a {
+            text-decoration: underline;
+            color: white;
+        }
+
+        .notifications-wrapper .notification .appointment-notification-panel a {
+            display: block;
+            margin-top: 2px;
+        }
+
+        .notifications-wrapper .notification .appointment-notification-panel .text {
+            margin-bottom: 10px;
+        }
+
+
+            .notifications-wrapper .notification .appointment-notification-panel .text a {
+                display: inline;
+            }

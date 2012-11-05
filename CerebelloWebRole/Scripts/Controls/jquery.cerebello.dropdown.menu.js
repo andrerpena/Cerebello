@@ -27,21 +27,21 @@
             var _this = this;
 
             // creates a new balloon for this dropdown
-            var $balloon = $("<div></div>").addClass("balloon").appendTo($(window.document.body));
-            var $balloonPointer = $("<div></div>").addClass("balloon-pointer").appendTo($balloon);
+            var $balloon = $("<div/>").addClass("balloon").appendTo($(window.document.body));
+            var $balloonPointer = $("<div/>").addClass("balloon-pointer").appendTo($balloon);
 
             // adding the arrow divs to the pointer
-            $balloonPointer.append($("<div></div>").addClass("balloon-arrow menu-target"));
-            $balloonPointer.append($("<div></div>").addClass("balloon-arrow-border"));
+            $balloonPointer.append($("<div/>").addClass("balloon-arrow menu-target"));
+            $balloonPointer.append($("<div/>").addClass("balloon-arrow-border"));
 
-            var $balloonWrapper = $("<div></div>").addClass("balloon-wrapper").appendTo($balloon);
-            var $balloonContent = $("<div></div>").addClass("balloon-content").appendTo($balloonWrapper);
+            var $balloonWrapper = $("<div/>").addClass("balloon-wrapper").appendTo($balloon);
+            var $balloonContent = $("<div/>").addClass("balloon-content").appendTo($balloonWrapper);
 
-            var $dropdownList = $("<ul></ul>").addClass("balloon-links").appendTo($balloonContent);
+            var $dropdownList = $("<ul/>").addClass("balloon-links").appendTo($balloonContent);
 
             for (var i = 0; i < _this.opts.items.length; i++) {
-                var $li = $("<li></li>").appendTo($dropdownList);
-                var $a = $("<a></a>").appendTo($li);
+                var $li = $("<li/>").appendTo($dropdownList);
+                var $a = $("<a/>").appendTo($li);
                 $a.attr("data-val-item-id", _this.opts.items[i].id);
                 $a.text(_this.opts.items[i].text);
                 if (_this.opts.items[i].href)
@@ -57,7 +57,7 @@
                 $balloon.css("left", _this.$el.offset().left);
                 $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + 5);
                 $balloon.show();
-                handler = function (e2) {
+                var handler = function (e2) {
                     if (!$balloon.has(e2.target).length) {
                         $balloon.hide();
                         $("html").unbind("click", handler);

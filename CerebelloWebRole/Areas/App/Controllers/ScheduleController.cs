@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
@@ -13,10 +14,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ScheduleController : DoctorController
     {
-        public ScheduleController()
-        {
-        }
-
         public JsonResult GetAppointments(int start, int end)
         {
             DateTime originUtc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -116,18 +113,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 maxTimes.Add(this.Doctor.CFG_Schedule.SaturdayWorkdayEndTime);
             }
 
-            string minMinTime = minTimes.Min();
+            var minMinTime = minTimes.Min();
             var maxMaxTime = maxTimes.Max();
 
-            ScheduleViewModel viewModel = new ScheduleViewModel()
-            {
-                SlotMinutes = this.Doctor.CFG_Schedule.AppointmentTime,
-                MinTime = minMinTime,
-                MaxTime = maxMaxTime,
-                Weekends = this.Doctor.CFG_Schedule.Saturday || this.Doctor.CFG_Schedule.Sunday
-            };
-
-            viewModel.DoctorId = this.Doctor.Id;
+            var viewModel = new ScheduleViewModel
+                {
+                    SlotMinutes = this.Doctor.CFG_Schedule.AppointmentTime,
+                    MinTime = minMinTime,
+                    MaxTime = maxMaxTime,
+                    Weekends = this.Doctor.CFG_Schedule.Saturday || this.Doctor.CFG_Schedule.Sunday,
+                    DoctorId = this.Doctor.Id
+                };
 
             return View(viewModel);
         }
@@ -487,9 +483,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return this.Json((dynamic)new { status = "error",
+                    return this.Json((dynamic)new
+                    {
+                        status = "error",
                         text = "Não foi possível salvar a consulta. Erro inexperado",
-                        details = ex.Message }, JsonRequestBehavior.AllowGet);
+                        details = ex.Message
+                    }, JsonRequestBehavior.AllowGet);
                 }
             }
 
@@ -844,9 +843,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Validation: cannot be day-off.
             var isDayOff = db.CFG_DayOff
-                .Where(d => d.DoctorId == doctor.Id)
-                .Where(d => d.Date == localDate.Date)
-                .Any();
+                             .Where(d => d.DoctorId == doctor.Id).Any(d => d.Date == localDate.Date);
 
             if (isDayOff)
             {
@@ -884,7 +881,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 hasError = true;
             }
 
-            Action<string, string, string, string> CheckModelTimingError = (workdayStart, workdayEnd, lunchStart, lunchEnd) =>
+            Action<string, string, string, string> checkModelTimingError = (workdayStart, workdayEnd, lunchStart, lunchEnd) =>
             {
                 if (string.IsNullOrEmpty(workdayStart) || string.IsNullOrEmpty(workdayEnd))
                 {
@@ -939,49 +936,49 @@ namespace CerebelloWebRole.Areas.App.Controllers
             switch (localDate.Date.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.SundayWorkdayStartTime,
                         doctor.CFG_Schedule.SundayWorkdayEndTime,
                         doctor.CFG_Schedule.SundayLunchStartTime,
                         doctor.CFG_Schedule.SundayLunchEndTime);
                     break;
                 case DayOfWeek.Monday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.MondayWorkdayStartTime,
                         doctor.CFG_Schedule.MondayWorkdayEndTime,
                         doctor.CFG_Schedule.MondayLunchStartTime,
                         doctor.CFG_Schedule.MondayLunchEndTime);
                     break;
                 case DayOfWeek.Tuesday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.TuesdayWorkdayStartTime,
                         doctor.CFG_Schedule.TuesdayWorkdayEndTime,
                         doctor.CFG_Schedule.TuesdayLunchStartTime,
                         doctor.CFG_Schedule.TuesdayLunchEndTime);
                     break;
                 case DayOfWeek.Wednesday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.WednesdayWorkdayStartTime,
                         doctor.CFG_Schedule.WednesdayWorkdayEndTime,
                         doctor.CFG_Schedule.WednesdayLunchStartTime,
                         doctor.CFG_Schedule.WednesdayLunchEndTime);
                     break;
                 case DayOfWeek.Thursday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.ThursdayWorkdayStartTime,
                         doctor.CFG_Schedule.ThursdayWorkdayEndTime,
                         doctor.CFG_Schedule.ThursdayLunchStartTime,
                         doctor.CFG_Schedule.ThursdayLunchEndTime);
                     break;
                 case DayOfWeek.Friday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.FridayWorkdayStartTime,
                         doctor.CFG_Schedule.FridayWorkdayEndTime,
                         doctor.CFG_Schedule.FridayLunchStartTime,
                         doctor.CFG_Schedule.FridayLunchEndTime);
                     break;
                 case DayOfWeek.Saturday:
-                    CheckModelTimingError(
+                    checkModelTimingError(
                         doctor.CFG_Schedule.SaturdayWorkdayStartTime,
                         doctor.CFG_Schedule.SaturdayWorkdayEndTime,
                         doctor.CFG_Schedule.SaturdayLunchStartTime,
@@ -1086,16 +1083,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
             if (!string.IsNullOrEmpty(viewModel.Start) && !string.IsNullOrEmpty(viewModel.End))
             {
-                var isTimeValid = ValidateTime(
-                    this.db,
-                    this.Doctor,
-                    viewModel.Date,
-                    viewModel.Start,
-                    viewModel.End,
-                    this.ModelState,
-                    inconsistencyMessages,
-                    localNow);
-
                 var startTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.Start);
                 var endTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.End);
 

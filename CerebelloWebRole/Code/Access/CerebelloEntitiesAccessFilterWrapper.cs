@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.Objects;
 using System.Linq;
 using Cerebello.Model;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code
 {
@@ -16,8 +18,9 @@ namespace CerebelloWebRole.Code
         private readonly CerebelloEntities db;
         private User user;
 
-        public CerebelloEntitiesAccessFilterWrapper(CerebelloEntities db)
+        public CerebelloEntitiesAccessFilterWrapper([NotNull] CerebelloEntities db)
         {
+            if (db == null) throw new ArgumentNullException("db");
             this.db = db;
         }
 
@@ -25,6 +28,8 @@ namespace CerebelloWebRole.Code
         {
             return this.db.SaveChanges();
         }
+
+        public DbConnection Connection { get { return this.db.Connection; } }
 
         public User SetCurrentUserById(int userId)
         {
@@ -196,6 +201,11 @@ namespace CerebelloWebRole.Code
         public FilteredObjectSetWrapper<User> Users
         {
             get { return new FilteredObjectSetWrapper<User>(this.db.Users, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<Notification> Notifications
+        {
+            get { return new FilteredObjectSetWrapper<Notification>(this.db.Notifications, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public ObjectSet<SYS_ActiveIngredient> SYS_ActiveIngredient

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
 using System;
+using CerebelloWebRole.Code.Notifications;
 
 namespace CerebelloWebRole.Code
 {
@@ -20,7 +21,7 @@ namespace CerebelloWebRole.Code
         /// <param name="practice"> </param>
         /// <param name="utcDateTime"></param>
         /// <returns></returns>
-        protected static DateTime ConvertToLocalDateTime(Practice practice, DateTime utcDateTime)
+        public static DateTime ConvertToLocalDateTime(Practice practice, DateTime utcDateTime)
         {
             if (practice == null) throw new ArgumentNullException("practice");
 
@@ -93,6 +94,16 @@ namespace CerebelloWebRole.Code
 
             // Setting a common ViewBag value.
             this.ViewBag.LocalNow = this.GetPracticeLocalNow();
+
+            // discover the appointments that have already been polled and sent to the client
+            this.ViewBag.AlreadyPolledAppointments =
+                NewAppointmentNotificationsHelper.GetNewAppointmentNotifications(this.db, this.Practice.Id, this.DbUser.Id,
+                                                                                 this.UtcNowGetter, this.Url, true);
+
+            // discover the notifications that have already been polled and sent to to the client
+            this.ViewBag.AlreadyPolledNotifications =
+                NotificationsHelper.GetNotifications(this.db, this.Practice.Id,
+                                                     this.Url, true);
         }
     }
 }

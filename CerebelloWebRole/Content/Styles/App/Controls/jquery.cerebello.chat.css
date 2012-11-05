@@ -9,6 +9,7 @@
     box-shadow: 0 0 1px #CCCCCC;
     position: fixed;
     width: 230px;
+    z-index: 10000;
 }
 
 .chat-window-title

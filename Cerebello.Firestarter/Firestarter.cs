@@ -1645,8 +1645,8 @@ GO
         /// Executes a SQL script containing GO statements.
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="script"></param>
-        public static void ExecuteScripts(CerebelloEntities db, string[] scripts)
+        /// <param name="scripts"></param>
+        private static void ExecuteScripts(CerebelloEntities db, IEnumerable<string> scripts)
         {
             foreach (var eachScript in scripts)
                 db.ExecuteStoreCommand(eachScript);
