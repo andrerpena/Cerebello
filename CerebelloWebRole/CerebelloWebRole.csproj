@@ -133,7 +133,7 @@
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
-    <Compile Include="Code\Access\FilteredObjectSet.cs" />
+    <Compile Include="Code\Access\FilteredObjectSetWrapper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsLongPollingProvider.cs" />

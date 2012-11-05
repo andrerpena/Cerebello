@@ -84,6 +84,11 @@
     editPanelMedic.AddField(
         m => m.MedicalEntityJurisdiction,
         format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
+
+    var editPanelContact = this.Html.CreateEditPanel();
+    editPanelContact.AddField(m => m.Email);
+    editPanelContact.AddField(m => m.PhoneCell);
+    editPanelContact.AddField(m => m.PhoneLand);
 }
 @section Scripts {
     <script type="text/javascript">
@@ -143,6 +148,12 @@
     </h2>
 
     @Html.EditorFor(model => model.Address);
+
+    <h2>
+        Informações de contato
+    </h2>
+    
+    @editPanelContact.GetHtml()
 
     <div class="submit-bar">
         <input type="submit" value="salvar usuário" />

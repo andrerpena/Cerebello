@@ -208,7 +208,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Gets an user given user name or email, and the practice identifier.
         /// </summary>
-        /// <param name="db"></param>
+        /// <param name="dbUserSet"> </param>
         /// <param name="practiceIdentifier"></param>
         /// <param name="userNameOrEmail"></param>
         /// <returns></returns>

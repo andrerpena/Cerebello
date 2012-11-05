@@ -196,6 +196,8 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 user.IsOwner = true;
 
+                user.Administrator = new Administrator { };
+
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (registrationData.IsDoctor)
                 {
@@ -219,7 +221,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This is the first doctor, so there will be no conflicts.
-                    string urlId = UsersController.GetUniqueDoctorUrlId(this.db.Doctors, registrationData.FullName, null);
+                    var urlId = UsersController.GetUniqueDoctorUrlId(this.db.Doctors, registrationData.FullName, null);
                     if (urlId == null)
                     {
                         this.ModelState.AddModelError(
@@ -232,20 +234,19 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                 db.Users.AddObject(user);
 
-                // Creating confirmation email, with the token.
-                MailMessage message;
-
+                if (this.ModelState.IsValid)
                 {
+                    // Creating confirmation email, with the token.
                     TokenId tokenId;
 
                     // Setting verification token.
-                    // Note: tokens are safe to save even if validation fails.
                     using (var db2 = this.CreateNewCerebelloEntities())
                     {
                         var token = db2.GLB_Token.CreateObject();
                         token.Value = Guid.NewGuid().ToString("N");
                         token.Type = "VerifyPracticeAndEmail";
-                        token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier, user.UserName);
+                        token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier,
+                                                   user.UserName);
                         token.ExpirationDate = utcNow.AddDays(30);
                         db2.GLB_Token.AddObject(token);
                         db2.SaveChanges();
@@ -255,12 +256,12 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                     // Rendering message bodies from partial view.
                     var partialViewModel = new EmailViewModel
-                    {
-                        PersonName = user.Person.FullName,
-                        UserName = user.UserName,
-                        Token = tokenId.ToString(),
-                        PracticeUrlIdentifier = user.Practice.UrlIdentifier,
-                    };
+                                               {
+                                                   PersonName = user.Person.FullName,
+                                                   UserName = user.UserName,
+                                                   Token = tokenId.ToString(),
+                                                   PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                               };
                     var bodyText = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
 
                     partialViewModel.IsBodyHtml = true;
@@ -268,24 +269,22 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
 
-                    message = this.CreateEmailMessage(
+                    var message = this.CreateEmailMessage(
                         toAddress,
                         "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.",
                         bodyHtml,
                         bodyText);
-                }
 
-                // If the ModelState is still valid, then save objects to the database,
-                // and send confirmation email message to the user.
-                using (message)
-                {
-                    if (this.ModelState.IsValid)
+                    // If the ModelState is still valid, then save objects to the database,
+                    // and send confirmation email message to the user.
+                    using (message)
                     {
                         // Saving changes to the DB.
                         db.SaveChanges();
 
                         user.Practice.Owner = user;
                         user.Person.PracticeId = user.PracticeId;
+                        user.Administrator.PracticeId = user.PracticeId;
                         db.SaveChanges();
 
                         // Sending the confirmation e-mail to the new user.

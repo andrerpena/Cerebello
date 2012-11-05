@@ -7,7 +7,12 @@
 
 @using (Html.BeginCollectionItemInline("Symptoms"))
 {
-    @(Html.LookupGridFor<SymptomViewModel, CidAutocompleteGridModel, string>(m => m.Cid10Code, m => m.Text, Url.Action("AutocompleteDiagnoses"), gm => gm.Cid10Code, gm => gm.Cid10Name, gm => gm.Cid10Code ))
+    @(Html.LookupGridFor<SymptomViewModel, CidAutocompleteGridModel, string>(
+        m => m.Cid10Code, m => m.Text,
+        Url.Action("AutocompleteDiagnoses"),
+        gm => gm.Cid10Code,
+        gm => gm.Cid10Name,
+        gm => gm.Cid10Code))
 }
     
 
