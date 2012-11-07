@@ -1083,6 +1083,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
             if (!string.IsNullOrEmpty(viewModel.Start) && !string.IsNullOrEmpty(viewModel.End))
             {
+                var isTimeValid = ValidateTime(
+                    this.db,
+                    this.Doctor,
+                    viewModel.Date,
+                    viewModel.Start,
+                    viewModel.End,
+                    this.ModelState,
+                    inconsistencyMessages,
+                    localNow);
+
                 var startTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.Start);
                 var endTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.End);
 

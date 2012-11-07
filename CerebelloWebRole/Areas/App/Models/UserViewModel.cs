@@ -26,6 +26,7 @@ namespace CerebelloWebRole.Areas.App.Models
         // Information of this user when he/she is a medic.
         // If IsDoctor is false, these properties have no meaning.
 
+        // todo: CRM não é válido para outros conselhos, deveria ser "Número no conselho"
         [Display(Name = "CRM")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicCRM { get; set; }
@@ -43,6 +44,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalSpecialtyName { get; set; }
 
+        // todo: o nome disso deveria ser "Conselho profissional"
         [Display(Name = "Conselho médico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntityId { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -29,6 +30,8 @@ namespace CerebelloWebRole.Tests
         {
             if (initForOldTests)
                 this.Reset();
+
+            this.HttpMethod = "GET";
         }
 
         private void Reset()
@@ -42,10 +45,10 @@ namespace CerebelloWebRole.Tests
             SetCurrentUser_Andre_CorrectPassword();
 
             // The route context is valid by default, for the user André.
-            RouteData = new RouteData();
-            RouteData.DataTokens["area"] = "App";
-            RouteData.Values["practice"] = "consultoriodrhouse";
-            RouteData.Values["doctor"] = "gregoryhouse";
+            this.RouteData = new RouteData();
+            this.RouteData.DataTokens["area"] = "App";
+            this.RouteData.Values["practice"] = "consultoriodrhouse";
+            this.RouteData.Values["doctor"] = "gregoryhouse";
         }
 
         /// <summary>
@@ -109,10 +112,16 @@ namespace CerebelloWebRole.Tests
             this.UserDbId = user.Id;
         }
 
-        public void SetCurrentUser(User user, string password)
+        public void SetCurrentUser(User user, string password, bool isPasswordValid = true)
         {
-            // todo: this method should check if the password is valid
+            // checking password
+            var passwordHash = CipherHelper.Hash(password, user.PasswordSalt);
+            bool isPasswordValid2 = passwordHash == user.Password;
+            if (isPasswordValid != isPasswordValid2)
+                throw new Exception(string.Format("The passed password should be {0}.",
+                    isPasswordValid ? "valid" : "invalid"));
 
+            // setting values that will be used to create mocks
             this.IsAuthenticated = true;
             this.FullName = user.Person.FullName;
             this.UserNameOrEmail = user.UserName;
@@ -245,6 +254,16 @@ namespace CerebelloWebRole.Tests
         public RouteData RouteData { get; set; }
 
         /// <summary>
+        /// Http method used in the mocked request.
+        /// </summary>
+        public string HttpMethod { get; set; }
+
+        /// <summary>
+        /// Indicates whether the mocked request should report itself as being an ajax request.
+        /// </summary>
+        public bool IsAjax { get; set; }
+
+        /// <summary>
         /// HttpServerUtilityBase stub.
         /// </summary>
         public class HttpServerUtilityBaseStub : HttpServerUtilityBase
@@ -293,8 +312,11 @@ namespace CerebelloWebRole.Tests
             mock.SetupGet(m => m.IsAuthenticated).Returns(this.IsAuthenticated);
             mock.SetupGet(m => m.ApplicationPath).Returns("/");
             mock.SetupGet(m => m.Url).Returns(new Uri("http://localhost/unittests", UriKind.Absolute));
-            mock.SetupGet(m => m.ServerVariables).Returns(new System.Collections.Specialized.NameValueCollection());
+            mock.SetupGet(m => m.ServerVariables).Returns(new NameValueCollection());
             mock.SetupGet(m => m.Cookies).Returns(new HttpCookieCollection());
+            mock.SetupGet(m => m.HttpMethod).Returns(this.HttpMethod);
+            if (this.IsAjax)
+                mock.SetupGet(m => m["X-Requested-With"]).Returns("XMLHttpRequest");
 
             return mock.Object;
         }
@@ -421,12 +443,7 @@ namespace CerebelloWebRole.Tests
         {
             var mockController = new Mock<TController> { CallBase = true };
             var controller = mockController.Object;
-            this.SetupController(controller, callOnActionExecuting, setupNewDb, allowEmailSending);
-            return controller;
-        }
 
-        private void SetupController(Controller controller, bool callOnActionExecuting = true, Action<CerebelloEntities> setupNewDb = null, bool allowEmailSending = false)
-        {
             var routes = new RouteCollection();
             MvcApplication.RegisterRoutes(routes);
 
@@ -455,6 +472,8 @@ namespace CerebelloWebRole.Tests
                 ((IActionFilter)controller).OnActionExecuting(this.CreateActionExecutingContext());
 
             controller.Url = new UrlHelper(this.GetRequestContext(), routes);
+
+            return controller;
         }
     }
 }

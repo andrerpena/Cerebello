@@ -10,7 +10,10 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 2012-10-## ##:00-##:## (#°##") ##   ######
 
 -- qua ##°##" (##°##")
-2012-11-03 14:00-14:25 (0°25") 10   Consertando programa organizador de scripts SQL.
+2012-11-03 17:00-18:30 (1°30")  8   Corrigindo testes que estavam falhando.
+2012-11-03 13:30-17:00 (3°30") 10   Corrigindo algumas coisas na arquitetura de testes.
+                                    Criados action-results: JsonForbiddenResult e JsonUnauthorizedResult.
+2012-11-03 14:00-13:00 (1°00")  9   Consertando programa organizador de scripts SQL.
 
 -- sab ##°##" (##°##")
 2012-11-03 00:00-02:00 (2°00")  8   

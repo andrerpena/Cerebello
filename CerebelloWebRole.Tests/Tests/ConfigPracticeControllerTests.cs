@@ -52,8 +52,8 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index", "GET")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index", "GET")
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index")
                             ?? controller.Index();
 
             // Asserts
@@ -80,8 +80,8 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index", "GET")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index", "GET")
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index")
                             ?? controller.Index();
 
             // Asserts
@@ -109,8 +109,8 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index", "GET")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index", "GET")
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index")
                             ?? controller.Index();
 
             // Asserts
@@ -139,8 +139,8 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "GET")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "GET")
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit")
                             ?? controller.Edit();
 
             // Asserts
@@ -167,8 +167,8 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "GET")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "GET")
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit")
                             ?? controller.Edit();
 
             // Asserts
@@ -196,8 +196,8 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "GET")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "GET")
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit")
                             ?? controller.Edit();
 
             // Asserts

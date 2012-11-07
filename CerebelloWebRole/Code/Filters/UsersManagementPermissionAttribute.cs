@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-using Cerebello.Model;
+﻿using Cerebello.Model;
 
 namespace CerebelloWebRole.Code.Filters
 {

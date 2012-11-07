@@ -13,7 +13,7 @@ namespace CerebelloWebRole.Tests.Tests.Self
         {
             var controller = new MyController();
             controller.CallInitialize();
-            Mvc3TestHelper.RunOnActionExecuting(controller, "Action", "GET");
+            Mvc3TestHelper.RunOnActionExecuting(controller, "Action");
             Assert.IsTrue(controller.OnActionExecutingCalled);
             Assert.IsTrue(controller.Attribute_OnActionExecutingCalled);
         }
@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Tests.Tests.Self
         {
             var controller = new MyController();
             controller.CallInitialize();
-            Mvc3TestHelper.RunOnAuthorization(controller, "Action", "GET");
+            Mvc3TestHelper.RunOnAuthorization(controller, "Action");
             Assert.IsTrue(controller.OnAuthorizationCalled);
             Assert.IsTrue(controller.Attribute_OnAuthorizationCalled);
         }
@@ -54,7 +54,9 @@ namespace CerebelloWebRole.Tests.Tests.Self
 
             public void CallInitialize()
             {
-                this.Initialize(new RequestContext(new MvcHelper.MockHttpContext(), new RouteData()));
+                this.Initialize(new RequestContext(
+                    new MvcHelper.MockHttpContext { Request2 = new MvcHelper.MockHttpRequest() },
+                    new RouteData()));
             }
 
             public bool OnAuthorizationCalled { get; set; }

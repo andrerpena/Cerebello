@@ -29,6 +29,9 @@ namespace CerebelloWebRole.Code.Filters
                 // if it's an Ajax Request, must return a Json
                 if (httpContext.Request.IsAjaxRequest())
                 {
+                    // todo: shouldn't Response.StatusCode be Unauthorized instead of Forbidden
+                    // todo: replace this code by JsonForbiddenResult or JsonUnauthorizedResult
+
                     httpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     filterContext.Result =
                         new JsonResult

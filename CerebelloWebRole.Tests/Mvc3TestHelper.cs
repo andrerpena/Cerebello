@@ -8,7 +8,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello;
 using CerebelloWebRole.Code.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests
 {
@@ -57,18 +56,28 @@ namespace CerebelloWebRole.Tests
         /// <param name="actionName"></param>
         /// <param name="httpMethod"></param>
         /// <returns></returns>
-        public static ActionResult RunOnAuthorization(Controller controller, string actionName, string httpMethod = "GET")
+        public static ActionResult RunOnAuthorization(Controller controller, string actionName = null, string httpMethod = null)
         {
             // reference: http://haacked.com/archive/2008/08/13/aspnetmvc-filters.aspx
             // reference: http://www.asp.net/mvc/tutorials/older-versions/controllers-and-routing/understanding-action-filters-cs
             // Filter execution order: Authorization, Action Execution, Result Execution, Exception Handling
 
-            var controllerDescriptor = new ReflectedControllerDescriptor(controller.GetType());
-            var filters = GetFilters<IAuthorizationFilter>(controller, controllerDescriptor, actionName, httpMethod);
+            httpMethod = httpMethod ?? controller.ControllerContext.HttpContext.Request.HttpMethod ?? "GET";
+            actionName = actionName ?? controller.ControllerContext.RouteData.GetRequiredString("action");
+            if (string.IsNullOrEmpty(actionName))
+                throw new Exception("actionName is null or empty");
 
-            var authorizationContext = new AuthorizationContext(
-                controller.ControllerContext,
-                controllerDescriptor.FindAction(controller.ControllerContext, actionName));
+            var controllerContextWithMethodParam = new ControllerContext(
+                new MvcHelper.MockHttpContext { Request2 = new MvcHelper.MockHttpRequest { HttpMethod2 = httpMethod } },
+                new RouteData(),
+                controller);
+
+            var controllerDescriptor = new ReflectedControllerDescriptor(controller.GetType());
+            var actionDescriptor = controllerDescriptor.FindAction(controllerContextWithMethodParam, actionName);
+
+            var authorizationContext = new AuthorizationContext(controller.ControllerContext, actionDescriptor);
+
+            var filters = GetFilters<IAuthorizationFilter>(controller, actionDescriptor, actionName, httpMethod);
 
             foreach (var eachFilter in filters)
             {
@@ -95,15 +104,27 @@ namespace CerebelloWebRole.Tests
         /// <param name="actionName"></param>
         /// <param name="httpMethod"></param>
         /// <returns></returns>
-        public static ActionResult RunOnActionExecuting(Controller controller, string actionName, string httpMethod = "GET")
+        public static ActionResult RunOnActionExecuting(Controller controller, string actionName = null, string httpMethod = null)
         {
+            httpMethod = httpMethod ?? controller.ControllerContext.HttpContext.Request.HttpMethod ?? "GET";
+            actionName = actionName ?? controller.ControllerContext.RouteData.GetRequiredString("action");
+            if (string.IsNullOrEmpty(actionName))
+                throw new Exception("actionName is null or empty");
+
+            var controllerContextWithMethodParam = new ControllerContext(
+                new MvcHelper.MockHttpContext { Request2 = new MvcHelper.MockHttpRequest { HttpMethod2 = httpMethod } },
+                new RouteData(),
+                controller);
+
             var controllerDescriptor = new ReflectedControllerDescriptor(controller.GetType());
-            var filters = GetFilters<IActionFilter>(controller, controllerDescriptor, actionName, httpMethod);
+            var actionDescriptor = controllerDescriptor.FindAction(controllerContextWithMethodParam, actionName);
 
             var actionExecutingContext = new ActionExecutingContext(
                 controller.ControllerContext,
-                controllerDescriptor.FindAction(controller.ControllerContext, actionName),
+                actionDescriptor,
                 new Dictionary<string, object>());
+
+            var filters = GetFilters<IActionFilter>(controller, actionDescriptor, actionName, httpMethod);
 
             foreach (var eachFilter in filters)
             {
@@ -116,7 +137,7 @@ namespace CerebelloWebRole.Tests
             return null;
         }
 
-        private static List<T> GetFilters<T>(Controller controller, ControllerDescriptor controllerDescriptor, string actionName, string httpMethod = "GET")
+        private static List<T> GetFilters<T>(ControllerBase controller, ActionDescriptor actionDescriptor, string actionName, string httpMethod)
             where T : class
         {
             var allFilters = new List<object>();
@@ -128,11 +149,6 @@ namespace CerebelloWebRole.Tests
 
             allFilters.AddRange(controller.GetType().GetCustomAttributes());
 
-            var controllerContextWithMethodParam = new ControllerContext(
-                new MvcHelper.MockHttpContext { Request2 = new MvcHelper.MockHttpRequest { HttpMethod2 = httpMethod } },
-                new RouteData(),
-                controller);
-            var actionDescriptor = controllerDescriptor.FindAction(controllerContextWithMethodParam, actionName);
             allFilters.AddRange(actionDescriptor.GetCustomAttributes(true));
 
             allFilters.Add(controller);

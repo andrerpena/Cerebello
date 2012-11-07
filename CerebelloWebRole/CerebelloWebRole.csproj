@@ -134,6 +134,8 @@
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectSetWrapper.cs" />
+    <Compile Include="Code\ActionResults\JsonForbiddenResult.cs" />
+    <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsLongPollingProvider.cs" />

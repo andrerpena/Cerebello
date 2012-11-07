@@ -4,6 +4,7 @@ using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Code.Filters
 {
+    // todo: this should be an IActionFilter instead of an IAuthorizationFilter
     public class FirstAccessFilter : IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationContext filterContext)
@@ -32,6 +33,9 @@ namespace CerebelloWebRole.Code.Filters
                             // if it's an Ajax Request, must return a Json
                             if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
                             {
+                                // todo: shouldn't Response.StatusCode be Unauthorized instead of Forbidden
+                                // todo: replace this code by JsonForbiddenResult or JsonUnauthorizedResult
+
                                 filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                                 filterContext.Result = new JsonResult
                                 {

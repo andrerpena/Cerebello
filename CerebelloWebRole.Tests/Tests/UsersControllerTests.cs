@@ -1209,6 +1209,7 @@ namespace CerebelloWebRole.Tests.Tests
                 idToDelete = secretary2.Users.Single().Id;
 
                 mr.SetCurrentUser(secretary1.Users.Single(), "milena");
+                mr.IsAjax = true;
 
                 controller = mr.CreateController<UsersController>(
                     setupNewDb: db1 => db1.SavingChanges += (s, e) => { isDbSaved = true; });
@@ -1224,7 +1225,9 @@ namespace CerebelloWebRole.Tests.Tests
             ActionResult actionResult;
 
             {
-                actionResult = controller.Delete(idToDelete);
+                actionResult =
+                    Mvc3TestHelper.RunOnAuthorization(controller, "Delete")
+                    ?? controller.Delete(idToDelete);
             }
 
             // Verifying the ActionResult, and the DB.
@@ -1232,8 +1235,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(actionResult, typeof(JsonResult));
             var jsonResult = (JsonResult)actionResult;
 
-            Assert.IsInstanceOfType(jsonResult.Data, typeof(JsonDeleteMessage));
-            var jsonDeleteMsg = (JsonDeleteMessage)jsonResult.Data;
+            var jsonDeleteMsg = (dynamic)jsonResult.Data;
 
             Assert.IsFalse(jsonDeleteMsg.success, "Must not succed... only administrators have the right to delete another user.");
             Assert.AreEqual("Você não tem permissão para excluir um usuário.", jsonDeleteMsg.text);

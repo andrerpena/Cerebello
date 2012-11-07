@@ -465,7 +465,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        [UsersManagementPermission]
+        [UsersManagementPermission(StatusDescription = "Você não tem permissão para excluir um usuário.")]
         public JsonResult Delete(int id)
         {
             try
