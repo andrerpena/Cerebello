@@ -9,6 +9,22 @@ S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
+    P0 Testes: toda a parte de criação, edição e exclusão de convênios.
+x   P0 Teste: garantir que o método ScheduleController.Create retorna PatientId sempre com o mesmo PracticeId.
+    P0 Teste: garantir que o método ScheduleController.Create retorna HealthInsuranceId sempre com o mesmo PracticeId.
+x   P0 Teste: garantir que o método ScheduleController.Create retorna HealthInsuranceId igual ao último usado pelo paciente.
+x   P0 Teste: garantir que o método ScheduleController.Create popula ViewBag.HealthInsuranceSelectItems.
+x   P0 Teste: garantir que o método ScheduleController.Edit retorna HealthInsuranceId correto.
+x   P0 Teste: garantir que o método ScheduleController.Edit popula ViewBag.HealthInsuranceSelectItems.
+x   P0 Teste: garantir que o método ScheduleController.Edit[POST] limpa validação de HealthInsuranceId quando criando um compromisso.
+x   P0 Teste: garantir que o método ScheduleController.Edit[POST] altera o valor LastUsedHealthInsuranceId do paciente.
+x   P0 Teste: garantir que o método ScheduleController.Edit[POST] está associando a consulta com o convênio corretamente.
+x   P0 Teste: garantir que o método ScheduleController.Edit[POST] popula ViewBag.HealthInsuranceSelectItems, quando validação falha.
+    P0 Teste: remover convênio que já está associado a uma consulta: não pode fazer isso.
+    P0 Teste: adicionar convênio com nome repetido: não pode fazer isso.
+    P0 Remover tabela coverage... na verdade ela foi substituida pela HealthInsurance.
+    P0 Remover tabela coverage... na verdade ela foi substituida pela HealthInsurance.
+    
 	P1 Existem duas classes EmailAddressAttribute no projeto.
 	
     P1 Remover os HttpContext.Current da aplicação, e sempre usar o HttpContextBase que está presente no MVC 3.

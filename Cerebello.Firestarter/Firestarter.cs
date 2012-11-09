@@ -518,6 +518,7 @@ namespace Cerebello.Firestarter
         /// <param name="db"></param>
         public static void SetupDoctor(Doctor doctor, CerebelloEntities db)
         {
+            #region CFG_Schedule
             doctor.CFG_Schedule = new CFG_Schedule()
             {
                 AppointmentTime = 30,
@@ -556,7 +557,10 @@ namespace Cerebello.Firestarter
 
                 PracticeId = doctor.PracticeId,
             };
+            #endregion
+            db.SaveChanges();
 
+            #region CFG_Documents
             doctor.CFG_Documents = new CFG_Documents()
             {
                 Header1 = doctor.Users.First().Person.FullName,
@@ -568,11 +572,22 @@ namespace Cerebello.Firestarter
 
                 PracticeId = doctor.PracticeId,
             };
+            #endregion
+            db.SaveChanges();
 
+            #region HealthInsurances
+            doctor.HealthInsurances.Add(new HealthInsurance
+                {
+                    PracticeId = doctor.PracticeId,
+                    Name = "Unimed - Juiz de Fora",
+                    FirstTimeValue = 20.00m,
+                    ReturnValue = 0.00m,
+                });
+            #endregion
             db.SaveChanges();
         }
 
-        public static Appointment CreateFakeAppointments(CerebelloEntities db, DateTime createdOn, Doctor doc, DateTime start, TimeSpan duration, string desc, User creator = null)
+        public static Appointment CreateFakeAppointment(CerebelloEntities db, DateTime createdOn, Doctor doc, DateTime start, TimeSpan duration, string desc, User creator = null)
         {
             creator = creator ?? doc.Users.First();
 
@@ -586,6 +601,32 @@ namespace Cerebello.Firestarter
                 Start = start,
                 End = start + duration,
                 Description = desc,
+                Type = (int)TypeAppointment.GenericAppointment,
+
+                PracticeId = doc.PracticeId,
+            });
+
+            db.SaveChanges();
+
+            return result;
+        }
+
+        public static Appointment CreateFakeAppointment(CerebelloEntities db, DateTime createdOn, Doctor doc, DateTime start, TimeSpan duration, Patient patient, User creator = null)
+        {
+            creator = creator ?? doc.Users.First();
+
+            Appointment result;
+
+            db.Appointments.AddObject(result = new Appointment
+            {
+                CreatedById = creator.Id,
+                CreatedOn = createdOn,
+                DoctorId = doc.Id,
+                Start = start,
+                End = start + duration,
+                Patient = patient,
+                Type = (int)TypeAppointment.MedicalAppointment,
+                HealthInsurance = doc.HealthInsurances.First(),
 
                 PracticeId = doc.PracticeId,
             });

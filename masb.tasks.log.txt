@@ -9,7 +9,12 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 
 2012-10-## ##:00-##:## (#°##") ##   ######
 
--- qui 06°00" (##°##")
+-- sex 01°30" (##°##")
+2012-11-09 00:00-01:30 (1°30") 10   #94: Associar consultas com convênios opcionalmente.
+2012-11-09 14:00-17:00 (3°00") ##   #94: Testes no ScheduleController relacionados com convênios.
+
+-- qui 05°10" (##°##")
+2012-11-08 23:00-24:00 (1°00")  9   #94: Associar consultas com convênios opcionalmente.
 2012-11-08 19:30-22:30 (3°00")  8   #94: Criar o sub-contexto de convênios dentro de configurações.
 2012-11-08 17:20-18:30 (1°10")  8   Verificando requests que deveriam ser identificados como JSON na app.
 

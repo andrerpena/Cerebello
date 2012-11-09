@@ -303,6 +303,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (appointment == null)
             {
+                // todo: return new HttpNotFoundResult("A consulta/compromisso não existe.");
                 return this.View("NotFound");
             }
 
