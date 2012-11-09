@@ -6,6 +6,7 @@
         this.defaults = {
             url: "",
             data: {},
+            dataType: "json", // json is the default for this app
             success: function () { },
             error: function () { }
         };
@@ -26,6 +27,7 @@
                 $.ajax({
                     url: _this.opts.url,
                     data: $.isFunction(_this.opts.data) ? _this.opts.data() : _this.opts.data,
+                    dataType: _this.opts.dataType,
                     success: function (data, status, e) {
                         _this.opts.success.call(_this.$el, data);
                         _this.$el.removeClass("loading");

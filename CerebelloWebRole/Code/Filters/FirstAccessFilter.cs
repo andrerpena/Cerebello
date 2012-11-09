@@ -30,6 +30,7 @@ namespace CerebelloWebRole.Code.Filters
 
                         if (isUsingDefaultPwd && isRedirectNeeded)
                         {
+                            // todo: check for json request: Request.AcceptTypes.Contains("application/json")
                             // if it's an Ajax Request, must return a Json
                             if (filterContext.RequestContext.HttpContext.Request.IsAjaxRequest())
                             {

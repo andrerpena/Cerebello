@@ -72,9 +72,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                  Text = medicine.Text,
                                  Fields = medicine.Fields.Select(f => new ModelMedicalCertificateFieldViewModel() { Id = f.Id, Name = f.Name }).ToList()
                              };
+                // todo: page title should be set in the view, not in the controller
                 ViewBag.Title = "Alterando modelo de atestado médico: " + viewModel.Name;
             }
             else
+                // todo: page title should be set in the view, not in the controller
                 ViewBag.Title = "Novo modelo de atestado médico";
 
             return View("Edit", viewModel);

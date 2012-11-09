@@ -122,10 +122,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return View("details", GetViewModel(anamnese));
+                return View("Details", GetViewModel(anamnese));
             }
 
-            return View("edit", formModel);
+            return View("Edit", formModel);
         }
 
         /// <summary>

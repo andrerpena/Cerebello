@@ -1,0 +1,29 @@
+﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceIndexViewModel
+@{
+    ViewBag.Title = "Convênios médicos · Cerebello";
+    ViewBag.Watermark = "Pesquisar pelo nome do convênio";
+
+    var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+    grid.AddField(model => model.Name);
+    grid.AddField(model => model.FirstTimeValue);
+    grid.AddField(model => model.ReturnValue);
+}
+@section Title {
+Convênios médicos
+}
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo convênio</a> </li>
+    </ul>
+}
+
+@using (Html.BeginForm("search", null, FormMethod.Get))
+{
+    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+}
+
+<div class="widget">
+    <h2>Últimos convênios cadastrados
+    </h2>
+    @grid.GetHtml()
+</div>

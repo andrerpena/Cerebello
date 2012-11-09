@@ -277,7 +277,7 @@
             e.preventDefault();
             var answer = confirm("Deseja realmente excluir esta consulta?\nEsta operação não pode ser desfeita.");
             if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function(data) {
                     if(data.success) {
                         $("#delete-appointment-link").trigger("modal-ok");
                         alert("Esta consulta foi excluída");
@@ -306,14 +306,15 @@
         }
 
         $("#check_time").ajaxLink({
-            url: "@Url.Action("verifytimeavailability")",
+            url: "@Url.Action("VerifyTimeAvailability")",
+            
             data: function() {
                 return {
                     date: $("#Date").val(),
                     start: $("#Start").val(),
                     end: $("#End").val(),
                     patientId: $("#PatientId").val()
-                }
+                };
             },
             success: function(result){
                 if(result.status == "Failed")
@@ -349,7 +350,7 @@
                 return {
                     date: $("#Date").val(),
                     time: $("#End").val()
-                }
+                };
             },
             success: function(data) {
                 populateTimeInfo(data);

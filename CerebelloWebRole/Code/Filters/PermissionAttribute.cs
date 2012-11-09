@@ -32,6 +32,7 @@ namespace CerebelloWebRole.Code.Filters
 
                 if (!canAccess)
                 {
+                    // todo: check for json request: Request.AcceptTypes.Contains("application/json")
                     if (filterContext.HttpContext.Request.IsAjaxRequest())
                     {
                         filterContext.Result = new JsonUnauthorizedResult(

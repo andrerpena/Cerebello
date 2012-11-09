@@ -2,14 +2,15 @@
     ViewBag.Title = "Configurações do médico · Cerebello";
 }
 @section Title {
-    Configurações do médico
+Configurações do médico
 }
 
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("edit", "configschedule")" class="icon-link icon-link-config">Configurações da agenda</a> </li>
-        <li><a href="@Url.Action("edit", "configdocuments")" class="icon-link icon-link-config">Configurações da documentos</a> </li>
-        <li><a href="@Url.Action("index", "modelmedicalcertificates")" class="icon-link icon-link-config">Modelos de atestados</a> </li>
+        <li><a href="@Url.Action("Edit", "ConfigSchedule")" class="icon-link icon-link-config">Configurações da agenda</a> </li>
+        <li><a href="@Url.Action("Edit", "ConfigDocuments")" class="icon-link icon-link-config">Configurações da documentos</a> </li>
+        <li><a href="@Url.Action("Index", "ModelMedicalCertificates")" class="icon-link icon-link-config">Modelos de atestados</a> </li>
+        <li><a href="@Url.Action("Index", "HealthInsurance")" class="icon-link icon-link-config">Configurações de convênios</a> </li>
     </ul>
 }
 

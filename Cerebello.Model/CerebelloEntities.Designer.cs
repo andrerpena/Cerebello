@@ -65,6 +65,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
 
 #endregion
 
@@ -5457,6 +5458,28 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "HealthInsurance")]
+        public EntityCollection<HealthInsurance> HealthInsurances
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<HealthInsurance>("Cerebello.Model.FK_HealthInsurance_Doctor", "HealthInsurance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<HealthInsurance>("Cerebello.Model.FK_HealthInsurance_Doctor", "HealthInsurance", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -6140,12 +6163,14 @@ namespace Cerebello.Model
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static HealthInsurance CreateHealthInsurance(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId)
+        /// <param name="doctorId">Initial value of the DoctorId property.</param>
+        public static HealthInsurance CreateHealthInsurance(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId, global::System.Int32 doctorId)
         {
             HealthInsurance healthInsurance = new HealthInsurance();
             healthInsurance.Id = id;
             healthInsurance.Name = name;
             healthInsurance.PracticeId = practiceId;
+            healthInsurance.DoctorId = doctorId;
             return healthInsurance;
         }
 
@@ -6227,6 +6252,120 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> FirstTimeValue
+        {
+            get
+            {
+                return _FirstTimeValue;
+            }
+            set
+            {
+                OnFirstTimeValueChanging(value);
+                ReportPropertyChanging("FirstTimeValue");
+                _FirstTimeValue = StructuralObject.SetValidValue(value, "FirstTimeValue");
+                ReportPropertyChanged("FirstTimeValue");
+                OnFirstTimeValueChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _FirstTimeValue;
+        partial void OnFirstTimeValueChanging(Nullable<global::System.Decimal> value);
+        partial void OnFirstTimeValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> ReturnValue
+        {
+            get
+            {
+                return _ReturnValue;
+            }
+            set
+            {
+                OnReturnValueChanging(value);
+                ReportPropertyChanging("ReturnValue");
+                _ReturnValue = StructuralObject.SetValidValue(value, "ReturnValue");
+                ReportPropertyChanged("ReturnValue");
+                OnReturnValueChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _ReturnValue;
+        partial void OnReturnValueChanging(Nullable<global::System.Decimal> value);
+        partial void OnReturnValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 DoctorId
+        {
+            get
+            {
+                return _DoctorId;
+            }
+            set
+            {
+                OnDoctorIdChanging(value);
+                ReportPropertyChanging("DoctorId");
+                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
+                ReportPropertyChanged("DoctorId");
+                OnDoctorIdChanged();
+            }
+        }
+        private global::System.Int32 _DoctorId;
+        partial void OnDoctorIdChanging(global::System.Int32 value);
+        partial void OnDoctorIdChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor")]
+        public Doctor Doctor
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_HealthInsurance_Doctor", "Doctor").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_HealthInsurance_Doctor", "Doctor").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Doctor> DoctorReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_HealthInsurance_Doctor", "Doctor");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Doctor>("Cerebello.Model.FK_HealthInsurance_Doctor", "Doctor", value);
+                }
+            }
+        }
 
         #endregion
 

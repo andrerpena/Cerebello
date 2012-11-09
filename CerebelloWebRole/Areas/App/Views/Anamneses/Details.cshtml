@@ -30,7 +30,8 @@
         $(".edit-anamnese", $("div[data-val-id='anamnese-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.ajax({
-                url: "@Url.Action("edit", "anamneses", new { id = Model.Id })",
+                url: "@Url.Action("Edit", "Anamneses", new { id = Model.Id })",
+                dataType: "html",
                 success: function(result) {
                     $("div[data-val-id='anamnese-@Model.Id']").replaceWith(result);
                 }

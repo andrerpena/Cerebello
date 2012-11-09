@@ -1,0 +1,54 @@
+﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceViewModel
+@{
+    if (this.Model != null && this.Model.Id.HasValue)
+    {
+        ViewBag.Title = "Convênio médico: " + this.Model.Name + " · Cerebello";
+    }
+    else
+    {
+        ViewBag.Title = "Novo convênio médico · Cerebello";
+    }
+}
+@section Title {
+    @if (this.Model != null && this.Model.Id.HasValue)
+    {
+        @:Editando convênio médico: @this.Model.Name
+    }
+    else
+    {
+        @:Novo convênio médico
+    }
+}
+@section SideBar {
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo dos convênios médicos</a>
+    <hr />
+    @Html.MessageHelp(
+        "Os valores definidos em cada convênio são usados para estimar o valor de cada consulta, "
+        + "portanto devem ser preenchidos com um valor médio, para que os relatórios e projeções sejam calculados "
+        + "corretamente.")
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(model => model.Id)
+    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.Name)</th>
+            <td class="large">@Html.TextBoxFor(model => model.Name)</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.FirstTimeValue)</th>
+            <td>@Html.TextBoxFor(model => model.FirstTimeValue)</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.ReturnValue)</th>
+            <td>@Html.TextBoxFor(model => model.ReturnValue)</td>
+        </tr>
+    </table>
+    <div class="submit-bar">
+        <input type="submit" value="salvar convênio" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

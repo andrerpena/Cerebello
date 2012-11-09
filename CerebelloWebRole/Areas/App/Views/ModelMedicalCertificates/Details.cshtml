@@ -14,7 +14,7 @@
             e.preventDefault();
             var answer = confirm("Deseja realmente excluir este modelo de atestado médico?\nTodas as receitas de pacientes associadas com este modelo perderão esta associação.\nEsta operação não pode ser desfeita.");
             if (answer) {
-                $.getJSON("@Url.Action("delete", new { id = this.Model.Id })", function(data) {
+                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function(data) {
                     if(data.success) {
                         alert("Este modelo de atestado médico foi excluído");
                         window.location = "@Url.Action("index")";

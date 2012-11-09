@@ -336,9 +336,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[HealthInsurance](
-	[Id] [int] NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
 	[PracticeId] [int] NOT NULL,
+	[FirstTimeValue] [numeric](6, 2) NULL,
+	[ReturnValue] [numeric](6, 2) NULL,
+	[DoctorId] [int] NOT NULL,
  CONSTRAINT [PK_HealthEnsurance] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -1025,6 +1028,12 @@ ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_Examinat
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
+GO
+/****** Object:  ForeignKey [FK_HealthInsurance_Doctor] ******/
+ALTER TABLE [dbo].[HealthInsurance]  WITH CHECK ADD  CONSTRAINT [FK_HealthInsurance_Doctor] FOREIGN KEY([DoctorId])
+REFERENCES [dbo].[Doctor] ([Id])
+GO
+ALTER TABLE [dbo].[HealthInsurance] CHECK CONSTRAINT [FK_HealthInsurance_Doctor]
 GO
 /****** Object:  ForeignKey [FK_Laboratory_Doctor] ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])

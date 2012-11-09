@@ -130,12 +130,15 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
+    <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
+    <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectSetWrapper.cs" />
     <Compile Include="Code\ActionResults\JsonForbiddenResult.cs" />
     <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
+    <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsLongPollingProvider.cs" />
@@ -623,6 +626,9 @@
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
     <Content Include="Areas\App\Views\ConfigPractice\Index.cshtml" />
     <Content Include="Areas\App\Views\ConfigPractice\Edit.cshtml" />
+    <Content Include="Areas\App\Views\HealthInsurance\Index.cshtml" />
+    <Content Include="Areas\App\Views\HealthInsurance\Edit.cshtml" />
+    <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

@@ -26,6 +26,7 @@ namespace CerebelloWebRole.Code.Filters
             }
             else
             {
+                // todo: check for json request: Request.AcceptTypes.Contains("application/json")
                 // if it's an Ajax Request, must return a Json
                 if (httpContext.Request.IsAjaxRequest())
                 {
