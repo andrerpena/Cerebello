@@ -11,11 +11,9 @@
     bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
     bool isSubsequentAppointment = !isGenericAppointment && !isFirstAppointment;
 
-    string genericAppointmentOnlyDisplay = isGenericAppointment ? "table-row" : "none";
-    string subsequentAppointmentOnlyDisplay = isSubsequentAppointment ? "table-row" : "none";
-    string firstAppointmentOnlyDisplay = isFirstAppointment ? "table-row" : "none";
-
     string saveButtonText = isGenericAppointment ? "salvar compromisso" : "salvar consulta";
+
+    Func<bool, string> funcDisplay = b => b ? "table-row" : "none";
 }
 <div class="appointment-edit">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "appointment_form" }))
@@ -28,7 +26,7 @@
         @Html.HiddenFor(model => model.PatientFirstAppointment)
         
         if (isEditingOrCreating == 'C')
-        { 
+        {
             <style>
                 /* todo: Must vanish with this style. */
                 .appointment-edit ul.tabs > li
@@ -50,7 +48,7 @@
         <table class="form-table">
             @if (isEditingOrCreating == 'C' || isGenericAppointment)
             {
-                <tr class="generic-appointment-only" style="display: @genericAppointmentOnlyDisplay">
+                <tr class="generic-appointment-only" style="display: @funcDisplay(isGenericAppointment)">
                     <th>@Html.LabelFor(model => model.Description)
                     </th>
                     <td>
@@ -60,14 +58,16 @@
             }
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
-                <tr class="subsequent-appointments-only" style="display: @subsequentAppointmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.PatientNameLookup)
-                    </th>
+                <tr class="subsequent-appointments-only" style="display: @funcDisplay(isSubsequentAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientNameLookup)</th>
                     <td>
-                        @Html.AutocompleteFor(model => model.PatientId, model => model.PatientNameLookup, Url.Action("lookuppatients", "patients"))
+                        @Html.AutocompleteFor(
+                            model => model.PatientId,
+                            model => model.PatientNameLookup,
+                            Url.Action("LookupPatients", "Patients"))
                         @if (Model.Id != null)
                         {
-                            <a href="@Url.Action("details", "patients", new { id = Model.PatientId })" class="block-little-link">
+                            <a href="@Url.Action("Details", "Patients", new { id = Model.PatientId })" class="block-little-link">
                                 Ir para o perfil do paciente</a>
                         }
                         <a id="non-existing-user-link" href="#" class="block-little-link">O paciente ainda não
@@ -77,36 +77,34 @@
             }
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
-                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.PatientName)
-                    </th>
-                    <td>@Html.EditorFor(model => model.PatientName)
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientName)</th>
+                    <td>
+                        @Html.EditorFor(model => model.PatientName)
                         <a id="existing-user-link" href="#" class="block-little-link">O paciente já é cadastrado</a>
                     </td>
                 </tr>
-                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.PatientGender)
-                    </th>
-                    <td>@Html.EnumDropdownListFor(model => model.PatientGender)
-                    </td>
+            }
+            @if (true)
+            {
+                <tr class="first-appointment-only subsequent-appointments-only" style="display: @funcDisplay(isFirstAppointment || isSubsequentAppointment)">
+                    <th>@Html.LabelFor(model => model.HealthInsuranceId)</th>
+                    <td>@Html.DropDownListFor(model => model.HealthInsuranceId, (IEnumerable<SelectListItem>)this.ViewBag.HealthInsuranceSelectItems)</td>
                 </tr>
-                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.PatientCoverageId)
-                    </th>
-                    <td>@Html.DropDownListFor(model => model.PatientCoverageId, new SelectListItem[] { })
-                    </td>
+            }
+            @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
+            {
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientGender)</th>
+                    <td>@Html.EnumDropdownListFor(model => model.PatientGender)</td>
                 </tr>
-                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.PatientDateOfBirth)
-                    </th>
-                    <td class="small">@Html.TextBoxFor(model => model.PatientDateOfBirth)
-                    </td>
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientDateOfBirth)</th>
+                    <td class="small">@Html.TextBoxFor(model => model.PatientDateOfBirth)</td>
                 </tr>
-                <tr class="first-appointment-only" style="display: @firstAppointmentOnlyDisplay">
-                    <th>@Html.LabelFor(model => model.PatientEmail)
-                    </th>
-                    <td>@Html.TextBoxFor(model => model.PatientEmail)
-                    </td>
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientEmail)</th>
+                    <td>@Html.TextBoxFor(model => model.PatientEmail)</td>
                 </tr>
             }
         </table>
@@ -131,9 +129,9 @@
                         @Html.EditorFor(model => model.Start)<span class="separator">às</span>
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(
-                            Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
-                            Model.DateAndTimeValidationState == DateAndTimeValidationState.Warning ? "validation-warning" :
-                            Model.DateAndTimeValidationState == DateAndTimeValidationState.Failed ? "validation-failed" :
+                            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
+                            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Warning ? "validation-warning" :
+                            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Failed ? "validation-failed" :
                             ""
                             )">
                         </span>
@@ -241,9 +239,9 @@
             $(this).siblings().removeClass("activated");
             $(this).addClass("activated");
 
-            $(".generic-appointment-only").show();
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").hide();
+            $(".generic-appointment-only").show();
             $("#IsGenericAppointment").val(true);
             $("#Description").focus();
             $("#save-button").val("salvar compromisso");
@@ -252,8 +250,8 @@
 
         $("#non-existing-user-link").click(function(e) {
             e.preventDefault();
-            $(".first-appointment-only").show();
             $(".subsequent-appointments-only").hide();
+            $(".first-appointment-only").show();
             $("#PatientFirstAppointment").val(true);
             $("#PatientName").focus();
             $(this).trigger("modal-resize");

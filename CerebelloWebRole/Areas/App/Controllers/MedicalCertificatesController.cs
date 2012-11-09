@@ -88,10 +88,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
             }
 
-            // NOTE: The ModelMedicalCertificateController is responsible for keeping medical certificate fields up to date with the model
+            // NOTE: The ModelMedicalCertificateController is responsible for keeping medical certificate
+            // fields up to date with the model
             // At this point, viewModel.Fields must be fully populated
             string selectedModelValue = viewModel.ModelId.HasValue ? viewModel.ModelId.ToString() : null;
-            viewModel.ModelOptions = this.db.ModelMedicalCertificates.ToList().Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() }).ToList();
+            viewModel.ModelOptions = this.db.ModelMedicalCertificates
+                .ToList()
+                .Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() })
+                .ToList();
 
             return View("Edit", viewModel);
         }

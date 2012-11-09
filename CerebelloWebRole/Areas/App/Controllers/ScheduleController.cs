@@ -215,16 +215,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             int currentUserPracticeId = this.DbUser.PracticeId;
 
-            var patientName = this.db.Patients
+            var patient = this.db.Patients
                 .Where(p => p.Id == patientId)
-                .Where(p => p.Doctor.Users.FirstOrDefault().PracticeId == currentUserPracticeId)
-                .Select(p => p.Person.FullName)
+                .Select(p => new { p.Person.FullName, p.LastUsedHealthInsuranceId })
                 .FirstOrDefault();
 
-            viewModel.PatientNameLookup = patientName;
-
-            if (patientName != null)
+            if (patient != null)
+            {
+                viewModel.PatientNameLookup = patient.FullName;
+                viewModel.HealthInsuranceId = patient.LastUsedHealthInsuranceId;
                 viewModel.PatientId = patientId;
+            }
 
             viewModel.Date = localDateAlone;
             viewModel.Start = start;
@@ -245,6 +246,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             this.ModelState.Clear();
 
             this.ViewBag.IsEditingOrCreating = 'C';
+
+            // populating health insurance list, to show in the combo-box
+            var listInsurances = this.Doctor.HealthInsurances
+                .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
+                .ToList();
+            listInsurances.Insert(0, new SelectListItem());
+            this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return this.View("Edit", viewModel);
         }
@@ -318,6 +326,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
                             | DateTimeHelper.RelativeDateOptions.ReplaceToday
                             | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
+                HealthInsuranceId = appointment.HealthInsuranceId,
             };
 
             DoDateAndTimeValidation(viewModel, localNow, id);
@@ -339,6 +348,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditingOrCreating = 'E';
 
+            // populating health insurance list, to show in the combo-box
+            var listInsurances = this.Doctor.HealthInsurances
+                .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
+                .ToList();
+            listInsurances.Insert(0, new SelectListItem());
+            this.ViewBag.HealthInsuranceSelectItems = listInsurances;
+
             return View("Edit", viewModel);
         }
 
@@ -356,7 +372,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientFirstAppointment);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientEmail);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientDateOfBirth);
-                this.ModelState.ClearPropertyErrors(() => formModel.PatientCoverageId);
+                this.ModelState.ClearPropertyErrors(() => formModel.HealthInsuranceId);
             }
             else if (formModel.PatientFirstAppointment)
             {
@@ -466,14 +482,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patient.Person.Email = formModel.PatientEmail;
                     patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail);
 
+                    patient.LastUsedHealthInsuranceId = formModel.HealthInsuranceId;
+
                     appointment.Patient = patient;
                 }
                 else
                 {
                     appointment.Type = (int)TypeAppointment.MedicalAppointment;
 
+                    var patient = this.db.Patients.Single(p => p.Id == formModel.PatientId);
+                    patient.LastUsedHealthInsuranceId = formModel.HealthInsuranceId;
+
                     appointment.PatientId = formModel.PatientId.Value;
                 }
+
+                appointment.HealthInsuranceId = formModel.HealthInsuranceId;
 
                 // Returning a JSON result, indicating what has happened.
                 try
@@ -494,6 +517,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditingOrCreating = this.RouteData.Values["action"].ToString()
                 .ToLowerInvariant() == "edit" ? 'E' : 'C';
+
+            // populating health insurance list, to show in the combo-box
+            var listInsurances = this.Doctor.HealthInsurances
+                .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
+                .ToList();
+            listInsurances.Insert(0, new SelectListItem());
+            this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", formModel);
         }

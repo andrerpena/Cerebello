@@ -105,6 +105,7 @@ CREATE TABLE [dbo].[Appointment](
 	[PracticeId] [int] NOT NULL,
 	[Status] [int] NOT NULL,
 	[IsPolled] [bit] NOT NULL,
+	[HealthInsuranceId] [int] NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -541,6 +542,7 @@ CREATE TABLE [dbo].[Patient](
 	[DoctorId] [int] NOT NULL,
 	[PersonId] [int] NOT NULL,
 	[PracticeId] [int] NOT NULL,
+	[LastUsedHealthInsuranceId] [int] NULL,
  CONSTRAINT [PK_Patient] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -969,6 +971,12 @@ REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Doctor]
 GO
+/****** Object:  ForeignKey [FK_Appointment_HealthInsurance] ******/
+ALTER TABLE [dbo].[Appointment]  WITH CHECK ADD  CONSTRAINT [FK_Appointment_HealthInsurance] FOREIGN KEY([HealthInsuranceId])
+REFERENCES [dbo].[HealthInsurance] ([Id])
+GO
+ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_HealthInsurance]
+GO
 /****** Object:  ForeignKey [FK_Appointment_User] ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_User] FOREIGN KEY([CreatedById])
 REFERENCES [dbo].[User] ([Id])
@@ -1130,6 +1138,12 @@ ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Doctor] FO
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Doctor]
+GO
+/****** Object:  ForeignKey [FK_Patient_HealthInsurance] ******/
+ALTER TABLE [dbo].[Patient]  WITH CHECK ADD  CONSTRAINT [FK_Patient_HealthInsurance] FOREIGN KEY([LastUsedHealthInsuranceId])
+REFERENCES [dbo].[HealthInsurance] ([Id])
+GO
+ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_HealthInsurance]
 GO
 /****** Object:  ForeignKey [FK_Patient_Person] ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Person] FOREIGN KEY([PersonId])

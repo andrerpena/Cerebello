@@ -47,9 +47,6 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Paciente")]
         public String PatientName { get; set; }
 
-        [Display(Name = "Convênio")]
-        public int PatientCoverageId { get; set; }
-
         [Display(Name = "E-mail")]
         [CerebelloWebRole.Code.Mvc.EmailAddress]
         public string PatientEmail { get; set; }
@@ -87,6 +84,9 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Validation state for date and time parameters.
         /// </summary>
         public DateAndTimeValidationState DateAndTimeValidationState { get; set; }
+
+        [Display(Name = "Convênio")]
+        public int? HealthInsuranceId { get; set; }
     }
 
     public enum DateAndTimeValidationState

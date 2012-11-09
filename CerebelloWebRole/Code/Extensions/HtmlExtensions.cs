@@ -221,7 +221,9 @@ namespace CerebelloWebRole.Code.Extensions
 
             // validação das colunas
             if (!options.columns.Contains(options.columnText))
-                throw new Exception(string.Format("O autocomplete possui configurações inválidas. A coluna de texto não faz parte da lista de colunas. Lookup: '{0}'. Coluna de text: '{1}'", inputTextId, options.columnText));
+                throw new Exception(string.Format("O autocomplete possui configurações inválidas. "
+                    + "A coluna de texto não faz parte da lista de colunas. Lookup: '{0}'. Coluna de text: '{1}'",
+                    inputTextId, options.columnText));
 
             scriptTag.InnerHtml = string.Format("$(\"#{0}\").autocomplete({1});", inputTextId, new JavaScriptSerializer().Serialize(options));
 

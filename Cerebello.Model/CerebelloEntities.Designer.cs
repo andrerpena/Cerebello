@@ -66,6 +66,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 
 #endregion
 
@@ -2680,6 +2682,30 @@ namespace Cerebello.Model
         private global::System.Boolean _IsPolled;
         partial void OnIsPolledChanging(global::System.Boolean value);
         partial void OnIsPolledChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> HealthInsuranceId
+        {
+            get
+            {
+                return _HealthInsuranceId;
+            }
+            set
+            {
+                OnHealthInsuranceIdChanging(value);
+                ReportPropertyChanging("HealthInsuranceId");
+                _HealthInsuranceId = StructuralObject.SetValidValue(value, "HealthInsuranceId");
+                ReportPropertyChanged("HealthInsuranceId");
+                OnHealthInsuranceIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _HealthInsuranceId;
+        partial void OnHealthInsuranceIdChanging(Nullable<global::System.Int32> value);
+        partial void OnHealthInsuranceIdChanged();
 
         #endregion
 
@@ -2795,6 +2821,44 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_Appointment_Patient", "Patient", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance")]
+        public HealthInsurance HealthInsurance
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<HealthInsurance>("Cerebello.Model.FK_Appointment_HealthInsurance", "HealthInsurance").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<HealthInsurance>("Cerebello.Model.FK_Appointment_HealthInsurance", "HealthInsurance").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<HealthInsurance> HealthInsuranceReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<HealthInsurance>("Cerebello.Model.FK_Appointment_HealthInsurance", "HealthInsurance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<HealthInsurance>("Cerebello.Model.FK_Appointment_HealthInsurance", "HealthInsurance", value);
                 }
             }
         }
@@ -6366,6 +6430,50 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "Patient")]
+        public EntityCollection<Patient> Patients
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Patient>("Cerebello.Model.FK_Patient_HealthInsurance", "Patient");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Patient>("Cerebello.Model.FK_Patient_HealthInsurance", "Patient", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "Appointment")]
+        public EntityCollection<Appointment> Appointments
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Appointment>("Cerebello.Model.FK_Appointment_HealthInsurance", "Appointment");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Appointment>("Cerebello.Model.FK_Appointment_HealthInsurance", "Appointment", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -8516,6 +8624,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> LastUsedHealthInsuranceId
+        {
+            get
+            {
+                return _LastUsedHealthInsuranceId;
+            }
+            set
+            {
+                OnLastUsedHealthInsuranceIdChanging(value);
+                ReportPropertyChanging("LastUsedHealthInsuranceId");
+                _LastUsedHealthInsuranceId = StructuralObject.SetValidValue(value, "LastUsedHealthInsuranceId");
+                ReportPropertyChanged("LastUsedHealthInsuranceId");
+                OnLastUsedHealthInsuranceIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _LastUsedHealthInsuranceId;
+        partial void OnLastUsedHealthInsuranceIdChanging(Nullable<global::System.Int32> value);
+        partial void OnLastUsedHealthInsuranceIdChanged();
 
         #endregion
 
@@ -8785,6 +8917,44 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Diagnosis>("Cerebello.Model.FK_Diagnosis2_Diagnosis2", "Diagnosis", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance")]
+        public HealthInsurance HealthInsurance
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<HealthInsurance>("Cerebello.Model.FK_Patient_HealthInsurance", "HealthInsurance").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<HealthInsurance>("Cerebello.Model.FK_Patient_HealthInsurance", "HealthInsurance").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<HealthInsurance> HealthInsuranceReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<HealthInsurance>("Cerebello.Model.FK_Patient_HealthInsurance", "HealthInsurance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<HealthInsurance>("Cerebello.Model.FK_Patient_HealthInsurance", "HealthInsurance", value);
                 }
             }
         }
