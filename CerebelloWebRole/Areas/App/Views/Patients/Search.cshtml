@@ -1,16 +1,17 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.PatientViewModel>
+@using CerebelloWebRole.Code
 @{
     ViewBag.Title = "Search";
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
-    
-    var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
-    grid.AddField(m => m.FullName, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
-    grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, true)</text>, header: "Idade");
+
+    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
+    grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
+    grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
 }
 @section Title {
-    Pesquisa de pacientes
+Pesquisa de pacientes
 }
 @section SideBar {
     <ul>
@@ -22,8 +23,7 @@
     @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
 }
 <div class="search-result">
-    <h2>
-        Resultado da pesquisa
+    <h2>Resultado da pesquisa
     </h2>
     @grid.GetHtml()
 </div>

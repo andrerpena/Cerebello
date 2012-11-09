@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.PatientsIndexViewModel
+@using CerebelloWebRole.Code
 @{
     ViewBag.Title = "Prontuário · Cerebello";
 
@@ -6,9 +7,9 @@
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
-    var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
-    grid.AddField(m => m.FullName, format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
-    grid.AddField(m => m.DateOfBirth, format: @<text>@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, true)</text>, header: "Idade");
+    var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients, Constants.GRID_PAGE_SIZE);
+    grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
+    grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
 }
 @section Title {
 Prontuário
@@ -29,8 +30,7 @@ Prontuário
 <div class="patients-summary">
     <table>
         <tr>
-            <td class="header">
-                Total de pacientes:
+            <td class="header">Total de pacientes:
             </td>
             <td class="value">@Model.TotalPatientsCount
             </td>
@@ -44,8 +44,7 @@ Prontuário
     </div>
 </div>
 <div class="widget">
-    <h2>
-        Últimos pacientes cadastrados
+    <h2>Últimos pacientes cadastrados
     </h2>
     @grid.GetHtml()
 </div>
