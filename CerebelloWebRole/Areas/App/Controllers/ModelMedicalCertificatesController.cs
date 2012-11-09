@@ -20,13 +20,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Index()
         {
             var model = new ModelMedicalCertificatesIndexViewModel();
-            model.Objects = (from m in this.db.ModelMedicalCertificates.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
+            model.Objects = (from m in this.db.ModelMedicalCertificates
+                                 .Where(m => m.Doctor.Id == this.Doctor.Id)
+                                 .OrderBy(m => m.Name).Take(5).ToList()
                              select new ModelMedicalCertificateViewModel()
-                             {
-                                 Id = m.Id,
-                                 Name = m.Name,
-                                 Text = m.Text
-                             }).ToList();
+                                 {
+                                     Id = m.Id,
+                                     Name = m.Name,
+                                     Text = m.Text
+                                 }).ToList();
             model.Count = db.Medicines.Count();
             return View(model);
         }
@@ -247,6 +249,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             return View("Edit", formModel);
+        }
+
+        public ActionResult Search(string term)
+        {
+            var model = new ModelMedicalCertificatesIndexViewModel();
+            model.Objects = (from m in this.db.ModelMedicalCertificates
+                                 .Where(m => m.Doctor.Id == this.Doctor.Id)
+                                 .Where(m => m.Name.Contains(term))
+                                 .OrderBy(m => m.Name).Take(5).ToList()
+                             select new ModelMedicalCertificateViewModel()
+                                 {
+                                     Id = m.Id,
+                                     Name = m.Name,
+                                     Text = m.Text
+                                 }).ToList();
+            model.Count = db.Medicines.Count();
+            this.ViewBag.IsFiltered = true;
+            return View("Index", model);
         }
 
         /// <remarks>
