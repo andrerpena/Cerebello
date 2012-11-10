@@ -20,14 +20,17 @@ namespace CerebelloWebRole.Code
             // Resolved: uniqueness of UrlIdentifier is ensured.
             // issue: 2 doctors with the same name would cause this query to fail
             // the doctor being visualized (not the user as a doctor)
-            var doctor = this.db.Doctors.Include("Users").Include("Users.Person").FirstOrDefault(d => d.UrlIdentifier == doctorIdentifier);
+            var doctor = this.db.Doctors
+                .Include("Users")
+                .Include("Users.Person")
+                .FirstOrDefault(d => d.UrlIdentifier == doctorIdentifier);
 
             Debug.Assert(doctor != null, "doctor must not be null");
             //if (doctor == null)
             //    return;
 
             this.Doctor = doctor;
-            var doc = new DoctorViewModel()
+            var doc = new DoctorViewModel
                 {
                     Name = doctor.Users.ElementAt(0).Person.FullName,
                     UrlIdentifier = doctor.UrlIdentifier,
