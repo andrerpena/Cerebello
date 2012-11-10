@@ -10,6 +10,8 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 2012-10-## ##:00-##:## (#°##") ##   ######
 
 -- sab 01°00" (##°##")
+2012-11-10 14:00-14:15 (0°15")  9   Permitir criar links para agenda numa data específica.
+2012-11-10 01:00-02:00 (1°00")  5   Permitir criar links para agenda numa data específica.
 2012-11-10 00:00-01:00 (1°00")  6   #94: Permitindo desativar um convênio.
 
 -- sex 07°00" (##°##")
