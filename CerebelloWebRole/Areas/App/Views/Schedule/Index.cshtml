@@ -25,13 +25,26 @@ Agenda
         window.weekends = @(Model.Weekends ? "true" : "false");
     </script>
     <script type="text/javascript" src="/scripts/app/schedule.js"></script>
+    @{
+        int y, m, d;
+        if (int.TryParse(Request["y"], out y) && int.TryParse(Request["m"], out m) && int.TryParse(Request["d"], out d))
+        {
+            if (y > 2000 && m >= 1 && m <= 12 && d >= 1 && d <= 31)
+            {
+        <script type="text/javascript">
+            $(function(e) {
+                $('#calendar').fullCalendar('gotoDate', new Date("@string.Format("{0:0000}-{1:00}-{2:00}", y, m, d)"));
+            });
+        </script>
+            }
+        }
+    }
 }
 @section SideBar {
     <div class="datepicker">
     </div>
     <ul style="margin-top: 10px;">
-        <li><a href="@Url.Action("edit", "configschedule", new { returnUrl = Url.Action(null) })" class="icon-link icon-link-config">
-            Configurações da agenda</a> </li>
+        <li><a href="@Url.Action("Edit", "ConfigSchedule", new { returnUrl = Url.Action(null) })" class="icon-link icon-link-config">Configurações da agenda</a> </li>
     </ul>
 }
 <div id="calendar">
