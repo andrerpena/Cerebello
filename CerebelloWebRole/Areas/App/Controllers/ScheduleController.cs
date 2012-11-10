@@ -252,7 +252,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Where(hi => hi.IsActive)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem { Text = "Particular" });
+            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return this.View("Edit", viewModel);
@@ -355,7 +355,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Where(hi => hi.IsActive)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem { Text = "Particular" });
+            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", viewModel);
@@ -526,7 +526,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Where(hi => hi.IsActive)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem { Text = "Particular" });
+            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", formModel);
