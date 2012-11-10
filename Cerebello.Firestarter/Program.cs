@@ -6,14 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Cerebello.Firestarter;
 using Cerebello.Model;
 
-namespace Test1
+namespace Cerebello.Firestarter
 {
-    class Program
+    // ReSharper disable LocalizableElement
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var rootCerebelloPath = ConfigurationManager.AppSettings["CerebelloPath"];
 
@@ -25,7 +25,8 @@ namespace Test1
 
             bool showHidden = false;
 
-            int? rndOption = 0; // default random seed
+            const int defaultSeed = 101; // default random seed
+            int? rndOption = defaultSeed;
 
             Console.BufferWidth = 200;
 
@@ -72,7 +73,7 @@ namespace Test1
                     for (int idxConnStr = 0; idxConnStr < ConfigurationManager.ConnectionStrings.Count; idxConnStr++)
                     {
                         var connStrSettings = ConfigurationManager.ConnectionStrings[idxConnStr];
-                        connStr[idxConnStr.ToString()] = connStrSettings.Name;
+                        connStr[idxConnStr.ToString(CultureInfo.InvariantCulture)] = connStrSettings.Name;
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("{0}: ", idxConnStr);
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -90,7 +91,9 @@ namespace Test1
                     // User may now choose a connection.
                     int idx;
                     string userOption = Console.ReadLine().ToLowerInvariant().Trim();
-                    if (!int.TryParse(userOption, out idx) || !connStr.TryGetValue(idx.ToString(), out connName))
+                    if (!int.TryParse(userOption, out idx) || !connStr.TryGetValue(
+                        idx.ToString(CultureInfo.InvariantCulture),
+                        out connName))
                     {
                         if (userOption == "q" || userOption == "quit")
                         {
@@ -163,12 +166,13 @@ namespace Test1
                     Console.WriteLine(@"crt    - Create all tables and FKs using script.");
                     Console.WriteLine(@"rnd    - Set the seed to the random generator.");
                     Console.WriteLine(@"cls    - Clear screen.");
-                    Console.WriteLine(wasAttached
-                        ? @"atc    - Leaves DB attached when done."
-                        : @"dtc    - Detach DB when done.");
+                    Console.WriteLine(
+                        wasAttached
+                            ? @"atc    - Leaves DB attached when done."
+                            : @"dtc    - Detach DB when done.");
                 }
 
-                Console.WriteLine(string.Format(@"RETURN - {0} options.", showHidden ? "Hides visible" : "Shows hidden"));
+                Console.WriteLine(@"RETURN - {0} options.", showHidden ? "Hides visible" : "Shows hidden");
 
                 Console.WriteLine(@"q      - Quit.");
                 Console.WriteLine(@"       Type ? after any option to get help.");
@@ -245,7 +249,7 @@ namespace Test1
                             try
                             {
                                 using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
-                                    Program.CreateDatabaseUsingScript(db, rootCerebelloPath);
+                                    CreateDatabaseUsingScript(db, rootCerebelloPath);
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -266,12 +270,30 @@ namespace Test1
                     case "size":
                         using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                         {
-                            Console.WriteLine("SYS_MedicalEntity: Code.Length: min={0}; max={1}", db.SYS_MedicalEntity.Min(x => x.Code.Length), db.SYS_MedicalEntity.Max(x => x.Code.Length));
-                            Console.WriteLine("SYS_MedicalEntity: Name.Length: min={0}; max={1}", db.SYS_MedicalEntity.Min(x => x.Name.Length), db.SYS_MedicalEntity.Max(x => x.Name.Length));
-                            Console.WriteLine("SYS_MedicalProcedure: Code.Length: min={0}; max={1}", db.SYS_MedicalProcedure.Min(x => x.Code.Length), db.SYS_MedicalProcedure.Max(x => x.Code.Length));
-                            Console.WriteLine("SYS_MedicalProcedure: Name.Length: min={0}; max={1}", db.SYS_MedicalProcedure.Min(x => x.Name.Length), db.SYS_MedicalProcedure.Max(x => x.Name.Length));
-                            Console.WriteLine("SYS_MedicalSpecialty: Code.Length: min={0}; max={1}", db.SYS_MedicalSpecialty.Min(x => x.Code.Length), db.SYS_MedicalSpecialty.Max(x => x.Code.Length));
-                            Console.WriteLine("SYS_MedicalSpecialty: Name.Length: min={0}; max={1}", db.SYS_MedicalSpecialty.Min(x => x.Name.Length), db.SYS_MedicalSpecialty.Max(x => x.Name.Length));
+                            Console.WriteLine(
+                                "SYS_MedicalEntity: Code.Length: min={0}; max={1}",
+                                db.SYS_MedicalEntity.Min(x => x.Code.Length),
+                                db.SYS_MedicalEntity.Max(x => x.Code.Length));
+                            Console.WriteLine(
+                                "SYS_MedicalEntity: Name.Length: min={0}; max={1}",
+                                db.SYS_MedicalEntity.Min(x => x.Name.Length),
+                                db.SYS_MedicalEntity.Max(x => x.Name.Length));
+                            Console.WriteLine(
+                                "SYS_MedicalProcedure: Code.Length: min={0}; max={1}",
+                                db.SYS_MedicalProcedure.Min(x => x.Code.Length),
+                                db.SYS_MedicalProcedure.Max(x => x.Code.Length));
+                            Console.WriteLine(
+                                "SYS_MedicalProcedure: Name.Length: min={0}; max={1}",
+                                db.SYS_MedicalProcedure.Min(x => x.Name.Length),
+                                db.SYS_MedicalProcedure.Max(x => x.Name.Length));
+                            Console.WriteLine(
+                                "SYS_MedicalSpecialty: Code.Length: min={0}; max={1}",
+                                db.SYS_MedicalSpecialty.Min(x => x.Code.Length),
+                                db.SYS_MedicalSpecialty.Max(x => x.Code.Length));
+                            Console.WriteLine(
+                                "SYS_MedicalSpecialty: Name.Length: min={0}; max={1}",
+                                db.SYS_MedicalSpecialty.Min(x => x.Name.Length),
+                                db.SYS_MedicalSpecialty.Max(x => x.Name.Length));
                         }
 
                         break;
@@ -370,7 +392,7 @@ namespace Test1
                                     }
                                     catch (Exception ex)
                                     {
-                                        Program.ConsoleWriteException(ex);
+                                        ConsoleWriteException(ex);
                                     }
 
                                     Console.ForegroundColor = ConsoleColor.Green;
@@ -431,13 +453,11 @@ namespace Test1
                         }
                         catch (Exception ex)
                         {
-                            Program.ConsoleWriteException(ex);
+                            ConsoleWriteException(ex);
 
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Partially done!");
                             Console.ForegroundColor = ConsoleColor.White;
-
-                            break;
                         }
 
                         break;
@@ -498,7 +518,11 @@ namespace Test1
                             Console.WriteLine();
                             Console.WriteLine("Sets a new seed to the random generator.");
                             Console.WriteLine("If left empty, uses an unpredictable seed.");
-                            Console.WriteLine("Default seed is 0.");
+                            Console.Write("Default seed is ");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write(defaultSeed);
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine('.');
                             Console.WriteLine("A predictable seed will always produce the same set of results,");
                             Console.WriteLine("suitable for unit tests, and an unpredictable seed will produce");
                             Console.WriteLine("different sets of result each time it is run, being suitable");
@@ -566,7 +590,7 @@ namespace Test1
                                         Firestarter.DropAllTables(db);
 
                                         Console.WriteLine("CreateDatabaseUsingScript");
-                                        Program.CreateDatabaseUsingScript(db, rootCerebelloPath);
+                                        CreateDatabaseUsingScript(db, rootCerebelloPath);
 
                                         InitSysTables(db, rootCerebelloPath);
 
@@ -576,7 +600,7 @@ namespace Test1
                                     }
                                     catch (Exception ex)
                                     {
-                                        Program.ConsoleWriteException(ex);
+                                        ConsoleWriteException(ex);
 
                                         Console.ForegroundColor = ConsoleColor.Yellow;
                                         Console.WriteLine("Partially done!");
@@ -685,8 +709,13 @@ namespace Test1
                     return input;
 
                 if (outType != null && outType != typeof(string) && outType.IsPrimitive)
-                    try { return Convert.ChangeType(input, outType); }
-                    catch { }
+                    try
+                    {
+                        return Convert.ChangeType(input, outType);
+                    }
+                    catch
+                    {
+                    }
 
                 var command = prefix + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(input);
                 var method = typeof(Exec).GetMethod(command, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
@@ -699,7 +728,7 @@ namespace Test1
                         Console.Write("{0}{1} ", new string(' ', (level + 1) * 4), eachParam.ParameterType.Name);
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("{0}: ", eachParam.Name);
-                        listParam.Add(ExecCommand(level + 1, eachParam.Name, eachParam.ParameterType, commands));
+                        listParam.Add(this.ExecCommand(level + 1, eachParam.Name, eachParam.ParameterType, commands));
                     }
 
                     return method.Invoke(this, listParam.ToArray());
@@ -714,6 +743,7 @@ namespace Test1
             }
 
             #region Commands called via reflection
+
             // ReSharper disable MemberCanBePrivate.Local
             // ReSharper disable UnusedMember.Local
             // ReSharper disable UnusedParameter.Local
@@ -721,19 +751,21 @@ namespace Test1
             public void DelUser(User user)
             {
                 if (user != null && user.Secretary != null)
-                    db.DeleteObject(user.Secretary);
+                    this.db.DeleteObject(user.Secretary);
                 if (user != null && user.Administrator != null)
-                    db.DeleteObject(user.Administrator);
+                    this.db.DeleteObject(user.Administrator);
                 if (user != null && user.Doctor != null)
-                    db.DeleteObject(user.Doctor);
+                    this.db.DeleteObject(user.Doctor);
                 if (user != null) this.db.DeleteObject(user);
-                db.SaveChanges();
+                this.db.SaveChanges();
             }
+
             public void DelPractice(Practice practice)
             {
                 if (practice != null) this.db.DeleteObject(practice);
-                db.SaveChanges();
+                this.db.SaveChanges();
             }
+
             public void SetOwner(User user)
             {
                 if (user != null)
@@ -745,33 +777,99 @@ namespace Test1
                     }
                     user.IsOwner = true;
                 }
-                db.SaveChanges();
+                this.db.SaveChanges();
             }
-            public void DelSecretary(Secretary secretary) { DelUser(secretary.Users.Single()); }
-            public void DelAdministrator(Administrator administrator) { DelUser(administrator.Users.Single()); }
-            public void DelDoctor(Doctor doctor) { DelUser(doctor.Users.Single()); }
+
+            public void DelSecretary(Secretary secretary)
+            {
+                this.DelUser(secretary.Users.Single());
+            }
+
+            public void DelAdministrator(Administrator administrator)
+            {
+                this.DelUser(administrator.Users.Single());
+            }
+
+            public void DelDoctor(Doctor doctor)
+            {
+                this.DelUser(doctor.Users.Single());
+            }
+
             public Secretary NewSecretary(Practice practice, string username, string password, string name)
             {
-                var user = Firestarter.CreateUser(db, practice, username, password, name);
+                var user = Firestarter.CreateUser(this.db, practice, username, password, name);
                 user.Secretary = new Secretary { PracticeId = user.PracticeId };
                 return user.Secretary;
             }
-            public Secretary NewSecretaryTtMilena(Practice practice) { return Firestarter.CreateSecretary_Milena(db, practice); }
-            public Secretary SecretaryMilena() { return db.Secretaries.First(x => x.Users.FirstOrDefault().UserName == "milena"); }
-            public Practice PracticeNew(string name, User user, string urlId) { return Firestarter.CreatePractice(db, name, user, urlId); }
-            public Practice NewPractice(string name, User user, string urlId) { return Firestarter.CreatePractice(db, name, user, urlId); }
-            public Practice PracticeFirst() { return db.Practices.FirstOrDefault(); }
-            public Practice PracticeDrHouse() { return db.Practices.Single(x => x.UrlIdentifier == "consultoriodrhouse"); }
-            public Practice PracticeByUrlId(string urlIdentifier) { return db.Practices.Single(x => x.UrlIdentifier == urlIdentifier); }
-            public User UserAndre() { return db.Users.Single(x => x.UserName == "andrerpena"); }
-            public User UserMiguel() { return db.Users.Single(x => x.UserName == "masbicudo"); }
-            public User UserOwner(Practice practice) { return practice.Owner; }
-            public Doctor DoctorById(int id) { return db.Doctors.Single(d => d.Id == id); }
-            public Secretary SecretaryById(int id) { return db.Secretaries.Single(d => d.Id == id); }
-            public User UserById(int id) { return db.Users.Single(d => d.Id == id); }
+
+            public Secretary NewSecretaryTtMilena(Practice practice)
+            {
+                return Firestarter.CreateSecretary_Milena(this.db, practice);
+            }
+
+            public Secretary SecretaryMilena()
+            {
+                return this.db.Secretaries.First(x => x.Users.FirstOrDefault().UserName == "milena");
+            }
+
+            public Practice PracticeNew(string name, User user, string urlId)
+            {
+                return Firestarter.CreatePractice(this.db, name, user, urlId);
+            }
+
+            public Practice NewPractice(string name, User user, string urlId)
+            {
+                return Firestarter.CreatePractice(this.db, name, user, urlId);
+            }
+
+            public Practice PracticeFirst()
+            {
+                return this.db.Practices.FirstOrDefault();
+            }
+
+            public Practice PracticeDrHouse()
+            {
+                return this.db.Practices.Single(x => x.UrlIdentifier == "consultoriodrhouse");
+            }
+
+            public Practice PracticeByUrlId(string urlIdentifier)
+            {
+                return this.db.Practices.Single(x => x.UrlIdentifier == urlIdentifier);
+            }
+
+            public User UserAndre()
+            {
+                return this.db.Users.Single(x => x.UserName == "andrerpena");
+            }
+
+            public User UserMiguel()
+            {
+                return this.db.Users.Single(x => x.UserName == "masbicudo");
+            }
+
+            public User UserOwner(Practice practice)
+            {
+                return practice.Owner;
+            }
+
+            public Doctor DoctorById(int id)
+            {
+                return this.db.Doctors.Single(d => d.Id == id);
+            }
+
+            public Secretary SecretaryById(int id)
+            {
+                return this.db.Secretaries.Single(d => d.Id == id);
+            }
+
+            public User UserById(int id)
+            {
+                return this.db.Users.Single(d => d.Id == id);
+            }
+
             public User UserNew(string username, string password, string name, string type)
             {
-                var user = Firestarter.CreateUser(db, null, username, password, name);
+                var user = Firestarter.CreateUser(this.db, null, username, password, name);
                 if (type.Contains("adm"))
                     user.Administrator = new Administrator { PracticeId = user.PracticeId };
                 if (type.Contains("sec"))
@@ -780,11 +878,16 @@ namespace Test1
                     user.Doctor = new Doctor { PracticeId = user.PracticeId };
                 return user;
             }
-            public Administrator AdministratorById(int id) { return db.Administrators.Single(d => d.Id == id); }
+
+            public Administrator AdministratorById(int id)
+            {
+                return this.db.Administrators.Single(d => d.Id == id);
+            }
 
             // ReSharper restore UnusedParameter.Local
             // ReSharper restore UnusedMember.Local
             // ReSharper restore MemberCanBePrivate.Local
+
             #endregion
         }
 
@@ -796,7 +899,7 @@ namespace Test1
 
             // Create practice, contract, doctors and other things
             Console.WriteLine("CreateSecretary_Milena");
-            var milena = Firestarter.CreateSecretary_Milena(db, listDoctors[0].Users.First().Practice);
+            Firestarter.CreateSecretary_Milena(db, listDoctors[0].Users.First().Practice);
 
             // Setup doctor schedule and document templates
             Console.WriteLine("SetupDoctor");
@@ -825,13 +928,13 @@ namespace Test1
             Console.WriteLine("Initialize_SYS_Cid10");
             Firestarter.Initialize_SYS_Cid10(
                 db,
-                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                progress: ConsoleWriteProgressIntInt);
 
             Console.WriteLine("Initialize_SYS_MedicalProcedures");
             Firestarter.Initialize_SYS_MedicalProcedures(
                 db,
                 Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                progress: new Action<int, int>(ConsoleWriteProgressIntInt));
+                progress: ConsoleWriteProgressIntInt);
         }
 
         private static void CreateDatabaseUsingScript(CerebelloEntities db, string rootCerebelloPath)
@@ -853,7 +956,7 @@ namespace Test1
                 // exception type
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(string.Format("Exception: {0}", ex1.GetType().Name));
+                Console.Write("Exception: {0}", ex1.GetType().Name);
                 Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
 
                 // message
@@ -876,7 +979,7 @@ namespace Test1
                     foreach (var eachLine in linesStackTrace)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(string.Format("{0:0000}:", fncLevel++));
+                        Console.Write("{0:0000}:", fncLevel++);
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write(eachLine);
                         if (Console.CursorLeft > 0)
@@ -905,8 +1008,10 @@ namespace Test1
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (x == 0 || x == y || x * 10 / y != (x - 1) * 10 / y)
-                Console.WriteLine(string.Format("    {0} of {1} - {2}%", x, y, x * 100 / y));
+                Console.WriteLine("    {0} of {1} - {2}%", x, y, x * 100 / y);
             Console.ForegroundColor = oldColor;
         }
     }
+
+    // ReSharper restore LocalizableElement
 }
