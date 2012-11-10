@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Cerebello.Firestarter;
 using Cerebello.Model;
-using CerebelloWebRole.Models;
-using System.IO;
-using System.Text.RegularExpressions;
-using Cerebello.Firestarter.Helpers;
-using System.Linq;
 
 namespace Test1
 {
@@ -27,11 +25,24 @@ namespace Test1
 
             bool showHidden = false;
 
+            int? rndOption = 0; // default random seed
+
             Console.BufferWidth = 200;
+
+            var lastVer = File.Exists("last.ver") ? File.ReadAllText("last.ver") : null;
+            var currVer = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            File.WriteAllText("last.ver", currVer);
 
             // New options:
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("Firestarter v{0}", currVer);
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (lastVer != currVer)
+                    Console.Write(" last used v{0}", lastVer ?? "?.?.?.?");
+                Console.WriteLine();
+
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine("DateTime (UTC):   {0}", DateTime.UtcNow);
                 Console.WriteLine("DateTime (Local): {0}", DateTime.Now);
@@ -150,6 +161,7 @@ namespace Test1
                     Console.WriteLine(@"p1     - Populate database with items (type p1? to know more).");
                     Console.WriteLine(@"drp    - Drop all tables and FKs.");
                     Console.WriteLine(@"crt    - Create all tables and FKs using script.");
+                    Console.WriteLine(@"rnd    - Set the seed to the random generator.");
                     Console.WriteLine(@"cls    - Clear screen.");
                     Console.WriteLine(wasAttached
                         ? @"atc    - Leaves DB attached when done."
@@ -409,7 +421,8 @@ namespace Test1
                                 // Initializing system tables
                                 InitSysTables(db, rootCerebelloPath);
 
-                                OptionP1(db);
+                                using (RandomContext.Create(rndOption))
+                                    OptionP1(db);
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -479,6 +492,37 @@ namespace Test1
 
                         break;
 
+                    case "rnd?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Sets a new seed to the random generator.");
+                            Console.WriteLine("If left empty, uses an unpredictable seed.");
+                            Console.WriteLine("Default seed is 0.");
+                            Console.WriteLine("A predictable seed will always produce the same set of results,");
+                            Console.WriteLine("suitable for unit tests, and an unpredictable seed will produce");
+                            Console.WriteLine("different sets of result each time it is run, being suitable");
+                            Console.WriteLine("for human interaction tests.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+
+                        break;
+
+                    case "rnd":
+                        // Dettaching previous DB if it was attached in this session.
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("Seed: ");
+                        var numText = Console.ReadLine();
+                        rndOption = null;
+                        int num;
+                        if (int.TryParse(numText, out num))
+                            rndOption = num;
+                        break;
+
                     case "r?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -527,7 +571,8 @@ namespace Test1
                                         InitSysTables(db, rootCerebelloPath);
 
                                         if (!isTestDb)
-                                            OptionP1(db);
+                                            using (RandomContext.Create(rndOption))
+                                                OptionP1(db);
                                     }
                                     catch (Exception ex)
                                     {
@@ -587,7 +632,6 @@ namespace Test1
                 }
             }
         }
-
 
         private class Exec
         {
@@ -756,14 +800,15 @@ namespace Test1
 
             // Setup doctor schedule and document templates
             Console.WriteLine("SetupDoctor");
-            var rand = new Random(1596790346);
-            foreach (var doctor in listDoctors)
-                Firestarter.SetupDoctor(doctor, db, rand.Next());
+            using (var rc = RandomContext.Create())
+                foreach (var doctor in listDoctors)
+                    Firestarter.SetupDoctor(doctor, db, rc.Random.Next());
 
             // Create patients
             Console.WriteLine("CreateFakePatients");
-            foreach (var doctor in listDoctors)
-                Firestarter.CreateFakePatients(doctor, db);
+            using (RandomContext.Create())
+                foreach (var doctor in listDoctors)
+                    Firestarter.CreateFakePatients(doctor, db);
         }
 
         private static void InitSysTables(CerebelloEntities db, string rootCerebelloPath)

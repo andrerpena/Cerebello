@@ -17,6 +17,13 @@ namespace Cerebello.Firestarter
     {
         const string DEFAULT_TIMEZONE_ID = "E. South America Standard Time";
 
+        public static Random Random { get; set; }
+
+        static Firestarter()
+        {
+            Random = new Random();
+        }
+
         public static DateTime ConvertFromDefaultToUtc(DateTime dateTime)
         {
             return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.FindSystemTimeZoneById(DEFAULT_TIMEZONE_ID));
@@ -516,7 +523,7 @@ namespace Cerebello.Firestarter
         /// </summary>
         /// <param name="doctor"></param>
         /// <param name="db"></param>
-        /// <param name="i"> </param>
+        /// <param name="seed"> </param>
         public static void SetupDoctor(Doctor doctor, CerebelloEntities db, int seed = 1)
         {
             #region CFG_Schedule
