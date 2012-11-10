@@ -1059,6 +1059,7 @@ GO
 /****** Object:  ForeignKey [FK_MedicalCertificate_ModelMedicalCertificate] ******/
 ALTER TABLE [dbo].[MedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificate_ModelMedicalCertificate] FOREIGN KEY([ModelMedicalCertificateId])
 REFERENCES [dbo].[ModelMedicalCertificate] ([Id])
+ON DELETE SET NULL
 GO
 ALTER TABLE [dbo].[MedicalCertificate] CHECK CONSTRAINT [FK_MedicalCertificate_ModelMedicalCertificate]
 GO

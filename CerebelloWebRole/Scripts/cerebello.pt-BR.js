@@ -57,7 +57,7 @@ cerebello.res = {
         actionName: "excluir",
 
         // The operation name. e.g. "Resetar senha", "Excluir usuário".
-        operationName: "Excluir usuário",
+        operationName: "Excluir {objectType}",
 
         // Optional. The type of the object affected by the operation. Like 'usuário'.
         objectType: function () {
@@ -72,7 +72,7 @@ cerebello.res = {
         // This field is going to be processed twice.
         // The first time it is formatted with 'options' object. Fields are like this '{field}'.
         // The second time it is formatted with 'data' object from json response. Fields are like this '{{field}}'
-        successMessage: "Este usuário foi excluído.",
+        successMessage: "{objectType} foi excluído",
     },
 
     // Defaults:

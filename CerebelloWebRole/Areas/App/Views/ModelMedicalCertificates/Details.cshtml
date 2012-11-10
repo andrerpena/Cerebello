@@ -3,26 +3,24 @@
     ViewBag.Title = "Details";
 }
 @section Title {
-    Medicamento: @Model.Name
+    Modelo de atestado: @Model.Name
 }
 @section SideBar {
-    <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar modelo de atestado</a>
-    <a href="@Url.Action("index")" class="icon-link icon-link-home" id="list-medications-link">Resumo de modelos de atestados</a>
+    <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar modelo de atestado</a>
+    <a href="#" class="icon-link icon-link-delete" id="delete-model-link">Excluir modelo de atestado</a>
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home" id="list-medications-link">Resumo de modelos de atestados</a>
 
     <script type="text/javascript">
         $("#delete-model-link").click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir este modelo de atestado médico?\nTodas as receitas de pacientes associadas com este modelo perderão esta associação.\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Este modelo de atestado médico foi excluído");
-                        window.location = "@Url.Action("index")";
+            $.confirmation(cerebello.res.deleteConfirmation, {
+                objectType: "modelo de atestado",
+                objectName: "@this.Model.Name",
+                    url: "@Url.Action("Delete", new { id = this.Model.Id })",
+                    success: function (data) {
+                        window.location = "@Url.Action("Index")";
                     }
-                    else
-                        alert("Não foi possível excluir este modelo de atestado médico.\n" + "Informações técnicas: " + data.text);
                 });
-            }
         });
     </script>
 }
