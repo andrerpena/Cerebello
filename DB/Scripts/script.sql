@@ -340,12 +340,19 @@ CREATE TABLE [dbo].[HealthInsurance](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
 	[PracticeId] [int] NOT NULL,
-	[FirstTimeValue] [numeric](6, 2) NULL,
-	[ReturnValue] [numeric](6, 2) NULL,
+	[NewAppointmentValue] [numeric](6, 2) NULL,
+	[ReturnAppointmentValue] [numeric](6, 2) NULL,
 	[DoctorId] [int] NOT NULL,
+	[ReturnTimeInterval] [int] NULL,
+	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_HealthEnsurance] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF),
+ CONSTRAINT [IX_HealthInsurance] UNIQUE NONCLUSTERED 
+(
+	[DoctorId] ASC,
+	[Name] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
@@ -972,7 +979,7 @@ GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Doctor]
 GO
 /****** Object:  ForeignKey [FK_Appointment_HealthInsurance] ******/
-ALTER TABLE [dbo].[Appointment]  WITH CHECK ADD  CONSTRAINT [FK_Appointment_HealthInsurance] FOREIGN KEY([HealthInsuranceId])
+ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_HealthInsurance] FOREIGN KEY([HealthInsuranceId])
 REFERENCES [dbo].[HealthInsurance] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_HealthInsurance]
@@ -1038,7 +1045,7 @@ GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
 GO
 /****** Object:  ForeignKey [FK_HealthInsurance_Doctor] ******/
-ALTER TABLE [dbo].[HealthInsurance]  WITH CHECK ADD  CONSTRAINT [FK_HealthInsurance_Doctor] FOREIGN KEY([DoctorId])
+ALTER TABLE [dbo].[HealthInsurance]  WITH NOCHECK ADD  CONSTRAINT [FK_HealthInsurance_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[HealthInsurance] CHECK CONSTRAINT [FK_HealthInsurance_Doctor]
@@ -1116,13 +1123,13 @@ GO
 ALTER TABLE [dbo].[ModelMedicalCertificateField] CHECK CONSTRAINT [FK_ModelMedicalCertificateField_ModelMedicalCertificate]
 GO
 /****** Object:  ForeignKey [FK_Notification_Practice] ******/
-ALTER TABLE [dbo].[Notification]  WITH CHECK ADD  CONSTRAINT [FK_Notification_Practice] FOREIGN KEY([PracticeId])
+ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_Practice]
 GO
 /****** Object:  ForeignKey [FK_Notification_User] ******/
-ALTER TABLE [dbo].[Notification]  WITH CHECK ADD  CONSTRAINT [FK_Notification_User] FOREIGN KEY([UserId])
+ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_User]
@@ -1140,7 +1147,7 @@ GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Doctor]
 GO
 /****** Object:  ForeignKey [FK_Patient_HealthInsurance] ******/
-ALTER TABLE [dbo].[Patient]  WITH CHECK ADD  CONSTRAINT [FK_Patient_HealthInsurance] FOREIGN KEY([LastUsedHealthInsuranceId])
+ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_HealthInsurance] FOREIGN KEY([LastUsedHealthInsuranceId])
 REFERENCES [dbo].[HealthInsurance] ([Id])
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_HealthInsurance]

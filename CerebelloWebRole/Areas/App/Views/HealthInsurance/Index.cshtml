@@ -1,15 +1,23 @@
-﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceIndexViewModel
+﻿@model HealthInsuranceIndexViewModel
+@using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code
 @{
-    ViewBag.Title = "Convênios médicos · Cerebello";
-    ViewBag.Watermark = "Pesquisar pelo nome do convênio";
+    var title =
+        this.ViewBag.IsFiltered == true
+            ? "Busca por convênios médicos"
+            : "Convênios médicos";
 
-    var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
-    grid.AddField(model => model.Name);
-    grid.AddField(model => model.FirstTimeValue);
-    grid.AddField(model => model.ReturnValue);
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.Watermark = "Pesquisar pelo nome do convênio";
+
+    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE);
+    grid.AddLinkField(item => item.Name, "Details", item => new { id = item.Id });
+    grid.AddField(item => item.IsActive, m => m.IsActive ? "Ativo" : "Inativo", "");
+    grid.AddField(item => item.NewAppointmentValue);
+    grid.AddField(item => item.ReturnDaysInterval);
 }
 @section Title {
-Convênios médicos
+    @title
 }
 @section SideBar {
     <ul>
@@ -19,7 +27,7 @@ Convênios médicos
 
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
-    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+    @Html.Partial("SearchBox", new SearchModel())
 }
 
 <div class="widget">

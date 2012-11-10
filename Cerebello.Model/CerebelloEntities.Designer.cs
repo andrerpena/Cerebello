@@ -6228,13 +6228,15 @@ namespace Cerebello.Model
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="doctorId">Initial value of the DoctorId property.</param>
-        public static HealthInsurance CreateHealthInsurance(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId, global::System.Int32 doctorId)
+        /// <param name="isActive">Initial value of the IsActive property.</param>
+        public static HealthInsurance CreateHealthInsurance(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId, global::System.Int32 doctorId, global::System.Boolean isActive)
         {
             HealthInsurance healthInsurance = new HealthInsurance();
             healthInsurance.Id = id;
             healthInsurance.Name = name;
             healthInsurance.PracticeId = practiceId;
             healthInsurance.DoctorId = doctorId;
+            healthInsurance.IsActive = isActive;
             return healthInsurance;
         }
 
@@ -6320,54 +6322,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> FirstTimeValue
-        {
-            get
-            {
-                return _FirstTimeValue;
-            }
-            set
-            {
-                OnFirstTimeValueChanging(value);
-                ReportPropertyChanging("FirstTimeValue");
-                _FirstTimeValue = StructuralObject.SetValidValue(value, "FirstTimeValue");
-                ReportPropertyChanged("FirstTimeValue");
-                OnFirstTimeValueChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _FirstTimeValue;
-        partial void OnFirstTimeValueChanging(Nullable<global::System.Decimal> value);
-        partial void OnFirstTimeValueChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> ReturnValue
-        {
-            get
-            {
-                return _ReturnValue;
-            }
-            set
-            {
-                OnReturnValueChanging(value);
-                ReportPropertyChanging("ReturnValue");
-                _ReturnValue = StructuralObject.SetValidValue(value, "ReturnValue");
-                ReportPropertyChanged("ReturnValue");
-                OnReturnValueChanged();
-            }
-        }
-        private Nullable<global::System.Decimal> _ReturnValue;
-        partial void OnReturnValueChanging(Nullable<global::System.Decimal> value);
-        partial void OnReturnValueChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.Int32 DoctorId
@@ -6388,6 +6342,102 @@ namespace Cerebello.Model
         private global::System.Int32 _DoctorId;
         partial void OnDoctorIdChanging(global::System.Int32 value);
         partial void OnDoctorIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> NewAppointmentValue
+        {
+            get
+            {
+                return _NewAppointmentValue;
+            }
+            set
+            {
+                OnNewAppointmentValueChanging(value);
+                ReportPropertyChanging("NewAppointmentValue");
+                _NewAppointmentValue = StructuralObject.SetValidValue(value, "NewAppointmentValue");
+                ReportPropertyChanged("NewAppointmentValue");
+                OnNewAppointmentValueChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _NewAppointmentValue;
+        partial void OnNewAppointmentValueChanging(Nullable<global::System.Decimal> value);
+        partial void OnNewAppointmentValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> ReturnAppointmentValue
+        {
+            get
+            {
+                return _ReturnAppointmentValue;
+            }
+            set
+            {
+                OnReturnAppointmentValueChanging(value);
+                ReportPropertyChanging("ReturnAppointmentValue");
+                _ReturnAppointmentValue = StructuralObject.SetValidValue(value, "ReturnAppointmentValue");
+                ReportPropertyChanged("ReturnAppointmentValue");
+                OnReturnAppointmentValueChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _ReturnAppointmentValue;
+        partial void OnReturnAppointmentValueChanging(Nullable<global::System.Decimal> value);
+        partial void OnReturnAppointmentValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> ReturnTimeInterval
+        {
+            get
+            {
+                return _ReturnTimeInterval;
+            }
+            set
+            {
+                OnReturnTimeIntervalChanging(value);
+                ReportPropertyChanging("ReturnTimeInterval");
+                _ReturnTimeInterval = StructuralObject.SetValidValue(value, "ReturnTimeInterval");
+                ReportPropertyChanged("ReturnTimeInterval");
+                OnReturnTimeIntervalChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _ReturnTimeInterval;
+        partial void OnReturnTimeIntervalChanging(Nullable<global::System.Int32> value);
+        partial void OnReturnTimeIntervalChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsActive
+        {
+            get
+            {
+                return _IsActive;
+            }
+            set
+            {
+                OnIsActiveChanging(value);
+                ReportPropertyChanging("IsActive");
+                _IsActive = StructuralObject.SetValidValue(value, "IsActive");
+                ReportPropertyChanged("IsActive");
+                OnIsActiveChanged();
+            }
+        }
+        private global::System.Boolean _IsActive;
+        partial void OnIsActiveChanging(global::System.Boolean value);
+        partial void OnIsActiveChanged();
 
         #endregion
 

@@ -21,8 +21,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                    {
                                        Id = m.Id,
                                        Name = m.Name,
-                                       FirstTimeValue = m.FirstTimeValue,
-                                       ReturnValue = m.ReturnValue,
+                                       NewAppointmentValue = m.NewAppointmentValue,
+                                       ReturnAppointmentValue = m.ReturnAppointmentValue,
+                                       ReturnDaysInterval = m.ReturnTimeInterval,
+                                       IsActive = m.IsActive,
                                    }).ToList(),
                     Count = this.db.Medicines.Count()
                 };
@@ -41,11 +43,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Edit(viewModel);
         }
 
-
         [HttpGet]
         public ActionResult Edit(int? id, int? anvisaId = null)
         {
             var viewModel = new HealthInsuranceViewModel();
+            viewModel.ReturnDaysInterval = 30;
+            viewModel.IsActive = true;
+
+            this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
             if (id != null)
             {
@@ -54,8 +59,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         Id = healthInsurance.Id,
                         Name = healthInsurance.Name,
-                        ReturnValue = healthInsurance.ReturnValue,
-                        FirstTimeValue = healthInsurance.FirstTimeValue,
+                        ReturnAppointmentValue = healthInsurance.ReturnAppointmentValue,
+                        NewAppointmentValue = healthInsurance.NewAppointmentValue,
+                        ReturnDaysInterval = healthInsurance.ReturnTimeInterval,
+                        IsActive = healthInsurance.IsActive,
                     };
             }
 
@@ -79,8 +86,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 healthInsurance.Name = formModel.Name;
-                healthInsurance.FirstTimeValue = formModel.FirstTimeValue;
-                healthInsurance.ReturnValue = formModel.ReturnValue;
+                healthInsurance.NewAppointmentValue = formModel.NewAppointmentValue;
+                healthInsurance.ReturnAppointmentValue = formModel.ReturnAppointmentValue;
+                healthInsurance.ReturnTimeInterval = formModel.ReturnDaysInterval;
+                healthInsurance.IsActive = formModel.IsActive;
 
                 db.SaveChanges();
 
@@ -98,8 +107,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Id = hi.Id,
                     Name = hi.Name,
-                    FirstTimeValue = hi.FirstTimeValue,
-                    ReturnValue = hi.ReturnValue,
+                    NewAppointmentValue = hi.NewAppointmentValue,
+                    ReturnAppointmentValue = hi.ReturnAppointmentValue,
+                    ReturnDaysInterval = hi.ReturnTimeInterval,
+                    IsActive = hi.IsActive,
                 };
 
             return this.View(viewModel);
@@ -117,8 +128,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                    {
                                        Id = m.Id,
                                        Name = m.Name,
-                                       FirstTimeValue = m.FirstTimeValue,
-                                       ReturnValue = m.ReturnValue,
+                                       NewAppointmentValue = m.NewAppointmentValue,
+                                       ReturnAppointmentValue = m.ReturnAppointmentValue,
+                                       ReturnDaysInterval = m.ReturnTimeInterval,
+                                       IsActive = m.IsActive,
                                    }).ToList(),
                     Count = this.db.Medicines.Count()
                 };

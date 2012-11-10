@@ -756,8 +756,9 @@ namespace Test1
 
             // Setup doctor schedule and document templates
             Console.WriteLine("SetupDoctor");
+            var rand = new Random(1596790346);
             foreach (var doctor in listDoctors)
-                Firestarter.SetupDoctor(doctor, db);
+                Firestarter.SetupDoctor(doctor, db, rand.Next());
 
             // Create patients
             Console.WriteLine("CreateFakePatients");

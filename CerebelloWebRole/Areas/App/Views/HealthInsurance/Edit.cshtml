@@ -1,23 +1,11 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceViewModel
 @{
-    if (this.Model != null && this.Model.Id.HasValue)
-    {
-        ViewBag.Title = "Convênio médico: " + this.Model.Name + " · Cerebello";
-    }
-    else
-    {
-        ViewBag.Title = "Novo convênio médico · Cerebello";
-    }
+    var isEditing = this.Model != null && this.Model.Id.HasValue;
+    var title = isEditing ? "Convênio médico: " + this.Model.Name : "Novo convênio médico";
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
-    @if (this.Model != null && this.Model.Id.HasValue)
-    {
-        @:Editando convênio médico: @this.Model.Name
-    }
-    else
-    {
-        @:Novo convênio médico
-    }
+    @title
 }
 @section SideBar {
     <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo dos convênios médicos</a>
@@ -32,20 +20,37 @@
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
     
+    if (!isEditing)
+    {
+    @Html.HiddenFor(model => model.IsActive)
+    }
+
     <table class="form-table">
         <tr>
             <th>@Html.LabelFor(model => model.Name)</th>
             <td class="large">@Html.TextBoxFor(model => model.Name)</td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.FirstTimeValue)</th>
-            <td>@Html.TextBoxFor(model => model.FirstTimeValue)</td>
+            <th>@Html.LabelFor(model => model.NewAppointmentValue)</th>
+            <td>@Html.TextBoxFor(model => model.NewAppointmentValue)</td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.ReturnValue)</th>
-            <td>@Html.TextBoxFor(model => model.ReturnValue)</td>
+            <th>@Html.LabelFor(model => model.ReturnAppointmentValue)</th>
+            <td>@Html.TextBoxFor(model => model.ReturnAppointmentValue)</td>
         </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.ReturnDaysInterval)</th>
+            <td>@Html.TextBoxFor(model => model.ReturnDaysInterval)</td>
+        </tr>
+        @if (isEditing)
+        {
+            <tr>
+                <th>@Html.LabelFor(model => model.IsActive)</th>
+                <td>@Html.CheckBoxFor(model => model.IsActive)</td>
+            </tr>
+        }
     </table>
+
     <div class="submit-bar">
         <input type="submit" value="salvar convênio" />
         <span class="separator">ou</span>

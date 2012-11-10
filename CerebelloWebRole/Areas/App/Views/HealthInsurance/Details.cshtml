@@ -3,9 +3,11 @@
     ViewBag.Title = "Details";
     // creating details CardView
     var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.Name, wholeRow: true);
-    cardView.AddField(m => m.FirstTimeValue, wholeRow: true);
-    cardView.AddField(m => m.ReturnValue, wholeRow: true);
+    cardView.AddField(m => m.Name);
+    cardView.AddField(m => m.IsActive, m => m.IsActive ? "Ativo" : "Inativo", header: "");
+    cardView.AddField(m => m.NewAppointmentValue);
+    cardView.AddField(m => m.ReturnAppointmentValue);
+    cardView.AddField(m => m.ReturnDaysInterval);
 }
 @section Title {
     Convênio: @Model.Name
@@ -19,8 +21,8 @@
             e.preventDefault();
             var answer = confirm("Deseja realmente excluir este modelo de atestado médico?\nTodas as receitas de pacientes associadas com este modelo perderão esta associação.\nEsta operação não pode ser desfeita.");
             if (answer) {
-                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
+                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function (data) {
+                    if (data.success) {
                         alert("Este modelo de atestado médico foi excluído");
                         window.location = "@Url.Action("index")";
                     }

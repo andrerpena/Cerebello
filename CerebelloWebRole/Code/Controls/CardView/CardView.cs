@@ -40,7 +40,7 @@ namespace CerebelloWebRole.Code.Controls
         /// <param name="format"></param>
         /// <param name="header"></param>
         /// <param name="wholeRow"></param>
-        public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, string header = null, bool wholeRow = false)
+        public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, Func<TModel, object> format = null, string header = null, bool wholeRow = false)
         {
             this.Fields.Add(new CardViewField<TModel, TValue>(exp, format, header, wholeRow));
         }
