@@ -14,13 +14,14 @@
         $("#delete-model-link").click(function (e) {
             e.preventDefault();
             $.confirmation(cerebello.res.deleteConfirmation, {
+                warnMessage: "Os atestados já emitidos vão perder o vínculo com este modelo, mas o conteúdo dos mesmos não será afetado.",
                 objectType: "modelo de atestado",
                 objectName: "@this.Model.Name",
-                    url: "@Url.Action("Delete", new { id = this.Model.Id })",
-                    success: function (data) {
-                        window.location = "@Url.Action("Index")";
+                url: "@Url.Action("Delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    window.location = "@Url.Action("Index")";
                     }
-                });
+            });
         });
     </script>
 }

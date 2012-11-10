@@ -144,6 +144,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var hi = this.db.HealthInsurances.First(m => m.Id == id);
 
+                if (this.db.Appointments.Any(a => a.HealthInsuranceId == id))
+                    return this.Json(
+                        new JsonDeleteMessage { success = false, text = "Este convênio está sendo usado e não pode ser removido." },
+                        JsonRequestBehavior.AllowGet);
+
                 this.db.HealthInsurances.DeleteObject(hi);
                 this.db.SaveChanges();
 
