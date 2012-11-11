@@ -524,7 +524,7 @@ namespace Cerebello.Firestarter
         /// <param name="doctor"></param>
         /// <param name="db"></param>
         /// <param name="seed"> </param>
-        public static void SetupDoctor(Doctor doctor, CerebelloEntities db, int seed = 1)
+        public static void SetupDoctor(Doctor doctor, CerebelloEntities db, int seed = 7)
         {
             #region CFG_Schedule
             doctor.CFG_Schedule = new CFG_Schedule()
