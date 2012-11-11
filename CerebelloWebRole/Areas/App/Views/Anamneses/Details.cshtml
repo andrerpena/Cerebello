@@ -42,10 +42,10 @@
             e.preventDefault();
             $.deleteConfirmation({
                 objectType: "anamnese",
-                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                url: "@Url.Action("Delete", new { id = this.Model.Id })",
                 success: function (data) {
                     alert("Esta anamnese foi excluída");
-                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                    window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
                 }
             });
         });

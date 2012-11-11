@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -39,13 +40,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PatientName = a.Patient.Person.FullName,
                     Date = ConvertToLocalDateTime(this.Practice, a.Start),
                     DateSpelled = getRelativeDate(a.Start)
-                    
+
                 }).ToList();
 
+            var person = this.Doctor.Users.First().Person;
             var viewModel = new DoctorHomeViewModel()
                 {
-                    DoctorName = this.Doctor.Users.First().Person.FullName,
-                    NextAppointments = nextAppoitments
+                    DoctorName = person.FullName,
+                    NextAppointments = nextAppoitments,
+                    Gender = (TypeGender)person.Gender,
                 };
 
             return View(viewModel);

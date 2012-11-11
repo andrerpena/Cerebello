@@ -65,7 +65,7 @@
                 alert("O CEP precisa estar preenchido");
             else {
                 $activityIndicator.show();
-                getGetInfo("@Url.Action("getcepinfo", "patients")", $cepInput.val(), {
+                getGetInfo("@Url.Action("GetCepInfo", "Correios")", $cepInput.val(), {
                     success: function(cepInfo) {
                         $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
                         $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);

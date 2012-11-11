@@ -3,31 +3,32 @@
     ViewBag.Title = "Details";
     // creating details CardView
     var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.Name, wholeRow: true);
-    cardView.AddField(m => m.FirstTimeValue, wholeRow: true);
-    cardView.AddField(m => m.ReturnValue, wholeRow: true);
+    cardView.AddField(m => m.Name);
+    cardView.AddField(m => m.IsActive, m => m.IsActive ? "Ativo" : "Inativo", header: "");
+    cardView.AddField(m => m.NewAppointmentValue);
+    cardView.AddField(m => m.ReturnAppointmentValue);
+    cardView.AddField(m => m.ReturnDaysInterval);
 }
 @section Title {
     Convênio: @Model.Name
 }
 @section SideBar {
     <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar convênio médico</a>
+    <a href="#" class="icon-link icon-link-delete" id="delete-model-link">Excluir convênio</a>
     <a href="@Url.Action("Index")" class="icon-link icon-link-home" id="list-medications-link">Resumo dos convênios médicos</a>
 
     <script type="text/javascript">
         $("#delete-model-link").click(function (e) {
             e.preventDefault();
-            var answer = confirm("Deseja realmente excluir este modelo de atestado médico?\nTodas as receitas de pacientes associadas com este modelo perderão esta associação.\nEsta operação não pode ser desfeita.");
-            if (answer) {
-                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
-                        alert("Este modelo de atestado médico foi excluído");
-                        window.location = "@Url.Action("index")";
-                    }
-                    else
-                        alert("Não foi possível excluir este modelo de atestado médico.\n" + "Informações técnicas: " + data.text);
-                });
-            }
+            $.confirmation(cerebello.res.deleteConfirmation, {
+                warnMessage: "Se houver consultas associadas não será possível excluir.",
+                objectType: "convênio",
+                objectName: "@this.Model.Name",
+                url: "@Url.Action("Delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    window.location = "@Url.Action("Index")";
+                }
+            });
         });
     </script>
 }

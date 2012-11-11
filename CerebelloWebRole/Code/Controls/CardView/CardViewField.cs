@@ -9,9 +9,13 @@ namespace CerebelloWebRole.Code.Controls
     {
         public Expression<Func<TModel, TValue>> Expression { get; set; }
 
-        public CardViewField(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, string header = null, bool foreverAlone = false)
+        public CardViewField(Expression<Func<TModel, TValue>> exp, Func<TModel, object> format = null, string header = null, bool foreverAlone = false)
         {
-            this.Format = format;
+            Func<dynamic, object> dynFormat = null;
+            if (format != null)
+                dynFormat = d => format((TModel)d);
+
+            this.Format = dynFormat;
             this.Expression = exp;
             this.Header = header;
             this.WholeRow = foreverAlone;

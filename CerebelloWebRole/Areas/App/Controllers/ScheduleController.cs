@@ -249,9 +249,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // populating health insurance list, to show in the combo-box
             var listInsurances = this.Doctor.HealthInsurances
+                .Where(hi => hi.IsActive)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem());
+            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return this.View("Edit", viewModel);
@@ -351,9 +352,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // populating health insurance list, to show in the combo-box
             var listInsurances = this.Doctor.HealthInsurances
+                .Where(hi => hi.IsActive)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem());
+            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", viewModel);
@@ -521,9 +523,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // populating health insurance list, to show in the combo-box
             var listInsurances = this.Doctor.HealthInsurances
+                .Where(hi => hi.IsActive)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem());
+            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", formModel);

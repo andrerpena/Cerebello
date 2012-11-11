@@ -130,6 +130,7 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
+    <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />

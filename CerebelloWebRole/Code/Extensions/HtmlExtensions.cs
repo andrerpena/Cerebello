@@ -46,7 +46,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int rowsPerPage, int? count = null)
         {
-            return new Grid<TModel>(model, rowsPerPage, count);
+            return new Grid<TModel>(htmlHelper, model, rowsPerPage, count);
         }
 
         /// <summary>

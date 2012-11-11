@@ -477,9 +477,11 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
-          <Property Name="FirstTimeValue" Type="numeric" Precision="6" Scale="2" />
-          <Property Name="ReturnValue" Type="numeric" Precision="6" Scale="2" />
+          <Property Name="NewAppointmentValue" Type="numeric" Precision="6" Scale="2" />
+          <Property Name="ReturnAppointmentValue" Type="numeric" Precision="6" Scale="2" />
           <Property Name="DoctorId" Type="int" Nullable="false" />
+          <Property Name="ReturnTimeInterval" Type="int" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Holiday">
           <Key>
@@ -2727,12 +2729,14 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <Property Type="Decimal" Name="FirstTimeValue" Precision="6" Scale="2" />
-          <Property Type="Decimal" Name="ReturnValue" Precision="6" Scale="2" />
           <Property Type="Int32" Name="DoctorId" Nullable="false" />
           <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_HealthInsurance_Doctor" FromRole="HealthInsurance" ToRole="Doctor" />
           <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_HealthInsurance" FromRole="HealthInsurance" ToRole="Patient" />
           <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_HealthInsurance" FromRole="HealthInsurance" ToRole="Appointment" />
+          <Property Type="Decimal" Name="NewAppointmentValue" Precision="6" Scale="2" />
+          <Property Type="Decimal" Name="ReturnAppointmentValue" Precision="6" Scale="2" />
+          <Property Type="Int32" Name="ReturnTimeInterval" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
         </EntityType>
         <EntityType Name="Notification">
           <Key>
@@ -3329,9 +3333,11 @@
           <EntitySetMapping Name="HealthInsurances">
             <EntityTypeMapping TypeName="Cerebello.Model.HealthInsurance">
               <MappingFragment StoreEntitySet="HealthInsurance">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ReturnTimeInterval" ColumnName="ReturnTimeInterval" />
+                <ScalarProperty Name="ReturnAppointmentValue" ColumnName="ReturnAppointmentValue" />
+                <ScalarProperty Name="NewAppointmentValue" ColumnName="NewAppointmentValue" />
                 <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
-                <ScalarProperty Name="ReturnValue" ColumnName="ReturnValue" />
-                <ScalarProperty Name="FirstTimeValue" ColumnName="FirstTimeValue" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3370,7 +3376,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="23">
+      <Diagram Name="CerebelloEntities" ZoomLevel="72">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="36.625" PointY="1" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="1.5" PointX="26.625" PointY="11.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="39.125" PointY="16.625" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -23,5 +21,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Next appointments
         /// </summary>
         public List<AppointmentViewModel> NextAppointments { get; set; }
+
+        public TypeGender Gender { get; set; }
     }
 }

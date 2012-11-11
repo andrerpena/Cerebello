@@ -31,12 +31,11 @@ cerebello.res = {
 
         // Text with informations about the risks of the operation, and other details about the operation.
         message: function () {
-            return ("Você está tentando excluir um(a) <b>"
-                + this.objectType + "</b> permanentemente" +
+            return ("Você está tentando excluir um(a) <b>{objectType}</b> permanentemente" +
                 // optionally adds object name descriptions if it exists
-                (this.objectName ? " <b>(" + this.objectName + ")</b>" : "")
-                + ". Todos os registros que dependem deste podem ser excluídos também. "
-                + "Esta operação não pode ser desfeita.");
+                (this.objectName ? " <b>({objectName})</b>" : "")
+                + ". {warnMessage} Esta operação não pode ser desfeita."
+            );
         },
 
         // Text instructing the user on how to process with the operation.
@@ -57,7 +56,7 @@ cerebello.res = {
         actionName: "excluir",
 
         // The operation name. e.g. "Resetar senha", "Excluir usuário".
-        operationName: "Excluir usuário",
+        operationName: "Excluir {objectType}",
 
         // Optional. The type of the object affected by the operation. Like 'usuário'.
         objectType: function () {
@@ -72,7 +71,10 @@ cerebello.res = {
         // This field is going to be processed twice.
         // The first time it is formatted with 'options' object. Fields are like this '{field}'.
         // The second time it is formatted with 'data' object from json response. Fields are like this '{{field}}'
-        successMessage: "Este usuário foi excluído.",
+        successMessage: "{objectType} foi excluído",
+        
+        // Warning message, added at the end of the message.
+        warnMessage: "Registros que dependem deste podem ser excluídos também.",
     },
 
     // Defaults:

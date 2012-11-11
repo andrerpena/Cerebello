@@ -1,13 +1,20 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificatesIndexViewModel
+﻿@model ModelMedicalCertificatesIndexViewModel
+@using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code
 @{
-    ViewBag.Title = "Modelos de atestado médico · Cerebello";
-    ViewBag.Watermark = "Pesquisar pelo nome do atestado";
+    var title =
+        this.ViewBag.IsFiltered == true
+            ? "Busca por modelos de atestado médico"
+            : "Modelos de atestado médico";
 
-    var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
-    grid.AddField(model => model.Name);
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.Watermark = "Pesquisar pelo nome do atestado";
+
+    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE);
+    grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
 }
 @section Title {
-    Modelos de atestado médico
+    @title
 }
 @section SideBar {
     <ul>
@@ -17,12 +24,11 @@
 
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
-    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+    @Html.Partial("SearchBox", new SearchModel())
 }
 
 <div class="widget">
-    <h2>
-        Últimos modelos de atestado cadastrados
+    <h2>Últimos modelos de atestado cadastrados
     </h2>
     @grid.GetHtml()
 </div>

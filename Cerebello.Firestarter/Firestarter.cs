@@ -17,6 +17,13 @@ namespace Cerebello.Firestarter
     {
         const string DEFAULT_TIMEZONE_ID = "E. South America Standard Time";
 
+        public static Random Random { get; set; }
+
+        static Firestarter()
+        {
+            Random = new Random();
+        }
+
         public static DateTime ConvertFromDefaultToUtc(DateTime dateTime)
         {
             return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.FindSystemTimeZoneById(DEFAULT_TIMEZONE_ID));
@@ -516,7 +523,8 @@ namespace Cerebello.Firestarter
         /// </summary>
         /// <param name="doctor"></param>
         /// <param name="db"></param>
-        public static void SetupDoctor(Doctor doctor, CerebelloEntities db)
+        /// <param name="seed"> </param>
+        public static void SetupDoctor(Doctor doctor, CerebelloEntities db, int seed = 1)
         {
             #region CFG_Schedule
             doctor.CFG_Schedule = new CFG_Schedule()
@@ -575,16 +583,7 @@ namespace Cerebello.Firestarter
             #endregion
             db.SaveChanges();
 
-            #region HealthInsurances
-            doctor.HealthInsurances.Add(new HealthInsurance
-                {
-                    PracticeId = doctor.PracticeId,
-                    Name = "Unimed - Juiz de Fora",
-                    FirstTimeValue = 20.00m,
-                    ReturnValue = 0.00m,
-                });
-            #endregion
-            db.SaveChanges();
+            CreateFakeHealthInsurances(db, doctor, seed);
         }
 
         public static Appointment CreateFakeAppointment(CerebelloEntities db, DateTime createdOn, Doctor doc, DateTime start, TimeSpan duration, string desc, User creator = null)
@@ -1461,7 +1460,7 @@ Definições e termos
             // Predictable set of medical procedures.
             // The official set o procedures is much larger, and may change over time.
             // These fake medical procedures, must not change over time, unless it is of extreme necessity.
-            // Care must be taken so that tests don't break.
+            // In this case, care must be taken so that tests don't break.
 
             var tissConselhoProfissional = new ListOfTuples<string, string>
             {
@@ -1825,6 +1824,81 @@ GO
                 db.SaveChanges();
 
             return user;
+        }
+
+        public static void CreateFakeHealthInsurances(CerebelloEntities db, Doctor doctor, int seed)
+        {
+            if ((seed & 1) != 0)
+                doctor.HealthInsurances.Add(
+                    new HealthInsurance
+                        {
+                            IsActive = (seed & 2) != 0,
+
+                            Name = "Unimed - Juiz de Fora",
+                            NewAppointmentValue = 20m,
+                            ReturnAppointmentValue = 0m,
+                            ReturnTimeInterval = 30,
+
+                            PracticeId = doctor.PracticeId,
+                        });
+
+            if ((seed & 4) != 0)
+                doctor.HealthInsurances.Add(
+                    new HealthInsurance
+                        {
+                            IsActive = (seed & 8) != 0,
+
+                            Name = "Cross",
+                            NewAppointmentValue = 15m,
+                            ReturnAppointmentValue = 0m,
+                            ReturnTimeInterval = 20,
+
+                            PracticeId = doctor.PracticeId,
+                        });
+
+            if ((seed & 16) != 0)
+                doctor.HealthInsurances.Add(
+                    new HealthInsurance
+                        {
+                            IsActive = (seed & 32) != 0,
+
+                            Name = "Plasc",
+                            NewAppointmentValue = 20m,
+                            ReturnAppointmentValue = 5m,
+                            ReturnTimeInterval = 40,
+
+                            PracticeId = doctor.PracticeId,
+                        });
+
+            if ((seed & 64) != 0)
+                doctor.HealthInsurances.Add(
+                    new HealthInsurance
+                        {
+                            IsActive = (seed & 128) != 0,
+
+                            Name = "Allianz Saúde",
+                            NewAppointmentValue = 30m,
+                            ReturnAppointmentValue = 5m,
+                            ReturnTimeInterval = 60,
+
+                            PracticeId = doctor.PracticeId,
+                        });
+
+            if ((seed & 256) != 0)
+                doctor.HealthInsurances.Add(
+                    new HealthInsurance
+                        {
+                            IsActive = (seed & 512) != 0,
+
+                            Name = "Porto Seguro",
+                            NewAppointmentValue = 16m,
+                            ReturnAppointmentValue = 1m,
+                            ReturnTimeInterval = 28,
+
+                            PracticeId = doctor.PracticeId,
+                        });
+
+            db.SaveChanges();
         }
     }
 }

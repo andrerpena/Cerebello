@@ -1,27 +1,30 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.DoctorHomeViewModel
+@using CerebelloWebRole.Models
 @{
-    ViewBag.Title = "Médico(a): " + this.ViewBag.Doctor.Name + " · Cerebello";
+    var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutDoctor.cshtml";
 }
 
 @section Title {
-    Médico(a): @Model.DoctorName
+    @title
 }
 
 <div class="widget">
-    <h2>
-        Próximas consultas agendadas
+    <h2>Próximas consultas agendadas
     </h2>
     @if (this.Model.NextAppointments.Count > 0)
     {
         <ul class="next-appointments-list">
-        @foreach (var appointment in this.Model.NextAppointments)
-        {
-            <li>
-                <span class="patient"><a href="@Url.Action("details", "patients", new {id = appointment.PatientId})">@appointment.PatientName</a></span>
-                <span class="date-and-time">, @appointment.DateSpelled</span>
-            </li>
-        }
+            @foreach (var appointment in this.Model.NextAppointments)
+            {
+                <li>
+                    <span class="patient">
+                        <a href="@Url.Action("Details", "Patients", new { id = appointment.PatientId })">@appointment.PatientName</a></span>, <span class="date-and-time">
+                            <a href="@Url.Action("Index", "Schedule", new { y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day })">@appointment.DateSpelled</a>
+                        </span>
+                </li>
+            }
         </ul>
     }
     else
