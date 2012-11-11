@@ -40,7 +40,8 @@ namespace CerebelloWebRole.Code
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            var attributes = @this.GetAttributesOfAction(action, controller, method)
+            var attributes = @this.GetFiltersForAction(action, controller, method)
+                .Select(f => f.Instance)
                 .OfType<PermissionAttribute>()
                 .ToArray();
 

@@ -309,7 +309,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private string GetCertificateText(int id)
+        public string GetCertificateText(int id)
         {
             var certificate = this.db.MedicalCertificates.Where(mmc => mmc.Id == id).FirstOrDefault();
             if (certificate == null)

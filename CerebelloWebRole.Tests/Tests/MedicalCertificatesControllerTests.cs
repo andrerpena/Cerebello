@@ -310,7 +310,7 @@ namespace CerebelloWebRole.Tests.Tests
             var certificate = this.db.MedicalCertificates.First();
 
             // tries to delete the certificate
-            var result = certificateController.Delete(certificateModel.Id);
+            var result = certificateController.Delete(certificate.Id);
             JsonDeleteMessage deleteMessage = (JsonDeleteMessage)result.Data;
 
             Assert.AreEqual(true, deleteMessage.success, "deleteMessage.success must be true");
@@ -368,8 +368,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Now verifies whether the result is the expected
             var newlyCreatedCertificate = this.db.MedicalCertificates.First();
 
-            var certificateControllerAcessor = new MedicalCertificatesController_Accessor(new PrivateObject(certificateController));
-            var certificateText = certificateControllerAcessor.GetCertificateText(newlyCreatedCertificate.Id);
+            var certificateText = certificateController.GetCertificateText(newlyCreatedCertificate.Id);
 
             Assert.AreEqual("This is a reference: This is a value. This is the patient name: " + patientName, certificateText);
         }

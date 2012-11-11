@@ -19,13 +19,14 @@ namespace CerebelloWebRole.Code.Helpers
         /// <param name="controller"></param>
         /// <param name="method"></param>
         /// <returns></returns>
+        [Obsolete("This method is not being used anymore. 2012-11-11.")]
         public static Attribute[] GetAttributesOfAction(
             this ControllerContext @this,
             [AspMvcAction]string action = null,
             [AspMvcController]string controller = null,
             string method = "GET")
         {
-            // TODO: must cache all of these informations
+            // TODO: must cache all of these informations, they can become quite expensive if this method is used everywhere.
 
             if (@this == null)
                 throw new ArgumentNullException("this");
@@ -68,6 +69,68 @@ namespace CerebelloWebRole.Code.Helpers
                 .ToArray();
 
             return attributes;
+        }
+
+        /// <summary>
+        /// Returns all the filters that are executed when calling an action.
+        /// This uses the default Mvc classes used to get the filters,
+        /// so the behavior is the same.
+        /// This means that the filters are returned in order,
+        /// according to Order and Scope values of the filters. 
+        /// </summary>
+        /// <param name="this"></param>
+        /// <param name="action"></param>
+        /// <param name="controller"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static Filter[] GetFiltersForAction(
+            this ControllerContext @this,
+            [AspMvcAction]string action = null,
+            [AspMvcController]string controller = null,
+            string method = "GET")
+        {
+            // TODO: must cache all of these informations, they can become quite expensive if this method is used everywhere.
+
+            if (@this == null)
+                throw new ArgumentNullException("this");
+
+            var actionName = action
+                ?? @this.RouteData.GetRequiredString("action");
+
+            var controllerName = controller
+                ?? @this.RouteData.GetRequiredString("controller");
+
+            // The default MvcHandler.ControllerBuilder returns ControllerBuilder.Current.
+            // So this method may not be compatible with other implementations of MvcHandler.
+            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
+
+            var otherController = (ControllerBase)controllerFactory
+                .CreateController(
+                // note: the area does not affect which controller is selected
+                    new RequestContext(@this.HttpContext, new RouteData()),
+                    controllerName);
+
+            var controllerType = otherController.GetType();
+
+            var controllerDescriptor = new ReflectedControllerDescriptor(controllerType);
+
+            //var httpContext = @this.HttpContext.ApplicationInstance.Context;
+            var controllerContextWithMethodParam = new ControllerContext(
+                new MockHttpContext { Request2 = new MockHttpRequest { HttpMethod2 = method } },
+                new RouteData(),
+                otherController);
+
+            var actionDescriptor = controllerDescriptor
+                .FindAction(controllerContextWithMethodParam, actionName);
+
+            // The default Controller.ActionInvoker.GetFilters returns filters from FilterProviders.Providers.GetFilters method.
+            // So this method may not be compatible with custom controller implementations that override the ActionInvoker,
+            // or override the GetFilters method.
+            var filters = FilterProviders.Providers
+                .GetFilters(controllerContextWithMethodParam, actionDescriptor)
+                .ToArray();
+
+            return filters;
         }
 
         public class MockHttpContext : HttpContextBase
