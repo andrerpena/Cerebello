@@ -1,17 +1,19 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceViewModel
 @{
     var isEditing = this.Model != null && this.Model.Id.HasValue;
-    var title = isEditing ? "Convênio médico: " + this.Model.Name : "Novo convênio médico";
+    var title = this.Model.IsParticular
+                    ? (isEditing ? "Forma de atendimento particular: " + this.Model.Name : "Nova forma de atendimento particular")
+                    : (isEditing ? "Convênio médico: " + this.Model.Name : "Novo convênio médico");
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
     @title
 }
 @section SideBar {
-    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo dos convênios médicos</a>
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de convênios e formas de atendimento</a>
     <hr />
     @Html.MessageHelp(
-        "Os valores definidos em cada convênio são usados para estimar o valor de cada consulta, "
+        "Os valores definidos nesta tela são usados para estimar o valor de cada consulta, "
         + "portanto devem ser preenchidos com um valor médio, para que os relatórios e projeções sejam calculados "
         + "corretamente.")
 }
@@ -19,6 +21,7 @@
 {
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.IsParticular)
     
     if (!isEditing)
     {
@@ -52,7 +55,7 @@
     </table>
 
     <div class="submit-bar">
-        <input type="submit" value="salvar convênio" />
+        <input type="submit" value="@(this.Model.IsParticular ? "salvar forma de atendimento" : "salvar convênio")" />
         <span class="separator">ou</span>
         @Html.ActionLink("cancelar", "Index")
     </div>

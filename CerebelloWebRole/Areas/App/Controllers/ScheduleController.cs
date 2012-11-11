@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -250,9 +251,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // populating health insurance list, to show in the combo-box
             var listInsurances = this.Doctor.HealthInsurances
                 .Where(hi => hi.IsActive)
+                .OrderByDescending(h => h.IsParticular)
+                .ThenBy(h => h.Name)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
+            listInsurances.Insert(0, new SelectListItem());
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return this.View("Edit", viewModel);
@@ -353,9 +356,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // populating health insurance list, to show in the combo-box
             var listInsurances = this.Doctor.HealthInsurances
                 .Where(hi => hi.IsActive)
+                .OrderByDescending(h => h.IsParticular)
+                .ThenBy(h => h.Name)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
+            listInsurances.Insert(0, new SelectListItem());
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", viewModel);
@@ -499,7 +504,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     appointment.PatientId = formModel.PatientId.Value;
                 }
 
-                appointment.HealthInsuranceId = formModel.HealthInsuranceId;
+                Debug.Assert(formModel.HealthInsuranceId != null, "formModel.HealthInsuranceId must not be null");
+                appointment.HealthInsuranceId = (int)formModel.HealthInsuranceId;
 
                 // Returning a JSON result, indicating what has happened.
                 try
@@ -524,9 +530,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // populating health insurance list, to show in the combo-box
             var listInsurances = this.Doctor.HealthInsurances
                 .Where(hi => hi.IsActive)
+                .OrderByDescending(h => h.IsParticular)
+                .ThenBy(h => h.Name)
                 .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
                 .ToList();
-            listInsurances.Insert(0, new SelectListItem { Text = "Particular", Value = "" });
+            listInsurances.Insert(0, new SelectListItem());
             this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", formModel);

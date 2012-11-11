@@ -148,7 +148,7 @@
                     <h1>@RenderSection("Title")</h1>
                     @RenderSection("AdditionalTitleInfo")
                 </div>
-                <div class="document-body">
+                <div class="document-body @(this.ViewBag.LargeSideBar == true ? "large-side-bar" : "")">
                     <div class="document-side-column">
                         @RenderSection("SideBar")
                     </div>

@@ -67,7 +67,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 
 #endregion
 
@@ -2371,7 +2371,8 @@ namespace Cerebello.Model
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="isPolled">Initial value of the IsPolled property.</param>
-        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, AppointmentStatus status, global::System.Boolean isPolled)
+        /// <param name="healthInsuranceId">Initial value of the HealthInsuranceId property.</param>
+        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, AppointmentStatus status, global::System.Boolean isPolled, global::System.Int32 healthInsuranceId)
         {
             Appointment appointment = new Appointment();
             appointment.Id = id;
@@ -2385,6 +2386,7 @@ namespace Cerebello.Model
             appointment.PracticeId = practiceId;
             appointment.Status = status;
             appointment.IsPolled = isPolled;
+            appointment.HealthInsuranceId = healthInsuranceId;
             return appointment;
         }
 
@@ -2686,9 +2688,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> HealthInsuranceId
+        public global::System.Int32 HealthInsuranceId
         {
             get
             {
@@ -2703,8 +2705,8 @@ namespace Cerebello.Model
                 OnHealthInsuranceIdChanged();
             }
         }
-        private Nullable<global::System.Int32> _HealthInsuranceId;
-        partial void OnHealthInsuranceIdChanging(Nullable<global::System.Int32> value);
+        private global::System.Int32 _HealthInsuranceId;
+        partial void OnHealthInsuranceIdChanging(global::System.Int32 value);
         partial void OnHealthInsuranceIdChanged();
 
         #endregion
@@ -6229,7 +6231,8 @@ namespace Cerebello.Model
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="doctorId">Initial value of the DoctorId property.</param>
         /// <param name="isActive">Initial value of the IsActive property.</param>
-        public static HealthInsurance CreateHealthInsurance(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId, global::System.Int32 doctorId, global::System.Boolean isActive)
+        /// <param name="isParticular">Initial value of the IsParticular property.</param>
+        public static HealthInsurance CreateHealthInsurance(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId, global::System.Int32 doctorId, global::System.Boolean isActive, global::System.Boolean isParticular)
         {
             HealthInsurance healthInsurance = new HealthInsurance();
             healthInsurance.Id = id;
@@ -6237,6 +6240,7 @@ namespace Cerebello.Model
             healthInsurance.PracticeId = practiceId;
             healthInsurance.DoctorId = doctorId;
             healthInsurance.IsActive = isActive;
+            healthInsurance.IsParticular = isParticular;
             return healthInsurance;
         }
 
@@ -6438,6 +6442,30 @@ namespace Cerebello.Model
         private global::System.Boolean _IsActive;
         partial void OnIsActiveChanging(global::System.Boolean value);
         partial void OnIsActiveChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsParticular
+        {
+            get
+            {
+                return _IsParticular;
+            }
+            set
+            {
+                OnIsParticularChanging(value);
+                ReportPropertyChanging("IsParticular");
+                _IsParticular = StructuralObject.SetValidValue(value, "IsParticular");
+                ReportPropertyChanged("IsParticular");
+                OnIsParticularChanged();
+            }
+        }
+        private global::System.Boolean _IsParticular;
+        partial void OnIsParticularChanging(global::System.Boolean value);
+        partial void OnIsParticularChanged();
 
         #endregion
 

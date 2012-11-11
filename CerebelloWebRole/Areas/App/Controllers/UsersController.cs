@@ -314,7 +314,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
-                        user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
+                    {
+                        user.Doctor = new Doctor {PracticeId = this.DbUser.PracticeId,};
+                        user.Doctor.HealthInsurances.Add(
+                            new HealthInsurance
+                                {
+                                    PracticeId = this.DbUser.PracticeId,
+                                    Name = "Particular",
+                                    IsActive = true,
+                                    IsParticular = true,
+                                });
+                    }
 
                     user.Doctor.CRM = formModel.MedicCRM;
 

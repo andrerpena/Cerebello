@@ -105,7 +105,7 @@ CREATE TABLE [dbo].[Appointment](
 	[PracticeId] [int] NOT NULL,
 	[Status] [int] NOT NULL,
 	[IsPolled] [bit] NOT NULL,
-	[HealthInsuranceId] [int] NULL,
+	[HealthInsuranceId] [int] NOT NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -345,6 +345,7 @@ CREATE TABLE [dbo].[HealthInsurance](
 	[DoctorId] [int] NOT NULL,
 	[ReturnTimeInterval] [int] NULL,
 	[IsActive] [bit] NOT NULL,
+	[IsParticular] [bit] NOT NULL,
  CONSTRAINT [PK_HealthEnsurance] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

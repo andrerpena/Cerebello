@@ -10,6 +10,7 @@ S   P Desc
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
     P0 Testes: toda a parte de criação, edição e exclusão de convênios.
+    P0 Testes: garantir que o convênio "particular" está sendo criado juntamente com o médico.
 x   P0 Teste: garantir que o método ScheduleController.Create retorna PatientId sempre com o mesmo PracticeId.
     P0 Teste: garantir que o método ScheduleController.Create retorna HealthInsuranceId sempre com o mesmo PracticeId.
 x   P0 Teste: garantir que o método ScheduleController.Create retorna HealthInsuranceId igual ao último usado pelo paciente.

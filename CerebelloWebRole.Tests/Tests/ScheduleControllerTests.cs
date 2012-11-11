@@ -91,7 +91,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Asserts related to the view bag.
             Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsInstanceOfType(controller.ViewBag.HealthInsuranceSelectItems, typeof(List<SelectListItem>));
-            Assert.AreEqual(2, ((List<SelectListItem>)controller.ViewBag.HealthInsuranceSelectItems).Count);
+            Assert.AreEqual(3, ((List<SelectListItem>)controller.ViewBag.HealthInsuranceSelectItems).Count);
 
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
@@ -1062,7 +1062,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Verifying the controller.
             Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'C');
             Assert.IsInstanceOfType(controller.ViewBag.HealthInsuranceSelectItems, typeof(List<SelectListItem>));
-            Assert.AreEqual(2, ((List<SelectListItem>)controller.ViewBag.HealthInsuranceSelectItems).Count);
+            Assert.AreEqual(3, ((List<SelectListItem>)controller.ViewBag.HealthInsuranceSelectItems).Count);
             Assert.IsFalse(controller.ModelState.IsValid, "ModelState should be invalid.");
 
             // Verifying the DB.
@@ -1134,7 +1134,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Asserts related to the view bag.
             Assert.AreEqual(controller.ViewBag.IsEditingOrCreating, 'E');
             Assert.IsInstanceOfType(controller.ViewBag.HealthInsuranceSelectItems, typeof(List<SelectListItem>));
-            Assert.AreEqual(2, ((List<SelectListItem>)controller.ViewBag.HealthInsuranceSelectItems).Count);
+            Assert.AreEqual(3, ((List<SelectListItem>)controller.ViewBag.HealthInsuranceSelectItems).Count);
 
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid, but should be.");
             Assert.IsFalse(isDbChanged, "View actions cannot change DB.");
