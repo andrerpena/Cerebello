@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Transactions;
 using System.Web.Mvc;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Helpers;
+using System.Linq;
 
 namespace CerebelloWebRole.Code.Controllers
 {
@@ -123,5 +128,57 @@ namespace CerebelloWebRole.Code.Controllers
         {
             return this.CerebelloEntitiesCreator();
         }
+
+        /// <summary>
+        /// Overrides the default IActionInvoker used by this controller, by one that allows usage of
+        /// the special attribute TransactionScopeAttribute that creates a transaction wide enough
+        /// to cover all filters and the action method itself.
+        /// </summary>
+        /// <returns></returns>
+        protected override IActionInvoker CreateActionInvoker()
+        {
+            return new ControllerActionInvoker();
+        }
+
+        /// <summary>
+        /// ControllerActionInvoker that allows the usage of TransactionScopeAttribute over action methods.
+        /// </summary>
+        class RootActionInvoker : ControllerActionInvoker
+        {
+            public override bool InvokeAction(ControllerContext controllerContext, string actionName)
+            {
+                // reading transaction attribute
+                ControllerDescriptor controllerDescriptor = GetControllerDescriptor(controllerContext);
+                ActionDescriptor actionDescriptor = FindAction(controllerContext, controllerDescriptor, actionName);
+                var transactionAttribute = actionDescriptor
+                    .GetCustomAttributes(true).OfType<TransactionScopeAttribute>()
+                    .SingleOrDefault();
+
+                var rootController = (RootController)controllerContext.Controller;
+
+                // creating transaction if needed
+                TransactionScope scope = null;
+                if (transactionAttribute != null)
+                    scope = new TransactionScope(transactionAttribute.ScopeOption);
+                rootController.TransactionScope = scope;
+
+                try
+                {
+                    return base.InvokeAction(controllerContext, actionName);
+                }
+                finally
+                {
+                    if (scope != null)
+                        scope.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Transaction scope created when using a TransactionScopeAttribute over the action method.
+        /// This transaction must have the Complete method called by the action, or a filter of that action,
+        /// when a commit is desired. If this is not done, the transaction will be rolled-back.
+        /// </summary>
+        public TransactionScope TransactionScope { get; set; }
     }
 }
