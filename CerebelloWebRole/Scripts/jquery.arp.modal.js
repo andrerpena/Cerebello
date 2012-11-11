@@ -107,6 +107,10 @@
                         _this.$el.show();
                         $content.html(html);
                         _this.resize();
+                    },
+                    error: function() {
+                        _this.close();
+                        throw "There was an error fetching the modal content";
                     }
                 });
 

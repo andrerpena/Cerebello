@@ -38,7 +38,7 @@
     width: 16px;
 }
 
-.modal .content
+.modal > .content
 {
     padding: 10px 10px 0;
 }

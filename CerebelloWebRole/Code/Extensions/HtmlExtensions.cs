@@ -146,27 +146,19 @@ namespace CerebelloWebRole.Code.Extensions
             var valueDisplayDictionary = EnumHelper.GetSelectListItems(EnumHelper.GetEnumDataTypeFromExpression(expression));
             return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, "");
         }
-
+        
         /// <summary>
         /// Lookup
         /// </summary>
-        public static MvcHtmlString AutocompleteFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
+        public static MvcHtmlString AutocompleteFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0)
         {
-            return AutocompleteGridFor<TModel, AutocompleteRow, int>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
-        }
-
-        /// <summary>
-        /// Lookup
-        /// </summary>
-        public static MvcHtmlString AutocompleteFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
-        {
-            return AutocompleteGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+            return AutocompleteGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value, newWindowUrl, newWindowTitle, newWindowWidth, newWindowMinHeight);
         }
 
         /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
+        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0, params Expression<Func<TGridModel, object>>[] otherColumns)
         {
             if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
             if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");
@@ -199,7 +191,11 @@ namespace CerebelloWebRole.Code.Extensions
                 inputHiddenValue = idPropertyValue,
                 inputTextId = inputTextId,
                 inputTextName = inputTextName,
-                inputTextValue = textPropertyValue
+                inputTextValue = textPropertyValue,
+                newWindowUrl = newWindowUrl,
+                newWindowWidth = newWindowWidth,
+                newWindowMinHeight = newWindowMinHeight,
+                newWindowTitle = newWindowTitle
             };
 
             var columnIdPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionLookupId);

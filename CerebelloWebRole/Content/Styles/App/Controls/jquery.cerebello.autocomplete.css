@@ -1,59 +1,17 @@
-﻿.autocomplete-wrapper {
-    background-color: white;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-    .autocomplete-wrapper table tr:hover {
-        background-color: #F5F5F5;
-        color: #060606;
-        cursor: pointer;
-    }
-
-    .autocomplete-wrapper table thead tr td {
-        background-color: #F5F5F5;
-        padding: 5px;
-    }
-
-    .autocomplete-wrapper table tbody tr td {
-        max-width: 100px;
-        padding: 6px;
-    }
-
-    .autocomplete-wrapper table {
-        border-collapse: collapse;
-        line-height: 1;
-        width: 100%;
-    }
-
-        .autocomplete-wrapper table tr {
-        }
-
-            .autocomplete-wrapper table tr.selected {
-                background-color: #567899;
-                color: #fff;
-            }
-
-                .autocomplete-wrapper table tr.selected:hover {
-                    cursor: pointer;
-                    background-color: #3875D7;
-                    color: #FFFFFF;
-                }
-
-    .autocomplete-wrapper .no-results-box {
-        background-color: #FFFFED;
-        padding: 10px;
-        text-align: center;
-    }
-
-
-
-.autocomplete.disabled {
+﻿.autocomplete.disabled {
     background-color: #F1F1F1;
 }
 
 .autocomplete {
+    background-image: url("/content/images/app/icons16/search.png");
+    background-position: 0 -3px;
+    background-repeat: no-repeat;
+    padding-left: 25px !important;
 }
+
+    .autocomplete.autocomplete-new {
+        padding-right: 25px !important;
+    }
 
     .autocomplete .input-wrapper {
         overflow: auto;
@@ -95,6 +53,55 @@
     z-index: 100000;
 }
 
+.autocomplete-dropdown-wrapper {
+    background-color: white;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+    .autocomplete-dropdown-wrapper table tr:hover {
+        background-color: #F5F5F5;
+        color: #060606;
+        cursor: pointer;
+    }
+
+    .autocomplete-dropdown-wrapper table thead tr td {
+        background-color: #F5F5F5;
+        padding: 5px;
+    }
+
+    .autocomplete-dropdown-wrapper table tbody tr td {
+        max-width: 100px;
+        padding: 6px;
+    }
+
+    .autocomplete-dropdown-wrapper table {
+        border-collapse: collapse;
+        line-height: 1;
+        width: 100%;
+    }
+
+        .autocomplete-dropdown-wrapper table tr {
+        }
+
+            .autocomplete-dropdown-wrapper table tr.selected {
+                background-color: #567899;
+                color: #fff;
+            }
+
+                .autocomplete-dropdown-wrapper table tr.selected:hover {
+                    cursor: pointer;
+                    background-color: #3875D7;
+                    color: #FFFFFF;
+                }
+
+    .autocomplete-dropdown-wrapper .no-results-box {
+        background-color: #FFFFED;
+        padding: 10px;
+        text-align: center;
+    }
+
+
 .autocomplete-loading {
     background-color: #FFFFFF;
     background-image: url("/content/images/app/controls/lookup/progress.gif");
@@ -102,3 +109,19 @@
     background-repeat: no-repeat;
     height: 150px;
 }
+
+.autocomplete-text-wrapper {
+    position: relative;
+}
+
+    .autocomplete-text-wrapper .new-button {
+        background: url("/content/images/app/icons16/new.png") repeat scroll 0 center transparent;
+        cursor: pointer;
+        display: block;
+        height: 16px;
+        position: absolute;
+        right: 5px;
+        top: -2px;
+        width: 16px;
+        z-index: 1;
+    }

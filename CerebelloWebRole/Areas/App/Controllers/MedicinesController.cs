@@ -199,7 +199,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public JsonResult LookupLaboratories(string term, int pageSize, int pageIndex)
+        public JsonResult AutocompleteLaboratories(string term, int pageSize, int pageIndex)
         {
             var baseQuery = this.db.Laboratories.Where(l => l.DoctorId == this.Doctor.Id);
             if (!string.IsNullOrEmpty(term))

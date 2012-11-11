@@ -131,6 +131,7 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
+    <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
@@ -415,7 +416,6 @@
     <Content Include="Content\Styles\App\Controls\cardview.css" />
     <Content Include="Content\Styles\Docs\Docs.css" />
     <Content Include="Content\Styles\Docs\Media.css" />
-    <Content Include="Content\Styles\Site\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\Site\Media.css" />
     <Content Include="Content\Styles\Site\Site.css" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
@@ -630,6 +630,7 @@
     <Content Include="Areas\App\Views\HealthInsurance\Index.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\EditModal.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

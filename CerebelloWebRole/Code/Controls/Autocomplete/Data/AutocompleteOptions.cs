@@ -26,6 +26,10 @@ namespace CerebelloWebRole.Code.Controls
         public string columnText { get; set; }
         public List<string> columns { get; private set; }
         public List<string> columnHeaders { get; private set; }
+        public string newWindowUrl { get; set; }
+        public int newWindowWidth { get; set; }
+        public int newWindowMinHeight { get; set; }
+        public string newWindowTitle { get; set; }
         // ReSharper restore InconsistentNaming
         // ReSharper restore UnusedAutoPropertyAccessor.Global
     }

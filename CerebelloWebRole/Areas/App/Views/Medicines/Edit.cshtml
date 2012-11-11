@@ -9,11 +9,10 @@
     {
         ViewBag.Title = "Novo medicamento · Cerebello";
     }
-    
+
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(m => m.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-        format: @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("lookuplaboratories"))</text>);
+    editPanel.AddField(m => m.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("EditModal", "Laboratories"), "Novo laboratório", 500, 100)</text>);
     editPanel.AddField(m => m.Usage);
     editPanel.AddField(m => m.ActiveIngredients, format: @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
 }
@@ -28,10 +27,9 @@
     }
 }
 @section SideBar {
-    <a href="#" class="icon-link icon-link-import">Importar da Anvisa</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">
-        Resumo de medicamentos</a>
+    <a href="#" class="icon-link icon-link-import">Importar da Anvisa</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
     <script type="text/javascript">
-        $(".icon-link-import").click(function(e) {
+        $(".icon-link-import").click(function (e) {
             e.preventDefault();
             $.modal({
                 url: "@Url.Action("anvisaimporteditor", new { medicationId = this.Model != null ? this.Model.Id : null })",
@@ -53,7 +51,7 @@
         @Html.LabelFor(model => model.Leaflets)
     </h2>    
     
-    @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula" ))
+    @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula"))
     
     <div class="submit-bar">
         <input type="submit" value="salvar medicamento" />

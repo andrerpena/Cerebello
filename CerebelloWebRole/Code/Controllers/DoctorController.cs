@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Code
 {
     public abstract class DoctorController : PracticeController
     {
-        public Doctor Doctor { get; private set; }
+        protected Doctor Doctor { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {

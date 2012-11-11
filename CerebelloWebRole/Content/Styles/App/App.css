@@ -194,13 +194,6 @@ input, textarea {
         padding: 4px;
     }
 
-    input.autocomplete {
-        background-image: url("/content/images/app/icons16/search.png");
-        background-position: 0 -3px;
-        background-repeat: no-repeat;
-        padding-left: 25px;
-    }
-
 .link-button {
     background: -moz-linear-gradient(center top, #8BB0CF, #729FCD) repeat scroll 0 0 transparent;
     border: 1px solid #245E9C;

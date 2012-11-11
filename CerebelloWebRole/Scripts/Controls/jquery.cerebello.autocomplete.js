@@ -16,6 +16,11 @@
             pageSize: 5,
             ajaxParams: {},
 
+            newWindowUrl: null,
+            newWindowMinHeight: null,
+            newWindowWidth: null,
+            newWindowTitle: null,
+
             inputHiddenName: null,
             columnId: "Id",
             columnText: "Value",
@@ -46,7 +51,6 @@
         _this.$pagerWrapper = null;
         _this.$inputHidden = null;
 
-
     }
 
     // Separate functionality from object creation
@@ -55,6 +59,19 @@
         init: function () {
 
             var _this = this;
+
+            // add the wrapper and the new button
+            if (_this.opts.newWindowUrl)
+                _this.$el.wrap($("<span/>").addClass("autocomplete-text-wrapper")).after($('<span/>').addClass("new-button").click(function () {
+
+                    $.modal({
+                        url: _this.opts.newWindowUrl,
+                        width: _this.opts.newWindowWidth,
+                        height: _this.opts.newWindowMinHeight,
+                        title : _this.opts.newWindowTitle
+                    });
+
+                }));
 
             _this.$inputHidden = $("input[name='" + _this.opts.inputHiddenName + "']");
             if (!_this.$inputHidden.length)
@@ -114,7 +131,7 @@
             });
 
             _this.$el.bind("keyup", function (e) {
-                
+
                 if (_this.$el.val() != _this.textCache) {
                     _this.opts.change(undefined);
                     if (_this.intervalHandler)
@@ -145,7 +162,7 @@
             if (!_this.isDropdownCreated()) {
 
                 _this.$dropdown = $("<div/>").attr("id", _this.dropdownId).addClass("autocomplete-dropdown").appendTo($("body"));
-                _this.$wrapper = $("<div/>").addClass("autocomplete-wrapper").appendTo(_this.$dropdown);
+                _this.$wrapper = $("<div/>").addClass("autocomplete-dropdown-wrapper").appendTo(_this.$dropdown);
                 _this.$pagerWrapper = $("<div/>").addClass("lookup-pager-wrapper").appendTo(_this.$dropdown);
 
                 _this.$dropdown.click(function () {

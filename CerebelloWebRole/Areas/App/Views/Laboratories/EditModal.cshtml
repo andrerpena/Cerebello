@@ -1,0 +1,19 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel
+@{
+    this.Layout = null;
+
+    var cardView = Html.CreateEditPanel();
+    cardView.AddField(m => m.Name);
+}
+@section Title
+{
+    <!-- The title is not going to be rendered in the modal but for now it's required -->
+Edição de laboratório
+}
+
+@cardView.GetHtml()
+
+<div class="submit-bar">
+    <input id="save-button" type="submit" value="salvar laboratório" />
+    <span class="separator">ou</span> <a id="cancel" href="#">cancelar</a>
+</div>
