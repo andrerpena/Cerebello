@@ -106,7 +106,7 @@
                     <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
                         @Html.LabelFor(model => model.MedicalSpecialtyId)
                         <div class="controls">
-                            @(Html.LookupGridFor<CreateAccountViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+                            @(Html.AutocompleteGridFor<CreateAccountViewModel, MedicalSpecialtiesLookupGridModel, int?>(
                                 m => m.MedicalSpecialtyId,
                                 m => m.MedicalSpecialtyName,
                                 Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),

@@ -26,7 +26,7 @@
             editPanel.AddField(
                 m => m.MedicalProcedureId,
                 format: @<text>
-                            @(Html.LookupGridFor<ExaminationResultViewModel, MedicalProceduresLookupGridModel, int?>(
+                            @(Html.AutocompleteGridFor<ExaminationResultViewModel, MedicalProceduresLookupGridModel, int?>(
                                     m => m.MedicalProcedureId,
                                     m => m.MedicalProcedureName,
                                     Url.Action("LookupMedicalProcedures", "MedicalProcedures"),

@@ -64,7 +64,7 @@
     editPanelMedic.AddField(
         m => m.MedicalSpecialtyId,
         EditPanelFieldSize.Large,
-        format: @<text>@(Html.LookupGridFor<UserViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+        format: @<text>@(Html.AutocompleteGridFor<UserViewModel, MedicalSpecialtiesLookupGridModel, int?>(
                                 m => m.MedicalSpecialtyId,
                                 m => m.MedicalSpecialtyName,
                                 Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),

@@ -152,7 +152,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         public static MvcHtmlString AutocompleteFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, int>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
         {
-            return LookupGridFor<TModel, AutocompleteRow, int>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+            return AutocompleteGridFor<TModel, AutocompleteRow, int>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
         }
 
         /// <summary>
@@ -160,13 +160,13 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         public static MvcHtmlString AutocompleteFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl)
         {
-            return LookupGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
+            return AutocompleteGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value);
         }
 
         /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString LookupGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
+        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, params Expression<Func<TGridModel, object>>[] otherColumns)
         {
             if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
             if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");

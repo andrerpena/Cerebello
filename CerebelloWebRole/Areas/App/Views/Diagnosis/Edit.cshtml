@@ -24,7 +24,7 @@
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(
                 m => m.Cid10Code,
-                format: @<text>@(Html.LookupGridFor<DiagnosisViewModel, CidAutocompleteGridModel, string>(
+                format: @<text>@(Html.AutocompleteGridFor<DiagnosisViewModel, CidAutocompleteGridModel, string>(
                     m => m.Cid10Code,
                     m => m.Cid10Name,
                     Url.Action("AutocompleteDiagnoses"),

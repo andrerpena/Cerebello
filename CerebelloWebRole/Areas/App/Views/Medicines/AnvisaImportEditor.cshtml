@@ -11,7 +11,7 @@
                     Medicamento
                 </th>
                 <td>
-                    @(Html.LookupGridFor<CerebelloWebRole.Areas.App.Models.AnvisaImportViewModel, CerebelloWebRole.Areas.App.Models.SysMedicineLookupGridModel, int>(
+                    @(Html.AutocompleteGridFor<CerebelloWebRole.Areas.App.Models.AnvisaImportViewModel, CerebelloWebRole.Areas.App.Models.SysMedicineLookupGridModel, int>(
                         model => model.AnvisaId,
                         model => model.AnvisaText,
                         Url.Action("LookupSysMedicine", "Medicines"),
