@@ -10,6 +10,13 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 2012-10-## ##:00-##:## (#°##") ##   ######
 
 -- sab 01°00" (##°##")
+2012-11-11 00:00-03:30 (3°30")  5   #141: criação do atributo TransactionScopeAttribute para usar nas actions.
+
+-- sab 01°00" (##°##")
+2012-11-10 23:00-24:00 (1°00")  7   Alterações no AccessManager para fazer obter filtros das actions de forma mais parecida ao Mvc.
+2012-11-10 19:30-21:30 (2°00")  9   #94: permitir excluir convênio, caso não esteja sendo usado.
+                                    #153: Permitir excluir modelo de atestado
+2012-11-10 15:00-18:00 (3°00")  9   Firulas no firestarter.
 2012-11-10 14:00-14:15 (0°15")  9   Permitir criar links para agenda numa data específica.
 2012-11-10 01:00-02:00 (1°00")  5   Permitir criar links para agenda numa data específica.
 2012-11-10 00:00-01:00 (1°00")  6   #94: Permitindo desativar um convênio.
