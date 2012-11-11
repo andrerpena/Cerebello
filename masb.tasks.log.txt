@@ -10,6 +10,7 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 2012-10-## ##:00-##:## (#°##") ##   ######
 
 -- dom 01°00" (##°##")
+2012-11-11 18:00-19:20 (1°20") 10   #94: lembrar último convênio quando selecionar paciente do autocomplete.
 2012-11-11 16:30-17:00 (1°30") 10   #94: formas de atendimento particulares.
 2012-11-11 13:00-13:10 (0°10") 10   #157: não alterar mais os atestados já emitidos ao editar um modelo de atestado.
 2012-11-11 00:00-03:30 (3°30")  5   #141: criação do atributo TransactionScopeAttribute para usar nas actions.

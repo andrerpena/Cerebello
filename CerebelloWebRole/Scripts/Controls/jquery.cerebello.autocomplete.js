@@ -317,9 +317,15 @@
     $.fn.autocomplete = function (options) {
         if (this.length) {
             this.each(function () {
-                var rev = new Autocomplete(this, options);
-                rev.init();
-                $(this).data('autocomplete', rev);
+                var rev = $(this).data('autocomplete');
+                if (rev) {
+                    rev.opts = $.extend({}, rev.opts, options);
+                }
+                else {
+                    rev = new Autocomplete(this, options);
+                    rev.init();
+                    $(this).data('autocomplete', rev);
+                }
             });
         }
         return this;
