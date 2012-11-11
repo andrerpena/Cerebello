@@ -220,6 +220,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // it's needed to synchronize certificates that use this model to make sure that they are up to date
                 // it's possible that this can be optimized
+                // bug: #157: is this really needed... the certificates are independent from the models...
+                // bug: why do we need to change already emited certificates?
                 foreach (var certificate in certificateModel.MedicalCertificates)
                 {
                     // find the differences between lists

@@ -308,15 +308,16 @@ namespace CerebelloWebRole.Tests.Tests
 
             var certificateController = mr.CreateController<MedicalCertificatesController>();
             var certificateControllerResult = certificateController.Edit(formModel);
+
             var certificate = this.db.MedicalCertificates.First();
 
-            // tries to delete the certificate
+            // tries to delete the model certificate
             var jsonResult = certificateModelController.Delete(certificateModel.Id);
 
             JsonDeleteMessage deleteMessage = (JsonDeleteMessage)jsonResult.Data;
 
             Assert.AreEqual(true, deleteMessage.success, "deleteMessage.success must be true");
-            Assert.AreEqual(null, certificate.ModelMedicalCertificate);
+            Assert.AreNotEqual(null, certificate.ModelMedicalCertificate, "The medical certificate should not be deleted with the model, but it was.");
             Assert.AreEqual(0, this.db.ModelMedicalCertificateFields.Count());
         }
 
