@@ -11,7 +11,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests
 {
-    // ReSharper disable HeuristicUnreachableCode
     [TestClass]
     public class AuthenticationControllerTests : DbTestBase
     {
@@ -65,11 +64,12 @@ namespace CerebelloWebRole.Tests.Tests
                     mve.SetViewContent(
                         "ConfirmationEmail",
                         vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
+                    mr.SetRouteData_ControllerAndActionOnly("Home", "Index");
 
                     mr.SetupHttpContext(disposer);
 
                     controller = mr.CreateController<AuthenticationController>(
-                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
+                        setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
                     controller.UtcNowGetter = () => utcNow;
 
@@ -97,7 +97,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex);
                     return;
                 }
 
@@ -182,11 +182,13 @@ namespace CerebelloWebRole.Tests.Tests
                     mve.SetViewContent(
                         "ConfirmationEmail",
                         vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
+                    mr.SetRouteData_ControllerAndActionOnly("Home", "Index");
 
                     mr.SetupHttpContext(disposer);
 
                     controller = mr.CreateController<AuthenticationController>(
-                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
+                        setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
+                    mr.SetupUrlHelper(controller);
 
                     controller.EmailSender = mm =>
                     {
@@ -218,7 +220,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex);
                     return;
                 }
 
@@ -254,6 +256,10 @@ namespace CerebelloWebRole.Tests.Tests
                     Assert.AreEqual("2231.53", user.Doctor.MedicalSpecialtyCode);
                     Assert.AreEqual("Psiquiatra", user.Doctor.MedicalSpecialtyName);
                     Assert.IsNotNull(user.Administrator, "Practice owner must be administrator.");
+
+                    var notification = dba.Notifications.Single();
+                    Assert.IsTrue(notification.Text.Contains("/p/consultoriodrhouse08sd986/Users/Edit/" + user.Id));
+                    Assert.IsTrue(notification.Text.Contains("notification-close"));
                 }
 
                 // Assert user is logged-in: this is already done in CreateAccount_HappyPath.
@@ -288,7 +294,7 @@ namespace CerebelloWebRole.Tests.Tests
                     mr.SetupHttpContext(disposer);
 
                     controller = mr.CreateController<AuthenticationController>(
-                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
+                        setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
                     var practiceName = this.db.Practices.Single().UrlIdentifier;
 
                     controller.EmailSender = mm =>
@@ -312,7 +318,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex);
                     return;
                 }
 
@@ -359,11 +365,12 @@ namespace CerebelloWebRole.Tests.Tests
                     mve.SetViewContent(
                         "ConfirmationEmail",
                         vc => vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>"));
+                    mr.SetRouteData_ControllerAndActionOnly("Home", "Index");
 
                     mr.SetupHttpContext(disposer);
 
                     controller = mr.CreateController<AuthenticationController>(
-                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
+                        setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
                     var userFullName = this.db.Users.Single().Person.FullName;
                     var userName = this.db.Users.Single().UserName;
 
@@ -388,7 +395,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex);
                     return;
                 }
 
@@ -433,7 +440,7 @@ namespace CerebelloWebRole.Tests.Tests
                     mve.SetViewContent("ConfirmationEmail", vc => "<html>Test e-mail string.</html>");
 
                     controller = mr.CreateController<AuthenticationController>(
-                        setupNewDb: db => db.SavingChanges += (s, e) => { hasBeenSaved = true; });
+                        setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
                     controller.EmailSender = mm => { hasEmail = true; };
 
@@ -453,7 +460,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex);
                     return;
                 }
 
@@ -478,6 +485,141 @@ namespace CerebelloWebRole.Tests.Tests
                 Assert.IsFalse(hasBeenSaved, "The database has been changed. This was not supposed to happen.");
                 Assert.IsFalse(hasEmail, "A confirmation e-mail has been sent. This was not supposed to happen.");
             }
+        }
+        #endregion
+
+        #region Login
+        /// <summary>
+        /// Tests the login with the remember-me checkbox set.
+        /// </summary>
+        [TestMethod]
+        public void Login_RemeberMe_HappyPath()
+        {
+            AuthenticationController controller;
+            var hasBeenSaved = false;
+            LoginViewModel vm;
+
+            var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
+
+            User user;
+            try
+            {
+                user = this.db.Users.Single(u => u.UserName == "andrerpena");
+
+                var mr = new MockRepository();
+
+                controller = mr.CreateController<AuthenticationController>(
+                    setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
+
+                controller.UtcNowGetter = () => utcNow;
+
+                // Creating ViewModel, and setting the ModelState of the controller.
+                vm = new LoginViewModel
+                {
+                    UserNameOrEmail = "andrerpena",
+                    PracticeIdentifier = "consultoriodrhouse",
+                    Password = "ph4r40h",
+                    RememberMe = true,
+                };
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            // Creating a new user without an e-mail.
+            // This must be ok, no exceptions, no validation errors.
+            ActionResult actionResult;
+
+            {
+                actionResult = controller.Login(vm);
+            }
+
+            // Assertions.
+            Assert.IsNotNull(actionResult, "The result of the controller method is null.");
+            Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
+            var redirectResult = (RedirectToRouteResult)actionResult;
+            Assert.AreEqual(redirectResult.RouteValues["action"], "Index");
+            Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
+            Assert.IsTrue(hasBeenSaved, "The database should be changed, but it was not.");
+
+            // Assert user is logged-in.
+            Assert.IsTrue(
+                controller.HttpContext.Response.Cookies.Keys.Cast<string>().Contains(".ASPXAUTH"),
+                "Authentication cookie should be present in the Response.");
+
+            var authCookie = controller.HttpContext.Response.Cookies[".ASPXAUTH"];
+            Assert.IsNotNull(authCookie, @"Response.Cookies["".ASPXAUTH""] must not be null.");
+            Assert.IsTrue(authCookie.Expires > utcNow, "Cookie expire date must be set to the future.");
+
+            var ticket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
+            Assert.AreEqual("andrerpena", ticket.Name);
+            Assert.IsTrue(ticket.Expiration > utcNow, "Ticket expire date must be set to the future.");
+            Assert.IsTrue(ticket.IsPersistent, "Ticket must be persistent.");
+
+            var token = SecurityTokenHelper.FromString(ticket.UserData);
+            Assert.AreEqual(user.Id, token.UserData.Id);
+            Assert.AreEqual("Gregory House", token.UserData.FullName);
+            Assert.AreEqual("andrerpena@gmail.com", token.UserData.Email);
+            Assert.AreEqual("consultoriodrhouse", token.UserData.PracticeIdentifier);
+            Assert.AreEqual(false, token.UserData.IsUsingDefaultPassword);
+        }
+
+        /// <summary>
+        /// Tests the login with the remember-me checkbox unset.
+        /// </summary>
+        [TestMethod]
+        public void Login_NotRemeberMe_HappyPath()
+        {
+            AuthenticationController controller;
+            LoginViewModel vm;
+
+            var utcNow = new DateTime(2012, 08, 31, 0, 0, 0, DateTimeKind.Utc);
+
+            try
+            {
+                var mr = new MockRepository();
+                controller = mr.CreateController<AuthenticationController>();
+                controller.UtcNowGetter = () => utcNow;
+
+                // Creating ViewModel, and setting the ModelState of the controller.
+                vm = new LoginViewModel
+                {
+                    UserNameOrEmail = "andrerpena",
+                    PracticeIdentifier = "consultoriodrhouse",
+                    Password = "ph4r40h",
+                    RememberMe = false,
+                };
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            // Creating a new user without an e-mail.
+            // This must be ok, no exceptions, no validation errors.
+
+            {
+                controller.Login(vm);
+            }
+
+            // Assert user is logged-in.
+            Assert.IsTrue(
+                controller.HttpContext.Response.Cookies.Keys.Cast<string>().Contains(".ASPXAUTH"),
+                "Authentication cookie should be present in the Response.");
+
+            var authCookie = controller.HttpContext.Response.Cookies[".ASPXAUTH"];
+            Assert.IsNotNull(authCookie, @"Response.Cookies["".ASPXAUTH""] must not be null.");
+            Assert.IsTrue(authCookie.Expires == DateTime.MinValue, "Cookie expire date must be set to DateTime.MinValue.");
+
+            var ticket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
+            Assert.AreEqual("andrerpena", ticket.Name);
+            Assert.IsTrue(ticket.Expiration > utcNow, "Ticket expire date must be set to the future.");
+            Assert.IsFalse(ticket.IsPersistent, "Ticket must not be persistent.");
         }
         #endregion
 
@@ -517,7 +659,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -573,7 +715,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -633,7 +775,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -700,7 +842,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -769,7 +911,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -834,7 +976,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                InconclusiveInit(ex);
                 return;
             }
 
@@ -865,7 +1007,6 @@ namespace CerebelloWebRole.Tests.Tests
         private static int CreateAccount_Helper(DateTime utcNow, out string password, out string outToken)
         {
             using (var disposer = new Disposer())
-            using (var db = CreateNewCerebelloEntities())
             {
                 var mr = new MockRepository();
 
@@ -886,23 +1027,23 @@ namespace CerebelloWebRole.Tests.Tests
                 controller.UtcNowGetter = () => utcNow;
 
                 controller.EmailSender = mm =>
-                {
-                    // Just don't send any REAL e-mail.
-                };
+                    {
+                        // Just don't send any REAL e-mail.
+                    };
 
                 // Creating ViewModel, and setting the ModelState of the controller.
                 password = "my_pwd";
                 var vm = new CreateAccountViewModel
-                {
-                    UserName = "andré-01",
-                    PracticeName = "consultoriodrhouse_08sd986",
-                    Password = password,
-                    ConfirmPassword = password,
-                    DateOfBirth = new DateTime(1984, 05, 04),
-                    EMail = "andre@gmail.com",
-                    FullName = "André",
-                    Gender = (short)TypeGender.Male,
-                };
+                    {
+                        UserName = "andré-01",
+                        PracticeName = "consultoriodrhouse_08sd986",
+                        Password = password,
+                        ConfirmPassword = password,
+                        DateOfBirth = new DateTime(1984, 05, 04),
+                        EMail = "andre@gmail.com",
+                        FullName = "André",
+                        Gender = (short)TypeGender.Male,
+                    };
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
 
                 // Call the action on the controller to create the new account.
@@ -971,7 +1112,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("Test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex);
                     return;
                 }
 
@@ -1069,7 +1210,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("1st test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex, "1st test initialization has failed");
                     return;
                 }
 
@@ -1109,7 +1250,7 @@ namespace CerebelloWebRole.Tests.Tests
                 }
                 catch (Exception ex)
                 {
-                    Assert.Inconclusive("2nd test initialization has failed.\n\n{0}", ex.FlattenMessages());
+                    InconclusiveInit(ex, "2nd test initialization has failed");
                     return;
                 }
 
@@ -1123,5 +1264,4 @@ namespace CerebelloWebRole.Tests.Tests
 
         #endregion
     }
-    // ReSharper restore HeuristicUnreachableCode
 }

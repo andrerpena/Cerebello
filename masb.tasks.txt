@@ -9,6 +9,8 @@ S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
+x   P0 Testes para login com caixa de lembrar de mim marcada.
+x   P0 Testes para login com caixa de lembrar de mim desmarcada.
     P0 Testes: toda a parte de criação, edição e exclusão de convênios.
     P0 Testes: garantir que o convênio "particular" está sendo criado juntamente com o médico.
 x   P0 Teste: garantir que o método ScheduleController.Create retorna PatientId sempre com o mesmo PracticeId.

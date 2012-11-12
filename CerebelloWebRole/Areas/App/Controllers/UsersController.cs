@@ -607,7 +607,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
                         RememberMe = false,
                         UserNameOrEmail = loggedUser.UserName,
-                    }, this.db.Users, out user);
+                    }, this.db.Users, out user, this.GetUtcNow());
 
                 if (!ok || user == null)
                     throw new Exception("This should never happen as the login uses the same data provided by the user.");

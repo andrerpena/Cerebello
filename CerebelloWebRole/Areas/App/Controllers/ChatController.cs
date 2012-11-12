@@ -110,7 +110,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Each UserFrom Id has a LIST of messages. Of course
             // all messages have the same UserTo, of course, myUserId.
-            Dictionary<string, List<ChatMessage>> messages = new Dictionary<string, List<ChatMessage>>
+            var messages = new Dictionary<string, List<ChatMessage>>
                 {
                     {otherUserId.ToString(), ChatServer.Rooms[roomId].GetMessagesBetween(myUserId, otherUserId, timeStamp)}
                 };
@@ -118,7 +118,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(new
             {
                 Messages = messages,
-                Timestamp = DateTime.UtcNow.Ticks.ToString()
+                Timestamp = this.GetUtcNow().Ticks.ToString()
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -143,7 +143,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             db.ChatMessages.AddObject(new Cerebello.Model.ChatMessage()
             {
-                Date = DateTime.UtcNow,
+                Date = this.GetUtcNow(),
                 Message = message,
                 UserFromId = myUserId,
                 UserToId = otherUserId,

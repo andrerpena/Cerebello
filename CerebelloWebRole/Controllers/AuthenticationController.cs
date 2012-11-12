@@ -67,7 +67,7 @@ namespace CerebelloWebRole.Controllers
             User user;
 
             var cookieCollection = this.HttpContext.Response.Cookies;
-            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user))
+            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
             {
                 this.ViewBag.LoginFailed = true;
                 return this.View(loginModel);
@@ -287,6 +287,7 @@ namespace CerebelloWebRole.Controllers
                             "Edit",
                             "Users",
                             new { id = user.Id, practice = user.Practice.UrlIdentifier, area = "App" });
+
                         this.db.Notifications.AddObject(new Notification()
                         {
                             CreatedOn = this.GetUtcNow(),
@@ -317,7 +318,7 @@ namespace CerebelloWebRole.Controllers
                             UserNameOrEmail = registrationData.UserName,
                         };
 
-                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, this.db.Users, out user))
+                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, this.db.Users, out user, this.GetUtcNow()))
                         {
                             throw new Exception("Login cannot fail.");
                         }
@@ -379,7 +380,7 @@ namespace CerebelloWebRole.Controllers
 
                 var cookieCollection = this.HttpContext.Response.Cookies;
                 if (!this.ModelState.IsValid ||
-                    !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user))
+                    !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
                 {
                     this.ViewBag.LoginFailed = true;
                 }

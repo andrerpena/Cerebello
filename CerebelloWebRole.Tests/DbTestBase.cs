@@ -81,11 +81,14 @@ namespace CerebelloWebRole.Tests
         }
 
         [DebuggerStepThrough]
-        protected static void InconclusiveInit(Exception ex)
+        protected static void InconclusiveInit(Exception ex, string message = null)
         {
-            Assert.Inconclusive("Init failed with {0}\nMessage: {1}\nStackTrace:\n{2}",
-                                ex.GetType().Name, ex.FlattenMessages(), ex.StackTrace);
+            Assert.Inconclusive(
+                "{3}: {0}\nMessage: {1}\nStackTrace:\n{2}",
+                ex.GetType().Name,
+                ex.FlattenMessages(),
+                ex.StackTrace,
+                message ?? "Init failed");
         }
-
     }
 }
