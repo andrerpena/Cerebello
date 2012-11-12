@@ -10,6 +10,7 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 2012-10-## ##:00-##:## (#°##") ##   ######
 
 -- seg 07°00" (##°##")
+2012-11-12 20:00-20:30 (0°30") 10   #58: Validação estilo bootstrap no login.
 2012-11-12 18:00-19:50 (1°50") 10   #85: testes para o login lembrando ou não do usuário logado.
 2012-11-12 15:00-17:10 (2°10")  9   #85: Fazer o site institucional reagir ao "lembrar credenciais neste computador"
 2012-11-12 00:00-03:00 (3°00")  7   ####

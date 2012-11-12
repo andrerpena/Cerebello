@@ -64,10 +64,23 @@ namespace CerebelloWebRole.Code.Extensions
             this WebViewPage @this,
             [AspMvcAction]string action = null,
             [AspMvcController]string controller = null,
-            string method = "GET")
+            string method = null)
         {
             if (@this == null)
                 throw new ArgumentNullException("this");
+
+            if (method == null)
+            {
+                var routeData = @this.ViewContext.RouteData;
+                var currentAction = routeData.GetRequiredString("action");
+                var currentController = routeData.GetRequiredString("controller");
+
+                if (controller != null)
+                    return string.Compare(currentController, controller, true) == 0
+                           && string.Compare(currentAction, action, true) == 0;
+
+                return string.Compare(currentAction, action, true) == 0;
+            }
 
             ControllerContext controllerContextWithMethodParam;
             var actionDescriptor = @this.ViewContext.Controller.ControllerContext
