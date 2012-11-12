@@ -101,9 +101,7 @@ namespace CerebelloWebRole.Code
                                                                                  this.UtcNowGetter, this.Url, true);
 
             // discover the notifications that have already been polled and sent to to the client
-            this.ViewBag.AlreadyPolledNotifications =
-                NotificationsHelper.GetNotifications(this.db, this.Practice.Id,
-                                                     this.Url, true);
+            this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(this.db, this.DbUser.Id, this.Url, true);
         }
     }
 }

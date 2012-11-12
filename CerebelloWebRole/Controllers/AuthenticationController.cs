@@ -282,6 +282,24 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                         // Saving changes to the DB.
                         db.SaveChanges();
 
+                        // adding message to the user so that he/she completes his/her profile informations
+                        var editUserUrl = this.Url.Action(
+                            "Edit",
+                            "Users",
+                            new { id = user.Id, practice = user.Practice.UrlIdentifier, area = "App" });
+                        this.db.Notifications.AddObject(new Notification()
+                        {
+                            CreatedOn = this.GetUtcNow(),
+                            PracticeId = user.Practice.Id,
+                            UserId = user.Id,
+                            Text =
+                                string.Format(
+                                    string.Format(@"<a href=""{0}"" style=""color: white"" onclick=""$(this).trigger('notification-close')"">", editUserUrl)
+                                    + "Por favor, complete as informações de seu perfil para uma melhor experiência com o software."
+                                    + @"</a>",
+                                    user.UserName)
+                        });
+
                         user.Practice.Owner = user;
                         user.Person.PracticeId = user.PracticeId;
                         user.Administrator.PracticeId = user.PracticeId;

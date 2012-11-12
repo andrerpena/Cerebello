@@ -8,7 +8,7 @@
     @Html.TextBoxFor(model => model.ActiveIngredientName, new { @class = "autocomplete" })
     <script type="text/javascript">
             $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).ActiveIngredientName']").autocomplete({
-                source: "@Url.Action("searchactiveingredient", "medicines")",
+                source: "@Url.Action("SearchActiveIngredient", "Medicines")",
                 select: function(event, ui) {
                     $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).ActiveIngredientId']").val(ui.item.id);
                 }
