@@ -10,6 +10,7 @@ yyyy-MM-dd h1:m1-h2:m2 (dh°dm") ee  esc
 2012-10-## ##:00-##:## (#°##") ##   ######
 
 -- dom 01°00" (##°##")
+2012-11-12 15:00-17:10 (2°10")  9   #85: Fazer o site institucional reagir ao "lembrar credenciais neste computador"
 2012-11-12 00:00-03:00 (3°00")  7   ####
 
 -- dom 01°00" (##°##")

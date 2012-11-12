@@ -120,11 +120,19 @@ namespace CerebelloWebRole.Code
 
                 var expiryDate = DateTime.UtcNow.AddYears(1);
                 var ticket = new FormsAuthenticationTicket(
-                     1, loginModel.UserNameOrEmail, DateTime.UtcNow, expiryDate, true,
-                     securityToken, FormsAuthentication.FormsCookiePath);
+                    1,
+                    loginModel.UserNameOrEmail,
+                    DateTime.UtcNow,
+                    expiryDate,
+                    loginModel.RememberMe,
+                    securityToken,
+                    FormsAuthentication.FormsCookiePath);
 
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) { Expires = expiryDate };
+                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+                    {
+                        Expires = loginModel.RememberMe ? DateTime.UtcNow.AddYears(1) : DateTime.MinValue
+                    };
 
                 cookieCollection.Add(cookie);
 
@@ -198,6 +206,7 @@ namespace CerebelloWebRole.Code
                     Id = loggedInUser.Id,
                     Email = loggedInUser.Person.Email,
                     FullName = loggedInUser.Person.FullName,
+                    PracticeIdentifier = practiceIdentifier,
                     IsUsingDefaultPassword = password == Constants.DEFAULT_PASSWORD,
                 }
             };

@@ -3,13 +3,11 @@ using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.Site.Controllers;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Code.Security;
+using CerebelloWebRole.Controllers;
 using CerebelloWebRole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace CerebelloWebRole.Tests.Tests
 {

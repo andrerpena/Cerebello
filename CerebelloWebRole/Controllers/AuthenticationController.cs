@@ -12,7 +12,7 @@ using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
 
-namespace CerebelloWebRole.Areas.Site.Controllers
+namespace CerebelloWebRole.Controllers
 {
     public class AuthenticationController : RootController
     {
@@ -45,7 +45,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     // the returnUrl must be invalid, let's just ignore it
                 }
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
@@ -67,10 +67,10 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             User user;
 
             var cookieCollection = this.HttpContext.Response.Cookies;
-            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, db.Users, out user))
+            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user))
             {
-                ViewBag.LoginFailed = true;
-                return View(loginModel);
+                this.ViewBag.LoginFailed = true;
+                return this.View(loginModel);
             }
 
             user.LastActiveOn = this.GetUtcNow();
@@ -79,11 +79,11 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
             if (loginModel.Password == Constants.DEFAULT_PASSWORD)
             {
-                return RedirectToAction("changepassword", "users", new { area = "app", practice = loginModel.PracticeIdentifier });
+                return this.RedirectToAction("ChangePassword", "Users", new { area = "App", practice = loginModel.PracticeIdentifier });
             }
             else
             {
-                return RedirectToAction("index", "practicehome", new { area = "app", practice = loginModel.PracticeIdentifier });
+                return this.RedirectToAction("Index", "PracticeHome", new { area = "App", practice = loginModel.PracticeIdentifier });
             }
         }
 
@@ -99,25 +99,25 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            this.db.Dispose();
             base.Dispose(disposing);
         }
 
         public ActionResult CreateAccount()
         {
-            ViewBag.MedicalSpecialtyOptions =
+            this.ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
                 .ToList()
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
-            ViewBag.MedicalEntityOptions =
+            this.ViewBag.MedicalEntityOptions =
                 this.db.SYS_MedicalEntity
                 .ToList()
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
-            return View();
+            return this.View();
         }
 
         [HttpPost]
@@ -148,7 +148,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
             // Creating the new user.
             User user;
-            var result = SecurityManager.CreateUser(out user, registrationData, db.Users, utcNow, null);
+            var result = SecurityManager.CreateUser(out user, registrationData, this.db.Users, utcNow, null);
 
             if (result == CreateUserResult.InvalidUserNameOrPassword)
             {
@@ -204,7 +204,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
-                        user.Doctor = db.Doctors.CreateObject();
+                        user.Doctor = this.db.Doctors.CreateObject();
 
                     var ms = this.db.SYS_MedicalSpecialty
                         .Single(ms1 => ms1.Id == registrationData.MedicalSpecialtyId);
@@ -232,7 +232,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     user.Doctor.UrlIdentifier = urlId;
                 }
 
-                db.Users.AddObject(user);
+                this.db.Users.AddObject(user);
 
                 if (this.ModelState.IsValid)
                 {
@@ -280,7 +280,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     using (message)
                     {
                         // Saving changes to the DB.
-                        db.SaveChanges();
+                        this.db.SaveChanges();
 
                         // adding message to the user so that he/she completes his/her profile informations
                         var editUserUrl = this.Url.Action(
@@ -303,7 +303,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                         user.Practice.Owner = user;
                         user.Person.PracticeId = user.PracticeId;
                         user.Administrator.PracticeId = user.PracticeId;
-                        db.SaveChanges();
+                        this.db.SaveChanges();
 
                         // Sending the confirmation e-mail to the new user.
                         this.SendEmail(message);
@@ -317,34 +317,34 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                             UserNameOrEmail = registrationData.UserName,
                         };
 
-                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, db.Users, out user))
+                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, this.db.Users, out user))
                         {
                             throw new Exception("Login cannot fail.");
                         }
 
-                        return RedirectToAction("CreateAccountCompleted", new { practice = user.Practice.UrlIdentifier });
+                        return this.RedirectToAction("CreateAccountCompleted", new { practice = user.Practice.UrlIdentifier });
                     }
                 }
             }
 
-            ViewBag.MedicalSpecialtyOptions =
+            this.ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
                 .ToList()
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
-            ViewBag.MedicalEntityOptions =
+            this.ViewBag.MedicalEntityOptions =
                 this.db.SYS_MedicalEntity
                 .ToList()
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
-            return View(registrationData);
+            return this.View(registrationData);
         }
 
         public ActionResult CreateAccountCompleted(string practice)
         {
-            return View(new VerifyPracticeAndEmailViewModel { Practice = practice });
+            return this.View(new VerifyPracticeAndEmailViewModel { Practice = practice });
         }
 
         #region ResetPassword: Request
@@ -381,7 +381,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                 if (!this.ModelState.IsValid ||
                     !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user))
                 {
-                    ViewBag.LoginFailed = true;
+                    this.ViewBag.LoginFailed = true;
                 }
                 else
                 {
@@ -453,7 +453,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
 
             viewModel.Token = null;
             viewModel.Password = null; // cannot allow password going to the view.
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         public ActionResult ResetPasswordRequest()
@@ -517,7 +517,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             }
             else
             {
-                return RedirectToAction("ResetPasswordManually");
+                return this.RedirectToAction("ResetPasswordManually");
             }
 
             // If the ModelState is still valid, then save objects to the database,
@@ -529,7 +529,7 @@ namespace CerebelloWebRole.Areas.Site.Controllers
                     // Sending the confirmation e-mail to the new user.
                     this.SendEmail(message);
 
-                    return RedirectToAction("ResetPasswordEmailSent");
+                    return this.RedirectToAction("ResetPasswordEmailSent");
                 }
             }
 
@@ -626,5 +626,11 @@ namespace CerebelloWebRole.Areas.Site.Controllers
             return this.View();
         }
         #endregion
+
+        public ActionResult LogoutLogin(string returnUrl)
+        {
+            this.Logout();
+            return this.RedirectToAction("Login");
+        }
     }
 }
