@@ -28,7 +28,13 @@
             var month = date.getMonth() + 1;
             var day = date.getDate();
             var year = date.getFullYear();
-            return [true, window.datesWithAppointments.indexOf($.datepicker.formatDate("'d'dd_mm_yy", date)) != -1 ? "dateWithAppointments" : ""];
+            return [
+                true,
+                jQuery.inArray(
+                    $.datepicker.formatDate("'d'dd_mm_yy", date),
+                    window.datesWithAppointments
+                ) ? "dateWithAppointments" : ""
+            ];
         },
         onChangeMonthYear: function (year, month, inst) {
             fetchDatePickerEvents(year, month);
