@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Models.LoginViewModel
+﻿@using CerebelloWebRole.Code
+@model CerebelloWebRole.Models.LoginViewModel
 @{
     ViewBag.Title = "Login · Cerebello";
 }
@@ -6,14 +7,32 @@
     <div class="authentication-container-wrapper">
         <div class="header">
             <h2>Login no Cerebello</h2>
-            <a href="@Url.Action("createaccount")" class="link">Criar uma conta</a>
+            @if (!this.ViewData.ModelState.GetAllErrors().Any())
+            {
+                <a href="@Url.Action("CreateAccount")" class="link">Criar uma conta</a>
+            }
         </div>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
         {
             <fieldset>
                 <div class="controls-wrapper">
-
-                    @Html.ValidationSummary(false)
+                    @if (this.ViewData.ModelState.GetAllErrors().Any())
+                    {
+                        <div class="alert alert-info alert fade in">
+                            <p>
+                                Se você não tem uma conta ainda crie uma agora
+                                <a href="@Url.Action("CreateAccount")" class="btn btn-block btn-large">Criar uma conta</a>
+                            </p>
+                        </div>
+                        <div class="alert alert-block alert-error fade in">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <h4 class="alert-heading">Ocorreram erros</h4>
+                            @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
+                            {
+                                <p>@eachModelError.Item2.ErrorMessage</p>
+                            }
+                        </div>
+                    }
 
                     <div class="control-group">
                         @Html.LabelFor(model => model.PracticeIdentifier)
