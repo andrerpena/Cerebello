@@ -238,7 +238,12 @@ namespace CerebelloWebRole.Code.Extensions
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
                 inputTextClasses.Add("autocomplete-validation-error");
 
-            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new { @class = string.Join(" ", inputTextClasses.ToArray()), autocomplete = "off" }));
+            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new
+            {
+                @class = string.Join(" ", inputTextClasses.ToArray()),
+                //autocomplete = "off" (this is done via script now, so that the browser restores the value of the input,
+                // when hitting back button in chrome and firefox, and also when pressing F5 in firefox).
+            }));
             tagBuilder.AppendLine();
             tagBuilder.Append(htmlHelper.HiddenFor(expressionId));
             tagBuilder.AppendLine();

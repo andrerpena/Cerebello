@@ -62,6 +62,16 @@
 
             _this.dropdownId = "lookup_" + generateGuid("_") + "_dropdown";
 
+            // Setting autocomplete="off", so that we can override the default browser autocomplete.
+            // This is done only after page is loaded, so that the browser can restore the value of
+            // the input when pressing the back button, or F5 (firefox only).
+            // For this to work, the attribute must be removed when navigating away from the page,
+            // in the beforeunload event.
+            $(function() { _this.$el.attr("autocomplete", "off"); });
+            $(window).on('beforeunload', function () {
+                _this.$el.removeAttr("autocomplete");
+            });
+
             _this.$el.bind("blur", function (e) {
                 $("tr", _this.$wrapper).removeClass("selected");
             });
