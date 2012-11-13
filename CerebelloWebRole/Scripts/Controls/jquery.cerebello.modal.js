@@ -78,7 +78,10 @@
                 _this.close();
             });
 
-            var $content = $("<div class='content'></div>").appendTo(this.$el);
+            // this "spare" div that seems to have no function inside the content is an "error preventer" div
+            // when you use a $.modalForm inside the $.modal, it will REPLACE the "form" parent element with whatever comes from the server.
+            // this extra <div/> represents something that can be replaced without causing damage
+            var $content = $("<div class='content'><div></div><div class='loading'></div></div>").appendTo(this.$el);
 
             this.$el.bind("modal-ok", function (e, data) {
                 _this.opts.ok(data);
@@ -107,6 +110,7 @@
                         _this.$el.show();
                         $content.html(html);
                         _this.resize();
+                        $("input:text, textarea, select", $content).first().focus();
                     },
                     error: function() {
                         _this.close();

@@ -31,7 +31,7 @@
                             var contentType;
                             if (contentTypeHeader.indexOf("text/html") != -1)
                                 contentType = "html";
-                            else if (contentTypeHeader.indexOf("applicationj/json") != -1)
+                            else if (contentTypeHeader.indexOf("application/json") != -1)
                                 contentType = "json";
                             _this.opts.success.call(_this.$el, data, contentType);
                         },

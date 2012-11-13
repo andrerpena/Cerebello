@@ -68,7 +68,12 @@
                         url: _this.opts.newWindowUrl,
                         width: _this.opts.newWindowWidth,
                         height: _this.opts.newWindowMinHeight,
-                        title : _this.opts.newWindowTitle
+                        title: _this.opts.newWindowTitle,
+                        ok: function(data) {
+                            _this.$inputHidden.val(data.Id);
+                            _this.$el.val(data.Value);
+                        }
+                    
                     });
 
                 }));

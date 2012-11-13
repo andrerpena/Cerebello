@@ -185,7 +185,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult Delete(int id)
         {
-            var medicine = db.Medicines.Where(m => m.Id == id).First();
+            var medicine = this.db.Medicines.First(m => m.Id == id);
             try
             {
                 this.db.Medicines.DeleteObject(medicine);
@@ -202,20 +202,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult AutocompleteLaboratories(string term, int pageSize, int pageIndex)
         {
             var baseQuery = this.db.Laboratories.Where(l => l.DoctorId == this.Doctor.Id);
+
             if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(l => l.Name.Contains(term));
 
-            var query = from l in baseQuery
+            var query = from l in baseQuery.OrderBy(l => l.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
                         orderby l.Name
-                        select new
+                        select new AutocompleteRow
                         {
-                            id = l.Id,
-                            value = l.Name
+                            Id = l.Id,
+                            Value = l.Name
                         };
 
             var result = new AutocompleteJsonResult()
             {
-                Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
+                Rows = new System.Collections.ArrayList(query.ToList()),
                 Count = query.Count()
             };
 

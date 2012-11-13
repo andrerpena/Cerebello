@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -8,8 +7,6 @@ using System.Net.Mime;
 using System.Transactions;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Helpers;
 using System.Linq;
 
 namespace CerebelloWebRole.Code.Controllers

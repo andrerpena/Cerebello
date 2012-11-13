@@ -164,7 +164,6 @@
             success: function(result, contentType) {
                 if(contentType == "html") {
                     $(".appointment-edit").replaceWith(result);
-                    console.log($(this).length);
                     $("#appointment_form").trigger("modal-resize");
                 }
                 else {

@@ -143,6 +143,7 @@
     <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
     <Compile Include="Code\Controllers\TransactionScopeAttribute.cs" />
+    <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsLongPollingProvider.cs" />
@@ -633,6 +634,7 @@
     <Content Include="Areas\App\Views\HealthInsurance\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\EditModal.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
