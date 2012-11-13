@@ -324,6 +324,14 @@ input, textarea {
         width: 205px;
     }
 
+    .document .document-body.large-side-bar .document-side-column {
+        width: 305px;
+    }
+
+    .document .document-body.large-side-bar .document-main-column {
+        margin-right: 340px;
+    }
+
 .input-water-mark-blured {
     color: #ABABAB;
 }

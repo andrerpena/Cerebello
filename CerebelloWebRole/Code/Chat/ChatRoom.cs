@@ -151,7 +151,6 @@ namespace CerebelloWebRole.Code.Chat
 
         /// <summary>
         /// Returns the messages related to the given user.
-        /// 
         /// </summary>
         /// <param name="myUserId"></param>
         /// <param name="timestamp"></param>

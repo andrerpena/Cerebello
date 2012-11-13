@@ -22,7 +22,10 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Intervalo de retorno em dias", Description = "Intervalo no qual uma consulta subsequente é considerada como sendo retorno pelo convênio médico.")]
         public int? ReturnDaysInterval { get; set; }
 
-        [Display(Name = "Está ativo?", Description = "Intervalo no qual uma consulta subsequente é considerada como sendo retorno pelo convênio médico.")]
+        [Display(Name = "Está ativo?", Description = "Indica se novas consultas podem ser marcadas usando este convênio.")]
         public bool IsActive { get; set; }
+
+        [Display(Name = "É particular?", Description = "Indica se é uma forma de atendimento particular, ao invés de um atendimento conveniado.")]
+        public bool IsParticular { get; set; }
     }
 }

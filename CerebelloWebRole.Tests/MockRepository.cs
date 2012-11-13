@@ -22,6 +22,24 @@ namespace CerebelloWebRole.Tests
 {
     public class MockRepository
     {
+        static MockRepository()
+        {
+            // Registering all routes, from all areas.
+            var allAreas = typeof(MvcApplication).Assembly.GetTypes()
+                .Where(type => typeof(AreaRegistration).IsAssignableFrom(type))
+                .Where(type => type.GetConstructor(Type.EmptyTypes) != null)
+                .Select(type => (AreaRegistration)Activator.CreateInstance(type))
+                .ToArray();
+
+            foreach (var eachAreaRegistration in allAreas)
+            {
+                eachAreaRegistration.RegisterArea(
+                    new AreaRegistrationContext(eachAreaRegistration.AreaName, RouteTable.Routes));
+            }
+
+            MvcApplication.RegisterRoutes(RouteTable.Routes);
+        }
+
         /// <summary>
         /// Initializes a new MockRepository with the default configuration:
         /// User = André; Route:Practice = ConsultorioDrHouse; Route:Doctor = GregoryHouse.
@@ -218,6 +236,9 @@ namespace CerebelloWebRole.Tests
 
         public void SetRouteData_ControllerAndActionOnly(string controller, string action)
         {
+            if (this.RouteData == null)
+                this.RouteData = new RouteData();
+
             this.RouteData.Values["controller"] = controller;
             this.RouteData.Values["action"] = action;
         }
@@ -444,9 +465,6 @@ namespace CerebelloWebRole.Tests
             var mockController = new Mock<TController> { CallBase = true };
             var controller = mockController.Object;
 
-            var routes = new RouteCollection();
-            MvcApplication.RegisterRoutes(routes);
-
             var rootController = controller as RootController;
             if (rootController != null)
             {
@@ -471,9 +489,12 @@ namespace CerebelloWebRole.Tests
             if (callOnActionExecuting)
                 ((IActionFilter)controller).OnActionExecuting(this.CreateActionExecutingContext());
 
-            controller.Url = new UrlHelper(this.GetRequestContext(), routes);
-
             return controller;
+        }
+
+        public void SetupUrlHelper(Controller controller)
+        {
+            controller.Url = new UrlHelper(this.GetRequestContext(), RouteTable.Routes);
         }
     }
 }

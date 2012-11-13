@@ -175,6 +175,14 @@ namespace Cerebello.Firestarter
                 PracticeId = practice.Id,
             };
 
+            doctor.HealthInsurances.Add(new HealthInsurance
+            {
+                PracticeId = practice.Id,
+                Name = "Particular",
+                IsActive = true,
+                IsParticular = true,
+            });
+
             user.Doctor = doctor;
 
             db.SaveChanges();
@@ -242,6 +250,14 @@ namespace Cerebello.Firestarter
                 PracticeId = practice.Id,
             };
 
+            doctor.HealthInsurances.Add(new HealthInsurance
+            {
+                PracticeId = practice.Id,
+                Name = "Particular",
+                IsActive = true,
+                IsParticular = true,
+            });
+
             db.Doctors.AddObject(doctor);
 
             db.SaveChanges();
@@ -307,6 +323,14 @@ namespace Cerebello.Firestarter
                 UrlIdentifier = "martacura",
                 PracticeId = practice.Id,
             };
+
+            doctor.HealthInsurances.Add(new HealthInsurance
+            {
+                PracticeId = practice.Id,
+                Name = "Particular",
+                IsActive = true,
+                IsParticular = true,
+            });
 
             db.Doctors.AddObject(doctor);
 

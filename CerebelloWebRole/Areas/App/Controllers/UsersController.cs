@@ -314,7 +314,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
-                        user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
+                    {
+                        user.Doctor = new Doctor {PracticeId = this.DbUser.PracticeId,};
+                        user.Doctor.HealthInsurances.Add(
+                            new HealthInsurance
+                                {
+                                    PracticeId = this.DbUser.PracticeId,
+                                    Name = "Particular",
+                                    IsActive = true,
+                                    IsParticular = true,
+                                });
+                    }
 
                     user.Doctor.CRM = formModel.MedicCRM;
 
@@ -597,7 +607,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
                         RememberMe = false,
                         UserNameOrEmail = loggedUser.UserName,
-                    }, this.db.Users, out user);
+                    }, this.db.Users, out user, this.GetUtcNow());
 
                 if (!ok || user == null)
                     throw new Exception("This should never happen as the login uses the same data provided by the user.");

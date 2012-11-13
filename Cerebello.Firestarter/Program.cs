@@ -875,7 +875,16 @@ namespace Cerebello.Firestarter
                 if (type.Contains("sec"))
                     user.Secretary = new Secretary { PracticeId = user.PracticeId };
                 if (type.Contains("doc"))
-                    user.Doctor = new Doctor { PracticeId = user.PracticeId };
+                {
+                    user.Doctor = new Doctor {PracticeId = user.PracticeId};
+                    user.Doctor.HealthInsurances.Add(new HealthInsurance
+                        {
+                            PracticeId = user.PracticeId,
+                            Name = "Particular",
+                            IsActive = true,
+                            IsParticular = true,
+                        });
+                }
                 return user;
             }
 

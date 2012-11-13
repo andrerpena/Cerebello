@@ -1,6 +1,11 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceViewModel
 @{
-    ViewBag.Title = "Details";
+    var title =
+        this.Model.IsParticular
+            ? string.Format("Forma de atendimento: {0}", this.Model.Name)
+            : string.Format("Convênio: {0}", this.Model.Name);
+
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.Name);
@@ -10,19 +15,25 @@
     cardView.AddField(m => m.ReturnDaysInterval);
 }
 @section Title {
-    Convênio: @Model.Name
+    @title
 }
 @section SideBar {
-    <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar convênio médico</a>
-    <a href="#" class="icon-link icon-link-delete" id="delete-model-link">Excluir convênio</a>
-    <a href="@Url.Action("Index")" class="icon-link icon-link-home" id="list-medications-link">Resumo dos convênios médicos</a>
+    <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">
+        @(this.Model.IsParticular ? "Editar forma de atendimento" : "Editar convênio")
+    </a>
+    <a href="#" class="icon-link icon-link-delete" id="delete-model-link">
+        @(this.Model.IsParticular ? "Excluir forma de atendimento" : "Excluir convênio")
+    </a>
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home" id="list-medications-link">
+        Resumo dos convênios e formas de atendimento
+    </a>
 
     <script type="text/javascript">
         $("#delete-model-link").click(function (e) {
             e.preventDefault();
             $.confirmation(cerebello.res.deleteConfirmation, {
                 warnMessage: "Se houver consultas associadas não será possível excluir.",
-                objectType: "convênio",
+                objectType: "@(this.Model.IsParticular ? "forma de atendimento" : "convênio")",
                 objectName: "@this.Model.Name",
                 url: "@Url.Action("Delete", new { id = this.Model.Id })",
                 success: function (data) {

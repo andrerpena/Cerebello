@@ -85,7 +85,8 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         public DateAndTimeValidationState DateAndTimeValidationState { get; set; }
 
-        [Display(Name = "Convênio")]
+        [Display(Name = "Convênio/Forma de atendimento")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? HealthInsuranceId { get; set; }
     }
 

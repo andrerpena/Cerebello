@@ -6,6 +6,6 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public int Count { get; set; }
 
-        public List<HealthInsuranceViewModel> Objects { get; set; }
+        public List<HealthInsuranceViewModel> HealthInsurances { get; set; }
     }
 }

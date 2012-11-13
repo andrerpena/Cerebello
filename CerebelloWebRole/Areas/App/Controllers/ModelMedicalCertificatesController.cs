@@ -218,33 +218,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         this.db.ModelMedicalCertificateFields.DeleteObject(m);
                     });
 
-                // it's needed to synchronize certificates that use this model to make sure that they are up to date
-                // it's possible that this can be optimized
-                // bug: #157: is this really needed... the certificates are independent from the models...
-                // bug: why do we need to change already emited certificates?
-                foreach (var certificate in certificateModel.MedicalCertificates)
-                {
-                    // find the differences between lists
-                    var mustBeAdded = new Queue<ModelMedicalCertificateField>(certificateModel.Fields.Where(cm => certificate.Fields.All(c => c.Name.ToLower() != cm.Name.ToLower())).ToList());
-                    var mustBeDeleted = new Queue<MedicalCertificateField>(certificate.Fields.Where(c => certificateModel.Fields.All(cm => cm.Name.ToLower() != c.Name.ToLower())).ToList());
-
-                    while (mustBeAdded.Count > 0)
-                    {
-                        var toBeAdded = mustBeAdded.Dequeue();
-                        certificate.Fields.Add(new MedicalCertificateField()
-                        {
-                            Name = toBeAdded.Name,
-                            PracticeId = this.DbUser.PracticeId,
-                        });
-                    }
-
-                    while (mustBeDeleted.Count > 0)
-                    {
-                        var toBeDeleted = mustBeDeleted.Dequeue();
-                        this.db.MedicalCertificateFields.DeleteObject(toBeDeleted);
-                    }
-                }
-
                 db.SaveChanges();
 
                 return Redirect(Url.Action("details", new { id = certificateModel.Id }));

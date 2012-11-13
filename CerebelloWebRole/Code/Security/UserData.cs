@@ -11,7 +11,9 @@ namespace CerebelloWebRole.Code.Security.Principals
     public class UserData
     {
         public int Id { get; set; }
+
         public String Email { get; set; }
+
         public String FullName { get; set; }
 
         /// <summary>
@@ -19,5 +21,7 @@ namespace CerebelloWebRole.Code.Security.Principals
         /// When this is the case, the user will be asked to set an access password, before being abled to use the software.
         /// </summary>
         public bool IsUsingDefaultPassword { get; set; }
+
+        public string PracticeIdentifier { get; set; }
     }
 }

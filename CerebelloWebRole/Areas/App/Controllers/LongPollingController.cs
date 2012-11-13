@@ -77,7 +77,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(new
             {
                 Events = eventsReturned,
-                Timestamp = DateTime.UtcNow.Ticks.ToString()
+                Timestamp = this.GetUtcNow().Ticks.ToString()
             }, JsonRequestBehavior.AllowGet);
         }
     }

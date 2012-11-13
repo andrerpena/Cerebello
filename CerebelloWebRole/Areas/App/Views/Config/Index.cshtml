@@ -1,8 +1,10 @@
 ﻿@{
-    ViewBag.Title = "Configurações do médico · Cerebello";
+    var title = "Configurações do médico";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.LargeSideBar = false;
 }
 @section Title {
-Configurações do médico
+    @title
 }
 
 @section SideBar {
@@ -10,7 +12,7 @@ Configurações do médico
         <li><a href="@Url.Action("Edit", "ConfigSchedule")" class="icon-link icon-link-config">Configurações da agenda</a> </li>
         <li><a href="@Url.Action("Edit", "ConfigDocuments")" class="icon-link icon-link-config">Configurações da documentos</a> </li>
         <li><a href="@Url.Action("Index", "ModelMedicalCertificates")" class="icon-link icon-link-config">Modelos de atestados</a> </li>
-        <li><a href="@Url.Action("Index", "HealthInsurance")" class="icon-link icon-link-config">Configurações de convênios</a> </li>
+        <li><a href="@Url.Action("Index", "HealthInsurance")" class="icon-link icon-link-config">Configurações de convênios e formas de atendimentos</a> </li>
     </ul>
 }
 

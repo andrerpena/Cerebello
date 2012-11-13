@@ -1,6 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using CerebelloWebRole.Code.Security
+<!DOCTYPE html>
 <html>
-<head>
+    <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
 
@@ -28,10 +29,19 @@
                     </a>
                 </div>
                 <ul id="top_menu" class="nav nav-pills">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li><a href="#">Preços e Planos</a></li>
-                    <li><a href="@Url.Action("index", "homedocs", new { area = "docs" })">Documentação</a></li>
-                    <li><a href="@Url.Action("login", "authentication")">Login</a></li>
+                    <li class="@(this.IsAction("Index", "Home") ? "active" : "")"><a href="/">Home</a></li>
+                    <li class="@(this.IsAction("PricesAndPlans", "Home") ? "active" : "")"><a href="#">Preços e Planos</a></li>
+                    <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentação</a></li>
+                    @if (this.User is AuthenticatedPrincipal)
+                    {
+                        var userData = (this.User as AuthenticatedPrincipal).Profile;
+                        <li><a href="@Url.Action("Index", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
+                        <li><a href="@Url.Action("LogoutLogin", "Authentication")">Eu não sou @userData.FullName</a></li>
+                    }
+                    else
+                    {
+                        <li class="@(this.IsAction("Login", "Authentication") ? "active" : "")"><a href="@Url.Action("Login", "Authentication", new { area = "" })">Login</a></li>
+                    }
                 </ul>
             </div>
         </div>

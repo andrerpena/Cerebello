@@ -4,24 +4,45 @@
 @{
     var title =
         this.ViewBag.IsFiltered == true
-            ? "Busca por convênios médicos"
-            : "Convênios médicos";
+            ? "Busca por convênios médicos e formas de atendimento particular"
+            : "Convênios médicos e formas de atendimento particular";
 
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.Watermark = "Pesquisar pelo nome do convênio";
 
-    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE);
+    var itemsHealthInsurance = this.Model.HealthInsurances.Where(hi => !hi.IsParticular);
+    var grid = this.Html.CreateGrid(itemsHealthInsurance, Constants.GRID_PAGE_SIZE);
     grid.AddLinkField(item => item.Name, "Details", item => new { id = item.Id });
     grid.AddField(item => item.IsActive, m => m.IsActive ? "Ativo" : "Inativo", "");
-    grid.AddField(item => item.NewAppointmentValue);
-    grid.AddField(item => item.ReturnDaysInterval);
+    if (itemsHealthInsurance.Any(item => item.NewAppointmentValue != null))
+    {
+        grid.AddField(item => item.NewAppointmentValue);
+    }
+    if (itemsHealthInsurance.Any(item => item.ReturnDaysInterval != null))
+    {
+        grid.AddField(item => item.ReturnDaysInterval);
+    }
+
+    var itemsParticular = this.Model.HealthInsurances.Where(hi => hi.IsParticular);
+    var gridParticular = this.Html.CreateGrid(itemsParticular, Constants.GRID_PAGE_SIZE);
+    gridParticular.AddLinkField(item => item.Name, "Details", item => new { id = item.Id });
+    gridParticular.AddField(item => item.IsActive, m => m.IsActive ? "Ativo" : "Inativo", "");
+    if (itemsParticular.Any(item => item.NewAppointmentValue != null))
+    {
+        gridParticular.AddField(item => item.NewAppointmentValue);
+    }
+    if (itemsParticular.Any(item => item.ReturnDaysInterval != null))
+    {
+        gridParticular.AddField(item => item.ReturnDaysInterval);
+    }
 }
 @section Title {
     @title
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo convênio</a> </li>
+        <li><a href="@Url.Action("Create", new { isParticular = false })" class="icon-link icon-link-plus">Novo convênio</a> </li>
+        <li><a href="@Url.Action("Create", new { isParticular = true })" class="icon-link icon-link-plus">Nova forma de atendimento particular</a> </li>
     </ul>
 }
 
@@ -31,7 +52,11 @@
 }
 
 <div class="widget">
-    <h2>Últimos convênios cadastrados
+    <h2>Últimas formas de atendimento particular cadastradas
+    </h2>
+    @gridParticular.GetHtml()
+
+    <h2 style="margin-top: 3em">Últimos convênios cadastrados
     </h2>
     @grid.GetHtml()
 </div>

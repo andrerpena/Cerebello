@@ -26,11 +26,18 @@
         var $notification = $("<div/>").addClass("notification").css("display", "none").attr("data-val-key", notificationKey).appendTo($notificationsWrapper).bind("notification-close", function () {
             $notification.fadeOut("fast", function () {
                 $notification.remove();
-                if (onClose)
-                    onClose();
             });
+            
+            // This MUST NOT be inside the fadeOut effect
+            // if it is placed there... triggering "notification-close"
+            // executes the onClose with delay... and that delay,
+            // may cause big troubles, such as when it is being triggered
+            // inside a link onclick event... navigation happens before
+            // the fade effect finishes.
+            if (onClose)
+                onClose();
         });
-        
+
         if (cssClass)
             $notification.addClass(cssClass);
 

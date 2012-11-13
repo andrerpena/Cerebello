@@ -1,12 +1,12 @@
 using System;
 using System.Data.Objects;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
+using Cerebello.Model;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Code.Security.Principals;
-using System.Linq;
 using CerebelloWebRole.Models;
-using Cerebello.Model;
 
 namespace CerebelloWebRole.Code
 {
@@ -62,24 +62,24 @@ namespace CerebelloWebRole.Code
             }
 
             // Creating user.
-            createdUser = new User()
-            {
-                Person = new Person()
+            createdUser = new User
                 {
-                    // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
-                    // The caller of this method must set the property.
-                    Gender = registrationData.Gender,
-                    FullName = registrationData.FullName,
-                    CreatedOn = utcNow,
-                    Email = registrationData.EMail,
-                    EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail),
-                },
-                UserName = registrationData.UserName,
-                UserNameNormalized = normalizedUserName,
-                PasswordSalt = passwordSalt,
-                Password = passwordHash,
-                LastActiveOn = utcNow,
-            };
+                    Person = new Person
+                        {
+                            // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
+                            // The caller of this method must set the property.
+                            Gender = registrationData.Gender,
+                            FullName = registrationData.FullName,
+                            CreatedOn = utcNow,
+                            Email = registrationData.EMail,
+                            EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail),
+                        },
+                    UserName = registrationData.UserName,
+                    UserNameNormalized = normalizedUserName,
+                    PasswordSalt = passwordSalt,
+                    Password = passwordHash,
+                    LastActiveOn = utcNow,
+                };
 
             if (practiceId != null)
             {
@@ -110,7 +110,7 @@ namespace CerebelloWebRole.Code
         /// login succeded. Otherwise null.
         /// </param>
         /// <returns>Returns whether the login succeded or not.</returns>
-        public static bool Login(HttpCookieCollection cookieCollection, LoginViewModel loginModel, IObjectSet<User> dbUserSet, out User loggedInUser)
+        public static bool Login(HttpCookieCollection cookieCollection, LoginViewModel loginModel, IObjectSet<User> dbUserSet, out User loggedInUser, DateTime utcNow)
         {
             loggedInUser = null;
 
@@ -118,13 +118,21 @@ namespace CerebelloWebRole.Code
             {
                 var securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, dbUserSet, out loggedInUser);
 
-                var expiryDate = DateTime.UtcNow.AddYears(1);
+                var expiryDate = utcNow.AddYears(1);
                 var ticket = new FormsAuthenticationTicket(
-                     1, loginModel.UserNameOrEmail, DateTime.UtcNow, expiryDate, true,
-                     securityToken, FormsAuthentication.FormsCookiePath);
+                    1,
+                    loginModel.UserNameOrEmail,
+                    utcNow,
+                    expiryDate,
+                    loginModel.RememberMe,
+                    securityToken,
+                    FormsAuthentication.FormsCookiePath);
 
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) { Expires = expiryDate };
+                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+                    {
+                        Expires = loginModel.RememberMe ? utcNow.AddYears(1) : DateTime.MinValue
+                    };
 
                 cookieCollection.Add(cookie);
 
@@ -198,6 +206,7 @@ namespace CerebelloWebRole.Code
                     Id = loggedInUser.Id,
                     Email = loggedInUser.Person.Email,
                     FullName = loggedInUser.Person.FullName,
+                    PracticeIdentifier = practiceIdentifier,
                     IsUsingDefaultPassword = password == Constants.DEFAULT_PASSWORD,
                 }
             };

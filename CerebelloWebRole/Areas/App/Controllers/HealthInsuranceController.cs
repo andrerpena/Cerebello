@@ -14,27 +14,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new HealthInsuranceIndexViewModel
                 {
-                    Objects = (from m in this.db.HealthInsurances
-                                   .Where(m => m.Doctor.Id == this.Doctor.Id)
-                                   .OrderBy(m => m.Name).Take(5).ToList()
-                               select new HealthInsuranceViewModel
-                                   {
-                                       Id = m.Id,
-                                       Name = m.Name,
-                                       NewAppointmentValue = m.NewAppointmentValue,
-                                       ReturnAppointmentValue = m.ReturnAppointmentValue,
-                                       ReturnDaysInterval = m.ReturnTimeInterval,
-                                       IsActive = m.IsActive,
-                                   }).ToList(),
+                    HealthInsurances = (from m in this.db.HealthInsurances
+                                            .Where(m => m.Doctor.Id == this.Doctor.Id)
+                                            .OrderBy(m => m.Name).Take(5).ToList()
+                                        select new HealthInsuranceViewModel
+                                            {
+                                                Id = m.Id,
+                                                Name = m.Name,
+                                                NewAppointmentValue = m.NewAppointmentValue,
+                                                ReturnAppointmentValue = m.ReturnAppointmentValue,
+                                                ReturnDaysInterval = m.ReturnTimeInterval,
+                                                IsActive = m.IsActive,
+                                                IsParticular = m.IsParticular,
+                                            }).ToList(),
                     Count = this.db.Medicines.Count()
                 };
             return View(model);
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(bool isParticular)
         {
-            return this.Edit((int?)null);
+            return this.Edit((int?)null, isParticular);
         }
 
         [HttpPost]
@@ -44,11 +45,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? id, int? anvisaId = null)
+        public ActionResult Edit(int? id, bool isParticular)
         {
-            var viewModel = new HealthInsuranceViewModel();
-            viewModel.ReturnDaysInterval = 30;
-            viewModel.IsActive = true;
+            var viewModel = new HealthInsuranceViewModel
+                {
+                    ReturnDaysInterval = 30,
+                    IsActive = true,
+                    IsParticular = isParticular,
+                };
 
             this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
@@ -63,6 +67,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         NewAppointmentValue = healthInsurance.NewAppointmentValue,
                         ReturnDaysInterval = healthInsurance.ReturnTimeInterval,
                         IsActive = healthInsurance.IsActive,
+                        IsParticular = healthInsurance.IsParticular,
                     };
             }
 
@@ -90,6 +95,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 healthInsurance.ReturnAppointmentValue = formModel.ReturnAppointmentValue;
                 healthInsurance.ReturnTimeInterval = formModel.ReturnDaysInterval;
                 healthInsurance.IsActive = formModel.IsActive;
+                healthInsurance.IsParticular = formModel.IsParticular;
 
                 db.SaveChanges();
 
@@ -111,6 +117,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     ReturnAppointmentValue = hi.ReturnAppointmentValue,
                     ReturnDaysInterval = hi.ReturnTimeInterval,
                     IsActive = hi.IsActive,
+                    IsParticular = hi.IsParticular,
                 };
 
             return this.View(viewModel);
@@ -120,19 +127,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new HealthInsuranceIndexViewModel
                 {
-                    Objects = (from m in this.db.HealthInsurances
-                                   .Where(m => m.Doctor.Id == this.Doctor.Id)
-                                   .Where(m => m.Name.Contains(term))
-                                   .OrderBy(m => m.Name).Take(5).ToList()
-                               select new HealthInsuranceViewModel
-                                   {
-                                       Id = m.Id,
-                                       Name = m.Name,
-                                       NewAppointmentValue = m.NewAppointmentValue,
-                                       ReturnAppointmentValue = m.ReturnAppointmentValue,
-                                       ReturnDaysInterval = m.ReturnTimeInterval,
-                                       IsActive = m.IsActive,
-                                   }).ToList(),
+                    HealthInsurances = (from m in this.db.HealthInsurances
+                                            .Where(m => m.Doctor.Id == this.Doctor.Id)
+                                            .Where(m => m.Name.Contains(term))
+                                            .OrderBy(m => m.Name).Take(5).ToList()
+                                        select new HealthInsuranceViewModel
+                                            {
+                                                Id = m.Id,
+                                                Name = m.Name,
+                                                NewAppointmentValue = m.NewAppointmentValue,
+                                                ReturnAppointmentValue = m.ReturnAppointmentValue,
+                                                ReturnDaysInterval = m.ReturnTimeInterval,
+                                                IsActive = m.IsActive,
+                                                IsParticular = m.IsParticular,
+                                            }).ToList(),
                     Count = this.db.Medicines.Count()
                 };
             return View("Index", model);

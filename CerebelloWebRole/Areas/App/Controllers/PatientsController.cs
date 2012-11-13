@@ -420,10 +420,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 baseQuery = baseQuery.Where(l => l.Person.FullName.Contains(term));
 
             var rows = (from p in baseQuery.OrderBy(p => p.Person.FullName).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
-                        select new AutocompleteRow
+                        select new
                         {
                             Id = p.Id,
-                            Value = p.Person.FullName
+                            Value = p.Person.FullName,
+                            InsuranceId = p.LastUsedHealthInsuranceId,
                         }).ToList();
 
             var result = new AutocompleteJsonResult()

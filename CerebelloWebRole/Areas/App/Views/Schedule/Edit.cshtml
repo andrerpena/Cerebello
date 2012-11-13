@@ -65,6 +65,14 @@
                             model => model.PatientId,
                             model => model.PatientNameLookup,
                             Url.Action("LookupPatients", "Patients"))
+                        <script type="text/javascript">
+                            $("#PatientNameLookup").autocomplete({
+                                 change: function (data) {
+                                     if (data)
+                                         $("#HealthInsuranceId").val(data.InsuranceId);
+                                 }
+                            });
+                        </script>
                         @if (Model.Id != null)
                         {
                             <a href="@Url.Action("Details", "Patients", new { id = Model.PatientId })" class="block-little-link">

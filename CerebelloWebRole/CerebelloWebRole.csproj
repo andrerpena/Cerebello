@@ -182,7 +182,6 @@
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
-    <Compile Include="Code\Access\AccessManager.cs" />
     <Compile Include="Code\Chat\ChatLongPollingProvider.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
     <Compile Include="Code\Chat\ChatRoom.cs" />
