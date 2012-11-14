@@ -110,6 +110,17 @@
                     <th>@Html.LabelFor(model => model.PatientDateOfBirth)</th>
                     <td class="small">@Html.TextBoxFor(model => model.PatientDateOfBirth)</td>
                 </tr>
+                
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientPhoneLand)</th>
+                    <td>@Html.TextBoxFor(model => model.PatientPhoneLand)</td>
+                </tr>
+                
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelFor(model => model.PatientPhoneCell)</th>
+                    <td>@Html.TextBoxFor(model => model.PatientPhoneCell)</td>
+                </tr>
+                
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
                     <th>@Html.LabelFor(model => model.PatientEmail)</th>
                     <td>@Html.TextBoxFor(model => model.PatientEmail)</td>
@@ -128,6 +139,15 @@
                     </span>
                 </td>
             </tr>
+            
+            <tr>
+                <th>@Html.LabelFor(model => model.Status)
+                </th>
+                <td class="small">
+                    @Html.EnumDropdownListFor(model => model.Status)
+                </td>
+            </tr>
+
             <tr>
                 <th>
                     Horário
@@ -137,11 +157,11 @@
                         @Html.EditorFor(model => model.Start)<span class="separator">às</span>
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(
-                            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
-                            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Warning ? "validation-warning" :
-                            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Failed ? "validation-failed" :
-                            ""
-                            )">
+    this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
+        this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Warning ? "validation-warning" :
+            this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Failed ? "validation-failed" :
+                ""
+                                                                     )">
                         </span>
                         @* ToDo: continuar desenvolvendo este estilo *@
                         <span id="time-validation-text" style="display: block; font-size: 11px; line-height: 1.2em; padding: 10px 0 5px; color: #DD390D;">@Model.TimeValidationMessage</span>
@@ -155,6 +175,7 @@
                         Próximo horário livre a partir de agora</a>
                 </td>
             </tr>
+
         </table>
         
             if (Model.Id != null)

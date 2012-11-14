@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Mvc;
 using CerebelloWebRole.Models;
@@ -88,6 +89,20 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Convênio/Forma de atendimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? HealthInsuranceId { get; set; }
+
+        /// <summary>
+        /// Appointment status
+        /// </summary>
+        [Display(Name="Status")]
+        public AppointmentStatus Status { get; set; }
+
+        [Display(Name = "Telefone fixo")]
+        [UIHint("Phone")]
+        public String PatientPhoneCell { get; set; }
+
+        [Display(Name = "Telefone celular")]
+        [UIHint("Phone")]
+        public String PatientPhoneLand { get; set; }
     }
 
     public enum DateAndTimeValidationState

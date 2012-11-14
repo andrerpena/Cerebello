@@ -332,6 +332,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             | DateTimeHelper.RelativeDateOptions.ReplaceToday
                             | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
                 HealthInsuranceId = appointment.HealthInsuranceId,
+                Status = appointment.Status
             };
 
             DoDateAndTimeValidation(viewModel, localNow, id);
@@ -458,6 +459,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start));
                 appointment.End = ConvertToUtcDateTime(this.Practice,
                     formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End));
+                appointment.Status = formModel.Status;
 
                 // Setting the appointment type and associated properties.
                 // - generic appointment: has description, date and time interval
@@ -480,8 +482,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                         Gender = (short)formModel.PatientGender,
                                         DateOfBirth =
                                             ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
+                                        PhoneCell = formModel.PatientPhoneCell,
+                                        PhoneLand = formModel.PatientPhoneLand,
                                         CreatedOn = this.GetUtcNow(),
-                                        PracticeId = this.DbUser.PracticeId,
+                                        PracticeId = this.DbUser.PracticeId
                                     },
                             Doctor = this.Doctor,
                             PracticeId = this.DbUser.PracticeId,
