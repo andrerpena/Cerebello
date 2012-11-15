@@ -33,7 +33,7 @@
                 jQuery.inArray(
                     $.datepicker.formatDate("'d'dd_mm_yy", date),
                     window.datesWithAppointments
-                ) ? "dateWithAppointments" : ""
+                ) != -1 ? "dateWithAppointments" : ""
             ];
         },
         onChangeMonthYear: function (year, month, inst) {
