@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
+using CerebelloWebRole.Models;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Notifications
@@ -38,7 +39,7 @@ namespace CerebelloWebRole.Code.Notifications
                 // in this case this user is a secretary
                 var scheduledAppointments =
                     db.Appointments.Include("Doctor").Include("Patient").
-                       Where(a => a.Start >= timeThresholdMin && a.Start < timeThresholdMax && a.Status == AppointmentStatus.Undefined && a.IsPolled == polled).ToList();
+                       Where(a => a.Start >= timeThresholdMin && a.Start < timeThresholdMax && a.Status == (int) TypeAppointmentStatus.Undefined && a.IsPolled == polled).ToList();
 
                 if (scheduledAppointments.Any())
                 {

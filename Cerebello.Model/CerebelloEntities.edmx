@@ -1674,7 +1674,7 @@
           <Property Type="Int32" Name="Type" Nullable="false" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <Property Type="Cerebello.Model.AppointmentStatus" Name="Status" Nullable="false" />
+          <Property Type="Int32" Name="Status" Nullable="false" />
           <Property Type="Boolean" Name="IsPolled" Nullable="false" />
           <Property Type="Int32" Name="HealthInsuranceId" Nullable="false" />
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Appointment_HealthInsurance" FromRole="Appointment" ToRole="HealthInsurance" />
@@ -2777,11 +2777,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EnumType Name="AppointmentStatus">
-          <Member Name="Undefined" Value="0" />
-          <Member Name="Canceled" Value="1" />
-          <Member Name="Accomplished" Value="10" />
-        </EnumType>
         <Association Name="FK_HealthInsurance_Doctor">
           <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
           <End Type="Cerebello.Model.HealthInsurance" Role="HealthInsurance" Multiplicity="*" />

@@ -1,4 +1,5 @@
 ﻿@model DiagnosisViewModel
+@using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
 @{
     Layout = null;
@@ -30,7 +31,7 @@
                     Url.Action("AutocompleteDiagnoses"),
                     gm => gm.Cid10Code,
                     gm => gm.Cid10Name,
-                    gm => gm.Cid10Code))</text>);
+                    new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
 
             editPanel.AddField(
                 m => m.Text,

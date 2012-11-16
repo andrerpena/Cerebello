@@ -141,24 +141,24 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// DropdownList 
         /// </summary>
-        public static MvcHtmlString EnumDropdownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        public static MvcHtmlString EnumDropdownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object selection = null, string optionLabel = "")
         {
-            var valueDisplayDictionary = EnumHelper.GetSelectListItems(EnumHelper.GetEnumDataTypeFromExpression(expression));
-            return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, "");
+            var valueDisplayDictionary = EnumHelper.GetSelectList(EnumHelper.GetEnumDataTypeFromExpression(expression), selection);
+            return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, optionLabel);
         }
-        
+
         /// <summary>
         /// Lookup
         /// </summary>
         public static MvcHtmlString AutocompleteFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0)
         {
-            return AutocompleteGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value, newWindowUrl, newWindowTitle, newWindowWidth, newWindowMinHeight);
+            return AutocompleteGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value, null, newWindowUrl, newWindowTitle, newWindowWidth, newWindowMinHeight);
         }
 
         /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0, params Expression<Func<TGridModel, object>>[] otherColumns)
+        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, Expression<Func<TGridModel, object>>[] otherColumns = null, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0)
         {
             if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
             if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");
@@ -208,12 +208,13 @@ namespace CerebelloWebRole.Code.Extensions
             options.columnHeaders.Add(ExpressionHelper.GetDisplayName(expressionLookupText));
 
             // adiciona os nomes das colunas
-            foreach (var columnExpression in otherColumns)
-            {
-                var otherColumnPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(columnExpression);
-                options.columns.Add(otherColumnPropertyInfo.Name);
-                options.columnHeaders.Add(ExpressionHelper.GetDisplayName(columnExpression));
-            }
+            if (otherColumns != null)
+                foreach (var columnExpression in otherColumns)
+                {
+                    var otherColumnPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(columnExpression);
+                    options.columns.Add(otherColumnPropertyInfo.Name);
+                    options.columnHeaders.Add(ExpressionHelper.GetDisplayName(columnExpression));
+                }
 
             // validação das colunas
             if (!options.columns.Contains(options.columnText))

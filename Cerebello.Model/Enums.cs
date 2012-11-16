@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Objects.DataClasses;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using Cerebello.Model;
@@ -18,6 +20,18 @@ namespace CerebelloWebRole.Models
         MonthlyFeeSubscriptionContract = 2,
         OneFeeOneYearSubscriptionContract = 3,
         MonthlyFeeSubscriptionForNewcomersContract = 4,
+    }
+
+    public enum TypeAppointmentStatus : int
+    {
+        [Display(Name="")]
+        Undefined = 0,
+
+        [Display(Name = "Não realizada")]
+        NotAccomplished = 1,
+
+        [Display(Name = "Realizada")]
+        Accomplished = 10
     }
 
     public enum TypeMaritalStatus

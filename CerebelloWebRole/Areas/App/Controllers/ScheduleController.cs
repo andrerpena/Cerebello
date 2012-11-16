@@ -411,7 +411,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 else
                 {
-                    var patient = db.Patients.Where(p => p.Id == formModel.PatientId).FirstOrDefault();
+                    var patient = this.db.Patients.FirstOrDefault(p => p.Id == formModel.PatientId);
 
                     if (patient == null)
                         ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
@@ -428,6 +428,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 DoDateAndTimeValidation(formModel, this.GetPracticeLocalNow(), formModel.Id);
             }
 
+            // Verify if we're creating an appointment for the future with a Status set
+            if(!string.IsNullOrEmpty(formModel.Start))
+            {
+                if (formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start) > this.GetPracticeLocalNow())
+                    if (formModel.Status != (int) TypeAppointmentStatus.Undefined)
+                        ModelState.AddModelError<AppointmentViewModel>(
+                            model => model.Status,
+                            "Não é permitido determinar o Status para consultas agendadas para o futuro");
+            }
+
             // Saving data if model is valid.
             if (this.ModelState.IsValid)
             {
@@ -436,10 +446,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (formModel.Id == null)
                 {
-                    appointment = new Appointment { PracticeId = this.DbUser.PracticeId, };
-                    appointment.CreatedOn = this.UtcNowGetter();
-                    appointment.DoctorId = formModel.DoctorId;
-                    appointment.CreatedById = this.DbUser.Id;
+                    appointment = new Appointment
+                        {
+                            PracticeId = this.DbUser.PracticeId,
+                            CreatedOn = this.UtcNowGetter(),
+                            DoctorId = formModel.DoctorId,
+                            CreatedById = this.DbUser.Id,
+                        };
                     this.db.Appointments.AddObject(appointment);
                 }
                 else
@@ -459,7 +472,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start));
                 appointment.End = ConvertToUtcDateTime(this.Practice,
                     formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End));
-                appointment.Status = formModel.Status;
+                appointment.Status = (int) formModel.Status;
 
                 // Setting the appointment type and associated properties.
                 // - generic appointment: has description, date and time interval
@@ -752,7 +765,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="db"></param>
         /// <param name="doctor"></param>
-        /// <param name="startingFromTimeOfPractice">
+        /// <param name="startingFromLocalTime">
         /// The date and time to start scanning for free times.
         /// This must be a time in the practice time-zone.
         /// </param>
@@ -865,18 +878,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (string.IsNullOrEmpty(startTimeText) || string.IsNullOrEmpty(endTimeText))
                 return false;
 
-            bool hasError = false;
+            var hasError = false;
 
             var startRegexMatch = TimeDataTypeAttribute.Regex.Match(startTimeText);
             var endRegexMatch = TimeDataTypeAttribute.Regex.Match(endTimeText);
 
-            int integerHourStart = int.Parse(startRegexMatch.Groups[1].Value) * 100 + int.Parse(startRegexMatch.Groups[2].Value);
-            int integerHourEnd = int.Parse(endRegexMatch.Groups[1].Value) * 100 + int.Parse(endRegexMatch.Groups[2].Value);
+            var integerHourStart = int.Parse(startRegexMatch.Groups[1].Value) * 100 + int.Parse(startRegexMatch.Groups[2].Value);
+            var integerHourEnd = int.Parse(endRegexMatch.Groups[1].Value) * 100 + int.Parse(endRegexMatch.Groups[2].Value);
 
             var monthAndDay = localDate.Month * 100 + localDate.Day;
 
             // Validation: cannot be holliday.
-            var isHolliday = db.SYS_Holiday.Where(h => h.MonthAndDay == monthAndDay).Any();
+            var isHolliday = db.SYS_Holiday.Any(h => h.MonthAndDay == monthAndDay);
             if (isHolliday)
             {
                 inconsistencyMessages.AddModelError<AppointmentViewModel>(
@@ -957,8 +970,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     // Verify the work time.
                     {
-                        int workdayStartInteger = GetTimeAsInteger(workdayStart);
-                        int workdayEndInteger = GetTimeAsInteger(workdayEnd);
+                        var workdayStartInteger = GetTimeAsInteger(workdayStart);
+                        var workdayEndInteger = GetTimeAsInteger(workdayEnd);
 
                         if (integerHourStart < workdayStartInteger)
                         {

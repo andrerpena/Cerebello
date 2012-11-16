@@ -1,4 +1,6 @@
-﻿@model CerebelloWebRole.Areas.App.Models.AnvisaImportViewModel
+﻿@using System.Linq.Expressions
+@using CerebelloWebRole.Areas.App.Models
+@model CerebelloWebRole.Areas.App.Models.AnvisaImportViewModel
 @{
     Layout = null;
 }
@@ -17,7 +19,7 @@
                         Url.Action("LookupSysMedicine", "Medicines"),
                         gridmodel => gridmodel.Id,
                         gridmodel => gridmodel.Name,
-                        gridmodel => gridmodel.LaboratoryName))
+                        new Expression<Func<SysMedicineLookupGridModel, object>>[] { gridmodel => gridmodel.LaboratoryName } ))
                 </td>
             </tr>
         </table>

@@ -94,7 +94,8 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Appointment status
         /// </summary>
         [Display(Name="Status")]
-        public AppointmentStatus Status { get; set; }
+        [EnumDataType(typeof(TypeAppointmentStatus))]
+        public int Status { get; set; }
 
         [Display(Name = "Telefone fixo")]
         [UIHint("Phone")]

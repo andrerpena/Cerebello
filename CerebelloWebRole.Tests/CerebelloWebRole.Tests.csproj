@@ -166,7 +166,7 @@
       <Name>Cerebello.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\CerebelloWebRole\CerebelloWebRole.csproj">
-      <Project>{FB7B2DD8-7D48-403E-9422-01176EF59A43}</Project>
+      <Project>{fb7b2dd8-7d48-403e-9422-01176ef59a43}</Project>
       <Name>CerebelloWebRole</Name>
     </ProjectReference>
   </ItemGroup>

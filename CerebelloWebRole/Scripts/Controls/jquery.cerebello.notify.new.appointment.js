@@ -60,7 +60,7 @@
                         _this.trigger("notification-close");
                     },
                     error: function () {
-                        throw "There was an error marking the appointment as canceled";
+                        throw "There was an error marking the appointment as NotAccomplished";
                     }
                 });
             }

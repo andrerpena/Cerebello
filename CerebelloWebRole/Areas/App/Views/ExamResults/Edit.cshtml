@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ExaminationResultViewModel
+@using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
 @{
     Layout = null;
@@ -17,61 +18,61 @@
     {
         using (Html.BeginScope("ExamResult"))
         {
-            @Html.ValidationSummary(false)
-            @Html.HiddenFor(model => model.PatientId)
-            @Html.HiddenFor(model => model.Id)
+        @Html.ValidationSummary(false)
+        @Html.HiddenFor(model => model.PatientId)
+        @Html.HiddenFor(model => model.Id)
 
             var editPanel = Html.CreateEditPanel();
 
             editPanel.AddField(
                 m => m.MedicalProcedureId,
                 format: @<text>
-                            @(Html.AutocompleteGridFor<ExaminationResultViewModel, MedicalProceduresLookupGridModel, int?>(
+        @(Html.AutocompleteGridFor<ExaminationResultViewModel, MedicalProceduresLookupGridModel, int?>(
                                     m => m.MedicalProcedureId,
                                     m => m.MedicalProcedureName,
                                     Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
                                     pm => pm.Id,
                                     pm => pm.Name,
-                                    pm => pm.Code
+                                    new Expression<Func<MedicalProceduresLookupGridModel, object>>[] { pm => pm.Code }
                             ))
-                            @Html.HiddenFor(m => m.MedicalProcedureCode)
-                        </text>);
+        @Html.HiddenFor(m => m.MedicalProcedureCode)
+        </text>);
 
             editPanel.AddField(
                 m => m.Text,
                 CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-                format: @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+                format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
 
-            @editPanel.GetHtml()
+        @editPanel.GetHtml()
 
-            <div class="inline-link-bar">
-            </div>
+        <div class="inline-link-bar">
+        </div>
 
-            <div class="submit-bar">
-                <input type="submit" value="salvar resultado de exame" />
-                <span class="separator">ou</span>
-                <a href="#" class="cancel">cancelar</a>
-            </div>
+        <div class="submit-bar">
+            <input type="submit" value="salvar resultado de exame" />
+            <span class="separator">ou</span>
+            <a href="#" class="cancel">cancelar</a>
+        </div>
         }
 
         <script type="text/javascript">
-            (function() {
+            (function () {
                 var $container = $("div[data-val-id='examresult-@examResultId']");
                 $('form', $container).ajaxForm({
-                    success: function(result) {
+                    success: function (result) {
                         $container.replaceWith(result);
                     }
                 });
-                $('a.cancel', $container).click(function(e) {
+                $('a.cancel', $container).click(function (e) {
                     e.preventDefault();
                     @if (Model.Id != null)
                     {
-                        @:$.ajax({url: "@(Url.Action("Details", new {id = Model.Id}))", success: function(result) { $container.replaceWith(result); }});   
+                        @:$.ajax({ url: "@(Url.Action("Details", new { id = Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
                     }
                     else
                     {
                         @:$container.remove();
-                    }
+                                        }
                 });
             })();
         </script>

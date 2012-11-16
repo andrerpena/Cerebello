@@ -2372,7 +2372,7 @@ namespace Cerebello.Model
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="isPolled">Initial value of the IsPolled property.</param>
         /// <param name="healthInsuranceId">Initial value of the HealthInsuranceId property.</param>
-        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, AppointmentStatus status, global::System.Boolean isPolled, global::System.Int32 healthInsuranceId)
+        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean isPolled, global::System.Int32 healthInsuranceId)
         {
             Appointment appointment = new Appointment();
             appointment.Id = id;
@@ -2642,7 +2642,7 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public AppointmentStatus Status
+        public global::System.Int32 Status
         {
             get
             {
@@ -2652,13 +2652,13 @@ namespace Cerebello.Model
             {
                 OnStatusChanging(value);
                 ReportPropertyChanging("Status");
-                _Status = (AppointmentStatus)StructuralObject.SetValidValue((int)value, "Status");
+                _Status = StructuralObject.SetValidValue(value, "Status");
                 ReportPropertyChanged("Status");
                 OnStatusChanged();
             }
         }
-        private AppointmentStatus _Status;
-        partial void OnStatusChanging(AppointmentStatus value);
+        private global::System.Int32 _Status;
+        partial void OnStatusChanging(global::System.Int32 value);
         partial void OnStatusChanged();
     
         /// <summary>
@@ -12765,36 +12765,6 @@ namespace Cerebello.Model
 
         #endregion
 
-    }
-
-    #endregion
-
-    #region Enums
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEnumTypeAttribute(NamespaceName="Cerebello.Model", Name="AppointmentStatus")]
-    [DataContractAttribute()]
-    public enum AppointmentStatus : int
-    {
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EnumMemberAttribute()]
-        Undefined = 0,
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EnumMemberAttribute()]
-        Canceled = 1,
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EnumMemberAttribute()]
-        Accomplished = 10
     }
 
     #endregion

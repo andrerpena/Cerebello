@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ReceiptMedicineViewModel
+@using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
 @{
     Layout = null;
@@ -11,7 +12,7 @@
             Url.Action("lookupmedication", "medicines"),
             gm => gm.Id,
             gm => gm.Name,
-            gm => gm.LaboratoryName
+            new Expression<Func<MedicineLookupGridModel, object>>[] { gm => gm.LaboratoryName }
         ))</text>);
     editPanel.AddField(m => m.Quantity);
     editPanel.AddField(m => m.Prescription, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, format: @<text>@Html.TextAreaFor(model => model.Prescription)</text>);

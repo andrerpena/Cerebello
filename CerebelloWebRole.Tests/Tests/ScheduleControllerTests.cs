@@ -462,7 +462,7 @@ namespace CerebelloWebRole.Tests.Tests
         /// Creates a medical appointment, in a free and valid time.
         /// </summary>
         [TestMethod]
-        public void Create_SaveMedicalAppointment_HappyPath()
+        public void Create_SaveAppointment_HappyPath()
         {
             ScheduleController controller;
             bool isDbChanged = false;
@@ -515,6 +515,7 @@ namespace CerebelloWebRole.Tests.Tests
                     Start = start.ToString("HH:mm"),
                     End = end.ToString("HH:mm"),
                     IsGenericAppointment = false,
+                    Status = (int) TypeAppointmentStatus.Undefined
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -1067,6 +1068,258 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the DB.
             Assert.IsFalse(isDbChanged, "Create actions must not change DB when there is an error.");
+        }
+
+        /// <summary>
+        /// This test consists of creating an appointment for the future that sets the Status for
+        /// NotAccomplished. Which must generate a ModelState error
+        /// Issue #54.
+        /// </summary>
+        [TestMethod]
+        public void Create_SaveAppointmentWhenStatusIsSetForTheFuture_NotAccomplished()
+        {
+            ScheduleController controller;
+            AppointmentViewModel vm;
+
+            try
+            {
+                // Creating practice, doctor and patient.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+                var patient = Firestarter.CreateFakePatients(docAndre, this.db, 1)[0];
+                patient.LastUsedHealthInsuranceId = null;
+                this.db.SaveChanges();
+
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.Single().Practice.WindowsTimeZoneId);
+                var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
+                var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                // the next free time from "now" 
+                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow);
+
+                // Creating Asp.Net Mvc mocks.
+                var mr = new MockRepository(true);
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = mr.CreateController<ScheduleController>();
+
+                // Mocking 'Now' values.
+                controller.UtcNowGetter = () => utcNow;
+
+                // Setting view-model values to create a new appointment.
+                vm = new AppointmentViewModel
+                {
+                    PatientId = patient.Id,
+                    PatientNameLookup = patient.Person.FullName,
+                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    Date = nextFreeTime.Item1.Date,
+                    DoctorId = docAndre.Id,
+                    Start = nextFreeTime.Item2.ToString("HH:mm"),
+                    End = nextFreeTime.Item2.ToString("HH:mm"),
+                    IsGenericAppointment = false,
+                    // this has to generate an error because the appointment is in the future
+                    Status = (int) TypeAppointmentStatus.NotAccomplished
+                };
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            var result = controller.Create(vm);
+
+            Assert.IsFalse(controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
+        }
+
+        /// <summary>
+        /// This test consists of creating an appointment for the future that sets the Status for
+        /// Accomplished. Which must generate a ModelState error
+        /// Issue #54.
+        /// </summary>
+        [TestMethod]
+        public void Create_SaveAppointmentWhenStatusIsSetForTheFuture_Accomplished()
+        {
+            ScheduleController controller;
+            AppointmentViewModel vm;
+
+            try
+            {
+                // Creating practice, doctor and patient.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+                var patient = Firestarter.CreateFakePatients(docAndre, this.db, 1)[0];
+                patient.LastUsedHealthInsuranceId = null;
+                this.db.SaveChanges();
+
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.Single().Practice.WindowsTimeZoneId);
+                var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
+                var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                // the next free time from "now" 
+                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow);
+
+                // Creating Asp.Net Mvc mocks.
+                var mr = new MockRepository(true);
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = mr.CreateController<ScheduleController>();
+
+                // Mocking 'Now' values.
+                controller.UtcNowGetter = () => utcNow;
+
+                // Setting view-model values to create a new appointment.
+                vm = new AppointmentViewModel
+                {
+                    PatientId = patient.Id,
+                    PatientNameLookup = patient.Person.FullName,
+                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    Date = nextFreeTime.Item1.Date,
+                    DoctorId = docAndre.Id,
+                    Start = nextFreeTime.Item2.ToString("HH:mm"),
+                    End = nextFreeTime.Item2.ToString("HH:mm"),
+                    IsGenericAppointment = false,
+                    // this has to generate an error because the appointment is in the future
+                    Status = (int) TypeAppointmentStatus.Accomplished
+                };
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            var result = controller.Create(vm);
+
+            Assert.IsFalse(controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
+        }
+
+        /// <summary>
+        /// This test consists of creating an appointment for the future that sets the Status for
+        /// NotAccomplished. Which must generate a ModelState error
+        /// Issue #54.
+        /// </summary>
+        [TestMethod]
+        public void Create_SaveAppointmentWhenStatusIsSetForThePast_NotAccomplished()
+        {
+            ScheduleController controller;
+            AppointmentViewModel vm;
+
+            try
+            {
+                // Creating practice, doctor and patient.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+                var patient = Firestarter.CreateFakePatients(docAndre, this.db, 1)[0];
+                patient.LastUsedHealthInsuranceId = null;
+                this.db.SaveChanges();
+
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.Single().Practice.WindowsTimeZoneId);
+                var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
+                var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                // finds a free time in the past week.
+                var freeTimeInPastWeek = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow.AddDays(-7));
+
+                // Creating Asp.Net Mvc mocks.
+                var mr = new MockRepository(true);
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = mr.CreateController<ScheduleController>();
+
+                // Mocking 'Now' values.
+                controller.UtcNowGetter = () => utcNow;
+
+                // Setting view-model values to create a new appointment.
+                vm = new AppointmentViewModel
+                {
+                    PatientId = patient.Id,
+                    PatientNameLookup = patient.Person.FullName,
+                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    Date = freeTimeInPastWeek.Item1.Date,
+                    DoctorId = docAndre.Id,
+                    Start = freeTimeInPastWeek.Item2.ToString("HH:mm"),
+                    End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
+                    IsGenericAppointment = false,
+                    // this should work because it's in the past
+                    Status = (int) TypeAppointmentStatus.NotAccomplished
+                };
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            var result = controller.Create(vm);
+
+            Assert.IsFalse(controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
+        }
+
+        /// <summary>
+        /// This test consists of creating an appointment for the future that sets the Status for
+        /// Accomplished. Which must generate a ModelState error
+        /// Issue #54.
+        /// </summary>
+        [TestMethod]
+        public void Create_SaveAppointmentWhenStatusIsSetForThePast_Accomplished()
+        {
+            ScheduleController controller;
+            AppointmentViewModel vm;
+
+            try
+            {
+                // Creating practice, doctor and patient.
+                var docAndre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.SetupDoctor(docAndre, this.db);
+                var patient = Firestarter.CreateFakePatients(docAndre, this.db, 1)[0];
+                patient.LastUsedHealthInsuranceId = null;
+                this.db.SaveChanges();
+
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(docAndre.Users.Single().Practice.WindowsTimeZoneId);
+                var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
+                var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
+                // finds a free time in the past week.
+                var freeTimeInPastWeek = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow.AddDays(-7));
+
+                // Creating Asp.Net Mvc mocks.
+                var mr = new MockRepository(true);
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
+                controller = mr.CreateController<ScheduleController>();
+
+                // Mocking 'Now' values.
+                controller.UtcNowGetter = () => utcNow;
+
+                // Setting view-model values to create a new appointment.
+                vm = new AppointmentViewModel
+                {
+                    PatientId = patient.Id,
+                    PatientNameLookup = patient.Person.FullName,
+                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    Date = freeTimeInPastWeek.Item1.Date,
+                    DoctorId = docAndre.Id,
+                    Start = freeTimeInPastWeek.Item2.ToString("HH:mm"),
+                    End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
+                    IsGenericAppointment = false,
+                    // this should work because it's in the past
+                    Status = (int) TypeAppointmentStatus.Accomplished
+                };
+
+                Mvc3TestHelper.SetModelStateErrors(controller, vm);
+            }
+            catch (Exception ex)
+            {
+                InconclusiveInit(ex);
+                return;
+            }
+
+            var result = controller.Create(vm);
+
+            Assert.IsFalse(controller.ModelState.IsValid);
+            Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
         }
 
         #endregion

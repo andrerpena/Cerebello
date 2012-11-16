@@ -99,6 +99,14 @@
                     <th>@Html.LabelFor(model => model.HealthInsuranceId)</th>
                     <td>@Html.DropDownListFor(model => model.HealthInsuranceId, (IEnumerable<SelectListItem>)this.ViewBag.HealthInsuranceSelectItems)</td>
                 </tr>
+                
+                <tr>
+                    <th>@Html.LabelFor(model => model.Status)
+                    </th>
+                    <td>
+                        @Html.EnumDropdownListFor(model => model.Status, this.Model != null ? (int?) this.Model.Status : null, null)
+                    </td>
+                </tr>
             }
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
@@ -140,14 +148,6 @@
                 </td>
             </tr>
             
-            <tr>
-                <th>@Html.LabelFor(model => model.Status)
-                </th>
-                <td class="small">
-                    @Html.EnumDropdownListFor(model => model.Status)
-                </td>
-            </tr>
-
             <tr>
                 <th>
                     Horário

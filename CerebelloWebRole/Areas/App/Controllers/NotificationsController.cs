@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -46,7 +47,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             try
             {
                 var appointment = this.db.Appointments.First(a => a.Id == id);
-                appointment.Status = AppointmentStatus.Accomplished;
+                appointment.Status = (int) TypeAppointmentStatus.Accomplished;
 
                 if (createDoctorNotification)
                 {
@@ -86,7 +87,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             try
             {
                 var appointment = this.db.Appointments.First(a => a.Id == id);
-                appointment.Status = AppointmentStatus.Canceled;
+                appointment.Status = (int)TypeAppointmentStatus.NotAccomplished;
                 this.db.SaveChanges();
                 return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }

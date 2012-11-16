@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+@using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
@@ -70,7 +71,7 @@
                                 Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
                                 pm => pm.Id,
                                 pm => pm.Name,
-                                pm => pm.Code))
+                                new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }))
                              </text>);
 
     editPanelMedic.AddField(

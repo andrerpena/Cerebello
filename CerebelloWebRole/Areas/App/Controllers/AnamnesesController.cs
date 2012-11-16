@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -155,18 +156,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(c => c.Name.Contains(term));
 
-            var query = from c in baseQuery
-                        orderby c.Name
-                        select new // CidAutocompleteGridModel
-                        {
-                            Cid10Code = c.Id,
-                            Cid10Name = c.Name
-                        };
+
+            var queryResult = (from c in baseQuery.OrderBy(c => c.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
+                               select new CidAutocompleteGridModel
+                                   {
+                                       Cid10Code = c.Id.ToString(),
+                                       Cid10Name = c.Name
+                                   }).ToList();
 
             var result = new AutocompleteJsonResult()
             {
-                Rows = new System.Collections.ArrayList(query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()),
-                Count = query.Count()
+                Rows = new ArrayList(queryResult),
+                Count = baseQuery.Count()
             };
 
             return this.Json(result, JsonRequestBehavior.AllowGet);

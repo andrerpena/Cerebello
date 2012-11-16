@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Collections;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code
 {
@@ -69,7 +71,7 @@ namespace CerebelloWebRole.Code
         /// 
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Se enumType for nulo</exception>
-        public static List<SelectListItem> GetSelectListItems(Type enumType)
+        public static List<SelectListItem> GetSelectListItems([NotNull] Type enumType)
         {
             if (((Object)enumType) == null) throw new ArgumentNullException("enumType");
             if (!enumType.IsEnum)
@@ -81,6 +83,24 @@ namespace CerebelloWebRole.Code
                 result.Add(new SelectListItem() { Value = ((int)vEnumValue).ToString(), Text = EnumHelper.GetText(vEnumValue) });
 
             return result;
+        }
+
+        public static SelectList GetSelectList([NotNull] Type enumType, object selectedValue)
+        {
+            if (enumType == null) throw new ArgumentNullException("enumType");
+            if (!enumType.IsEnum)
+                throw new Exception("Type must be an Enum");
+
+            var selectListItems =
+                (Enum.GetValues(enumType)
+                     .Cast<object>()
+                     .Select(ev => new SelectListItem()
+                         {
+                             Value = ((int)ev).ToString(),
+                             Text = EnumHelper.GetText(ev),
+                             // To set the "Selected" property here won't take any effect
+                         })).ToList();
+            return new SelectList(selectListItems,  "Value", "Text", selectedValue != null ? selectedValue.ToString() : null);
         }
 
         /// <summary>

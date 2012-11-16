@@ -50,7 +50,7 @@
 
         if (timeout)
             setTimeout(function () {
-                $notification.trigger("notification-content");
+                $notification.trigger("notification-close");
             }, timeout);
 
         $notification.fadeIn("fast");
