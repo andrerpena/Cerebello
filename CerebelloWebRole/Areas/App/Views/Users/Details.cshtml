@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
 @using CerebelloWebRole.Code.Extensions
 @using CerebelloWebRole.Code.Access
+@using CerebelloWebRole.Models
 @{
     ViewBag.Title = "Usuário: " + this.Model.FullName + " · Cerebello";
     ViewBag.Watermark = "Pesquisar pelo nome do usuário";
@@ -10,9 +11,40 @@
 
     // creating details CardView
     var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.FullName);
+    cardView.AddField(m => m.UserName);
+    cardView.AddField(m => m.FullName, wholeRow: true);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeMaritalStatus))</text>);
+    cardView.AddField(m => m.BirthPlace);
+    cardView.AddField(m => m.CPF);
+    cardView.AddField(m => m.Profissao);
+
+    // creating details CardView
+    var cardView1 = Html.CreateCardView();
+    cardView1.AddField(m => m.UserRoles);
+
+    // creating details CardView
+    var cardView2 = Html.CreateCardView();
+    cardView2.AddField(m => m.MedicCRM);
+    cardView2.AddField(m => m.MedicalSpecialtyName);
+    cardView2.AddField(m => m.MedicalEntityName);
+    cardView2.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeEstadoBrasileiro))</text>);
+
+    // creating details CardView
+    var cardView3 = Html.CreateCardView();
+    cardView3.AddField(m => m.Address.CEP);
+    cardView3.AddField(m => m.Address.StateProvince);
+    cardView3.AddField(m => m.Address.City);
+    cardView3.AddField(m => m.Address.Neighborhood);
+    cardView3.AddField(m => m.Address.Street);
+    cardView3.AddField(m => m.Address.Complement);
+
+    // creating details CardView
+    var cardView4 = Html.CreateCardView();
+    cardView4.AddField(m => m.Email);
+    cardView4.AddField(m => m.PhoneCell);
+    cardView4.AddField(m => m.PhoneLand);
 }
 @section Title {
     Usuário: @Model.FullName
@@ -73,3 +105,19 @@
 }
 
 @cardView.GetHtml()
+
+<h2>Funções deste usuário</h2>
+@cardView1.GetHtml()
+
+@if (this.Model.IsDoctor)
+{
+    <h2>Informações do médico</h2>
+    @cardView2.GetHtml()
+}
+
+<h2>Endereço</h2>
+@cardView3.GetHtml()
+
+<h2>Informações de contato</h2>
+@cardView4.GetHtml()
+

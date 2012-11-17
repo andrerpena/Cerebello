@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Validation;
 using CerebelloWebRole.Models;
@@ -48,5 +49,28 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Conselho médico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntityId { get; set; }
+
+        [Display(Name = "Conselho médico")]
+        public string MedicalEntityName { get; set; }
+
+        public string UserRoles
+        {
+            get
+            {
+                var userRoles = new[]
+                    {
+                        (this.IsSecretary ? "secretária" : ""),
+                        (this.IsDoctor ? "médico" : ""),
+                        (this.IsAdministrador ? "administrador" : ""),
+                    }.Where(ur => ur != "").ToArray();
+                var andParts = new[]
+                    {
+                        string.Join(", ", userRoles.Skip(1)),
+                        userRoles.Take(1).SingleOrDefault() ?? ""
+                    }.Where(ur => ur != "");
+                var result = string.Join(" e ", andParts);
+                return result;
+            }
+        }
     }
 }
