@@ -75,7 +75,7 @@
                 user: {
                     Id: @this.ViewBag.UserInfo.Id,
                     Name: '@this.ViewBag.UserInfo.DisplayName',
-                    GravatarUrl: '@CerebelloWebRole.Code.GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, CerebelloWebRole.Code.GravatarHelper.Size.s32)'
+                    GravatarUrl: '@GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, GravatarHelper.Size.s32)'
                 },
                 practice: "@this.ViewBag.Practice.UrlIdentifier"
             });
@@ -105,7 +105,7 @@
         </div>
         <div class="title">
             <div class="logo-wrapper">
-                <a href="@Url.RouteUrl("Practice", new { action = "index", controller = "practiceHome" })">
+                <a href="@Url.RouteUrl("Practice", new { action = "Index", controller = "PracticeHome" })">
                     <img src="/content/images/top-logo.png" />
                 </a>
             </div>
@@ -133,10 +133,10 @@
             items: [
                 @if (userInfo.DoctorId.HasValue)
                 {
-                    @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("index", "doctorhome", new { doctor = userInfo.DoctorUrlIdentifier })" },
+                    @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
                 }
-                { id: "profile", text: "Perfil do usuário", href: "@Url.Action("details", "users", new { id = userInfo.Id })" },
-                { id: "logout", text: "Sair", href: "@Url.Action("logout", "authentication", new { area = "" })" }
+                { id: "profile", text: "Perfil do usuário", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
+                { id: "logout", text: "Sair", href: "@Url.Action("logout", "Authentication", new { area = "" })" }
             ]
         });
     </script>

@@ -3,9 +3,10 @@
 @using CerebelloWebRole.Code.Access
 @using CerebelloWebRole.Models
 @{
-    ViewBag.Title = "Usuário: " + this.Model.FullName + " · Cerebello";
-    ViewBag.Watermark = "Pesquisar pelo nome do usuário";
-    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    var title = "Usuário: " + this.Model.FullName;
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.Watermark = "Pesquisar pelo nome do usuário";
+    this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
@@ -47,7 +48,7 @@
     cardView4.AddField(m => m.PhoneLand);
 }
 @section Title {
-    Usuário: @Model.FullName
+    @title
 }
 @section SideBar {
 
@@ -62,7 +63,7 @@
         <a href="#" class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a>
     }
 
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de usuários</a>
 
     @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("ResetPassword"))
     {
@@ -79,7 +80,7 @@
                     objectName: "@this.Model.FullName",
                     url: "@Url.Action("Delete", new { id = this.Model.Id })",
                     success: function (data) {
-                        window.location = "@Url.Action("index")";
+                        window.location = "@Url.Action("Index")";
                     }
                 });
             });
