@@ -36,25 +36,36 @@ namespace CerebelloWebRole.Tests.Tests
         #region Edit
 
         [TestMethod]
-        public void Edit_CreateDiagnosisIfItDoesNotExist()
+        public void Edit_HappyPath()
         {
-            // obtains a valid patient
-            Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db, 1);
-            this.db.SaveChanges();
-            var patientId = this.db.Patients.First().Id;
-
-            AnamneseViewModel formModel = new AnamneseViewModel()
+            AnamnesesController controller;
+            AnamneseViewModel formModel;
+            try
             {
-                PatientId = patientId,
-                Text = "This is my anamnese",
-                Symptoms = new List<SymptomViewModel>() {
-                        new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
-                        new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
-                   }
-            };
+                // obtains a valid patient
+                Firestarter.CreateFakePatients(this.db.Doctors.First(), this.db, 1);
+                this.db.SaveChanges();
+                var patientId = this.db.Patients.First().Id;
 
-            var mr = new MockRepository(true);
-            var controller = mr.CreateController<AnamnesesController>();
+                formModel = new AnamneseViewModel()
+                    {
+                        PatientId = patientId,
+                        Text = "This is my anamnese",
+                        Symptoms = new List<SymptomViewModel>()
+                            {
+                                new SymptomViewModel() {Text = "Text", Cid10Code = "Q878"},
+                                new SymptomViewModel() {Text = "Text2", Cid10Code = "Q879"}
+                            }
+                    };
+
+                var mr = new MockRepository(true);
+                controller = mr.CreateController<AnamnesesController>();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
 
             // executing the test
             controller.Create(formModel);

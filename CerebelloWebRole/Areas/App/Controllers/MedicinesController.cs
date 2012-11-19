@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -84,7 +85,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var medicine = db.Medicines.Where(m => m.Id == id).First();
+                var medicine = this.db.Medicines.First(m => m.Id == id);
                 viewModel = this.GetViewModelFromModel(medicine);
                 ViewBag.Title = "Alterando medicamento: " + viewModel.Name;
             }
@@ -93,13 +94,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (anvisaId != null)
             {
-                var sysMedicine = db.SYS_Medicine.Where(sm => sm.Id == anvisaId).FirstOrDefault();
+                var sysMedicine = this.db.SYS_Medicine.FirstOrDefault(sm => sm.Id == anvisaId);
 
                 viewModel.Name = sysMedicine.Name;
 
 
                 // verify if there's already this lab in the user database
-                var existingLab = db.Laboratories.Where(l => l.Name == sysMedicine.Laboratory.Name && l.DoctorId == this.Doctor.Id).FirstOrDefault();
+                var existingLab = this.db.Laboratories.FirstOrDefault(l => l.Name == sysMedicine.Laboratory.Name && l.DoctorId == this.Doctor.Id);
                 viewModel.LaboratoryName = sysMedicine.Laboratory.Name;
                 if (existingLab != null)
                     viewModel.LaboratoryId = existingLab.Id;
@@ -119,20 +120,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(MedicineViewModel formModel)
         {
-            if (formModel.ActiveIngredients == null || formModel.ActiveIngredients.Count == 0)
-                this.ModelState.AddModelError("activeIngredients", "O medicamento deve possuir pelo menos um princípio ativo");
+            // add validation error when Laboratory Id is invalid
+            Laboratory laboratory = null;
+            if (formModel.LaboratoryId != null)
+            {
+                laboratory = this.db.Laboratories.FirstOrDefault(lab => lab.Id == formModel.LaboratoryId && lab.DoctorId == this.Doctor.Id);
+                if (laboratory == null)
+                    this.ModelState.AddModelError<MedicineViewModel>((model) => model.LaboratoryId, "O laboratório informado é inválido");
+            }
 
-            if (formModel.LaboratoryId == null && string.IsNullOrEmpty(formModel.LaboratoryName))
-                this.ModelState.AddModelError("laboraroty", "É necessário informar o laboratório");
-
-            //TODO: adicionar validação pra ver se os IDs do laboratórios e dos princípios ativos existem de verdade
+            // add validation error when any Active Ingredient Id is invalid
+            foreach (var activeIngredientViewModel in formModel.ActiveIngredients)
+                if (!this.db.ActiveIngredients.Any(ai => ai.Id == activeIngredientViewModel.ActiveIngredientId))
+                    this.ModelState.AddModelError<MedicineViewModel>(
+                        model => model.ActiveIngredients, string.Format("O princípio ativo '{0}' é inválido", activeIngredientViewModel.ActiveIngredientName));
 
             if (this.ModelState.IsValid)
             {
                 Medicine medicine = null;
 
                 if (formModel.Id != null)
-                    medicine = db.Medicines.Where(m => m.Id == formModel.Id).First();
+                    medicine = this.db.Medicines.First(m => m.Id == formModel.Id);
                 else
                 {
                     medicine = new Medicine { PracticeId = this.DbUser.PracticeId, };
@@ -144,35 +152,63 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 medicine.Doctor = this.Doctor;
 
                 if (formModel.LaboratoryId != null)
-                    medicine.Laboratory = db.Laboratories.Where(lab => lab.Id == formModel.LaboratoryId && lab.DoctorId == this.Doctor.Id).First();
-                else
-                    medicine.Laboratory = new Laboratory()
-                    {
-                        Name = formModel.LaboratoryName,
-                        Doctor = this.Doctor,
-                        PracticeId = this.DbUser.PracticeId,
-                    };
+                    medicine.Laboratory = laboratory;
 
-                medicine.ActiveIngredients.Update(
-                    formModel.ActiveIngredients,
-                    (vm, m) => vm.ActiveIngredientId == m.Id,
-                    (vm, m) =>
-                    {
-                        m.DoctorId = this.Doctor.Id;
-                        m.Name = vm.ActiveIngredientName;
-                    },
-                    (m) => medicine.ActiveIngredients.Remove(m)
-                    , EntityObjectExtensions.CollectionUpdateStrategy.Create);
+                // Active ingredients (as it's a NxM association, there's no update here, just creates and deletes)
+                {
+                    // Verify whether any existing active ingredient should be REMOVED.
+                    var activeIngredientsDeathQueue = new Queue<ActiveIngredient>();
+                    foreach (var existingActiveIngredient in medicine.ActiveIngredients)
+                        if (formModel.ActiveIngredients.All(a => a.ActiveIngredientId != existingActiveIngredient.Id))
+                            activeIngredientsDeathQueue.Enqueue(existingActiveIngredient);
+                    while (activeIngredientsDeathQueue.Any())
+                        medicine.ActiveIngredients.Remove(activeIngredientsDeathQueue.Dequeue());
 
-                medicine.Leaflets.Update(
-                    formModel.Leaflets,
-                    (vm, m) => vm.Id == m.Id,
-                    (vm, m) =>
+                    // Verify whether any new active ingredient should be ADDED
+                    foreach (var activeIngredientViewModel in formModel.ActiveIngredients)
+                        if (medicine.ActiveIngredients.All(ai => ai.Id != activeIngredientViewModel.ActiveIngredientId))
+                        {
+                            // this First has a very small chance of triggering an exception. Before the 'if (this.ModelState.IsValid)'
+                            // all active ingredients 
+                            var activeIngredient =
+                                this.db.ActiveIngredients.First(ai => ai.Id == activeIngredientViewModel.ActiveIngredientId);
+                            medicine.ActiveIngredients.Add(activeIngredient);
+                        }
+                }
+
+                // Leaflets
+                {
+                    // Verify whether any existing leaflet must be REMOVED
+                    var leafletsDeathQueue = new Queue<Leaflet>();
+                    foreach (var existingLeaflet in medicine.Leaflets)
+                        if (formModel.Leaflets.All(l => l.Id != existingLeaflet.Id))
+                            leafletsDeathQueue.Enqueue(existingLeaflet);
+                    while (leafletsDeathQueue.Any())
+                        this.db.Leaflets.DeleteObject(leafletsDeathQueue.Dequeue());
+
+                    // Verify whether any leaflet should be UPDATED or ADDED
+                    foreach (var leafletViewModel in formModel.Leaflets)
                     {
-                        m.Description = vm.Description;
-                        m.Url = vm.Url;
-                    },
-                    (m) => medicine.Leaflets.Remove(m));
+                        var existingLeaftlet = medicine.Leaflets.SingleOrDefault(l => l.Id == leafletViewModel.Id);
+                        if (existingLeaftlet == null)
+                        {
+                            // ADD when not existing
+                            medicine.Leaflets.Add(
+                                new Leaflet()
+                                    {
+                                        PracticeId = this.Practice.Id,
+                                        Url = leafletViewModel.Url,
+                                        Description = leafletViewModel.Description
+                                    });
+                        }
+                        else
+                        {
+                            // UPDATE when existing
+                            existingLeaftlet.Url = leafletViewModel.Url;
+                            existingLeaftlet.Description = leafletViewModel.Description;
+                        }
+                    }
+                }
 
                 db.SaveChanges();
 
@@ -223,6 +259,31 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult AutocompleteActiveIngredients(string term, int pageSize, int pageIndex)
+        {
+            var baseQuery = this.db.ActiveIngredients.Where(ai => ai.DoctorId == this.Doctor.Id);
+
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(l => l.Name.Contains(term));
+
+            var query = from l in baseQuery.OrderBy(l => l.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
+                        orderby l.Name
+                        select new AutocompleteRow
+                        {
+                            Id = l.Id,
+                            Value = l.Name
+                        };
+
+            var result = new AutocompleteJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(query.ToList()),
+                Count = query.Count()
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ActiveIngredientEditor(MedicineActiveIngredientViewModel viewModel)
         {
             return View(viewModel);
@@ -251,21 +312,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             };
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult SearchActiveIngredient(string term)
-        {
-            var activeIngredients = (from ai in this.db.ActiveIngredients
-                                     where (ai.Doctor.Id == this.Doctor.Id) && (ai.Name.Contains(term))
-                                     orderby ai.Name
-                                     select new
-                                     {
-                                         id = ai.Id,
-                                         value = ai.Name
-                                     }).Take(5).ToList();
-
-            return this.Json(activeIngredients, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

@@ -101,7 +101,7 @@ namespace CerebelloWebRole.Tests.Tests
         }
 
         [TestMethod]
-        public void Delete_HappyPath_WhenTheresNoAssociation()
+        public void Delete_WhenTheresNoAssociation()
         {
             PatientsController controller;
             int patientId;
@@ -133,7 +133,7 @@ namespace CerebelloWebRole.Tests.Tests
         }
 
         [TestMethod]
-        public void Delete_HappyPath_WhenTheresAnAnamnese()
+        public void Delete_WhenTheresAnAnamnese()
         {
             PatientsController controller;
             int patientId;

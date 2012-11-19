@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    public class LaboratoriesController : DoctorController
+    public class ActiveIngredientsController : DoctorController
     {
         [HttpGet]
         public ActionResult CreateModal()
@@ -28,32 +28,32 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditModal([NotNull] MedicineLaboratoryViewModel formModel)
+        public ActionResult EditModal([NotNull] MedicineActiveIngredientViewModel formModel)
         {
             if (formModel == null) throw new ArgumentNullException("formModel");
             return this.Edit(formModel);
         }
 
         [HttpPost]
-        public ActionResult Edit([NotNull] MedicineLaboratoryViewModel formModel)
+        public ActionResult Edit([NotNull] MedicineActiveIngredientViewModel formModel)
         {
             if (formModel == null) throw new ArgumentNullException("formModel");
 
-            var laboratory = this.db.Laboratories.FirstOrDefault(l => l.Name == formModel.Name);
+            var activeIngredient = this.db.ActiveIngredients.FirstOrDefault(l => l.Name == formModel.ActiveIngredientName);
 
-            if (laboratory != null)
-                this.ModelState.AddModelError<MedicineLaboratoryViewModel>(model => model.Name, "Já existe um laboratório cadastrado com o mesmo nome");
+            if (activeIngredient != null)
+                this.ModelState.AddModelError<MedicineActiveIngredientViewModel>(model => model.ActiveIngredientName, "Já existe um princípio ativo cadastrado com o mesmo nome");
 
             if (this.ModelState.IsValid)
             {
-                laboratory = new Laboratory()
+                activeIngredient = new ActiveIngredient()
                 {
-                    Name = formModel.Name,
+                    Name = formModel.ActiveIngredientName,
                     Doctor = this.Doctor,
                     PracticeId = this.Practice.Id
                 };
 
-                this.db.Laboratories.AddObject(laboratory);
+                this.db.ActiveIngredients.AddObject(activeIngredient);
                 this.db.SaveChanges();
 
                 // depending on whether or not this is an Ajax request,
@@ -61,19 +61,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (this.Request.IsAjaxRequest())
                     return this.Json(
                         new AutocompleteNewJsonResult()
-                            {
-                                Id = laboratory.Id,
-                                Value = laboratory.Name
-                            });
-                
+                        {
+                            Id = activeIngredient.Id,
+                            Value = activeIngredient.Name
+                        });
+
                 // The View here will DEPEND on the caller.
                 // If it's EditModal, it's gonna be EditModal. Otherwise, Edit
                 return this.View(
-                    new MedicineLaboratoryViewModel()
-                        {
-                            Id = laboratory.Id,
-                            Name = laboratory.Name
-                        });
+                    new MedicineActiveIngredientViewModel()
+                    {
+                        ActiveIngredientId = activeIngredient.Id,
+                        ActiveIngredientName = activeIngredient.Name
+                    });
             }
 
             return this.View(formModel);

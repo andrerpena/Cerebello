@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
+    <Compile Include="Areas\App\Controllers\ActiveIngredientsController.cs" />
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
@@ -635,6 +636,8 @@
     <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\EditModal.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Edit.cshtml" />
+    <Content Include="Areas\App\Views\ActiveIngredients\Edit.cshtml" />
+    <Content Include="Areas\App\Views\ActiveIngredients\EditModal.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
