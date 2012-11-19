@@ -1282,6 +1282,10 @@ div.message-warning {
     padding: 10px;
 }
 
+    div.message-warning p + p {
+        margin-top: 0.6em;
+    }
+
 /* messaging for help */
 div.message-help {
     color: #5F5F5F;

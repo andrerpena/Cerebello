@@ -10,28 +10,28 @@
         @if (actionName == "welcome")
         {
             <li class="youarehere">
-                <a href="@Url.Action("welcome", "practicehome")" class="no-icon">Bem vindo!</a>
+                <a href="@Url.Action("Welcome", "PracticeHome")" class="no-icon">Bem vindo!</a>
             </li>
         }
         <li class="@(controllerName.Equals("practicehome") && actionName == "index" ? "youarehere" : "")">
-            <a href="@Url.Action("Index", "practicehome")" class="home-icon">Início</a> 
+            <a href="@Url.Action("Index", "PracticeHome")" class="home-icon">Início</a>
         </li>
         <li class="@(controllerName.Equals("doctors") ? "youarehere" : "")">
-            <a href="@Url.Action("Index", "doctors")" class="doctors-icon">Médicos</a>
+            <a href="@Url.Action("Index", "Doctors")" class="doctors-icon">Médicos</a>
         </li>
         <li class="@(controllerName.Equals("users") ? "youarehere" : "")">
-            <a href="@Url.Action("Index", "users")" class="doctors-icon">Usuários</a>
+            <a href="@Url.Action("Index", "Users")" class="doctors-icon">Usuários</a>
         </li>
         @if (user.AdministratorId != null)
         {
             <li class="header">Configurações</li>
             <li class="@(controllerName.Equals("configpractice") ? "youarehere" : "")">
-                <a href="@Url.Action("Index", "configpractice")" class="doctors-icon">Config. do consultório</a>
+                <a href="@Url.Action("Index", "ConfigPractice")" class="doctors-icon">Config. do consultório</a>
             </li>
             if (user.IsOwner)
             {
                 <li class="@(controllerName.Equals("configaccount") ? "youarehere" : "")">
-                    <a href="@Url.Action("Index", "configaccount")" class="doctors-icon">Config. da conta</a>
+                    <a href="@Url.Action("Index", "ConfigAccount")" class="doctors-icon">Config. da conta</a>
                 </li>
             }
         }

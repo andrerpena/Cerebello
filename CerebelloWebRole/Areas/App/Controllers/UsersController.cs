@@ -27,6 +27,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Creates an UserViewModel given an User object.
         /// </summary>
         /// <param name="user">User object to be used as source of values.</param>
+        /// <param name="practice"> </param>
+        /// <param name="medicalEntity"> </param>
+        /// <param name="medicalSpecialty"> </param>
         /// <returns>A new UserViewModel with informations copied from the User object.</returns>
         public static UserViewModel GetViewModel(User user, Practice practice, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty)
         {
@@ -66,6 +69,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel.MedicalSpecialtyId = medicalSpecialty.Id;
                 viewModel.MedicalSpecialtyName = medicalSpecialty.Name;
                 viewModel.MedicalEntityId = medicalEntity.Id;
+                viewModel.MedicalEntityName = medicalEntity.Name;
                 viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
                     typeof(TypeEstadoBrasileiro),
                     user.Doctor.MedicalEntityJurisdiction);
@@ -315,7 +319,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
                     {
-                        user.Doctor = new Doctor {PracticeId = this.DbUser.PracticeId,};
+                        user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
                         user.Doctor.HealthInsurances.Add(
                             new HealthInsurance
                                 {
@@ -410,7 +414,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             UserId = this.DbUser.Id,
                             Text =
                                 string.Format(
-                                    "O usuário {0} foi criado com successo. A senha padrão é: 123abc. O usuário terá a oportunidade de modificar esta senha no primeiro acesso",
+                                    "O usuário {0} foi criado com "
+                                    + "successo. A senha padrão é: 123abc. "
+                                    + "O usuário terá a oportunidade de "
+                                    + "modificar esta senha no primeiro acesso.",
                                     user.UserName)
                         });
                 }
@@ -421,7 +428,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Making user available in the Chat
                 ChatServerHelper.SetupUserIfNonexisting(this.db, this.Practice.Id, user.Id);
 
-                return RedirectToAction("details", new { id = user.Id });
+                return RedirectToAction("Details", new { id = user.Id });
             }
 
             ViewBag.MedicalSpecialtyOptions =
