@@ -1033,67 +1033,6 @@ namespace Cerebello.Firestarter.Helpers
             }
         }
 
-        //public class Codigo : IEquatable<Codigo>
-        //{
-        //    byte capitulo;
-        //    byte tipo;
-        //    byte subtipo;
-        //    byte id;
-        //    byte seq;
-
-        //    private Codigo()
-        //    {
-        //    }
-
-        //    private Codigo(string codigo)
-        //    {
-        //        var match = Regex.Match(codigo, @"^(\d)\.(\d\d)\.(\d\d)\.(\d\d)-(\d)$");
-        //        this.capitulo = byte.Parse(match.Groups[1].Value);
-        //        this.tipo = byte.Parse(match.Groups[2].Value);
-        //        this.subtipo = byte.Parse(match.Groups[3].Value);
-        //        this.id = byte.Parse(match.Groups[4].Value);
-        //        this.seq = byte.Parse(match.Groups[5].Value);
-        //    }
-
-        //    public Codigo Tipo
-        //    {
-        //        get
-        //        {
-        //            return new Codigo { capitulo = this.capitulo, tipo = this.tipo };
-        //        }
-        //    }
-
-        //    public Codigo Subtipo
-        //    {
-        //        get
-        //        {
-        //            return new Codigo { capitulo = this.capitulo, tipo = this.tipo };
-        //        }
-        //    }
-
-        //    public override string ToString()
-        //    {
-        //        return string.Format("{0}.{1:00}.{2:00}.{3:00}-{4}", this.capitulo, this.tipo, this.subtipo, this.id, this.seq);
-        //    }
-
-        //    public virtual bool Equals(Codigo other)
-        //    {
-        //        if (other == null)
-        //            return false;
-        //        return StringComparer.Ordinal.Equals(this.ToString(), other.ToString());
-        //    }
-
-        //    public override bool Equals(object obj)
-        //    {
-        //        return this.Equals(obj as Codigo);
-        //    }
-
-        //    public override int GetHashCode()
-        //    {
-        //        return this.ToString().GetHashCode();
-        //    }
-        //}
-
         public interface ICbhpmItem
         {
             string Codigo { get; }

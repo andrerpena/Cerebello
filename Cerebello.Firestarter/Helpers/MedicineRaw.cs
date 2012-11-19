@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Leaflet.Crawler
+namespace Cerebello.Firestarter.Helpers
 {
     public class MedicineRaw
     {

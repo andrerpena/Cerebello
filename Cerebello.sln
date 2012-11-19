@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Anvisa", "Anvisa", "{16D14AC2-D2E3-411F-A649-872C7E43BF51}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8A758F7D-C82A-4010-9E99-621949FCC440}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A012C95-90A6-42E5-A510-1163A86E47B2}"
@@ -18,11 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Model", "Cerebell
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole", "CerebelloWebRole\CerebelloWebRole.csproj", "{FB7B2DD8-7D48-403E-9422-01176EF59A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anvisa.Crawler", "Anvisa.Crawler\Anvisa.Crawler.csproj", "{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Firestarter", "Cerebello.Firestarter\Cerebello.Firestarter.csproj", "{910ADA48-2A68-4783-B70B-314D9BAA1428}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anvisa.Uploader", "Anvisa.Uploader\Anvisa.Uploader.csproj", "{0949C820-C755-4ECB-90EA-40716E29A0AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole.Tests", "CerebelloWebRole.Tests\CerebelloWebRole.Tests.csproj", "{6EE63206-FF20-496B-83F1-232944BE6E97}"
 EndProject
@@ -69,16 +63,6 @@ Global
 		{FB7B2DD8-7D48-403E-9422-01176EF59A43}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FB7B2DD8-7D48-403E-9422-01176EF59A43}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FB7B2DD8-7D48-403E-9422-01176EF59A43}.Release|x86.ActiveCfg = Release|Any CPU
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Debug|x86.ActiveCfg = Debug|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Debug|x86.Build.0 = Debug|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Release|Any CPU.ActiveCfg = Release|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Release|Mixed Platforms.Build.0 = Release|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Release|x86.ActiveCfg = Release|x86
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E}.Release|x86.Build.0 = Release|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -89,16 +73,6 @@ Global
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Release|Mixed Platforms.Build.0 = Release|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Release|x86.ActiveCfg = Release|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Release|x86.Build.0 = Release|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Debug|x86.ActiveCfg = Debug|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Debug|x86.Build.0 = Debug|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Release|Any CPU.ActiveCfg = Release|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Release|Mixed Platforms.Build.0 = Release|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Release|x86.ActiveCfg = Release|x86
-		{0949C820-C755-4ECB-90EA-40716E29A0AC}.Release|x86.Build.0 = Release|x86
 		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -114,8 +88,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{DC3C9009-DE1B-45ED-8A5E-14AF20FE0D2E} = {16D14AC2-D2E3-411F-A649-872C7E43BF51}
-		{0949C820-C755-4ECB-90EA-40716E29A0AC} = {16D14AC2-D2E3-411F-A649-872C7E43BF51}
 		{4A012C95-90A6-42E5-A510-1163A86E47B2} = {8A758F7D-C82A-4010-9E99-621949FCC440}
 		{6EE63206-FF20-496B-83F1-232944BE6E97} = {8A758F7D-C82A-4010-9E99-621949FCC440}
 	EndGlobalSection
