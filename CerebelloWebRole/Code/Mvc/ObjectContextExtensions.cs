@@ -26,7 +26,7 @@ namespace CerebelloWebRole.Code.Mvc
         /// <param name="update"> </param>
         /// <param name="delete"> </param>
         /// <param name="updateStrategy"> </param>
-        [Obsolete("This logic is to complicated and error prone to be encapsulated. Just do it by hand")]
+        [Obsolete("This logic is to complicated and error prone to be encapsulated. Just do it manually")]
         public static void Update<TModel, TViewModel>(
             this EntityCollection<TModel> entityCollection,
             IEnumerable<TViewModel> viewModelCollection,

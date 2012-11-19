@@ -139,9 +139,26 @@ namespace CerebelloWebRole.Code.Extensions
         }
 
         /// <summary>
-        /// DropdownList 
+        /// Shows a DropdownListFor automatically filled with enums values from the given expression
         /// </summary>
-        public static MvcHtmlString EnumDropdownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object selection = null, string optionLabel = "")
+        /// <remarks>
+        /// DO NOT remove this method and merge it with the OTHER OVERLOAD, using optional parameters.
+        /// This method is required WITH THIS EXACT SIGNATURE in order to be called by the EditPanel
+        /// </remarks>
+        public static MvcHtmlString EnumDropdownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        {
+            var valueDisplayDictionary = EnumHelper.GetSelectList(EnumHelper.GetEnumDataTypeFromExpression(expression), null);
+            return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, "");
+        }
+
+        /// <summary>
+        /// Shows a DropdownListFor automatically filled with enums values from the given expression
+        /// </summary>
+        /// <remarks>
+        /// DO NOT remove this method and merge it with the OTHER OVERLOAD, using optional parameters.
+        /// The other method is required WITH THAT EXACT SIGNATURE in order to be called by the EditPanel
+        /// </remarks>
+        public static MvcHtmlString EnumDropdownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object selection, string optionLabel = "")
         {
             var valueDisplayDictionary = EnumHelper.GetSelectList(EnumHelper.GetEnumDataTypeFromExpression(expression), selection);
             return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, optionLabel);
