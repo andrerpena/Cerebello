@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
 
 namespace Cerebello.Firestarter
@@ -161,6 +162,7 @@ namespace Cerebello.Firestarter
                 if (showHidden)
                 {
                     Console.WriteLine(@"clr    - Clear all data.");
+                    Console.WriteLine(@"anvll  - Downloads all leaflets from Anvisa site.");
                     Console.WriteLine(@"p1     - Populate database with items (type p1? to know more).");
                     Console.WriteLine(@"drp    - Drop all tables and FKs.");
                     Console.WriteLine(@"crt    - Create all tables and FKs using script.");
@@ -445,6 +447,48 @@ namespace Cerebello.Firestarter
 
                                 using (RandomContext.Create(rndOption))
                                     OptionP1(db);
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ConsoleWriteException(ex);
+
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Partially done!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+
+                        break;
+
+                    case "anvll?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Downloads and saves all leaflets from Anvisa official site.");
+                            Console.WriteLine("A JSON file is going to be saved with all data.");
+                            Console.WriteLine("This file is used to populate DB later.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+
+                        break;
+
+                    case "anvll":
+                        try
+                        {
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+
+                                // Downloading data from Anvisa official site.
+                                AnvisaLeafletHelper.DownloadAndCreateMedicinesJson();
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -943,6 +987,11 @@ namespace Cerebello.Firestarter
             Firestarter.Initialize_SYS_MedicalProcedures(
                 db,
                 Path.Combine(rootCerebelloPath, @"DB\cbhpm_2010.txt"),
+                progress: ConsoleWriteProgressIntInt);
+
+            Console.WriteLine("SaveLeafletsInMedicinesJsonToDb");
+            AnvisaLeafletHelper.SaveLeafletsInMedicinesJsonToDb(
+                db,
                 progress: ConsoleWriteProgressIntInt);
         }
 
