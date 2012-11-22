@@ -106,6 +106,7 @@ CREATE TABLE [dbo].[Appointment](
 	[Status] [int] NOT NULL,
 	[IsPolled] [bit] NOT NULL,
 	[HealthInsuranceId] [int] NOT NULL,
+	[ReminderEmailSent] [bit] NOT NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

@@ -325,6 +325,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="IsPolled" Type="bit" Nullable="false" />
           <Property Name="HealthInsuranceId" Type="int" Nullable="false" />
+          <Property Name="ReminderEmailSent" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CFG_DayOff">
           <Key>
@@ -1678,6 +1679,7 @@
           <Property Type="Boolean" Name="IsPolled" Nullable="false" />
           <Property Type="Int32" Name="HealthInsuranceId" Nullable="false" />
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Appointment_HealthInsurance" FromRole="Appointment" ToRole="HealthInsurance" />
+          <Property Type="Boolean" Name="ReminderEmailSent" Nullable="false" />
         </EntityType>
         <EntityType Name="Coverage">
           <Key>
@@ -2831,6 +2833,7 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Appointments"><EntityTypeMapping TypeName="Cerebello.Model.Appointment"><MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="ReminderEmailSent" ColumnName="ReminderEmailSent" />
                 <ScalarProperty Name="HealthInsuranceId" ColumnName="HealthInsuranceId" />
                 <ScalarProperty Name="IsPolled" ColumnName="IsPolled" />
                 <ScalarProperty Name="Status" ColumnName="Status" />

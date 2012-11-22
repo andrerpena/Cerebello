@@ -2372,7 +2372,8 @@ namespace Cerebello.Model
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="isPolled">Initial value of the IsPolled property.</param>
         /// <param name="healthInsuranceId">Initial value of the HealthInsuranceId property.</param>
-        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean isPolled, global::System.Int32 healthInsuranceId)
+        /// <param name="reminderEmailSent">Initial value of the ReminderEmailSent property.</param>
+        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean isPolled, global::System.Int32 healthInsuranceId, global::System.Boolean reminderEmailSent)
         {
             Appointment appointment = new Appointment();
             appointment.Id = id;
@@ -2387,6 +2388,7 @@ namespace Cerebello.Model
             appointment.Status = status;
             appointment.IsPolled = isPolled;
             appointment.HealthInsuranceId = healthInsuranceId;
+            appointment.ReminderEmailSent = reminderEmailSent;
             return appointment;
         }
 
@@ -2708,6 +2710,30 @@ namespace Cerebello.Model
         private global::System.Int32 _HealthInsuranceId;
         partial void OnHealthInsuranceIdChanging(global::System.Int32 value);
         partial void OnHealthInsuranceIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean ReminderEmailSent
+        {
+            get
+            {
+                return _ReminderEmailSent;
+            }
+            set
+            {
+                OnReminderEmailSentChanging(value);
+                ReportPropertyChanging("ReminderEmailSent");
+                _ReminderEmailSent = StructuralObject.SetValidValue(value, "ReminderEmailSent");
+                ReportPropertyChanged("ReminderEmailSent");
+                OnReminderEmailSentChanged();
+            }
+        }
+        private global::System.Boolean _ReminderEmailSent;
+        partial void OnReminderEmailSentChanging(global::System.Boolean value);
+        partial void OnReminderEmailSentChanged();
 
         #endregion
 
