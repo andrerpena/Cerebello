@@ -150,6 +150,7 @@
     <Compile Include="Code\Notifications\NotificationData.cs" />
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
+    <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />

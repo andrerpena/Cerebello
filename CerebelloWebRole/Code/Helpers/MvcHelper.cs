@@ -109,18 +109,88 @@ namespace CerebelloWebRole.Code.Helpers
 
         public class MockHttpContext : HttpContextBase
         {
+            private readonly HttpResponseBase response = new MockHttpResponse();
+
             public HttpRequestBase Request2 { get; set; }
             public override HttpRequestBase Request { get { return this.Request2; } }
+
+            public override HttpResponseBase Response
+            {
+                get { return this.response; }
+            }
         }
 
         public class MockHttpRequest : HttpRequestBase
         {
-            public string HttpMethod2 { get; set; }
-            public override string HttpMethod { get { return this.HttpMethod2; } }
+            private readonly Uri url = new Uri(
+                string.Format(
+                    "http://www.{0}{1}/",
+                    Constants.DOMAIN,
+                    Constants.PORT.HasValue ? ":" + Constants.PORT : ""),
+                UriKind.Absolute);
 
-            public override NameValueCollection Headers { get { return new NameValueCollection(); } }
-            public override NameValueCollection Form { get { return new NameValueCollection(); } }
-            public override NameValueCollection QueryString { get { return new NameValueCollection(); } }
+            private readonly HttpCookieCollection cookies = new HttpCookieCollection();
+            private readonly NameValueCollection serverVars = new NameValueCollection();
+            private readonly NameValueCollection headers = new NameValueCollection();
+            private readonly NameValueCollection form = new NameValueCollection();
+            private readonly NameValueCollection queryStr = new NameValueCollection();
+
+            public string HttpMethod2 { get; set; }
+
+            public override string HttpMethod
+            {
+                get { return this.HttpMethod2; }
+            }
+
+            public override Uri Url
+            {
+                get { return url; }
+            }
+
+            public override string ApplicationPath
+            {
+                get { return "/"; }
+            }
+
+            public override HttpCookieCollection Cookies
+            {
+                get { return this.cookies; }
+            }
+
+            public override NameValueCollection ServerVariables
+            {
+                get { return this.serverVars; }
+            }
+
+            public override NameValueCollection Headers
+            {
+                get { return this.headers; }
+            }
+
+            public override NameValueCollection Form
+            {
+                get { return this.form; }
+            }
+
+            public override NameValueCollection QueryString
+            {
+                get { return this.queryStr; }
+            }
+        }
+
+        public class MockHttpResponse : HttpResponseBase
+        {
+            private readonly HttpCookieCollection cookies = new HttpCookieCollection();
+
+            public override string ApplyAppPathModifier(string virtualPath)
+            {
+                return virtualPath;
+            }
+
+            public override HttpCookieCollection Cookies
+            {
+                get { return this.cookies; }
+            }
         }
     }
 }
