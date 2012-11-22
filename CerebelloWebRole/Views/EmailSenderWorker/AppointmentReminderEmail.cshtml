@@ -1,0 +1,7 @@
+﻿@model CerebelloWebRole.WorkerRole.Code.Workers.PatientEmailModel
+@{
+    
+}
+Patient Name: @Model.PatientName
+
+Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "http")">PracticeHome</a>

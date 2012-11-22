@@ -152,6 +152,7 @@
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />
@@ -330,6 +331,11 @@
     <Compile Include="Models\CreateAccountViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebRole.cs" />
+    <Compile Include="WorkerRole.Code\Workers\BaseCerebelloWorker.cs" />
+    <Compile Include="WorkerRole.Code\Workers\BaseWorker.cs" />
+    <Compile Include="WorkerRole.Code\Workers\EmailSenderWorker.cs" />
+    <Compile Include="WorkerRole.Code\Workers\BaseWorkerScheduler.cs" />
+    <Compile Include="WorkerRole.Code\Workers\IntervalWorkerScheduler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\App\urls.txt" />
@@ -656,6 +662,7 @@
     <Content Include="Views\Authentication\ResetPassword.cshtml" />
     <Content Include="Views\Authentication\ResetPasswordManually.cshtml" />
     <Content Include="Views\Authentication\ResetPasswordSuccess.cshtml" />
+    <EmbeddedResource Include="Views\EmailSenderWorker\AppointmentReminderEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">
