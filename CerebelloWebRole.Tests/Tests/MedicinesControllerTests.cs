@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
@@ -35,54 +36,57 @@ namespace CerebelloWebRole.Tests.Tests
 
             try
             {
-                var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = mr.CreateController<MedicinesController>();
 
-                controller.Create(new MedicineViewModel()
-                {
-                    Name = "Pristiq",
-                    LaboratoryName = "MyLab",
-                    Usage = (int)TypeUsage.Cutaneo,
-                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
-                    {
-                        new MedicineActiveIngredientViewModel() { ActiveIngredientName = "P1" },
-                        new MedicineActiveIngredientViewModel() { ActiveIngredientName = "P2" }
-                    }
-                });
+                controller.Create(
+                    new MedicineViewModel
+                        {
+                            Name = "Pristiq",
+                            LaboratoryName = "MyLab",
+                            Usage = (int)TypeUsage.Cutaneo,
+                            ActiveIngredients = new List<MedicineActiveIngredientViewModel>
+                                {
+                                    new MedicineActiveIngredientViewModel {ActiveIngredientName = "P1"},
+                                    new MedicineActiveIngredientViewModel {ActiveIngredientName = "P2"}
+                                }
+                        });
 
-                controller.Create(new MedicineViewModel()
-                {
-                    Name = "Novalgina",
-                    LaboratoryName = "MyLab2",
-                    Usage = (int)TypeUsage.Cutaneo,
-                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
-                    {
-                        new MedicineActiveIngredientViewModel() { ActiveIngredientName = "P1" },
-                    }
-                });
+                controller.Create(
+                    new MedicineViewModel
+                        {
+                            Name = "Novalgina",
+                            LaboratoryName = "MyLab2",
+                            Usage = (int)TypeUsage.Cutaneo,
+                            ActiveIngredients = new List<MedicineActiveIngredientViewModel>
+                                {
+                                    new MedicineActiveIngredientViewModel {ActiveIngredientName = "P1"},
+                                }
+                        });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
-            var patientsCount = this.db.Patients.Count();
-
             // making an empty search
-            var result = controller.Search(new Areas.App.Models.SearchModel()
-            {
-                Term = "",
-                Page = 1
-            });
+            var result = controller.Search(
+                new SearchModel
+                    {
+                        Term = "",
+                        Page = 1
+                    });
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
 
+            Debug.Assert(resultAsView != null, "resultAsView must not be null");
             Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<MedicineViewModel>));
             var model = resultAsView.Model as SearchViewModel<MedicineViewModel>;
 
+            Debug.Assert(model != null, "model must not be null");
             Assert.AreEqual(2, model.Count);
         }
 
@@ -93,43 +97,43 @@ namespace CerebelloWebRole.Tests.Tests
 
             try
             {
-                var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = mr.CreateController<MedicinesController>();
 
-                controller.Create(new MedicineViewModel()
+                controller.Create(new MedicineViewModel
                 {
                     Name = "Pristiq",
                     LaboratoryName = "MyLab",
                     Usage = (int)TypeUsage.Cutaneo,
-                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
+                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>
                     {
-                        new MedicineActiveIngredientViewModel() { ActiveIngredientName = "P1" },
-                        new MedicineActiveIngredientViewModel() { ActiveIngredientName = "P2" }
+                        new MedicineActiveIngredientViewModel { ActiveIngredientName = "P1" },
+                        new MedicineActiveIngredientViewModel { ActiveIngredientName = "P2" }
                     }
                 });
 
-                controller.Create(new MedicineViewModel()
+                controller.Create(new MedicineViewModel
                 {
                     Name = "Novalgina",
                     LaboratoryName = "MyLab2",
                     Usage = (int)TypeUsage.Cutaneo,
-                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
+                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>
                     {
-                        new MedicineActiveIngredientViewModel() { ActiveIngredientName = "P1" },
+                        new MedicineActiveIngredientViewModel { ActiveIngredientName = "P1" },
                     }
                 });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
-            var searchTerm = "nova";
+            const string searchTerm = "nova";
 
             // making an empty search
-            var result = controller.Search(new Areas.App.Models.SearchModel()
+            var result = controller.Search(new SearchModel
             {
                 Term = searchTerm,
                 Page = 1
@@ -138,9 +142,11 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
 
+            Debug.Assert(resultAsView != null, "resultAsView must not null");
             Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<MedicineViewModel>));
             var model = resultAsView.Model as SearchViewModel<MedicineViewModel>;
 
+            Debug.Assert(model != null, "model must not be null");
             Assert.AreEqual(1, model.Count);
         }
 

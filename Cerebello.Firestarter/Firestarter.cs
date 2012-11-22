@@ -625,6 +625,9 @@ namespace Cerebello.Firestarter
                 End = start + duration,
                 Description = desc,
                 Type = (int)TypeAppointment.GenericAppointment,
+                HealthInsuranceId =
+                    (doc.HealthInsurances.FirstOrDefault(hi => hi.IsActive)
+                    ?? doc.HealthInsurances.First(hi => !hi.IsActive)).Id,
 
                 PracticeId = doc.PracticeId,
             });
