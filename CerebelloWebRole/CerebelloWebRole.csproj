@@ -144,6 +144,7 @@
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
     <Compile Include="Code\Controllers\TransactionScopeAttribute.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
+    <Compile Include="Code\Helpers\EmailHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsLongPollingProvider.cs" />

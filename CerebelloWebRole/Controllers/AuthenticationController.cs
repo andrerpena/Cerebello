@@ -269,7 +269,7 @@ namespace CerebelloWebRole.Controllers
 
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
 
-                    var message = this.CreateEmailMessage(
+                    var message = EmailHelper.CreateEmailMessage(
                         toAddress,
                         "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.",
                         bodyHtml,
@@ -508,7 +508,7 @@ namespace CerebelloWebRole.Controllers
 
                 var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
 
-                message = this.CreateEmailMessage(
+                message = EmailHelper.CreateEmailMessage(
                     toAddress,
                     "Redefinir senha da conta no Cerebello",
                     bodyHtml,
