@@ -1106,7 +1106,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
                 db2.SetCurrentUserById(docAndre.Users.Single().Id);
 
-                // the reason for this .AddMinutos(1) is that FindNextFreeTimeInPracticeLocalTime returns now, when now is available
+                // the reason for this .AddMinutes(1) is that FindNextFreeTimeInPracticeLocalTime returns now, when now is available
                 // but now is not considered future, and I need a date in the future so the Status validation will fail
                 var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow.AddMinutes(1));
 
