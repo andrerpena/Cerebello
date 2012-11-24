@@ -1,0 +1,121 @@
+﻿@using System.Globalization
+@using CerebelloWebRole.Code
+@using CerebelloWebRole.Models
+@model CerebelloWebRole.WorkerRole.Code.Workers.PatientEmailModel
+@{
+    var dr = this.Model.DoctorGender == TypeGender.Male ? "Dr." : "Dra.";
+    var o_dr = this.Model.DoctorGender == TypeGender.Male ? "o Dr." : "a Dra.";
+    var contactDoctor = string.Format("{0} {1}", dr, this.Model.DoctorName);
+    var contactPractice = string.Format("{0}", this.Model.PracticeName);
+
+    var hasDoctorContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.DoctorPhone, this.Model.DoctorEmail));
+    var hasPracticeContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.PracticePhone, this.Model.PracticeEmail));
+}
+@if (this.Model.IsBodyHtml)
+{
+    <p>
+        @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
+    </p>
+    <br />
+    <p>
+        Estamos entrando em contato para lhe lembrar de sua consulta, com
+        @o_dr @Model.DoctorName, na seguinte data:
+        <strong>@Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))</strong>.
+    </p>
+    <br />
+    <p>
+        Qualquer dúvida, entre em contato usando um dos meios abaixo:
+    </p>
+    <br />
+    if (hasDoctorContact)
+    {
+    <strong>@contactDoctor</strong>
+    <ul>
+        <li>telefone: @Model.DoctorPhone</li>
+        <li>e-mail: @Model.DoctorEmail</li>
+    </ul>
+    <br />
+    }
+    if (hasPracticeContact)
+    {
+    <strong>@contactPractice</strong>
+    <ul>
+        <li>telefone: @Model.PracticePhone</li>
+        <li>e-mail: @Model.PracticeEmail</li>
+    </ul>
+    <br />
+    }
+    if (true)
+    {
+    <p>
+        Por favor, não responda este e-mail.
+    </p>
+    }
+    else
+    {
+    <p>
+        Ou então simplesmente respondendo este e-mail.
+    </p>
+    }
+    <br />
+    <p>Atenciosamente,</p>
+    <p style="padding-left: 2em; color: darkslategray">@Model.DoctorName</p>
+    <br />
+    
+@*
+    Link no qual o paciente pode ver suas consultas marcadas, e interagir com o consultório
+    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "http")">PracticeHome</a>
+*@
+
+    <p style="padding-left: 2em; color: gray; font-style: italic">
+        Powered by <a href="@Url.Action("Index", "Home", new { }, "http")">@Constants.EMAIL_POWEREDBY</a>
+    </p>
+    return;
+}
+@(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
+
+    Estamos entrando em contato para
+lhe lembrar de sua consulta, com @o_dr
+@Model.DoctorName,
+na seguinte data:
+
+@Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))
+
+Qualquer dúvida, entre em contato
+usando um dos meios abaixo:
+
+@{ if (!hasDoctorContact) { goto skipContactDoctor; } }
+@contactDoctor
+@(new string('-', contactDoctor.Length))
+telefone: @Model.DoctorPhone
+e-mail: @Model.DoctorEmail
+
+@{ skipContactDoctor: }
+@{ if (!hasDoctorContact) { goto skipcontactPractice; } }
+
+@contactPractice
+@(new string('-', contactPractice.Length))
+telefone: @Model.PracticePhone
+e-mail: @Model.PracticeEmail
+@{ skipcontactPractice: }
+
+@if (true)
+{
+    @:Por favor, não responda este e-mail.
+}
+else
+{
+    @:Ou então simplesmente respondendo este e-mail.
+}
+
+@*
+    Link no qual o paciente pode ver suas consultas marcadas, e interagir com o consultório
+    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "http")">PracticeHome</a>
+*@
+
+Atenciosamente,
+    @Model.DoctorName
+
+
+@(">> Powered by cerebello <<")
+>> @Url.Action("Index", "Home", new { }, "http") <<

@@ -137,7 +137,9 @@
     <Compile Include="Mvc3TestHelper.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Tests.Helpers\RazorHelperTests.cs" />
     <Compile Include="Tests.Self\Mvc3HelperTests.cs" />
+    <Compile Include="Tests.WebRole\EmailSenderWorkerTests.cs" />
     <Compile Include="Tests\AnamnesesControllerTests.cs" />
     <Compile Include="Tests\AuthenticationControllerTests.cs" />
     <Compile Include="Tests\ConfigPracticeControllerTests.cs">

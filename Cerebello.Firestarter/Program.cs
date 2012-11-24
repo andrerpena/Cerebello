@@ -485,10 +485,15 @@ namespace Cerebello.Firestarter
                         {
                             using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                             {
-                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine("Saving to: {0}", new FileInfo("medicines.json").FullName);
 
                                 // Downloading data from Anvisa official site.
-                                AnvisaLeafletHelper.DownloadAndCreateMedicinesJson();
+                                var anvisaHelper = new AnvisaLeafletHelper();
+                                var meds = anvisaHelper.DownloadAndCreateMedicinesJson();
+
+                                Console.WriteLine("Total medicines: {0}", meds.Count);
+                                Console.WriteLine("Saved to: {0}", new FileInfo("medicines.json").FullName);
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -920,7 +925,7 @@ namespace Cerebello.Firestarter
                     user.Secretary = new Secretary { PracticeId = user.PracticeId };
                 if (type.Contains("doc"))
                 {
-                    user.Doctor = new Doctor {PracticeId = user.PracticeId};
+                    user.Doctor = new Doctor { PracticeId = user.PracticeId };
                     user.Doctor.HealthInsurances.Add(new HealthInsurance
                         {
                             PracticeId = user.PracticeId,
@@ -990,7 +995,8 @@ namespace Cerebello.Firestarter
                 progress: ConsoleWriteProgressIntInt);
 
             Console.WriteLine("SaveLeafletsInMedicinesJsonToDb");
-            AnvisaLeafletHelper.SaveLeafletsInMedicinesJsonToDb(
+            var anvisaHelper = new AnvisaLeafletHelper();
+            anvisaHelper.SaveLeafletsInMedicinesJsonToDb(
                 db,
                 progress: ConsoleWriteProgressIntInt);
         }

@@ -509,13 +509,13 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
-                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = start.Date,
                     DoctorId = docAndre.Id,
                     Start = start.ToString("HH:mm"),
                     End = end.ToString("HH:mm"),
                     IsGenericAppointment = false,
-                    Status = (int) TypeAppointmentStatus.Undefined
+                    Status = (int)TypeAppointmentStatus.Undefined,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -603,14 +603,19 @@ namespace CerebelloWebRole.Tests.Tests
                 utcEnd = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
 
                 // Creating an appointment.
-                var appointment = this.db.Appointments.CreateObject();
-                appointment.CreatedBy = docAndre.Users.Single();
-                appointment.CreatedOn = utcNow;
-                appointment.Description = "This is a generic appointment.";
-                appointment.Doctor = docAndre;
-                appointment.Start = utcStart;
-                appointment.End = utcEnd;
-                appointment.Type = (int)TypeAppointment.GenericAppointment;
+                var appointment = new Appointment
+                    {
+                        CreatedBy = docAndre.Users.Single(),
+                        CreatedOn = utcNow,
+                        Description = "This is a generic appointment.",
+                        Doctor = docAndre,
+                        Start = utcStart,
+                        End = utcEnd,
+                        Type = (int)TypeAppointment.GenericAppointment,
+                        HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
+                        PracticeId = docAndre.PracticeId,
+                    };
+                this.db.Appointments.AddObject(appointment);
                 this.db.SaveChanges();
 
                 // Creating Asp.Net Mvc mocks.
@@ -633,6 +638,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
                         IsGenericAppointment = true,
+                        HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -737,6 +743,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
                         IsGenericAppointment = true,
+                        HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -846,6 +853,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
                         IsGenericAppointment = true,
+                        HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -946,6 +954,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
                         IsGenericAppointment = true,
+                        HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -1094,7 +1103,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
                 var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
                 // the next free time from "now" 
-                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow);
+                var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
+                db2.SetCurrentUserById(docAndre.Users.Single().Id);
+                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow);
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1109,14 +1120,14 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
-                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = nextFreeTime.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = nextFreeTime.Item2.ToString("HH:mm"),
                     End = nextFreeTime.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this has to generate an error because the appointment is in the future
-                    Status = (int) TypeAppointmentStatus.NotAccomplished
+                    Status = (int)TypeAppointmentStatus.NotAccomplished,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -1157,7 +1168,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
                 var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
                 // the next free time from "now" 
-                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow);
+                var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
+                db2.SetCurrentUserById(docAndre.Users.Single().Id);
+                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow);
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1172,14 +1185,14 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
-                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = nextFreeTime.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = nextFreeTime.Item2.ToString("HH:mm"),
                     End = nextFreeTime.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this has to generate an error because the appointment is in the future
-                    Status = (int) TypeAppointmentStatus.Accomplished
+                    Status = (int)TypeAppointmentStatus.Accomplished,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -1220,7 +1233,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
                 var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
                 // finds a free time in the past week.
-                var freeTimeInPastWeek = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow.AddDays(-7));
+                var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
+                db2.SetCurrentUserById(docAndre.Users.Single().Id);
+                var freeTimeInPastWeek = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow.AddDays(-7));
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1235,14 +1250,14 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
-                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = freeTimeInPastWeek.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = freeTimeInPastWeek.Item2.ToString("HH:mm"),
                     End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this should work because it's in the past
-                    Status = (int) TypeAppointmentStatus.NotAccomplished
+                    Status = (int)TypeAppointmentStatus.NotAccomplished,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -1283,7 +1298,9 @@ namespace CerebelloWebRole.Tests.Tests
                 var localNow = new DateTime(2012, 11, 09, 13, 00, 00, 000);
                 var utcNow = TimeZoneInfo.ConvertTimeToUtc(localNow, timeZoneInfo);
                 // finds a free time in the past week.
-                var freeTimeInPastWeek = ScheduleController.FindNextFreeTimeInPracticeLocalTime(new CerebelloEntitiesAccessFilterWrapper(this.db), docAndre, localNow.AddDays(-7));
+                var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
+                db2.SetCurrentUserById(docAndre.Users.Single().Id);
+                var freeTimeInPastWeek = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow.AddDays(-7));
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1298,14 +1315,14 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
-                    HealthInsuranceId = docAndre.HealthInsurances.First().Id,
+                    HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = freeTimeInPastWeek.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = freeTimeInPastWeek.Item2.ToString("HH:mm"),
                     End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this should work because it's in the past
-                    Status = (int) TypeAppointmentStatus.Accomplished
+                    Status = (int)TypeAppointmentStatus.Accomplished,
                 };
 
                 Mvc3TestHelper.SetModelStateErrors(controller, vm);
@@ -1522,6 +1539,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Start = referenceTime,
                         End = referenceTime + TimeSpan.FromMinutes(30),
                         PracticeId = docAndre.PracticeId,
+                        HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     };
 
                 this.db.Appointments.AddObject(appointment);

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Objects;
-using System.Linq;
+using System.Diagnostics;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
 using Cerebello.Model;
@@ -46,6 +47,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             try
             {
+                var doctor = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = mr.CreateController<MedicinesController>();
 
@@ -74,13 +76,11 @@ namespace CerebelloWebRole.Tests.Tests
                                 }
                         });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
-
-            var patientsCount = this.db.Patients.Count();
 
             // making an empty search
             var result = controller.Search(
@@ -93,9 +93,11 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
 
+            Debug.Assert(resultAsView != null, "resultAsView must not be null");
             Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<MedicineViewModel>));
             var model = resultAsView.Model as SearchViewModel<MedicineViewModel>;
 
+            Debug.Assert(model != null, "model must not be null");
             Assert.AreEqual(2, model.Count);
         }
 
@@ -106,6 +108,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             try
             {
+                Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
                 var mr = new MockRepository(true);
                 controller = mr.CreateController<MedicinesController>();
 
@@ -134,13 +137,13 @@ namespace CerebelloWebRole.Tests.Tests
                                 }
                         });
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Inconclusive("Test initialization has failed.");
+                InconclusiveInit(ex);
                 return;
             }
 
-            var searchTerm = "nova";
+            const string searchTerm = "nova";
 
             // making an empty search
             var result = controller.Search(
@@ -153,9 +156,11 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             var resultAsView = result as ViewResult;
 
+            Debug.Assert(resultAsView != null, "resultAsView must not null");
             Assert.IsInstanceOfType(resultAsView.Model, typeof(SearchViewModel<MedicineViewModel>));
             var model = resultAsView.Model as SearchViewModel<MedicineViewModel>;
 
+            Debug.Assert(model != null, "model must not be null");
             Assert.AreEqual(1, model.Count);
         }
 

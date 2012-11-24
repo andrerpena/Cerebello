@@ -1,13 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
-using System.Net;
+using System.Linq;
 using System.Net.Mail;
-using System.Net.Mime;
 using System.Transactions;
 using System.Web.Mvc;
 using Cerebello.Model;
-using System.Linq;
+using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.Code.Controllers
 {
@@ -17,18 +15,10 @@ namespace CerebelloWebRole.Code.Controllers
         {
             this.UtcNowGetter = () => DateTime.UtcNow;
 
-            this.EmailSender = mm =>
-            {
-                using (var smtpClient = this.CreateSmtpClient())
-                    smtpClient.Send(mm);
-            };
-
             this.CerebelloEntitiesCreator = () => new CerebelloEntities();
         }
 
         public Func<DateTime> UtcNowGetter { get; set; }
-
-        public Action<MailMessage> EmailSender { get; set; }
 
         public Func<CerebelloEntities> CerebelloEntitiesCreator { get; set; }
 
@@ -36,7 +26,7 @@ namespace CerebelloWebRole.Code.Controllers
         /// Mockable version of the DateTime.UtcNow property.
         /// </summary>
         /// <returns></returns>
-        public DateTime GetUtcNow()
+        public virtual DateTime GetUtcNow()
         {
             return this.UtcNowGetter();
         }
@@ -62,63 +52,15 @@ namespace CerebelloWebRole.Code.Controllers
             }
         }
 
-        /// <summary>
-        /// Creates an e-mail message.
-        /// The 'From' address is fixed, and is valid in the Smtp server used by the 'SendEmail' method.
-        /// </summary>
-        /// <param name="toAddress">Address to send the message to.</param>
-        /// <param name="subject">Subject of the message.</param>
-        /// <param name="bodyHtml">Body of the message in Html format.</param>
-        /// <param name="bodyText">Body of the message in plain text format.</param>
-        /// <returns>Returns a 'MailMessage' that can be sent using the 'SendEmail' method.</returns>
-        protected MailMessage CreateEmailMessage(
-            MailAddress toAddress,
-            [Localizable(true)] string subject,
-            [Localizable(true)] string bodyHtml,
-            [Localizable(true)] string bodyText)
-        {
-            if (string.IsNullOrEmpty(bodyText))
-                throw new ArgumentException("bodyText must be provided.", "bodyText");
-
-            // NOTE: The string "mig.ang.san.bic@gmail.com" is repeated in other place.
-            var fromAddress = new MailAddress("mig.ang.san.bic@gmail.com", "www.cerebello.com");
-            var mailMessage = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyText.Trim() };
-
-            // Adding Html body.
-            if (!string.IsNullOrWhiteSpace(bodyHtml))
-                mailMessage.AlternateViews.Add(
-                    AlternateView.CreateAlternateViewFromString(bodyHtml.Trim(), new ContentType(MediaTypeNames.Text.Html)));
-
-            return mailMessage;
-        }
+        public EmailHelper.SendEmailAction EmailSender { get; set; }
 
         /// <summary>
         /// Sends an e-mail message using the default SmtpClient.
         /// </summary>
         /// <param name="message">MailMessage containing the informations about the message to be sent.</param>
-        protected void SendEmail(MailMessage message)
+        public virtual void SendEmail(MailMessage message)
         {
-            using (message)
-                this.EmailSender(message);
-        }
-
-        /// <summary>
-        /// Creates an SmtpClient that will be used to send e-mails.
-        /// </summary>
-        /// <returns></returns>
-        private SmtpClient CreateSmtpClient()
-        {
-            var smtpClient = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("mig.ang.san.bic@gmail.com", "50kf96wu")
-            };
-
-            return smtpClient;
+            (this.EmailSender ?? EmailHelper.SendEmail)(message);
         }
 
         public virtual CerebelloEntities CreateNewCerebelloEntities()
@@ -126,6 +68,7 @@ namespace CerebelloWebRole.Code.Controllers
             return this.CerebelloEntitiesCreator();
         }
 
+        #region Transaction [needs changes - not good as is now]
         /// <summary>
         /// Overrides the default IActionInvoker used by this controller, by one that allows usage of
         /// the special attribute TransactionScopeAttribute that creates a transaction wide enough
@@ -134,7 +77,7 @@ namespace CerebelloWebRole.Code.Controllers
         /// <returns></returns>
         protected override IActionInvoker CreateActionInvoker()
         {
-            return new ControllerActionInvoker();
+            return new RootActionInvoker();
         }
 
         /// <summary>
@@ -177,5 +120,6 @@ namespace CerebelloWebRole.Code.Controllers
         /// when a commit is desired. If this is not done, the transaction will be rolled-back.
         /// </summary>
         public TransactionScope TransactionScope { get; set; }
+        #endregion
     }
 }

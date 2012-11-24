@@ -792,6 +792,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     while (true)
                     {
                         var daysOffDates = db.CFG_DayOff
+                            .Where(df => df.DoctorId == doctor.Id)
                             .Where(df => df.Date >= currentDateStartLocal && df.Date < currentDateEndLocal)
                             .Select(df => df.Date)
                             .ToArray();

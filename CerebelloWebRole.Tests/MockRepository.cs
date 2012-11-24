@@ -9,10 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using Cerebello;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controllers;
+using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Code.Security.Principals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,20 +24,7 @@ namespace CerebelloWebRole.Tests
     {
         static MockRepository()
         {
-            // Registering all routes, from all areas.
-            var allAreas = typeof(MvcApplication).Assembly.GetTypes()
-                .Where(type => typeof(AreaRegistration).IsAssignableFrom(type))
-                .Where(type => type.GetConstructor(Type.EmptyTypes) != null)
-                .Select(type => (AreaRegistration)Activator.CreateInstance(type))
-                .ToArray();
-
-            foreach (var eachAreaRegistration in allAreas)
-            {
-                eachAreaRegistration.RegisterArea(
-                    new AreaRegistrationContext(eachAreaRegistration.AreaName, RouteTable.Routes));
-            }
-
-            MvcApplication.RegisterRoutes(RouteTable.Routes);
+            RouteHelper.RegisterAllRoutes();
         }
 
         /// <summary>
@@ -319,12 +306,8 @@ namespace CerebelloWebRole.Tests
         /// <returns></returns>
         public RequestContext GetRequestContext()
         {
-            var mock = new Mock<RequestContext>();
-
-            mock.SetupGet(rq => rq.RouteData).Returns(this.RouteData);
-            mock.SetupGet(rq => rq.HttpContext).Returns(this.GetHttpContext());
-
-            return mock.Object;
+            var mock = new RequestContext(this.GetHttpContext(), this.RouteData ?? new RouteData());
+            return mock;
         }
 
         public HttpRequestBase GetRequest()

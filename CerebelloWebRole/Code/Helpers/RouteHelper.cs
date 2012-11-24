@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
+using Cerebello;
 
 namespace CerebelloWebRole.Code.Helpers
 {
@@ -50,6 +52,35 @@ namespace CerebelloWebRole.Code.Helpers
                     get { return ""; }
                 }
             }
+        }
+
+        private static object lockerRegisterAllRoutes = new object();
+
+        /// <summary>
+        /// Register all areas in the assembly of the application.
+        /// This is used by tests and by the Worker-Role.
+        /// </summary>
+        public static void RegisterAllRoutes()
+        {
+            if (lockerRegisterAllRoutes != null)
+                lock (lockerRegisterAllRoutes)
+                {
+                    lockerRegisterAllRoutes = null;
+                    // Registering all routes, from all areas.
+                    var allAreas = typeof(MvcApplication).Assembly.GetTypes()
+                        .Where(type => typeof(AreaRegistration).IsAssignableFrom(type))
+                        .Where(type => type.GetConstructor(Type.EmptyTypes) != null)
+                        .Select(type => (AreaRegistration)Activator.CreateInstance(type))
+                        .ToArray();
+
+                    foreach (var eachAreaRegistration in allAreas)
+                    {
+                        eachAreaRegistration.RegisterArea(
+                            new AreaRegistrationContext(eachAreaRegistration.AreaName, RouteTable.Routes));
+                    }
+
+                    MvcApplication.RegisterRoutes(RouteTable.Routes);
+                }
         }
     }
 }
