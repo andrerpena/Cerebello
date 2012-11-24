@@ -1105,7 +1105,10 @@ namespace CerebelloWebRole.Tests.Tests
                 // the next free time from "now" 
                 var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
                 db2.SetCurrentUserById(docAndre.Users.Single().Id);
-                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow);
+
+                // the reason for this .AddMinutos(1) is that FindNextFreeTimeInPracticeLocalTime returns now, when now is available
+                // but now is not considered future, and I need a date in the future so the Status validation will fail
+                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow.AddMinutes(1));
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1123,7 +1126,7 @@ namespace CerebelloWebRole.Tests.Tests
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = nextFreeTime.Item1.Date,
                     DoctorId = docAndre.Id,
-                    Start = nextFreeTime.Item2.ToString("HH:mm"),
+                    Start = nextFreeTime.Item1.ToString("HH:mm"),
                     End = nextFreeTime.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this has to generate an error because the appointment is in the future
@@ -1170,7 +1173,10 @@ namespace CerebelloWebRole.Tests.Tests
                 // the next free time from "now" 
                 var db2 = new CerebelloEntitiesAccessFilterWrapper(this.db);
                 db2.SetCurrentUserById(docAndre.Users.Single().Id);
-                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow);
+
+                // the reason for this .AddMinutos(1) is that FindNextFreeTimeInPracticeLocalTime returns now, when now is available
+                // but now is not considered future, and I need a date in the future so the Status validation will fail
+                var nextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(db2, docAndre, localNow.AddMinutes(1));
 
                 // Creating Asp.Net Mvc mocks.
                 var mr = new MockRepository(true);
@@ -1188,7 +1194,7 @@ namespace CerebelloWebRole.Tests.Tests
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = nextFreeTime.Item1.Date,
                     DoctorId = docAndre.Id,
-                    Start = nextFreeTime.Item2.ToString("HH:mm"),
+                    Start = nextFreeTime.Item1.ToString("HH:mm"),
                     End = nextFreeTime.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this has to generate an error because the appointment is in the future
@@ -1203,15 +1209,15 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            var result = controller.Create(vm);
+            controller.Create(vm);
 
             Assert.IsFalse(controller.ModelState.IsValid);
             Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
         }
 
         /// <summary>
-        /// This test consists of creating an appointment for the future that sets the Status for
-        /// NotAccomplished. Which must generate a ModelState error
+        /// This test consists of creating an appointment for the past that sets the Status for
+        /// NotAccomplished. It should not generate an error
         /// Issue #54.
         /// </summary>
         [TestMethod]
@@ -1253,7 +1259,7 @@ namespace CerebelloWebRole.Tests.Tests
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = freeTimeInPastWeek.Item1.Date,
                     DoctorId = docAndre.Id,
-                    Start = freeTimeInPastWeek.Item2.ToString("HH:mm"),
+                    Start = freeTimeInPastWeek.Item1.ToString("HH:mm"),
                     End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this should work because it's in the past
@@ -1268,15 +1274,14 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            var result = controller.Create(vm);
+            controller.Create(vm);
 
-            Assert.IsFalse(controller.ModelState.IsValid);
-            Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
+            Assert.IsTrue(controller.ModelState.IsValid);
         }
 
         /// <summary>
-        /// This test consists of creating an appointment for the future that sets the Status for
-        /// Accomplished. Which must generate a ModelState error
+        /// This test consists of creating an appointment for the past that sets the Status for
+        /// Accomplished. It should not generate an error
         /// Issue #54.
         /// </summary>
         [TestMethod]
@@ -1318,7 +1323,7 @@ namespace CerebelloWebRole.Tests.Tests
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
                     Date = freeTimeInPastWeek.Item1.Date,
                     DoctorId = docAndre.Id,
-                    Start = freeTimeInPastWeek.Item2.ToString("HH:mm"),
+                    Start = freeTimeInPastWeek.Item1.ToString("HH:mm"),
                     End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
                     IsGenericAppointment = false,
                     // this should work because it's in the past
@@ -1333,10 +1338,9 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            var result = controller.Create(vm);
+            controller.Create(vm);
 
-            Assert.IsFalse(controller.ModelState.IsValid);
-            Assert.AreEqual(1, controller.ModelState["Status"].Errors.Count);
+            Assert.IsTrue(controller.ModelState.IsValid);
         }
 
         #endregion
