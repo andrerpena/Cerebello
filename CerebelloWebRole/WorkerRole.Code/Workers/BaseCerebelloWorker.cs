@@ -39,7 +39,12 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
         /// <returns></returns>
         public string RenderView([JetBrains.Annotations.AspMvcView]string viewName, object model = null)
         {
-            return RazorHelper.RenderEmbeddedRazor(this.GetType(), viewName, model);
+            return RazorHelper.RenderEmbeddedRazor(this.GetWorkerType(), viewName, model);
+        }
+
+        public virtual Type GetWorkerType()
+        {
+            return this.GetType();
         }
     }
 }

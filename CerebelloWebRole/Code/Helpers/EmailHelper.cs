@@ -35,19 +35,21 @@ namespace CerebelloWebRole.Code.Helpers
         /// <param name="subject">Subject of the message.</param>
         /// <param name="bodyHtml">Body of the message in Html format.</param>
         /// <param name="bodyText">Body of the message in plain text format.</param>
+        /// <param name="sourceName"></param>
         /// <returns>Returns a 'MailMessage' that can be sent using the 'SendEmail' method.</returns>
         public static MailMessage CreateEmailMessage(
             MailAddress toAddress,
             [Localizable(true)] string subject,
             [Localizable(true)] string bodyHtml,
-            [Localizable(true)] string bodyText)
+            [Localizable(true)] string bodyText,
+            string sourceName = null)
         {
             // note: this method was copied to EmailSenderWorker
             if (string.IsNullOrEmpty(bodyText))
                 throw new ArgumentException("bodyText must be provided.", "bodyText");
 
             // NOTE: The string "mig.ang.san.bic@gmail.com" is repeated in other place.
-            var fromAddress = new MailAddress("mig.ang.san.bic@gmail.com", "www.cerebello.com");
+            var fromAddress = new MailAddress("mig.ang.san.bic@gmail.com", sourceName ?? "www.cerebello.com");
             var mailMessage = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyText.Trim() };
 
             // Adding Html body.
