@@ -4,5 +4,6 @@
 }
 @using (Html.BeginCollectionItemInline("ActiveIngredients"))
 {
-    @Html.AutocompleteFor(model => model.ActiveIngredientId, model => model.ActiveIngredientName, @Url.Action("AutocompleteActiveIngredients"), @Url.Action("CreateModal", "ActiveIngredients"), "Novo Princípio Ativo", 500, 100)
+    @Html.HiddenFor(model => model.Id)
+    @Html.EditorFor(model => model.Name)
 }

@@ -7,7 +7,6 @@
     <Schema Namespace="cerebelloModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="cerebelloModelStoreContainer">
           <EntitySet Name="AccountContract" EntityType="cerebelloModel.Store.AccountContract" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ActiveIngredient" EntityType="cerebelloModel.Store.ActiveIngredient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Address" EntityType="cerebelloModel.Store.Address" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Administrator" EntityType="cerebelloModel.Store.Administrator" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Anamnese" EntityType="cerebelloModel.Store.Anamnese" store:Type="Tables" Schema="dbo" />
@@ -62,9 +61,9 @@
             <End Role="SYS_ContractType" EntitySet="SYS_ContractType" />
             <End Role="AccountContract" EntitySet="AccountContract" />
           </AssociationSet>
-          <AssociationSet Name="FK_ActiveIngredient_Doctor" Association="cerebelloModel.Store.FK_ActiveIngredient_Doctor">
-            <End Role="Doctor" EntitySet="Doctor" />
-            <End Role="ActiveIngredient" EntitySet="ActiveIngredient" />
+          <AssociationSet Name="FK_ActiveIngredient_Medicine" Association="cerebelloModel.Store.FK_ActiveIngredient_Medicine">
+            <End Role="Medicine" EntitySet="Medicine" />
+            <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredient" />
           </AssociationSet>
           <AssociationSet Name="FK_Address_Person" Association="cerebelloModel.Store.FK_Address_Person">
             <End Role="Person" EntitySet="Person" />
@@ -149,14 +148,6 @@
           <AssociationSet Name="FK_Medicine_MedicineLaboratory" Association="cerebelloModel.Store.FK_Medicine_MedicineLaboratory">
             <End Role="Laboratory" EntitySet="Laboratory" />
             <End Role="Medicine" EntitySet="Medicine" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MedicineActiveIngredient_ActiveIngredient" Association="cerebelloModel.Store.FK_MedicineActiveIngredient_ActiveIngredient">
-            <End Role="ActiveIngredient" EntitySet="ActiveIngredient" />
-            <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredient" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MedicineActiveIngredient_Medicine" Association="cerebelloModel.Store.FK_MedicineActiveIngredient_Medicine">
-            <End Role="Medicine" EntitySet="Medicine" />
-            <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredient" />
           </AssociationSet>
           <AssociationSet Name="FK_MedicineLeaflet_Leaflet" Association="cerebelloModel.Store.FK_MedicineLeaflet_Leaflet">
             <End Role="Leaflet" EntitySet="Leaflet" />
@@ -267,15 +258,6 @@
           <Property Name="Fee" Type="numeric" Nullable="false" Precision="16" Scale="2" />
           <Property Name="EndDate" Type="date" />
           <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ActiveIngredient">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
-          <Property Name="DoctorId" Type="int" Nullable="false" />
-          <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -545,11 +527,12 @@
         </EntityType>
         <EntityType Name="MedicineActiveIngredient">
           <Key>
-            <PropertyRef Name="MedicineId" />
-            <PropertyRef Name="ActiveIngredientId" />
+            <PropertyRef Name="Id" />
           </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="MedicineId" Type="int" Nullable="false" />
-          <Property Name="ActiveIngredientId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="MedicineLeaflet">
           <Key>
@@ -815,15 +798,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ActiveIngredient_Doctor">
-          <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
-          <End Role="ActiveIngredient" Type="cerebelloModel.Store.ActiveIngredient" Multiplicity="*" />
+        <Association Name="FK_ActiveIngredient_Medicine">
+          <End Role="Medicine" Type="cerebelloModel.Store.Medicine" Multiplicity="1" />
+          <End Role="MedicineActiveIngredient" Type="cerebelloModel.Store.MedicineActiveIngredient" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Doctor">
+            <Principal Role="Medicine">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="ActiveIngredient">
-              <PropertyRef Name="DoctorId" />
+            <Dependent Role="MedicineActiveIngredient">
+              <PropertyRef Name="MedicineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1076,30 +1059,6 @@
             </Principal>
             <Dependent Role="Medicine">
               <PropertyRef Name="LaboratoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MedicineActiveIngredient_ActiveIngredient">
-          <End Role="ActiveIngredient" Type="cerebelloModel.Store.ActiveIngredient" Multiplicity="1" />
-          <End Role="MedicineActiveIngredient" Type="cerebelloModel.Store.MedicineActiveIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ActiveIngredient">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MedicineActiveIngredient">
-              <PropertyRef Name="ActiveIngredientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MedicineActiveIngredient_Medicine">
-          <End Role="Medicine" Type="cerebelloModel.Store.Medicine" Multiplicity="1" />
-          <End Role="MedicineActiveIngredient" Type="cerebelloModel.Store.MedicineActiveIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Medicine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MedicineActiveIngredient">
-              <PropertyRef Name="MedicineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1454,22 +1413,13 @@
             <End Role="Receipt" EntitySet="Receipts" />
             <End Role="ReceiptMedicine" EntitySet="ReceiptMedicines" />
           </AssociationSet>
-          <EntitySet Name="ActiveIngredients" EntityType="Cerebello.Model.ActiveIngredient" />
           <EntitySet Name="Medicines" EntityType="Cerebello.Model.Medicine" />
-          <AssociationSet Name="FK_ActiveIngredient_Doctor" Association="Cerebello.Model.FK_ActiveIngredient_Doctor">
-            <End Role="Doctor" EntitySet="Doctors" />
-            <End Role="ActiveIngredient" EntitySet="ActiveIngredients" />
-          </AssociationSet>
           <AssociationSet Name="FK_Medicine_Doctor" Association="Cerebello.Model.FK_Medicine_Doctor">
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="Medicine" EntitySet="Medicines" />
           </AssociationSet>
           <AssociationSet Name="FK_Medicine_MedicineLaboratory" Association="Cerebello.Model.FK_Medicine_MedicineLaboratory">
             <End Role="Laboratory" EntitySet="Laboratories" />
-            <End Role="Medicine" EntitySet="Medicines" />
-          </AssociationSet>
-          <AssociationSet Name="MedicineActiveIngredient" Association="Cerebello.Model.MedicineActiveIngredient">
-            <End Role="ActiveIngredient" EntitySet="ActiveIngredients" />
             <End Role="Medicine" EntitySet="Medicines" />
           </AssociationSet>
           <AssociationSet Name="FK_ReceiptMedicine_Medicine" Association="Cerebello.Model.FK_ReceiptMedicine_Medicine">
@@ -1642,6 +1592,11 @@
             <End Role="HealthInsurance" EntitySet="HealthInsurances" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
+          <EntitySet Name="MedicineActiveIngredients" EntityType="Cerebello.Model.MedicineActiveIngredient" />
+          <AssociationSet Name="FK_ActiveIngredient_Medicine" Association="Cerebello.Model.FK_ActiveIngredient_Medicine">
+            <End Role="Medicine" EntitySet="Medicines" />
+            <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredients" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1698,7 +1653,6 @@
           <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_Doctor" FromRole="Doctor" ToRole="Appointment" />
           <NavigationProperty Name="Laboratories" Relationship="Cerebello.Model.FK_Laboratory_Doctor" FromRole="Doctor" ToRole="Laboratory" />
           <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_Doctor" FromRole="Doctor" ToRole="Patient" />
-          <NavigationProperty Name="ActiveIngredients" Relationship="Cerebello.Model.FK_ActiveIngredient_Doctor" FromRole="Doctor" ToRole="ActiveIngredient" />
           <NavigationProperty Name="Medicines" Relationship="Cerebello.Model.FK_Medicine_Doctor" FromRole="Doctor" ToRole="Medicine" />
           <NavigationProperty Name="CFG_Schedule" Relationship="Cerebello.Model.FK_CFG_Schedule_Doctor" FromRole="Doctor" ToRole="CFG_Schedule" />
           <NavigationProperty Name="CFG_Documents" Relationship="Cerebello.Model.FK_CFG_Documents_Doctor" FromRole="Doctor" ToRole="CFG_Documents" />
@@ -1982,17 +1936,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ActiveIngredient">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="DoctorId" Nullable="false" />
-          <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_ActiveIngredient_Doctor" FromRole="ActiveIngredient" ToRole="Doctor" />
-          <NavigationProperty Name="Medicines" Relationship="Cerebello.Model.MedicineActiveIngredient" FromRole="ActiveIngredient" ToRole="Medicine" />
-          <Property Type="Int32" Name="PracticeId" Nullable="false" />
-        </EntityType>
         <EntityType Name="Medicine">
           <Key>
             <PropertyRef Name="Id" />
@@ -2004,23 +1947,11 @@
           <Property Type="Int16" Name="Usage" Nullable="false" />
           <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_Medicine_Doctor" FromRole="Medicine" ToRole="Doctor" />
           <NavigationProperty Name="Laboratory" Relationship="Cerebello.Model.FK_Medicine_MedicineLaboratory" FromRole="Medicine" ToRole="Laboratory" />
-          <NavigationProperty Name="ActiveIngredients" Relationship="Cerebello.Model.MedicineActiveIngredient" FromRole="Medicine" ToRole="ActiveIngredient" />
           <NavigationProperty Name="ReceiptMedicines" Relationship="Cerebello.Model.FK_ReceiptMedicine_Medicine" FromRole="Medicine" ToRole="ReceiptMedicine" />
           <NavigationProperty Name="Leaflets" Relationship="Cerebello.Model.MedicineLeaflet" FromRole="Medicine" ToRole="Leaflet" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="ActiveIngredients" Relationship="Cerebello.Model.FK_ActiveIngredient_Medicine" FromRole="Medicine" ToRole="MedicineActiveIngredient" />
         </EntityType>
-        <Association Name="FK_ActiveIngredient_Doctor">
-          <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
-          <End Type="Cerebello.Model.ActiveIngredient" Role="ActiveIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Doctor">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ActiveIngredient">
-              <PropertyRef Name="DoctorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Medicine_Doctor">
           <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
           <End Type="Cerebello.Model.Medicine" Role="Medicine" Multiplicity="*" />
@@ -2044,10 +1975,6 @@
               <PropertyRef Name="LaboratoryId" />
             </Dependent>
           </ReferentialConstraint>
-        </Association>
-        <Association Name="MedicineActiveIngredient">
-          <End Type="Cerebello.Model.ActiveIngredient" Role="ActiveIngredient" Multiplicity="*" />
-          <End Type="Cerebello.Model.Medicine" Role="Medicine" Multiplicity="*" />
         </Association>
         <Association Name="FK_ReceiptMedicine_Medicine">
           <End Type="Cerebello.Model.Medicine" Role="Medicine" Multiplicity="1" />
@@ -2815,6 +2742,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MedicineActiveIngredient">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="Int32" Name="MedicineId" Nullable="false" />
+          <NavigationProperty Name="Medicine" Relationship="Cerebello.Model.FK_ActiveIngredient_Medicine" FromRole="MedicineActiveIngredient" ToRole="Medicine" />
+        </EntityType>
+        <Association Name="FK_ActiveIngredient_Medicine">
+          <End Type="Cerebello.Model.Medicine" Role="Medicine" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicineActiveIngredient" Role="MedicineActiveIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicineActiveIngredient">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2926,16 +2875,6 @@
             <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="ActiveIngredients">
-            <EntityTypeMapping TypeName="Cerebello.Model.ActiveIngredient">
-              <MappingFragment StoreEntitySet="ActiveIngredient">
-                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
-                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Medicines">
             <EntityTypeMapping TypeName="Cerebello.Model.Medicine">
               <MappingFragment StoreEntitySet="Medicine">
@@ -2948,14 +2887,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="MedicineActiveIngredient" TypeName="Cerebello.Model.MedicineActiveIngredient" StoreEntitySet="MedicineActiveIngredient">
-            <EndProperty Name="Medicine">
-              <ScalarProperty Name="Id" ColumnName="MedicineId" />
-            </EndProperty>
-            <EndProperty Name="ActiveIngredient">
-              <ScalarProperty Name="Id" ColumnName="ActiveIngredientId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="Anamnese">
             <EntityTypeMapping TypeName="Cerebello.Model.Anamnese">
               <MappingFragment StoreEntitySet="Anamnese">
@@ -3357,6 +3288,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MedicineActiveIngredients">
+            <EntityTypeMapping TypeName="Cerebello.Model.MedicineActiveIngredient">
+              <MappingFragment StoreEntitySet="MedicineActiveIngredient">
+                <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3459,14 +3400,7 @@
           <ConnectorPoint PointX="10.333333333333334" PointY="13.427643229166666" />
           <ConnectorPoint PointX="10.5" PointY="13.427643229166666" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.ActiveIngredient" Width="1.625" PointX="20.125" PointY="23.625" Height="1.9802864583333388" FillColor="RoyalBlue" />
         <EntityTypeShape EntityType="Cerebello.Model.Medicine" Width="1.5" PointX="22.625" PointY="24.875" Height="2.9417936197916674" FillColor="RoyalBlue" />
-        <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Doctor">
-          <ConnectorPoint PointX="13.5" PointY="20.615143229166669" />
-          <ConnectorPoint PointX="13.791669166666667" PointY="20.615143229166669" />
-          <ConnectorPoint PointX="14.083333333333334" PointY="20.615143229166669" />
-          <ConnectorPoint PointX="14.25" PointY="20.615143229166669" />
-        </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Medicine_Doctor">
           <ConnectorPoint PointX="13.5" PointY="21.365143229166669" />
           <ConnectorPoint PointX="13.791669166666667" PointY="21.365143229166669" />
@@ -3481,12 +3415,6 @@
           <ConnectorPoint PointX="16.125" PointY="22" />
           <ConnectorPoint PointX="16.125" PointY="18.470896809895834" />
           <ConnectorPoint PointX="16.5" PointY="18.470896809895834" />
-        </AssociationConnector>
-        <AssociationConnector Association="Cerebello.Model.MedicineActiveIngredient">
-          <ConnectorPoint PointX="15.75" PointY="19.470896809895834" />
-          <ConnectorPoint PointX="16.041666666666668" PointY="19.470896809895834" />
-          <ConnectorPoint PointX="16.208333333333332" PointY="19.470896809895834" />
-          <ConnectorPoint PointX="16.5" PointY="19.470896809895834" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_ReceiptMedicine_Medicine">
           <ConnectorPoint PointX="16.71875" PointY="17" />
@@ -3752,6 +3680,8 @@
         <AssociationConnector Association="Cerebello.Model.FK_HealthInsurance_Doctor" />
         <AssociationConnector Association="Cerebello.Model.FK_Patient_HealthInsurance" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_HealthInsurance" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicineActiveIngredient" Width="1.5" PointX="22.625" PointY="29.625" />
+        <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         </Diagram>
     </Diagrams>
   </Designer>

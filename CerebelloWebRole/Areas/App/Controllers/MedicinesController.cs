@@ -71,8 +71,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 ActiveIngredients = (from activeIngredient in medicine.ActiveIngredients
                                      select new MedicineActiveIngredientViewModel()
                                          {
-                                             ActiveIngredientId = activeIngredient.Id,
-                                             ActiveIngredientName = activeIngredient.Name
+                                             Id = activeIngredient.Id,
+                                             Name = activeIngredient.Name
                                          }).ToList(),
                 Leaflets = (from leaflet in medicine.Leaflets
                             select this.GetLeafletViewModel(leaflet)
@@ -167,7 +167,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 viewModel.ActiveIngredients.Clear();
                 foreach (var activeIngredient in sysMedicine.ActiveIngredients)
-                    viewModel.ActiveIngredients.Add(new MedicineActiveIngredientViewModel() { ActiveIngredientName = activeIngredient.Name });
+                    viewModel.ActiveIngredients.Add(new MedicineActiveIngredientViewModel() { Name = activeIngredient.Name });
 
                 viewModel.Leaflets.Clear();
                 foreach (var leafleft in sysMedicine.Leaflets)
@@ -189,12 +189,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.ModelState.AddModelError<MedicineViewModel>((model) => model.LaboratoryId, "O laboratório informado é inválido");
             }
 
-            // add validation error when any Active Ingredient Id is invalid
-            foreach (var activeIngredientViewModel in formModel.ActiveIngredients)
-                if (!this.db.ActiveIngredients.Any(ai => ai.Id == activeIngredientViewModel.ActiveIngredientId))
-                    this.ModelState.AddModelError<MedicineViewModel>(
-                        model => model.ActiveIngredients, string.Format("O princípio ativo '{0}' é inválido", activeIngredientViewModel.ActiveIngredientName));
-
             if (this.ModelState.IsValid)
             {
                 Medicine medicine = null;
@@ -214,26 +208,35 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (formModel.LaboratoryId != null)
                     medicine.Laboratory = laboratory;
 
-                // Active ingredients (as it's a NxM association, there's no update here, just creates and deletes)
+                // Active ingredients
                 {
                     // Verify whether any existing active ingredient should be REMOVED.
-                    var activeIngredientsDeathQueue = new Queue<ActiveIngredient>();
+                    var activeIngredientsDeathQueue = new Queue<MedicineActiveIngredient>();
                     foreach (var existingActiveIngredient in medicine.ActiveIngredients)
-                        if (formModel.ActiveIngredients.All(a => a.ActiveIngredientId != existingActiveIngredient.Id))
+                        if (formModel.ActiveIngredients.All(a => a.Id != existingActiveIngredient.Id))
                             activeIngredientsDeathQueue.Enqueue(existingActiveIngredient);
                     while (activeIngredientsDeathQueue.Any())
-                        medicine.ActiveIngredients.Remove(activeIngredientsDeathQueue.Dequeue());
+                        this.db.ActiveIngredients.DeleteObject(activeIngredientsDeathQueue.Dequeue());
 
-                    // Verify whether any new active ingredient should be ADDED
+                    // Verify whether any new active ingredient should be UPDATED or ADDED
                     foreach (var activeIngredientViewModel in formModel.ActiveIngredients)
-                        if (medicine.ActiveIngredients.All(ai => ai.Id != activeIngredientViewModel.ActiveIngredientId))
+                    {
+                        var existingActiveIngredient = medicine.ActiveIngredients.SingleOrDefault(l => l.Id == activeIngredientViewModel.Id);
+                        if (existingActiveIngredient == null)
                         {
-                            // this First has a very small chance of triggering an exception. Before the 'if (this.ModelState.IsValid)'
-                            // all active ingredients 
-                            var activeIngredient =
-                                this.db.ActiveIngredients.First(ai => ai.Id == activeIngredientViewModel.ActiveIngredientId);
-                            medicine.ActiveIngredients.Add(activeIngredient);
+                            // ADD when not existing
+                            medicine.ActiveIngredients.Add(
+                                new MedicineActiveIngredient()
+                                    {
+                                        Name = activeIngredientViewModel.Name
+                                    });
                         }
+                        else
+                        {
+                            // UPDATE when existing
+                            existingActiveIngredient.Name = activeIngredientViewModel.Name;
+                        }
+                    }
                 }
 
                 // Leaflets
@@ -298,31 +301,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult AutocompleteLaboratories(string term, int pageSize, int pageIndex)
         {
             var baseQuery = this.db.Laboratories.Where(l => l.DoctorId == this.Doctor.Id);
-
-            if (!string.IsNullOrEmpty(term))
-                baseQuery = baseQuery.Where(l => l.Name.Contains(term));
-
-            var query = from l in baseQuery.OrderBy(l => l.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
-                        orderby l.Name
-                        select new AutocompleteRow
-                        {
-                            Id = l.Id,
-                            Value = l.Name
-                        };
-
-            var result = new AutocompleteJsonResult()
-            {
-                Rows = new System.Collections.ArrayList(query.ToList()),
-                Count = query.Count()
-            };
-
-            return this.Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult AutocompleteActiveIngredients(string term, int pageSize, int pageIndex)
-        {
-            var baseQuery = this.db.ActiveIngredients.Where(ai => ai.DoctorId == this.Doctor.Id);
 
             if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(l => l.Name.Contains(term));
@@ -445,15 +423,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // verify the need to create new active ingredients
                 foreach (var ai in sysMedicine.ActiveIngredients)
                 {
-                    var activeIngredient = this.db.ActiveIngredients.FirstOrDefault(a => a.DoctorId == this.Doctor.Id && a.Name == ai.Name) ??
-                                           new ActiveIngredient()
-                                            {
-                                                Name = ai.Name,
-                                                PracticeId = this.Practice.Id,
-                                                DoctorId = this.Doctor.Id
-                                            };
-
-                    medicine.ActiveIngredients.Add(activeIngredient);
+                    medicine.ActiveIngredients.Add(new MedicineActiveIngredient()
+                    { 
+                        Name = ai.Name,
+                        PracticeId = this.Practice.Id,
+                    });
                 }
 
                 // create the leaflets

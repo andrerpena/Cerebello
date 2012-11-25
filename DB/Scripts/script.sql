@@ -19,22 +19,6 @@ CREATE TABLE [dbo].[AccountContract](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[ActiveIngredient] ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[ActiveIngredient](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](200) NOT NULL,
-	[DoctorId] [int] NOT NULL,
-	[PracticeId] [int] NOT NULL,
- CONSTRAINT [PK_ActiveIngredient] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
-)
-GO
 /****** Object:  Table [dbo].[Address] ******/
 SET ANSI_NULLS ON
 GO
@@ -464,12 +448,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[MedicineActiveIngredient](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](200) NOT NULL,
+	[PracticeId] [int] NOT NULL,
 	[MedicineId] [int] NOT NULL,
-	[ActiveIngredientId] [int] NOT NULL,
- CONSTRAINT [PK_MedicineActiveIngredient] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ActiveIngredient] PRIMARY KEY CLUSTERED 
 (
-	[MedicineId] ASC,
-	[ActiveIngredientId] ASC
+	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
@@ -956,11 +941,11 @@ REFERENCES [dbo].[SYS_ContractType] ([Id])
 GO
 ALTER TABLE [dbo].[AccountContract] CHECK CONSTRAINT [FK_AccountContract_SYS_ContractType]
 GO
-/****** Object:  ForeignKey [FK_ActiveIngredient_Doctor] ******/
-ALTER TABLE [dbo].[ActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiveIngredient_Doctor] FOREIGN KEY([DoctorId])
-REFERENCES [dbo].[Doctor] ([Id])
+/****** Object:  ForeignKey [FK_ActiveIngredient_Medicine] ******/
+ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH CHECK ADD  CONSTRAINT [FK_ActiveIngredient_Medicine] FOREIGN KEY([MedicineId])
+REFERENCES [dbo].[Medicine] ([Id])
 GO
-ALTER TABLE [dbo].[ActiveIngredient] CHECK CONSTRAINT [FK_ActiveIngredient_Doctor]
+ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_ActiveIngredient_Medicine]
 GO
 /****** Object:  ForeignKey [FK_Address_Person] ******/
 ALTER TABLE [dbo].[Address]  WITH NOCHECK ADD  CONSTRAINT [FK_Address_Person] FOREIGN KEY([Id])
@@ -1088,18 +1073,6 @@ ALTER TABLE [dbo].[Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_Medicine_Medicine
 REFERENCES [dbo].[Laboratory] ([Id])
 GO
 ALTER TABLE [dbo].[Medicine] CHECK CONSTRAINT [FK_Medicine_MedicineLaboratory]
-GO
-/****** Object:  ForeignKey [FK_MedicineActiveIngredient_ActiveIngredient] ******/
-ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineActiveIngredient_ActiveIngredient] FOREIGN KEY([ActiveIngredientId])
-REFERENCES [dbo].[ActiveIngredient] ([Id])
-GO
-ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_MedicineActiveIngredient_ActiveIngredient]
-GO
-/****** Object:  ForeignKey [FK_MedicineActiveIngredient_Medicine] ******/
-ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineActiveIngredient_Medicine] FOREIGN KEY([MedicineId])
-REFERENCES [dbo].[Medicine] ([Id])
-GO
-ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_MedicineActiveIngredient_Medicine]
 GO
 /****** Object:  ForeignKey [FK_MedicineLeaflet_Leaflet] ******/
 ALTER TABLE [dbo].[MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineLeaflet_Leaflet] FOREIGN KEY([LeaftletId])

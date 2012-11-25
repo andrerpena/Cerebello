@@ -217,7 +217,7 @@ namespace CerebelloWebRole.Controllers
                     user.Doctor.MedicalSpecialtyName = ms.Name;
                     user.Doctor.MedicalEntityCode = me.Code;
                     user.Doctor.MedicalEntityName = me.Name;
-                    user.Doctor.MedicalEntityJurisdiction = registrationData.MedicalEntityJurisdiction.ToString();
+                    user.Doctor.MedicalEntityJurisdiction =  ((TypeEstadoBrasileiro) registrationData.MedicalEntityJurisdiction).ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This is the first doctor, so there will be no conflicts.

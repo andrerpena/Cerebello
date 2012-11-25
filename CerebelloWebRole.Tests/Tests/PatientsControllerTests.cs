@@ -216,10 +216,9 @@ namespace CerebelloWebRole.Tests.Tests
                         PracticeId = doctor.PracticeId,
                     };
 
-                medicine.ActiveIngredients.Add(new ActiveIngredient()
+                medicine.ActiveIngredients.Add(new MedicineActiveIngredient()
                     {
                         Name = "AI1",
-                        Doctor = doctor,
                         PracticeId = doctor.PracticeId,
                     });
 

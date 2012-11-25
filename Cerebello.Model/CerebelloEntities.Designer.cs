@@ -29,10 +29,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.User), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ReceiptMedicine_Receipt", "Receipt", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Receipt), "ReceiptMedicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ReceiptMedicine), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ActiveIngredient_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "ActiveIngredient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ActiveIngredient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Medicine_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Medicine), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Medicine_MedicineLaboratory", "Laboratory", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Laboratory), "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Medicine), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "MedicineActiveIngredient", "ActiveIngredient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ActiveIngredient), "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Medicine))]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ReceiptMedicine_Medicine", "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Medicine), "ReceiptMedicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ReceiptMedicine), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Anamnese_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Anamnese), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_SYS_Medicine_SYS_Laboratory", "SYS_Laboratory", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.SYS_Laboratory), "SYS_Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.SYS_Medicine), true)]
@@ -68,6 +66,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ActiveIngredient_Medicine", "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Medicine), "MedicineActiveIngredient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicineActiveIngredient), true)]
 
 #endregion
 
@@ -310,22 +309,6 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<User> _Users;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<ActiveIngredient> ActiveIngredients
-        {
-            get
-            {
-                if ((_ActiveIngredients == null))
-                {
-                    _ActiveIngredients = base.CreateObjectSet<ActiveIngredient>("ActiveIngredients");
-                }
-                return _ActiveIngredients;
-            }
-        }
-        private ObjectSet<ActiveIngredient> _ActiveIngredients;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -822,6 +805,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<Notification> _Notifications;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<MedicineActiveIngredient> MedicineActiveIngredients
+        {
+            get
+            {
+                if ((_MedicineActiveIngredients == null))
+                {
+                    _MedicineActiveIngredients = base.CreateObjectSet<MedicineActiveIngredient>("MedicineActiveIngredients");
+                }
+                return _MedicineActiveIngredients;
+            }
+        }
+        private ObjectSet<MedicineActiveIngredient> _MedicineActiveIngredients;
 
         #endregion
 
@@ -921,14 +920,6 @@ namespace Cerebello.Model
         public void AddToUsers(User user)
         {
             base.AddObject("Users", user);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the ActiveIngredients EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToActiveIngredients(ActiveIngredient activeIngredient)
-        {
-            base.AddObject("ActiveIngredients", activeIngredient);
         }
     
         /// <summary>
@@ -1177,6 +1168,14 @@ namespace Cerebello.Model
         public void AddToNotifications(Notification notification)
         {
             base.AddObject("Notifications", notification);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the MedicineActiveIngredients EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToMedicineActiveIngredients(MedicineActiveIngredient medicineActiveIngredient)
+        {
+            base.AddObject("MedicineActiveIngredients", medicineActiveIngredient);
         }
 
         #endregion
@@ -1517,204 +1516,6 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Practice>("Cerebello.Model.FK_Practice_AccountContract", "Practice", value);
-                }
-            }
-        }
-
-        #endregion
-
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="ActiveIngredient")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class ActiveIngredient : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new ActiveIngredient object.
-        /// </summary>
-        /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="name">Initial value of the Name property.</param>
-        /// <param name="doctorId">Initial value of the DoctorId property.</param>
-        /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static ActiveIngredient CreateActiveIngredient(global::System.Int32 id, global::System.String name, global::System.Int32 doctorId, global::System.Int32 practiceId)
-        {
-            ActiveIngredient activeIngredient = new ActiveIngredient();
-            activeIngredient.Id = id;
-            activeIngredient.Name = name;
-            activeIngredient.DoctorId = doctorId;
-            activeIngredient.PracticeId = practiceId;
-            return activeIngredient;
-        }
-
-        #endregion
-
-        #region Simple Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 Id
-        {
-            get
-            {
-                return _Id;
-            }
-            set
-            {
-                if (_Id != value)
-                {
-                    OnIdChanging(value);
-                    ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value, "Id");
-                    ReportPropertyChanged("Id");
-                    OnIdChanged();
-                }
-            }
-        }
-        private global::System.Int32 _Id;
-        partial void OnIdChanging(global::System.Int32 value);
-        partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Name
-        {
-            get
-            {
-                return _Name;
-            }
-            set
-            {
-                OnNameChanging(value);
-                ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false, "Name");
-                ReportPropertyChanged("Name");
-                OnNameChanged();
-            }
-        }
-        private global::System.String _Name;
-        partial void OnNameChanging(global::System.String value);
-        partial void OnNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 DoctorId
-        {
-            get
-            {
-                return _DoctorId;
-            }
-            set
-            {
-                OnDoctorIdChanging(value);
-                ReportPropertyChanging("DoctorId");
-                _DoctorId = StructuralObject.SetValidValue(value, "DoctorId");
-                ReportPropertyChanged("DoctorId");
-                OnDoctorIdChanged();
-            }
-        }
-        private global::System.Int32 _DoctorId;
-        partial void OnDoctorIdChanging(global::System.Int32 value);
-        partial void OnDoctorIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 PracticeId
-        {
-            get
-            {
-                return _PracticeId;
-            }
-            set
-            {
-                OnPracticeIdChanging(value);
-                ReportPropertyChanging("PracticeId");
-                _PracticeId = StructuralObject.SetValidValue(value, "PracticeId");
-                ReportPropertyChanged("PracticeId");
-                OnPracticeIdChanged();
-            }
-        }
-        private global::System.Int32 _PracticeId;
-        partial void OnPracticeIdChanging(global::System.Int32 value);
-        partial void OnPracticeIdChanged();
-
-        #endregion
-
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ActiveIngredient_Doctor", "Doctor")]
-        public Doctor Doctor
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_ActiveIngredient_Doctor", "Doctor").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_ActiveIngredient_Doctor", "Doctor").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Doctor> DoctorReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Doctor>("Cerebello.Model.FK_ActiveIngredient_Doctor", "Doctor");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Doctor>("Cerebello.Model.FK_ActiveIngredient_Doctor", "Doctor", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "MedicineActiveIngredient", "Medicine")]
-        public EntityCollection<Medicine> Medicines
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Medicine>("Cerebello.Model.MedicineActiveIngredient", "Medicine");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Medicine>("Cerebello.Model.MedicineActiveIngredient", "Medicine", value);
                 }
             }
         }
@@ -5371,28 +5172,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ActiveIngredient_Doctor", "ActiveIngredient")]
-        public EntityCollection<ActiveIngredient> ActiveIngredients
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ActiveIngredient>("Cerebello.Model.FK_ActiveIngredient_Doctor", "ActiveIngredient");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ActiveIngredient>("Cerebello.Model.FK_ActiveIngredient_Doctor", "ActiveIngredient", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Medicine_Doctor", "Medicine")]
         public EntityCollection<Medicine> Medicines
         {
@@ -7799,28 +7578,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "MedicineActiveIngredient", "ActiveIngredient")]
-        public EntityCollection<ActiveIngredient> ActiveIngredients
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ActiveIngredient>("Cerebello.Model.MedicineActiveIngredient", "ActiveIngredient");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ActiveIngredient>("Cerebello.Model.MedicineActiveIngredient", "ActiveIngredient", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ReceiptMedicine_Medicine", "ReceiptMedicine")]
         public EntityCollection<ReceiptMedicine> ReceiptMedicines
         {
@@ -7855,6 +7612,204 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Leaflet>("Cerebello.Model.MedicineLeaflet", "Leaflet", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ActiveIngredient_Medicine", "MedicineActiveIngredient")]
+        public EntityCollection<MedicineActiveIngredient> ActiveIngredients
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<MedicineActiveIngredient>("Cerebello.Model.FK_ActiveIngredient_Medicine", "MedicineActiveIngredient");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<MedicineActiveIngredient>("Cerebello.Model.FK_ActiveIngredient_Medicine", "MedicineActiveIngredient", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="MedicineActiveIngredient")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class MedicineActiveIngredient : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new MedicineActiveIngredient object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="name">Initial value of the Name property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="medicineId">Initial value of the MedicineId property.</param>
+        public static MedicineActiveIngredient CreateMedicineActiveIngredient(global::System.Int32 id, global::System.String name, global::System.Int32 practiceId, global::System.Int32 medicineId)
+        {
+            MedicineActiveIngredient medicineActiveIngredient = new MedicineActiveIngredient();
+            medicineActiveIngredient.Id = id;
+            medicineActiveIngredient.Name = name;
+            medicineActiveIngredient.PracticeId = practiceId;
+            medicineActiveIngredient.MedicineId = medicineId;
+            return medicineActiveIngredient;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value, "PracticeId");
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 MedicineId
+        {
+            get
+            {
+                return _MedicineId;
+            }
+            set
+            {
+                OnMedicineIdChanging(value);
+                ReportPropertyChanging("MedicineId");
+                _MedicineId = StructuralObject.SetValidValue(value, "MedicineId");
+                ReportPropertyChanged("MedicineId");
+                OnMedicineIdChanged();
+            }
+        }
+        private global::System.Int32 _MedicineId;
+        partial void OnMedicineIdChanging(global::System.Int32 value);
+        partial void OnMedicineIdChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_ActiveIngredient_Medicine", "Medicine")]
+        public Medicine Medicine
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Medicine>("Cerebello.Model.FK_ActiveIngredient_Medicine", "Medicine").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Medicine>("Cerebello.Model.FK_ActiveIngredient_Medicine", "Medicine").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Medicine> MedicineReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Medicine>("Cerebello.Model.FK_ActiveIngredient_Medicine", "Medicine");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Medicine>("Cerebello.Model.FK_ActiveIngredient_Medicine", "Medicine", value);
                 }
             }
         }

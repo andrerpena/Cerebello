@@ -60,8 +60,8 @@ namespace CerebelloWebRole.Tests.Tests
                             Usage = (int)TypeUsage.Cutaneo,
                             ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
                                 {
-                                    new MedicineActiveIngredientViewModel() {ActiveIngredientName = "P1"},
-                                    new MedicineActiveIngredientViewModel() {ActiveIngredientName = "P2"}
+                                    new MedicineActiveIngredientViewModel() {Name = "P1"},
+                                    new MedicineActiveIngredientViewModel() {Name = "P2"}
                                 }
                         });
 
@@ -73,7 +73,7 @@ namespace CerebelloWebRole.Tests.Tests
                             Usage = (int)TypeUsage.Cutaneo,
                             ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
                                 {
-                                    new MedicineActiveIngredientViewModel() {ActiveIngredientName = "P1"},
+                                    new MedicineActiveIngredientViewModel() {Name = "P1"},
                                 }
                         });
             }
@@ -121,8 +121,8 @@ namespace CerebelloWebRole.Tests.Tests
                             Usage = (int)TypeUsage.Cutaneo,
                             ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
                                 {
-                                    new MedicineActiveIngredientViewModel() {ActiveIngredientName = "P1"},
-                                    new MedicineActiveIngredientViewModel() {ActiveIngredientName = "P2"}
+                                    new MedicineActiveIngredientViewModel() {Name = "P1"},
+                                    new MedicineActiveIngredientViewModel() {Name = "P2"}
                                 }
                         });
 
@@ -134,7 +134,7 @@ namespace CerebelloWebRole.Tests.Tests
                             Usage = (int)TypeUsage.Cutaneo,
                             ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
                                 {
-                                    new MedicineActiveIngredientViewModel() {ActiveIngredientName = "P1"},
+                                    new MedicineActiveIngredientViewModel() {Name = "P1"},
                                 }
                         });
             }
@@ -269,7 +269,7 @@ namespace CerebelloWebRole.Tests.Tests
                         {
                             new MedicineActiveIngredientViewModel()
                                 {
-                                    ActiveIngredientId = 89
+                                    Id = 89
                                 }
                         }
                 });
@@ -310,40 +310,16 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual(1, controller.ModelState["LaboratoryId"].Errors.Count);
         }
 
+
         [TestMethod]
-        public void Edit_AddingNewActiveIngredients()
+        public void Edit_AddingNewActiveIngredient()
         {
             MedicinesController controller;
 
-            var activeIngredientsCache = new List<ActiveIngredient>();
             try
             {
                 var mr = new MockRepository(true);
                 controller = mr.CreateController<MedicinesController>();
-
-                var doctor = this.db.Doctors.First();
-
-                // we need to add some active ingredients here
-                activeIngredientsCache.Add(
-                    new ActiveIngredient()
-                        {
-                            PracticeId = doctor.PracticeId,
-                            Doctor = doctor,
-                            Name = "AI1"
-                        });
-
-                activeIngredientsCache.Add(
-                    new ActiveIngredient()
-                    {
-                        PracticeId = doctor.PracticeId,
-                        Doctor = doctor,
-                        Name = "AI2"
-                    });
-
-                foreach (var ai in activeIngredientsCache)
-                    this.db.ActiveIngredients.AddObject(ai);
-
-                this.db.SaveChanges();
             }
             catch
             {
@@ -355,16 +331,23 @@ namespace CerebelloWebRole.Tests.Tests
 
             // all these active ingredients have already been created. 
             // now we have to associate them with the original active ingredients
-            controller.Create(new MedicineViewModel()
-                {
-                    Name = medicineName,
-                    ActiveIngredients = (from ai in activeIngredientsCache
-                                         select new MedicineActiveIngredientViewModel()
-                                             {
-                                                 ActiveIngredientId = ai.Id,
-                                                 ActiveIngredientName = ai.Name
-                                             }).ToList()
-                });
+
+            var formModel = new MedicineViewModel()
+            {
+                Name = medicineName,
+                ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
+                        {
+                            new MedicineActiveIngredientViewModel()
+                                {
+                                    Name = "AI1"
+                                },
+                            new MedicineActiveIngredientViewModel()
+                                {
+                                    Name = "AI2"
+                                }
+                        }
+            };
+            controller.Create(formModel);
 
 
             var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == medicineName);
@@ -373,47 +356,19 @@ namespace CerebelloWebRole.Tests.Tests
 
             // verify that all the active ingredients inside the medicine are those that
             // we've created here
-            foreach (var activeIngredient in medicine.ActiveIngredients)
-                Assert.IsTrue(activeIngredientsCache.Any(ai => ai == activeIngredient));
+            Assert.AreEqual(formModel.ActiveIngredients[0].Name, medicine.ActiveIngredients.ElementAt(0).Name);
+            Assert.AreEqual(formModel.ActiveIngredients[1].Name, medicine.ActiveIngredients.ElementAt(1).Name);
         }
 
-        /// <summary>
-        /// Removing existing active ingredients
-        /// </summary>
         [TestMethod]
-        public void Edit_RemovingExistingActiveIngredients()
+        public void Edit_UpdatingExistingActiveIngredient()
         {
             MedicinesController controller;
 
-            var activeIngredientsCache = new List<ActiveIngredient>();
             try
             {
                 var mr = new MockRepository(true);
                 controller = mr.CreateController<MedicinesController>();
-
-                var doctor = this.db.Doctors.First();
-
-                // we need to add some active ingredients here
-                activeIngredientsCache.Add(
-                    new ActiveIngredient()
-                    {
-                        PracticeId = doctor.PracticeId,
-                        Doctor = doctor,
-                        Name = "AI1"
-                    });
-
-                activeIngredientsCache.Add(
-                    new ActiveIngredient()
-                    {
-                        PracticeId = doctor.PracticeId,
-                        Doctor = doctor,
-                        Name = "AI2"
-                    });
-
-                foreach (var ai in activeIngredientsCache)
-                    this.db.ActiveIngredients.AddObject(ai);
-
-                this.db.SaveChanges();
             }
             catch
             {
@@ -425,53 +380,98 @@ namespace CerebelloWebRole.Tests.Tests
 
             // all these active ingredients have already been created. 
             // now we have to associate them with the original active ingredients
-            controller.Create(new MedicineViewModel()
+
+            var formModel = new MedicineViewModel()
             {
                 Name = medicineName,
-                ActiveIngredients = (from ai in activeIngredientsCache
-                                     select new MedicineActiveIngredientViewModel()
-                                     {
-                                         ActiveIngredientId = ai.Id,
-                                         ActiveIngredientName = ai.Name
-                                     }).ToList()
-            });
+                ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
+                        {
+                            new MedicineActiveIngredientViewModel()
+                                {
+                                   Name = "AI1"
+                                }
+                        }
+            };
+            controller.Create(formModel);
+
+            var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == medicineName);
+            Assert.IsNotNull(medicine);
+            Assert.AreEqual(1, medicine.ActiveIngredients.Count);
+
+            formModel.Id = medicine.Id;
+            formModel.ActiveIngredients[0].Id = medicine.ActiveIngredients.ElementAt(0).Id;
+            formModel.ActiveIngredients[0].Name = "AI2";
+
+            // Let's edit now and change some properties
+            controller.Edit(formModel);
+
+            // we need to refresh since the DB inside the controller is different from this
+            this.db.Refresh(RefreshMode.StoreWins, medicine.ActiveIngredients);
+
+            // verify that all the active ingredients inside the medicine are those that
+            // we've EDITED here
+            Assert.AreEqual(formModel.ActiveIngredients[0].Name, medicine.ActiveIngredients.ElementAt(0).Name);
+        }
+
+        [TestMethod]
+        public void Edit_RemovingExistingActiveIngredient()
+        {
+            MedicinesController controller;
+
+            try
+            {
+                var mr = new MockRepository(true);
+                controller = mr.CreateController<MedicinesController>();
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            var medicineName = "My Medicine";
+
+            // all these active ingredients have already been created. 
+            // now we have to associate them with the original active ingredients
+
+            var formModel = new MedicineViewModel()
+            {
+                Name = medicineName,
+                ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
+                        {
+                            new MedicineActiveIngredientViewModel()
+                                {
+                                    Name = "AI1",
+                                },
+                            new MedicineActiveIngredientViewModel()
+                                {
+                                    Name = "AI2",
+                                }
+                        }
+            };
+            controller.Create(formModel);
+
 
             var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == medicineName);
             Assert.IsNotNull(medicine);
             Assert.AreEqual(2, medicine.ActiveIngredients.Count);
 
+            // let's put the formModel in edit mode and remove the second leaflet
+            formModel.Id = medicine.Id;
+            formModel.ActiveIngredients[0].Id = medicine.ActiveIngredients.ElementAt(0).Id;
+            formModel.ActiveIngredients.RemoveAt(1);
 
-            controller = new MockRepository(true).CreateController<MedicinesController>();
+            // Let's edit 
+            controller.Edit(formModel);
 
-            // now we have 2 active ingredients, let's just remove 1
-            controller.Edit(new MedicineViewModel()
-            {
-                Id = medicine.Id,
-                Name = medicineName,
-                // this query has a Take(1), meaning I'm editing the medicine passing just 1 
-                // active ingredient and no 2, as it was previously
-                ActiveIngredients = (from ai in activeIngredientsCache
-                                     select new MedicineActiveIngredientViewModel()
-                                     {
-                                         ActiveIngredientId = ai.Id,
-                                         ActiveIngredientName = ai.Name
-                                     }).Take(1).ToList()
-            });
+            // we need to refresh since the DB inside the controller is different from this
+            this.db.Refresh(RefreshMode.StoreWins, medicine.ActiveIngredients);
 
-            // The only way to make the "medicine" to update it's number of ActiveIngredientes
-            // was to create another CerebelloEntities. I dont know why REFRESH DID NOT WORK.
-            // Maybe it has something to do with the distributed transaction.
-            var db2 = CreateNewCerebelloEntities();
-            medicine = db2.Medicines.FirstOrDefault(m => m.Name == medicineName);
             Assert.AreEqual(1, medicine.ActiveIngredients.Count);
+
             // verify that all the active ingredients inside the medicine are those that
             // we've created here
-            foreach (var activeIngredient in medicine.ActiveIngredients)
-                Assert.IsTrue(activeIngredientsCache.Any(ai => ai.Id == activeIngredient.Id));
-
-            // this is very important that this action WILL NOT DELETE the action active ingredients,
-            // just their association with the given medicine
-            Assert.AreEqual(2, db2.ActiveIngredients.Count());
+            Assert.AreEqual(formModel.ActiveIngredients[0].Name, medicine.ActiveIngredients.ElementAt(0).Name);
         }
 
         [TestMethod]
@@ -517,7 +517,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == medicineName);
             Assert.IsNotNull(medicine);
-            Assert.AreEqual(2, medicine.Leaflets.Count);
+            Assert.AreEqual(2, medicine.ActiveIngredients.Count);
 
             // verify that all the active ingredients inside the medicine are those that
             // we've created here

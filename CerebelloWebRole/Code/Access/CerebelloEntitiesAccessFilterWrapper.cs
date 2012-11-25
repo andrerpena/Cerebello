@@ -42,9 +42,9 @@ namespace CerebelloWebRole.Code
             get { return new FilteredObjectSetWrapper<AccountContract>(this.db.AccountContracts, s => s.Where(ac => ac.PracticeId == this.user.PracticeId)); }
         }
 
-        public FilteredObjectSetWrapper<ActiveIngredient> ActiveIngredients
+        public FilteredObjectSetWrapper<MedicineActiveIngredient> ActiveIngredients
         {
-            get { return new FilteredObjectSetWrapper<ActiveIngredient>(this.db.ActiveIngredients, s => s.Where(ai => ai.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<MedicineActiveIngredient>(this.db.MedicineActiveIngredients, s => s.Where(ai => ai.PracticeId == this.user.PracticeId)); }
         }
 
         public FilteredObjectSetWrapper<Address> Addresses
