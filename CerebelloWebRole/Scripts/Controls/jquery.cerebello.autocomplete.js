@@ -61,8 +61,8 @@
             var _this = this;
 
             // add the wrapper and the new button
-            if (_this.opts.newWindowUrl)
-                _this.$el.wrap($("<span/>").addClass("autocomplete-text-wrapper")).after($('<span/>').addClass("new-button").click(function () {
+            if (_this.opts.newWindowUrl) {
+                _this.$el.wrap($("<span/>").addClass("autocomplete-text-wrapper")).after($('<span/>').addClass("new-button").click(function() {
 
                     $.modal({
                         url: _this.opts.newWindowUrl,
@@ -73,11 +73,11 @@
                             _this.$inputHidden.val(data.Id);
                             _this.$el.val(data.Value);
                         }
-                    
                     });
 
                 }));
-
+                _this.$el.addClass("autocomplete-new");
+            }
             _this.$inputHidden = $("input[name='" + _this.opts.inputHiddenName + "']");
             if (!_this.$inputHidden.length)
                 throw "Couldn't find the $inputHiddenName";

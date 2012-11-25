@@ -643,8 +643,6 @@
     <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\CreateModal.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Edit.cshtml" />
-    <Content Include="Areas\App\Views\ActiveIngredients\Edit.cshtml" />
-    <Content Include="Areas\App\Views\ActiveIngredients\CreateModal.cshtml" />
     <Content Include="Areas\App\Views\Medicines\ViewLeaflet.cshtml" />
     <Content Include="Areas\App\Views\Medicines\Prescriptions.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
