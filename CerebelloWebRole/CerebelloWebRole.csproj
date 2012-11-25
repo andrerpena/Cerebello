@@ -600,7 +600,7 @@
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\Medicines\LeafletEditor.cshtml" />
-    <Content Include="Areas\App\Views\Medicines\AnvisaImportEditor.cshtml" />
+    <Content Include="Areas\App\Views\Medicines\AnvisaImport.cshtml" />
     <Content Include="Areas\App\Views\Medicines\DetailsViewLeaflets.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\Index.cshtml" />
     <Content Include="Areas\Docs\Views\_ViewStart.cshtml" />
@@ -642,10 +642,10 @@
     <Content Include="Areas\App\Views\HealthInsurance\Index.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />
-    <Content Include="Areas\App\Views\Laboratories\EditModal.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\CreateModal.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Edit.cshtml" />
     <Content Include="Areas\App\Views\ActiveIngredients\Edit.cshtml" />
-    <Content Include="Areas\App\Views\ActiveIngredients\EditModal.cshtml" />
+    <Content Include="Areas\App\Views\ActiveIngredients\CreateModal.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

@@ -1,0 +1,51 @@
+﻿@using System.Linq.Expressions
+@using CerebelloWebRole.Areas.App.Models
+@model AnvisaImportViewModel
+@{
+    ViewBag.Title = "Importar medicamento da Anvisa · Cerebello";
+
+    var editPanel = this.Html.CreateEditPanel(null);
+    editPanel.AddField(model => model.AnvisaId,
+    @<text>
+    @(Html.AutocompleteGridFor(
+                    model => model.AnvisaId,
+                    model => model.AnvisaText,
+                    Url.Action("LookupSysMedicine", "Medicines"),
+                    gridmodel => gridmodel.Id,
+                    gridmodel => gridmodel.Name,
+                    new Expression<Func<SysMedicineLookupGridModel, object>>[] { gridmodel => gridmodel.LaboratoryName }))
+    </text>);
+}
+
+@section Styles
+{
+    <style type="text/css">
+        div.message-warning {
+            margin-top: 0;
+        }
+    </style>
+}
+
+@section Title {
+Importar medicamento da Anvisa
+}
+
+@using (Html.BeginForm())
+{
+    @Html.Message(@<text>
+                    Você está importante um medicamento da Anvisa. Caso não encontre o que está procurando, é possível 
+                    <a href="@Url.Action("AnvisaImport")">cadastrar um medicamento manualmente</a>.
+                </text>)
+    
+    @Html.ValidationSummary(false)
+}
+
+@using (Html.BeginForm())
+{
+    @editPanel.GetHtml()
+    <div class="submit-bar">
+        <input type="submit" value="importar medicamento" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

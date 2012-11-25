@@ -133,7 +133,7 @@ namespace CerebelloWebRole.Code
                 };
 
             if (!supportedTypes.Contains(propertyType))
-                throw new Exception("Expression member must be either an enum type, an integer type or a nullable of any previous types.");
+                throw new Exception("Expression member must be of an integer type");
 
             var vEnumDataTypeAttributes = propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), false);
             if (vEnumDataTypeAttributes.Length == 0)

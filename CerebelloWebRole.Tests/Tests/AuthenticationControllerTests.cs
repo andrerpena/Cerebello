@@ -214,7 +214,7 @@ namespace CerebelloWebRole.Tests.Tests
                         MedicalEntityId = me.Id,
                         MedicalSpecialtyId = ms.Id,
                         MedicalSpecialtyName = ms.Name,
-                        MedicalEntityJurisdiction = TypeEstadoBrasileiro.RJ,
+                        MedicalEntityJurisdiction = (int) TypeEstadoBrasileiro.RJ,
                     };
                     Mvc3TestHelper.SetModelStateErrors(controller, vm);
                 }

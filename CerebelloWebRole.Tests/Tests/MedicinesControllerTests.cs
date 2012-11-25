@@ -173,6 +173,48 @@ namespace CerebelloWebRole.Tests.Tests
         /// It must be possible to save a medicine just by passing the minimum information
         /// </summary>
         [TestMethod]
+        public void AnvisaImport_HappyPath()
+        {
+            MedicinesController controller;
+            SYS_Medicine sysMedicine;
+            try
+            {
+                var mr = new MockRepository(true);
+                controller = mr.CreateController<MedicinesController>();
+
+                sysMedicine = this.db.SYS_Medicine.FirstOrDefault();
+                if (sysMedicine == null)
+                    throw new Exception("SYS_Medicines are not populated");
+            }
+            catch
+            {
+                Assert.Inconclusive("Test initialization has failed.");
+                return;
+            }
+
+            controller.AnvisaImport(
+                new AnvisaImportViewModel()
+                {
+                    AnvisaId = sysMedicine.Id,
+                    AnvisaText = sysMedicine.Name
+                });
+
+            var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == sysMedicine.Name);
+            Assert.IsNotNull(medicine);
+
+            foreach (var activeIngredient in medicine.ActiveIngredients)
+                Assert.IsTrue(sysMedicine.ActiveIngredients.Any(ai => ai.Name == activeIngredient.Name));
+
+            foreach (var leaflet in medicine.Leaflets)
+                Assert.IsTrue(sysMedicine.Leaflets.Any(l => l.Url == leaflet.Url));
+
+            Assert.IsTrue(sysMedicine.Laboratory.Name == medicine.Laboratory.Name);
+        }
+
+        /// <summary>
+        /// It must be possible to save a medicine just by passing the minimum information
+        /// </summary>
+        [TestMethod]
         public void Edit_MinimalInformation_HappyPath()
         {
             MedicinesController controller;

@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using System.Web.Script.Serialization;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Controls;
@@ -24,6 +25,28 @@ namespace CerebelloWebRole.Code.Extensions
         private static string Encode(string original)
         {
             return original.Replace('[', '_').Replace(']', '_').Replace('.', '_');
+        }
+
+        public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
+        {
+            var tagBuilder = new TagBuilder("div");
+            tagBuilder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            var tagBuilderStringBuilder = new StringBuilder();
+            tagBuilder.AddCssClass("check-box-label-wrapper");
+
+            var checkBoxTagBuilder = new TagBuilder("span");
+            checkBoxTagBuilder.AddCssClass("check-box-wrapper");
+            checkBoxTagBuilder.InnerHtml = html.CheckBoxFor(expression).ToString();
+            tagBuilderStringBuilder.Append(checkBoxTagBuilder);
+
+            var labelTagBuilder = new TagBuilder("span");
+            labelTagBuilder.AddCssClass("label-wrapper");
+            labelTagBuilder.InnerHtml = html.LabelFor(expression).ToString();
+            tagBuilderStringBuilder.Append(labelTagBuilder);
+
+            tagBuilder.InnerHtml = tagBuilderStringBuilder.ToString();
+
+            return new MvcHtmlString(tagBuilder.ToString());
         }
 
         public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html)
@@ -55,8 +78,16 @@ namespace CerebelloWebRole.Code.Extensions
         /// </summary>
         public static MvcHtmlString Message(this HtmlHelper htmlHelper, string text)
         {
-            var encodedText = HttpUtility.HtmlEncode(text);
-            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", encodedText));
+            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", htmlHelper.Encode(text)));
+        }
+
+        /// <summary>
+        /// Displays an inline message-box, containing arbitrary text.
+        /// The text will be html encoded.
+        /// </summary>
+        public static MvcHtmlString Message(this HtmlHelper htmlHelper, Func<dynamic, object> format)
+        {
+            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", format(null)));
         }
 
         /// <summary>

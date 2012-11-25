@@ -16,22 +16,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult CreateModal()
         {
-            return this.EditModal((int?)null);
-        }
-
-        [HttpGet]
-        public ActionResult EditModal(int? id)
-        {
-            // this is necessary to explicitly state the View name here because
-            // CreateModal may redirect to here
-            return this.View("EditModal");
+            return this.Edit((int?)null);
         }
 
         [HttpPost]
-        public ActionResult EditModal([NotNull] MedicineLaboratoryViewModel formModel)
+        public ActionResult CreateModal([NotNull] MedicineLaboratoryViewModel formModel)
         {
             if (formModel == null) throw new ArgumentNullException("formModel");
             return this.Edit(formModel);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            return View();
         }
 
         [HttpPost]

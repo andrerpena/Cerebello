@@ -92,7 +92,7 @@ namespace CerebelloWebRole.Models
 
         [Display(Name = "Estado do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        //[EnumDataType(typeof(TypeEstadoBrasileiro))]
-        public TypeEstadoBrasileiro MedicalEntityJurisdiction { get; set; }
+        [EnumDataType(typeof(TypeEstadoBrasileiro))]
+        public int MedicalEntityJurisdiction { get; set; }
     }
 }

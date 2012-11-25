@@ -1340,3 +1340,7 @@ div.message-help {
     .next-appointments-list .date-and-time {
         color: gray;
     }
+
+.check-box-label-wrapper .label-wrapper {
+    margin-left: 5px;
+}

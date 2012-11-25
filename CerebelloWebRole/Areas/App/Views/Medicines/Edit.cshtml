@@ -16,41 +16,47 @@
     editPanel.AddField(m => m.Usage);
     editPanel.AddField(m => m.ActiveIngredients, format: @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
 }
+
 @section Title {
     @if (this.Model != null && this.Model.Id.HasValue)
     {
-        @:Editando medicamento:  + @this.Model.Name;
+        @:Editando medicamento:  + @this.Model.Name
     }
     else
     {
-        ViewBag.Title = "Novo medicamento";
+        @:Novo medicamento
     }
 }
+
+@section Styles
+{
+    <style type="text/css">
+        div.message-warning {
+            margin-top: 0;
+        }
+    </style>
+}
+
 @section SideBar {
-    <a href="#" class="icon-link icon-link-import">Importar da Anvisa</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
-    <script type="text/javascript">
-        $(".icon-link-import").click(function (e) {
-            e.preventDefault();
-            $.modal({
-                url: "@Url.Action("anvisaimporteditor", new { medicationId = this.Model != null ? this.Model.Id : null })",
-                title: "Importar medicamento da Anvisa",
-                width: 480,
-                height: 150
-            });
-        });
-    </script>
+    <a href="@Url.Action("anvisaimport")" class="icon-link icon-link-import">Importar da Anvisa</a>
+    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
 }
 @using (Html.BeginForm())
 {
+    @Html.Message(@<text>
+                       Você está adicionando um medicamento manualmente. Alternativamente, é possível 
+                       <a href="@Url.Action("AnvisaImport")">importar medicamentos da Anvisa</a>.
+                   </text>)
+    
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
-    
+
     @editPanel.GetHtml()
-    
+
     <h2>
         @Html.LabelFor(model => model.Leaflets)
-    </h2>    
-    
+    </h2>
+
     @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula"))
     
     <div class="submit-bar">

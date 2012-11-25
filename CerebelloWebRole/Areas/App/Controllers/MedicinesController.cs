@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Objects;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -343,10 +345,77 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(viewModel);
         }
 
-        public ActionResult AnvisaImportEditor(int? medicationId)
+        [HttpGet]
+        public ActionResult AnvisaImport()
         {
-            ViewBag.MedicationId = medicationId;
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult AnvisaImport(AnvisaImportViewModel formModel)
+        {
+            // validating the existence of the sys medicine
+            var sysMedicine = this.db.SYS_Medicine.FirstOrDefault(sm => sm.Id == formModel.AnvisaId);
+            if (sysMedicine == null && formModel.AnvisaId.HasValue) // I verify formModel.AnvisaId.HasValue here to prevent double errors
+                this.ModelState.AddModelError<AnvisaImportViewModel>(model => model.AnvisaId, "O medicamento informado não foi encontrado");
+
+            // validating the name is unique
+            if (this.db.Medicines.Any(m => m.DoctorId == this.Doctor.Id && m.Name == sysMedicine.Name))
+                this.ModelState.AddModelError<AnvisaImportViewModel>(
+                    model => model.AnvisaId, "Já existe um medicamento com o mesmo nome do medicamento informado");
+
+            if (this.ModelState.IsValid)
+            {
+                Debug.Assert(sysMedicine != null, "sysMedicine != null");
+                var medicine = new Medicine()
+                    {
+                        Name = sysMedicine.Name,
+                        PracticeId = this.Practice.Id,
+                        DoctorId = this.Doctor.Id
+                    };
+
+                // verify the need to create a new laboratory
+                var laboratory = this.db.Laboratories.FirstOrDefault(l => l.DoctorId == this.Doctor.Id && l.Name == sysMedicine.Laboratory.Name) ??
+                                 new Laboratory()
+                                     {
+                                         Name = sysMedicine.Laboratory.Name,
+                                         PracticeId = this.Practice.Id,
+                                         DoctorId = this.Doctor.Id
+                                     };
+                medicine.Laboratory = laboratory;
+
+                // verify the need to create new active ingredients
+                foreach (var ai in sysMedicine.ActiveIngredients)
+                {
+                    var activeIngredient = this.db.ActiveIngredients.FirstOrDefault(a => a.DoctorId == this.Doctor.Id && a.Name == ai.Name) ??
+                                           new ActiveIngredient()
+                                            {
+                                                Name = ai.Name,
+                                                PracticeId = this.Practice.Id,
+                                                DoctorId = this.Doctor.Id
+                                            };
+
+                    medicine.ActiveIngredients.Add(activeIngredient);
+                }
+
+                // create the leaflets
+                foreach (var l in sysMedicine.Leaflets)
+                    medicine.Leaflets.Add(
+                        new Leaflet()
+                            {
+                                Description = l.Description,
+                                Url = l.Url,
+                                PracticeId = this.Practice.Id
+                            });
+
+                this.db.Medicines.AddObject(medicine);
+
+                this.db.SaveChanges();
+
+                return this.RedirectToAction("Details", new {id = medicine.Id});
+            }
+
+            return this.View(formModel);
         }
 
         /// <summary>
