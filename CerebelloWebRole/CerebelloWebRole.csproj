@@ -137,6 +137,7 @@
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
+    <Compile Include="Areas\App\Models\PrescriptionViewModel.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectSetWrapper.cs" />
@@ -601,7 +602,6 @@
     <Content Include="Areas\App\Views\ConfigSchedule\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\Medicines\LeafletEditor.cshtml" />
     <Content Include="Areas\App\Views\Medicines\AnvisaImport.cshtml" />
-    <Content Include="Areas\App\Views\Medicines\DetailsViewLeaflets.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\Index.cshtml" />
     <Content Include="Areas\Docs\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Docs\Views\Shared\_Layout.cshtml" />
@@ -646,6 +646,8 @@
     <Content Include="Areas\App\Views\Laboratories\Edit.cshtml" />
     <Content Include="Areas\App\Views\ActiveIngredients\Edit.cshtml" />
     <Content Include="Areas\App\Views\ActiveIngredients\CreateModal.cshtml" />
+    <Content Include="Areas\App\Views\Medicines\ViewLeaflet.cshtml" />
+    <Content Include="Areas\App\Views\Medicines\Prescriptions.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

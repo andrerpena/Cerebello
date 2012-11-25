@@ -33,7 +33,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Princípios ativos")]
         public List<MedicineActiveIngredientViewModel> ActiveIngredients { get; set; }
-
+        
         [Display(Name = "Bulas")]
         public List<MedicineLeafletViewModel> Leaflets { get; set; }
 
@@ -41,5 +41,8 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeUsage))]
         public int Usage { get; set; }
+
+        [Display(Name = "Prescrições")]
+        public SearchViewModel<PrescriptionViewModel> Prescriptions { get; set; }
     }
 }

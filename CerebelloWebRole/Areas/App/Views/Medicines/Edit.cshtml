@@ -43,11 +43,13 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.Message(@<text>
-                       Você está adicionando um medicamento manualmente. Alternativamente, é possível 
-                       <a href="@Url.Action("AnvisaImport")">importar medicamentos da Anvisa</a>.
-                   </text>)
-    
+     if (!this.Model.Id.HasValue)
+     {
+         @Html.Message(@<text>
+                            Você está adicionando um medicamento manualmente. Alternativamente, é possível 
+                            <a href="@Url.Action("AnvisaImport")">importar medicamentos da Anvisa</a>.
+                        </text>)
+     }
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
 

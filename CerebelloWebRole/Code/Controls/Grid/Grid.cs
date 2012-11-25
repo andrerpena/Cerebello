@@ -62,6 +62,18 @@ namespace CerebelloWebRole.Code.Controls
                     routeValuesFunc(item)));
         }
 
+        public void AddLinkField<TValue>(Expression<Func<TModel, TValue>> exp, [JetBrains.Annotations.AspMvcAction] string actionName, [JetBrains.Annotations.AspMvcController] string controllerName, Func<TModel, object> routeValuesFunc)
+        {
+            var func = exp.Compile();
+            this.AddField(
+                exp,
+                item => this.htmlHelper.ActionLink(
+                    string.Format("{0}", func(item)),
+                    actionName,
+                    controllerName,
+                    routeValuesFunc(item), null));
+        }
+
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
             if (this.model.Any())

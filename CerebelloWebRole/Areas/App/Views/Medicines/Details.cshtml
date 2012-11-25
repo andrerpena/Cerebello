@@ -1,6 +1,39 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
 @{
     ViewBag.Title = "Medicamento: " + this.Model.Name + " · Cerebello";
+
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(model => model.Name, wholeRow: true);
+    cardView.AddField(model => model.LaboratoryName, wholeRow: true);
+    cardView.AddField(model => model.ActiveIngredients,
+    @<text>
+    <ul class="string-list">
+        @foreach (var activeIngredient in @item.ActiveIngredients)
+        {
+            <li>
+                @activeIngredient.ActiveIngredientName
+            </li>
+        }
+    </ul>
+    </text>, wholeRow: true);
+    cardView.AddField(model => model.Leaflets,
+    @<text>
+    <ul class="string-list">
+        @foreach (var leaflet in @item.Leaflets)
+        {
+            <li>
+                @if (!string.IsNullOrEmpty(leaflet.ViewerUrl))
+                {
+                    <a href="@leaflet.ViewerUrl">@leaflet.Description</a>
+                }
+                else
+                {
+                    <a href="@leaflet.Url">@leaflet.Description </a>   
+                }
+            </li>
+        }
+    </ul>
+    </text>, wholeRow: true);
 }
 @section Title {
     Medicamento: @Model.Name
@@ -26,35 +59,8 @@
     </script>
 }
 
-<table class="view-table">
-    <tr>
-        <th>@Html.LabelFor(model => model.Name)</th>
-        <td>@Html.DisplayFor(model => model.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.LabelFor(model => model.LaboratoryName)</th>
-        <td>@Html.DisplayFor(model => model.LaboratoryName)</td>
-    </tr>
-    <tr>
-        <th>@Html.LabelFor(model => model.ActiveIngredients)</th>
-        <td>
-            <ul class="string-list">
-                @foreach (var activeIngredient in this.Model.ActiveIngredients)
-                {
-                    <li>
-                        @activeIngredient.ActiveIngredientName
-                    </li>
-                }
-            </ul>
-        </td>
-    </tr>
-</table>
+@cardView.GetHtml()
 
-<div class="small-tabs" style="margin: 18px 0">
-    <a href="#" class="activated">Bulas</a>
-    <a href="#">Pacientes</a>
-</div>
+<h2>Prescrições</h2>
 
-<div class="details-search-result-list">
-    @Html.Partial(this.ViewBag.DetailsView as string)
-</div>
+@Html.Partial("Prescriptions", this.Model.Prescriptions)

@@ -34,7 +34,7 @@ Importar medicamento da Anvisa
 {
     @Html.Message(@<text>
                     Você está importante um medicamento da Anvisa. Caso não encontre o que está procurando, é possível 
-                    <a href="@Url.Action("AnvisaImport")">cadastrar um medicamento manualmente</a>.
+                    <a href="@Url.Action("Create")">cadastrar um medicamento manualmente</a>.
                 </text>)
     
     @Html.ValidationSummary(false)

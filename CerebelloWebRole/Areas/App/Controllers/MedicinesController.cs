@@ -9,13 +9,60 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Mvc;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class MedicinesController : DoctorController
     {
-        public MedicineViewModel GetViewModelFromModel(Medicine medicine)
+
+
+        private MedicineLeafletViewModel GetLeafletViewModel([NotNull] Leaflet leaflet)
         {
+            if (leaflet == null) throw new ArgumentNullException("leaflet");
+
+            Func<string, bool> canLeafletBeVisualized = url => url.ToLower().EndsWith(".pdf") ||
+                                                               url.ToLower().EndsWith(".doc") ||
+                                                               url.ToLower().EndsWith(".docx") ||
+                                                               url.ToLower().EndsWith(".txt");
+
+            return new MedicineLeafletViewModel()
+                {
+                    Id = leaflet.Id,
+                    Description = leaflet.Description,
+                    Url = leaflet.Url,
+                    MedicineId = leaflet.Medicines.First().Id,
+                    MedicineName = leaflet.Medicines.First().Name,
+                    ViewerUrl = canLeafletBeVisualized(leaflet.Url)
+                                    ? Url.Action("ViewLeaflet", new { id = leaflet.Id })
+                                    : null,
+                    GoogleDocsUrl = canLeafletBeVisualized(leaflet.Url)
+                                        ? string.Format("http://docs.google.com/viewer?url={0}", leaflet.Url)
+                                        : null,
+                    GoogleDocsEmbeddedUrl = canLeafletBeVisualized(leaflet.Url)
+                    ? string.Format("http://docs.google.com/viewer?embedded=true&url={0}", leaflet.Url)
+                    : null,
+                };
+        }
+
+        public MedicineViewModel GetViewModelFromModel(Medicine medicine, int? page = null)
+        {
+            if (!page.HasValue)
+                page = 1;
+            var pageSize = Constants.GRID_PAGE_SIZE;
+
+            var prescriptionsQuery = from receiptMedicine in medicine.ReceiptMedicines
+                                     let patient = receiptMedicine.Receipt.Patient
+                                     orderby receiptMedicine.Receipt.CreatedOn descending
+                                     select new PrescriptionViewModel()
+                                         {
+                                             PatientId = patient.Id,
+                                             PatientName = patient.Person.FullName,
+                                             Prescription = receiptMedicine.Prescription,
+                                             Quantity = receiptMedicine.Quantity,
+                                             Date = receiptMedicine.Receipt.CreatedOn
+                                         };
+
             return new MedicineViewModel
             {
                 Id = medicine.Id,
@@ -28,15 +75,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                              ActiveIngredientName = activeIngredient.Name
                                          }).ToList(),
                 Leaflets = (from leaflet in medicine.Leaflets
-                            select new MedicineLeafletViewModel()
-                            {
-                                Id = leaflet.Id,
-                                Description = leaflet.Description,
-                                Url = leaflet.Url
-                            }).ToList(),
+                            select this.GetLeafletViewModel(leaflet)
+                            ).ToList(),
+                Prescriptions = new SearchViewModel<PrescriptionViewModel>()
+                    {
+                        Objects = prescriptionsQuery.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList(),
+                        Count = prescriptionsQuery.Count()
+                    },
                 LaboratoryId = medicine.Laboratory.Id,
                 LaboratoryName = medicine.Laboratory.Name
             };
+        }
+
+        public ActionResult ViewLeaflet(int id)
+        {
+            var leaflet = this.db.Leaflets.FirstOrDefault(l => l.Id == id);
+            if (leaflet == null)
+                return this.ObjectNotFound();
+
+            var viewModel = this.GetLeafletViewModel(leaflet);
+            return this.View(viewModel);
         }
 
         //
@@ -51,13 +109,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(model);
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, int? page)
         {
             if (string.IsNullOrEmpty(ViewBag.DetailsAction as String))
                 this.ViewBag.DetailsView = "DetailsViewLeaflets";
 
-            var medicine = db.Medicines.Where(m => m.Id == id).First();
-            var model = this.GetViewModelFromModel(medicine);
+            var medicine = this.db.Medicines.First(m => m.Id == id);
+            var model = this.GetViewModelFromModel(medicine, page);
 
             return View(model);
         }
@@ -65,7 +123,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult DetailsReceipt(int id)
         {
             this.ViewBag.DetailsView = "DetailsViewLeaflets";
-            return this.Details(id);
+            return this.Details(id, null);
         }
 
         [HttpGet]
@@ -412,7 +470,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 this.db.SaveChanges();
 
-                return this.RedirectToAction("Details", new {id = medicine.Id});
+                return this.RedirectToAction("Details", new { id = medicine.Id });
             }
 
             return this.View(formModel);
