@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -71,6 +72,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.Practice.Name = viewModel.PracticeName;
                 this.Practice.WindowsTimeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue(
                     (TypeTimeZone)viewModel.PracticeTimeZone).Id;
+
+                this.Practice.PhoneMain = viewModel.PhoneMain;
+                this.Practice.PhoneAlt = viewModel.PhoneAlt;
+                this.Practice.SiteUrl = viewModel.SiteUrl;
+                this.Practice.Email = viewModel.Email;
+
+                Debug.Assert(this.Practice.Address != null, "this.Practice.Address must not be null");
+                this.Practice.Address.CEP = viewModel.Address.CEP;
+                this.Practice.Address.City = viewModel.Address.City;
+                this.Practice.Address.Complement = viewModel.Address.Complement;
+                this.Practice.Address.Neighborhood = viewModel.Address.Neighborhood;
+                this.Practice.Address.StateProvince = viewModel.Address.StateProvince;
+                this.Practice.Address.Street = viewModel.Address.Street;
 
                 this.db.SaveChanges();
 
