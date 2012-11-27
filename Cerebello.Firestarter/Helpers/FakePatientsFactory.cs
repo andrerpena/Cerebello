@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Models;
 
@@ -161,18 +162,20 @@ namespace Cerebello.Firestarter.Helpers
                         };
 
                     patient.Person.Email = firstName + string.Join("", chosenMiddleNames) + "@gmail.com";
-                    Debug.Assert(patient.Person.Address == null);
-                    patient.Person.Address = new Address
-                        {
-                            CEP = random.Next(36000000, 37000000).ToString(CultureInfo.InvariantCulture),
-                            StateProvince = "MG",
-                            City = "Juiz de Fora",
-                            Neighborhood = "Centro",
-                            Street =
-                                "Rua " + middleNames[random.Next(middleNames.Length)] + " " + middleNames[random.Next(middleNames.Length)],
-                            Complement = "",
-                            PracticeId = doctor.PracticeId,
-                        };
+                    Debug.Assert(!patient.Person.Addresses.Any());
+                    patient.Person.Addresses.Add(
+                        new Address
+                            {
+                                CEP = random.Next(36000000, 37000000).ToString(CultureInfo.InvariantCulture),
+                                StateProvince = "MG",
+                                City = "Juiz de Fora",
+                                Neighborhood = "Centro",
+                                Street =
+                                    "Rua " + middleNames[random.Next(middleNames.Length)] + " " +
+                                    middleNames[random.Next(middleNames.Length)],
+                                Complement = "",
+                                PracticeId = doctor.PracticeId,
+                            });
 
                     result.Add(patient);
                     db.Patients.AddObject(patient);

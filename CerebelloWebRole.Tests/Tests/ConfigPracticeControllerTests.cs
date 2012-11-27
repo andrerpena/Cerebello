@@ -229,7 +229,16 @@ namespace CerebelloWebRole.Tests.Tests
             var viewModel = new ConfigPracticeViewModel
                                 {
                                     PracticeName = "K!",
-                                    PracticeTimeZone = 3
+                                    PracticeTimeZone = 3,
+                                    PhoneMain = "(32)91272552",
+                                    Address = new AddressViewModel
+                                        {
+                                            StateProvince = "MG",
+                                            CEP = "36030-000",
+                                            City = "Juiz de Fora",
+                                            Complement = "Sta Luzia",
+                                            Street = "Rua Sem Saída",
+                                        }
                                 };
 
             Mvc3TestHelper.SetModelStateErrors(controller, viewModel);

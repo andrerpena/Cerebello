@@ -1,4 +1,5 @@
-﻿@using CerebelloWebRole.Code
+﻿@using Cerebello.Model
+@using CerebelloWebRole.Code
 @using CerebelloWebRole.Models
 @model CerebelloWebRole.Areas.App.Models.ConfigPracticeViewModel
 @{
@@ -11,6 +12,11 @@
     cardView.AddField(m => m.PracticeTimeZone,
     @<text>@EnumHelper.GetText(@item.PracticeTimeZone, typeof(TypeTimeZone))</text>,
         wholeRow: true);
+    cardView.AddField(m => m.PhoneMain);
+    cardView.AddField(m => m.PhoneAlt);
+    cardView.AddField(m => m.Pabx);
+    cardView.AddField(m => m.Email, wholeRow: true);
+    cardView.AddField(m => m.SiteUrl, wholeRow: true);
 }
 @section Title {
     @ViewBag.Title
@@ -20,3 +26,7 @@
 }
 
 @cardView.GetHtml()
+<h2>
+    @Html.LabelFor(model => model.Address)
+</h2>
+@Html.DisplayFor(model => model.Address)

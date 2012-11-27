@@ -35,6 +35,7 @@
           <EntitySet Name="Notification" EntityType="cerebelloModel.Store.Notification" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Patient" EntityType="cerebelloModel.Store.Patient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Person" EntityType="cerebelloModel.Store.Person" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PersonAddress" EntityType="cerebelloModel.Store.PersonAddress" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Practice" EntityType="cerebelloModel.Store.Practice" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
@@ -64,10 +65,6 @@
           <AssociationSet Name="FK_ActiveIngredient_Medicine" Association="cerebelloModel.Store.FK_ActiveIngredient_Medicine">
             <End Role="Medicine" EntitySet="Medicine" />
             <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredient" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Address_Person" Association="cerebelloModel.Store.FK_Address_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Address" EntitySet="Address" />
           </AssociationSet>
           <AssociationSet Name="FK_Anamnese_Patient" Association="cerebelloModel.Store.FK_Anamnese_Patient">
             <End Role="Patient" EntitySet="Patient" />
@@ -189,6 +186,14 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="Patient" EntitySet="Patient" />
           </AssociationSet>
+          <AssociationSet Name="FK_PersonAddress_Address" Association="cerebelloModel.Store.FK_PersonAddress_Address">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="PersonAddress" EntitySet="PersonAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonAddress_Person" Association="cerebelloModel.Store.FK_PersonAddress_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="PersonAddress" EntitySet="PersonAddress" />
+          </AssociationSet>
           <AssociationSet Name="FK_Practice_AccountContract" Association="cerebelloModel.Store.FK_Practice_AccountContract">
             <End Role="AccountContract" EntitySet="AccountContract" />
             <End Role="Practice" EntitySet="Practice" />
@@ -263,14 +268,13 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CEP" Type="varchar" MaxLength="20" />
           <Property Name="City" Type="varchar" MaxLength="100" />
           <Property Name="StateProvince" Type="varchar" MaxLength="100" />
           <Property Name="Neighborhood" Type="varchar" MaxLength="100" />
           <Property Name="Complement" Type="varchar" MaxLength="50" />
           <Property Name="Street" Type="varchar" MaxLength="100" />
-          <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Administrator">
@@ -569,10 +573,10 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Text" Type="varchar(max)" Nullable="false" />
+          <Property Name="Text" Type="varchar(max)" />
           <Property Name="IsPolled" Type="bit" Nullable="false" />
-          <Property Name="ViewName" Type="varchar" MaxLength="50" />
-          <Property Name="ViewData" Type="nvarchar" MaxLength="200" />
+          <Property Name="ViewData" Type="nvarchar" MaxLength="50" />
+          <Property Name="ViewName" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -607,6 +611,14 @@
           <Property Name="EmailGravatarHash" Type="varchar" MaxLength="200" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="PersonAddress">
+          <Key>
+            <PropertyRef Name="PersonId" />
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="AddressId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Practice">
           <Key>
             <PropertyRef Name="Id" />
@@ -620,6 +632,12 @@
           <Property Name="VerificationDate" Type="datetime" />
           <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
           <Property Name="ActiveAccountContractId" Type="int" />
+          <Property Name="PhoneMain" Type="varchar" MaxLength="20" />
+          <Property Name="PhoneAlt" Type="varchar" MaxLength="20" />
+          <Property Name="PABX" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="varchar" MaxLength="200" />
+          <Property Name="SiteUrl" Type="nvarchar(max)" />
+          <Property Name="AddressId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -809,18 +827,6 @@
             </Principal>
             <Dependent Role="MedicineActiveIngredient">
               <PropertyRef Name="MedicineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Address_Person">
-          <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1" />
-          <End Role="Address" Type="cerebelloModel.Store.Address" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Address">
-              <PropertyRef Name="Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1186,6 +1192,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PersonAddress_Address">
+          <End Role="Address" Type="cerebelloModel.Store.Address" Multiplicity="1" />
+          <End Role="PersonAddress" Type="cerebelloModel.Store.PersonAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonAddress">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PersonAddress_Person">
+          <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1" />
+          <End Role="PersonAddress" Type="cerebelloModel.Store.PersonAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonAddress">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Practice_AccountContract">
           <End Role="AccountContract" Type="cerebelloModel.Store.AccountContract" Multiplicity="0..1" />
           <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="*" />
@@ -1521,10 +1551,6 @@
             <End Role="ExaminationResult" EntitySet="ExaminationResults" />
           </AssociationSet>
           <EntitySet Name="SYS_MedicalProcedure" EntityType="Cerebello.Model.SYS_MedicalProcedure" />
-          <AssociationSet Name="FK_Address_Person1" Association="Cerebello.Model.FK_Address_Person1">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Address" EntitySet="Addresses" />
-          </AssociationSet>
           <EntitySet Name="CFG_DayOff" EntityType="Cerebello.Model.CFG_DayOff" />
           <AssociationSet Name="FK_CFG_DayOff_Doctor" Association="Cerebello.Model.FK_CFG_DayOff_Doctor">
             <End Role="Doctor" EntitySet="Doctors" />
@@ -1599,6 +1625,14 @@
             <End Role="Medicine" EntitySet="Medicines" />
             <End Role="MedicineActiveIngredient" EntitySet="MedicineActiveIngredients" />
           </AssociationSet>
+          <AssociationSet Name="FK_Practice_Address" Association="Cerebello.Model.FK_Practice_Address">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Practice" EntitySet="Practices" />
+          </AssociationSet>
+          <AssociationSet Name="PersonAddress" Association="Cerebello.Model.PersonAddress">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1611,9 +1645,9 @@
           <Property Name="Complement" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="Street" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="PersonId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Cerebello.Model.FK_Address_Person1" FromRole="Address" ToRole="Person" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Practices" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Address" ToRole="Practice" />
+          <NavigationProperty Name="People" Relationship="Cerebello.Model.PersonAddress" FromRole="Address" ToRole="Person" />
         </EntityType>
         <EntityType Name="Appointment">
           <Key>
@@ -1721,12 +1755,12 @@
           <Property Name="Profession" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_Person" FromRole="Person" ToRole="Patient" />
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Person" FromRole="Person" ToRole="User" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:SetterAccess="Public" />
-          <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Address_Person1" FromRole="Person" ToRole="Address" />
           <Property Type="String" Name="PhoneCell" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Email" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="EmailGravatarHash" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="PhoneLand" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Addresses" Relationship="Cerebello.Model.PersonAddress" FromRole="Person" ToRole="Address" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -1747,6 +1781,13 @@
           <NavigationProperty Name="AccountContracts" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="Practice" ToRole="AccountContract" />
           <NavigationProperty Name="AccountContract" Relationship="Cerebello.Model.FK_Practice_AccountContract" FromRole="Practice" ToRole="AccountContract" />
           <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Practice" ToRole="Notification" />
+          <Property Type="String" Name="PhoneMain" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PhoneAlt" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PABX" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Email" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SiteUrl" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AddressId" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Practice" ToRole="Address" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2438,18 +2479,6 @@
           <Property Type="String" Name="Code" Nullable="false" MaxLength="12" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="310" FixedLength="false" Unicode="true" />
         </EntityType>
-        <Association Name="FK_Address_Person1">
-          <End Type="Cerebello.Model.Person" Role="Person" Multiplicity="1" />
-          <End Type="Cerebello.Model.Address" Role="Address" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Address">
-              <PropertyRef Name="Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="CFG_DayOff">
           <Key>
             <PropertyRef Name="Id" />
@@ -2679,12 +2708,12 @@
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="Int32" Name="UserId" Nullable="false" />
-          <Property Type="String" Name="Text" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Notification" ToRole="Practice" />
           <NavigationProperty Name="User" Relationship="Cerebello.Model.FK_Notification_User" FromRole="Notification" ToRole="User" />
           <Property Type="Boolean" Name="IsPolled" Nullable="false" />
-          <Property Type="String" Name="ViewName" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="ViewData" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ViewName" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ViewData" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Notification_Practice">
           <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
@@ -2768,6 +2797,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Practice_Address">
+          <End Type="Cerebello.Model.Address" Role="Address" Multiplicity="1" />
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Practice">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonAddress">
+          <End Type="Cerebello.Model.Address" Role="Address" Multiplicity="*" />
+          <End Type="Cerebello.Model.Person" Role="Person" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2783,7 +2828,6 @@
             <ScalarProperty Name="Complement" ColumnName="Complement" />
             <ScalarProperty Name="Street" ColumnName="Street" />
             <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Appointments"><EntityTypeMapping TypeName="Cerebello.Model.Appointment"><MappingFragment StoreEntitySet="Appointment">
                 <ScalarProperty Name="ReminderEmailSent" ColumnName="ReminderEmailSent" />
@@ -2850,6 +2894,12 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="SiteUrl" ColumnName="SiteUrl" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PABX" ColumnName="PABX" />
+                <ScalarProperty Name="PhoneAlt" ColumnName="PhoneAlt" />
+                <ScalarProperty Name="PhoneMain" ColumnName="PhoneMain" />
                 <ScalarProperty Name="ActiveAccountContractId" ColumnName="ActiveAccountContractId" />
                 <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
                 <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
@@ -3304,6 +3354,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="PersonAddress" TypeName="Cerebello.Model.PersonAddress" StoreEntitySet="PersonAddress">
+            <EndProperty Name="Person">
+              <ScalarProperty Name="Id" ColumnName="PersonId" />
+            </EndProperty>
+            <EndProperty Name="Address">
+              <ScalarProperty Name="Id" ColumnName="AddressId" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3324,7 +3382,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="72">
+      <Diagram Name="CerebelloEntities" ZoomLevel="82">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="36.625" PointY="1" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="11.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="39.125" PointY="16.625" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />
@@ -3572,11 +3630,6 @@
           <ConnectorPoint PointX="6.296875" PointY="26.75" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalProcedure" Width="2" PointX="40.5" PointY="24.875" Height="1.9802864583333388" FillColor="Firebrick" />
-        <AssociationConnector Association="Cerebello.Model.FK_Address_Person1">
-          <ConnectorPoint PointX="1.84375" PointY="11.375" />
-          <ConnectorPoint PointX="1.84375" PointY="9.12474609375" />
-          <ConnectorPoint PointX="3" PointY="9.12474609375" />
-        </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.CFG_DayOff" Width="1.5" PointX="13.375" PointY="20.75" Height="1.9802864583333246" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_CFG_DayOff_Doctor">
           <ConnectorPoint PointX="12.433590625" PointY="20.25" />
@@ -3688,6 +3741,8 @@
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_HealthInsurance" />
         <EntityTypeShape EntityType="Cerebello.Model.MedicineActiveIngredient" Width="1.5" PointX="22.625" PointY="29.625" />
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
+        <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
+        <AssociationConnector Association="Cerebello.Model.PersonAddress" />
         </Diagram>
     </Diagrams>
   </Designer>

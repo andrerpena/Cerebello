@@ -33,6 +33,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <returns>A new UserViewModel with informations copied from the User object.</returns>
         public static UserViewModel GetViewModel(User user, Practice practice, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty)
         {
+            var address = user.Person.Addresses.SingleOrDefault();
+
             var viewModel = new UserViewModel()
             {
                 Id = user.Id,
@@ -51,14 +53,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 IsDoctor = user.DoctorId != null,
                 IsSecretary = user.SecretaryId != null,
 
-                Address = user.Person.Address == null ? new AddressViewModel() : new AddressViewModel()
+                Address = address == null ? new AddressViewModel() : new AddressViewModel()
                 {
-                    CEP = user.Person.Address.CEP,
-                    City = user.Person.Address.City,
-                    Complement = user.Person.Address.Complement,
-                    Neighborhood = user.Person.Address.Neighborhood,
-                    StateProvince = user.Person.Address.StateProvince,
-                    Street = user.Person.Address.Street
+                    CEP = address.CEP,
+                    City = address.City,
+                    Complement = address.Complement,
+                    Neighborhood = address.Neighborhood,
+                    StateProvince = address.StateProvince,
+                    Street = address.Street
                 }
             };
 
@@ -300,15 +302,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 user.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
 
                 // handle address
-                if (user.Person.Address == null)
-                    user.Person.Address = new Address { PracticeId = this.DbUser.PracticeId, };
-
-                user.Person.Address.CEP = formModel.Address.CEP;
-                user.Person.Address.City = formModel.Address.City;
-                user.Person.Address.Complement = formModel.Address.Complement;
-                user.Person.Address.Neighborhood = formModel.Address.Neighborhood;
-                user.Person.Address.StateProvince = formModel.Address.StateProvince;
-                user.Person.Address.Street = formModel.Address.Street;
+                if (!user.Person.Addresses.Any())
+                    user.Person.Addresses.Add(
+                        new Address
+                            {
+                                PracticeId = this.DbUser.PracticeId,
+                                CEP = formModel.Address.CEP,
+                                City = formModel.Address.City,
+                                Complement = formModel.Address.Complement,
+                                Neighborhood = formModel.Address.Neighborhood,
+                                StateProvince = formModel.Address.StateProvince,
+                                Street = formModel.Address.Street,
+                            });
 
                 var practiceId = this.Practice.Id;
 
