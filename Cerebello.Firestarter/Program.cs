@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
@@ -49,6 +52,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("DateTime (UTC):   {0}", DateTime.UtcNow);
                 Console.WriteLine("DateTime (Local): {0}", DateTime.Now);
                 Console.WriteLine("DateTime (?):     {0}", DateTime.Now.ToUniversalTime());
+                Console.WriteLine("CurrentDir:       {0}", Environment.CurrentDirectory);
 
                 while (isToChooseDb)
                 {
@@ -161,17 +165,36 @@ namespace Cerebello.Firestarter
 
                 if (showHidden)
                 {
+                    Console.WriteLine();
                     Console.WriteLine(@"clr    - Clear all data.");
-                    Console.WriteLine(@"anvll  - Downloads all leaflets from Anvisa site.");
                     Console.WriteLine(@"p1     - Populate database with items (type p1? to know more).");
                     Console.WriteLine(@"drp    - Drop all tables and FKs.");
                     Console.WriteLine(@"crt    - Create all tables and FKs using script.");
+                    Console.WriteLine();
+                    Console.WriteLine(@"anvll  - Downloads all leaflets from Anvisa site.");
                     Console.WriteLine(@"rnd    - Set the seed to the random generator.");
-                    Console.WriteLine(@"cls    - Clear screen.");
+                    Console.WriteLine();
+                    Console.WriteLine(@"bkc    - Create database backup.");
+                    Console.WriteLine(@"bkr    - Restore database backup.");
+                    Console.WriteLine();
+                    using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                    {
+                        if (Firestarter.BackupExists(db, "__zero__"))
+                            Console.WriteLine(@"zero   - Restores DB to last zeroed state.");
+                        if (Firestarter.BackupExists(db, "__undo__"))
+                            Console.WriteLine(@"undo   - Undoes the last operation (if possible).");
+                        if (Firestarter.BackupExists(db, "__redo__"))
+                            Console.WriteLine(@"redo   - Redoes something that was undone.");
+                        if (Firestarter.BackupExists(db, "__reset__"))
+                            Console.WriteLine(@"reset  - Reset DB to initial set (differentiates WORK and TEST).");
+                    }
+                    Console.WriteLine();
                     Console.WriteLine(
                         wasAttached
                             ? @"atc    - Leaves DB attached when done."
                             : @"dtc    - Detach DB when done.");
+                    Console.WriteLine();
+                    Console.WriteLine(@"cls    - Clear screen.");
                 }
 
                 Console.WriteLine(@"RETURN - {0} options.", showHidden ? "Hides visible" : "Shows hidden");
@@ -192,6 +215,81 @@ namespace Cerebello.Firestarter
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine(showHidden ? "Complex options: VISIBLE" : "Complex options: HIDDEN");
 
+                        break;
+
+                    case "undo":
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                        {
+                            Firestarter.CreateBackup(db, "__redo__");
+                            if (Firestarter.RestoreBackup(db, "__undo__"))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Undone!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("Could not undo!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+                        break;
+
+                    case "zero":
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                        {
+                            Firestarter.CreateBackup(db, "__undo__");
+                            if (Firestarter.RestoreBackup(db, "__zero__"))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Zeroed!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("Could not zero database!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+                        break;
+
+                    case "redo":
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                        {
+                            if (Firestarter.RestoreBackup(db, "__redo__"))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("Could not redo!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+                        break;
+
+                    case "reset":
+                        using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                        {
+                            Firestarter.CreateBackup(db, "__undo__");
+                            if (Firestarter.RestoreBackup(db, "__reset__"))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Done!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("Could not reset database!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
                         break;
 
                     case "atc?":
@@ -251,7 +349,10 @@ namespace Cerebello.Firestarter
                             try
                             {
                                 using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                {
+                                    Firestarter.CreateBackup(db, "__undo__");
                                     CreateDatabaseUsingScript(db, rootCerebelloPath);
+                                }
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -328,6 +429,7 @@ namespace Cerebello.Firestarter
                             {
                                 if (clearAllData)
                                 {
+                                    Firestarter.CreateBackup(db, "__undo__");
                                     Firestarter.DropAllTables(db);
                                     Console.ForegroundColor = ConsoleColor.Green;
                                     Console.WriteLine("Done!");
@@ -388,6 +490,7 @@ namespace Cerebello.Firestarter
                             {
                                 if (clearAllData)
                                 {
+                                    Firestarter.CreateBackup(db, "__undo__");
                                     try
                                     {
                                         Firestarter.ClearAllData(db);
@@ -440,6 +543,8 @@ namespace Cerebello.Firestarter
                         {
                             using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
                             {
+                                Firestarter.CreateBackup(db, "__undo__");
+
                                 Console.ForegroundColor = ConsoleColor.Gray;
 
                                 // Initializing system tables
@@ -447,6 +552,8 @@ namespace Cerebello.Firestarter
 
                                 using (RandomContext.Create(rndOption))
                                     OptionP1(db);
+
+                                Firestarter.CreateBackup(db, "__reset__");
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Done!");
@@ -596,6 +703,81 @@ namespace Cerebello.Firestarter
                             rndOption = num;
                         break;
 
+                    case "bkc?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Creates a database backup,");
+                            Console.WriteLine("that can latter be restored");
+                            Console.WriteLine("using the 'bkr' command.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+
+                        break;
+
+                    case "bkc":
+                        // Dettaching previous DB if it was attached in this session.
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("Backup name: ");
+                        var ssName = Console.ReadLine();
+                        try
+                        {
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                Firestarter.CreateBackup(db, ssName);
+                        }
+                        catch (Exception ex)
+                        {
+                            ConsoleWriteException(ex);
+                            break;
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Done!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+
+                    case "bkr?":
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine();
+                            Console.WriteLine("Restores a database backup,");
+                            Console.WriteLine("that was created using the");
+                            Console.WriteLine("'bkc' command.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Press any key to continue.");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+
+                        break;
+
+                    case "bkr":
+                        // Dettaching previous DB if it was attached in this session.
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("Backup name: ");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        var ssNameRestore = Console.ReadLine();
+                        try
+                        {
+                            using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                                Firestarter.RestoreBackup(db, ssNameRestore);
+                        }
+                        catch (Exception ex)
+                        {
+                            ConsoleWriteException(ex);
+                            break;
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Done!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+
                     case "r?":
                         {
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -633,6 +815,7 @@ namespace Cerebello.Firestarter
                             {
                                 if (resetDb)
                                 {
+                                    Firestarter.CreateBackup(db, "__undo__");
                                     try
                                     {
                                         Console.WriteLine("DropAllTables");
@@ -646,11 +829,14 @@ namespace Cerebello.Firestarter
                                         if (!isTestDb)
                                             using (RandomContext.Create(rndOption))
                                                 OptionP1(db);
+
+                                        Firestarter.CreateBackup(db, "__reset__");
                                     }
                                     catch (Exception ex)
                                     {
                                         ConsoleWriteException(ex);
 
+                                        Console.WriteLine("Use 'undo' command to restore database to what it was before.");
                                         Console.ForegroundColor = ConsoleColor.Yellow;
                                         Console.WriteLine("Partially done!");
                                         Console.ForegroundColor = ConsoleColor.White;
@@ -658,6 +844,8 @@ namespace Cerebello.Firestarter
                                         break;
                                     }
 
+                                    Console.WriteLine("Use 'zero' command to restore database to a minimal state.");
+                                    Console.WriteLine("Use 'undo' command to restore database to what it was before.");
                                     Console.ForegroundColor = ConsoleColor.Green;
                                     Console.WriteLine("Done!");
                                     Console.ForegroundColor = ConsoleColor.White;
@@ -679,7 +867,10 @@ namespace Cerebello.Firestarter
                         {
                             Console.Write("Command: ");
                             using (var db = new CerebelloEntities(string.Format("name={0}", connName)))
+                            {
+                                Firestarter.CreateBackup(db, "__undo__");
                                 new Exec(db).ExecCommand(0, "", null, new Queue<string>());
+                            }
 
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Done!");
@@ -999,6 +1190,9 @@ namespace Cerebello.Firestarter
             anvisaHelper.SaveLeafletsInMedicinesJsonToDb(
                 db,
                 progress: ConsoleWriteProgressIntInt);
+
+            // Creating a minimal DB backup called __zero__.
+            Firestarter.CreateBackup(db, "__zero__");
         }
 
         private static void CreateDatabaseUsingScript(CerebelloEntities db, string rootCerebelloPath)

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Permissions;
+using System.Security.Principal;
 using System.Xml;
 using System.Xml.Linq;
 using Cerebello.Model;
@@ -1730,7 +1733,7 @@ GO
             var dbName = sqlConn1.Database;
 
             // attaches the database
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
 
@@ -1751,10 +1754,106 @@ GO
                     // probably the database exists already because a previous test failed.. let's move on
                     return false;
                 }
-                conn.Close();
 
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Creates a backup from the given database.
+        /// </summary>
+        internal static bool CreateBackup(CerebelloEntities db, string backupName = "default")
+        {
+            var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
+            var connStr = sqlConn2.ToString();
+            var dbName = sqlConn1.Database;
+
+            // attaches the database
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                try
+                {
+                    using (var command = conn.CreateCommand())
+                    {
+                        string bakFile = Path.Combine(
+                            @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL",
+                            string.Format(@"Backup\{0}_{1}.Bak", dbName, backupName));
+
+                        command.CommandText = string.Format(@"
+                            BACKUP DATABASE {0}
+                            TO DISK = N'{2}'
+                               WITH FORMAT,
+                                  MEDIANAME = '{0}_{1}_bak',
+                                  NAME = 'Full Backup of {0}';
+                            ", dbName, backupName, bakFile);
+
+                        command.ExecuteNonQuery();
+
+                        return true;
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Restores a backup for the given database.
+        /// </summary>
+        internal static bool RestoreBackup(CerebelloEntities db, string backupName = "default")
+        {
+            var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
+            var connStr = sqlConn2.ToString();
+            var dbName = sqlConn1.Database;
+
+            // attaches the database
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                try
+                {
+                    using (var command = conn.CreateCommand())
+                    {
+                        string bakFile = Path.Combine(
+                            @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL",
+                            string.Format(@"Backup\{0}_{1}.Bak", dbName, backupName));
+
+                        if (!File.Exists(bakFile))
+                            return false;
+
+                        command.CommandText = string.Format(@"
+                            USE master
+                            RESTORE DATABASE {0}
+                            FROM DISK = N'{1}'
+                            ", dbName, bakFile);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public static bool BackupExists(CerebelloEntities db, string backupName = "default")
+        {
+            var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
+            var dbName = sqlConn1.Database;
+            string bakFile = Path.Combine(
+                @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL",
+                string.Format(@"Backup\{0}_{1}.Bak", dbName, backupName));
+            return File.Exists(bakFile);
         }
 
         /// <summary>
