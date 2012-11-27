@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
@@ -283,22 +284,22 @@ namespace CerebelloWebRole.Controllers
                         this.db.SaveChanges();
 
                         // adding message to the user so that he/she completes his/her profile informations
-                        var editUserUrl = this.Url.Action(
-                            "Edit",
-                            "Users",
-                            new { id = user.Id, practice = user.Practice.UrlIdentifier, area = "App" });
+                        this.db.Notifications.AddObject(new Notification()
+                        {
+                            CreatedOn = this.GetUtcNow(),
+                            PracticeId = user.Practice.Id,
+                            UserId = user.Id,
+                            ViewName = "NotificationFillUserProfile",
+                            ViewData = System.Web.Helpers.Json.Encode(new { id = user.Id, practice = user.Practice.UrlIdentifier }),
+                        });
 
                         this.db.Notifications.AddObject(new Notification()
                         {
                             CreatedOn = this.GetUtcNow(),
                             PracticeId = user.Practice.Id,
                             UserId = user.Id,
-                            Text =
-                                string.Format(
-                                    string.Format(@"<a href=""{0}"" style=""color: white"" onclick=""$(this).trigger('notification-close')"">", editUserUrl)
-                                    + "Por favor, complete as informações de seu perfil para uma melhor experiência com o software."
-                                    + @"</a>",
-                                    user.UserName)
+                            ViewName = "NotificationFillPracticeProfile",
+                            ViewData = System.Web.Helpers.Json.Encode(new { id = user.Id, practice = user.Practice.UrlIdentifier }),
                         });
 
                         user.Practice.Owner = user;

@@ -257,9 +257,12 @@ namespace CerebelloWebRole.Tests.Tests
                     Assert.AreEqual("Psiquiatra", user.Doctor.MedicalSpecialtyName);
                     Assert.IsNotNull(user.Administrator, "Practice owner must be administrator.");
 
-                    var notification = dba.Notifications.Single();
-                    Assert.IsTrue(notification.Text.Contains("/p/consultoriodrhouse08sd986/Users/Edit/" + user.Id));
-                    Assert.IsTrue(notification.Text.Contains("notification-close"));
+                    var notifications = dba.Notifications.ToArray();
+                    Assert.AreEqual(2, notifications.Length);
+                    Assert.AreEqual("NotificationFillUserProfile", notifications[0].ViewName);
+                    Assert.AreEqual(string.Format(@"{{""id"":{0},""practice"":""consultoriodrhouse08sd986""}}", user.Id), notifications[0].ViewData);
+                    Assert.AreEqual("NotificationFillPracticeProfile", notifications[1].ViewName);
+                    Assert.AreEqual(string.Format(@"{{""id"":{0},""practice"":""consultoriodrhouse08sd986""}}", user.Id), notifications[1].ViewData);
                 }
 
                 // Assert user is logged-in: this is already done in CreateAccount_HappyPath.
