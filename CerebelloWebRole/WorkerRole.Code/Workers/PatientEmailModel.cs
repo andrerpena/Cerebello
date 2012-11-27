@@ -1,4 +1,5 @@
 ﻿using System;
+using Cerebello.Model;
 using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers

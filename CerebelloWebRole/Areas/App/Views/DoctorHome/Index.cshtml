@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.DoctorHomeViewModel
+@using Cerebello.Model
 @using CerebelloWebRole.Models
 @{
     var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;

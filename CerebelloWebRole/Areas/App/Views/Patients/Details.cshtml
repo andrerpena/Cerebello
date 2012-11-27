@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+@using Cerebello.Model
 @using CerebelloWebRole.Code.Extensions
 @{
     ViewBag.Title = "Paciente: " + this.Model.FullName + " · Cerebello";
@@ -11,13 +12,13 @@
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
-    cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeGender))</text>);
+    cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text> @(((DateTime)@item.DateOfBirth).ToShortDateString())
     (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
     cardView.AddField(m => m.Profissao);
-    cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeMaritalStatus))</text>);
+    cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.CPF);
-    cardView.AddField(m => m.CPFOwner, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(CerebelloWebRole.Models.TypeCPFOwner))</text>);
+    cardView.AddField(m => m.CPFOwner, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeCpfOwner))</text>);
     cardView.AddField(m => m.PhoneLand);
     cardView.AddField(m => m.PhoneCell);
     cardView.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);

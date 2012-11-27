@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Objects.DataClasses;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
-using Cerebello.Model;
+﻿using System.ComponentModel.DataAnnotations;
 
 // todo: this namespace is wrong... should be Cerebello.Model
-namespace CerebelloWebRole.Models
+namespace Cerebello.Model
 {
     /// <summary>
     /// Enumeration of all Cerebello usage contract types.
@@ -70,7 +63,7 @@ namespace CerebelloWebRole.Models
         PostGraduation = 5
     }
 
-    public enum TypeCPFOwner
+    public enum TypeCpfOwner
     {
         [Display(Name = "O próprio paciente")]
         PatientItself,

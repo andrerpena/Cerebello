@@ -150,7 +150,7 @@ namespace Cerebello.Firestarter.Helpers
                                     MaritalStatus = (short?)random.Next(0, 4),
                                     BirthPlace = "Brasileiro(a)",
                                     CPF = "87324128910",
-                                    CPFOwner = (int)TypeCPFOwner.PatientItself,
+                                    CPFOwner = (int)TypeCpfOwner.PatientItself,
                                     Profession = professions[random.Next(professions.Length)],
                                     CreatedOn = DateTime.UtcNow,
                                     PracticeId = doctor.PracticeId,
