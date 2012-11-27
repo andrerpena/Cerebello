@@ -518,6 +518,8 @@ CREATE TABLE [dbo].[Notification](
 	[UserId] [int] NOT NULL,
 	[Text] [varchar](max) NOT NULL,
 	[IsPolled] [bit] NOT NULL,
+	[ViewData] [nvarchar](50) NULL,
+	[ViewName] [nvarchar](250) NULL,
  CONSTRAINT [PK_Notification] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

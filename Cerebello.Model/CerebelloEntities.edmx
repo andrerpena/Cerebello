@@ -571,6 +571,8 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="Text" Type="varchar(max)" Nullable="false" />
           <Property Name="IsPolled" Type="bit" Nullable="false" />
+          <Property Name="ViewName" Type="varchar" MaxLength="50" />
+          <Property Name="ViewData" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -2681,6 +2683,8 @@
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Notification" ToRole="Practice" />
           <NavigationProperty Name="User" Relationship="Cerebello.Model.FK_Notification_User" FromRole="Notification" ToRole="User" />
           <Property Type="Boolean" Name="IsPolled" Nullable="false" />
+          <Property Type="String" Name="ViewName" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ViewData" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Notification_Practice">
           <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
@@ -3279,6 +3283,8 @@
           <EntitySetMapping Name="Notifications">
             <EntityTypeMapping TypeName="Cerebello.Model.Notification">
               <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="ViewData" ColumnName="ViewData" />
+                <ScalarProperty Name="ViewName" ColumnName="ViewName" />
                 <ScalarProperty Name="IsPolled" ColumnName="IsPolled" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />

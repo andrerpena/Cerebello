@@ -19,8 +19,12 @@ namespace CerebelloWebRole.Code.Notifications
                 this.utcNowGetter = () => DateTime.UtcNow;
         }
 
-        public override IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp,
-                                                                    [NotNull] string connectionString, UrlHelper url)
+        public override IEnumerable<LongPollingEvent> WaitForEvents(
+            int userId,
+            int practiceId,
+            long timestamp,
+            [NotNull] string connectionString,
+            Controller controller)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
 
@@ -29,17 +33,19 @@ namespace CerebelloWebRole.Code.Notifications
                 db.SetCurrentUserById(userId);
 
                 var result = new List<LongPollingEvent>();
-                var notificationData = NewAppointmentNotificationsHelper.GetNewAppointmentNotifications(db, practiceId, userId, this.utcNowGetter, url, false);
+                var notificationData = NewAppointmentNotificationsHelper.GetNewAppointmentNotifications(
+                    db, practiceId, userId, this.utcNowGetter, controller.Url, false);
 
                 if (notificationData.Any())
                 {
                     foreach (var notification in notificationData)
-                        result.Add(new LongPollingEvent()
-                            {
-                                ProviderName = "new-appointment",
-                                EventKey = notification.NotificationClientId,
-                                Data = notification
-                            });
+                        result.Add(
+                            new LongPollingEvent()
+                                {
+                                    ProviderName = "new-appointment",
+                                    EventKey = notification.NotificationClientId,
+                                    Data = notification
+                                });
                 }
                 return result;
             }

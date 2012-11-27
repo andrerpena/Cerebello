@@ -8421,6 +8421,54 @@ namespace Cerebello.Model
         private global::System.Boolean _IsPolled;
         partial void OnIsPolledChanging(global::System.Boolean value);
         partial void OnIsPolledChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ViewName
+        {
+            get
+            {
+                return _ViewName;
+            }
+            set
+            {
+                OnViewNameChanging(value);
+                ReportPropertyChanging("ViewName");
+                _ViewName = StructuralObject.SetValidValue(value, true, "ViewName");
+                ReportPropertyChanged("ViewName");
+                OnViewNameChanged();
+            }
+        }
+        private global::System.String _ViewName;
+        partial void OnViewNameChanging(global::System.String value);
+        partial void OnViewNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ViewData
+        {
+            get
+            {
+                return _ViewData;
+            }
+            set
+            {
+                OnViewDataChanging(value);
+                ReportPropertyChanging("ViewData");
+                _ViewData = StructuralObject.SetValidValue(value, true, "ViewData");
+                ReportPropertyChanged("ViewData");
+                OnViewDataChanged();
+            }
+        }
+        private global::System.String _ViewData;
+        partial void OnViewDataChanging(global::System.String value);
+        partial void OnViewDataChanged();
 
         #endregion
 

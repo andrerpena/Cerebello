@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -123,7 +124,7 @@ namespace CerebelloWebRole.Code.Helpers
         public class MockHttpRequest : HttpRequestBase
         {
             private readonly Uri url = new Uri(
-                string.Format(
+                String.Format(
                     "http://www.{0}{1}/",
                     Constants.DOMAIN,
                     Constants.PORT.HasValue ? ":" + Constants.PORT : ""),
@@ -144,7 +145,7 @@ namespace CerebelloWebRole.Code.Helpers
 
             public override Uri Url
             {
-                get { return url; }
+                get { return this.url; }
             }
 
             public override string ApplicationPath
@@ -190,6 +191,30 @@ namespace CerebelloWebRole.Code.Helpers
             public override HttpCookieCollection Cookies
             {
                 get { return this.cookies; }
+            }
+        }
+
+        /// <summary>
+        /// Renders a partial MVC view to a string.
+        /// The view search locations is relative to the ControllerContext.
+        /// </summary>
+        /// <param name="controllerContext">ControllerContext that is used to locate the view.</param>
+        /// <param name="viewName">The name of the partial view to render.</param>
+        /// <param name="model">The model objeto to pass to the partial view.</param>
+        /// <returns>The string rendered from the partial view.</returns>
+        public static string RenderPartialViewToString(
+            ControllerContext controllerContext,
+            [JetBrains.Annotations.AspMvcView][JetBrains.Annotations.AspMvcPartialView] string viewName,
+            object model = null)
+        {
+            var viewData = new ViewDataDictionary(model);
+            var tempData = new TempDataDictionary();
+            var viewResult = ViewEngines.Engines.FindPartialView(controllerContext, viewName);
+            using (var sw = new StringWriter())
+            {
+                var viewContext = new ViewContext(controllerContext, viewResult.View, viewData, tempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
             }
         }
     }

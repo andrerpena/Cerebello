@@ -18,17 +18,17 @@ namespace CerebelloWebRole.Code.Notifications
 
         public override IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp,
                                                                     [NotNull] string connectionString,
-                                                                    [NotNull] UrlHelper url)
+                                                                    [NotNull] Controller controller)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (url == null) throw new ArgumentNullException("url");
+            if (controller == null) throw new ArgumentNullException("controller");
 
             using (var db = new CerebelloEntitiesAccessFilterWrapper(new CerebelloEntities(connectionString)))
             {
                 db.SetCurrentUserById(userId);
 
                 var result = new List<LongPollingEvent>();
-                var notificationData = NotificationsHelper.GetNotifications(db, userId, url, false);
+                var notificationData = NotificationsHelper.GetNotifications(db, userId, controller, false);
 
                 if (notificationData.Any())
                 {

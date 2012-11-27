@@ -41,15 +41,7 @@ namespace CerebelloWebRole.Code.Controllers
             [JetBrains.Annotations.AspMvcView][JetBrains.Annotations.AspMvcPartialView] string viewName,
             object model = null)
         {
-            var viewData = new ViewDataDictionary(model);
-            var tempData = new TempDataDictionary();
-            var viewResult = ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
-            using (var sw = new StringWriter())
-            {
-                var viewContext = new ViewContext(this.ControllerContext, viewResult.View, viewData, tempData, sw);
-                viewResult.View.Render(viewContext, sw);
-                return sw.GetStringBuilder().ToString();
-            }
+            return MvcHelper.RenderPartialViewToString(this.ControllerContext, viewName, model);
         }
 
         public EmailHelper.SendEmailAction EmailSender { get; set; }

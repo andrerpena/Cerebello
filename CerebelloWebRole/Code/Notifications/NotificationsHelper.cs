@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.Code.Notifications
 {
@@ -13,9 +12,10 @@ namespace CerebelloWebRole.Code.Notifications
         /// </summary>
         /// <param name="db"></param>
         /// <param name="userId"></param>
+        /// <param name="controller"> </param>
         /// <param name="polled"></param>
         /// <returns></returns>
-        public static List<NotificationData> GetNotifications(CerebelloEntitiesAccessFilterWrapper db, int userId, UrlHelper url, bool polled)
+        public static List<NotificationData> GetNotifications(CerebelloEntitiesAccessFilterWrapper db, int userId, Controller controller, bool polled)
         {
             var result = new List<NotificationData>();
             var notifications = db.Notifications.Where(n => n.UserId == userId && n.IsPolled == polled);
@@ -24,14 +24,25 @@ namespace CerebelloWebRole.Code.Notifications
             {
                 foreach (var notification in notifications)
                 {
+                    string text;
+                    if (string.IsNullOrWhiteSpace(notification.ViewName))
+                    {
+                        text = notification.Text;
+                    }
+                    else
+                    {
+                        var jsonData = System.Web.Helpers.Json.Decode(notification.ViewData);
+                        text = MvcHelper.RenderPartialViewToString(controller.ControllerContext, notification.ViewName, jsonData);
+                    }
+
                     result.Add(new NotificationData()
                         {
                             NotificationId = notification.Id,
                             NotificationClientId = "notification_" + notification.Id,
-                            Text = notification.Text,
+                            Text = text,
                             NotificationIsPolledUrl =
-                                url.Action("SetNotificationAsPolled", "Notifications", new { id = notification.Id }),
-                            NotificationRemoveUrl = url.Action("RemoveNotification", "Notifications", new { id = notification.Id })
+                                controller.Url.Action("SetNotificationAsPolled", "Notifications", new { id = notification.Id }),
+                            NotificationRemoveUrl = controller.Url.Action("RemoveNotification", "Notifications", new { id = notification.Id })
                         });
                 }
             }
