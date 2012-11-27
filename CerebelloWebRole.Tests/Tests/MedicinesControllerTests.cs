@@ -515,7 +515,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == medicineName);
             Assert.IsNotNull(medicine);
-            Assert.AreEqual(2, medicine.ActiveIngredients.Count);
+            Assert.AreEqual(2, medicine.Leaflets.Count);
 
             // verify that all the active ingredients inside the medicine are those that
             // we've created here
