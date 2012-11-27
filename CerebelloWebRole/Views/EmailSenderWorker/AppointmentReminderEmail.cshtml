@@ -9,8 +9,8 @@
     var contactDoctor = string.Format("{0} {1}", dr, this.Model.DoctorName);
     var contactPractice = string.Format("{0}", this.Model.PracticeName);
 
-    var hasDoctorContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.DoctorPhone, this.Model.DoctorEmail));
-    var hasPracticeContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.PracticePhone, this.Model.PracticeEmail));
+    var hasDoctorContact = new[] { this.Model.DoctorPhone, this.Model.DoctorEmail }.AnyFilled();
+    var hasPracticeContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.PracticePhoneMain, this.Model.PracticeEmail));
 }
 @if (this.Model.IsBodyHtml)
 {
@@ -28,22 +28,44 @@
         Qualquer dúvida, entre em contato usando um dos meios abaixo:
     </p>
     <br />
-    if (hasDoctorContact)
-    {
-    <strong>@contactDoctor</strong>
-    <ul>
-        <li>telefone: @Model.DoctorPhone</li>
-        <li>e-mail: @Model.DoctorEmail</li>
-    </ul>
-    <br />
-    }
-    if (hasPracticeContact)
+    if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
     {
     <strong>@contactPractice</strong>
     <ul>
-        <li>telefone: @Model.PracticePhone</li>
-        <li>e-mail: @Model.PracticeEmail</li>
+        @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
+        {
+            <li>telefone: @Model.PracticePhoneMain@{
+            if (new[] { this.Model.PracticePhoneMain }.AnyFilled())
+            {
+                <text> <i>-ou-</i> @Model.PracticePhoneAlt</text>
+            }
+            }</li>
+        }
+        @if (new[] { this.Model.PracticeEmail }.AnyFilled())
+        {
+            <li>e-mail: @Model.PracticeEmail</li>
+        }
+        @if (new[] { this.Model.PracticePabx }.AnyFilled())
+        {
+            <li>PABX: @Model.PracticePabx</li>
+        }
     </ul>
+        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        {
+    <p>Site: @Model.PracticeSiteUrl</p>
+        }
+        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        {
+    <h3>Endereço</h3>
+    <div><b>CEP:</b> @Model.PracticeAddress.CEP</div>
+    <div>
+        Rua/Av @Model.PracticeAddress.Street,
+                @Model.PracticeAddress.Neighborhood,
+                @Model.PracticeAddress.City,
+                @Model.PracticeAddress.StateProvince,
+                @Model.PracticeAddress.Complement
+    </div>
+        }
     <br />
     }
     if (true)
@@ -85,21 +107,38 @@ na seguinte data:
 Qualquer dúvida, entre em contato
 usando um dos meios abaixo:
 
-@{ if (!hasDoctorContact) { goto skipContactDoctor; } }
-@contactDoctor
-@(new string('-', contactDoctor.Length))
-telefone: @Model.DoctorPhone
-e-mail: @Model.DoctorEmail
-
-@{ skipContactDoctor: }
-@{ if (!hasDoctorContact) { goto skipcontactPractice; } }
-
-@contactPractice
-@(new string('-', contactPractice.Length))
-telefone: @Model.PracticePhone
-e-mail: @Model.PracticeEmail
-@{ skipcontactPractice: }
-
+@if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
+{
+    @:**@contactPractice**
+        if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
+        {
+    @:  telefone: @Model.PracticePhoneMain@{if (new[] { this.Model.PracticePhoneMain }.AnyFilled())
+                                            {<text> -ou- @Model.PracticePhoneAlt</text>}}
+        }
+        if (new[] { this.Model.PracticeEmail }.AnyFilled())
+        {
+    @:  e-mail: @Model.PracticeEmail
+        }
+        if (new[] { this.Model.PracticePabx }.AnyFilled())
+        {
+    @:  PABX: @Model.PracticePabx
+        }
+        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        {
+    @:Site: @Model.PracticeSiteUrl
+        }
+        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        {
+    @:Endereço
+    @:  CEP: @Model.PracticeAddress.CEP
+    @:  Rua/Av @Model.PracticeAddress.Street,
+    @:      @Model.PracticeAddress.Neighborhood,
+    @:      @Model.PracticeAddress.City,
+    @:      @Model.PracticeAddress.StateProvince,
+    @:      @Model.PracticeAddress.Complement
+        }
+    @:
+}
 @if (true)
 {
     @:Por favor, não responda este e-mail.

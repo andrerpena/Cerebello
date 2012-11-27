@@ -1,6 +1,6 @@
 ﻿using System;
 using Cerebello.Model;
-using CerebelloWebRole.Models;
+using CerebelloWebRole.Areas.App.Models;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
@@ -30,6 +30,14 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 
         public string PracticeEmail { get; set; }
 
-        public string PracticePhone { get; set; }
+        public string PracticePhoneMain { get; set; }
+
+        public string PracticePhoneAlt { get; set; }
+
+        public string PracticeSiteUrl { get; set; }
+
+        public string PracticePabx { get; set; }
+
+        public AddressViewModel PracticeAddress { get; set; }
     }
 }

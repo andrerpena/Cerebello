@@ -174,5 +174,25 @@ namespace CerebelloWebRole.Code
                 });
             return result;
         }
+
+        public static bool AllEmpty(this IEnumerable<string> strs)
+        {
+            return (strs ?? new string[0]).All(string.IsNullOrWhiteSpace);
+        }
+
+        public static bool AllFilled(this IEnumerable<string> strs)
+        {
+            return !AnyEmpty(strs);
+        }
+
+        public static bool AnyEmpty(this IEnumerable<string> strs)
+        {
+            return (strs ?? new string[0]).Any(string.IsNullOrWhiteSpace);
+        }
+
+        public static bool AnyFilled(this IEnumerable<string> strs)
+        {
+            return !AllEmpty(strs);
+        }
     }
 }

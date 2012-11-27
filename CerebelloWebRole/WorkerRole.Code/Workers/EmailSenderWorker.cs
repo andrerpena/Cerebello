@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Mail;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Models;
 
@@ -46,8 +47,20 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                                             DoctorGender = (TypeGender)a.DoctorPerson.Gender,
                                             AppointmentDate = a.Appointment.Start,
 
-                                            PracticeEmail = "",//a.Practice.Email,
-                                            PracticePhone = "",//a.Practice.Phone,
+                                            PracticeEmail = a.Practice.Email,
+                                            PracticePhoneMain = a.Practice.PhoneMain,
+                                            PracticePhoneAlt = a.Practice.PhoneAlt,
+                                            PracticeSiteUrl = a.Practice.SiteUrl,
+                                            PracticePabx = a.Practice.PABX,
+                                            PracticeAddress = new AddressViewModel
+                                                {
+                                                    StateProvince = a.Practice.Address.StateProvince,
+                                                    City = a.Practice.Address.City,
+                                                    Neighborhood = a.Practice.Address.Neighborhood,
+                                                    Street = a.Practice.Address.Street,
+                                                    Complement = a.Practice.Address.Complement,
+                                                    CEP = a.Practice.Address.CEP,
+                                                },
 
                                             // todo: is it correct to send these informations to the patient
                                             // maybe this info is not suited to the outside world
