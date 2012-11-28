@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Code.LongPolling
         /// <param name="practiceId"></param>
         /// <param name="timestamp"></param>
         /// <param name="connectionString"></param>
-        /// <param name="url"></param>
-        public abstract IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, string connectionString, UrlHelper url);
+        /// <param name="controller"></param>
+        public abstract IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp, string connectionString, Controller controller);
     }
 }

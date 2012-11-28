@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -15,7 +16,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         private ConfigPracticeViewModel ConfigPracticeViewModel()
         {
-            var viewModel = new ConfigPracticeViewModel();
 
             var timeZoneId = this.Practice.WindowsTimeZoneId;
 
@@ -23,9 +23,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Cast<TypeTimeZone>()
                 .First(tz => TimeZoneDataAttribute.GetAttributeFromEnumValue(tz).Id == timeZoneId);
 
-            viewModel.PracticeTimeZone = (short)timeZone;
+            var address = this.Practice.Address ?? new Address();
 
-            viewModel.PracticeName = this.Practice.Name;
+            var viewModel = new ConfigPracticeViewModel
+                {
+                    Address = new AddressViewModel
+                        {
+                            CEP = address.CEP,
+                            City = address.City,
+                            Complement = address.Complement,
+                            Neighborhood = address.Neighborhood,
+                            StateProvince = address.StateProvince,
+                            Street = address.Street,
+                        },
+                    Email = this.Practice.Email,
+                    Pabx = this.Practice.PABX,
+                    PhoneAlt = this.Practice.PhoneAlt,
+                    PhoneMain = this.Practice.PhoneMain,
+                    PracticeName = this.Practice.Name,
+                    PracticeTimeZone = (short)timeZone,
+                    SiteUrl = this.Practice.SiteUrl,
+                };
+
             return viewModel;
         }
 
@@ -53,6 +72,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.Practice.Name = viewModel.PracticeName;
                 this.Practice.WindowsTimeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue(
                     (TypeTimeZone)viewModel.PracticeTimeZone).Id;
+
+                this.Practice.PhoneMain = viewModel.PhoneMain;
+                this.Practice.PhoneAlt = viewModel.PhoneAlt;
+                this.Practice.SiteUrl = viewModel.SiteUrl;
+                this.Practice.Email = viewModel.Email;
+
+                if (this.Practice.Address == null)
+                    this.Practice.Address = new Address();
+                this.Practice.Address.CEP = viewModel.Address.CEP;
+                this.Practice.Address.City = viewModel.Address.City;
+                this.Practice.Address.Complement = viewModel.Address.Complement;
+                this.Practice.Address.Neighborhood = viewModel.Address.Neighborhood;
+                this.Practice.Address.StateProvince = viewModel.Address.StateProvince;
+                this.Practice.Address.Street = viewModel.Address.Street;
 
                 this.db.SaveChanges();
 

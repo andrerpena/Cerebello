@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Code.Chat
         }
 
         public override IEnumerable<LongPollingEvent> WaitForEvents(int userId, int practiceId, long timestamp,
-                                                                    [NotNull] string connectionString, UrlHelper url)
+                                                                    [NotNull] string connectionString, Controller controller)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
 

@@ -28,6 +28,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private PatientViewModel GetViewModel(Patient patient, bool includeSessions = false)
         {
+            var address = patient.Person.Addresses.Single();
+
             var viewModel = new PatientViewModel()
             {
                 Id = patient.Id,
@@ -47,12 +49,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 PhoneLand = patient.Person.PhoneLand,
                 Address = new AddressViewModel()
                 {
-                    CEP = patient.Person.Address.CEP,
-                    City = patient.Person.Address.City,
-                    Complement = patient.Person.Address.Complement,
-                    Neighborhood = patient.Person.Address.Neighborhood,
-                    StateProvince = patient.Person.Address.StateProvince,
-                    Street = patient.Person.Address.Street
+                    CEP = address.CEP,
+                    City = address.City,
+                    Complement = address.Complement,
+                    Neighborhood = address.Neighborhood,
+                    StateProvince = address.StateProvince,
+                    Street = address.Street
                 }
             };
 
@@ -291,19 +293,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.PhoneLand = formModel.PhoneLand;
                 patient.Person.PhoneCell = formModel.PhoneCell;
                 // handle patient address
-                if (patient.Person.Address == null)
-                    patient.Person.Address = new Address { PracticeId = this.DbUser.PracticeId, };
-
-                patient.Person.Address.CEP = formModel.Address.CEP;
-                patient.Person.Address.StateProvince = formModel.Address.StateProvince;
-                patient.Person.Address.City = formModel.Address.City;
-                patient.Person.Address.Complement = formModel.Address.Complement;
-                patient.Person.Address.Neighborhood = formModel.Address.Neighborhood;
-                patient.Person.Address.StateProvince = formModel.Address.StateProvince;
-                patient.Person.Address.Street = formModel.Address.Street;
+                if (!patient.Person.Addresses.Any())
+                    patient.Person.Addresses.Add(
+                        new Address
+                            {
+                                PracticeId = this.DbUser.PracticeId,
+                                CEP = formModel.Address.CEP,
+                                City = formModel.Address.City,
+                                Complement = formModel.Address.Complement,
+                                Neighborhood = formModel.Address.Neighborhood,
+                                StateProvince = formModel.Address.StateProvince,
+                                Street = formModel.Address.Street,
+                            });
 
                 db.SaveChanges();
-                return RedirectToAction("details", new { id = patient.Id });
+                return RedirectToAction("Details", new { id = patient.Id });
             }
 
             return View("Edit", formModel);

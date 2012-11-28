@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Cerebello.Model;
 using CerebelloWebRole.Models;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;

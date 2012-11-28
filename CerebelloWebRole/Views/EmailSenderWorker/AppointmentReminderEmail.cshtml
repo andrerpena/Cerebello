@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using Cerebello.Model
 @using CerebelloWebRole.Code
 @using CerebelloWebRole.Models
 @model CerebelloWebRole.WorkerRole.Code.Workers.PatientEmailModel
@@ -8,8 +9,8 @@
     var contactDoctor = string.Format("{0} {1}", dr, this.Model.DoctorName);
     var contactPractice = string.Format("{0}", this.Model.PracticeName);
 
-    var hasDoctorContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.DoctorPhone, this.Model.DoctorEmail));
-    var hasPracticeContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.PracticePhone, this.Model.PracticeEmail));
+    var hasDoctorContact = new[] { this.Model.DoctorPhone, this.Model.DoctorEmail }.AnyFilled();
+    var hasPracticeContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.PracticePhoneMain, this.Model.PracticeEmail));
 }
 @if (this.Model.IsBodyHtml)
 {
@@ -24,25 +25,60 @@
     </p>
     <br />
     <p>
-        Qualquer dúvida, entre em contato usando um dos meios abaixo:
+        Qualquer dúvida, entre em contato conosco.
     </p>
     <br />
-    if (hasDoctorContact)
+    <h2>@contactPractice</h2>
+    if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
     {
-    <strong>@contactDoctor</strong>
+    <h3>Contato</h3>
     <ul>
-        <li>telefone: @Model.DoctorPhone</li>
-        <li>e-mail: @Model.DoctorEmail</li>
+        @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
+        {
+            <li>telefone: @Model.PracticePhoneMain@{
+            if (new[] { this.Model.PracticePhoneAlt }.AnyFilled())
+            {
+                <text> <i>-ou-</i> @Model.PracticePhoneAlt</text>
+            }
+            }</li>
+        }
+        @if (new[] { this.Model.PracticeEmail }.AnyFilled())
+        {
+            <li>e-mail: @Model.PracticeEmail</li>
+        }
+        @if (new[] { this.Model.PracticePabx }.AnyFilled())
+        {
+            <li>PABX: @Model.PracticePabx</li>
+        }
     </ul>
-    <br />
-    }
-    if (hasPracticeContact)
-    {
-    <strong>@contactPractice</strong>
+        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        {
+    <h3>Site</h3>
     <ul>
-        <li>telefone: @Model.PracticePhone</li>
-        <li>e-mail: @Model.PracticeEmail</li>
+        <li>@Model.PracticeSiteUrl</li>
     </ul>
+        }
+        if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
+        {
+    <h3>Endereço</h3>
+    <ul>
+        @if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
+        {
+            <li><b>CEP:</b> @Model.PracticeAddress.CEP</li>
+        }
+        @if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
+        {
+            <li>Rua/Av @(string.Join(",\r\n    ", new[] {
+                 Model.PracticeAddress.Street,
+                 Model.PracticeAddress.Neighborhood,
+                 Model.PracticeAddress.City,
+                 Model.PracticeAddress.StateProvince,
+                 Model.PracticeAddress.Complement }
+                 .Where(s => !string.IsNullOrWhiteSpace(s))))
+            </li>
+        }
+    </ul>
+        }
     <br />
     }
     if (true)
@@ -81,24 +117,54 @@ na seguinte data:
 
 @Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))
 
-Qualquer dúvida, entre em contato
-usando um dos meios abaixo:
-
-@{ if (!hasDoctorContact) { goto skipContactDoctor; } }
-@contactDoctor
-@(new string('-', contactDoctor.Length))
-telefone: @Model.DoctorPhone
-e-mail: @Model.DoctorEmail
-
-@{ skipContactDoctor: }
-@{ if (!hasDoctorContact) { goto skipcontactPractice; } }
+Qualquer dúvida, entre em contato conosco.
 
 @contactPractice
 @(new string('-', contactPractice.Length))
-telefone: @Model.PracticePhone
-e-mail: @Model.PracticeEmail
-@{ skipcontactPractice: }
-
+@if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
+{
+    @:
+    @:Contato
+        if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
+        {
+    @:  telefone: @Model.PracticePhoneMain@{if (new[] { this.Model.PracticePhoneAlt }.AnyFilled())
+                                            {<text> -ou- @Model.PracticePhoneAlt</text>}}
+        }
+        if (new[] { this.Model.PracticeEmail }.AnyFilled())
+        {
+    @:  e-mail: @Model.PracticeEmail
+        }
+        if (new[] { this.Model.PracticePabx }.AnyFilled())
+        {
+    @:  PABX: @Model.PracticePabx
+        }
+        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        {
+    @:
+    @:Site
+    @:  @Model.PracticeSiteUrl
+        }
+        if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
+        {
+    @:
+    @:Endereço
+        if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
+        {
+    @:  CEP: @Model.PracticeAddress.CEP
+        }
+        if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
+        {
+    @:  Rua/Av @(string.Join(",\r\n    ", new[] {
+                 Model.PracticeAddress.Street,
+                 Model.PracticeAddress.Neighborhood,
+                 Model.PracticeAddress.City,
+                 Model.PracticeAddress.StateProvince,
+                 Model.PracticeAddress.Complement }
+                 .Where(s => !string.IsNullOrWhiteSpace(s))))
+        }
+        }
+    @:
+}
 @if (true)
 {
     @:Por favor, não responda este e-mail.
@@ -118,4 +184,4 @@ Atenciosamente,
 
 
 @(">> Powered by cerebello <<")
->> @Url.Action("Index", "Home", new { }, "http") <<
+@Url.Action("Index", "Home", new { }, "http")

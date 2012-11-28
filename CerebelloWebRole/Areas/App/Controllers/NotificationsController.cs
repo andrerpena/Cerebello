@@ -52,7 +52,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (createDoctorNotification)
                 {
                     var notificationText = string.Format("<a href='{0}'>{1}</a> chegou para uma consulta às {2}",
-                        this.Url.Action("details", "patients", new { id = appointment.PatientId }),
+                        this.Url.Action("Details", "Patients", new { id = appointment.PatientId }),
                         appointment.Patient.Person.FullName,
                         DateTimeHelper.GetFormattedTime(PracticeController.ConvertToLocalDateTime(this.Practice, appointment.Start)));
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Models;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Notifications
@@ -14,16 +13,17 @@ namespace CerebelloWebRole.Code.Notifications
         /// 
         /// </summary>
         /// <param name="db"></param>
+        /// <param name="userId"> </param>
         /// <param name="utcNowGetter"></param>
-        /// <param name="url"></param>
+        /// <param name="urlHelper"></param>
         /// <param name="practiceId"></param>
         /// <param name="polled"></param>
         /// <returns></returns>
-        public static List<NewAppointmentNotificationData> GetNewAppointmentNotifications([NotNull] CerebelloEntitiesAccessFilterWrapper db, int practiceId, int userId, [NotNull] Func<DateTime> utcNowGetter, [NotNull] UrlHelper url, bool polled = false)
+        public static List<NewAppointmentNotificationData> GetNewAppointmentNotifications([NotNull] CerebelloEntitiesAccessFilterWrapper db, int practiceId, int userId, [NotNull] Func<DateTime> utcNowGetter, [NotNull] UrlHelper urlHelper, bool polled = false)
         {
             if (db == null) throw new ArgumentNullException("db");
             if (utcNowGetter == null) throw new ArgumentNullException("utcNowGetter");
-            if (url == null) throw new ArgumentNullException("url");
+            if (urlHelper == null) throw new ArgumentNullException("urlHelper");
 
             var practice = db.Practices.First(p => p.Id == practiceId);
             var user = db.Users.First(u => u.Id == userId);
@@ -44,7 +44,7 @@ namespace CerebelloWebRole.Code.Notifications
                 if (scheduledAppointments.Any())
                 {
                     foreach (var appointment in scheduledAppointments)
-                        result.Add(new NewAppointmentNotificationData()
+                        result.Add(new NewAppointmentNotificationData
                         {
                             NotificationId = appointment.Id,
                             NotificationClientId = "appointment_" + appointment.Id,
@@ -54,19 +54,19 @@ namespace CerebelloWebRole.Code.Notifications
                             DoctorId = appointment.DoctorId,
                             DoctorName = appointment.Doctor.Users.First().Person.FullName,
                             DoctorUrl =
-                                url.Action("Index", "DoctorHome",
+                                urlHelper.Action("Index", "DoctorHome",
                                            new { doctor = appointment.Doctor.UrlIdentifier }),
                             PatientId = appointment.Patient.Id,
                             PatientName = appointment.Patient.Person.FullName,
                             PatientUrl =
-                                url.Action("Details", "Patients", new { id = appointment.Patient.Id }),
+                                urlHelper.Action("Details", "Patients", new { id = appointment.Patient.Id }),
                             AppointmentAccomplishedUrl =
-                                url.Action("SetAppointmentAsAccomplished", "Notifications",
+                                urlHelper.Action("SetAppointmentAsAccomplished", "Notifications",
                                            new { id = appointment.Id, createDoctorNotification = true }),
                             AppointmentCanceledUrl =
-                                url.Action("SetAppointmentAsCanceled", "Notifications",
+                                urlHelper.Action("SetAppointmentAsCanceled", "Notifications",
                                            new { id = appointment.Id }),
-                            AppointmentIsPolledUrl = url.Action("SetAppointmentAsPolled", "Notifications", new { id = appointment.Id })
+                            AppointmentIsPolledUrl = urlHelper.Action("SetAppointmentAsPolled", "Notifications", new { id = appointment.Id })
 
                         });
                 }

@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Tests.Tests
                     MaritalStatus = (int)TypeMaritalStatus.Casado,
                     BirthPlace = "Brasileiro",
                     CPF = "87324128910",
-                    CPFOwner = (int)TypeCPFOwner.PatientItself,
+                    CPFOwner = (int)TypeCpfOwner.PatientItself,
                     Profession = "Encarregado de Obras",
                     CreatedOn = DateTime.UtcNow,
                     PracticeId = doctor.PracticeId,
@@ -63,16 +63,17 @@ namespace CerebelloWebRole.Tests.Tests
                 PracticeId = doctor.PracticeId,
             };
             patient1.Person.Email = "joao@gmail.com";
-            patient1.Person.Address = new Address()
-            {
-                CEP = "602500330",
-                StateProvince = "RJ",
-                City = "Rio de Janeiro",
-                Neighborhood = "Jacarepaguá",
-                Street = "Rua Estrada do Pau Ferro 329",
-                Complement = "",
-                PracticeId = doctor.PracticeId,
-            };
+            patient1.Person.Addresses.Add(
+                new Address
+                    {
+                        CEP = "602500330",
+                        StateProvince = "RJ",
+                        City = "Rio de Janeiro",
+                        Neighborhood = "Jacarepaguá",
+                        Street = "Rua Estrada do Pau Ferro 329",
+                        Complement = "",
+                        PracticeId = doctor.PracticeId,
+                    });
 
             db.Patients.AddObject(patient1);
 
@@ -86,7 +87,7 @@ namespace CerebelloWebRole.Tests.Tests
                     MaritalStatus = (int)TypeMaritalStatus.Casado,
                     BirthPlace = "Brasileiro",
                     CPF = "87324128910",
-                    CPFOwner = (int)TypeCPFOwner.PatientItself,
+                    CPFOwner = (int)TypeCpfOwner.PatientItself,
                     Profession = "Encarregado de Obras",
                     CreatedOn = DateTime.UtcNow,
                     PracticeId = doctor.PracticeId,
@@ -94,16 +95,17 @@ namespace CerebelloWebRole.Tests.Tests
                 Doctor = doctor
             };
             patient1.Person.Email = "manuela@gmail.com";
-            patient1.Person.Address = new Address()
-            {
-                CEP = "602500330",
-                StateProvince = "RJ",
-                City = "Rio de Janeiro",
-                Neighborhood = "Jacarepaguá",
-                Street = "Rua Estrada do Pau Ferro 329",
-                Complement = "",
-                PracticeId = doctor.PracticeId,
-            };
+            patient1.Person.Addresses.Add(
+                new Address
+                    {
+                        CEP = "602500330",
+                        StateProvince = "RJ",
+                        City = "Rio de Janeiro",
+                        Neighborhood = "Jacarepaguá",
+                        Street = "Rua Estrada do Pau Ferro 329",
+                        Complement = "",
+                        PracticeId = doctor.PracticeId,
+                    });
 
             db.Patients.AddObject(patient2);
 

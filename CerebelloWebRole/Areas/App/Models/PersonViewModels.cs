@@ -49,7 +49,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String CPF { get; set; }
 
         [Display(Name = "Proprietário do CPF")]
-        [EnumDataType(typeof(TypeCPFOwner))]
+        [EnumDataType(typeof(TypeCpfOwner))]
         public short? CPFOwner { get; set; }
 
         [Display(Name = "Profissão")]

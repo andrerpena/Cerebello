@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Models;
 
@@ -150,7 +151,7 @@ namespace Cerebello.Firestarter.Helpers
                                     MaritalStatus = (short?)random.Next(0, 4),
                                     BirthPlace = "Brasileiro(a)",
                                     CPF = "87324128910",
-                                    CPFOwner = (int)TypeCPFOwner.PatientItself,
+                                    CPFOwner = (int)TypeCpfOwner.PatientItself,
                                     Profession = professions[random.Next(professions.Length)],
                                     CreatedOn = DateTime.UtcNow,
                                     PracticeId = doctor.PracticeId,
@@ -161,18 +162,20 @@ namespace Cerebello.Firestarter.Helpers
                         };
 
                     patient.Person.Email = firstName + string.Join("", chosenMiddleNames) + "@gmail.com";
-                    Debug.Assert(patient.Person.Address == null);
-                    patient.Person.Address = new Address
-                        {
-                            CEP = random.Next(36000000, 37000000).ToString(CultureInfo.InvariantCulture),
-                            StateProvince = "MG",
-                            City = "Juiz de Fora",
-                            Neighborhood = "Centro",
-                            Street =
-                                "Rua " + middleNames[random.Next(middleNames.Length)] + " " + middleNames[random.Next(middleNames.Length)],
-                            Complement = "",
-                            PracticeId = doctor.PracticeId,
-                        };
+                    Debug.Assert(!patient.Person.Addresses.Any());
+                    patient.Person.Addresses.Add(
+                        new Address
+                            {
+                                CEP = random.Next(36000000, 37000000).ToString(CultureInfo.InvariantCulture),
+                                StateProvince = "MG",
+                                City = "Juiz de Fora",
+                                Neighborhood = "Centro",
+                                Street =
+                                    "Rua " + middleNames[random.Next(middleNames.Length)] + " " +
+                                    middleNames[random.Next(middleNames.Length)],
+                                Complement = "",
+                                PracticeId = doctor.PracticeId,
+                            });
 
                     result.Add(patient);
                     db.Patients.AddObject(patient);

@@ -53,7 +53,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         try
                         {
-                            var events = ((LongPollingProvider)providerClosure).WaitForEvents(userId, practiceId, timeStamp, connectionString, this.Url);
+                            var events = ((LongPollingProvider)providerClosure).WaitForEvents(userId, practiceId, timeStamp, connectionString, this);
                             // if the provider returned no events, we're not going to continue. Maybe another provider will return
                             // something later on (the new appointment provider returns immediately when no appointments exists, without
                             // this IF, it would always stop the longpolling without waiting for the chat.)
