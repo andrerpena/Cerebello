@@ -153,6 +153,7 @@
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Compile Include="Controllers\MasterAdminController.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
@@ -667,6 +668,7 @@
     <Content Include="Views\Authentication\ResetPasswordManually.cshtml" />
     <Content Include="Views\Authentication\ResetPasswordSuccess.cshtml" />
     <EmbeddedResource Include="Views\EmailSenderWorker\AppointmentReminderEmail.cshtml" />
+    <Content Include="Views\MasterAdmin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

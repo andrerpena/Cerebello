@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Cerebello master admin";
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("a[resultType='json']").click(function (event) {
+                event.preventDefault();
+                $.getJSON($(this).attr("href"), function (data) {
+                    alert(data.message);
+                });
+            });
+        });
+    </script>
+}
+<div class="hero ac">
+    <div class="container">
+        <h1>Central administrativa</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span9">
+            <h2>E-mails</h2>
+        </div>
+        <div class="span3">
+        </div>
+    </div>
+    <hr />
+    <div class="container features">
+        <div class="row">
+            <div class="span6">
+                <div class="row">
+                    <div class="span1">
+                    </div>
+                    <div class="span5">
+                        <h3>E-mails para pacientes</h3>
+                        <p>
+                            <a resultType="json" href="@Url.Action("SendReminderEmails")">Enviar e-mails para lembrar das consultas</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span9">
+            <h2>Outras operações</h2>
+        </div>
+        <div class="span3">
+        </div>
+    </div>
+    <hr />
+    <div class="container features">
+        <div class="row">
+            <div class="span6">
+                <div class="row">
+                    <div class="span1">
+                    </div>
+                    <div class="span5">
+                        <h3>xpto</h3>
+                        <p>
+                            <a href="@Url.Action("xpto")">xpto</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

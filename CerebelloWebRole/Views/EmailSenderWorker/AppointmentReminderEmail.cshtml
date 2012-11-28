@@ -25,17 +25,18 @@
     </p>
     <br />
     <p>
-        Qualquer dúvida, entre em contato usando um dos meios abaixo:
+        Qualquer dúvida, entre em contato conosco.
     </p>
     <br />
+    <h2>@contactPractice</h2>
     if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
     {
-    <strong>@contactPractice</strong>
+    <h3>Contato</h3>
     <ul>
         @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
         {
             <li>telefone: @Model.PracticePhoneMain@{
-            if (new[] { this.Model.PracticePhoneMain }.AnyFilled())
+            if (new[] { this.Model.PracticePhoneAlt }.AnyFilled())
             {
                 <text> <i>-ou-</i> @Model.PracticePhoneAlt</text>
             }
@@ -52,19 +53,31 @@
     </ul>
         if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
         {
-    <p>Site: @Model.PracticeSiteUrl</p>
+    <h3>Site</h3>
+    <ul>
+        <li>@Model.PracticeSiteUrl</li>
+    </ul>
         }
-        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
         {
     <h3>Endereço</h3>
-    <div><b>CEP:</b> @Model.PracticeAddress.CEP</div>
-    <div>
-        Rua/Av @Model.PracticeAddress.Street,
-                @Model.PracticeAddress.Neighborhood,
-                @Model.PracticeAddress.City,
-                @Model.PracticeAddress.StateProvince,
-                @Model.PracticeAddress.Complement
-    </div>
+    <ul>
+        @if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
+        {
+            <li><b>CEP:</b> @Model.PracticeAddress.CEP</li>
+        }
+        @if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
+        {
+            <li>Rua/Av @(string.Join(",\r\n    ", new[] {
+                 Model.PracticeAddress.Street,
+                 Model.PracticeAddress.Neighborhood,
+                 Model.PracticeAddress.City,
+                 Model.PracticeAddress.StateProvince,
+                 Model.PracticeAddress.Complement }
+                 .Where(s => !string.IsNullOrWhiteSpace(s))))
+            </li>
+        }
+    </ul>
         }
     <br />
     }
@@ -104,15 +117,17 @@ na seguinte data:
 
 @Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))
 
-Qualquer dúvida, entre em contato
-usando um dos meios abaixo:
+Qualquer dúvida, entre em contato conosco.
 
+@contactPractice
+@(new string('-', contactPractice.Length))
 @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
 {
-    @:**@contactPractice**
+    @:
+    @:Contato
         if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
         {
-    @:  telefone: @Model.PracticePhoneMain@{if (new[] { this.Model.PracticePhoneMain }.AnyFilled())
+    @:  telefone: @Model.PracticePhoneMain@{if (new[] { this.Model.PracticePhoneAlt }.AnyFilled())
                                             {<text> -ou- @Model.PracticePhoneAlt</text>}}
         }
         if (new[] { this.Model.PracticeEmail }.AnyFilled())
@@ -125,17 +140,28 @@ usando um dos meios abaixo:
         }
         if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
         {
-    @:Site: @Model.PracticeSiteUrl
+    @:
+    @:Site
+    @:  @Model.PracticeSiteUrl
         }
-        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+        if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
         {
+    @:
     @:Endereço
+        if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
+        {
     @:  CEP: @Model.PracticeAddress.CEP
-    @:  Rua/Av @Model.PracticeAddress.Street,
-    @:      @Model.PracticeAddress.Neighborhood,
-    @:      @Model.PracticeAddress.City,
-    @:      @Model.PracticeAddress.StateProvince,
-    @:      @Model.PracticeAddress.Complement
+        }
+        if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
+        {
+    @:  Rua/Av @(string.Join(",\r\n    ", new[] {
+                 Model.PracticeAddress.Street,
+                 Model.PracticeAddress.Neighborhood,
+                 Model.PracticeAddress.City,
+                 Model.PracticeAddress.StateProvince,
+                 Model.PracticeAddress.Complement }
+                 .Where(s => !string.IsNullOrWhiteSpace(s))))
+        }
         }
     @:
 }
@@ -158,4 +184,4 @@ Atenciosamente,
 
 
 @(">> Powered by cerebello <<")
->> @Url.Action("Index", "Home", new { }, "http") <<
+@Url.Action("Index", "Home", new { }, "http")

@@ -11,6 +11,8 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
     {
         public static readonly object locker = new object();
 
+        public int EmailsCount { get; set; }
+
         public override void RunOnce()
         {
             lock (locker)
@@ -95,6 +97,8 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                             try
                             {
                                 this.SendEmail(message);
+
+                                this.EmailsCount++;
 
                                 eachItem.Appointment.ReminderEmailSent = true;
 
