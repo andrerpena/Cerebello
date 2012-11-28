@@ -637,7 +637,7 @@
           <Property Name="PABX" Type="varchar" MaxLength="20" />
           <Property Name="Email" Type="varchar" MaxLength="200" />
           <Property Name="SiteUrl" Type="nvarchar(max)" />
-          <Property Name="AddressId" Type="int" Nullable="false" />
+          <Property Name="AddressId" Type="int" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1786,7 +1786,7 @@
           <Property Type="String" Name="PABX" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Email" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="SiteUrl" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="AddressId" Nullable="false" />
+          <Property Type="Int32" Name="AddressId" />
           <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Practice" ToRole="Address" />
         </EntityType>
         <EntityType Name="Receipt">
@@ -2798,7 +2798,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Practice_Address">
-          <End Type="Cerebello.Model.Address" Role="Address" Multiplicity="1" />
+          <End Type="Cerebello.Model.Address" Role="Address" Multiplicity="0..1" />
           <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Address">
@@ -3382,7 +3382,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="82">
+      <Diagram Name="CerebelloEntities" ZoomLevel="52">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="36.625" PointY="1" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="11.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="39.125" PointY="16.625" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />

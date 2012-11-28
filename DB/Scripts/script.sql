@@ -607,7 +607,7 @@ CREATE TABLE [dbo].[Practice](
 	[PABX] [varchar](20) NULL,
 	[Email] [varchar](200) NULL,
 	[SiteUrl] [nvarchar](max) NULL,
-	[AddressId] [int] NOT NULL,
+	[AddressId] [int] NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

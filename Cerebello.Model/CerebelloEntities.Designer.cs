@@ -66,7 +66,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ActiveIngredient_Medicine", "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Medicine), "MedicineActiveIngredient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicineActiveIngredient), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_Address", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Address), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_Address", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "PersonAddress", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Address), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Person))]
 
 #endregion
@@ -9564,8 +9564,7 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="windowsTimeZoneId">Initial value of the WindowsTimeZoneId property.</param>
         /// <param name="showWelcomeScreen">Initial value of the ShowWelcomeScreen property.</param>
-        /// <param name="addressId">Initial value of the AddressId property.</param>
-        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean showWelcomeScreen, global::System.Int32 addressId)
+        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean showWelcomeScreen)
         {
             Practice practice = new Practice();
             practice.Id = id;
@@ -9574,7 +9573,6 @@ namespace Cerebello.Model
             practice.CreatedOn = createdOn;
             practice.WindowsTimeZoneId = windowsTimeZoneId;
             practice.ShowWelcomeScreen = showWelcomeScreen;
-            practice.AddressId = addressId;
             return practice;
         }
 
@@ -9924,9 +9922,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Int32 AddressId
+        public Nullable<global::System.Int32> AddressId
         {
             get
             {
@@ -9941,8 +9939,8 @@ namespace Cerebello.Model
                 OnAddressIdChanged();
             }
         }
-        private global::System.Int32 _AddressId;
-        partial void OnAddressIdChanging(global::System.Int32 value);
+        private Nullable<global::System.Int32> _AddressId;
+        partial void OnAddressIdChanging(Nullable<global::System.Int32> value);
         partial void OnAddressIdChanged();
 
         #endregion

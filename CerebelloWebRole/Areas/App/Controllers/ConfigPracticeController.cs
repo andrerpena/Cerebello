@@ -78,7 +78,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.Practice.SiteUrl = viewModel.SiteUrl;
                 this.Practice.Email = viewModel.Email;
 
-                Debug.Assert(this.Practice.Address != null, "this.Practice.Address must not be null");
+                if (this.Practice.Address == null)
+                    this.Practice.Address = new Address();
                 this.Practice.Address.CEP = viewModel.Address.CEP;
                 this.Practice.Address.City = viewModel.Address.City;
                 this.Practice.Address.Complement = viewModel.Address.Complement;
