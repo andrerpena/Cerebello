@@ -367,6 +367,7 @@ CREATE TABLE [dbo].[Laboratory](
 	[Name] [varchar](200) NOT NULL,
 	[DoctorId] [int] NOT NULL,
 	[PracticeId] [int] NOT NULL,
+	[Observations] [varchar](max) NULL,
  CONSTRAINT [PK_MedicineLaboratory] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -436,6 +437,7 @@ CREATE TABLE [dbo].[Medicine](
 	[LaboratoryId] [int] NULL,
 	[Usage] [smallint] NOT NULL,
 	[PracticeId] [int] NOT NULL,
+	[Observations] [varchar](max) NULL,
  CONSTRAINT [PK_Medicine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

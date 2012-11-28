@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
@@ -20,5 +16,11 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Nome")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Name { get; set; }
+
+        [Display(Name = "Observações")]
+        public string Observations { get; set; }
+
+        [Display(Name = "Medicamentos")]
+        public SearchViewModel<MedicineViewModel> Medicines { get; set; }
     }
 }

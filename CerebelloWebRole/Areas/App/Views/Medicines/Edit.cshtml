@@ -1,4 +1,5 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
+@using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
     if (this.Model != null && this.Model.Id.HasValue)
@@ -11,10 +12,11 @@
     }
 
     var editPanel = this.Html.CreateEditPanel(null);
-    editPanel.AddField(m => m.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("CreateModal", "Laboratories"), "Novo laboratório", 500, 100)</text>);
-    editPanel.AddField(m => m.Usage);
-    editPanel.AddField(m => m.ActiveIngredients, format: @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
+    editPanel.AddField(model => model.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    editPanel.AddField(model => model.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("CreateModal", "Laboratories"), "Novo laboratório", 500, 100)</text>);
+    editPanel.AddField(model => model.Usage);
+    editPanel.AddField(model => model.ActiveIngredients, @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
+    editPanel.AddField(model => model.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>);
 }
 
 @section Title {

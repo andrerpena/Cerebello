@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -11,7 +12,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? Id { get; set; }
         public String Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Url { get; set; }
 
         public String ViewerUrl { get; set; }

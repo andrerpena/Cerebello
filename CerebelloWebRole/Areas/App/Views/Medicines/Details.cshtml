@@ -4,7 +4,7 @@
 
     var cardView = this.Html.CreateCardView();
     cardView.AddField(model => model.Name, wholeRow: true);
-    cardView.AddField(model => model.LaboratoryName, wholeRow: true);
+    cardView.AddLinkField(model => model.LaboratoryName, "details", "laboratories", model => new { id = Model.LaboratoryId}, true);
     cardView.AddField(model => model.ActiveIngredients,
     @<text>
     <ul class="string-list">
@@ -34,6 +34,7 @@
         }
     </ul>
     </text>, wholeRow: true);
+    cardView.AddField(model => model.Observations);
 }
 @section Title {
     Medicamento: @Model.Name

@@ -5,7 +5,7 @@
 
     var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
-    grid.AddField(m => m.LaboratoryName);
+    grid.AddLinkField(m => m.LaboratoryName, "details", "laboratories", model => new { id = model.LaboratoryId });
 }
 @section Title {
     Pesquisa de medicamentos

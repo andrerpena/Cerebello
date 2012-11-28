@@ -45,6 +45,30 @@ namespace CerebelloWebRole.Code.Controls
             this.Fields.Add(new CardViewField<TModel, TValue>(exp, format, header, wholeRow));
         }
 
+        public void AddLinkField<TValue>(Expression<Func<TModel, TValue>> exp, [JetBrains.Annotations.AspMvcAction] string actionName, Func<TModel, object> routeValuesFunc, bool wholeRow = false)
+        {
+            this.AddLinkField(exp, actionName, null, routeValuesFunc);
+        }
+
+        public void AddLinkField<TValue>(Expression<Func<TModel, TValue>> exp, [JetBrains.Annotations.AspMvcAction] string actionName, [JetBrains.Annotations.AspMvcController] string controllerName, Func<TModel, object> routeValuesFunc, bool wholeRow = false)
+        {
+            var textGetter = exp.Compile();
+
+            this.AddField(
+                exp,
+                item =>
+                {
+                    var text = textGetter(item);
+                    // if TEXT IS NULL, the ActionLink helper will trigger an exception, so, this code means to clarify the possible error
+                    if (text == null)
+                        throw new Exception(
+                            "The expression used to return the link text returned a null value. If you are using, for instance, model => model.Name. Verify that model.Name does not return null");
+
+                    return this.HtmlHelper.ActionLink(
+                        string.Format("{0}", text), actionName, controllerName, routeValuesFunc(item), null);
+                });
+        }
+
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
             List<List<CardViewFieldBase>> rows = new List<List<CardViewFieldBase>>();

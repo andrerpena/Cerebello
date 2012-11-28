@@ -88,8 +88,12 @@ namespace CerebelloWebRole.Code.Controllers
             public override bool InvokeAction(ControllerContext controllerContext, string actionName)
             {
                 // reading transaction attribute
-                ControllerDescriptor controllerDescriptor = GetControllerDescriptor(controllerContext);
-                ActionDescriptor actionDescriptor = FindAction(controllerContext, controllerDescriptor, actionName);
+                var controllerDescriptor = GetControllerDescriptor(controllerContext);
+                var actionDescriptor = FindAction(controllerContext, controllerDescriptor, actionName);
+
+                if (actionDescriptor == null)
+                    throw new Exception("Could not find action " + actionName);
+
                 var transactionAttribute = actionDescriptor
                     .GetCustomAttributes(true).OfType<TransactionScopeAttribute>()
                     .SingleOrDefault();

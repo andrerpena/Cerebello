@@ -1,0 +1,12 @@
+﻿@using CerebelloWebRole.Code
+@using CerebelloWebRole.Models
+@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.MedicineViewModel>
+@{
+    Layout = null;
+
+    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
+    grid.AddLinkField(model => model.Name, "Details", "Medicines", model => new {id = model.Id});
+    grid.AddField(model => model.Usage, @<text>@EnumHelper.GetText(@item.Usage, typeof(TypeUsage))</text>);
+}
+
+@grid.GetHtml()

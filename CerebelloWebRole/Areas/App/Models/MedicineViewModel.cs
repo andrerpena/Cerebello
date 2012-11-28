@@ -28,7 +28,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name="Laboratório")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceName = "MaxLengthValidationMessage")]
+        [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "MaxLengthValidationMessage")]
         public string LaboratoryName { get; set; }
 
         [Display(Name = "Princípios ativos")]
@@ -44,5 +44,8 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Prescrições")]
         public SearchViewModel<PrescriptionViewModel> Prescriptions { get; set; }
+
+        [Display(Name = "Observações")]
+        public string Observations { get; set; }
     }
 }

@@ -8,7 +8,7 @@
         /// <summary>
         /// The max size for "names" in the database
         /// </summary>
-        public const int DB_NAME_MAX_LENGTH = 50;
+        public const int DB_NAME_MAX_LENGTH = 200;
 
         /// <summary>
         /// The size of a page of the grid

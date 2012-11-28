@@ -68,6 +68,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = medicine.Id,
                 Name = medicine.Name,
                 Usage = medicine.Usage,
+                Observations = medicine.Observations,
                 ActiveIngredients = (from activeIngredient in medicine.ActiveIngredients
                                      select new MedicineActiveIngredientViewModel()
                                          {
@@ -102,10 +103,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Index()
         {
-            var model = new MedicinesIndexViewModel();
-            model.LastRegisteredMedicines = (from medicine in db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
-                                             select this.GetViewModelFromModel(medicine)).ToList();
-            model.TotalMedicinesCount = db.Medicines.Count();
+            var model = new MedicinesIndexViewModel
+                {
+                    LastRegisteredMedicines =
+                        (from medicine in this.db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
+                         select this.GetViewModelFromModel(medicine)).ToList(),
+                    TotalMedicinesCount = this.db.Medicines.Count()
+                };
             return View(model);
         }
 
@@ -202,6 +206,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 medicine.Name = formModel.Name;
+                medicine.Observations = formModel.Observations;
                 medicine.Usage = (short)formModel.Usage;
                 medicine.Doctor = this.Doctor;
 
@@ -481,7 +486,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                              {
                                  Id = m.Id,
                                  Name = m.Name,
-                                 LaboratoryName = m.Laboratory.Name
+                                 LaboratoryName = m.Laboratory.Name,
+                                 LaboratoryId = m.LaboratoryId
                              }).OrderBy(p => p.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);

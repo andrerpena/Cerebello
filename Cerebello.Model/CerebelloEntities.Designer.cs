@@ -6599,6 +6599,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Observations
+        {
+            get
+            {
+                return _Observations;
+            }
+            set
+            {
+                OnObservationsChanging(value);
+                ReportPropertyChanging("Observations");
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
+                ReportPropertyChanged("Observations");
+                OnObservationsChanged();
+            }
+        }
+        private global::System.String _Observations;
+        partial void OnObservationsChanging(global::System.String value);
+        partial void OnObservationsChanged();
 
         #endregion
 
@@ -7491,6 +7515,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Observations
+        {
+            get
+            {
+                return _Observations;
+            }
+            set
+            {
+                OnObservationsChanging(value);
+                ReportPropertyChanging("Observations");
+                _Observations = StructuralObject.SetValidValue(value, true, "Observations");
+                ReportPropertyChanged("Observations");
+                OnObservationsChanged();
+            }
+        }
+        private global::System.String _Observations;
+        partial void OnObservationsChanging(global::System.String value);
+        partial void OnObservationsChanged();
 
         #endregion
 

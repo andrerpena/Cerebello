@@ -645,6 +645,9 @@
     <Content Include="Areas\App\Views\Laboratories\Edit.cshtml" />
     <Content Include="Areas\App\Views\Medicines\ViewLeaflet.cshtml" />
     <Content Include="Areas\App\Views\Medicines\Prescriptions.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\Details.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\Index.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\Medicines.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

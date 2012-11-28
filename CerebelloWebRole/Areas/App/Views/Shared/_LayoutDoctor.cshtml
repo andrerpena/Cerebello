@@ -34,7 +34,7 @@
     </div>
     <hr />
     <ul class="tabNav">
-        <li class="@(controllerName.Equals("medicines") ? "youarehere" : "")"><a href="@Url.Action("Index", "medicines")" class="medicines-icon">
+        <li class="@(controllerName.Equals("medicines") || controllerName.Equals("laboratories") ? "youarehere" : "")"><a href="@Url.Action("Index", "medicines")" class="medicines-icon">
             Medicamentos</a> </li>
         <li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")"><a href="@Url.Action("Index", "config")" class="config-icon">
             Configurações</a> </li>

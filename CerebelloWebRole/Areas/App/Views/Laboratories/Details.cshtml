@@ -1,0 +1,25 @@
+﻿@model CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel
+
+@{
+    ViewBag.Title = "Laboratório: " + this.Model.Name + " · Cerebello";
+
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(model => model.Name, wholeRow: true);
+    cardView.AddField(model => model.Observations, wholeRow: true);
+}
+
+@section Title {
+    Laboratório: @Model.Name
+}
+
+@section SideBar {
+    <a href="@Url.Action("edit", new {id = Model.Id})"class="icon-link icon-link-edit" id="edit-laboratory-link">Editar laboratório</a>
+    <a href="@Url.Action("edit", new {id = Model.Id})"class="icon-link icon-link-delete" id="delete-laboratory-link">Excluir laboratório</a>
+    <a href="@Url.Action("index")" class="icon-link icon-link-home" id="list-laboratories-link">Resumo de laboratórios</a>
+}
+
+@cardView.GetHtml()
+
+<h2>Medicamentos</h2>
+
+@Html.Partial("Medicines", this.Model.Medicines)
