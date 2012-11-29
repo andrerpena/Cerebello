@@ -238,44 +238,7 @@ namespace CerebelloWebRole.Tests.Tests
             var medicine = this.db.Medicines.FirstOrDefault(m => m.Name == medicineName);
             Assert.IsNotNull(medicine);
         }
-
-        /// <summary>
-        /// It must be possible to save a medicine just by passing the minimum information
-        /// </summary>
-        [TestMethod]
-        public void Edit_PassingInInvalidActiveIngredient()
-        {
-            MedicinesController controller;
-
-            try
-            {
-                var mr = new MockRepository(true);
-                controller = mr.CreateController<MedicinesController>();
-            }
-            catch
-            {
-                Assert.Inconclusive("Test initialization has failed.");
-                return;
-            }
-
-            var medicineName = "My Medicine";
-            controller.Create(
-                new MedicineViewModel()
-                {
-                    Name = medicineName,
-                    ActiveIngredients = new List<MedicineActiveIngredientViewModel>()
-                        {
-                            new MedicineActiveIngredientViewModel()
-                                {
-                                    Id = 89
-                                }
-                        }
-                });
-
-            Assert.IsFalse(controller.ModelState.IsValid);
-            Assert.AreEqual(1, controller.ModelState["ActiveIngredients"].Errors.Count);
-        }
-
+        
         /// <summary>
         /// It must be possible to save a medicine just by passing the minimum information
         /// </summary>
