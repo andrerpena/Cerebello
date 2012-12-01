@@ -136,6 +136,7 @@
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
+    <Compile Include="Areas\App\Models\LaboratoriesIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PrescriptionViewModel.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
@@ -651,6 +652,7 @@
     <Content Include="Areas\App\Views\Shared\NotificationFillPracticeProfile.cshtml" />
     <Content Include="Areas\App\Views\Shared\NotificationFillUserProfile.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Medicines.cshtml" />
+    <Content Include="Areas\App\Views\Laboratories\Search.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -672,6 +674,7 @@
     <Content Include="Views\Authentication\ResetPasswordSuccess.cshtml" />
     <EmbeddedResource Include="Views\EmailSenderWorker\AppointmentReminderEmail.cshtml" />
     <Content Include="Views\MasterAdmin\Index.cshtml" />
+    <Content Include="Views\Shared\ObjectNotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

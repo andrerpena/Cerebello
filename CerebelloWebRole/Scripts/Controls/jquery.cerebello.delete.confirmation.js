@@ -85,7 +85,8 @@
                                 _this.opts.success(data);
                             }
                             else {
-                                alert("Não foi possível excluir este(a) '" + _this.opts.objectType + "'.\n" + "Informações técnicas: " + data.text);
+                                $.notify("Não foi possível excluir este(a) '" + _this.opts.objectType + "'.\n" + "Informações técnicas: " + data.text);
+                                $inputSubmit.trigger("modal-cancel");
                             }
                         });
                     });

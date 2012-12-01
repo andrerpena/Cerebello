@@ -96,19 +96,16 @@ namespace CerebelloWebRole.Code
         /// <returns></returns>
         public ActionResult ObjectNotFound()
         {
-            // It's necessary to check whether or not it's an AJAX request. 
-            // There must be a DIFFERENT output for AJAX and regular requests
-            throw new NotImplementedException();
+            return this.View("ObjectNotFound");
         }
 
         /// <summary>
-        /// Returns a view indicating that the requested object does not exist in the database (for requests that expect HTML and prints 
-        /// the result in the page through AJAX)
+        /// Returns a Json indicating that the requested object does not exist in the database
         /// </summary>
         /// <returns></returns>
-        public ActionResult ObjectNotFound_Ajax()
+        public JsonResult ObjectNotFoundJson()
         {
-            return this.View();
+            return this.Json(new { success = false, text = "O registro solicitado não existe no banco de dados" }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

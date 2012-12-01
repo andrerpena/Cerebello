@@ -488,6 +488,7 @@
           <Property Name="DoctorId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="Observations" Type="varchar(max)" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Leaflet">
           <Key>
@@ -530,6 +531,7 @@
           <Property Name="Usage" Type="smallint" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="Observations" Type="varchar(max)" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="MedicineActiveIngredient">
           <Key>
@@ -1717,6 +1719,7 @@
           <NavigationProperty Name="Medicines" Relationship="Cerebello.Model.FK_Medicine_MedicineLaboratory" FromRole="Laboratory" ToRole="Medicine" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="String" Name="Observations" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -1998,6 +2001,7 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <NavigationProperty Name="ActiveIngredients" Relationship="Cerebello.Model.FK_ActiveIngredient_Medicine" FromRole="Medicine" ToRole="MedicineActiveIngredient" />
           <Property Type="String" Name="Observations" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_Medicine_Doctor">
           <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
@@ -2865,7 +2869,8 @@
             <ScalarProperty Name="CRM" ColumnName="CRM" />
             </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Laboratories"><EntityTypeMapping TypeName="Cerebello.Model.Laboratory"><MappingFragment StoreEntitySet="Laboratory">
-            <ScalarProperty Name="Observations" ColumnName="Observations" />
+            <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
@@ -2937,6 +2942,7 @@
           <EntitySetMapping Name="Medicines">
             <EntityTypeMapping TypeName="Cerebello.Model.Medicine">
               <MappingFragment StoreEntitySet="Medicine">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="Observations" ColumnName="Observations" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Usage" ColumnName="Usage" />

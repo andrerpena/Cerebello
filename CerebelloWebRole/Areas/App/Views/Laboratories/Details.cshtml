@@ -14,8 +14,23 @@
 
 @section SideBar {
     <a href="@Url.Action("edit", new {id = Model.Id})"class="icon-link icon-link-edit" id="edit-laboratory-link">Editar laboratório</a>
-    <a href="@Url.Action("edit", new {id = Model.Id})"class="icon-link icon-link-delete" id="delete-laboratory-link">Excluir laboratório</a>
+    <a href="#"class="icon-link icon-link-delete" id="delete-laboratory-link">Excluir laboratório</a>
     <a href="@Url.Action("index")" class="icon-link icon-link-home" id="list-laboratories-link">Resumo de laboratórios</a>
+    
+        <script type="text/javascript">
+            $("#delete-laboratory-link").click(function (e) {
+                e.preventDefault();
+                $.deleteConfirmation({
+                    objectType: "laboratório",
+                    objectName: "@this.Model.Name",
+                url: "@Url.Action("delete", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Este laboratório foi excluído");
+                    window.location = "@Url.Action("index")";
+                }
+            });
+        });
+    </script>
 }
 
 @cardView.GetHtml()

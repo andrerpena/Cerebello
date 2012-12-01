@@ -206,11 +206,11 @@
                         $.getJSON(url, sendData, function (data) {
                             if (data.success) {
                                 if (successMessage)
-                                    alert(fmt(successMessage, data));
+                                    $.notify(fmt(successMessage, data));
                                 _this.opts.success(data);
                             }
                             else {
-                                alert($.trim(errorMessage + "\n" + fmt(techInfoText, data)));
+                                $.notify($.trim(errorMessage + "\n" + fmt(techInfoText, data)));
                             }
                         });
                     });

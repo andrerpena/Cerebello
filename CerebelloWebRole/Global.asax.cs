@@ -16,6 +16,7 @@ namespace Cerebello
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthenticationFilter());
             filters.Add(new FirstAccessFilter());
+            filters.Add(new ValidateInputAttribute(false));
         }
 
         public static void RegisterRoutes(RouteCollection routes)

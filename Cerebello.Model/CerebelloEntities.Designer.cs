@@ -6468,13 +6468,15 @@ namespace Cerebello.Model
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="doctorId">Initial value of the DoctorId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static Laboratory CreateLaboratory(global::System.Int32 id, global::System.String name, global::System.Int32 doctorId, global::System.Int32 practiceId)
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static Laboratory CreateLaboratory(global::System.Int32 id, global::System.String name, global::System.Int32 doctorId, global::System.Int32 practiceId, global::System.DateTime createdOn)
         {
             Laboratory laboratory = new Laboratory();
             laboratory.Id = id;
             laboratory.Name = name;
             laboratory.DoctorId = doctorId;
             laboratory.PracticeId = practiceId;
+            laboratory.CreatedOn = createdOn;
             return laboratory;
         }
 
@@ -6604,6 +6606,30 @@ namespace Cerebello.Model
         private global::System.String _Observations;
         partial void OnObservationsChanging(global::System.String value);
         partial void OnObservationsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
 
         #endregion
 
@@ -7335,7 +7361,8 @@ namespace Cerebello.Model
         /// <param name="doctorId">Initial value of the DoctorId property.</param>
         /// <param name="usage">Initial value of the Usage property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static Medicine CreateMedicine(global::System.Int32 id, global::System.String name, global::System.Int32 doctorId, global::System.Int16 usage, global::System.Int32 practiceId)
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static Medicine CreateMedicine(global::System.Int32 id, global::System.String name, global::System.Int32 doctorId, global::System.Int16 usage, global::System.Int32 practiceId, global::System.DateTime createdOn)
         {
             Medicine medicine = new Medicine();
             medicine.Id = id;
@@ -7343,6 +7370,7 @@ namespace Cerebello.Model
             medicine.DoctorId = doctorId;
             medicine.Usage = usage;
             medicine.PracticeId = practiceId;
+            medicine.CreatedOn = createdOn;
             return medicine;
         }
 
@@ -7520,6 +7548,30 @@ namespace Cerebello.Model
         private global::System.String _Observations;
         partial void OnObservationsChanging(global::System.String value);
         partial void OnObservationsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value, "CreatedOn");
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
 
         #endregion
 

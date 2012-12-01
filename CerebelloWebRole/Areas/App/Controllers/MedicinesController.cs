@@ -103,14 +103,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Index()
         {
-            var model = new MedicinesIndexViewModel
+            var viewModel = new MedicinesIndexViewModel
                 {
                     LastRegisteredMedicines =
-                        (from medicine in this.db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderBy(m => m.Name).Take(5).ToList()
+                        (from medicine in this.db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderByDescending(m => m.CreatedOn).Take(5).ToList()
                          select this.GetViewModelFromModel(medicine)).ToList(),
                     TotalMedicinesCount = this.db.Medicines.Count()
                 };
-            return View(model);
+            return View(viewModel);
         }
 
         public ActionResult Details(int id, int? page)
@@ -143,7 +143,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? id, int? anvisaId = null)
+        public ActionResult Edit(int? id)
         {
             MedicineViewModel viewModel = new MedicineViewModel();
 
@@ -151,31 +151,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var medicine = this.db.Medicines.First(m => m.Id == id);
                 viewModel = this.GetViewModelFromModel(medicine);
-                ViewBag.Title = "Alterando medicamento: " + viewModel.Name;
-            }
-            else
-                ViewBag.Title = "Novo medicamento";
-
-            if (anvisaId != null)
-            {
-                var sysMedicine = this.db.SYS_Medicine.FirstOrDefault(sm => sm.Id == anvisaId);
-
-                viewModel.Name = sysMedicine.Name;
-
-
-                // verify if there's already this lab in the user database
-                var existingLab = this.db.Laboratories.FirstOrDefault(l => l.Name == sysMedicine.Laboratory.Name && l.DoctorId == this.Doctor.Id);
-                viewModel.LaboratoryName = sysMedicine.Laboratory.Name;
-                if (existingLab != null)
-                    viewModel.LaboratoryId = existingLab.Id;
-
-                viewModel.ActiveIngredients.Clear();
-                foreach (var activeIngredient in sysMedicine.ActiveIngredients)
-                    viewModel.ActiveIngredients.Add(new MedicineActiveIngredientViewModel() { Name = activeIngredient.Name });
-
-                viewModel.Leaflets.Clear();
-                foreach (var leafleft in sysMedicine.Leaflets)
-                    viewModel.Leaflets.Add(new MedicineLeafletViewModel() { Description = leafleft.Description, Url = leafleft.Url });
             }
 
             return View("Edit", viewModel);
@@ -184,6 +159,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(MedicineViewModel formModel)
         {
+            // if a medicine exists with the same name, a model state error must be placed
+            var existingMedicine = this.db.Medicines.FirstOrDefault(m => m.Name == formModel.Name);
+            if (existingMedicine != null && existingMedicine.Id != formModel.Id)
+                this.ModelState.AddModelError<MedicineViewModel>(
+                    model => model.Name, "Já existe um medicamento cadastrado com o mesmo nome");
+
             // add validation error when Laboratory Id is invalid
             Laboratory laboratory = null;
             if (formModel.LaboratoryId != null)
@@ -197,18 +178,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 Medicine medicine = null;
 
-                if (formModel.Id != null)
-                    medicine = this.db.Medicines.First(m => m.Id == formModel.Id);
+                if (formModel.Id.HasValue)
+                {
+                    medicine = this.db.Medicines.FirstOrDefault(m => m.Id == formModel.Id);
+                    if (medicine == null)
+                        return this.ObjectNotFound();
+                }
                 else
                 {
-                    medicine = new Medicine { PracticeId = this.DbUser.PracticeId, };
+                    medicine = new Medicine
+                        {
+                            PracticeId = this.DbUser.PracticeId,
+                            DoctorId = this.Doctor.Id,
+                            CreatedOn = DateTime.UtcNow
+                        };
                     this.db.Medicines.AddObject(medicine);
                 }
 
                 medicine.Name = formModel.Name;
                 medicine.Observations = formModel.Observations;
                 medicine.Usage = (short)formModel.Usage;
-                medicine.Doctor = this.Doctor;
 
                 if (formModel.LaboratoryId != null)
                     medicine.Laboratory = laboratory;
@@ -289,9 +278,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult Delete(int id)
         {
-            var medicine = this.db.Medicines.First(m => m.Id == id);
+            var medicine = this.db.Medicines.FirstOrDefault(m => m.Id == id);
+            if (medicine == null)
+                return this.ObjectNotFoundJson();
+
+            if(medicine.ReceiptMedicines.Any())
+                    return this.Json(new { success = false, text = "Existe uma prescrição para o medicamento informado, portanto não pode ser removido" }, JsonRequestBehavior.AllowGet);
+
             try
             {
+                // delete active ingredients manually
+                var activeIngredients = medicine.ActiveIngredients.ToList();
+                while (activeIngredients.Any())
+                {
+                    var activeIngredient = activeIngredients.First();
+                    this.db.ActiveIngredients.DeleteObject(activeIngredient);
+                    activeIngredients.Remove(activeIngredient);
+                }
+
+                // delete leaflets manually
+                var leaflets = medicine.Leaflets.ToList();
+                while (leaflets.Any())
+                {
+                    var leaflet = leaflets.First();
+                    this.db.Leaflets.DeleteObject(leaflet);
+                    leaflets.Remove(leaflet);
+                }
+
                 this.db.Medicines.DeleteObject(medicine);
                 this.db.SaveChanges();
                 return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
@@ -412,7 +425,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         Name = sysMedicine.Name,
                         PracticeId = this.Practice.Id,
-                        DoctorId = this.Doctor.Id
+                        DoctorId = this.Doctor.Id,
+                        CreatedOn = DateTime.UtcNow
                     };
 
                 // verify the need to create a new laboratory
@@ -421,7 +435,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      {
                                          Name = sysMedicine.Laboratory.Name,
                                          PracticeId = this.Practice.Id,
-                                         DoctorId = this.Doctor.Id
+                                         DoctorId = this.Doctor.Id,
+                                         CreatedOn = DateTime.UtcNow
                                      };
                 medicine.Laboratory = laboratory;
 
@@ -429,7 +444,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var ai in sysMedicine.ActiveIngredients)
                 {
                     medicine.ActiveIngredients.Add(new MedicineActiveIngredient()
-                    { 
+                    {
                         Name = ai.Name,
                         PracticeId = this.Practice.Id,
                     });

@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Tests\DiagnosisControllerTests.cs" />
     <Compile Include="Tests.Helpers\DateTimeHelperTests.cs" />
+    <Compile Include="Tests\LaboratoriesControllerTests.cs" />
     <Compile Include="Tests\MedicinesControllerTests.cs" />
     <Compile Include="Tests\PatientsControllerTests.cs" />
     <Compile Include="Tests\ScheduleControllerTests.cs" />
