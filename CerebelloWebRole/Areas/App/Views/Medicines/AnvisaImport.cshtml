@@ -30,6 +30,13 @@
 Importar medicamento da Anvisa
 }
 
+@section SideBar {
+    <ul>
+        <li><a href="@Url.Action("index", "medicines")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
+    </ul>
+}
+
+
 @using (Html.BeginForm())
 {
     @Html.Message(@<text>

@@ -506,17 +506,15 @@ fieldset {
     }
 
         .tabNav li a {
-            color: #222222;
             display: block;
             margin-right: 0;
-            padding: 8px 0 8px 34px;
+            padding: 10px 0 8px 34px;
             text-decoration: none;
             text-shadow: 0 1px 1px #FFFFFF;
         }
 
         .tabNav li.youarehere a {
             background-color: #F2F2F2;
-            background-position: 4px 50%;
             color: #DD390D;
             font-weight: bold;
         }
@@ -651,6 +649,7 @@ fieldset {
 
 .tabNav li a {
     background-repeat: no-repeat;
+    background-position: 4px 50%;
 }
 
     .tabNav li a.home-icon {
@@ -694,13 +693,11 @@ fieldset {
 }
 
 .tabNav li a.config-icon {
-    background-position: 4px 50%;
-    background-repeat: no-repeat;
+    background-image: url("/content/images/app/icons/config-off.png");
 }
 
 .tabNav li.youarehere a.config-icon {
-    background-position: 4px 50%;
-    background-repeat: no-repeat;
+    background-image: url("/content/images/app/icons/config-off.png");
 }
 
 /* pacientes do consultório */
@@ -1321,6 +1318,10 @@ div.message-help {
 
     .top-bar-menu-button.add-new-button {
         background-image: url("/content/images/app/icons16/plus.png");
+    }
+
+    .top-bar-menu-button.schedule-button {
+        background-image: url("/content/images/app/icons16/calendar.png");
     }
     
 
