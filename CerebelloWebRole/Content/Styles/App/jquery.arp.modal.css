@@ -11,7 +11,7 @@
 .modal
 {
     background-color: White;
-    box-shadow: 0 0 4px #626262;
+    box-shadow: 0 0 10px #626262;
     display: none;
     position: fixed;
 }

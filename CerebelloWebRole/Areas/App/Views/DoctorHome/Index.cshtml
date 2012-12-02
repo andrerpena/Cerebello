@@ -12,7 +12,7 @@
 }
 
 <div class="widget">
-    <h2>Próximas consultas agendadas
+    <h2>Próximos compromissos agendados
     </h2>
     @if (this.Model.NextAppointments.Count > 0)
     {
@@ -20,9 +20,21 @@
             @foreach (var appointment in this.Model.NextAppointments)
             {
                 <li>
-                    <span class="patient">
-                        <a href="@Url.Action("Details", "Patients", new { id = appointment.PatientId })">@appointment.PatientName</a></span>, <span class="date-and-time">
-                            <a href="@Url.Action("Index", "Schedule", new { y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day })">@appointment.DateSpelled</a>
+                    @if (appointment.PatientId != default(int))
+                    {
+                        <span class="patient">
+                            <a href="@Url.Action("Details", "Patients", new {id = appointment.PatientId})">@appointment.PatientName</a>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="patient">
+                            @appointment.Description
+                        </span>
+                    }
+                    ,
+                        <span class="date-and-time">
+                            <a href="@Url.Action("Index", "Schedule", new {y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day})">@appointment.DateSpelled</a>
                         </span>
                 </li>
             }

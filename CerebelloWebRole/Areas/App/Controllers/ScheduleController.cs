@@ -40,17 +40,24 @@ namespace CerebelloWebRole.Areas.App.Controllers
                               }).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        private static string GetAppointmentText(Appointment a)
+        public static string GetAppointmentText(Appointment a)
         {
+            string result = null;
             switch ((TypeAppointment)a.Type)
             {
                 case TypeAppointment.GenericAppointment:
-                    return a.Description;
+                    result = a.Description;
+                    break;
                 case TypeAppointment.MedicalAppointment:
-                    return a.Patient.Person.FullName;
+                    result = a.Patient.Person.FullName;
+                    break;
                 default:
                     throw new Exception("Unsupported appointment type.");
             }
+            if (string.IsNullOrEmpty(result))
+                throw new Exception("The appointment text cannot be null. This will trigger a client-side exception");
+
+            return result;
         }
 
         private static string GetAppointmentClass(Appointment a)

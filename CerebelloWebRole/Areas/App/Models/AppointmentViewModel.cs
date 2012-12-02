@@ -38,7 +38,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String DateSpelled { get; set; }
 
         public bool PatientFirstAppointment { get; set; }
-
+        
         [Display(Name = "Paciente")]
         public int? PatientId { get; set; }
 

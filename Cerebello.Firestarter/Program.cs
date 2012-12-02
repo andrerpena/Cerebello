@@ -1355,23 +1355,29 @@ namespace Cerebello.Firestarter
         {
             // Create practice, contract, doctors and other things
             Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
-            var listDoctors = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
+            var doctorsList = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
 
             // Create practice, contract, doctors and other things
             Console.WriteLine("CreateSecretary_Milena");
-            Firestarter.CreateSecretary_Milena(db, listDoctors[0].Users.First().Practice);
+            Firestarter.CreateSecretary_Milena(db, doctorsList[0].Users.First().Practice);
 
             // Setup doctor schedule and document templates
             Console.WriteLine("SetupDoctor");
             using (var rc = RandomContext.Create())
-                foreach (var doctor in listDoctors)
+                foreach (var doctor in doctorsList)
                     Firestarter.SetupDoctor(doctor, db, rc.Random.Next());
 
             // Create patients
             Console.WriteLine("CreateFakePatients");
             using (RandomContext.Create())
-                foreach (var doctor in listDoctors)
+                foreach (var doctor in doctorsList)
                     Firestarter.CreateFakePatients(doctor, db);
+
+            // Create appointments
+            Console.WriteLine("CreateFakeAppointments");
+            using (var rc = RandomContext.Create())
+                foreach (var doctor in doctorsList)
+                    Firestarter.CreateFakeAppointments(db, doctor, rc.Random.Next());
         }
 
         private void InitSysTables(CerebelloEntities db)

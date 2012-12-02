@@ -37,11 +37,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Start > utcNow)
                 .Take(10).AsEnumerable().Select(a => new AppointmentViewModel()
                 {
+                    Description = a.Description,
                     PatientId = a.PatientId,
-                    PatientName = a.Patient.Person.FullName,
+                    PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
                     Date = ConvertToLocalDateTime(this.Practice, a.Start),
                     DateSpelled = getRelativeDate(a.Start)
-
                 }).ToList();
 
             var person = this.Doctor.Users.First().Person;
