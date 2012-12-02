@@ -49,7 +49,7 @@
         events: window.eventsUrl,
         weekends: window.weekends,
         selectable: true,
-        defaultView: 'agendaWeek',
+        defaultView: 'agendaDay',
         // translation
         dayNames: ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado'],
         columnFormat: {

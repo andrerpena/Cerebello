@@ -1293,13 +1293,16 @@ div.message-help {
 
 /* calendar */
 .generic-appointment.fc-event-skin, .generic-appointment .fc-event-skin {
-    border-color: #3c6;
-    background-color: #63CB95;
+    background-color: #F7F8D8;
+    border-color: #E1E1B0;
+    color: #252525;
 }
 
+
 .medical-appointment.fc-event-skin, .medical-appointment .fc-event-skin {
-    border-color: #36c;
-    background-color: #6395CB;
+    border-color: #DDE3F1;
+    background-color: #F0F3F5;
+    color: #252525;
 }
 
 /* add new (global) */
