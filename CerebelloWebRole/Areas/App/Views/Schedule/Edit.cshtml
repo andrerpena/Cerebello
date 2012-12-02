@@ -27,20 +27,19 @@
         
         if (isEditingOrCreating == 'C')
         {
-            <style>
-                /* todo: Must vanish with this style. */
-                .appointment-edit ul.tabs > li
-                {
-                    display: inline-block;
-                    border: 1px solid black;
-                    cursor: pointer;
-                }
-                /* todo: Must vanish with this style. */
-            </style>
-            <div class="small-tabs">
-                <a id="medical-appointment-tab" class="activated">Consulta</a>
-                <a id="generic-appointment-tab">Compromisso</a>
-            </div>
+        <style>
+            /* todo: Must vanish with this style. */
+            .appointment-edit ul.tabs > li {
+                display: inline-block;
+                border: 1px solid black;
+                cursor: pointer;
+            }
+            /* todo: Must vanish with this style. */
+        </style>
+        <div class="small-tabs">
+            <a id="medical-appointment-tab" class="activated">Consulta</a>
+            <a id="generic-appointment-tab">Compromisso</a>
+        </div>
         }
         
         @Html.HiddenFor(model => model.IsGenericAppointment)
@@ -67,16 +66,15 @@
                             Url.Action("LookupPatients", "Patients"))
                         <script type="text/javascript">
                             $("#PatientNameLookup").autocomplete({
-                                 change: function (data) {
-                                     if (data)
-                                         $("#HealthInsuranceId").val(data.InsuranceId);
-                                 }
+                                change: function (data) {
+                                    if (data)
+                                        $("#HealthInsuranceId").val(data.InsuranceId);
+                                }
                             });
                         </script>
                         @if (Model.Id != null)
                         {
-                            <a href="@Url.Action("Details", "Patients", new { id = Model.PatientId })" class="block-little-link">
-                                Ir para o perfil do paciente</a>
+                            <a href="@Url.Action("Details", "Patients", new { id = Model.PatientId })" class="block-little-link">Ir para o perfil do paciente</a>
                         }
                         <a id="non-existing-user-link" href="#" class="block-little-link">O paciente ainda não
                             é cadastrado</a>
@@ -100,11 +98,11 @@
                     <td>@Html.DropDownListFor(model => model.HealthInsuranceId, (IEnumerable<SelectListItem>)this.ViewBag.HealthInsuranceSelectItems)</td>
                 </tr>
                 
-                <tr>
+                <tr class="first-appointment-only subsequent-appointments-only" style="display: @funcDisplay(isFirstAppointment || isSubsequentAppointment)">
                     <th>@Html.LabelFor(model => model.Status)
                     </th>
                     <td>
-                        @Html.EnumDropdownListFor(model => model.Status, this.Model != null ? (int?) this.Model.Status : null, null)
+                        @Html.EnumDropdownListFor(model => model.Status, this.Model != null ? (int?)this.Model.Status : null, null)
                     </td>
                 </tr>
             }
@@ -147,32 +145,27 @@
                     </span>
                 </td>
             </tr>
-            
+
             <tr>
-                <th>
-                    Horário
+                <th>Horário
                 </th>
                 <td class="small">
                     <div>
                         @Html.EditorFor(model => model.Start)<span class="separator">às</span>
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(
-    this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
+ this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :
         this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Warning ? "validation-warning" :
             this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Failed ? "validation-failed" :
                 ""
-                                                                     )">
-                        </span>
+                                                                     )"></span>
                         @* ToDo: continuar desenvolvendo este estilo *@
                         <span id="time-validation-text" style="display: block; font-size: 11px; line-height: 1.2em; padding: 10px 0 5px; color: #DD390D;">@Model.TimeValidationMessage</span>
                     </div>
                     @* Action-links *@
-                    <a id="check_time" href="#" class="block-little-link">
-                        Verificar disponibilidade deste horário</a>
-                    <a id="next_time_from_this_link" href="#" class="block-little-link">
-                        Próximo horário livre a partir deste</a>
-                    <a id="next_time_link" href="#" class="block-little-link">
-                        Próximo horário livre a partir de agora</a>
+                    <a id="check_time" href="#" class="block-little-link">Verificar disponibilidade deste horário</a>
+                    <a id="next_time_from_this_link" href="#" class="block-little-link">Próximo horário livre a partir deste</a>
+                    <a id="next_time_link" href="#" class="block-little-link">Próximo horário livre a partir de agora</a>
                 </td>
             </tr>
 
@@ -180,7 +173,7 @@
         
             if (Model.Id != null)
             {
-            <a id="delete-appointment-link" class="block-little-link" href="#">excluir</a>
+        <a id="delete-appointment-link" class="block-little-link" href="#">excluir</a>
             }
         
         <div class="submit-bar">
@@ -190,33 +183,30 @@
     }
     <script type="text/javascript">
         $("#appointment_form").ajaxForm({
-            success: function(result, contentType) {
-                if(contentType == "html") {
+            success: function (result, contentType) {
+                if (contentType == "html") {
                     $(".appointment-edit").replaceWith(result);
                     $("#appointment_form").trigger("modal-resize");
                 }
                 else {
-                    if(result.status == "success")
-                    {
+                    if (result.status == "success") {
                         $(this).trigger("modal-ok");
 
                         // Updating the components in the background page.
                         var calendar = $("#calendar");
-                        if (calendar.length > 0)
-                        {
+                        if (calendar.length > 0) {
                             // If calendar is there, all the other variables and objects are there too.
                             calendar.fullCalendar("refetchEvents");
                             fetchDatePickerEvents();
                             $(".datepicker").datepicker("refresh");
                         }
                     }
-                    else
-                    {
+                    else {
                         alert(result.text);
                     }
                 }
             },
-            error: function(e) {
+            error: function (e) {
                 alert("Não foi possível salvar a consulta. Erro inesperado.");
             }
         });
@@ -226,27 +216,15 @@
         $("#Start").mask("99:99");
         $("#End").mask("99:99");
 
-        $("#Date").bind("keyup", function(e) {
-            $.getJSON("@Url.Action("GetSpelledDate")", { date: $(this).val() }, function(result) {
+        $("#Date").bind("keyup", function (e) {
+            $.getJSON("@Url.Action("GetSpelledDate")", { date: $(this).val() }, function (result) {
                 $(".date-spelled").html(result.success ? result.text : "");
             });
         });
 
-//        $("#PatientNameLookup").autocomplete({
-//                source: "@Url.Action("Search", "Patients")",
-//                select: function(event, ui) {
-//                            $("#PatientId").val(ui.item.id);
-//                        }
-//            }).data( "autocomplete" )._renderItem = function( ul, item ) {
-//			    return $( "<li></li>" )
-//				    .data( "item.autocomplete", item )
-//				    .append( "<a><span class='item-title'>" + item.value + "</span><span class='item-description'>" + item.description + "</span></a>" )
-//				    .appendTo( ul );
-//		    };
-
-        $("#medical-appointment-tab").click(function(e) {
+        $("#medical-appointment-tab").click(function (e) {
             e.preventDefault();
-            
+
             // marks the selected tab
             $(this).siblings().removeClass("activated");
             $(this).addClass("activated");
@@ -260,7 +238,7 @@
             $(this).trigger("modal-resize");
         });
 
-        $("#generic-appointment-tab").click(function(e) {
+        $("#generic-appointment-tab").click(function (e) {
             e.preventDefault();
 
             // marks the selected tab
@@ -276,7 +254,7 @@
             $(this).trigger("modal-resize");
         });
 
-        $("#non-existing-user-link").click(function(e) {
+        $("#non-existing-user-link").click(function (e) {
             e.preventDefault();
             $(".subsequent-appointments-only").hide();
             $(".first-appointment-only").show();
@@ -285,7 +263,7 @@
             $(this).trigger("modal-resize");
         });
 
-        $("#existing-user-link").click(function(e) {
+        $("#existing-user-link").click(function (e) {
             e.preventDefault();
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
@@ -294,24 +272,23 @@
             $(this).trigger("modal-resize");
         });
 
-        $("#cancel").click(function(e) {
+        $("#cancel").click(function (e) {
             e.preventDefault();
             $(this).trigger("modal-cancel");
         });
-        
+
         $("#delete-appointment-link").click(function (e) {
             e.preventDefault();
             var answer = confirm("Deseja realmente excluir esta consulta?\nEsta operação não pode ser desfeita.");
             if (answer) {
-                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function(data) {
-                    if(data.success) {
+                $.getJSON("@Url.Action("Delete", new { id = this.Model.Id })", function (data) {
+                    if (data.success) {
                         $("#delete-appointment-link").trigger("modal-ok");
                         alert("Esta consulta foi excluída");
 
                         // Updating the components in the background page.
                         var calendar = $("#calendar");
-                        if (calendar.length > 0)
-                        {
+                        if (calendar.length > 0) {
                             // If calendar is there, all the other variables and objects are there too.
                             calendar.fullCalendar("refetchEvents");
                             fetchDatePickerEvents();
@@ -333,8 +310,8 @@
 
         $("#check_time").ajaxLink({
             url: "@Url.Action("VerifyTimeAvailability")",
-            
-            data: function() {
+
+            data: function () {
                 return {
                     date: $("#Date").val(),
                     start: $("#Start").val(),
@@ -342,28 +319,25 @@
                     patientId: $("#PatientId").val()
                 };
             },
-            success: function(result){
-                if(result.status == "Failed")
-                {
+            success: function (result) {
+                if (result.status == "Failed") {
                     $("#time-validation-icon").removeClass("validation-warning validation-passed").addClass("validation-failed");
                     $("#time-validation-text").html(result.text);
                 }
-                else if(result.status == "Warning")
-                {
+                else if (result.status == "Warning") {
                     $("#time-validation-icon").removeClass("validation-passed validation-failed").addClass("validation-warning");
                     $("#time-validation-text").html(result.text);
                 }
-                else if(result.status == "Passed")
-                {
+                else if (result.status == "Passed") {
                     $("#time-validation-icon").removeClass("validation-failed validation-warning").addClass("validation-passed");
                     $("#time-validation-text").html("");
                 }
             }
         });
-                
-        $("#next_time_link").ajaxLink({
-            url: "@Url.Action("FindNextFreeTime")",
-            success: function(data) {
+
+            $("#next_time_link").ajaxLink({
+                url: "@Url.Action("FindNextFreeTime")",
+            success: function (data) {
                 populateTimeInfo(data);
                 $("#time-validation-icon").removeClass("validation-failed validation-warning").addClass("validation-passed");
                 $("#time-validation-text").html("");
@@ -372,13 +346,13 @@
 
         $("#next_time_from_this_link").ajaxLink({
             url: "@Url.Action("FindNextFreeTime")",
-            data: function() {
+            data: function () {
                 return {
                     date: $("#Date").val(),
                     time: $("#End").val()
                 };
             },
-            success: function(data) {
+            success: function (data) {
                 populateTimeInfo(data);
                 $("#time-validation-icon").removeClass("validation-failed validation-warning").addClass("validation-passed");
                 $("#time-validation-text").html("");
