@@ -22,13 +22,8 @@
     </ul>
 }
 
-@using (Html.BeginForm("search", null, FormMethod.Get))
-{
-    @Html.Partial("SearchBox", new SearchModel())
-}
-
 <div class="widget">
-    <h2>Últimos modelos de atestado cadastrados
+    <h2>Modelos de atestado médico
     </h2>
     @grid.GetHtml()
 </div>

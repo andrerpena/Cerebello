@@ -16,7 +16,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     HealthInsurances = (from m in this.db.HealthInsurances
                                             .Where(m => m.Doctor.Id == this.Doctor.Id)
-                                            .OrderBy(m => m.Name).Take(5).ToList()
+                                            .OrderBy(m => m.Name).ToList()
                                         select new HealthInsuranceViewModel
                                             {
                                                 Id = m.Id,
@@ -121,29 +121,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
 
             return this.View(viewModel);
-        }
-
-        public ActionResult Search(string term)
-        {
-            var model = new HealthInsuranceIndexViewModel
-                {
-                    HealthInsurances = (from m in this.db.HealthInsurances
-                                            .Where(m => m.Doctor.Id == this.Doctor.Id)
-                                            .Where(m => m.Name.Contains(term))
-                                            .OrderBy(m => m.Name).Take(5).ToList()
-                                        select new HealthInsuranceViewModel
-                                            {
-                                                Id = m.Id,
-                                                Name = m.Name,
-                                                NewAppointmentValue = m.NewAppointmentValue,
-                                                ReturnAppointmentValue = m.ReturnAppointmentValue,
-                                                ReturnDaysInterval = m.ReturnTimeInterval,
-                                                IsActive = m.IsActive,
-                                                IsParticular = m.IsParticular,
-                                            }).ToList(),
-                    Count = this.db.Medicines.Count()
-                };
-            return View("Index", model);
         }
 
         public JsonResult Delete(int id)

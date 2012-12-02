@@ -8,7 +8,6 @@
             : "Convênios médicos e formas de atendimento particular";
 
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
-    this.ViewBag.Watermark = "Pesquisar pelo nome do convênio";
 
     var itemsHealthInsurance = this.Model.HealthInsurances.Where(hi => !hi.IsParticular);
     var grid = this.Html.CreateGrid(itemsHealthInsurance, Constants.GRID_PAGE_SIZE);
@@ -46,17 +45,12 @@
     </ul>
 }
 
-@using (Html.BeginForm("search", null, FormMethod.Get))
-{
-    @Html.Partial("SearchBox", new SearchModel())
-}
-
 <div class="widget">
-    <h2>Últimas formas de atendimento particular cadastradas
+    <h2>Formas de atendimento particular
     </h2>
     @gridParticular.GetHtml()
 
-    <h2 style="margin-top: 3em">Últimos convênios cadastrados
+    <h2 style="margin-top: 3em">Convênios
     </h2>
     @grid.GetHtml()
 </div>
