@@ -11,6 +11,7 @@ using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
 using HtmlAgilityPack;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -26,8 +27,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public DateTime LocalDate { get; set; }
         }
 
-        private PatientViewModel GetViewModel(Patient patient, bool includeSessions = false)
+        private PatientViewModel GetViewModel([NotNull] Patient patient, bool includeSessions = false)
         {
+            if (patient == null) throw new ArgumentNullException("patient");
             var address = patient.Person.Addresses.Single();
 
             var viewModel = new PatientViewModel()
@@ -60,6 +62,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (includeSessions)
             {
+                // gets a textual date. The input date must be LOCAL
+                Func<DateTime, string> getRelativeDate = s =>
+                {
+                    var result = s.ToShortDateString();
+                    result += ", " + DateTimeHelper.GetFormattedTime(s);
+                    result += ", " +
+                              DateTimeHelper.ConvertToRelative(s, this.GetPracticeLocalNow(),
+                                                               DateTimeHelper.RelativeDateOptions.IncludeSuffixes |
+                                                               DateTimeHelper.RelativeDateOptions.IncludePrefixes |
+                                                               DateTimeHelper.RelativeDateOptions.ReplaceToday |
+                                                               DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+
+                    return result;
+                };
+
+                // get appointments scheduled for the future
+                var utcNow = this.GetUtcNow();
+                var appointments = this.db.Appointments.Where(a => a.PatientId == patient.Id && a.DoctorId == this.Doctor.Id && a.Start > utcNow).ToList();
+                viewModel.FutureAppointments = (from a in appointments
+                                                select new AppointmentViewModel()
+                                                    {
+                                                        PatientId = a.PatientId,
+                                                        PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
+                                                        Date = ConvertToLocalDateTime(this.Practice, a.Start),
+                                                        DateSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
+                                                    }).ToList();
+
                 var eventDates = new List<DateTime>();
 
                 // anamneses

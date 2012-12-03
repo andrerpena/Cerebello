@@ -41,7 +41,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PatientId = a.PatientId,
                     PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
                     Date = ConvertToLocalDateTime(this.Practice, a.Start),
-                    DateSpelled = getRelativeDate(a.Start)
+                    DateSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
                 }).ToList();
 
             var person = this.Doctor.Users.First().Person;

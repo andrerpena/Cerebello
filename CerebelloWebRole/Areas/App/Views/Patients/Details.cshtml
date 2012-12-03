@@ -49,6 +49,28 @@
     @Html.LabelFor(model => model.Address)
 </h2>
 @Html.DisplayFor(model => model.Address)
+
+<h2>Consultas agendadas para o futuro</h2>
+@if (this.Model.FutureAppointments.Count > 0)
+{
+    <ul class="next-appointments-list">
+        @foreach (var appointment in this.Model.FutureAppointments)
+        {
+            <li>
+                <span class="date-and-time">
+                    <a href="@Url.Action("Index", "Schedule", new { y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day })">@appointment.DateSpelled</a>
+                </span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <div class="message-warning">Não existem consultas agendadas para o futuro</div>
+}
+
+
+
 <h2>Histórico do paciente</h2>
 <div class="medical-appointments-panel">
     @if (this.Model.Sessions.Any())
@@ -106,7 +128,7 @@
                 @Html.Action("details", "examresults", new { id = examResultId })
                 }
             }
-            
+
             @if (session.DiagnosisIds.Count > 0)
             {
                 <p class="subtitle">
@@ -128,7 +150,7 @@
                 @Html.Action("details", "medicalcertificates", new { id = certificateId })
                 }
             }
-            
+
         </div>
         }
     }

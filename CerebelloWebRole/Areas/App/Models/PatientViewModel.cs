@@ -10,7 +10,8 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public PatientViewModel()
         {
-            this.Sessions = new List<SessionViewModel>();   
+            this.Sessions = new List<SessionViewModel>();
+            this.FutureAppointments = new List<AppointmentViewModel>();
         }
 
         [Display(Name = "Convênio")]
@@ -23,5 +24,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String Observations { get; set; }
 
         public List<SessionViewModel> Sessions { get; set; }
+
+        public List<AppointmentViewModel> FutureAppointments { get; set; }
     }
 }
