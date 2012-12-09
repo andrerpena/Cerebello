@@ -40,7 +40,7 @@
         <tr>
             <th>@Html.LabelFor(model => model.Text)
             </th>
-            <td class="large">@Html.TextAreaFor(model => model.Text)
+            <td class="large">@Html.TextAreaFor(model => model.Text, new { rows = 10})
             </td>
         </tr>
         <tr>
