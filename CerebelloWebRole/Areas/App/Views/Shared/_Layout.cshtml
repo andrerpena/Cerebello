@@ -75,7 +75,7 @@
                 user: {
                     Id: @this.ViewBag.UserInfo.Id,
                     Name: '@this.ViewBag.UserInfo.DisplayName',
-                    GravatarUrl: '@GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, GravatarHelper.Size.s32)'
+                    GravatarUrl: '@Html.Raw(GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, GravatarHelper.Size.s32))'
                 },
                 practice: "@this.ViewBag.Practice.UrlIdentifier"
             });
