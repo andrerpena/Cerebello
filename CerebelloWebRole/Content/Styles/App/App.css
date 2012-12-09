@@ -519,13 +519,12 @@ fieldset {
             font-weight: bold;
         }
 
-.tabNav li.header
-{
-    margin: 20px 0px 10px; 
-    font-size: 110%;
-    background-position: 4px 50%;
-    font-weight: bold;
-}
+        .tabNav li.header {
+            margin: 20px 0px 10px;
+            font-size: 110%;
+            background-position: 4px 50%;
+            font-weight: bold;
+        }
 
 
 .side-column hr {
@@ -703,12 +702,16 @@ fieldset {
 
 /* pacientes do consultório */
 
+.doctors-list li {
+    margin-bottom: 10px;
+}
+
 .doctors-list .doctor-picture {
     float: left;
 }
 
 .doctors-list .doctor-info {
-    margin-left: 74px;
+    margin-left: 40px;
 }
 
 .doctors-list td {
@@ -892,8 +895,7 @@ ul.dayoff-list .delete {
 
 /* generic class to use anywhere */
 
-.user_select_none, .user_select_none *
-{
+.user_select_none, .user_select_none * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -1327,14 +1329,13 @@ div.message-help {
     .top-bar-menu-button.schedule-button {
         background-image: url("/content/images/app/icons16/calendar.png");
     }
-    
+
 
 .next-appointments-list {
     margin-bottom: 15px;
 }
 
     .next-appointments-list .patient {
-
     }
 
 

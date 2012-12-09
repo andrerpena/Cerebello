@@ -54,6 +54,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Conselho médico")]
         public string MedicalEntityName { get; set; }
 
+        [Display(Name = "Funções")]
         public string UserRoles
         {
             get

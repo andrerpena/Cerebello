@@ -134,13 +134,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
                             if (uc == UnicodeCategory.NonSpacingMark)
                             {
-                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alpha-numéricos, hífens e 'underline's são permitidos");
+                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alfa-numéricos, hífens e 'underline's são permitidos");
                                 break;
                             }
 
                             if (!char.IsLetterOrDigit(c) && !new char[] { '_', '-' }.Contains(c))
                             {
-                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alpha-numéricos, hífens e 'underline's são permitidos");
+                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alfa-numéricos, hífens e 'underline's são permitidos");
                                 break;
                             }
                         }

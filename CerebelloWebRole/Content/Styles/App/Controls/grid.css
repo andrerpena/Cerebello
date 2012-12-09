@@ -12,7 +12,7 @@
  
  .webgrid-header th
  {
-    border-bottom: 1px dashed #D7D7D7;
+    background-color: #F5F5F5;
     font-weight: bold;
  }
   
@@ -28,23 +28,36 @@
     color: #777777;
     padding: 2px;
  }
+
+  .webgrid-footer td {
+      border: none !important;
+  }
  
  .webgrid tr td, .webgrid tr th
  {
+    border-bottom: 1px solid #F1EFEF;
     padding: 8px;
- }
-  
- .webgrid-alternating-row
- {
-    background-color: #F5F5F5;
- }
-  
- .webgrid-row-style
- {
-     
+    line-height: 1.2em;
  }
   
  .webgrid-selected-row
  {
      font-weight: bold;
  }
+
+ 
+/* a grid cell that supports icon links*/
+.icon-link-td {
+    white-space: nowrap;
+    padding: 0;
+}
+
+    .icon-link-td a.cell-icon {
+        background-repeat: no-repeat;
+        display: inline-block;
+        height: 16px;
+        margin: 0 8px 0 0;
+        padding-left: 22px;
+        vertical-align: text-bottom;
+        cursor: pointer;
+    }

@@ -14,6 +14,7 @@ using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
 using HtmlAgilityPack;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -28,11 +29,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="user">User object to be used as source of values.</param>
         /// <param name="practice"> </param>
-        /// <param name="medicalEntity"> </param>
-        /// <param name="medicalSpecialty"> </param>
+        /// <param name="medicalEntity">medical entity, if the user is a doctor. If medical entity is null, medical entity won't be added to the view-model even if the user is a doctor</param>
+        /// <param name="medicalSpecialty">medical specialty, if the user is a doctor. If medical specialty is null, medical specialty won't be added to the view-model even if the user is a doctor</param>
         /// <returns>A new UserViewModel with informations copied from the User object.</returns>
-        public static UserViewModel GetViewModel(User user, Practice practice, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty)
+        public static UserViewModel GetViewModel(
+            [NotNull] User user, [NotNull] Practice practice, SYS_MedicalEntity medicalEntity = null, SYS_MedicalSpecialty medicalSpecialty = null)
         {
+            if (user == null) throw new ArgumentNullException("user");
+            if (practice == null) throw new ArgumentNullException("practice");
+
             var address = user.Person.Addresses.SingleOrDefault();
 
             var viewModel = new UserViewModel()
@@ -40,7 +45,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Id = user.Id,
                 UserName = user.UserName,
                 FullName = user.Person.FullName,
-                ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s64),
+                ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s16),
                 Gender = user.Person.Gender,
                 DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth),
                 MaritalStatus = user.Person.MaritalStatus,
@@ -68,10 +73,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (userDoctor != null)
             {
                 viewModel.MedicCRM = userDoctor.CRM;
-                viewModel.MedicalSpecialtyId = medicalSpecialty.Id;
-                viewModel.MedicalSpecialtyName = medicalSpecialty.Name;
-                viewModel.MedicalEntityId = medicalEntity.Id;
-                viewModel.MedicalEntityName = medicalEntity.Name;
+                viewModel.MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?) null;
+                viewModel.MedicalSpecialtyName = medicalSpecialty != null ? medicalSpecialty.Name : null;
+                viewModel.MedicalEntityId = medicalEntity != null ? medicalEntity.Id : (int?) null;
+                viewModel.MedicalEntityName = medicalEntity != null ? medicalEntity.Name : null;
                 viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
                     typeof(TypeEstadoBrasileiro),
                     user.Doctor.MedicalEntityJurisdiction);
@@ -88,27 +93,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            var model = new PracticeUsersViewModel();
-
-            var dataCollection =
-                this.Practice.Users.Select(u =>
-                new
+            var model = new PracticeUsersViewModel
                 {
-                    vm = new UserViewModel
-                    {
-                        Id = u.Id,
-                        FullName = u.Person.FullName,
-                    },
-                    EmailGravatarHash = u.Person.EmailGravatarHash,
-                }).ToList();
-
-            foreach (var eachItem in dataCollection)
-            {
-                if (!string.IsNullOrEmpty(eachItem.EmailGravatarHash))
-                    eachItem.vm.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.EmailGravatarHash, GravatarHelper.Size.s64);
-            }
-
-            model.Users = dataCollection.Select(item => item.vm).ToList();
+                    Users = (from u in this.Practice.Users.OrderBy(u => u.Person.FullName).ToList()
+                             select GetViewModel(u, u.Practice)).ToList()
+                };
 
             return View(model);
         }

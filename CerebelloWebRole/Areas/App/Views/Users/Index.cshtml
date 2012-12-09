@@ -1,13 +1,12 @@
-﻿@model CerebelloWebRole.Areas.App.Models.PracticeUsersViewModel
+﻿@using CerebelloWebRole.Code
+@model CerebelloWebRole.Areas.App.Models.PracticeUsersViewModel
 @{
     ViewBag.Title = "Usuários do consultório · Cerebello";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
-    WebGrid gridUsers = new WebGrid();
-    gridUsers.Bind(Model.Users, null, false, Model.Users.Count);
-    var userNameColumn = gridUsers.Column(
-        header: "Nome do usuário",
-        format: @<text><a href="@Url.Action("details", new { id = @item.Id })">@item.FullName</a></text>);
+    var grid = this.Html.CreateGrid(this.Model.Users, Constants.GRID_PAGE_SIZE);
+    grid.AddField(model => model.FullName, @<text><a href="@Url.Action("details", new { id = item.Id})" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FullName</a></text>, cssClass: "icon-link-td");
+    grid.AddField(model => model.UserRoles);
 }
 @section Title {
 Usuários do consultório
@@ -20,18 +19,5 @@ Usuários do consultório
         </ul>
     }
 }
-<div class="users-list">
-    <div class="widget">
-        <h2>Usuários do sistema
-        </h2>
-        @gridUsers.GetHtml(
-                    columns: new List<WebGridColumn>() { userNameColumn },
-                    displayHeader: true,
-                    tableStyle: "webgrid",
-                    headerStyle: "webgrid-header",
-                    footerStyle: "webgrid-footer",
-                    alternatingRowStyle: "webgrid-alternating-row",
-                    selectedRowStyle: "webgrid-selected-row",
-                    rowStyle: "webgrid-row-style")
-    </div>
-</div>
+
+@grid.GetHtml()

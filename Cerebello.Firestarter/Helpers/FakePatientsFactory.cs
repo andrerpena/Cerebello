@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Cerebello.Model;
-using CerebelloWebRole.Models;
 
 namespace Cerebello.Firestarter.Helpers
 {
@@ -161,7 +160,7 @@ namespace Cerebello.Firestarter.Helpers
                             PracticeId = doctor.PracticeId,
                         };
 
-                    patient.Person.Email = firstName + string.Join("", chosenMiddleNames) + "@gmail.com";
+                    patient.Person.Email = (firstName + string.Join("", chosenMiddleNames)).ToLower() + "@gmail.com";
                     Debug.Assert(!patient.Person.Addresses.Any());
                     patient.Person.Addresses.Add(
                         new Address

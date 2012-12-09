@@ -123,9 +123,7 @@ namespace CerebelloWebRole.Code.Controls
                             columnHeader = propertyInfo.Name;
                     }
 
-                    var format = field.Format;
-                    if (format == null)
-                        format = x => propertyInfo.GetValue(((WebGridRow)x).Value, null);
+                    var format = field.Format ?? (x => propertyInfo.GetValue(((WebGridRow)x).Value, null));
 
                     var cssClasses = new List<string>();
                     if (field.WordWrap)

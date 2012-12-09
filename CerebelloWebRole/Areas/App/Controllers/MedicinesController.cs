@@ -489,7 +489,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         select medicine;
 
             if (!string.IsNullOrEmpty(searchModel.Term))
-                query = from medicine in query where medicine.Name.Contains(searchModel.Term) select medicine;
+                query = from medicine in query where medicine.Name.Contains(searchModel.Term)
+                        || medicine.Laboratory.Name.Contains(searchModel.Term)
+                        || medicine.ActiveIngredients.Any(ai => ai.Name.Contains(searchModel.Term))
+                        select medicine;
 
             // 1-based page index
             var pageIndex = searchModel.Page;

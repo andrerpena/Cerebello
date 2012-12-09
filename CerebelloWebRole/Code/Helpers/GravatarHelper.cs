@@ -17,6 +17,9 @@ namespace CerebelloWebRole.Code
             // this code CAN BE BETTER. I'm jot not feeling like fixing it right now
             switch (size)
             {
+                case Size.s16:
+                    sizeAsString = "16";
+                    break;
                 case Size.s24:
                     sizeAsString = "24";
                     break;
@@ -85,8 +88,12 @@ namespace CerebelloWebRole.Code
 
         }
 
+        /// <summary>
+        /// Gravatar image size
+        /// </summary>
         public enum Size
         {
+            s16,
             s24,
             s32,
             s64,

@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.PracticeHomeIndexViewModel
+﻿@using CerebelloWebRole.Code
+@model CerebelloWebRole.Areas.App.Models.PracticeHomeIndexViewModel
 @{
     ViewBag.Title = "Meu consultório médico · Cerebello";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
@@ -6,59 +7,16 @@
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.PatientsCount);
+    
+    var grid = this.Html.CreateGrid(this.Model.Doctors, Constants.GRID_PAGE_SIZE);
+    grid.AddField(model => model.Name, @<text><a href="@Url.Action("index", "doctorhome", new { doctor = item.UrlIdentifier })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.Name</a></text>, cssClass: "icon-link-td");
+    grid.AddField(model => model.MedicalSpecialty);
+    grid.AddField(model => model.CRM, @<text>@item.CRM (@item.MedicalEntity)</text>);
 }
 @section Title {
     Meu consultório médico
 }
+
 @cardView.GetHtml()
-<div class="widget">
-    <h2>
-        Médicos do consultório</h2>
-    <div class="doctors-list">
-        <ul>
-            @foreach (var doctor in Model.Doctors)
-            {
-                <li>
-                    <div class="doctor-picture">
-                        <img alt="doctor-picture" src="@doctor.ImageUrl" />
-                    </div>
-                    <div class="doctor-info">
-                        <table>
-                            <tr>
-                                <td class="header">
-                                    Nome
-                                </td>
-                                <td class="value">
-                                    <a href="@Url.Action("Index", "DoctorHome", new { doctor = doctor.UrlIdentifier })">@doctor.Name</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="header">
-                                    Especialidade
-                                </td>
-                                <td class="value">@doctor.MedicalSpecialty
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="header">
-                                    CRM
-                                </td>
-                                <td class="value">@doctor.CRM (@doctor.MedicalEntity)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="header">
-                                    Próximo horário
-                                </td>
-                                <td class="value">@doctor.NextAvailableTime
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div style="clear: both">
-                    </div>
-                </li>
-            }
-        </ul>
-    </div>
-</div>
+
+@grid.GetHtml()

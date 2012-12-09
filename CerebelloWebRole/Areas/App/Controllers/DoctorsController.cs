@@ -19,8 +19,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Index()
         {
-            var model = new PracticeDoctorsViewModel();
-            model.Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow());
+            var model = new PracticeDoctorsViewModel
+                {
+                    Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow())
+                };
             return View(model);
         }
 
@@ -55,7 +57,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             foreach (var eachItem in dataCollection)
             {
                 if (!string.IsNullOrEmpty(eachItem.EmailGravatarHash))
-                    eachItem.ViewModel.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.EmailGravatarHash, GravatarHelper.Size.s64);
+                    eachItem.ViewModel.ImageUrl = GravatarHelper.GetGravatarUrl(eachItem.EmailGravatarHash, GravatarHelper.Size.s16);
 
                 eachItem.ViewModel.MedicalEntity = string.Format(
                     string.IsNullOrEmpty(eachItem.MedicalEntityJurisdiction) ? "{0}" : "{0}-{1}",

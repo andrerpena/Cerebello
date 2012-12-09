@@ -1,6 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.MedicineViewModel>
 @{
-    ViewBag.Title = "Search";
+    ViewBag.Title = "Pesquisa de medicamentos · Cerebello";
     ViewBag.Watermark = "Pesquisar pelo nome do medicamento";
 
     var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
