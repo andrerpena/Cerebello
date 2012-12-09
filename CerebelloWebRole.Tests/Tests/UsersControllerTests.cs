@@ -1103,8 +1103,6 @@ namespace CerebelloWebRole.Tests.Tests
             TestChangePassword_3_Helper<UsersController>(mr, practice, docToView, "delete", filterToTest);
 
             // Testing other controllers, for which access should be denied.
-            TestChangePassword_3_Helper<PracticeHomeController>(mr, practice, docToView, "index", filterToTest);
-            TestChangePassword_3_Helper<DoctorsController>(mr, practice, docToView, "index", filterToTest);
             TestChangePassword_3_Helper<DoctorHomeController>(mr, practice, docToView, "index", filterToTest);
             TestChangePassword_3_Helper<PatientsController>(mr, practice, docToView, "index", filterToTest);
             TestChangePassword_3_Helper<AppController>(mr, practice, docToView, "lookupeverything", filterToTest);

@@ -158,7 +158,7 @@
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
-    <Compile Include="Areas\App\Controllers\ConfigPracticeController.cs" />
+    <Compile Include="Areas\App\Controllers\PracticeHomeController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigAccountController.cs" />
     <Compile Include="Areas\App\Controllers\ExamResultsController.cs" />
     <Compile Include="Areas\App\Controllers\ExamsController.cs" />
@@ -170,7 +170,7 @@
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalSpecialtiesLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
-    <Compile Include="Areas\App\Models\ConfigPracticeViewModel.cs" />
+    <Compile Include="Areas\App\Models\PracticeHomeController.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
@@ -178,7 +178,6 @@
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalProceduresLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\AutocompleteGridModels\SysMedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\PhoneViewModel.cs" />
-    <Compile Include="Areas\App\Models\PracticeHomeIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
     <Compile Include="Areas\App\Models\AutocompleteGridModels\CidAutocompleteGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
@@ -207,8 +206,6 @@
     <Compile Include="Areas\App\Controllers\PatientsController.cs" />
     <Compile Include="Areas\App\Controllers\ReceiptsController.cs" />
     <Compile Include="Areas\App\Controllers\ScheduleController.cs" />
-    <Compile Include="Areas\App\Controllers\DoctorsController.cs" />
-    <Compile Include="Areas\App\Controllers\PracticeHomeController.cs" />
     <Compile Include="Areas\App\Models\DiagnosisViewModel.cs" />
     <Compile Include="Areas\App\Models\AnamneseViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDocumentsViewModel.cs" />
@@ -560,12 +557,6 @@
     <Content Include="Areas\App\Views\Schedule\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\App\Views\Doctors\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\App\Views\PracticeHome\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\App\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -630,7 +621,6 @@
     <Content Include="Areas\App\Views\ExamResults\NotFound.cshtml" />
     <Content Include="Areas\App\Views\Shared\DisplayTemplates\AddressViewModel.cshtml" />
     <Content Include="Areas\App\Views\Schedule\MissingConfigurations.cshtml" />
-    <Content Include="Areas\App\Views\PracticeHome\Welcome.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\DaysOff.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\_ViewStart.cshtml" />
@@ -638,8 +628,8 @@
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
-    <Content Include="Areas\App\Views\ConfigPractice\Index.cshtml" />
-    <Content Include="Areas\App\Views\ConfigPractice\Edit.cshtml" />
+    <Content Include="Areas\App\Views\PracticeHome\Index.cshtml" />
+    <Content Include="Areas\App\Views\PracticeHome\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Index.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Details.cshtml" />

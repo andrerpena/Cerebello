@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Firestarter;
-using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PracticeHomeController = CerebelloWebRole.Areas.App.Models.PracticeHomeController;
 
 namespace CerebelloWebRole.Tests.Tests
 {
     [TestClass]
-    public class ConfigPracticeControllerTests : DbTestBase
+    public class PracticeHomeControllerTests : DbTestBase
     {
         #region TEST_SETUP
         [ClassInitialize]
@@ -36,14 +36,14 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Index_UserIsOwner()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Index");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Index");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -52,9 +52,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index")
-                            ?? controller.Index();
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Index")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Index")
+                            ?? homeController.Index();
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
@@ -64,14 +64,14 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Index_UserIsAdministrator()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Miguel_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Index");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Index");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -80,9 +80,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index")
-                            ?? controller.Index();
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Index")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Index")
+                            ?? homeController.Index();
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
@@ -92,15 +92,15 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Index_UserIsSecretary()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 var milena = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.First());
                 mr.SetCurrentUser(milena.Users.Single(), "milena");
-                mr.SetRouteData("Index", "ConfigPractice", "App", "consultoriodrhouse");
+                mr.SetRouteData("Index", "practicehome", "App", "consultoriodrhouse");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -109,9 +109,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Index")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Index")
-                            ?? controller.Index();
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Index")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Index")
+                            ?? homeController.Index();
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(HttpUnauthorizedResult));
@@ -123,14 +123,14 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Edit_UserIsOwner()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Edit");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -139,9 +139,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit")
-                            ?? controller.Edit();
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit")
+                            ?? homeController.Edit();
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
@@ -151,14 +151,14 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Edit_UserIsAdministrator()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Miguel_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Edit");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -167,9 +167,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit")
-                            ?? controller.Edit();
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit")
+                            ?? homeController.Edit();
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
@@ -179,15 +179,15 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Edit_UserIsSecretary()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 var milena = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.First());
                 mr.SetCurrentUser(milena.Users.Single(), "milena");
-                mr.SetRouteData("Edit", "ConfigPractice", "App", "consultoriodrhouse");
+                mr.SetRouteData("Edit", "practicehome", "App", "consultoriodrhouse");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -196,9 +196,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit")
-                            ?? controller.Edit();
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit")
+                            ?? homeController.Edit();
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(HttpUnauthorizedResult));
@@ -211,14 +211,14 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void EditPost_UserIsOwner_WithValidData()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Edit");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -226,7 +226,7 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            var viewModel = new ConfigPracticeViewModel
+            var viewModel = new PracticeHomeController
                                 {
                                     PracticeName = "K!",
                                     PracticeTimeZone = 3,
@@ -241,32 +241,32 @@ namespace CerebelloWebRole.Tests.Tests
                                         }
                                 };
 
-            Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
+            Mvc3TestHelper.SetModelStateErrors(homeController, viewModel);
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "POST")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "POST")
-                            ?? controller.Edit(viewModel);
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit", "POST")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit", "POST")
+                            ?? homeController.Edit(viewModel);
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
             var redirectResult = (RedirectToRouteResult)actionResult;
             Assert.AreEqual(2, redirectResult.RouteValues.Count);
-            Assert.AreEqual("ConfigPractice", string.Format("{0}", redirectResult.RouteValues["controller"]), ignoreCase: true);
+            Assert.AreEqual("practicehome", string.Format("{0}", redirectResult.RouteValues["controller"]), ignoreCase: true);
             Assert.AreEqual("Index", string.Format("{0}", redirectResult.RouteValues["action"]), ignoreCase: true);
         }
 
         [TestMethod]
         public void EditPost_UserIsOwner_WithInvalidData()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Andre_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Edit");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -274,18 +274,18 @@ namespace CerebelloWebRole.Tests.Tests
                 return;
             }
 
-            var viewModel = new ConfigPracticeViewModel
+            var viewModel = new PracticeHomeController
             {
                 PracticeName = "", // Cannot set practice name to empty
                 PracticeTimeZone = 3
             };
 
-            Mvc3TestHelper.SetModelStateErrors(controller, viewModel);
+            Mvc3TestHelper.SetModelStateErrors(homeController, viewModel);
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "POST")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "POST")
-                            ?? controller.Edit(viewModel);
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit", "POST")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit", "POST")
+                            ?? homeController.Edit(viewModel);
 
             // Asserts
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
@@ -295,14 +295,14 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void EditPost_UserIsAdministrator()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 mr.SetCurrentUser_Miguel_CorrectPassword();
-                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ConfigPracticeController), "Edit");
+                mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(Areas.App.Controllers.PracticeHomeController), "Edit");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -311,9 +311,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "POST")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "POST")
-                            ?? controller.Edit(new ConfigPracticeViewModel
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit", "POST")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit", "POST")
+                            ?? homeController.Edit(new PracticeHomeController
                             {
                                 PracticeName = "My New Practice Name",
                                 PracticeTimeZone = 3
@@ -323,22 +323,22 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
             var redirectResult = (RedirectToRouteResult)actionResult;
             Assert.AreEqual(2, redirectResult.RouteValues.Count);
-            Assert.AreEqual("ConfigPractice", string.Format("{0}", redirectResult.RouteValues["controller"]), ignoreCase: true);
+            Assert.AreEqual("practicehome", string.Format("{0}", redirectResult.RouteValues["controller"]), ignoreCase: true);
             Assert.AreEqual("Index", string.Format("{0}", redirectResult.RouteValues["action"]), ignoreCase: true);
         }
 
         [TestMethod]
         public void EditPost_UserIsSecretary()
         {
-            ConfigPracticeController controller;
+            Areas.App.Controllers.PracticeHomeController homeController;
             var mr = new MockRepository();
             try
             {
                 var milena = Firestarter.CreateSecretary_Milena(this.db, this.db.Practices.First());
                 mr.SetCurrentUser(milena.Users.Single(), "milena");
-                mr.SetRouteData("Edit", "ConfigPractice", "App", "consultoriodrhouse");
+                mr.SetRouteData("Edit", "practicehome", "App", "consultoriodrhouse");
 
-                controller = mr.CreateController<ConfigPracticeController>(callOnActionExecuting: false);
+                homeController = mr.CreateController<Areas.App.Controllers.PracticeHomeController>(callOnActionExecuting: false);
             }
             catch (Exception ex)
             {
@@ -347,9 +347,9 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // Execute test: owner must have access to this view.
-            var actionResult = Mvc3TestHelper.RunOnAuthorization(controller, "Edit", "POST")
-                            ?? Mvc3TestHelper.RunOnActionExecuting(controller, "Edit", "POST")
-                            ?? controller.Edit(new ConfigPracticeViewModel
+            var actionResult = Mvc3TestHelper.RunOnAuthorization(homeController, "Edit", "POST")
+                            ?? Mvc3TestHelper.RunOnActionExecuting(homeController, "Edit", "POST")
+                            ?? homeController.Edit(new PracticeHomeController
                             {
                                 PracticeName = "My New Practice Name",
                                 PracticeTimeZone = 3

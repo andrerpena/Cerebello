@@ -7,33 +7,14 @@
 }
 @section MainMenu {
     <ul class="tabNav">
-        @if (actionName == "welcome")
+        <li class="@(   (controllerName.Equals("practicehome") || controllerName.Equals("users") ) ? "youarehere" : "")">
+            <a href="@Url.Action("index", "practicehome")" class="home-icon">Consultório</a>
+        </li>
+        @if (user.IsOwner)
         {
-            <li class="youarehere">
-                <a href="@Url.Action("welcome", "practicehome")" class="no-icon">Bem vindo!</a>
+            <li class="@(controllerName.Equals("configaccount") ? "youarehere" : "")">
+                <a href="@Url.Action("index", "configaccount")" class="config-icon">Configurações da conta</a>
             </li>
-        }
-        <li class="@(controllerName.Equals("practicehome") && actionName == "index" ? "youarehere" : "")">
-            <a href="@Url.Action("index", "practicehome")" class="home-icon">Início</a>
-        </li>
-        <li class="@(controllerName.Equals("doctors") ? "youarehere" : "")">
-            <a href="@Url.Action("index", "doctors")" class="doctors-icon">Médicos</a>
-        </li>
-        <li class="@(controllerName.Equals("users") ? "youarehere" : "")">
-            <a href="@Url.Action("index", "users")" class="doctors-icon">Usuários</a>
-        </li>
-        @if (user.AdministratorId != null)
-        {
-            <li class="header">Configurações</li>
-            <li class="@(controllerName.Equals("configpractice") ? "youarehere" : "")">
-                <a href="@Url.Action("index", "configpractice")" class="config-icon">Config. do consultório</a>
-            </li>
-            if (user.IsOwner)
-            {
-                <li class="@(controllerName.Equals("configaccount") ? "youarehere" : "")">
-                    <a href="@Url.Action("index", "configaccount")" class="config-icon">Config. da conta</a>
-                </li>
-            }
         }
     </ul>
     <hr />
@@ -47,7 +28,7 @@
     @if (IsSectionDefined("AdditionalTitleInfo"))
     {
         <span class="subtitle">
-        @RenderSection("AdditionalTitleInfo")
+            @RenderSection("AdditionalTitleInfo")
         </span>
     }
 }

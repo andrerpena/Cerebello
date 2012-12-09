@@ -64,7 +64,7 @@
         <a href="#" class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a>
     }
 
-    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de usuários</a>
+    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 
     @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("ResetPassword"))
     {
@@ -81,7 +81,7 @@
                     objectName: "@this.Model.FullName",
                     url: "@Url.Action("Delete", new { id = this.Model.Id })",
                     success: function (data) {
-                        window.location = "@Url.Action("Index")";
+                        window.location = "@Url.Action("Index", "PracticeHome")";
                     }
                 });
             });

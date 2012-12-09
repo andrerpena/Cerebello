@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
-    public class ConfigPracticeViewModel
+    public class PracticeHomeController
     {
-        public ConfigPracticeViewModel()
+        public PracticeHomeController()
         {
             this.Address = new AddressViewModel();
         }
@@ -46,5 +47,9 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Endereço")]
         public AddressViewModel Address { get; set; }
+
+        public List<DoctorViewModel> Doctors { get; set; }
+
+        public List<UserViewModel> Users { get; set; }
     }
 }

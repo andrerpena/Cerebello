@@ -17,14 +17,14 @@ namespace CerebelloWebRole.Areas.App
             context.MapRoute(
                 "Doctor",
                 "p/{practice}/d/{doctor}/{controller}/{action}/{id}",
-                new { controller = "PracticeHome", action = "Index", id = UrlParameter.Optional },
+                new { controller = "practicehome", action = "Index", id = UrlParameter.Optional },
                 new string[] { "CerebelloWebRole.Areas.App.Controllers" }
             );
 
             context.MapRoute(
                 "Practice",
                 "p/{practice}/{controller}/{action}/{id}",
-                new { controller = "PracticeHome", action = "Index", id = UrlParameter.Optional },
+                new { controller = "practicehome", action = "Index", id = UrlParameter.Optional },
                 new string[] { "CerebelloWebRole.Areas.App.Controllers" }
             );
         }

@@ -116,7 +116,7 @@
     }
 }
 @section SideBar {
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de usuários</a>
+    <a href="@Url.Action("index", "practicehome")" class="icon-link icon-link-home">Consultório</a>
 }
 @using (Html.BeginForm())
 {
@@ -159,6 +159,6 @@
     <div class="submit-bar">
         <input type="submit" value="salvar usuário" />
         <span class="separator">ou</span>
-        @Html.ActionLink("cancelar", "Index")
+        @Html.ActionLink("cancelar", "index", "practicehome")
     </div>
 }

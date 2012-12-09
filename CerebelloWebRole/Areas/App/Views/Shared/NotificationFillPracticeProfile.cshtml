@@ -1,4 +1,4 @@
-﻿<a href="@(this.Url.Action("Edit", "ConfigPractice", new { @Model.practice, area = "App" }))" style="color: white" onclick="$(this).trigger('notification-close')">
+﻿<a href="@this.Url.Action("Edit", "PracticeHome", new { @Model.practice, area = "App" })" style="color: white" onclick="$(this).trigger('notification-close')">
     Por favor, complete as informações do consultório,
     pois essas informações são necessárias para várias operações,
     tal como o envio de e-mails para os pacientes.

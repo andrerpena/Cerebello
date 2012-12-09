@@ -7,6 +7,5 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class PracticeUsersViewModel
     {
-        public List<UserViewModel> Users { get; set; }
     }
 }

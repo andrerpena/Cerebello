@@ -1,9 +1,9 @@
 ﻿@using CerebelloWebRole.Code
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Models
-@model CerebelloWebRole.Areas.App.Models.ConfigPracticeViewModel
+@model CerebelloWebRole.Areas.App.Models.PracticeHomeController
 @{
-    ViewBag.Title = "Configurações do consultório";
+    ViewBag.Title = "Editando consultório · Cerebello";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     // creating edit panel
@@ -20,9 +20,10 @@
     editPanel.AddField(m => m.SiteUrl, EditPanelFieldSize.XLarge);
 }
 @section Title {
-    @ViewBag.Title
+    Editando consultório
 }
 @section SideBar {
+    <a href="@Url.Action("index", "practicehome")" class="icon-link icon-link-home">Consultório</a>
 }
 
 @using (Html.BeginForm())

@@ -25,6 +25,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
     public class UsersController : PracticeController
     {
         /// <summary>
+        /// Gets informations for the page used to create new users.
+        /// This page has no informations at all.
+        /// URL: http://www.cerebello.com.br/p/consultoriodrhouse/users/create
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [UsersManagementPermission]
+        public ActionResult Create()
+        {
+            return this.Edit((int?)null);
+        }
+
+        [HttpPost]
+        [UsersManagementPermission]
+        public ActionResult Create(UserViewModel viewModel)
+        {
+            return this.Edit(viewModel);
+        }
+
+        /// <summary>
         /// Creates an UserViewModel given an User object.
         /// </summary>
         /// <param name="user">User object to be used as source of values.</param>
@@ -73,9 +93,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (userDoctor != null)
             {
                 viewModel.MedicCRM = userDoctor.CRM;
-                viewModel.MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?) null;
+                viewModel.MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?)null;
                 viewModel.MedicalSpecialtyName = medicalSpecialty != null ? medicalSpecialty.Name : null;
-                viewModel.MedicalEntityId = medicalEntity != null ? medicalEntity.Id : (int?) null;
+                viewModel.MedicalEntityId = medicalEntity != null ? medicalEntity.Id : (int?)null;
                 viewModel.MedicalEntityName = medicalEntity != null ? medicalEntity.Name : null;
                 viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
                     typeof(TypeEstadoBrasileiro),
@@ -83,43 +103,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             return viewModel;
-        }
-
-        /// <summary>
-        /// Gets informations for the root page of this controller.
-        /// This page consists of a list of users.
-        /// URL: http://www.cerebello.com.br/p/consultoriodrhouse/users
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index()
-        {
-            var model = new PracticeUsersViewModel
-                {
-                    Users = (from u in this.Practice.Users.OrderBy(u => u.Person.FullName).ToList()
-                             select GetViewModel(u, u.Practice)).ToList()
-                };
-
-            return View(model);
-        }
-
-        /// <summary>
-        /// Gets informations for the page used to create new users.
-        /// This page has no informations at all.
-        /// URL: http://www.cerebello.com.br/p/consultoriodrhouse/users/create
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [UsersManagementPermission]
-        public ActionResult Create()
-        {
-            return this.Edit((int?)null);
-        }
-
-        [HttpPost]
-        [UsersManagementPermission]
-        public ActionResult Create(UserViewModel viewModel)
-        {
-            return this.Edit(viewModel);
         }
 
         [HttpGet]
@@ -136,7 +119,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var user = this.db.Users.First(p => p.Id == id);
+                var user = this.db.Users.FirstOrDefault(p => p.Id == id);
+                if (user == null)
+                    return this.ObjectNotFound();
 
                 var medicalEntity = GetDoctorEntity(this.db.SYS_MedicalEntity, user.Doctor);
                 var medicalSpecialty = GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, user.Doctor);
@@ -465,7 +450,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         // TODO: add permission attribute ProfileAccessPermission
         public ActionResult Details(int id)
         {
-            var user = this.db.Users.First(p => p.Id == id);
+            var user = this.db.Users.FirstOrDefault(p => p.Id == id);
+            if (user == null)
+                return this.ObjectNotFound();
 
             var medicalEntity = GetDoctorEntity(this.db.SYS_MedicalEntity, user.Doctor);
             var medicalSpecialty = GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, user.Doctor);

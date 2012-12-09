@@ -1,22 +1,57 @@
-﻿@using CerebelloWebRole.Code
-@model CerebelloWebRole.Areas.App.Models.PracticeHomeIndexViewModel
+﻿@using Cerebello.Model
+@using CerebelloWebRole.Code
+@using CerebelloWebRole.Models
+@model CerebelloWebRole.Areas.App.Models.PracticeHomeController
 @{
     ViewBag.Title = "Meu consultório médico · Cerebello";
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     // creating details CardView
-    var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.PatientsCount);
-    
-    var grid = this.Html.CreateGrid(this.Model.Doctors, Constants.GRID_PAGE_SIZE);
-    grid.AddField(model => model.Name, @<text><a href="@Url.Action("index", "doctorhome", new { doctor = item.UrlIdentifier })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.Name</a></text>, cssClass: "icon-link-td");
-    grid.AddField(model => model.MedicalSpecialty);
-    grid.AddField(model => model.CRM, @<text>@item.CRM (@item.MedicalEntity)</text>);
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(m => m.PracticeName, wholeRow: true);
+    cardView.AddField(m => m.PracticeTimeZone,
+    @<text>@EnumHelper.GetText(@item.PracticeTimeZone, typeof(TypeTimeZone))</text>,
+        wholeRow: true);
+    cardView.AddField(m => m.PhoneMain);
+    cardView.AddField(m => m.PhoneAlt);
+    cardView.AddField(m => m.Pabx);
+    cardView.AddField(m => m.Email, wholeRow: true);
+    cardView.AddField(m => m.SiteUrl, wholeRow: true);
+
+    var doctorsGrid = this.Html.CreateGrid(this.Model.Doctors, Constants.GRID_PAGE_SIZE);
+    doctorsGrid.AddField(model => model.Name, @<text><a href="@Url.Action("index", "doctorhome", new { doctor = item.UrlIdentifier })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.Name</a></text>, cssClass: "icon-link-td");
+    doctorsGrid.AddField(model => model.MedicalSpecialty);
+    doctorsGrid.AddField(model => model.CRM, @<text>@item.CRM (@item.MedicalEntity)</text>);
+
+    var usersGrid = this.Html.CreateGrid(this.Model.Users, Constants.GRID_PAGE_SIZE);
+    usersGrid.AddField(model => model.FullName, @<text><a href="@Url.Action("details", "users", new { id = item.Id })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FullName</a></text>, cssClass: "icon-link-td");
+    usersGrid.AddField(model => model.UserRoles);
 }
 @section Title {
     Meu consultório médico
 }
+@section SideBar {
+    @if (this.CanAccessAction("Edit"))
+    {
+        <a href="@Url.Action("edit")" class="icon-link icon-link-home">Editar consultório</a>
+    }
+    @if (this.CanAccessAction("Create", "Users"))
+    {
+        <a href="@Url.Action("create", "users")" class="icon-link icon-link-plus">Novo usuário</a>
+    }
+}
 
 @cardView.GetHtml()
+<h2>
+    @Html.LabelFor(model => model.Address)
+</h2>
+@Html.DisplayFor(model => model.Address)
 
-@grid.GetHtml()
+<h2>Médicos do consultório
+</h2>
+@doctorsGrid.GetHtml()
+
+<h2 style="margin-top: 30px;">Usuários do consultório
+</h2>
+@usersGrid.GetHtml()
+

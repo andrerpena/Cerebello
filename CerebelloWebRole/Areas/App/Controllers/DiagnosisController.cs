@@ -3,12 +3,13 @@ using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    public class DiagnosisController : DoctorsController
+    public class DiagnosisController : DoctorController
     {
         private static DiagnosisViewModel GetViewModel(Diagnosis diagnosis)
         {
