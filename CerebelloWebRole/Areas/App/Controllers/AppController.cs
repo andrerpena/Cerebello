@@ -75,33 +75,41 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             Relevance = 1
                         }));
 
-            var medicinesQuery = this.db.Medicines.Where(p => p.DoctorId == this.Doctor.Id);
-            if (!string.IsNullOrEmpty(term))
-                medicinesQuery = medicinesQuery.Where(p => p.Name.Contains(term));
+            // somente os médicos podem pesquisar por algumas informações
+            if (this.DbUser.Doctor != null || this.DbUser.Administrator != null)
+            {
+                var medicinesQuery = this.db.Medicines.Where(p => p.DoctorId == this.Doctor.Id);
+                if (!string.IsNullOrEmpty(term))
+                    medicinesQuery = medicinesQuery.Where(p => p.Name.Contains(term));
 
-            queries.Add(medicinesQuery.Select(m =>
+                queries.Add(
+                    medicinesQuery.Select(
+                        m =>
                         new GlobalSearchIntermediateResult()
-                        {
-                            Id = m.Id,
-                            Text = m.Name,
-                            Type = "medicine",
-                            TypeDescription = "Medicamento",
-                            Relevance = 2
-                        }));
+                            {
+                                Id = m.Id,
+                                Text = m.Name,
+                                Type = "medicine",
+                                TypeDescription = "Medicamento",
+                                Relevance = 2
+                            }));
 
-            var laboratoriesQuery = this.db.Laboratories.Where(p => p.DoctorId == this.Doctor.Id);
-            if (!string.IsNullOrEmpty(term))
-                laboratoriesQuery = laboratoriesQuery.Where(p => p.Name.Contains(term));
+                var laboratoriesQuery = this.db.Laboratories.Where(p => p.DoctorId == this.Doctor.Id);
+                if (!string.IsNullOrEmpty(term))
+                    laboratoriesQuery = laboratoriesQuery.Where(p => p.Name.Contains(term));
 
-            queries.Add(laboratoriesQuery.Select(l =>
+                queries.Add(
+                    laboratoriesQuery.Select(
+                        l =>
                         new GlobalSearchIntermediateResult()
-                        {
-                            Id = l.Id,
-                            Text = l.Name,
-                            Type = "laboratory",
-                            TypeDescription = "Laboratório",
-                            Relevance = 3
-                        }));
+                            {
+                                Id = l.Id,
+                                Text = l.Name,
+                                Type = "laboratory",
+                                TypeDescription = "Laboratório",
+                                Relevance = 3
+                            }));
+            }
 
             var finalQuery = queries[0];
 

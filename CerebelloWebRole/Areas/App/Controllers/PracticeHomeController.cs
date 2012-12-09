@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -8,12 +7,9 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Models;
-using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
     public class PracticeHomeController : PracticeController
     {
         private Models.PracticeHomeController GetViewModel()
@@ -58,6 +54,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(viewModel);
         }
 
+        [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
         public ActionResult Edit()
         {
             var viewModel = this.GetViewModel();
@@ -115,6 +112,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
+        [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
         public ActionResult Edit(Models.PracticeHomeController formModel)
         {
             if (this.ModelState.IsValid)
@@ -146,6 +144,5 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return View(formModel);
         }
-
     }
 }
