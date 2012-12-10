@@ -35,6 +35,7 @@
                 initialToggleState: initialToggleState,
                 onClose: function () {
                     delete _this.chatWindows[otherUser.Id];
+                    $.organizeChatContainers();
                     _this.saveWindows();
                 },
                 onToggleStateChanged: function (toggleState) {
