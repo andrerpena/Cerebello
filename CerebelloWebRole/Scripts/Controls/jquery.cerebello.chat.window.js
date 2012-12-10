@@ -124,6 +124,11 @@
             var _this = this;
             return _this.chatContainer.getToggleState();
         };
+
+        this.setVisible = function (value) {
+            var _this = this;
+            _this.chatContainer.setVisible(value);
+        };
     }
 
     // Separate functionality from object creation

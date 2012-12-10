@@ -191,6 +191,9 @@
                             // chances are that the user just clicked a link. When you click a link
                             // the pending ajaxes break and we'll just hide the window
                             _this.chatContainer.setVisible(false);
+
+                            for (var otherUserId in _this.chatWindows)
+                                _this.chatWindows[otherUserId].setVisible(false);
                     }
                 }
             );
