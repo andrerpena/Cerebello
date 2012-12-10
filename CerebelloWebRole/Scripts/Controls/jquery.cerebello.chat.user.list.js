@@ -21,18 +21,29 @@
         this.lastMessageCheckTimeStamp = null;
         this.chatContainer = null;
 
-        this.createNewChatWindow = function (otherUser) {
+        this.createNewChatWindow = function (otherUser, initialToggleState) {
             var _this = this;
+
+            if (!initialToggleState)
+                initialToggleState = "maximized";
+
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
                 practice: _this.opts.practice,
                 myUser: _this.opts.user,
                 otherUser: otherUser,
+                initialToggleState: initialToggleState,
                 onClose: function () {
                     delete _this.chatWindows[otherUser.Id];
+                    _this.saveWindows();
+                },
+                onToggleStateChanged: function (toggleState) {
+                    _this.saveWindows();
                 }
             });
+
             _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
+            _this.saveWindows();
         };
 
         this.processUserListAjaxResult = function (data) {
@@ -59,6 +70,8 @@
                     });
                 })(i);
             }
+
+            _this.chatContainer.setVisible(true);
         };
 
         this.processMessagesAjaxResult = function (data) {
@@ -81,6 +94,58 @@
                 }
             }
         };
+
+        this.saveWindows = function () {
+            var _this = this;
+            var openedChatWindows = new Array();
+            for (var otherUserId in _this.chatWindows) {
+                openedChatWindows.push({
+                    userId: otherUserId,
+                    toggleState: _this.chatWindows[otherUserId].getToggleState()
+                });
+            }
+            createCookie("chat_state", JSON.stringify(openedChatWindows), 365);
+        };
+
+        this.loadWindows = function () {
+            var _this = this;
+            var cookie = readCookie("chat_state");
+            if (cookie) {
+                var openedChatWindows = JSON.parse(cookie);
+                for (var i = 0; i < openedChatWindows.length; i++) {
+                    var otherUserId = openedChatWindows[i].userId;
+                    var initialToggleState = openedChatWindows[i].toggleState;
+                    var user = null;
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        url: "/p/" + _this.opts.practice + "/chat/getuserinfo",
+                        data: {
+                            userId: otherUserId
+                        },
+                        cache: false,
+                        success: function (data) {
+                            try {
+                                user = data.User;
+                            } catch (ex) {
+                                user = null;
+                            }
+                        },
+                        error: function () {
+                            user = null;
+                        }
+                    });
+                    if (user) {
+                        if (!_this.chatWindows[otherUserId])
+                            _this.createNewChatWindow(user, initialToggleState);
+                    } else {
+                        // when an error occur, the state of this cookie invalid
+                        // it must be destroyed
+                        eraseCookie("chat_state");
+                    }
+                }
+            }
+        };
     }
 
     // Separate functionality from object creation
@@ -89,39 +154,48 @@
         init: function () {
             var _this = this;
 
+            var mainChatWindowChatState = readCookie("main_window_chat_state");
+            if (!mainChatWindowChatState)
+                mainChatWindowChatState = "maximized";
+
             _this.chatContainer = $.chatContainer({
                 title: "Bate-papo",
                 showTextBox: false,
-                canClose: false
-            });
-
-            $.addLongPollingListener("chat", function (event) {
-                // success
-                if (event.EventKey == "new-messages")
-                    _this.processMessagesAjaxResult(event.Data);
-                else if (event.EventKey == "user-list")
-                    _this.processUserListAjaxResult(event.Data);
-            },
-            function (e) {
-                
-                var errorMessage;
-
-                switch (e.status) {
-                    case 403:
-                        errorMessage = "Seu usuário não está logado ou não possui permissão para acessar o bate-papo no momento.";
-                        _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
-                        break;
-                    case 500:
-                        errorMessage = "Ocorreu um erro ao tentar carregar o bate-papo.";
-                        _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
-                        break;
-                    default:
-                        // chances are that the user just clicked a link. When you click a link
-                        // the pending ajaxes break and we'll just hide the window
-                        _this.chatContainer.setVisible(false);
+                canClose: false,
+                initialToggleState: mainChatWindowChatState,
+                onToggleStateChanged: function (toggleState) {
+                    createCookie("main_window_chat_state", toggleState);
                 }
-
             });
+
+            $.addLongPollingListener("chat",
+                function (event) {
+                    // success
+                    if (event.EventKey == "new-messages")
+                        _this.processMessagesAjaxResult(event.Data);
+                    else if (event.EventKey == "user-list")
+                        _this.processUserListAjaxResult(event.Data);
+                },
+                function (e) {
+                    var errorMessage;
+                    switch (e.status) {
+                        case 403:
+                            errorMessage = "Seu usuário não está logado ou não possui permissão para acessar o bate-papo no momento.";
+                            _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
+                            break;
+                        case 500:
+                            errorMessage = "Ocorreu um erro ao tentar carregar o bate-papo.";
+                            _this.chatContainer.getContent().html($("<div/>").addClass("message-warning").text(errorMessage).appendTo(_this.chatContainer.getContent()));
+                            break;
+                        default:
+                            // chances are that the user just clicked a link. When you click a link
+                            // the pending ajaxes break and we'll just hide the window
+                            _this.chatContainer.setVisible(false);
+                    }
+                }
+            );
+
+            _this.loadWindows();
         }
     };
 

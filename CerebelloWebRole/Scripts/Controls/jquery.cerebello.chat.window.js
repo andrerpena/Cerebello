@@ -7,7 +7,10 @@
             practice: null,
             myUser: null,
             otherUser: null,
-            onClose: function () { }
+            initialToggleState: "maximized",
+            onClose: function () { },
+            // triggers when the window changes it's state: minimized or maximized
+            onToggleStateChanged: function (currentState) { }
         };
 
         //Extending options:
@@ -116,6 +119,11 @@
                 }
             });
         };
+        
+        this.getToggleState = function() {
+            var _this = this;
+            return _this.chatContainer.getToggleState();
+        };
     }
 
     // Separate functionality from object creation
@@ -127,8 +135,12 @@
             _this.chatContainer = $.chatContainer({
                 title: _this.opts.userToName,
                 canClose: true,
+                initialToggleState: _this.opts.initialToggleState,
                 onClose: function (e) {
                     _this.opts.onClose(e);
+                },
+                onToggleStateChanged: function(toggleState) {
+                    _this.opts.onToggleStateChanged(toggleState)
                 }
             });
 
@@ -144,8 +156,8 @@
 
             _this.chatContainer.setTitle(_this.opts.otherUser.Name);
             _this.chatContainer.$textBox.focus();
-
-            this.loadHistory();
+            _this.loadHistory();
+            _this.chatContainer.setVisible(true);
         }
     };
 

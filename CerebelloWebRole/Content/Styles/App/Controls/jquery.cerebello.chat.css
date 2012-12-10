@@ -10,6 +10,7 @@
     position: fixed;
     width: 230px;
     z-index: 10000;
+    display: none;
 }
 
 .chat-window-title

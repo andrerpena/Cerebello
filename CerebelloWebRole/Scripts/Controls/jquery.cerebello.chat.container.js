@@ -9,7 +9,10 @@
             title: null,
             canClose: true,
             showTextBox: true,
-            onClose: function (chatContainer) {  }
+            initialToggleState: "maximized",
+            onClose: function (chatContainer) { },
+            // triggers when the window changes it's state: minimized or maximized
+            onToggleStateChanged: function(currentState) { }
         };
 
         //Extending options:
@@ -19,6 +22,7 @@
         this.$el = null;
         this.$window = null;
         this.$windowTitle = null;
+        this.$windowContent = null;
         this.$windowInnerContent = null;
         this.$textBox = null;
     }
@@ -59,20 +63,24 @@
             $("<div/>").addClass("text").text(_this.opts.title).appendTo(_this.$windowTitle);
             
             // content
-            var $windowContent = $("<div/>").addClass("chat-window-content").appendTo(_this.$window);
-            _this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo($windowContent);
+            _this.$windowContent = $("<div/>").addClass("chat-window-content").appendTo(_this.$window);
+            if (_this.opts.initialToggleState == "minimized")
+                _this.$windowContent.hide();
+
+            _this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo(_this.$windowContent);
 
             // text-box-wrapper
             if (_this.opts.showTextBox) {
-                var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo($windowContent);
+                var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(_this.$windowContent);
                 _this.$textBox = $("<input/>").attr("type", "text").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
             }
 
             // wire everything up
             _this.$windowTitle.click(function () {
-                $windowContent.toggle();
-                if ($windowContent.is(":visible") && _this.opts.showTextBox)
+                _this.$windowContent.toggle();
+                if (_this.$windowContent.is(":visible") && _this.opts.showTextBox)
                     _this.$textBox.focus();
+                _this.opts.onToggleStateChanged(_this.$windowContent.is(":visible") ? "maximized" : "minimized");
             });
 
             // enlists this container in the containers
@@ -101,6 +109,11 @@
                 _this.$window.show();
             else
                 _this.$window.hide();
+        },
+        
+        getToggleState: function() {
+            var _this = this;
+            return _this.$windowContent.is(":visible") ? "maximized" : "minimized";
         }
     };
 

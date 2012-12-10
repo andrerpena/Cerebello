@@ -24,79 +24,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 ChatServer.Rooms[roomId].SetUserOffline(userId);
         }
 
-        ///// <summary>
-        ///// Returns the buddy-list (as facebook calls it), the list of users in the current chatroom
-        ///// This Action should also inform the ChatServer that the user is active
-        ///// </summary>
-        ///// <param name="roomId"></param>
-        ///// <param name="userId"></param>
-        ///// <param name="noWait">
-        ///// Indicates whether it should wait for room modifications or just return it right away
-        ///// </param>
-        //[HttpGet]
-        //public JsonResult UserList(bool noWait = false)
-        //{
-        //    var roomId = this.Practice.Id;
-        //    var myUserId = this.DbUser.Id;
+        [HttpGet]
+        public JsonResult GetUserInfo(int userId)
+        {
+            var roomId = this.Practice.Id;
+            var myUserId = this.DbUser.Id;
 
-        //    // if either the room or the user is not set up yet, do it
-        //    ChatServerHelper.SetupRoomIfNonexisting(this.db, roomId);
-        //    ChatServerHelper.SetupUserIfNonexisting(this.db, roomId, myUserId);
+            ChatServerHelper.SetupRoomIfNonexisting(this.db, roomId);
+            ChatServerHelper.SetupUserIfNonexisting(this.db, roomId, myUserId);
+            ChatServerHelper.SetupUserIfNonexisting(this.db, roomId, userId);
 
-        //    // updates the status of the current user
-        //    ChatServer.Rooms[roomId].SetUserOnline(myUserId);
-        //    List<ChatUser> result = new List<ChatUser>();
-
-        //    // this is the async operation
-        //    ChatServer.WaitForRoomUsersChanged(roomId, users =>
-        //    {
-        //        // this is necessary to remove the current user from
-        //        // the buddy list before retrieving
-        //        var roomUsersExcludingCurrentUser = users.Where(u => u.Id != myUserId).OrderBy(u => u.Name).ToList();
-        //        result = roomUsersExcludingCurrentUser;
-        //    }, noWait);
-
-        //    return this.Json(result, JsonRequestBehavior.AllowGet);
-        //}
-
-        //[HttpGet]
-        //public JsonResult GetMessages(long? timeStamp = null)
-        //{
-        //    var roomId = this.Practice.Id;
-        //    var myUserId = this.DbUser.Id;
-
-        //    // if either the room or the user is not set up yet, do it
-        //    ChatServerHelper.SetupRoomIfNonexisting(this.db,roomId);
-        //    ChatServerHelper.SetupUserIfNonexisting(this.db,roomId, myUserId);
-
-        //    // Each UserFrom Id has a LIST of messages. Of course
-        //    // all messages have the same UserTo, of course, myUserId.
-        //    Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>> messages = new Dictionary<string, List<CerebelloWebRole.Code.Chat.ChatMessage>>();
-
-        //    // possible existing messages
-        //    var existingMessages = timeStamp.HasValue ? ChatServer.Rooms[roomId].GetMessagesTo(myUserId, timeStamp.Value) : new List<CerebelloWebRole.Code.Chat.ChatMessage>();
-
-        //    if (timeStamp.HasValue && existingMessages.Any())
-        //    {
-        //        // makes the messages follow the scructure: Each UserFrom Id has a LIST of messages
-        //        messages = existingMessages.GroupBy(cm => cm.UserFrom.Id).ToDictionary(g => g.Key.ToString(), g => g.ToList());
-        //    }
-        //    else
-        //    {
-        //        // .. otherwise, lets WAIT for a new message and return it when it comes
-        //        ChatServer.WaitForNewMessage(roomId, myUserId, m =>
-        //        {
-        //            if (m != null)
-        //                messages.Add(m.UserFrom.Id.ToString(), new List<CerebelloWebRole.Code.Chat.ChatMessage>() { m });
-        //        });
-        //    }
-
-        //    return this.Json(new
-        //    {
-        //        Messages = messages,
-        //        Timestamp = DateTime.UtcNow.Ticks.ToString()
-        //    }, JsonRequestBehavior.AllowGet);
-        //}
+            // this will intentionally trigger an error in case the user doesn't exist.
+            // the client must treat this scenario
+            return this.Json(
+                new
+                    {
+                        User = ChatServer.Rooms[roomId].Users[userId]
+                    },
+                JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         public JsonResult GetMessageHistory(int otherUserId, long? timeStamp = null)
@@ -104,9 +50,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var roomId = this.Practice.Id;
             var myUserId = this.DbUser.Id;
 
-            ChatServerHelper.SetupRoomIfNonexisting(this.db,roomId);
-            ChatServerHelper.SetupUserIfNonexisting(this.db,roomId, myUserId);
-            ChatServerHelper.SetupUserIfNonexisting(this.db,roomId, otherUserId);
+            ChatServerHelper.SetupRoomIfNonexisting(this.db, roomId);
+            ChatServerHelper.SetupUserIfNonexisting(this.db, roomId, myUserId);
+            ChatServerHelper.SetupUserIfNonexisting(this.db, roomId, otherUserId);
 
             // Each UserFrom Id has a LIST of messages. Of course
             // all messages have the same UserTo, of course, myUserId.
