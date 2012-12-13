@@ -2075,7 +2075,9 @@ GO
             if (patients.Count < 1)
                 throw new Exception("Cannot create fake appointments. There are no patients");
 
-            var helthInsurances = db.HealthInsurances.Where(hi => hi.IsActive).ToList();
+            var helthInsurances = db.HealthInsurances
+                .Where(hi => hi.IsActive && hi.DoctorId == doctor.Id)
+                .ToList();
             if (helthInsurances.Count < 1)
                 throw new Exception("Cannot create fake appointments. There are no helth insurances");
 

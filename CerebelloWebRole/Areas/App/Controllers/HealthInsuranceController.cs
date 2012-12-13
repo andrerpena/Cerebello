@@ -44,8 +44,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Edit(viewModel);
         }
 
+
         [HttpGet]
-        public ActionResult Edit(int? id, bool isParticular)
+        public ActionResult Edit(int? id, bool isParticular = false)
         {
             var viewModel = new HealthInsuranceViewModel
                 {
