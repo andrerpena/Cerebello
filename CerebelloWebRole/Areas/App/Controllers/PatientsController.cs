@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Objects;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
-using HtmlAgilityPack;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -27,12 +24,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public DateTime LocalDate { get; set; }
         }
 
-        private PatientViewModel GetViewModel([NotNull] Patient patient, bool includeSessions = false)
+        private PatientViewModel GetViewModel([NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments)
         {
             if (patient == null) throw new ArgumentNullException("patient");
             var address = patient.Person.Addresses.Single();
 
-            var viewModel = new PatientViewModel()
+            var viewModel = new PatientViewModel
             {
                 Id = patient.Id,
                 BirthPlace = patient.Person.BirthPlace,
@@ -49,18 +46,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Email = patient.Person.Email,
                 PhoneCell = patient.Person.PhoneCell,
                 PhoneLand = patient.Person.PhoneLand,
-                Address = new AddressViewModel()
+                Address = new AddressViewModel
                 {
                     CEP = address.CEP,
                     City = address.City,
                     Complement = address.Complement,
                     Neighborhood = address.Neighborhood,
                     StateProvince = address.StateProvince,
-                    Street = address.Street
-                }
+                    Street = address.Street,
+                },
             };
 
-            if (includeSessions)
+            if (includeFutureAppointments)
             {
                 // gets a textual date. The input date must be LOCAL
                 Func<DateTime, string> getRelativeDate = s =>
@@ -79,16 +76,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // get appointments scheduled for the future
                 var utcNow = this.GetUtcNow();
-                var appointments = this.db.Appointments.Where(a => a.PatientId == patient.Id && a.DoctorId == this.Doctor.Id && a.Start > utcNow).ToList();
-                viewModel.FutureAppointments = (from a in appointments
-                                                select new AppointmentViewModel()
-                                                    {
-                                                        PatientId = a.PatientId,
-                                                        PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                                                        Date = ConvertToLocalDateTime(this.Practice, a.Start),
-                                                        DateSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
-                                                    }).ToList();
+                var appointments = this.db.Appointments
+                    .Where(
+                        a => a.PatientId == patient.Id
+                             && a.DoctorId == patient.DoctorId
+                             && a.Start > utcNow)
+                    .ToList();
 
+                viewModel.FutureAppointments = (from a in appointments
+                                                select new AppointmentViewModel
+                                                {
+                                                    PatientId = a.PatientId,
+                                                    PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
+                                                    Date = ConvertToLocalDateTime(this.Practice, a.Start),
+                                                    DateSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
+                                                }).ToList();
+            }
+
+            if (includeSessions)
+            {
                 var eventDates = new List<DateTime>();
 
                 // anamneses
@@ -179,22 +185,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
 
                 // creating sessions
-                List<SessionViewModel> sessions = new List<SessionViewModel>();
-
-                foreach (var eventDate in eventDates)
-                {
-                    sessions.Add(new SessionViewModel()
-                    {
-                        PatientId = patient.Id,
-                        Date = eventDate,
-                        AnamneseIds = anamnesesByDate.ContainsKey(eventDate) ? anamnesesByDate[eventDate].Select(a => a.Id).ToList() : new List<int>(),
-                        ReceiptIds = receiptsByDate.ContainsKey(eventDate) ? receiptsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
-                        MedicalCertificateIds = certificatesByDate.ContainsKey(eventDate) ? certificatesByDate[eventDate].Select(c => c.Id).ToList() : new List<int>(),
-                        ExaminationRequestIds = examRequestsByDate.ContainsKey(eventDate) ? examRequestsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
-                        ExaminationResultIds = examResultsByDate.ContainsKey(eventDate) ? examResultsByDate[eventDate].Select(v => v.Id).ToList() : new List<int>(),
-                        DiagnosisIds = diagnosisByDate.ContainsKey(eventDate) ? diagnosisByDate[eventDate].Select(v => v.Id).ToList() : new List<int>()
-                    });
-                }
+                var sessions = eventDates.Select(
+                    eventDate => new SessionViewModel
+                        {
+                            PatientId = patient.Id,
+                            Date = eventDate,
+                            AnamneseIds =
+                                anamnesesByDate.ContainsKey(eventDate)
+                                    ? anamnesesByDate[eventDate].Select(a => a.Id).ToList()
+                                    : new List<int>(),
+                            ReceiptIds =
+                                receiptsByDate.ContainsKey(eventDate)
+                                    ? receiptsByDate[eventDate].Select(v => v.Id).ToList()
+                                    : new List<int>(),
+                            MedicalCertificateIds =
+                                certificatesByDate.ContainsKey(eventDate)
+                                    ? certificatesByDate[eventDate].Select(c => c.Id).ToList()
+                                    : new List<int>(),
+                            ExaminationRequestIds =
+                                examRequestsByDate.ContainsKey(eventDate)
+                                    ? examRequestsByDate[eventDate].Select(v => v.Id).ToList()
+                                    : new List<int>(),
+                            ExaminationResultIds =
+                                examResultsByDate.ContainsKey(eventDate)
+                                    ? examResultsByDate[eventDate].Select(v => v.Id).ToList()
+                                    : new List<int>(),
+                            DiagnosisIds =
+                                diagnosisByDate.ContainsKey(eventDate)
+                                    ? diagnosisByDate[eventDate].Select(v => v.Id).ToList()
+                                    : new List<int>()
+                        }).ToList();
 
                 viewModel.Sessions = sessions;
             }
@@ -249,8 +269,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var patient = (Patient)this.db.Patients.First(p => p.Id == id);
-            var model = this.GetViewModel(patient, true);
+            var patient = this.db.Patients.First(p => p.Id == id);
+
+            // Only the doctor and the patient can see the medical records.
+            var canAccessMedicalRecords = this.DbUser.Id == patient.Doctor.Users.Single().Id;
+            this.ViewBag.CanAccessMedicalRecords = canAccessMedicalRecords;
+
+            // Creating the view-model object.
+            var model = this.GetViewModel(patient, canAccessMedicalRecords, true);
 
             return View(model);
         }
@@ -275,7 +301,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (id != null)
             {
                 var patient = this.db.Patients.First(p => p.Id == id);
-                viewModel = this.GetViewModel(patient);
+                viewModel = this.GetViewModel(patient, false, false);
 
                 ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
             }

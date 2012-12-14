@@ -33,7 +33,7 @@ Agenda
             {
         <script type="text/javascript">
             $(function(e) {
-                var date = new Date("@string.Format("{0:0000}-{1:00}-{2:00}", y, m, d)");
+                var date = new Date("@string.Format("{0:0000}-{1:00}-{2:00}", y, m, d)T12:00:00");
                 $('#calendar').fullCalendar('gotoDate', date);
                 $('.datepicker').datepicker('setDate', date);
             });
