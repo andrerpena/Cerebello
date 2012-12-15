@@ -8,9 +8,10 @@
 Configurações de agenda
 }
 @section SideBar {
-    <ul style="margin-top: 10px;">
+    <ul>
         <li><a href="@Url.Action("daysoff", "configschedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">
-            Configurações de dias sem expediente</a> </li>
+                Configurações de dias sem expediente</a> </li>
+        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
 }
 @using (Html.BeginForm())
