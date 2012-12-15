@@ -1624,6 +1624,38 @@ Definições e termos
                      ' ");
         }
 
+        public static bool CreateDatabaseIfNeeded(CerebelloEntities db)
+        {
+            var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
+            var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
+            var connStr = sqlConn2.ToString();
+            var dbName = sqlConn1.Database;
+
+            // creates the database
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                try
+                {
+                    using (var command = conn.CreateCommand())
+                    {
+                        command.CommandText = string.Format(@"CREATE DATABASE {0}", dbName);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    if (ex.Number == 5170)
+                        return true;
+
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         public static void DropAllTables(CerebelloEntities db)
         {
             // http://stackoverflow.com/questions/536350/sql-server-2005-drop-all-the-tables-stored-procedures-triggers-constriants-a
@@ -1757,10 +1789,18 @@ GO
                 db.ExecuteStoreCommand(eachScript);
         }
 
+        public enum AttachLocalDatabaseResult
+        {
+            Ok,
+            AlreadyAttached,
+            NotFound,
+            Failed,
+        }
+
         /// <summary>
         /// Attaches the given database.
         /// </summary>
-        internal static bool AttachLocalDatabase(CerebelloEntities db)
+        internal static AttachLocalDatabaseResult AttachLocalDatabase(CerebelloEntities db)
         {
             var sqlConn1 = (SqlConnection)((EntityConnection)db.Connection).StoreConnection;
             var sqlConn2 = new SqlConnectionStringBuilder(sqlConn1.ConnectionString) { InitialCatalog = "" };
@@ -1777,20 +1817,33 @@ GO
                     using (var command = conn.CreateCommand())
                     {
                         command.CommandText =
-                            string.Format(@"CREATE DATABASE {0} ON 
-                    ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\{0}.mdf' )
-                     FOR ATTACH ;", dbName);
+                            string.Format(@"SELECT CASE WHEN db_id('{0}') IS NULL THEN 0 ELSE 1 END", dbName);
+
+                        var dbExists = (int)command.ExecuteScalar() == 1;
+
+                        if (dbExists)
+                            return AttachLocalDatabaseResult.AlreadyAttached;
+
+                        command.CommandText =
+                            string.Format(@"
+                                IF db_id('{0}') IS NULL
+                                    CREATE DATABASE {0}
+                                        ON ( FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.SQLEXPRESS\MSSQL\DATA\{0}.mdf' )
+                                        FOR ATTACH ;", dbName);
 
                         command.ExecuteNonQuery();
+
+                        return AttachLocalDatabaseResult.Ok;
                     }
                 }
                 catch (SqlException ex)
                 {
-                    // probably the database exists already because a previous test failed.. let's move on
-                    return false;
-                }
+                    if (ex.Number == 5120) // file not found
+                        return AttachLocalDatabaseResult.NotFound;
 
-                return true;
+                    // probably the database exists already because a previous test failed.. let's move on
+                    return AttachLocalDatabaseResult.Failed;
+                }
             }
         }
 
@@ -1902,10 +1955,13 @@ GO
 
             SqlConnection.ClearAllPools();
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn) { CommandText = @"sp_detach_db CerebelloTEST" };
+                var cmd = new SqlCommand("", conn)
+                    {
+                        CommandText = string.Format(@"sp_detach_db {0}", sqlConn1.Database)
+                    };
                 cmd.ExecuteNonQuery();
             }
         }

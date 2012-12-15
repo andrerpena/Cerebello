@@ -138,7 +138,31 @@ namespace Cerebello.Firestarter
                     {
                         using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
                         {
-                            this.wasAttached = Firestarter.AttachLocalDatabase(db);
+                            var attachResult = Firestarter.AttachLocalDatabase(db);
+                            if (attachResult == Firestarter.AttachLocalDatabaseResult.NotFound)
+                            {
+                                // Create the DB if it does not exist.
+                                Console.Write("Would you like to create the database (y/n): ");
+                                if (Console.ReadKey().KeyChar == 'y')
+                                {
+                                    Console.WriteLine();
+                                    var result = Firestarter.CreateDatabaseIfNeeded(db);
+                                    if (!result)
+                                    {
+                                        Console.WriteLine("Could not create database.");
+                                        continue;
+                                    }
+
+                                    bool isTestDb = this.connName.ToUpper().Contains("TEST");
+                                    this.wasAttached = isTestDb;
+                                }
+                                else
+                                    continue;
+                            }
+                            else
+                            {
+                                this.wasAttached = attachResult == Firestarter.AttachLocalDatabaseResult.AlreadyAttached;
+                            }
                             if (this.wasAttached)
                             {
                                 Console.WriteLine();
@@ -1418,6 +1442,7 @@ namespace Cerebello.Firestarter
             var path = Path.Combine(this.rootCerebelloPath, @"DB\Scripts");
             string script = File.ReadAllText(Path.Combine(path, "script.sql"));
             var script2 = SqlHelper.SetScriptColumnsCollation(script, "Latin1_General_CI_AI");
+
             // Creating tables.
             Firestarter.ExecuteScript(db, script2);
         }
