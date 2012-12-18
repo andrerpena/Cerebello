@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.MedicineViewModel>
 @{
-    ViewBag.Title = "Pesquisa de medicamentos · Cerebello";
+    var title = "Pesquisa de medicamentos";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do medicamento";
 
     var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
@@ -8,11 +9,14 @@
     grid.AddLinkField(m => m.LaboratoryName, "details", "laboratories", model => new { id = model.LaboratoryId });
 }
 @section Title {
-    Pesquisa de medicamentos
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
     </ul>
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))

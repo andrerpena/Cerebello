@@ -1,23 +1,21 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificateViewModel
 @{
+    string title;
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        ViewBag.Title = "Modelo de atestado: " + this.Model.Name + " · Cerebello";
+        title = "Modelo de atestado: " + this.Model.Name;
     }
     else
     {
-        ViewBag.Title = "Novo modelo de atestado médico · Cerebello";
+        title = "Novo modelo de atestado médico";
     }
+    ViewBag.Title = title + " · Cerebello";
 }
 @section Title {
-    @if (this.Model != null && this.Model.Id.HasValue)
-    {
-        @:Editando modelo de atestado médico: @this.Model.Name
-    }
-    else
-    {
-        @:Novo modelo de atestado médico
-    }
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de modelos de

@@ -7,7 +7,10 @@
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
-    @title
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de convênios e formas de atendimento</a>

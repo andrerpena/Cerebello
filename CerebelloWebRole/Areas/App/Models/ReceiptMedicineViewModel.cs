@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Quantity { get; set; }
 
-        [Display(Name = "Precrição")]
+        [Display(Name = "Prescrição")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Prescription { get; set; }
 

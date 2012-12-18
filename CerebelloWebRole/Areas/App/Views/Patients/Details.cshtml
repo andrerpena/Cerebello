@@ -44,6 +44,21 @@
         });
     </script>
 }
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".lock-hist").dropdownMenu({
+                offsetX: -34,
+                offsetY: 10,
+                items: [
+                    { id: "title", text: "Quem pode ver esta seção", cssClass: "header" },
+                    { id: "self-only", text: "Somente você" }
+                ]
+            });
+        });
+    </script>
+}
 
 @cardView.GetHtml()
 <h2>@Html.LabelFor(model => model.Address)</h2>
@@ -70,7 +85,8 @@ else
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
-    <h2>Histórico do paciente</h2>
+    <h2>Histórico do paciente <span class="lock-hist icon-lock ui-icon-locked" /></h2>
+
     <div class="medical-appointments-panel">
         @if (this.Model.Sessions.Any())
         {
@@ -94,7 +110,7 @@ else
                         </p>
                         foreach (var anamneseId in session.AnamneseIds)
                         {
-                            @Html.Action("Details", "Anamneses", new {id = anamneseId})
+                            @Html.Action("Details", "Anamneses", new { id = anamneseId })
                         }
                     }
                     @if (session.ReceiptIds.Count > 0)
@@ -104,7 +120,7 @@ else
                         </p>
                         foreach (var receiptId in session.ReceiptIds)
                         {
-                            @Html.Action("Details", "Receipts", new {id = receiptId})
+                            @Html.Action("Details", "Receipts", new { id = receiptId })
                         }
                     }
                     @if (session.ExaminationRequestIds.Count > 0)
@@ -114,7 +130,7 @@ else
                         </p>
                         foreach (var receiptId in session.ExaminationRequestIds)
                         {
-                            @Html.Action("Details", "Exams", new {id = receiptId})
+                            @Html.Action("Details", "Exams", new { id = receiptId })
                         }
                     }
                     @if (session.ExaminationResultIds.Count > 0)
@@ -124,7 +140,7 @@ else
                         </p>
                         foreach (var examResultId in session.ExaminationResultIds)
                         {
-                            @Html.Action("Details", "ExamResults", new {id = examResultId})
+                            @Html.Action("Details", "ExamResults", new { id = examResultId })
                         }
                     }
 
@@ -135,7 +151,7 @@ else
                         </p>
                         foreach (var diagnosisId in session.DiagnosisIds)
                         {
-                            @Html.Action("Details", "Diagnosis", new {id = diagnosisId})
+                            @Html.Action("Details", "Diagnosis", new { id = diagnosisId })
                         }
                     }
 
@@ -146,7 +162,7 @@ else
                         </p>
                         foreach (var certificateId in session.MedicalCertificateIds)
                         {
-                            @Html.Action("Details", "MedicalCertificates", new {id = certificateId})
+                            @Html.Action("Details", "MedicalCertificates", new { id = certificateId })
                         }
                     }
 
@@ -157,42 +173,42 @@ else
         {
             @Html.Message("O paciente não possui histórico")
         }
-        <h2>Nova consulta</h2>
+        <h2>Nova consulta <span class="lock-hist icon-lock ui-icon-locked" /></h2>
         <div class="new-medical-appointment-panel-wrapper">
             <div class="new-medical-appointment-panel">
                 <!-- anamnese -->
                 <div>
-                    <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "anamneses", new {patientId = Model.Id})">Nova anamnese</a>
+                    <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "anamneses", new { patientId = Model.Id })">Nova anamnese</a>
                     <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- receipt -->
                 <div>
-                    <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "receipts", new {patientId = Model.Id})">Nova receita</a>
+                    <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "receipts", new { patientId = Model.Id })">Nova receita</a>
                     <div id="new-receipt-wrapper" class="appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- exam requirement -->
                 <div>
-                    <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "exams", new {patientId = Model.Id})">Nova solicitação de exames</a>
+                    <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "exams", new { patientId = Model.Id })">Nova solicitação de exames</a>
                     <div class="new-exams-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- exam result -->
                 <div>
-                    <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "examresults", new {patientId = Model.Id})">Novo resultado de exame</a>
+                    <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "examresults", new { patientId = Model.Id })">Novo resultado de exame</a>
                     <div class="new-exam-result-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- diagnosis -->
                 <div>
-                    <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new {patientId = Model.Id})">Novo diagnóstico</a>
+                    <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "diagnosis", new { patientId = Model.Id })">Novo diagnóstico</a>
                     <div class="new-diagnosis-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- medical certificate -->
                 <div>
-                    <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "medicalcertificates", new {patientId = Model.Id})">Novo atestado médico</a>
+                    <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "medicalcertificates", new { patientId = Model.Id })">Novo atestado médico</a>
                     <div class="medical-certificate-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
@@ -205,7 +221,7 @@ else
         <script type="text/javascript">
             $("a.schedule-appointment").click(function() {
                 $.modal({
-                    url: "@Url.Action("Create", "Schedule", new {findNextAvailable = true})",
+                    url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
                     title: "Nova consulta",
                     data: {
                         date: "@retornoDateStr",

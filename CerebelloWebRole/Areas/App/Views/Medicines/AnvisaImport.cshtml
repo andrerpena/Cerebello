@@ -2,7 +2,8 @@
 @using CerebelloWebRole.Areas.App.Models
 @model AnvisaImportViewModel
 @{
-    ViewBag.Title = "Importar medicamento da Anvisa · Cerebello";
+    var title = "Importar medicamento da Anvisa";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(model => model.AnvisaId,
@@ -27,7 +28,10 @@
 }
 
 @section Title {
-Importar medicamento da Anvisa
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 
 @section SideBar {

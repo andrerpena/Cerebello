@@ -10,7 +10,11 @@
             // OR 
             // {id: "myId", text: "my text" } <- in this case, you can handle the click in the onItemClicked event
             items: new Array(),
-            onItemClicked: function (itemId) { }
+
+            onItemClicked: function (itemId) { },
+
+            offsetX: 0,
+            offsetY: 5
         };
 
         //Extending options:
@@ -41,11 +45,23 @@
 
             for (var i = 0; i < _this.opts.items.length; i++) {
                 var $li = $("<li/>").appendTo($dropdownList);
-                var $a = $("<a/>").appendTo($li);
+                
+                var $a;
+                if (_this.opts.items[i].href) {
+                    $a = $("<a/>")
+                        .appendTo($li)
+                        .attr("href", _this.opts.items[i].href);
+                }
+                else {
+                    $a = $("<span/>").appendTo($li);
+                }
+                
                 $a.attr("data-val-item-id", _this.opts.items[i].id);
+                
                 $a.text(_this.opts.items[i].text);
-                if (_this.opts.items[i].href)
-                    $a.attr("href", _this.opts.items[i].href);
+                
+                if (_this.opts.items[i].cssClass)
+                    $a.addClass(_this.opts.items[i].cssClass);
             };
 
             $("a", $dropdownList).bind("click", function (e) {
@@ -54,8 +70,8 @@
 
             _this.$el.bind("click", function (e) {
                 e.stopPropagation();
-                $balloon.css("left", _this.$el.offset().left);
-                $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + 5);
+                $balloon.css("left", _this.$el.offset().left + _this.opts.offsetX);
+                $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + _this.opts.offsetY);
                 $balloon.show();
                 var handler = function (e2) {
                     if (!$balloon.has(e2.target).length) {

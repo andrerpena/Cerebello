@@ -146,6 +146,7 @@
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
     <Compile Include="Code\Controllers\TransactionScopeAttribute.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
+    <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
     <Compile Include="Code\Helpers\EmailHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
@@ -357,8 +358,10 @@
     <Content Include="Content\Images\App\Controls\Lookup\filter.png" />
     <Content Include="Content\Images\App\Controls\Lookup\progress.gif" />
     <Content Include="Content\Images\App\Controls\Lookup\search.png" />
+    <Content Include="Content\Images\App\Icons16\calendar.png" />
     <Content Include="Content\Images\App\Icons16\check.png" />
     <Content Include="Content\Images\App\Icons16\checkbox_checked.png" />
+    <Content Include="Content\Images\App\Icons16\clear-white.png" />
     <Content Include="Content\Images\App\Icons16\clear.png" />
     <Content Include="Content\Images\App\Icons16\config.png" />
     <Content Include="Content\Images\App\Icons16\delete.png" />
@@ -368,9 +371,12 @@
     <Content Include="Content\Images\App\Icons16\home.png" />
     <Content Include="Content\Images\App\Icons16\import.png" />
     <Content Include="Content\Images\App\Icons16\list.png" />
+    <Content Include="Content\Images\App\Icons16\lock-icon.png" />
+    <Content Include="Content\Images\App\Icons16\new.png" />
     <Content Include="Content\Images\App\Icons16\plus.png" />
     <Content Include="Content\Images\App\Icons16\reload.png" />
     <Content Include="Content\Images\App\Icons16\search.png" />
+    <Content Include="Content\Images\App\Icons16\warning.png" />
     <Content Include="Content\Images\App\Icons\config-off.png" />
     <Content Include="Content\Images\App\Icons\config-on.png" />
     <Content Include="Content\Images\App\Icons\contact-off.png" />
@@ -644,6 +650,7 @@
     <Content Include="Areas\App\Views\Shared\NotificationFillUserProfile.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Medicines.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Search.cshtml" />
+    <Content Include="Areas\App\Views\Shared\ConfigLockScript.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

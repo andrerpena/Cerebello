@@ -1,18 +1,22 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.LaboratoriesIndexViewModel
 @{
-    ViewBag.Title = "Labotarórios · Cerebello";
+    var title = "Labotarórios";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do laboratório";
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredLaboratories, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
 }
 @section Title {
-Laboratórios
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo laboratório</a> </li>
-        <li><a href="@Url.Action("index", "medicines")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo laboratório</a> </li>
+        <li><a href="@Url.Action("Index", "Medicines")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
     </ul>
 }
 

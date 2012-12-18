@@ -2,14 +2,16 @@
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
+    string title;
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        ViewBag.Title = "Editando medicamento: " + this.Model.Name + " · Cerebello";
+        title = "Editando medicamento: " + this.Model.Name;
     }
     else
     {
-        ViewBag.Title = "Novo medicamento · Cerebello";
+        title = "Novo medicamento";
     }
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(model => model.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
@@ -20,14 +22,10 @@
 }
 
 @section Title {
-    @if (this.Model != null && this.Model.Id.HasValue)
-    {
-        @:Editando medicamento:  + @this.Model.Name
-    }
-    else
-    {
-        @:Novo medicamento
-    }
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 
 @section Styles

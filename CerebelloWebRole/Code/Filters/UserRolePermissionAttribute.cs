@@ -12,8 +12,9 @@ namespace CerebelloWebRole.Code.Filters
     {
         public UserRoleFlags RoleFlags { get; set; }
 
-        public override bool CanAccessResource(User user)
+        public override bool CanAccessResource(PermissionContext permissionContext)
         {
+            var user = permissionContext.User;
             UserRoleFlags userRoles = 0;
             userRoles |= user.IsOwner ? UserRoleFlags.Owner : 0;
             userRoles |= user.AdministratorId != null ? UserRoleFlags.Administrator : 0;

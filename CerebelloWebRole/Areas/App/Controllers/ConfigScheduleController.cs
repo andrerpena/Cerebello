@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 using System.Linq;
 using Cerebello.Model;
@@ -12,6 +13,7 @@ using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    [SelfOrUserRolePermission(RoleFlags = UserRoleFlags.Administrator)]
     public class ConfigScheduleController : DoctorController
     {
         [HttpGet]

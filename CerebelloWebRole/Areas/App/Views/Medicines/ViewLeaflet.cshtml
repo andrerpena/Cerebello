@@ -1,9 +1,13 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineLeafletViewModel
 @{
-    ViewBag.Title = "Bula do medicamento: " + this.Model.MedicineName + " · Cerebello";
+    var title = "Bula do medicamento: " + this.Model.MedicineName;
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
-    Bula do medicamento: @Model.MedicineName (@Model.Description)
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 
 @section SideBar {
