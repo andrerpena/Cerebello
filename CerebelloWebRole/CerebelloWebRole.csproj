@@ -171,7 +171,7 @@
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalSpecialtiesLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
-    <Compile Include="Areas\App\Models\PracticeHomeController.cs" />
+    <Compile Include="Areas\App\Models\PracticeHomeControllerViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />

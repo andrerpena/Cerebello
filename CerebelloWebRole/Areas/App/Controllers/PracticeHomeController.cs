@@ -12,7 +12,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PracticeHomeController : PracticeController
     {
-        private Models.PracticeHomeController GetViewModel()
+        private Models.PracticeHomeControllerViewModel GetViewModel()
         {
             var timeZoneId = this.Practice.WindowsTimeZoneId;
 
@@ -22,7 +22,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var address = this.Practice.Address ?? new Address();
 
-            var viewModel = new Models.PracticeHomeController
+            var viewModel = new Models.PracticeHomeControllerViewModel
                 {
                     Address = new AddressViewModel
                         {
@@ -113,7 +113,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         [HttpPost]
         [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
-        public ActionResult Edit(Models.PracticeHomeController formModel)
+        public ActionResult Edit(Models.PracticeHomeControllerViewModel formModel)
         {
             if (this.ModelState.IsValid)
             {
