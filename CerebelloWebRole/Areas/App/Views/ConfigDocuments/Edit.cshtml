@@ -11,8 +11,14 @@
 {
     @Html.Partial("ConfigLockScript")
 }
+
 @section SideBar {
+    <ul>
+        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
+    </ul>
 }
+
+
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(false)

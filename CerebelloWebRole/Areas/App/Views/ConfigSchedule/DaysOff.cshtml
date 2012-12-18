@@ -12,9 +12,9 @@
     @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
-    <ul style="margin-top: 10px;">
-        <li><a href="@Url.Action("edit", "configschedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">
-            Configurações de agenda</a> </li>
+    <ul style="">
+        <li><a href="@Url.Action("edit", "configschedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">Configurações de agenda</a> </li>
+        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
 }
 @using (Html.BeginForm())
@@ -23,7 +23,7 @@
 
     if (ViewBag.ReturnUrl != null)
     {
-        @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
+    @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
     }
 
     <table class="form-table">
@@ -46,27 +46,27 @@
     
     if (this.ViewBag.ShowPast != true)
     { 
-        <a href="@Url.Action("DaysOff", new { showPast = true, returnUrl = this.ViewBag.ReturnUrl })">Mostrar todas as datas, incluindo passadas</a>
+    <a href="@Url.Action("DaysOff", new { showPast = true, returnUrl = this.ViewBag.ReturnUrl })">Mostrar todas as datas, incluindo passadas</a>
     }
     else
     { 
-        <a href="@Url.Action("DaysOff", new { showPast = false, returnUrl = this.ViewBag.ReturnUrl })">Mostrar somente datas presente e futuras</a>
+    <a href="@Url.Action("DaysOff", new { showPast = false, returnUrl = this.ViewBag.ReturnUrl })">Mostrar somente datas presente e futuras</a>
     }
 }
-    
+
 <ul class="dayoff-list">
-@foreach (var eachDayOff in this.Model.DaysOff)
-{
-    if (eachDayOff.GroupItems == null || eachDayOff.GroupItems.Count == 0)
+    @foreach (var eachDayOff in this.Model.DaysOff)
     {
+        if (eachDayOff.GroupItems == null || eachDayOff.GroupItems.Count == 0)
+        {
         <li>
             <div class="delete" item-id="@eachDayOff.Id">x</div>
             <span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span> - <span>@eachDayOff.Description</span>
         </li>
-    }
-    else if (eachDayOff.GroupItems.Count == 1)
-    {
-        var singleItem = eachDayOff.GroupItems.Single();
+        }
+        else if (eachDayOff.GroupItems.Count == 1)
+        {
+            var singleItem = eachDayOff.GroupItems.Single();
         <li>
             <div class="delete" item-id="@eachDayOff.Id,@(string.Join(",", eachDayOff.GroupItems.Select(gi => gi.Id.ToString())))" >x</div>
             <a class="expand" group-id="group-@eachDayOff.Id"><span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span> e <span>@singleItem.Date.ToString("dd/MM/yyyy")</span> - <span>@eachDayOff.Description</span></a>
@@ -84,10 +84,10 @@
                 }
             </ul>
         </li>
-    }
-    else
-    {
-        var lastItem = eachDayOff.GroupItems.Last();
+        }
+        else
+        {
+            var lastItem = eachDayOff.GroupItems.Last();
         <li>
             <div class="delete" item-id="@eachDayOff.Id,@(string.Join(",", eachDayOff.GroupItems.Select(gi => gi.Id.ToString())))" >x</div>
             <a class="expand" group-id="group-@eachDayOff.Id"><span>@eachDayOff.Date.ToString("dd/MM/yyyy")</span> até <span>@lastItem.Date.ToString("dd/MM/yyyy")</span> (<span>@((lastItem.Date - eachDayOff.Date).Days + 1) dias</span>) - <span>@eachDayOff.Description</span></a>
@@ -105,8 +105,8 @@
                 }
             </ul>
         </li>
+        }
     }
-}
 </ul>
 <div class="submit-bar">
     <a href="@cancelUrl">retornar</a>
