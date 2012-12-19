@@ -10,7 +10,12 @@ namespace CerebelloWebRole.Code.Filters
     /// </summary>
     public class UserRolePermissionAttribute : PermissionAttribute
     {
-        public UserRoleFlags RoleFlags { get; set; }
+        public UserRolePermissionAttribute(UserRoleFlags roleFlags)
+        {
+            this.RoleFlags = roleFlags;
+        }
+
+        public UserRoleFlags RoleFlags { get; private set; }
 
         public override bool CanAccessResource(PermissionContext permissionContext)
         {

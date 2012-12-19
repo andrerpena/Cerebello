@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.App_GlobalResources;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CerebelloWebRole.Areas.App.Models
 {

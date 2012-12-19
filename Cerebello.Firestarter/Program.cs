@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter
 {
@@ -28,7 +29,7 @@ namespace Cerebello.Firestarter
         const int defaultSeed = 101; // default random seed
         private int? rndOption = defaultSeed;
 
-        bool wasAttached = false;
+        bool detachDbWhenDone;
 
         private void Run()
         {
@@ -62,16 +63,33 @@ namespace Cerebello.Firestarter
 
                 while (isToChooseDb)
                 {
-                    if (this.wasAttached)
+                    if (this.detachDbWhenDone)
                     {
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("Detaching DB... ");
 
+                        bool ok = false;
                         using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
-                            Firestarter.DetachLocalDatabase(db);
+                            try
+                            {
+                                Firestarter.DetachLocalDatabase(db);
+                                ok = true;
+                            }
+                            catch
+                            {
+                            }
 
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("DONE");
+
+                        if (ok)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("DONE");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("ERROR");
+                        }
                     }
 
                     Console.ForegroundColor = ConsoleColor.White;
@@ -154,16 +172,17 @@ namespace Cerebello.Firestarter
                                     }
 
                                     bool isTestDb = this.connName.ToUpper().Contains("TEST");
-                                    this.wasAttached = isTestDb;
+                                    this.detachDbWhenDone = isTestDb;
                                 }
                                 else
                                     continue;
                             }
                             else
                             {
-                                this.wasAttached = attachResult == Firestarter.AttachLocalDatabaseResult.AlreadyAttached;
+                                this.detachDbWhenDone = attachResult == Firestarter.AttachLocalDatabaseResult.Ok;
                             }
-                            if (this.wasAttached)
+
+                            if (this.detachDbWhenDone)
                             {
                                 Console.WriteLine();
                                 Console.ForegroundColor = ConsoleColor.Blue;
@@ -226,7 +245,7 @@ namespace Cerebello.Firestarter
                     }
                     Console.WriteLine();
                     Console.WriteLine(
-                        this.wasAttached
+                        this.detachDbWhenDone
                             ? @"atc    - Leaves DB attached when done."
                             : @"dtc    - Detach DB when done.");
                     Console.WriteLine();
@@ -326,7 +345,6 @@ namespace Cerebello.Firestarter
 
         private static void InfoAbk()
         {
-            return;
         }
 
         private void OptAbk()
@@ -364,16 +382,23 @@ namespace Cerebello.Firestarter
                 Console.WriteLine(this.isFuncBackupEnabled ? "enabled" : "disabled");
                 Console.ForegroundColor = ConsoleColor.White;
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
+                PressAnyKeyToContinue();
             }
-            return;
+        }
+
+        private static void PressAnyKeyToContinue()
+        {
+            var prevColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Press any key to continue.");
+            Console.ForegroundColor = Console.BackgroundColor;
+            Console.ReadKey(true);
+            Console.WriteLine();
+            Console.ForegroundColor = prevColor;
         }
 
         private static void InfoUndo()
         {
-            return;
         }
 
         private void OptUndo()
@@ -394,12 +419,10 @@ namespace Cerebello.Firestarter
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-            return;
         }
 
         private static void InfoZero()
         {
-            return;
         }
 
         private void OptZero()
@@ -420,12 +443,10 @@ namespace Cerebello.Firestarter
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-            return;
         }
 
         private static void InfoRedo()
         {
-            return;
         }
 
         private void OptRedo()
@@ -445,12 +466,10 @@ namespace Cerebello.Firestarter
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-            return;
         }
 
         private static void InfoReset()
         {
-            return;
         }
 
         private void OptReset()
@@ -471,7 +490,6 @@ namespace Cerebello.Firestarter
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-            return;
         }
 
         private static void InfoAtc()
@@ -481,19 +499,13 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("When you are done with the current DB, it will be left attached.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptAtc()
         {
-            this.wasAttached = false;
-            return;
+            this.detachDbWhenDone = false;
         }
 
         private static void InfoDtc()
@@ -503,19 +515,13 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("When you are done with the current DB, it is going to be detached.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptDtc()
         {
-            this.wasAttached = true;
-            return;
+            this.detachDbWhenDone = true;
         }
 
         private static void InfoCrt()
@@ -527,13 +533,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Changes the collation of columns in the script to 'Latin1_General_CI_AI',");
                 Console.WriteLine("and then executes the changed script.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptCrt()
@@ -556,13 +557,10 @@ namespace Cerebello.Firestarter
                     ConsoleWriteException(ex);
                 }
             }
-
-            return;
         }
 
         private static void InfoSize()
         {
-            return;
         }
 
         private void OptSize()
@@ -594,8 +592,6 @@ namespace Cerebello.Firestarter
                     db.SYS_MedicalSpecialty.Min(x => x.Name.Length),
                     db.SYS_MedicalSpecialty.Max(x => x.Name.Length));
             }
-
-            return;
         }
 
         private static void InfoDrp()
@@ -606,13 +602,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Methods that will be called:");
                 Console.WriteLine("    DropAllTables");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptDrp()
@@ -643,7 +634,6 @@ namespace Cerebello.Firestarter
                     }
                 }
             }
-            return;
         }
 
         private static void InfoCls()
@@ -653,19 +643,13 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("Clears the output from all previous commands.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private static void OptCls()
         {
             Console.Clear();
-            return;
         }
 
         private static void InfoClr()
@@ -676,13 +660,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Methods that will be called:");
                 Console.WriteLine("    ClearAllData");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptClr()
@@ -721,8 +700,6 @@ namespace Cerebello.Firestarter
                     }
                 }
             }
-
-            return;
         }
 
         private static void InfoP1()
@@ -736,18 +713,13 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("    Initialize_SYS_Contracts");
                 Console.WriteLine("    Initialize_SYS_Cid10");
                 Console.WriteLine("    Initialize_SYS_MedicalProcedures");
-                Console.WriteLine("    Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
+                Console.WriteLine("    Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel_Thomas");
                 Console.WriteLine("    CreateSecretary_Milena");
                 Console.WriteLine("    SetupDoctor (for each doctor)");
                 Console.WriteLine("    CreateFakePatients (for each doctor)");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptP1()
@@ -781,8 +753,6 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Partially done!");
                 Console.ForegroundColor = ConsoleColor.White;
             }
-
-            return;
         }
 
         private static void InfoAnvll()
@@ -794,13 +764,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("A JSON file is going to be saved with all data.");
                 Console.WriteLine("This file is used to populate DB later.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptAnvll()
@@ -832,8 +797,6 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Partially done!");
                 Console.ForegroundColor = ConsoleColor.White;
             }
-
-            return;
         }
 
         private static void InfoQ()
@@ -843,31 +806,42 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("Quits the program.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptQ()
         {
             // Dettaching previous DB if it was attached in this session.
-            if (this.wasAttached)
+            if (this.detachDbWhenDone)
             {
+                bool ok = false;
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
-                    Firestarter.DetachLocalDatabase(db);
+                    try
+                    {
+                        Firestarter.DetachLocalDatabase(db);
+                        ok = true;
+                    }
+                    catch
+                    {
+                    }
 
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("DB detached.");
+                if (ok)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("DB detached.");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("DB NOT detached.");
+                    PressAnyKeyToContinue();
+                }
             }
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Bye!");
-            return;
         }
 
         private static void InfoDb()
@@ -877,13 +851,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("Changes the current database.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private static bool OptDb()
@@ -912,13 +881,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("different sets of result each time it is run, being suitable");
                 Console.WriteLine("for human interaction tests.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptRnd()
@@ -931,7 +895,6 @@ namespace Cerebello.Firestarter
             int num;
             if (int.TryParse(numText, out num))
                 this.rndOption = num;
-            return;
         }
 
         private static void InfoBkc()
@@ -943,13 +906,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("that can latter be restored");
                 Console.WriteLine("using the 'bkr' command.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptBkc()
@@ -972,7 +930,6 @@ namespace Cerebello.Firestarter
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Done!");
             Console.ForegroundColor = ConsoleColor.White;
-            return;
         }
 
         private static void InfoBkr()
@@ -984,13 +941,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("that was created using the");
                 Console.WriteLine("'bkc' command.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptBkr()
@@ -1014,7 +966,6 @@ namespace Cerebello.Firestarter
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Done!");
             Console.ForegroundColor = ConsoleColor.White;
-            return;
         }
 
         private static void InfoR()
@@ -1026,13 +977,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Work database is dropped, recreated, and populated with p1 option.");
                 Console.WriteLine("Test database is dropped, recreated, and populated with all SYS tables.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-                Console.WriteLine();
+                PressAnyKeyToContinue();
             }
-
-            return;
         }
 
         private void OptR()
@@ -1100,8 +1046,6 @@ namespace Cerebello.Firestarter
                     }
                 }
             }
-
-            return;
         }
 
         private void OptExec()
@@ -1124,12 +1068,7 @@ namespace Cerebello.Firestarter
                 ConsoleWriteException(ex);
             }
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
-            Console.WriteLine();
-
-            return;
+            PressAnyKeyToContinue();
         }
 
         private class Exec
@@ -1368,6 +1307,16 @@ namespace Cerebello.Firestarter
                 return this.db.Administrators.Single(d => d.Id == id);
             }
 
+            public void Pwd(string password)
+            {
+                var passwordSalt = CipherHelper.GenerateSalt();
+                var passwordHash = CipherHelper.Hash(password, passwordSalt);
+                Console.WriteLine();
+                Console.WriteLine(@"PasswordSalt = ""{0}"",", passwordSalt);
+                Console.WriteLine(@"Password = ""{0}"", // pwd: '{1}'", passwordHash, password);
+                Console.WriteLine();
+            }
+
             // ReSharper restore UnusedParameter.Local
             // ReSharper restore UnusedMember.Local
             // ReSharper restore MemberCanBePrivate.Local
@@ -1378,8 +1327,8 @@ namespace Cerebello.Firestarter
         private static void OptionP1(CerebelloEntities db)
         {
             // Create practice, contract, doctors and other things
-            Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel");
-            var doctorsList = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel(db);
+            Console.WriteLine("Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel_Thomas");
+            var doctorsList = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel_Thomas(db);
 
             // Create practice, contract, doctors and other things
             Console.WriteLine("CreateSecretary_Milena");

@@ -16,7 +16,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// <summary>
     /// Medical certificate controllers
     /// </summary>
-    [SelfOrUserRolePermission(RoleFlags = UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class ModelMedicalCertificatesController : DoctorController
     {
         public ActionResult Index()

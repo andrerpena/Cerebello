@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Objects;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
@@ -8,15 +7,14 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code.Filters;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class MedicinesController : DoctorController
     {
-
-
         private MedicineLeafletViewModel GetLeafletViewModel([NotNull] Leaflet leaflet)
         {
             if (leaflet == null) throw new ArgumentNullException("leaflet");
@@ -282,8 +280,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (medicine == null)
                 return this.ObjectNotFoundJson();
 
-            if(medicine.ReceiptMedicines.Any())
-                    return this.Json(new { success = false, text = "Existe uma prescrição para o medicamento informado, portanto não pode ser removido" }, JsonRequestBehavior.AllowGet);
+            if (medicine.ReceiptMedicines.Any())
+                return this.Json(new { success = false, text = "Existe uma prescrição para o medicamento informado, portanto não pode ser removido" }, JsonRequestBehavior.AllowGet);
 
             try
             {
@@ -489,9 +487,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         select medicine;
 
             if (!string.IsNullOrEmpty(searchModel.Term))
-                query = from medicine in query where medicine.Name.Contains(searchModel.Term)
-                        || medicine.Laboratory.Name.Contains(searchModel.Term)
-                        || medicine.ActiveIngredients.Any(ai => ai.Name.Contains(searchModel.Term))
+                query = from medicine in query
+                        where medicine.Name.Contains(searchModel.Term)
+                            || medicine.Laboratory.Name.Contains(searchModel.Term)
+                            || medicine.ActiveIngredients.Any(ai => ai.Name.Contains(searchModel.Term))
                         select medicine;
 
             // 1-based page index

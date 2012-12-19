@@ -1,17 +1,19 @@
-﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
+﻿@model UserViewModel
 @using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
+    string title;
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        ViewBag.Title = "Editando usuário: " + this.Model.FullName + " · Cerebello";
+        title = "Editando usuário: " + this.Model.FullName;
     }
     else
     {
-        ViewBag.Title = "Novo usuário · Cerebello";
+        title = "Novo usuário";
     }
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
@@ -71,8 +73,7 @@
                                 Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
                                 pm => pm.Id,
                                 pm => pm.Name,
-                                new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }))
-                             </text>);
+                                new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }))</text>);
 
     editPanelMedic.AddField(
         m => m.MedicalEntityId,
@@ -91,6 +92,10 @@
     editPanelContact.AddField(m => m.PhoneCell);
     editPanelContact.AddField(m => m.PhoneLand);
 }
+
+@section Title {
+    @title <span class="lock-title icon-lock" />
+}
 @section Scripts {
     <script type="text/javascript">
         $(function () {
@@ -103,20 +108,18 @@
             else $('#MedicEditPanel').hide();
         });
     </script>
-}
-
-@section Title {
-    @if (this.Model != null && this.Model.Id.HasValue)
+    @if (this.ViewBag.IsEditingOrCreating == 'C')
     {
-        @:Editando usuário: @this.Model.FullName
+        @:@Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.AdminOrOwner))
     }
     else
     {
-        @:Novo usuário
+        @:@Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "usuário"))
     }
 }
+
 @section SideBar {
-    <a href="@Url.Action("index", "practicehome")" class="icon-link icon-link-home">Consultório</a>
+    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 }
 @using (Html.BeginForm())
 {
@@ -131,15 +134,13 @@
         CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD))
     }
     
-    <h2>
-        Funções deste usuário
+    <h2>Funções deste usuário
     </h2>
     
     @editPanelRoles.GetHtml()
     
     <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsDoctor ? "" : "style=\"display: none\""))>
-        <h2>
-            Informações do médico
+        <h2>Informações do médico
         </h2>
         @editPanelMedic.GetHtml()
     </div>
@@ -150,8 +151,7 @@
 
     @Html.EditorFor(model => model.Address)
 
-    <h2>
-        Informações de contato
+    <h2>Informações de contato
     </h2>
     
     @editPanelContact.GetHtml()
@@ -159,6 +159,6 @@
     <div class="submit-bar">
         <input type="submit" value="salvar usuário" />
         <span class="separator">ou</span>
-        @Html.ActionLink("cancelar", "index", "practicehome")
+        @Html.ActionLink("cancelar", "Index", "PracticeHome")
     </div>
 }

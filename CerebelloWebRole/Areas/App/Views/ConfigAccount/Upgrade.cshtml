@@ -1,16 +1,20 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ConfigAccountViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model CerebelloWebRole.Areas.App.Models.ConfigAccountViewModel
 @{
-    ViewBag.Title = string.Format("Upgrade para {0}", this.Model.Migrations[0].Contract.PlanTitle);
+    var title = string.Format("Upgrade para {0}", this.Model.Migrations[0].Contract.PlanTitle);
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
     var partialViewName = string.Format("{0}Partial", this.Model.Migrations[0].Contract.UrlIdentifier);
 }
 @section Title {
-    @ViewBag.Title
+    @title <span class="lock-title icon-lock" />
+}
+@section Scripts {
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.Owner))
 }
 <div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
     @Html.Partial(partialViewName)
 </div>
-
 
 <div style="margin: 1em; padding: 1em; border: 1px solid #DDD; overflow: hidden;">
     <h2 style="margin-bottom: 1em;">

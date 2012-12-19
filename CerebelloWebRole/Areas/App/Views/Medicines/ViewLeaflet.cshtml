@@ -1,19 +1,20 @@
-﻿@model CerebelloWebRole.Areas.App.Models.MedicineLeafletViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model MedicineLeafletViewModel
 @{
     var title = "Bula do medicamento: " + this.Model.MedicineName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 
 @section SideBar {
     <a href="@Model.GoogleDocsUrl" class="icon-link icon-link-import">Visualizar no Google Docs</a>
     <a href="@Model.Url" class="icon-link icon-link-import">Download</a>
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
 }
 
 <p style="margin-bottom: 15px">

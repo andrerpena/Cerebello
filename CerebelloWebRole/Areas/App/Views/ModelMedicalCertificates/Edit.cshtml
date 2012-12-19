@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificateViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model ModelMedicalCertificateViewModel
 @{
     string title;
     if (this.Model != null && this.Model.Id.HasValue)
@@ -9,19 +10,23 @@
     {
         title = "Novo modelo de atestado médico";
     }
-    ViewBag.Title = title + " · Cerebello";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de modelos de
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de modelos de
         atestados</a>
-        <hr />
-        @Html.MessageHelp("Ao criar um modelo de atestado, é possível declarar campos que deverão ser definidos ao criar um novo atestado. Para definir um campo, basta clicar em 'adicionar campo' e digitar seu nome. Para referenciar um campo no texto, use o padrão <%nome_do_campo%>. O campo <%paciente%> é definido automaticamente.")
+    <hr />
+    @Html.MessageHelp("Ao criar um modelo de atestado, "
+            + "é possível declarar campos que deverão ser definidos ao criar um novo atestado. "
+            + "Para definir um campo, basta clicar em 'adicionar campo' e digitar seu nome. "
+            + "Para referenciar um campo no texto, use o padrão <%nome_do_campo%>. "
+            + "O campo <%paciente%> é definido automaticamente.")
 }
 @using (Html.BeginForm())
 {
@@ -38,7 +43,7 @@
         <tr>
             <th>@Html.LabelFor(model => model.Text)
             </th>
-            <td class="large">@Html.TextAreaFor(model => model.Text, new { rows = 10})
+            <td class="large">@Html.TextAreaFor(model => model.Text, new { rows = 10 })
             </td>
         </tr>
         <tr>

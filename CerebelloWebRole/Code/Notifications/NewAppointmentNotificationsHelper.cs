@@ -39,36 +39,50 @@ namespace CerebelloWebRole.Code.Notifications
                 // in this case this user is a secretary
                 var scheduledAppointments =
                     db.Appointments.Include("Doctor").Include("Patient").
-                       Where(a => a.Start >= timeThresholdMin && a.Start < timeThresholdMax && a.Status == (int) TypeAppointmentStatus.Undefined && a.IsPolled == polled).ToList();
+                       Where(a => a.Start >= timeThresholdMin && a.Start < timeThresholdMax && a.Status == (int)TypeAppointmentStatus.Undefined && a.IsPolled == polled).ToList();
 
                 if (scheduledAppointments.Any())
                 {
                     foreach (var appointment in scheduledAppointments)
-                        result.Add(new NewAppointmentNotificationData
-                        {
-                            NotificationId = appointment.Id,
-                            NotificationClientId = "appointment_" + appointment.Id,
-                            AppointmentTime =
-                                DateTimeHelper.GetFormattedTime(
-                                    PracticeController.ConvertToLocalDateTime(practice, appointment.Start)),
-                            DoctorId = appointment.DoctorId,
-                            DoctorName = appointment.Doctor.Users.First().Person.FullName,
-                            DoctorUrl =
-                                urlHelper.Action("Index", "DoctorHome",
-                                           new { doctor = appointment.Doctor.UrlIdentifier }),
-                            PatientId = appointment.Patient.Id,
-                            PatientName = appointment.Patient.Person.FullName,
-                            PatientUrl =
-                                urlHelper.Action("Details", "Patients", new { id = appointment.Patient.Id }),
-                            AppointmentAccomplishedUrl =
-                                urlHelper.Action("SetAppointmentAsAccomplished", "Notifications",
-                                           new { id = appointment.Id, createDoctorNotification = true }),
-                            AppointmentCanceledUrl =
-                                urlHelper.Action("SetAppointmentAsCanceled", "Notifications",
-                                           new { id = appointment.Id }),
-                            AppointmentIsPolledUrl = urlHelper.Action("SetAppointmentAsPolled", "Notifications", new { id = appointment.Id })
+                    {
+                        var data = new NewAppointmentNotificationData
+                            {
+                                NotificationId = appointment.Id,
+                                NotificationClientId = "appointment_" + appointment.Id,
+                                AppointmentTime =
+                                    DateTimeHelper.GetFormattedTime(
+                                        PracticeController.ConvertToLocalDateTime(practice, appointment.Start)),
+                                DoctorId = appointment.DoctorId,
+                                DoctorName = appointment.Doctor.Users.First().Person.FullName,
+                                DoctorUrl =
+                                    urlHelper.Action(
+                                        "Index",
+                                        "DoctorHome",
+                                        new { doctor = appointment.Doctor.UrlIdentifier }),
+                                AppointmentAccomplishedUrl =
+                                    urlHelper.Action(
+                                        "SetAppointmentAsAccomplished",
+                                        "Notifications",
+                                        new { id = appointment.Id, createDoctorNotification = true }),
+                                AppointmentCanceledUrl =
+                                    urlHelper.Action(
+                                        "SetAppointmentAsCanceled",
+                                        "Notifications",
+                                        new { id = appointment.Id }),
+                                AppointmentIsPolledUrl =
+                                    urlHelper.Action("SetAppointmentAsPolled", "Notifications", new { id = appointment.Id })
+                            };
 
-                        });
+                        var patient = appointment.Patient;
+                        if (patient != null)
+                        {
+                            data.PatientId = patient.Id;
+                            data.PatientName = patient.Person.FullName;
+                            data.PatientUrl = urlHelper.Action("Details", "Patients", new { id = patient.Id });
+
+                        }
+                        result.Add(data);
+                    }
                 }
             }
 

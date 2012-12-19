@@ -1,8 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
 @using Cerebello.Model
 @using CerebelloWebRole.Code.Extensions
-@using CerebelloWebRole.Code.Access
-@using CerebelloWebRole.Models
 @{
     var title = "Usuário: " + this.Model.FullName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -16,7 +14,7 @@
     cardView.AddField(m => m.UserName);
     cardView.AddField(m => m.FullName, wholeRow: true);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text>  @(@item.DateOfBirth.ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
     cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.BirthPlace);
     cardView.AddField(m => m.CPF);
@@ -64,12 +62,17 @@
         <a href="#" class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a>
     }
 
-    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
+    @if (this.ViewBag.IsSelf == true)
+    {
+        <a href="@Url.Action("ChangePassword", "Users")" class="icon-link icon-reset-password">Alterar senha</a>
+    }
 
     @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("ResetPassword"))
     {
         <a href="#" class="icon-link icon-reset-password" id="reset-password-link">Resetar senha</a>
     }
+
+    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 
     @if (this.CanAccessAction("Delete"))
     {

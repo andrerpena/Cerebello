@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
-    public class PracticeHomeController
+    public class PracticeHomeControllerViewModel
     {
-        public PracticeHomeController()
+        public PracticeHomeControllerViewModel()
         {
             this.Address = new AddressViewModel();
         }

@@ -1,19 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Mvc;
-using System.Linq;
-using Cerebello.Model;
-using System;
-using System.Collections.Generic;
 using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermission(RoleFlags = UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class ConfigScheduleController : DoctorController
     {
         [HttpGet]

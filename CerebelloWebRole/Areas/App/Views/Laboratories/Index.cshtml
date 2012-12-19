@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.LaboratoriesIndexViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model LaboratoriesIndexViewModel
 @{
     var title = "Labotarórios";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -8,10 +9,10 @@
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <ul>

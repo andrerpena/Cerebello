@@ -133,6 +133,7 @@
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
+    <Compile Include="Areas\App\Models\LockScriptViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
     <Compile Include="Code\Controllers\TransactionScopeAttribute.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
+    <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
     <Compile Include="Code\Helpers\EmailHelper.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
@@ -171,7 +173,7 @@
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicalSpecialtiesLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
-    <Compile Include="Areas\App\Models\PracticeHomeController.cs" />
+    <Compile Include="Areas\App\Models\PracticeHomeControllerViewModel.cs" />
     <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
@@ -268,7 +270,6 @@
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
     <Compile Include="Code\Filters\AuthenticationFilter.cs" />
-    <Compile Include="Code\Filters\UsersManagementPermissionAttribute.cs" />
     <Compile Include="Code\Filters\UserRolePermissionAttribute.cs" />
     <Compile Include="Code\Filters\IsOwnerPermissionAttribute.cs" />
     <Compile Include="Code\Filters\FirstAccessFilter.cs" />
@@ -648,7 +649,7 @@
     <Content Include="Areas\App\Views\Shared\NotificationFillUserProfile.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Medicines.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Search.cshtml" />
-    <Content Include="Areas\App\Views\Shared\ConfigLockScript.cshtml" />
+    <Content Include="Areas\App\Views\Shared\LockScript.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
