@@ -64,12 +64,17 @@
         <a href="#" class="icon-link icon-link-delete" id="delete-user-link">Excluir usuário</a>
     }
 
-    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
+    @if (this.ViewBag.IsSelf == true)
+    {
+        <a href="@Url.Action("ChangePassword", "Users")" class="icon-link icon-reset-password">Alterar senha</a>
+    }
 
     @if (string.IsNullOrWhiteSpace(this.Model.Email) && this.CanAccessAction("ResetPassword"))
     {
         <a href="#" class="icon-link icon-reset-password" id="reset-password-link">Resetar senha</a>
     }
+
+    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 
     @if (this.CanAccessAction("Delete"))
     {

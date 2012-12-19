@@ -488,6 +488,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
 
+            this.ViewBag.IsSelf = user.Id == this.DbUser.Id;
+
             return View(model);
         }
 
