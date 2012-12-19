@@ -1,8 +1,6 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
 @using Cerebello.Model
 @using CerebelloWebRole.Code.Extensions
-@using CerebelloWebRole.Code.Access
-@using CerebelloWebRole.Models
 @{
     var title = "Usuário: " + this.Model.FullName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -16,7 +14,7 @@
     cardView.AddField(m => m.UserName);
     cardView.AddField(m => m.FullName, wholeRow: true);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text>  @(((DateTime)@item.DateOfBirth).ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text>  @(@item.DateOfBirth.ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
     cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.BirthPlace);
     cardView.AddField(m => m.CPF);

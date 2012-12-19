@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.EntityClient;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Permissions;
-using System.Security.Principal;
 using System.Xml;
 using System.Xml.Linq;
+using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Models;
-using System.Data.SqlClient;
-using System.Data.EntityClient;
-using Cerebello.Firestarter.Helpers;
-using System.IO;
 
 namespace Cerebello.Firestarter
 {
@@ -73,6 +69,33 @@ namespace Cerebello.Firestarter
             var andre = CreateAdministratorDoctor_Andre(db, entity, specialty, practice);
             var miguel = CreateAdministratorDoctor_Miguel(db, entity, specialty, practice);
             var result = new List<Doctor> { andre, miguel, };
+
+            // In this case, André is the owner of the account.
+            var user = andre.Users.First();
+            user.IsOwner = true;
+            user.Practice.Owner = user;
+            db.SaveChanges();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Crates a fake user, doctor and practice.
+        /// </summary>
+        public static List<Doctor> Create_CrmMg_Psiquiatria_DrHouse_Andre_Miguel_Thomas(CerebelloEntities db, bool useTrialContract = true)
+        {
+            // Creating data infrastructure.
+            var entity = GetMedicalEntity_Crm(db);
+            var specialty = GetMedicalSpecialty_Psiquiatra(db);
+
+            // Creating practice.
+            var practice = CreatePractice_DrHouse(db, useTrialContract);
+
+            // Creating person, user and doctor objects to be used by André.
+            var andre = CreateAdministratorDoctor_Andre(db, entity, specialty, practice);
+            var miguel = CreateAdministratorDoctor_Miguel(db, entity, specialty, practice);
+            var thomas = CreateDoctor_ThomasGray(db, entity, specialty, practice);
+            var result = new List<Doctor> { andre, miguel, thomas, };
 
             // In this case, André is the owner of the account.
             var user = andre.Users.First();
@@ -345,6 +368,72 @@ namespace Cerebello.Firestarter
                         IsActive = true,
                         IsParticular = true,
                     });
+
+            db.Doctors.AddObject(doctor);
+
+            db.SaveChanges();
+
+            user.Doctor = doctor;
+
+            db.SaveChanges();
+
+            return doctor;
+        }
+
+        public static Doctor CreateDoctor_ThomasGray(
+            CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
+        {
+            var person = new Person
+            {
+                DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
+                FullName = "Thomas Gray",
+                Gender = (int)TypeGender.Male,
+                CreatedOn = DateTime.UtcNow,
+                Email = "thomasgray@gmail.com",
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("thomasgray@gmail.com"),
+                PracticeId = practice.Id,
+            };
+
+            db.People.AddObject(person);
+
+            db.SaveChanges();
+
+            var user = new User()
+            {
+                UserName = "thomasgray",
+                UserNameNormalized = "thomasgray",
+                Person = person,
+                LastActiveOn = DateTime.UtcNow,
+                PasswordSalt = "DAGjFT7iMXxfJQAFYFRa+w==",
+                Password = "39ltFvGLs/oC71jd1ngWnTzar2A=", // pwd: 'tgray'
+                Practice = practice,
+            };
+
+            db.Users.AddObject(user);
+
+            db.SaveChanges();
+
+            var doctor = new Doctor()
+            {
+                Id = 4,
+                CRM = "102938",
+                MedicalSpecialtyCode = specialty.Code,
+                MedicalSpecialtyName = specialty.Name,
+                MedicalEntityCode = entity.Code,
+                MedicalEntityName = entity.Name,
+                MedicalEntityJurisdiction = "RJ",
+                UrlIdentifier = "thomasgray",
+                PracticeId = practice.Id,
+            };
+
+            doctor.HealthInsurances.Add(
+                new HealthInsurance
+                {
+                    PracticeId = practice.Id,
+                    Name = "Particular",
+                    IsActive = true,
+                    IsParticular = true,
+                });
 
             db.Doctors.AddObject(doctor);
 
