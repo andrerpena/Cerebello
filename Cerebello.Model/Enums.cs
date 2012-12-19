@@ -17,7 +17,7 @@ namespace Cerebello.Model
 
     public enum TypeAppointmentStatus : int
     {
-        [Display(Name="")]
+        [Display(Name="Agendada")]
         Undefined = 0,
 
         [Display(Name = "Não realizada")]

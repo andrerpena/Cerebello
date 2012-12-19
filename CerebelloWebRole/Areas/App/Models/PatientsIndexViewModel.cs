@@ -18,11 +18,6 @@ namespace CerebelloWebRole.Areas.App.Models
         }
 
         /// <summary>
-        /// Pacient age distribution chart data
-        /// </summary>
-        public List<ChartPatientAgeDistribution> PatientAgeDistribution { get; set; }
-
-        /// <summary>
         /// The list of last registered patients
         /// </summary>
         public List<PatientViewModel> LastRegisteredPatients { get; set; }

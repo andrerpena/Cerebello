@@ -1,48 +1,58 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.DoctorHomeViewModel
 @using Cerebello.Model
-@using CerebelloWebRole.Models
+@using CerebelloWebRole.Areas.App.Models
 @{
     var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutDoctor.cshtml";
+
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(m => m.DoctorName, wholeRow: true);
+    cardView.AddField(m => m.MedicCrm);
+    cardView.AddField(m => m.MedicalSpecialtyName);
+    cardView.AddField(m => m.MedicalEntityName);
+    cardView.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
+    
+    Func<AppointmentViewModel, string> getCssClass = (vm) =>
+        {
+            var cssClasses = new List<string>();
+            
+            if (vm.Status == (int)TypeAppointmentStatus.NotAccomplished)
+                cssClasses.Add("not-accomplished");
+
+            if (vm.IsInThePast)
+                cssClasses.Add("in-the-past");
+
+            if (vm.IsNow)
+                cssClasses.Add("now");
+
+            return string.Join(" ", cssClasses.ToArray());
+        };
+
+    var todaysAppointmentGrid = this.Html.CreateGrid(this.Model.TodaysAppointments);
+    todaysAppointmentGrid.AddField(model => model.PatientName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new {id = item.PatientId})">@item.PatientName</a></span></text>);
+    todaysAppointmentGrid.AddField(model => model.LocalDateTimeSpelled, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new {y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day})">@item.LocalDateTimeSpelled</a></span></text>);
+    todaysAppointmentGrid.AddField(model => model.HealthInsuranceId, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "HealthInsurance", new {id = item.HealthInsuranceId})">@item.HealthInsuranceName</a></span></text>);
+    todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)">@item.StatusText</span></text>);
+
+    var nextGenericAppointments = this.Html.CreateGrid(this.Model.NextGenericAppointments);
+    nextGenericAppointments.AddField(model => model.Description);
+    nextGenericAppointments.AddField(model => model.LocalDateTimeSpelled, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new {y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day})">@item.LocalDateTimeSpelled</a></span></text>);
 }
 
 @section Title {
     @title
 }
 
+@cardView.GetHtml()
+
 <div class="widget">
-    <h2>Próximos compromissos agendados
+    <h2>Consultas agendadas para hoje (@this.ViewBag.PracticeLocalDate)
     </h2>
-    @if (this.Model.NextAppointments.Count > 0)
-    {
-        <ul class="next-appointments-list">
-            @foreach (var appointment in this.Model.NextAppointments)
-            {
-                <li>
-                    @if (appointment.PatientId != default(int))
-                    {
-                        <span class="patient">
-                            <a href="@Url.Action("Details", "Patients", new {id = appointment.PatientId})">@appointment.PatientName</a>
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="patient">
-                            @appointment.Description
-                        </span>
-                    }
-                    ,
-                        <span class="date-and-time">
-                            <a href="@Url.Action("Index", "Schedule", new {y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day})">@appointment.DateSpelled</a>
-                        </span>
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <div class="message-warning">Não existem consultas agendadas para o futuro</div>
-    }
+    @todaysAppointmentGrid.GetHtml()
 </div>
 
+<div class="widget">
+    <h2>Próximos compromissos (Exibindo 5)</h2>
+    @nextGenericAppointments.GetHtml()
+</div>

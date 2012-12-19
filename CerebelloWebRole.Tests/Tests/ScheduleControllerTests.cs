@@ -230,7 +230,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Verify view-model.
             var viewResult = (ViewResult)actionResult;
             var viewModel = (AppointmentViewModel)viewResult.Model;
-            Assert.AreEqual(new DateTime(2012, 07, 26), viewModel.Date);
+            Assert.AreEqual(new DateTime(2012, 07, 26), viewModel.LocalDateTime);
             Assert.AreEqual("09:00", viewModel.Start);
             Assert.AreEqual("09:30", viewModel.End);
 
@@ -285,7 +285,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Verify view-model.
             var viewResult = (ViewResult)actionResult;
             var viewModel = (AppointmentViewModel)viewResult.Model;
-            Assert.AreEqual(new DateTime(2012, 08, 24), viewModel.Date);
+            Assert.AreEqual(new DateTime(2012, 08, 24), viewModel.LocalDateTime);
             Assert.AreEqual("09:00", viewModel.Start);
             Assert.AreEqual("09:30", viewModel.End);
 
@@ -510,7 +510,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
-                    Date = start.Date,
+                    LocalDateTime = start.Date,
                     DoctorId = docAndre.Id,
                     Start = start.ToString("HH:mm"),
                     End = end.ToString("HH:mm"),
@@ -633,7 +633,7 @@ namespace CerebelloWebRole.Tests.Tests
                 vm = new AppointmentViewModel
                     {
                         Description = "Another generic appointment.",
-                        Date = start.Date,
+                        LocalDateTime = start.Date,
                         DoctorId = docAndre.Id,
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
@@ -738,7 +738,7 @@ namespace CerebelloWebRole.Tests.Tests
                 vm = new AppointmentViewModel
                     {
                         Description = "Generic appointment.",
-                        Date = start.Date,
+                        LocalDateTime = start.Date,
                         DoctorId = docAndre.Id,
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
@@ -848,7 +848,7 @@ namespace CerebelloWebRole.Tests.Tests
                 vm = new AppointmentViewModel
                     {
                         Description = "Generic appointment.",
-                        Date = start.Date,
+                        LocalDateTime = start.Date,
                         DoctorId = docAndre.Id,
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
@@ -949,7 +949,7 @@ namespace CerebelloWebRole.Tests.Tests
                 vm = new AppointmentViewModel
                     {
                         Description = "Generic appointment on lunch time.",
-                        Date = start.Date,
+                        LocalDateTime = start.Date,
                         DoctorId = docAndre.Id,
                         Start = start.ToString("HH:mm"),
                         End = end.ToString("HH:mm"),
@@ -1124,7 +1124,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
-                    Date = nextFreeTime.Item1.Date,
+                    LocalDateTime = nextFreeTime.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = nextFreeTime.Item1.ToString("HH:mm"),
                     End = nextFreeTime.Item2.ToString("HH:mm"),
@@ -1192,7 +1192,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
-                    Date = nextFreeTime.Item1.Date,
+                    LocalDateTime = nextFreeTime.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = nextFreeTime.Item1.ToString("HH:mm"),
                     End = nextFreeTime.Item2.ToString("HH:mm"),
@@ -1257,7 +1257,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
-                    Date = freeTimeInPastWeek.Item1.Date,
+                    LocalDateTime = freeTimeInPastWeek.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = freeTimeInPastWeek.Item1.ToString("HH:mm"),
                     End = freeTimeInPastWeek.Item2.ToString("HH:mm"),
@@ -1321,7 +1321,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PatientId = patient.Id,
                     PatientNameLookup = patient.Person.FullName,
                     HealthInsuranceId = docAndre.HealthInsurances.First(hi => hi.IsActive).Id,
-                    Date = freeTimeInPastWeek.Item1.Date,
+                    LocalDateTime = freeTimeInPastWeek.Item1.Date,
                     DoctorId = docAndre.Id,
                     Start = freeTimeInPastWeek.Item1.ToString("HH:mm"),
                     End = freeTimeInPastWeek.Item2.ToString("HH:mm"),

@@ -5,7 +5,7 @@
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do medicamento, princípio ativo ou laboratório";
 
-    var grid = this.Html.CreateGrid(this.Model.LastRegisteredMedicines, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+    var grid = this.Html.CreateGrid(this.Model.LastRegisteredMedicines);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
     grid.AddLinkField(m => m.LaboratoryName, "Details", "Laboratories", model => new { id = model.LaboratoryId });
 }

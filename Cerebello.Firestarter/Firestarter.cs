@@ -2126,7 +2126,7 @@ GO
             var user = doctor.Users.First();
             var dbWrapper = new CerebelloEntitiesAccessFilterWrapper(db);
             dbWrapper.SetCurrentUserById(user.Id);
-            var patients = db.Patients.ToList();
+            var patients = db.Patients.Where(p => p.DoctorId == doctor.Id).ToList();
 
             if (patients.Count < 1)
                 throw new Exception("Cannot create fake appointments. There are no patients");

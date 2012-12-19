@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,10 +23,13 @@ namespace CerebelloWebRole.Code.Controls
         /// </summary>
         public int? Count { get; set; }
 
-        public int RowsPerPage { get; set; }
+        public int? RowsPerPage { get; set; }
 
-        public Grid(HtmlHelper htmlHelper, IEnumerable<TModel> model, int rowsPerPage = 30, int? count = null)
+        public Grid(HtmlHelper htmlHelper, IEnumerable<TModel> model, int? rowsPerPage = null, int? count = null)
         {
+            if (rowsPerPage.HasValue != count.HasValue)
+                throw new Exception("When rowsPerPage is set on a Grid, count must be set as well and vice-versa");
+
             this.htmlHelper = htmlHelper;
             this.model = model;
             this.Fields = new List<GridFieldBase>();
@@ -86,12 +90,13 @@ namespace CerebelloWebRole.Code.Controls
 
                 if (this.Count.HasValue)
                 {
-                    webGrid = new WebGrid(canPage: true, sortFieldName: "SortBy", sortDirectionFieldName: "SortDirection", pageFieldName: "Page", rowsPerPage: this.RowsPerPage);
+                    Debug.Assert(this.RowsPerPage.HasValue);
+                    webGrid = new WebGrid(canPage: true, sortFieldName: "SortBy", sortDirectionFieldName: "SortDirection", pageFieldName: "Page", rowsPerPage: this.RowsPerPage.Value);
                     webGrid.Bind((IEnumerable<dynamic>)this.model, null, false, this.Count.Value);
                 }
                 else
                 {
-                    webGrid = new WebGrid();
+                    webGrid = new WebGrid(canPage: false);
                     webGrid.Bind((IEnumerable<dynamic>)this.model);
                 }
 

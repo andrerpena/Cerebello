@@ -184,7 +184,6 @@
     <Compile Include="Areas\App\Models\PasswordViewModel.cs" />
     <Compile Include="Areas\App\Models\AutocompleteGridModels\CidAutocompleteGridModel.cs" />
     <Compile Include="Areas\App\Models\CollectionEditorViewModel.cs" />
-    <Compile Include="Areas\App\Models\PracticeUsersViewModel.cs" />
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
@@ -615,7 +614,6 @@
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsDetails.cshtml" />
     <Content Include="Areas\App\Views\MedicalCertificates\MedicalCertificateFieldsEditor.cshtml" />
     <Content Include="Areas\App\Views\Shared\CollectionEditor.cshtml" />
-    <Content Include="Areas\App\Views\Users\Index.cshtml" />
     <Content Include="Areas\App\Views\Users\Edit.cshtml" />
     <Content Include="Areas\App\Views\Users\Details.cshtml" />
     <Content Include="Areas\App\Views\Users\ChangePassword.cshtml" />

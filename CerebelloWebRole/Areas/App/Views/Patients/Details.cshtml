@@ -23,6 +23,9 @@
     cardView.AddField(m => m.PhoneCell);
     cardView.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);
     cardView.AddField(m => m.Observations, wholeRow: true);
+
+    var futureAppointmentsGrid = this.Html.CreateGrid(this.Model.FutureAppointments);
+    futureAppointmentsGrid.AddLinkField(model => model.LocalDateTimeSpelled, "Index", "Schedule", a => new { y = a.LocalDateTime.Year, m = a.LocalDateTime.Month, d = a.LocalDateTime.Day });
 }
 @section Title {
     Paciente: @Model.FullName
@@ -65,23 +68,9 @@
 @Html.DisplayFor(model => model.Address)
 
 <h2>Consultas agendadas para o futuro</h2>
-@if (this.Model.FutureAppointments.Count > 0)
-{
-    <ul class="next-appointments-list">
-        @foreach (var appointment in this.Model.FutureAppointments)
-        {
-            <li>
-                <span class="date-and-time">
-                    <a href="@Url.Action("Index", "Schedule", new { y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day })">@appointment.DateSpelled</a>
-                </span>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <div class="message-warning">Não existem consultas agendadas para o futuro</div>
-}
+<div style="margin-bottom: 10px">
+    @futureAppointmentsGrid.GetHtml()
+</div>
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
@@ -100,73 +89,73 @@ else
                     | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday
                     | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
 
-                <div class="medical-appointment-panel">
-                    <h3>Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
-                    </h3>
-                    @if (session.AnamneseIds.Count > 0)
+            <div class="medical-appointment-panel">
+                <h3>Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
+                </h3>
+                @if (session.AnamneseIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Anamneses
+                    </p>
+                    foreach (var anamneseId in session.AnamneseIds)
                     {
-                        <p class="subtitle">
-                            Anamneses
-                        </p>
-                        foreach (var anamneseId in session.AnamneseIds)
-                        {
-                            @Html.Action("Details", "Anamneses", new { id = anamneseId })
-                        }
+                    @Html.Action("Details", "Anamneses", new { id = anamneseId })
                     }
-                    @if (session.ReceiptIds.Count > 0)
+                }
+                @if (session.ReceiptIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Receitas
+                    </p>
+                    foreach (var receiptId in session.ReceiptIds)
                     {
-                        <p class="subtitle">
-                            Receitas
-                        </p>
-                        foreach (var receiptId in session.ReceiptIds)
-                        {
-                            @Html.Action("Details", "Receipts", new { id = receiptId })
-                        }
+                    @Html.Action("Details", "Receipts", new { id = receiptId })
                     }
-                    @if (session.ExaminationRequestIds.Count > 0)
+                }
+                @if (session.ExaminationRequestIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Solicitações de exames
+                    </p>
+                    foreach (var receiptId in session.ExaminationRequestIds)
                     {
-                        <p class="subtitle">
-                            Solicitações de exames
-                        </p>
-                        foreach (var receiptId in session.ExaminationRequestIds)
-                        {
-                            @Html.Action("Details", "Exams", new { id = receiptId })
-                        }
+                    @Html.Action("Details", "Exams", new { id = receiptId })
                     }
-                    @if (session.ExaminationResultIds.Count > 0)
+                }
+                @if (session.ExaminationResultIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Resultados de exames
+                    </p>
+                    foreach (var examResultId in session.ExaminationResultIds)
                     {
-                        <p class="subtitle">
-                            Resultados de exames
-                        </p>
-                        foreach (var examResultId in session.ExaminationResultIds)
-                        {
-                            @Html.Action("Details", "ExamResults", new { id = examResultId })
-                        }
+                    @Html.Action("Details", "ExamResults", new { id = examResultId })
                     }
+                }
 
-                    @if (session.DiagnosisIds.Count > 0)
+                @if (session.DiagnosisIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Diagnósticos
+                    </p>
+                    foreach (var diagnosisId in session.DiagnosisIds)
                     {
-                        <p class="subtitle">
-                            Diagnósticos
-                        </p>
-                        foreach (var diagnosisId in session.DiagnosisIds)
-                        {
-                            @Html.Action("Details", "Diagnosis", new { id = diagnosisId })
-                        }
+                    @Html.Action("Details", "Diagnosis", new { id = diagnosisId })
                     }
+                }
 
-                    @if (session.MedicalCertificateIds.Count > 0)
+                @if (session.MedicalCertificateIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Atestados médicos
+                    </p>
+                    foreach (var certificateId in session.MedicalCertificateIds)
                     {
-                        <p class="subtitle">
-                            Atestados médicos
-                        </p>
-                        foreach (var certificateId in session.MedicalCertificateIds)
-                        {
-                            @Html.Action("Details", "MedicalCertificates", new { id = certificateId })
-                        }
+                    @Html.Action("Details", "MedicalCertificates", new { id = certificateId })
                     }
+                }
 
-                </div>
+            </div>
             }
         }
         else
@@ -229,7 +218,7 @@ else
                         end: "",
                         doctorId: "",
                         patientId: @(this.Model.Id)
-                    },
+                        },
                     width: 480,
                     height: 200
                 });
@@ -256,7 +245,7 @@ else
                         $this.removeClass("icon-link-loading").addClass("icon-link-plus");
                     }
                 });
-        });
-    </script>
+            });
+        </script>
     </div>
 }

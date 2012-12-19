@@ -50,7 +50,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     LastRegisteredLaboratories =
                         (from laboratory in
-                             this.db.Laboratories.Where(l => l.DoctorId == this.Doctor.Id).OrderByDescending(l => l.CreatedOn).Take(5).ToList()
+                             this.db.Laboratories.Where(l => l.DoctorId == this.Doctor.Id).OrderByDescending(l => l.CreatedOn).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
                          select this.GetViewModel(laboratory)).ToList(),
                     TotalLaboratoriesCount = this.db.Laboratories.Count()
                 };

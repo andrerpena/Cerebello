@@ -233,10 +233,11 @@ input, textarea {
 
 .icon-lock {
     background-image: url("/content/images/app/icons16/lock-icon.png");
-    width: 16px;
-    height: 16px;
-    display: inline-block;
     cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    margin-left: 3px;
+    width: 16px;
 }
 
 .icon-link-list {
@@ -927,6 +928,7 @@ ul.dayoff-list .delete {
     }
 
 .widget {
+    margin-bottom: 15px;
 }
 
     .widget .title {
@@ -1316,6 +1318,10 @@ div.message-help {
     color: #252525;
 }
 
+.medical-appointment.fc-event-skin, .medical-appointment.not-accomplished .fc-event-skin {
+    background-color: #FEEAEA !important;
+}
+
 /* add new (global) */
 
 .top-bar-menu-button {
@@ -1359,3 +1365,29 @@ div.message-help {
 .check-box-label-wrapper .label-wrapper {
     margin-left: 5px;
 }
+
+.webgrid .in-the-past {
+    color: #A2A2A2;
+}
+
+    .webgrid .in-the-past a {
+        color: #A2A2A2;
+    }
+
+.webgrid .not-accomplished {
+    color: #FF9595;
+}
+
+    .webgrid .not-accomplished a {
+        color: #FF9595;
+    }
+
+.webgrid .now {
+    font-weight: bold;
+    color: #595959;
+}
+
+    .webgrid .now a {
+        color: #595959 !important;
+        font-weight: bold;
+    }

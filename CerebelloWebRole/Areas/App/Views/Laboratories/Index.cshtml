@@ -5,7 +5,7 @@
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do laboratório";
 
-    var grid = this.Html.CreateGrid(this.Model.LastRegisteredLaboratories, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
+    var grid = this.Html.CreateGrid(this.Model.LastRegisteredLaboratories);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
 }
 @section Title {

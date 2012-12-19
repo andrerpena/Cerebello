@@ -7,7 +7,7 @@
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
-    var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients, Constants.GRID_PAGE_SIZE);
+    var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients);
     grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
     grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
 }
@@ -27,22 +27,6 @@ Prontuário
 {
     @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
 }
-<div class="patients-summary">
-    <table>
-        <tr>
-            <td class="header">Total de pacientes:
-            </td>
-            <td class="value">@Model.TotalPatientsCount
-            </td>
-        </tr>
-    </table>
-</div>
-<div style="clear: both">
-</div>
-<div class="patients-graphs">
-    <div id="placeholder" style="height: 50px; width: 200px;">
-    </div>
-</div>
 <div class="widget">
     <h2>Últimos pacientes cadastrados
     </h2>
