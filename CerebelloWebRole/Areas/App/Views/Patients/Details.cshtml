@@ -85,7 +85,7 @@ else
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
-    <h2>Histórico do paciente <span class="lock-hist icon-lock ui-icon-locked" /></h2>
+    <h2>Histórico do paciente <span class="lock-hist icon-lock" /></h2>
 
     <div class="medical-appointments-panel">
         @if (this.Model.Sessions.Any())
@@ -173,7 +173,7 @@ else
         {
             @Html.Message("O paciente não possui histórico")
         }
-        <h2>Nova consulta <span class="lock-hist icon-lock ui-icon-locked" /></h2>
+        <h2>Nova consulta <span class="lock-hist icon-lock" /></h2>
         <div class="new-medical-appointment-panel-wrapper">
             <div class="new-medical-appointment-panel">
                 <!-- anamnese -->

@@ -1,11 +1,12 @@
-﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model MedicineViewModel
 @{
     var title = "Medicamento: " + this.Model.Name;
     ViewBag.Title =  string.Format("{0} · Cerebello", title);
 
     var cardView = this.Html.CreateCardView();
     cardView.AddField(model => model.Name, wholeRow: true);
-    cardView.AddLinkField(model => model.LaboratoryName, "details", "laboratories", model => new { id = Model.LaboratoryId}, true);
+    cardView.AddLinkField(model => model.LaboratoryName, "Details", "Laboratories", model => new { id = Model.LaboratoryId}, true);
     cardView.AddField(model => model.ActiveIngredients,
     @<text>
     <ul class="string-list">
@@ -38,10 +39,10 @@
     cardView.AddField(model => model.Observations);
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar medicamento</a>

@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ConfigScheduleViewModel
+﻿@model ConfigScheduleViewModel
+@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Extensions
 @{
     var title = "Configurações da agenda";
@@ -6,15 +7,15 @@
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts
 {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("daysoff", "configschedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">
+        <li><a href="@Url.Action("DaysOff", "ConfigSchedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">
                 Configurações de dias sem expediente</a> </li>
         <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
@@ -46,7 +47,7 @@ if (ViewBag.ReturnUrl != null)
                         <li>
                             <div class="day-check">
                                 @Html.CheckBoxFor(model => model.DaysOfWeek[i].IsBusinessDay)
-                                @Html.LabelFor(model => model.DaysOfWeek[i].IsBusinessDay, (string)Model.DaysOfWeek[i].Name)
+                                @Html.LabelFor(model => model.DaysOfWeek[i].IsBusinessDay, this.Model.DaysOfWeek[i].Name)
                                 @Html.HiddenFor(model => model.DaysOfWeek[i].Name)
                             </div>
                             <div class="table-table-editors small">

@@ -1,15 +1,16 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ConfigDaysOffViewModel
+﻿@model ConfigDaysOffViewModel
+@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Extensions
 @{
     var title = "Configurações de dias sem expediente";
-    this.ViewBag.Title = "Configurações de dias sem expediente · Cerebello";
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <ul style="">

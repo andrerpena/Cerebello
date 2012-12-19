@@ -1,5 +1,6 @@
-﻿@using CerebelloWebRole.Code.Controls
-@model CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code.Controls
+@model MedicineLaboratoryViewModel
 @{
     string title;
     if (this.Model != null && this.Model.Id.HasValue)
@@ -14,14 +15,18 @@
 
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(model => model.Name, EditPanelFieldSize.Large, wholeRow: true);
-    editPanel.AddField(model => model.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>, wholeRow: true);
+    editPanel.AddField(
+        model => model.Observations,
+        EditPanelFieldSize.Large,
+        @<text>@Html.TextAreaFor(model => model.Observations)</text>,
+        wholeRow: true);
 }
 
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 
 @section SideBar {

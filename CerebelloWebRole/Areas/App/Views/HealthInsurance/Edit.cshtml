@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model HealthInsuranceViewModel
 @{
     var isEditing = this.Model != null && this.Model.Id.HasValue;
     var title = this.Model.IsParticular
@@ -7,10 +8,10 @@
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de convênios e formas de atendimento</a>

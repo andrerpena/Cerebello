@@ -9,7 +9,7 @@ using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermissionAttribute(RoleFlags = UserRoleFlags.Doctor | UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
     public class HealthInsuranceController : DoctorController
     {
         public ActionResult Index()

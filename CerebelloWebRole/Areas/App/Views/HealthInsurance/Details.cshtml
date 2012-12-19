@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.HealthInsuranceViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model HealthInsuranceViewModel
 @{
     var title =
         this.Model.IsParticular
@@ -15,10 +16,10 @@
     cardView.AddField(m => m.ReturnDaysInterval);
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">

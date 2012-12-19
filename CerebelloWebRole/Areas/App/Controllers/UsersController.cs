@@ -24,6 +24,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class UsersController : PracticeController
     {
+        protected override void InitSelfUserIdCore()
+        {
+            var context = this.ControllerContext;
+            var idObj = context.RequestContext.RouteData.Values["id"] ?? "";
+            int id;
+            var isValidId = int.TryParse(idObj.ToString(), out id);
+
+            if (this.IsActionName("Edit")
+                || this.IsActionName("Details")
+                || this.IsActionName("Delete")
+                || this.IsActionName("ResetPassword"))
+            {
+                if (isValidId)
+                    this.SelfUserId = db.Users.Any(p => p.Id == id) ? id : (int?)null;
+            }
+
+            base.InitSelfUserIdCore();
+        }
+
+        private bool IsActionName([AspMvcAction] string actionName)
+        {
+            var context = this.ControllerContext;
+            var curActionName = context.RequestContext.RouteData.GetRequiredString("action");
+            var result = String.Compare(curActionName, actionName, StringComparison.OrdinalIgnoreCase) == 0;
+            return result;
+        }
+
         /// <summary>
         /// Gets informations for the page used to create new users.
         /// This page has no informations at all.
@@ -31,14 +58,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [UsersManagementPermission]
+        [UserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Create()
         {
             return this.Edit((int?)null);
         }
 
         [HttpPost]
-        [UsersManagementPermission]
+        [UserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Create(UserViewModel viewModel)
         {
             return this.Edit(viewModel);
@@ -106,7 +133,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        [UsersManagementPermission]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Edit(int? id)
         {
             UserViewModel model = null;
@@ -171,7 +198,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        [UsersManagementPermission]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Edit(UserViewModel formModel)
         {
             var isEditingOrCreating = formModel.Id != null ? 'E' : 'C';
@@ -465,7 +492,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        [UsersManagementPermission(StatusDescription = "Você não tem permissão para excluir um usuário.")]
+        [UserRolePermission(UserRoleFlags.Administrator, StatusDescription = "Você não tem permissão para excluir um usuário.")]
         public JsonResult Delete(int id)
         {
             try
@@ -642,7 +669,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        [UsersManagementPermission]
+        [UserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult ResetPassword(int id, string typeTextCheck)
         {
             // Reseting the password of the user.

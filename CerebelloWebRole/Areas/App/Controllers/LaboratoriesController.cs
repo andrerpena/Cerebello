@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermissionAttribute(RoleFlags = UserRoleFlags.Doctor | UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
     public class LaboratoriesController : DoctorController
     {
         public MedicineLaboratoryViewModel GetViewModel(Laboratory laboratory, int? page = null)

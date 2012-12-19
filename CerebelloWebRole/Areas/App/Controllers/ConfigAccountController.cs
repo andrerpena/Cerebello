@@ -1,12 +1,14 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using System.Collections.Generic;
+using CerebelloWebRole.Code.Filters;
 using PayPal.Version940;
-using System.Linq;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    [UserRolePermission(UserRoleFlags.Owner)]
     public class ConfigAccountController : PracticeController
     {
         public ActionResult Index()

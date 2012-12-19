@@ -1,0 +1,56 @@
+﻿@using CerebelloWebRole.Areas.App.Models
+@model LockScriptViewModel
+@{
+    var dicItems = new Dictionary<string, string>();
+
+    if ((this.Model.Type & LockScriptType.You) != 0)
+    {
+        dicItems["you"] = this.Model.Type == LockScriptType.You ?
+            "Somente você" :
+            "Você";
+    }
+
+    if ((this.Model.Type & LockScriptType.Self) != 0)
+    {
+        if (string.IsNullOrWhiteSpace(this.Model.SelfText))
+        {
+            throw new Exception("SelfText must have a value, when Self flag is used.");
+        }
+
+        dicItems["self"] =
+            this.Model.Type == LockScriptType.Self ?
+            string.Format("Somente o próprio {0}", this.Model.SelfText) :
+            string.Format("O próprio {0}", this.Model.SelfText);
+    }
+
+    if ((this.Model.Type & LockScriptType.Admin) != 0)
+    {
+        dicItems["administrators"] =
+            this.Model.Type == LockScriptType.Admin ?
+            "Somente administradores" :
+            "Administradores";
+    }
+
+    if ((this.Model.Type & LockScriptType.Owner) != 0)
+    {
+        dicItems["owner"] =
+            this.Model.Type == LockScriptType.Owner ?
+            "Somente o proprietário da conta" :
+            "O proprietário da conta";
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        $(".lock-title").dropdownMenu({
+            offsetX: -34,
+            offsetY: 10,
+            items: [
+                { id: "title", text: "Quem pode ver esta tela", cssClass: "header" }
+                @foreach (var eachKV in dicItems)
+                {
+                    @:, { id: "@Html.Raw(eachKV.Key)", text: "@Html.Raw(eachKV.Value)" }
+                }
+            ]
+        });
+    });
+</script>

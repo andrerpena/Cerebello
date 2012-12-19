@@ -1,9 +1,9 @@
-﻿@using CerebelloWebRole.Code
+﻿@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Controls
-@using CerebelloWebRole.Models
-@model CerebelloWebRole.Areas.App.Models.PracticeHomeControllerViewModel
+@model PracticeHomeControllerViewModel
 @{
-    ViewBag.Title = "Editando consultório · Cerebello";
+    var title = "Editando consultório";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     // creating edit panel
@@ -20,10 +20,13 @@
     editPanel.AddField(m => m.SiteUrl, EditPanelFieldSize.XLarge);
 }
 @section Title {
-    Editando consultório
+    @title <span class="lock-title icon-lock" />
+}
+@section Scripts {
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.AdminOrOwner))
 }
 @section SideBar {
-    <a href="@Url.Action("index", "practicehome")" class="icon-link icon-link-home">Consultório</a>
+    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 }
 
 @using (Html.BeginForm())

@@ -5,7 +5,7 @@ using CerebelloWebRole.Code.Filters;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermission(RoleFlags = UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class ConfigDocumentsController : DoctorController
     {
         [HttpGet]
@@ -50,15 +50,5 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return this.View(formModel);
         }
-
-        //
-        // GET: /App/ConfigDocuments/
-
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        
     }
 }

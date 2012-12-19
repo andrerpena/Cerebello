@@ -1,7 +1,8 @@
 ﻿@model ConfigAccountViewModel
 @using CerebelloWebRole.Areas.App.Models
 @{
-    ViewBag.Title = "Configurações da conta";
+    var title = "Configurações da conta";
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var buttonTexts = new string[5];
@@ -26,7 +27,10 @@
     actionName[(int)ConfigAccountViewModel.MigrationType.Cancel] = "cancel";
 }
 @section Title {
-    @ViewBag.Title
+    @title <span class="lock-title icon-lock" />
+}
+@section Scripts {
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.Owner))
 }
 <div class="widget">
     <p class="title">

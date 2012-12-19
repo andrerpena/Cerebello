@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.MedicinesIndexViewModel
+﻿@using CerebelloWebRole.Areas.App.Models
+@model MedicinesIndexViewModel
 @{
     var title = "Medicamentos";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -6,19 +7,19 @@
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredMedicines, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
-    grid.AddLinkField(m => m.LaboratoryName, "details", "laboratories", model => new { id = model.LaboratoryId });
+    grid.AddLinkField(m => m.LaboratoryName, "Details", "Laboratories", model => new { id = model.LaboratoryId });
 }
 @section Title {
-    @title <span class="lock-config icon-lock ui-icon-locked" />
+    @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("ConfigLockScript")
+    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
-        <li><a href="@Url.Action("anvisaimport")" class="icon-link icon-link-import">Importar da Anvisa</a> </li>
-        <li><a href="@Url.Action("index", "laboratories")" class="icon-link icon-link-home" id="list-laboratories-link">Resumo de laboratórios</a></li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
+        <li><a href="@Url.Action("AnvisaImport")" class="icon-link icon-link-import">Importar da Anvisa</a> </li>
+        <li><a href="@Url.Action("Index", "Laboratories")" class="icon-link icon-link-home" id="list-laboratories-link">Resumo de laboratórios</a></li>
     </ul>
 }
 

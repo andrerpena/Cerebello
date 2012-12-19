@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(viewModel);
         }
 
-        [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
+        [UserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Edit()
         {
             var viewModel = this.GetViewModel();
@@ -112,8 +112,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        [UserRolePermission(RoleFlags = UserRoleFlags.Administrator | UserRoleFlags.Owner)]
-        public ActionResult Edit(Models.PracticeHomeControllerViewModel formModel)
+        [UserRolePermission(UserRoleFlags.Administrator)]
+        public ActionResult Edit(PracticeHomeControllerViewModel formModel)
         {
             if (this.ModelState.IsValid)
             {
