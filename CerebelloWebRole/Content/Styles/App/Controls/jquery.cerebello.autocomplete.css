@@ -60,13 +60,13 @@
 }
 
     .autocomplete-dropdown-wrapper table tr:hover {
-        background-color: #F5F5F5;
+        background-color: #F1F1F1;
         color: #060606;
         cursor: pointer;
     }
 
     .autocomplete-dropdown-wrapper table thead tr td {
-        background-color: #F5F5F5;
+        background-color: #F1F1F1;
         padding: 5px;
     }
 
