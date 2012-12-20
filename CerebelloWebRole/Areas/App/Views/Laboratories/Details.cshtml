@@ -1,7 +1,8 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel
 
 @{
-    ViewBag.Title = "Laboratório: " + this.Model.Name + " · Cerebello";
+    var title = "Laboratório: " + this.Model.Name;
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 
     var cardView = this.Html.CreateCardView();
     cardView.AddField(model => model.Name, wholeRow: true);
@@ -9,7 +10,10 @@
 }
 
 @section Title {
-    Laboratório: @Model.Name
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 
 @section SideBar {

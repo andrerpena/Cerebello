@@ -28,7 +28,12 @@ namespace CerebelloWebRole.Code.Filters
                 cerebelloController.InitDbUser(filterContext.RequestContext);
 
                 Debug.Assert(cerebelloController.DbUser != null, "cerebelloController.DbUser must not be null");
-                bool canAccess = this.CanAccessResource(cerebelloController.DbUser);
+                bool canAccess = this.CanAccessResource(
+                    new PermissionContext
+                        {
+                            User = cerebelloController.DbUser,
+                            ControllerContext = filterContext.Controller.ControllerContext
+                        });
 
                 if (!canAccess)
                 {
@@ -50,7 +55,7 @@ namespace CerebelloWebRole.Code.Filters
             }
         }
 
-        public abstract bool CanAccessResource(User user);
+        public abstract bool CanAccessResource(PermissionContext permissionContext);
 
         public Type StatusDescriptionResourceType { get; set; }
         public string StatusDescriptionResourceName { get; set; }
@@ -58,5 +63,11 @@ namespace CerebelloWebRole.Code.Filters
         [Localizable(true)] // must be [Localizable(true)]
         [JetBrains.Annotations.LocalizationRequired(true)]
         public string StatusDescription { get; set; }
+    }
+
+    public class PermissionContext
+    {
+        public ControllerContext ControllerContext { get; set; }
+        public User User { get; set; }
     }
 }

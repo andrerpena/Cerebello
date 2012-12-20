@@ -8,11 +8,19 @@ namespace CerebelloWebRole.Code
 {
     public abstract class DoctorController : PracticeController
     {
-        protected Doctor Doctor { get; set; }
+        public Doctor Doctor { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
+
+            this.InitDoctor();
+        }
+
+        public void InitDoctor()
+        {
+            if (this.Doctor != null)
+                return;
 
             // the URL's doctor identifier (doctor's name)
             var doctorIdentifier = this.RouteData.Values["doctor"] as string;

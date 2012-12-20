@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicinesIndexViewModel
 @{
-    ViewBag.Title = "Medicamentos · Cerebello";
+    var title = "Medicamentos";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do medicamento, princípio ativo ou laboratório";
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredMedicines);
@@ -8,7 +9,10 @@
     grid.AddLinkField(m => m.LaboratoryName, "details", "laboratories", model => new { id = model.LaboratoryId });
 }
 @section Title {
-Medicamentos
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <ul>

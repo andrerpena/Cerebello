@@ -32,13 +32,30 @@
         <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "index", controller = "practicehome" })">
             Ir para o consultório</a>
     </div>
-    <hr />
-    <ul class="tabNav">
-        <li class="@(controllerName.Equals("medicines") || controllerName.Equals("laboratories") ? "youarehere" : "")"><a href="@Url.Action("Index", "medicines")" class="medicines-icon">
-            Medicamentos</a> </li>
-        <li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")"><a href="@Url.Action("Index", "config")" class="config-icon">
-            Configurações</a> </li>
-    </ul>
+    @{
+        bool canAccessConfig = this.CanAccessAction("Index", "Config");
+        bool canAccessMedicines = this.CanAccessAction("Index", "Medicines");
+        bool idHrNeeded = canAccessConfig || canAccessMedicines;
+    }
+    @if (idHrNeeded)
+    {
+        <hr />
+        <ul class="tabNav">
+            @if (canAccessMedicines)
+            {
+                <li class="@(controllerName.Equals("medicines") || controllerName.Equals("laboratories") ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "Medicines")" class="medicines-icon">
+                              Medicamentos</a>
+                </li>
+            }
+            @if (canAccessConfig)
+            {
+                <li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "Config")" class="config-icon">Configurações</a>
+                </li>
+            }
+        </ul>
+    }
 }
 
 @section TopActions {

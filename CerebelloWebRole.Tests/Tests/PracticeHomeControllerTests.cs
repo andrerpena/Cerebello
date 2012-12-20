@@ -114,7 +114,8 @@ namespace CerebelloWebRole.Tests.Tests
                             ?? homeController.Index();
 
             // Asserts
-            Assert.IsInstanceOfType(actionResult, typeof(HttpUnauthorizedResult));
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+            Assert.AreEqual(null, (actionResult as ViewResult).View);
         }
         #endregion
 

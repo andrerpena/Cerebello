@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.Mvc;
 
@@ -15,6 +16,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// <summary>
     /// Medical certificate controllers
     /// </summary>
+    [SelfOrUserRolePermission(RoleFlags = UserRoleFlags.Administrator)]
     public class ModelMedicalCertificatesController : DoctorController
     {
         public ActionResult Index()

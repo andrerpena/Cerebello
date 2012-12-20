@@ -1,11 +1,16 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ConfigScheduleViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
+    var title = "Configurações da agenda";
     this.ViewBag.Title = "Configurações da agenda · Cerebello";
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }
 @section Title {
-Configurações de agenda
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts
+{
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <ul>

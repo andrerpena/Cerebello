@@ -55,9 +55,16 @@ div.balloon-wrapper {
     white-space: nowrap;
 }
 
-.balloon-links li a 
+.balloon-links li .header
 {
     color: #333333 !important;
+    font-weight: bold;
+}
+
+.balloon-links li a
+{
+    color: #333333 !important;
+    cursor: default;
 }
 
 .balloon-links li a:hover

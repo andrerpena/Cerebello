@@ -7,8 +7,9 @@ namespace CerebelloWebRole.Code.Filters
     /// </summary>
     public class UsersManagementPermissionAttribute : PermissionAttribute
     {
-        public override bool CanAccessResource(User user)
+        public override bool CanAccessResource(PermissionContext permissionContext)
         {
+            var user = permissionContext.User;
             return user.AdministratorId != null || user.IsOwner;
         }
     }

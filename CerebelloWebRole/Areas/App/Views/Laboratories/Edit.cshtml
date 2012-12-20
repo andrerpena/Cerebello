@@ -1,14 +1,16 @@
 ﻿@using CerebelloWebRole.Code.Controls
 @model CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel
 @{
+    string title;
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        ViewBag.Title = "Editando laboratório: " + this.Model.Name + " · Cerebello";
+        title = "Editando laboratório: " + this.Model.Name;
     }
     else
     {
-        ViewBag.Title = "Novo laboratório · Cerebello";
+        title = "Novo laboratório";
     }
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
 
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(model => model.Name, EditPanelFieldSize.Large, wholeRow: true);
@@ -16,18 +18,14 @@
 }
 
 @section Title {
-    @if (this.Model != null && this.Model.Id.HasValue)
-    {
-        @:Editando laboratório:  + @this.Model.Name
-    }
-    else
-    {
-        @:Novo laboratório
-    }
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 
 @section SideBar {
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de laboratórios</a>
+    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de laboratórios</a>
 }
 
 @using (Html.BeginForm())
@@ -37,7 +35,7 @@
 
     @editPanel.GetHtml()
 
-        <div class="submit-bar">
+    <div class="submit-bar">
         <input type="submit" value="salvar laboratório" />
         <span class="separator">ou</span>
         @Html.ActionLink("cancelar", "Index")

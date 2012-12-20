@@ -1,15 +1,15 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ConfigDaysOffViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
+    var title = "Configurações de dias sem expediente";
     this.ViewBag.Title = "Configurações de dias sem expediente · Cerebello";
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }
 @section Title {
-Configurações de dias sem expediente
+    @title <span class="lock-config icon-lock ui-icon-locked" />
 }
 @section Scripts {
-    <script type="text/javascript" src="/Scripts/fullcalendar.min.js"></script>
-
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <ul style="">

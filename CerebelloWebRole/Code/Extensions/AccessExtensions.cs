@@ -44,7 +44,13 @@ namespace CerebelloWebRole.Code.Extensions
                     .ToArray();
 
                 var result = !attributes.Any()
-                    || attributes.All(pa => pa.CanAccessResource(cerebelloController.DbUser));
+                             || attributes.All(
+                                 pa => pa.CanAccessResource(
+                                     new PermissionContext
+                                         {
+                                             User = cerebelloController.DbUser,
+                                             ControllerContext = @this.ViewContext.Controller.ControllerContext
+                                         }));
 
                 return result;
             }

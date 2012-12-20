@@ -1,9 +1,13 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificateViewModel
 @{
-    ViewBag.Title = "Modelo de atestado: " + this.Model.Name + " · Cerebello";
+    var title = "Modelo de atestado: " + this.Model.Name;
+    ViewBag.Title = title + " · Cerebello";
 }
 @section Title {
-    Modelo de atestado: @Model.Name
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar modelo de atestado</a>

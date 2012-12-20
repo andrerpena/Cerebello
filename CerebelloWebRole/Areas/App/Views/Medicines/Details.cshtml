@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicineViewModel
 @{
-    ViewBag.Title = "Medicamento: " + this.Model.Name + " · Cerebello";
+    var title = "Medicamento: " + this.Model.Name;
+    ViewBag.Title =  string.Format("{0} · Cerebello", title);
 
     var cardView = this.Html.CreateCardView();
     cardView.AddField(model => model.Name, wholeRow: true);
@@ -37,7 +38,10 @@
     cardView.AddField(model => model.Observations);
 }
 @section Title {
-    Medicamento: @Model.Name
+    @title <span class="lock-config icon-lock ui-icon-locked" />
+}
+@section Scripts {
+    @Html.Partial("ConfigLockScript")
 }
 @section SideBar {
     <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar medicamento</a>
