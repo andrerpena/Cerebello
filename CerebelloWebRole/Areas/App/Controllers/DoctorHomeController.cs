@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -40,22 +39,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
 
             var todaysAppointments =
-                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Start >= todayStart && a.Start < todayEnd && a.Type == (int)TypeAppointment.MedicalAppointment)
-                .AsEnumerable().Select(a => new AppointmentViewModel()
-                {
-                    Description = a.Description,
-                    PatientId = a.PatientId,
-                    PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                    LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
-                    LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)),
-                    HealthInsuranceId = a.HealthInsuranceId,
-                    HealthInsuranceName = a.HealthInsurance.Name,
-                    IsInThePast = getIsInThePast(a),
-                    IsNow = getIsNow(a),
-                    PatientArrived = getPatientArrived(a),
-                    Status = a.Status,
-                    StatusText = getStatusText(a)
-                }).ToList();
+                this.db.Appointments
+                    .Where(
+                        a =>
+                        a.DoctorId == this.Doctor.Id && a.Start >= todayStart && a.Start < todayEnd &&
+                        a.Type == (int)TypeAppointment.MedicalAppointment)
+                    .AsEnumerable()
+                    .Select(
+                        a => new AppointmentViewModel()
+                            {
+                                Id = a.Id,
+                                Description = a.Description,
+                                PatientId = a.PatientId,
+                                PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
+                                LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)),
+                                HealthInsuranceId = a.HealthInsuranceId,
+                                HealthInsuranceName = a.HealthInsurance.Name,
+                                IsInThePast = getIsInThePast(a),
+                                IsNow = getIsNow(a),
+                                PatientArrived = getPatientArrived(a),
+                                Status = a.Status,
+                                StatusText = getStatusText(a)
+                            }).ToList();
 
             var nextGenericAppointments =
                 this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Type == (int) TypeAppointment.GenericAppointment &&  a.Start > utcNow).OrderBy(a => a.Start).Take(5)

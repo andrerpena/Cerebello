@@ -16,11 +16,6 @@ namespace CerebelloWebRole.Code
         protected Practice Practice { get; set; }
 
         /// <summary>
-        /// Represents the user that is the owner of the screen information.
-        /// </summary>
-        public int? SelfUserId { get; protected set; }
-
-        /// <summary>
         /// Converts the specified UTC date and time for the location of the current practice.
         /// </summary>
         /// <param name="practice"> </param>
@@ -57,8 +52,6 @@ namespace CerebelloWebRole.Code
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-
-            this.InitSelfUserId();
 
             // setting up user
             Debug.Assert(this.DbUser != null);
@@ -111,19 +104,9 @@ namespace CerebelloWebRole.Code
             this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(this.db, this.DbUser.Id, this, true);
         }
 
-        private bool wasInternalInitSelfUserIdCalled;
-        public void InitSelfUserId()
+        public virtual bool IsSelfUser(User user)
         {
-            if (wasInternalInitSelfUserIdCalled)
-                return;
-
-            this.wasInternalInitSelfUserIdCalled = true;
-
-            this.InitSelfUserIdCore();
-        }
-
-        protected virtual void InitSelfUserIdCore()
-        {
+            return false;
         }
     }
 }

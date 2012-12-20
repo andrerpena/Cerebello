@@ -16,20 +16,20 @@
             <img src="@doctor.ImageUrl" /></div>
         <div class="doctor-info">
             <p class="name">
-                <a href="@Url.Action("index", "doctorhome")">@doctor.Name</a></p>
+                <a href="@Url.Action("Index", "DoctorHome")">@doctor.Name</a></p>
             <p class="crm">@doctor.CRM (@doctor.MedicalEntity)</p>
         </div>
     </div>
     <ul class="tabNav">
-        <li class="@(controllerName.Equals("doctorhome") ? "youarehere" : "")"><a href="@Url.Action("Index", "doctorhome")" class="home-icon">
+        <li class="@(controllerName.Equals("doctorhome") ? "youarehere" : "")"><a href="@Url.Action("Index", "DoctorHome")" class="home-icon">
             Início</a> </li>
-        <li class="@(controllerName.Equals("schedule") ? "youarehere" : "")"><a href="@Url.Action("Index", "schedule")" class="schedule-icon">
+        <li class="@(controllerName.Equals("schedule") ? "youarehere" : "")"><a href="@Url.Action("Index", "Schedule")" class="schedule-icon">
             Agenda</a> </li>
-        <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "patients")" class="contact-icon">
+        <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "Patients")" class="contact-icon">
             Prontuário</a> </li>
     </ul>
     <div style="margin-right: 10px; text-align: right;">
-        <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "index", controller = "practicehome" })">
+        <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "Index", controller = "PracticeHome" })">
             Ir para o consultório</a>
     </div>
     @{
@@ -63,7 +63,7 @@
     <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="autocomplete" />
     <script type="text/javascript">
         $("#global-search").autocomplete({
-            contentUrl: "@Url.Action("lookupeverything", "app")",
+            contentUrl: "@Url.Action("LookupEverything", "App")",
             inputHiddenName: "global-search-hidden",
             ajaxParams: {
                 doctorId: @doctor.Id
@@ -85,8 +85,8 @@
 
         $("#global-add-new").dropdownMenu({
             items: [
-                { id: "new-patient", text: "Novo paciente", href: "@Url.Action("create", "patients")" },
-                { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("create", "medicines")" }
+                { id: "new-patient", text: "Novo paciente", href: "@Url.Action("Create", "Patients")" },
+                { id: "new-medicine", text: "Novo medicamento", href: "@Url.Action("Create", "Medicines")" }
             ]
         });
 

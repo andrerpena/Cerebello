@@ -17,9 +17,8 @@
             if (controller is PracticeController)
             {
                 var practiceController = controller as PracticeController;
-                practiceController.InitSelfUserId();
-                var result = practiceController.SelfUserId == user.Id;
-                return result;
+                var isSelf = practiceController.IsSelfUser(user);
+                return isSelf;
             }
 
             return false;

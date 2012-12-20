@@ -9,31 +9,67 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Helpers
 {
-    public static class MvcHelper
+    public class MvcHelper
     {
-        /// <summary>
-        /// Returns the attributes places on an action method.
-        /// </summary>
-        /// <param name="this"></param>
-        /// <param name="action"></param>
-        /// <param name="controller"></param>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        [Obsolete("This method is not being used anymore. 2012-11-11.")]
-        public static Attribute[] GetAttributesOfAction(
-            this ControllerContext @this,
-            [AspMvcAction]string action = null,
-            [AspMvcController]string controller = null,
-            string method = "GET")
+        public MvcHelper(
+            ControllerContext currentControllerContext,
+            [AspMvcAction] string actionName = null,
+            [AspMvcController] string controllerName = null,
+            string httpMethod = "GET",
+            object routeValues = null,
+            string protocol = null,
+            string hostName = null)
         {
-            ControllerContext controllerContextWithMethodParam;
-            var actionDescriptor = GetActionDescriptor(@this, action, controller, method, out controllerContextWithMethodParam);
+            this.CurrentControllerContext = currentControllerContext;
 
-            var attributes = actionDescriptor.GetCustomAttributes(true)
-                .Cast<Attribute>()
-                .ToArray();
+            this.ActionName = actionName ?? this.CurrentControllerContext.RouteData.GetRequiredString("action");
+            this.ControllerName = controllerName ?? this.CurrentControllerContext.RouteData.GetRequiredString("controller");
 
-            return attributes;
+            this.HttpMethod = httpMethod;
+
+            var httpContext = new MvcHelper.MockHttpContext
+            {
+                Request2 =
+                    new MvcHelper.MockHttpRequest(this.CurrentControllerContext.HttpContext.Request)
+                    {
+                        HttpMethod2 = this.HttpMethod,
+                        Url2 = this.Uri,
+                    }
+            };
+
+            // Building route data.
+            var urlHelper = new UrlHelper(this.CurrentControllerContext.RequestContext);
+            var currentUri = this.CurrentControllerContext.RequestContext.HttpContext.Request.Url;
+            this.Uri = new Uri(urlHelper.Action(
+                this.ActionName,
+                this.ControllerName,
+                new RouteValueDictionary(routeValues),
+                protocol ?? currentUri.Scheme,
+                hostName ?? currentUri.Host));
+
+            var routeData = RouteTable.Routes.GetRouteData(httpContext);
+
+            // Creating controller.
+            this.Controller = (ControllerBase)this.ControllerFactory
+                .CreateController(
+                // note: the area does not affect which controller is selected
+                new RequestContext(httpContext, routeData),
+                this.ControllerName);
+
+            this.ControllerType = this.Controller.GetType();
+
+            this.ControllerDescriptor = new ReflectedControllerDescriptor(this.ControllerType);
+
+            // Creating fake controller context.
+            this.MockControllerContext = new ControllerContext(
+                httpContext,
+                routeData,
+                this.Controller);
+
+            this.Controller.ControllerContext = this.MockControllerContext;
+
+            this.ActionDescriptor = this.ControllerDescriptor
+                .FindAction(this.MockControllerContext, this.ActionName);
         }
 
         /// <summary>
@@ -43,75 +79,54 @@ namespace CerebelloWebRole.Code.Helpers
         /// This means that the filters are returned in order,
         /// according to Order and Scope values of the filters. 
         /// </summary>
-        /// <param name="this"></param>
-        /// <param name="action"></param>
-        /// <param name="controller"></param>
-        /// <param name="method"></param>
         /// <returns></returns>
-        public static Filter[] GetFiltersForAction(
-            this ControllerContext @this,
-            [AspMvcAction]string action = null,
-            [AspMvcController]string controller = null,
-            string method = "GET")
+        public Filter[] GetFilters()
         {
-            ControllerContext controllerContextWithMethodParam;
-            var actionDescriptor = GetActionDescriptor(@this, action, controller, method, out controllerContextWithMethodParam);
+            var actionDescriptor = this.ActionDescriptor;
 
             // The default Controller.ActionInvoker.GetFilters returns filters from FilterProviders.Providers.GetFilters method.
             // So this method may not be compatible with custom controller implementations that override the ActionInvoker,
             // or override the GetFilters method.
             var filters = FilterProviders.Providers
-                .GetFilters(controllerContextWithMethodParam, actionDescriptor)
+                .GetFilters(this.MockControllerContext, actionDescriptor)
                 .ToArray();
 
             return filters;
         }
 
-        public static ActionDescriptor GetActionDescriptor(this ControllerContext @this, string action, string controller, string method, out ControllerContext mockControllerContext)
+        public IControllerFactory ControllerFactory
         {
-            // TODO: must cache all of these informations, they can become quite expensive if this method is used everywhere.
-
-            if (@this == null)
-                throw new ArgumentNullException("this");
-
-            var actionName = action
-                             ?? @this.RouteData.GetRequiredString("action");
-
-            var controllerName = controller
-                                 ?? @this.RouteData.GetRequiredString("controller");
-
-            // The default MvcHandler.ControllerBuilder returns ControllerBuilder.Current.
-            // So this method may not be compatible with other implementations of MvcHandler.
-            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
-
-            var otherController = (ControllerBase)controllerFactory
-                .CreateController(
-                // note: the area does not affect which controller is selected
-                new RequestContext(@this.HttpContext, new RouteData()),
-                controllerName);
-
-            var controllerType = otherController.GetType();
-
-            var controllerDescriptor = new ReflectedControllerDescriptor(controllerType);
-
-            //var httpContext = @this.HttpContext.ApplicationInstance.Context;
-            var controllerContextWithMethodParam = new ControllerContext(
-                new MockHttpContext { Request2 = new MockHttpRequest { HttpMethod2 = method } },
-                new RouteData(),
-                otherController);
-
-            mockControllerContext = controllerContextWithMethodParam;
-
-            var actionDescriptor = controllerDescriptor
-                .FindAction(controllerContextWithMethodParam, actionName);
-
-            return actionDescriptor;
+            get
+            {
+                // The default MvcHandler.ControllerBuilder returns ControllerBuilder.Current.
+                // So this may not be compatible with other implementations of MvcHandler.
+                return ControllerBuilder.Current.GetControllerFactory();
+            }
         }
 
+        public ControllerContext CurrentControllerContext { get; set; }
+
+        public string ActionName { get; private set; }
+
+        public string ControllerName { get; private set; }
+
+        public string HttpMethod { get; set; }
+
+        public ControllerBase Controller { get; private set; }
+
+        public ActionDescriptor ActionDescriptor { get; private set; }
+
+        public ControllerContext MockControllerContext { get; private set; }
+
+        public Type ControllerType { get; private set; }
+
+        public ReflectedControllerDescriptor ControllerDescriptor { get; private set; }
+
+        public Uri Uri { get; private set; }
+    
         public class MockHttpContext : HttpContextBase
         {
             private readonly HttpResponseBase response = new MockHttpResponse();
-
             public HttpRequestBase Request2 { get; set; }
             public override HttpRequestBase Request { get { return this.Request2; } }
 
@@ -136,7 +151,30 @@ namespace CerebelloWebRole.Code.Helpers
             private readonly NameValueCollection form = new NameValueCollection();
             private readonly NameValueCollection queryStr = new NameValueCollection();
 
+            private HttpRequestBase httpRequestBase;
+
+            public MockHttpRequest()
+            {
+            }
+
+            public MockHttpRequest(HttpRequestBase httpRequestBase)
+            {
+                this.httpRequestBase = httpRequestBase;
+            }
+
+            public override string AppRelativeCurrentExecutionFilePath
+            {
+                get { return this.httpRequestBase.AppRelativeCurrentExecutionFilePath; }
+            }
+
+            public override string PathInfo
+            {
+                get { return this.httpRequestBase.PathInfo; }
+            }
+
             public string HttpMethod2 { get; set; }
+
+            public Uri Url2 { get; set; }
 
             public override string HttpMethod
             {
@@ -145,7 +183,7 @@ namespace CerebelloWebRole.Code.Helpers
 
             public override Uri Url
             {
-                get { return this.url; }
+                get { return this.Url2 ?? this.url; }
             }
 
             public override string ApplicationPath

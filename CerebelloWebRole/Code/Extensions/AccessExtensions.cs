@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
@@ -23,34 +24,43 @@ namespace CerebelloWebRole.Code.Extensions
             this WebViewPage @this,
             [AspMvcAction]string action = null,
             [AspMvcController]string controller = null,
-            string method = "GET")
+            string method = "GET",
+            object routeValues = null)
         {
             // TODO: must cache all of these informations
 
             if (@this == null)
                 throw new ArgumentNullException("this");
 
-            var cerebelloController = @this.ViewContext.Controller as CerebelloController;
+            var mvcHelper = new MvcHelper(@this.ViewContext.Controller.ControllerContext, action, controller, method, routeValues);
 
+            // Getting the current DB User... (the logged user).
+            var cerebelloController = @this.ViewContext.Controller as CerebelloController;
+            User dbUser = null;
             if (cerebelloController != null)
             {
                 cerebelloController.InitDb();
                 cerebelloController.InitDbUser(@this.Request.RequestContext);
+                dbUser = cerebelloController.DbUser;
+            }
 
-                var attributes = @this.ViewContext.Controller.ControllerContext
-                    .GetFiltersForAction(action, controller, method)
-                    .Select(f => f.Instance)
-                    .OfType<PermissionAttribute>()
-                    .ToArray();
+            // If there is a logged user, then use permission attributes to determine whether user has access or not.
+            if (dbUser != null)
+            {
+                var attributes = mvcHelper
+                        .GetFilters()
+                        .Select(f => f.Instance)
+                        .OfType<PermissionAttribute>()
+                        .ToArray();
+
+                var permissionContext = new PermissionContext
+                    {
+                        User = dbUser,
+                        ControllerContext = mvcHelper.MockControllerContext,
+                    };
 
                 var result = !attributes.Any()
-                             || attributes.All(
-                                 pa => pa.CanAccessResource(
-                                     new PermissionContext
-                                         {
-                                             User = cerebelloController.DbUser,
-                                             ControllerContext = @this.ViewContext.Controller.ControllerContext
-                                         }));
+                             || attributes.All(pa => pa.CanAccessResource(permissionContext));
 
                 return result;
             }
@@ -64,41 +74,24 @@ namespace CerebelloWebRole.Code.Extensions
         /// <param name="this"></param>
         /// <param name="action"></param>
         /// <param name="controller"></param>
-        /// <param name="method"></param>
         /// <returns></returns>
         public static bool IsAction(
             this WebViewPage @this,
             [AspMvcAction]string action = null,
-            [AspMvcController]string controller = null,
-            string method = null)
+            [AspMvcController]string controller = null)
         {
             if (@this == null)
                 throw new ArgumentNullException("this");
 
-            if (method == null)
-            {
-                var routeData = @this.ViewContext.RouteData;
-                var currentAction = routeData.GetRequiredString("action");
-                var currentController = routeData.GetRequiredString("controller");
+            var routeData = @this.ViewContext.RouteData;
+            var currentAction = routeData.GetRequiredString("action");
+            var currentController = routeData.GetRequiredString("controller");
 
-                if (controller != null)
-                    return string.Compare(currentController, controller, true) == 0
-                           && string.Compare(currentAction, action, true) == 0;
+            if (controller != null)
+                return string.Compare(currentController, controller, true) == 0
+                       && string.Compare(currentAction, action, true) == 0;
 
-                return string.Compare(currentAction, action, true) == 0;
-            }
-
-            ControllerContext controllerContextWithMethodParam;
-            var actionDescriptor = @this.ViewContext.Controller.ControllerContext
-                .GetActionDescriptor(action, controller, method, out controllerContextWithMethodParam);
-
-            var controllerDescriptor = new ReflectedControllerDescriptor(@this.ViewContext.Controller.GetType());
-            var actionDescriptor2 = controllerDescriptor.FindAction(@this.ViewContext.Controller.ControllerContext, action);
-
-            if (actionDescriptor == null || actionDescriptor2 == null)
-                return false;
-
-            return actionDescriptor.UniqueId == actionDescriptor2.UniqueId;
+            return string.Compare(currentAction, action, true) == 0;
         }
     }
 }

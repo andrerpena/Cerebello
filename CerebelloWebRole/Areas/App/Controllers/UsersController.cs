@@ -24,23 +24,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class UsersController : PracticeController
     {
-        protected override void InitSelfUserIdCore()
+        public override bool IsSelfUser(User user)
         {
-            var context = this.ControllerContext;
-            var idObj = context.RequestContext.RouteData.Values["id"] ?? "";
-            int id;
-            var isValidId = int.TryParse(idObj.ToString(), out id);
-
             if (this.IsActionName("Edit")
                 || this.IsActionName("Details")
                 || this.IsActionName("Delete")
                 || this.IsActionName("ResetPassword"))
             {
+                var context = this.ControllerContext;
+                var idObj = context.RequestContext.RouteData.Values["id"] ?? "";
+                int id;
+                var isValidId = int.TryParse(idObj.ToString(), out id);
+
                 if (isValidId)
-                    this.SelfUserId = db.Users.Any(p => p.Id == id) ? id : (int?)null;
+                    return user.Id == id;
             }
 
-            base.InitSelfUserIdCore();
+            return base.IsSelfUser(user);
         }
 
         private bool IsActionName([AspMvcAction] string actionName)

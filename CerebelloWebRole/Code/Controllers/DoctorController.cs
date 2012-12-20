@@ -10,15 +10,13 @@ namespace CerebelloWebRole.Code
     {
         public Doctor Doctor { get; set; }
 
-        protected override void InitSelfUserIdCore()
+        public override bool IsSelfUser(User user)
         {
-            this.InitDoctor();
+            var doctorUrlId = this.ControllerContext.RouteData.GetRequiredString("doctor");
+            if (user.DoctorId != null)
+                return user.Doctor.UrlIdentifier == doctorUrlId;
 
-            this.SelfUserId = this.Doctor != null
-                                  ? this.Doctor.Users.Select(u => u.Id).Single()
-                                  : (int?)null;
-
-            base.InitSelfUserIdCore();
+            return base.IsSelfUser(user);
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
