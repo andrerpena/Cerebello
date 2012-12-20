@@ -12,7 +12,7 @@
     @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <ul>

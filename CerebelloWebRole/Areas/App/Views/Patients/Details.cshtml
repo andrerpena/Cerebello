@@ -1,5 +1,6 @@
-﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+﻿@model PatientViewModel
 @using Cerebello.Model
+@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Extensions
 @{
     ViewBag.Title = "Paciente: " + this.Model.FullName + " · Cerebello";
@@ -13,8 +14,8 @@
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName);
     cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text> @(((DateTime)@item.DateOfBirth).ToShortDateString())
-    (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow, false))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.ToShortDateString())
+                                               (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
     cardView.AddField(m => m.Profissao);
     cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.CPF);
@@ -49,18 +50,7 @@
 }
 @section Scripts
 {
-    <script type="text/javascript">
-        $(function() {
-            $(".lock-hist").dropdownMenu({
-                offsetX: -34,
-                offsetY: 10,
-                items: [
-                    { id: "title", text: "Quem pode ver esta seção", cssClass: "header" },
-                    { id: "self-only", text: "Somente você" }
-                ]
-            });
-        });
-    </script>
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist"))
 }
 
 @cardView.GetHtml()

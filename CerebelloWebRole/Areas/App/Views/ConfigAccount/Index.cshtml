@@ -30,7 +30,7 @@
     @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.Owner))
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
 <div class="widget">
     <p class="title">

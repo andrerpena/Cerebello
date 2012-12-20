@@ -104,18 +104,24 @@
                 else $('#MedicEditPanel').hide();
             });
 
-            if ($('#IsDoctor').is(':checked')) $('#MedicEditPanel').show();
+            if ($('#IsDoctor').is(':checked') || $('#IsDoctor').val() == 'True') $('#MedicEditPanel').show();
             else $('#MedicEditPanel').hide();
         });
     </script>
-    @if (this.ViewBag.IsEditingOrCreating == 'C')
-    {
-        @:@Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.AdminOrOwner))
+    @{
+        var hasSubRestrictions = this.ViewBag.CanEditRole == true;
+        var isCreating = this.ViewBag.IsEditingOrCreating == 'C';
     }
-    else
-    {
-        @:@Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "usuário"))
-    }
+    @(isCreating
+        ? hasSubRestrictions
+            ? Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner, notes: "Esta tela possui restrições especificas em alguns campos"))
+            : Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner))
+        : hasSubRestrictions
+            ? Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "usuário", notes: "Esta tela possui restrições especificas em alguns campos"))
+            : Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "usuário"))
+    )
+
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner, elementAction: LockElementActionType.SectionEdit, cssClass: "lock-role"))
 }
 
 @section SideBar {
@@ -133,15 +139,21 @@
         "A senha padrão deste usuário é {0}. Essa senha será usada somente para fazer o primeiro acesso ao sistema.",
         CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD))
     }
-    
-    <h2>Funções deste usuário
-    </h2>
-    
-    @editPanelRoles.GetHtml()
-    
-    <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && Model.IsDoctor ? "" : "style=\"display: none\""))>
-        <h2>Informações do médico
-        </h2>
+
+    if (this.ViewBag.CanEditRole == true)
+    {
+        <h2>Funções deste usuário <span class="lock-role icon-lock" /></h2>
+        @:@editPanelRoles.GetHtml()
+    }
+    else
+    {
+        @:@Html.HiddenFor(m => m.IsAdministrador)
+        @:@Html.HiddenFor(m => m.IsSecretary)
+        @:@Html.HiddenFor(m => m.IsDoctor)
+    }
+
+    <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && this.Model.IsDoctor ? "" : "style=\"display: none\""))>
+        <h2>Informações do médico</h2>
         @editPanelMedic.GetHtml()
     </div>
     

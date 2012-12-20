@@ -61,6 +61,14 @@ div.balloon-wrapper {
     font-weight: bold;
 }
 
+.balloon-links li .notes
+{
+    background-color: #FCFBE6 !important;
+    border: 1px solid #F5F3C7 !important;
+    color: #444444 !important;
+    padding: 0.2em !important;
+}
+
 .balloon-links li a
 {
     color: #333333 !important;

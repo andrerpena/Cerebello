@@ -29,11 +29,11 @@ namespace CerebelloWebRole.Areas.App.Models
         // If IsDoctor is false, these properties have no meaning.
 
         // todo: CRM não é válido para outros conselhos, deveria ser "Número no conselho"
-        [Display(Name = "CRM")]
+        [Display(Name = "Número no conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicCRM { get; set; }
 
-        [Display(Name = "Estado do conselho")]
+        [Display(Name = "Estado do conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataTypeAttribute(typeof(TypeEstadoBrasileiro))]
         public int? MedicalEntityJurisdiction { get; set; }
@@ -47,11 +47,11 @@ namespace CerebelloWebRole.Areas.App.Models
         public string MedicalSpecialtyName { get; set; }
 
         // todo: o nome disso deveria ser "Conselho profissional"
-        [Display(Name = "Conselho médico")]
+        [Display(Name = "Conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntityId { get; set; }
 
-        [Display(Name = "Conselho médico")]
+        [Display(Name = "Conselho profissional")]
         public string MedicalEntityName { get; set; }
 
         [Display(Name = "Funções")]

@@ -175,6 +175,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
+            if (this.DbUser.AdministratorId != null)
+                this.ViewBag.CanEditRole = true;
+
             return View("Edit", model);
         }
 
@@ -250,7 +253,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // password used the first time the person logs in.
                 // The only action allowed with this password,
                 // is to change the password.
-                var userData = new CerebelloWebRole.Models.CreateAccountViewModel
+                var userData = new CreateAccountViewModel
                 {
                     UserName = formModel.UserName,
                     Password = Constants.DEFAULT_PASSWORD,
@@ -318,26 +321,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 Street = formModel.Address.Street,
                             });
 
-                var practiceId = this.Practice.Id;
-
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (formModel.IsDoctor)
                 {
-                    // if user is already a doctor, we just edit the properties
-                    // otherwise we create a new doctor instance
-                    if (user.Doctor == null)
+                    // Only administrators can change the role of an user.
+                    if (this.DbUser.AdministratorId != null)
                     {
-                        user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
-                        user.Doctor.HealthInsurances.Add(
-                            new HealthInsurance
-                                {
-                                    PracticeId = this.DbUser.PracticeId,
-                                    Name = "Particular",
-                                    IsActive = true,
-                                    IsParticular = true,
-                                });
+                        // if user is already a doctor, we just edit the properties
+                        // otherwise we create a new doctor instance
+                        if (user.Doctor == null)
+                        {
+                            user.Doctor = new Doctor {PracticeId = this.DbUser.PracticeId,};
+                            user.Doctor.HealthInsurances.Add(
+                                new HealthInsurance
+                                    {
+                                        PracticeId = this.DbUser.PracticeId,
+                                        Name = "Particular",
+                                        IsActive = true,
+                                        IsParticular = true,
+                                    });
+                        }
                     }
 
+                    // Changing the doctor's informations.
                     user.Doctor.CRM = formModel.MedicCRM;
 
                     if (formModel.MedicalEntityId != null)
@@ -355,11 +361,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     }
 
                     if (formModel.MedicalEntityJurisdiction != null)
-                        user.Doctor.MedicalEntityJurisdiction = ((TypeEstadoBrasileiro)formModel.MedicalEntityJurisdiction.Value).ToString();
+                        user.Doctor.MedicalEntityJurisdiction =
+                            ((TypeEstadoBrasileiro)formModel.MedicalEntityJurisdiction.Value).ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This does not consider UrlIdentifier's used by other kinds of objects.
-                    string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, practiceId);
+                    string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, this.Practice.Id);
                     if (urlId == null)
                     {
                         this.ModelState.AddModelError(
@@ -371,20 +378,35 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    // if the user is not a doctor, then we make sure
-                    // by assigning the doctor property to null
-                    user.Doctor = null;
+                    // Only administrators can change the role of an user.
+                    if (this.DbUser.AdministratorId != null)
+                    {
+                        if (user.Doctor != null)
+                            this.db.Doctors.DeleteObject(user.Doctor);
+
+                        // if the user is not a doctor, then we make sure
+                        // by assigning the doctor property to null
+                        user.Doctor = null;
+                    }
                 }
 
                 // when the user is an administrator
                 if (formModel.IsAdministrador)
                 {
-                    if (user.Administrator == null)
-                        user.Administrator = new Administrator { PracticeId = this.DbUser.PracticeId, };
+                    // Only administrators can change the role of an user.
+                    if (this.DbUser.AdministratorId != null)
+                        if (user.Administrator == null)
+                            user.Administrator = new Administrator { PracticeId = this.DbUser.PracticeId, };
                 }
                 else
                 {
-                    user.Administrator = null;
+                    // Only administrators can change the role of an user.
+                    if (this.DbUser.AdministratorId != null)
+                    {
+                        if (user.Administrator != null)
+                            this.db.Administrators.DeleteObject(user.Administrator);
+                        user.Administrator = null;
+                    }
                 }
 
                 if (user.IsOwner)
@@ -398,12 +420,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // when the user is a secretary
                 if (formModel.IsSecretary)
                 {
-                    if (user.Secretary == null)
-                        user.Secretary = new Secretary { PracticeId = this.DbUser.PracticeId, };
+                    // Only administrators can change the role of an user.
+                    if (this.DbUser.AdministratorId != null)
+                        if (user.Secretary == null)
+                            user.Secretary = new Secretary { PracticeId = this.DbUser.PracticeId, };
                 }
                 else
                 {
-                    user.Secretary = null;
+                    // Only administrators can change the role of an user.
+                    if (this.DbUser.AdministratorId != null)
+                    {
+                        if (user.Secretary != null)
+                            this.db.Secretaries.DeleteObject(user.Secretary);
+                        user.Secretary = null;
+                    }
                 }
             }
 

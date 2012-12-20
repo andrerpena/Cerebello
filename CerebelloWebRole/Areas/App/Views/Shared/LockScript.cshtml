@@ -3,14 +3,14 @@
 @{
     var dicItems = new Dictionary<string, string>();
 
-    if ((this.Model.Type & LockScriptType.You) != 0)
+    if ((this.Model.AccessType & LockAccessType.You) != 0)
     {
-        dicItems["you"] = this.Model.Type == LockScriptType.You ?
+        dicItems["you"] = this.Model.AccessType == LockAccessType.You ?
             "Somente você" :
             "Você";
     }
 
-    if ((this.Model.Type & LockScriptType.Self) != 0)
+    if ((this.Model.AccessType & LockAccessType.Self) != 0)
     {
         if (string.IsNullOrWhiteSpace(this.Model.SelfText))
         {
@@ -18,37 +18,70 @@
         }
 
         dicItems["self"] =
-            this.Model.Type == LockScriptType.Self ?
+            this.Model.AccessType == LockAccessType.Self ?
             string.Format("Somente o próprio {0}", this.Model.SelfText) :
             string.Format("O próprio {0}", this.Model.SelfText);
     }
 
-    if ((this.Model.Type & LockScriptType.Admin) != 0)
+    if ((this.Model.AccessType & LockAccessType.Admin) != 0)
     {
         dicItems["administrators"] =
-            this.Model.Type == LockScriptType.Admin ?
+            this.Model.AccessType == LockAccessType.Admin ?
             "Somente administradores" :
             "Administradores";
     }
 
-    if ((this.Model.Type & LockScriptType.Owner) != 0)
+    if ((this.Model.AccessType & LockAccessType.Owner) != 0)
     {
         dicItems["owner"] =
-            this.Model.Type == LockScriptType.Owner ?
+            this.Model.AccessType == LockAccessType.Owner ?
             "Somente o proprietário da conta do consultório" :
             "O proprietário da conta do consultório";
+    }
+
+    string lockElementType;
+    switch (this.Model.ElementAction)
+    {
+        case LockElementActionType.Generic:
+            lockElementType = "acessar isto";
+            break;
+        case LockElementActionType.SoftwareAreaAccess:
+            lockElementType = "acessar esta área do software";
+            break;
+        case LockElementActionType.ScreenAccess:
+            lockElementType = "acessar esta tela";
+            break;
+        case LockElementActionType.Section:
+            lockElementType = "ver esta seção";
+            break;
+        case LockElementActionType.Field:
+            lockElementType = "var este campo";
+            break;
+        case LockElementActionType.FieldEdit:
+            lockElementType = "editar este campo";
+            break;
+        case LockElementActionType.SectionEdit:
+            lockElementType = "editar esta seção";
+            break;
+        default:
+            lockElementType = "isto";
+            break;
     }
 }
 <script type="text/javascript">
     $(function () {
-        $(".lock-title").dropdownMenu({
+        $(".@Html.Raw(this.Model.CssClass)").dropdownMenu({
             offsetX: -34,
             offsetY: 10,
             items: [
-                { id: "title", text: "Quem pode ver esta tela", cssClass: "header" }
+                { id: "title", text: "Quem pode @Html.Raw(lockElementType)", cssClass: "header" }
                 @foreach (var eachKV in dicItems)
                 {
                     @:, { id: "@Html.Raw(eachKV.Key)", text: "@Html.Raw(eachKV.Value)" }
+                }
+                @if (!string.IsNullOrWhiteSpace(this.Model.Notes))
+                {
+                    @:, { id: "notes", text: "@Html.Raw(this.Model.Notes)", cssClass: "notes" }
                 }
             ]
         });

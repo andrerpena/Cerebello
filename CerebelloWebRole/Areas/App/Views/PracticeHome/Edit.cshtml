@@ -23,7 +23,7 @@
     @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.AdminOrOwner))
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner))
 }
 @section SideBar {
     <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>

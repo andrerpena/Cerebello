@@ -10,7 +10,7 @@
     @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.Owner))
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
 <div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
     @Html.Partial(partialViewName)

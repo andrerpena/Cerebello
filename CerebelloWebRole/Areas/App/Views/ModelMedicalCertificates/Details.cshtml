@@ -8,7 +8,7 @@
     @title <span class="lock-title icon-lock" />
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockScriptType.SelfOrAdminOrOwner, "médico"))
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
     <a href="@Url.Action("Edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar modelo de atestado</a>
