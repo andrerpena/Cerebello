@@ -69,7 +69,7 @@ namespace CerebelloWebRole.Code.Extensions
         }
 
         /// <summary>
-        /// Checks whether the current view is the result of the specified action.
+        /// Checks whether the current view is the result of the specified action call.
         /// </summary>
         /// <param name="this"></param>
         /// <param name="action"></param>
@@ -77,7 +77,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// <returns></returns>
         public static bool IsAction(
             this WebViewPage @this,
-            [AspMvcAction]string action = null,
+            [AspMvcAction]string action,
             [AspMvcController]string controller = null)
         {
             if (@this == null)
@@ -92,6 +92,25 @@ namespace CerebelloWebRole.Code.Extensions
                        && string.Compare(currentAction, action, true) == 0;
 
             return string.Compare(currentAction, action, true) == 0;
+        }
+
+        /// <summary>
+        /// Checks whether the current view is the result of the specified controller call.
+        /// </summary>
+        /// <param name="this"></param>
+        /// <param name="controllerNames"></param>
+        /// <returns></returns>
+        public static bool IsController(
+            this WebViewPage @this,
+            [AspMvcController]params string[] controllerNames)
+        {
+            if (@this == null)
+                throw new ArgumentNullException("this");
+
+            var routeData = @this.ViewContext.RouteData;
+            var currentController = routeData.GetRequiredString("controller");
+
+            return controllerNames.Any(cn => String.Compare(currentController, cn, StringComparison.OrdinalIgnoreCase) == 0);
         }
     }
 }

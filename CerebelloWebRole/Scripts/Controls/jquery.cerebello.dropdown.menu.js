@@ -70,6 +70,7 @@
 
             _this.$el.bind("click", function (e) {
                 e.stopPropagation();
+                e.preventDefault();
                 $balloon.css("left", _this.$el.offset().left + _this.opts.offsetX);
                 $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + _this.opts.offsetY);
                 $balloon.show();

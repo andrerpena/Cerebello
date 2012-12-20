@@ -1,4 +1,5 @@
-﻿@using CerebelloWebRole.Code.Data
+﻿@using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code.Data
 @{
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
     var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
@@ -7,13 +8,15 @@
 }
 @section MainMenu {
     <ul class="tabNav">
-        <li class="@(   (controllerName.Equals("practicehome") || controllerName.Equals("users") ) ? "youarehere" : "")">
-            <a href="@Url.Action("index", "practicehome")" class="home-icon">Consultório</a>
+        <li class="@((this.IsController("PracticeHome", "Users")) ? "youarehere" : "")">
+            <a href="@Url.Action("Index", "PracticeHome")" class="home-icon">Consultório</a>
         </li>
         @if (user.IsOwner)
         {
-            <li class="@(controllerName.Equals("configaccount") ? "youarehere" : "")">
-                <a href="@Url.Action("index", "configaccount")" class="config-icon">Configurações da conta</a>
+            <li class="@(this.IsController("ConfigAccount") ? "youarehere" : "")">
+                <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
+                    <span class="lock-account-config icon-lock" />
+                </a>
             </li>
         }
     </ul>
@@ -34,6 +37,7 @@
 
 @section Scripts {
     @RenderSection("Scripts", false)
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner, elementAction: LockElementActionType.SoftwareAreaAccess, cssClass: "lock-account-config"))
 }
 
 @section Title {
