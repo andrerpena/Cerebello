@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Cerebello.Model;
 using CerebelloWebRole.Models;
@@ -9,7 +10,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public DoctorHomeViewModel()
         {
-            this.NextAppointments = new List<AppointmentViewModel>();
+            this.TodaysAppointments = new List<AppointmentViewModel>();
         }
 
         /// <summary>
@@ -21,8 +22,13 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Next appointments
         /// </summary>
-        public List<AppointmentViewModel> NextAppointments { get; set; }
+        public List<AppointmentViewModel> TodaysAppointments { get; set; }
 
         public TypeGender Gender { get; set; }
+
+        /// <summary>
+        /// Next doctor's free time
+        /// </summary>
+        public Tuple<DateTime, DateTime> NextFreeTime { get; set; }
     }
 }

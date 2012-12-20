@@ -67,10 +67,19 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Creates a grid considering the current view Model as a type identifier
         /// </summary>
-        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int rowsPerPage, int? count = null)
+        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int rowsPerPage, int totalCount)
         {
-            return new Grid<TModel>(htmlHelper, model, rowsPerPage, count);
+            return new Grid<TModel>(htmlHelper, model, rowsPerPage, totalCount);
         }
+
+        /// <summary>
+        /// Creates a grid considering the current view Model as a type identifier
+        /// </summary>
+        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model)
+        {
+            return new Grid<TModel>(htmlHelper, model);
+        }
+
 
         /// <summary>
         /// Displays an inline message-box, containing arbitrary text.

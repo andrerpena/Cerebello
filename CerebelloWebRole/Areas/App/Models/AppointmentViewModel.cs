@@ -17,7 +17,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Data da consulta")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime Date { get; set; }
+        public DateTime LocalDateTime { get; set; }
 
         /// <summary>
         /// Local time converted start
@@ -35,7 +35,8 @@ namespace CerebelloWebRole.Areas.App.Models
         [TimeDataType]
         public string End { get; set; }
 
-        public String DateSpelled { get; set; }
+        [Display(Name = "Data da consulta")]
+        public String LocalDateTimeSpelled { get; set; }
 
         public bool PatientFirstAppointment { get; set; }
         
@@ -86,16 +87,18 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         public DateAndTimeValidationState DateAndTimeValidationState { get; set; }
 
-        [Display(Name = "Convênio/Forma de atendimento")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public int? HealthInsuranceId { get; set; }
-
         /// <summary>
         /// Appointment status
         /// </summary>
         [Display(Name="Status")]
         [EnumDataType(typeof(TypeAppointmentStatus))]
         public int Status { get; set; }
+
+        /// <summary>
+        /// The textual representation of the Status
+        /// </summary>
+        [Display(Name = "Status")]
+        public string StatusText { get; set; }
 
         [Display(Name = "Telefone fixo")]
         [UIHint("Phone")]
@@ -104,6 +107,34 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Telefone celular")]
         [UIHint("Phone")]
         public String PatientPhoneLand { get; set; }
+
+        [Display(Name = "Convênio/Forma de atendimento")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? HealthInsuranceId { get; set; }
+
+        /// <summary>
+        /// The health insurance textual represention. This is used only in viewing
+        /// </summary>
+        [Display(Name = "Convênio/Forma de atendimento")]
+        public string HealthInsuranceName { get; set; }
+
+        /// <summary>
+        /// A calculated property indicating whether the appointment is in the past
+        /// This property is only used in viewing
+        /// </summary>
+        public bool IsInThePast { get; set; }
+
+        /// <summary>
+        /// Whether the appointment should be happening now
+        /// This property is only used in viewing
+        /// </summary>
+        public bool IsNow { get; set; }
+
+        /// <summary>
+        /// A calculated property indicating whether the patient has arrived. PatientArrived will be true if the Status is set to 
+        /// accomplished even though it's still in the future. 
+        /// </summary>
+        public bool PatientArrived { get; set; }
     }
 
     public enum DateAndTimeValidationState

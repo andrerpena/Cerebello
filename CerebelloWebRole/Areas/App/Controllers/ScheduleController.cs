@@ -62,15 +62,37 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private static string GetAppointmentClass(Appointment a)
         {
+            var classes = new List<string>();
+            if (a.Status == (int)TypeAppointmentStatus.NotAccomplished)
+                classes.Add("not-accomplished");
+
+            switch ((TypeAppointmentStatus)a.Status)
+            {
+                case TypeAppointmentStatus.Accomplished:
+                    classes.Add("accomplished");
+                    break;
+                case TypeAppointmentStatus.NotAccomplished:
+                    classes.Add("not-accomplished");
+                    break;
+                case TypeAppointmentStatus.Undefined:
+                    break;
+                default:
+                    throw new Exception("Unsupported appointment status");
+            }
+
             switch ((TypeAppointment)a.Type)
             {
                 case TypeAppointment.GenericAppointment:
-                    return "generic-appointment";
+                    classes.Add("generic-appointment");
+                    break;
                 case TypeAppointment.MedicalAppointment:
-                    return "medical-appointment";
+                    classes.Add("medical-appointment");
+                    break;
                 default:
                     throw new Exception("Unsupported appointment type.");
             }
+
+            return string.Join(" ", classes);
         }
 
         public ActionResult Index()
@@ -158,7 +180,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     // If date has something, then start and end must also be null or empty.
                     this.ModelState.AddModelError<AppointmentViewModel>(
-                        m => m.Date,
+                        m => m.LocalDateTime,
                         "Ocorreu um erro nos parâmetros desta página.");
 
                     return this.View("Edit", new AppointmentViewModel());
@@ -235,11 +257,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel.PatientId = patientId;
             }
 
-            viewModel.Date = localDateAlone;
+            viewModel.LocalDateTime = localDateAlone;
             viewModel.Start = start;
             viewModel.End = end;
             viewModel.DoctorId = this.Doctor.Id;
-            viewModel.DateSpelled =
+            viewModel.LocalDateTimeSpelled =
                 DateTimeHelper.GetDayOfWeekAsString(localDateAlone) + ", "
                 + DateTimeHelper.ConvertToRelative(
                     localDateAlone,
@@ -326,11 +348,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var viewModel = new AppointmentViewModel()
             {
                 Id = appointment.Id,
-                Date = appointmentLocalStart.Date,
+                LocalDateTime = appointmentLocalStart.Date,
                 Start = appointmentLocalStart.ToString("HH:mm"),
                 End = appointmentLocalEnd.ToString("HH:mm"),
                 DoctorId = appointment.DoctorId,
-                DateSpelled = DateTimeHelper.GetDayOfWeekAsString(appointmentLocalStart.Date) + ", "
+                LocalDateTimeSpelled = DateTimeHelper.GetDayOfWeekAsString(appointmentLocalStart.Date) + ", "
                     + DateTimeHelper.ConvertToRelative(
                         appointmentLocalStart.Date,
                         localNow,
@@ -438,7 +460,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Verify if we're creating an appointment for the future with a Status set
             if(!string.IsNullOrEmpty(formModel.Start))
             {
-                if (formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start) > this.GetPracticeLocalNow())
+                if (formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start) > this.GetPracticeLocalNow())
                     if (formModel.Status != (int) TypeAppointmentStatus.Undefined)
                         ModelState.AddModelError<AppointmentViewModel>(
                             model => model.Status,
@@ -476,9 +498,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 appointment.Start = ConvertToUtcDateTime(this.Practice,
-                    formModel.Date + DateTimeHelper.GetTimeSpan(formModel.Start));
+                    formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start));
                 appointment.End = ConvertToUtcDateTime(this.Practice,
-                    formModel.Date + DateTimeHelper.GetTimeSpan(formModel.End));
+                    formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.End));
                 appointment.Status = (int) formModel.Status;
 
                 // Setting the appointment type and associated properties.
@@ -751,7 +773,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 var vm = new AppointmentViewModel
                 {
-                    Date = slot.Item1.Date,
+                    LocalDateTime = slot.Item1.Date,
                     Start = slot.Item1.ToString("HH:mm"),
                     End = slot.Item2.ToString("HH:mm"),
                 };
@@ -901,7 +923,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (isHolliday)
             {
                 inconsistencyMessages.AddModelError<AppointmentViewModel>(
-                    model => model.Date,
+                    model => model.LocalDateTime,
                     "O campo '{0}' é inválido. Este dia é um feriado.");
                 hasError = true;
             }
@@ -915,7 +937,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (isDayOff)
             {
                 inconsistencyMessages.AddModelError<AppointmentViewModel>(
-                    model => model.Date,
+                    model => model.LocalDateTime,
                     "O campo '{0}' é inválido. Este dia está no intervalo de dias sem expediente do médico.");
                 hasError = true;
             }
@@ -925,7 +947,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (localStartDate < localNow)
             {
                 inconsistencyMessages.AddModelError<AppointmentViewModel>(
-                    model => model.Date,
+                    model => model.LocalDateTime,
                     "A data e hora indicadas estão no passado.");
                 hasError = true;
             }
@@ -953,7 +975,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (string.IsNullOrEmpty(workdayStart) || string.IsNullOrEmpty(workdayEnd))
                 {
                     modelState.AddModelError<AppointmentViewModel>(
-                        model => model.Date,
+                        model => model.LocalDateTime,
                         "O campo '{0}' é inválido. Não existem configurações de horário para esta data.");
                     hasError = true;
                 }
@@ -970,7 +992,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         if (lunchIsAfter == lunchIsBefore)
                         {
                             inconsistencyMessages.AddModelError<AppointmentViewModel>(
-                                model => model.Date,
+                                model => model.LocalDateTime,
                                 "A data e hora marcada está no horário de almoço do médico.");
                             hasError = true;
                         }
@@ -1127,7 +1149,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 AppointmentViewModel viewModel = new AppointmentViewModel
                 {
-                    Date = localDateParsed,
+                    LocalDateTime = localDateParsed,
                     Start = start,
                     End = end,
                 };
@@ -1144,7 +1166,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private void DoDateAndTimeValidation(AppointmentViewModel viewModel, DateTime localNow, int? excludeAppointmentId)
         {
-            if (viewModel.Date != viewModel.Date.Date)
+            if (viewModel.LocalDateTime != viewModel.LocalDateTime.Date)
                 throw new ArgumentException("viewModel.Date must be the date alone, without time data.");
 
             ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
@@ -1153,15 +1175,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var isTimeValid = ValidateTime(
                     this.db,
                     this.Doctor,
-                    viewModel.Date,
+                    viewModel.LocalDateTime,
                     viewModel.Start,
                     viewModel.End,
                     this.ModelState,
                     inconsistencyMessages,
                     localNow);
 
-                var startTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.Start);
-                var endTimeLocal = viewModel.Date + DateTimeHelper.GetTimeSpan(viewModel.End);
+                var startTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.Start);
+                var endTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.End);
 
                 var startTimeUtc = ConvertToUtcDateTime(this.Practice, startTimeLocal);
                 var endTimeUtc = ConvertToUtcDateTime(this.Practice, endTimeLocal);
@@ -1170,7 +1192,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (!isTimeAvailable)
                 {
                     inconsistencyMessages.AddModelError(
-                        () => viewModel.Date,
+                        () => viewModel.LocalDateTime,
                         "A data e hora já está marcada para outro compromisso.");
                 }
             }
@@ -1178,7 +1200,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Setting the error message to display near the date and time configurations.
             var emptyErrors = new ModelErrorCollection();
             var errorsList = new List<ModelError>();
-            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
+            errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.LocalDateTime) ?? emptyErrors);
             errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
             errorsList.AddRange(this.ModelState.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
 
@@ -1189,7 +1211,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 DateAndTimeValidationState.Passed;
 
             // Continue filling error list with warnings.
-            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Date) ?? emptyErrors);
+            errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.LocalDateTime) ?? emptyErrors);
             errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.Start) ?? emptyErrors);
             errorsList.AddRange(inconsistencyMessages.GetPropertyErrors(() => viewModel.End) ?? emptyErrors);
             if (errorsList.Any())

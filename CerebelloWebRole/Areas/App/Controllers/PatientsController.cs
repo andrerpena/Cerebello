@@ -88,8 +88,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                                 {
                                                     PatientId = a.PatientId,
                                                     PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                                                    Date = ConvertToLocalDateTime(this.Practice, a.Start),
-                                                    DateSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
+                                                    LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
+                                                    LocalDateTimeSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
                                                 }).ToList();
             }
 
@@ -232,36 +232,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     LastRegisteredPatients = (from p in
                                                   (from Patient patient in this.db.Patients
                                                    where patient.DoctorId == this.Doctor.Id
-                                                   select patient).ToList()
+                                                   orderby patient.Person.CreatedOn descending 
+                                                   select patient).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
                                               select new PatientViewModel
                                                   {
                                                       Id = p.Id,
-                                                      // note: this date is going to be converted in the next statement.
-                                                      DateOfBirth = p.Person.DateOfBirth,
+                                                      DateOfBirth = ConvertToLocalDateTime(this.Practice, p.Person.DateOfBirth),
                                                       FullName = p.Person.FullName
                                                   }).ToList()
                 };
-
-            // Converting dates from the DB that are Utc, to local practice time-zone.
-            foreach (var eachPatient in model.LastRegisteredPatients)
-                eachPatient.DateOfBirth = ConvertToLocalDateTime(this.Practice, eachPatient.DateOfBirth);
-
-            var utcNow = this.GetUtcNow();
-
-            model.PatientAgeDistribution = (from p in db.Patients
-                                            where p.DoctorId == this.Doctor.Id
-                                            group p by new
-                                            {
-                                                p.Person.Gender,
-                                                Age = EntityFunctions.DiffYears(p.Person.DateOfBirth, utcNow)
-                                            } into g
-                                            select g).OrderBy(g => g.Key)
-                                            .Select(g => new PatientsIndexViewModel.ChartPatientAgeDistribution
-                                            {
-                                                Age = g.Key.Age,
-                                                Gender = g.Key.Gender,
-                                                Count = g.Count()
-                                            }).ToList();
 
             model.TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id);
             return View(model);

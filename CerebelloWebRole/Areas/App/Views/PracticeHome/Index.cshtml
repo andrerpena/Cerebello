@@ -18,12 +18,12 @@
     cardView.AddField(m => m.Email, wholeRow: true);
     cardView.AddField(m => m.SiteUrl, wholeRow: true);
 
-    var doctorsGrid = this.Html.CreateGrid(this.Model.Doctors, Constants.GRID_PAGE_SIZE);
+    var doctorsGrid = this.Html.CreateGrid(this.Model.Doctors);
     doctorsGrid.AddField(model => model.Name, @<text><a href="@Url.Action("index", "doctorhome", new { doctor = item.UrlIdentifier })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.Name</a></text>, cssClass: "icon-link-td");
     doctorsGrid.AddField(model => model.MedicalSpecialty);
     doctorsGrid.AddField(model => model.CRM, @<text>@item.CRM (@item.MedicalEntity)</text>);
 
-    var usersGrid = this.Html.CreateGrid(this.Model.Users, Constants.GRID_PAGE_SIZE);
+    var usersGrid = this.Html.CreateGrid(this.Model.Users);
     usersGrid.AddField(model => model.FullName, @<text><a href="@Url.Action("details", "users", new { id = item.Id })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FullName</a></text>, cssClass: "icon-link-td");
     usersGrid.AddField(model => model.UserRoles);
 }

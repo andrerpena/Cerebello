@@ -31,7 +31,7 @@ namespace CerebelloWebRole.Code
 
             // pego os atributes do FieldInfo do enum
             var customAttributes = enumField.GetCustomAttributes(typeof(DisplayAttribute), true);
-            if (customAttributes == null || customAttributes.Length == 0)
+            if (customAttributes.Length == 0)
                 return enumValueString;
             return (customAttributes[0] as DisplayAttribute).Name;
         }
@@ -40,7 +40,7 @@ namespace CerebelloWebRole.Code
         public static String GetText(int? enumValue, Type enumType)
         {
             if (enumValue == null)
-                return "";
+                return null;
 
             if (enumType == null) throw new ArgumentNullException("enumType");
             if (!enumType.IsEnum)

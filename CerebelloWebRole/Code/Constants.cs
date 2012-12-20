@@ -15,6 +15,8 @@
         /// </summary>
         public const int GRID_PAGE_SIZE = 20;
 
+        public const int LAST_REGISTERED_OBJECTS_COUNT = 10;
+
         /// <summary>
         /// The default password given to every new user.
         /// When loggin in with this password the user will be asked to change the password.

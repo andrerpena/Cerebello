@@ -57,7 +57,7 @@
         {
             <li>
                 <span class="date-and-time">
-                    <a href="@Url.Action("Index", "Schedule", new { y = appointment.Date.Year, m = appointment.Date.Month, d = appointment.Date.Day })">@appointment.DateSpelled</a>
+                    <a href="@Url.Action("Index", "Schedule", new { y = appointment.LocalDateTime.Year, m = appointment.LocalDateTime.Month, d = appointment.LocalDateTime.Day })">@appointment.LocalDateTimeSpelled</a>
                 </span>
             </li>
         }

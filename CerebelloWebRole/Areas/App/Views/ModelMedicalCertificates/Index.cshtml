@@ -10,7 +10,7 @@
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.Watermark = "Pesquisar pelo nome do atestado";
 
-    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE);
+    var grid = this.Html.CreateGrid(this.Model.Objects);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
 }
 @section Title {

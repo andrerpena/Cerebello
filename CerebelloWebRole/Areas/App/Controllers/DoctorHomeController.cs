@@ -18,39 +18,59 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var utcNow = this.GetUtcNow();
             var localNow = this.GetPracticeLocalNow();
 
-            Func<DateTime, string> getRelativeDate = s =>
-                {
-                    var result = s.ToShortDateString();
-                    result += ", " + DateTimeHelper.GetFormattedTime(s);
-                    result += ", " +
-                              DateTimeHelper.ConvertToRelative(s, localNow,
-                                                               DateTimeHelper.RelativeDateOptions.IncludeSuffixes |
-                                                               DateTimeHelper.RelativeDateOptions.IncludePrefixes |
-                                                               DateTimeHelper.RelativeDateOptions.ReplaceToday |
-                                                               DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+            // try to find an appointment that should be happening now
+            var appointmentsForNow =
+                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Start <= utcNow && a.End > utcNow && a.Type == (int)TypeAppointment.MedicalAppointment).ToList();
 
-                    return result;
+            // find today's appointments
+            var todayStart = utcNow.Date;
+            var todayEnd = todayStart.AddDays(1);
+
+            // returns whether the appointment is in the past
+            Func<Appointment, bool> getIsInThePast = a => ConvertToLocalDateTime(this.Practice, a.Start) < localNow;
+
+            Func<Appointment, bool> getIsNow = a => a.Start <= utcNow && a.End > utcNow;
+
+            // returns whether the patient has arrived
+            Func<Appointment, bool> getPatientArrived = a => !getIsInThePast(a) && a.Status == (int)TypeAppointmentStatus.Accomplished;
+
+            // returns the status text
+            Func<Appointment, string> getStatusText = a =>
+                {
+                    if (getPatientArrived(a))
+                        return "Paciente chegou";
+                    return EnumHelper.GetText(a.Status, typeof(TypeAppointmentStatus)) ??
+                           EnumHelper.GetText(TypeAppointmentStatus.Undefined);
                 };
 
-            // find next appointments
-            var nextAppoitments =
-                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Start > utcNow)
-                .Take(10).AsEnumerable().Select(a => new AppointmentViewModel()
+            var todaysAppointments =
+                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Start >= todayStart && a.Start < todayEnd && a.Type == (int)TypeAppointment.MedicalAppointment)
+                .AsEnumerable().Select(a => new AppointmentViewModel()
                 {
                     Description = a.Description,
                     PatientId = a.PatientId,
                     PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                    Date = ConvertToLocalDateTime(this.Practice, a.Start),
-                    DateSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
+                    LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
+                    LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)),
+                    HealthInsuranceId = a.HealthInsuranceId,
+                    HealthInsuranceName = a.HealthInsurance.Name,
+                    IsInThePast = getIsInThePast(a),
+                    IsNow = getIsNow(a),
+                    PatientArrived = getPatientArrived(a),
+                    Status = a.Status,
+                    StatusText = getStatusText(a)
                 }).ToList();
 
             var person = this.Doctor.Users.First().Person;
             var viewModel = new DoctorHomeViewModel()
                 {
                     DoctorName = person.FullName,
-                    NextAppointments = nextAppoitments,
+                    NextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(this.db, this.Doctor, localNow),
+                    TodaysAppointments = todaysAppointments,
                     Gender = (TypeGender)person.Gender,
                 };
+
+            this.ViewBag.PracticeLocalDate = localNow.ToShortDateString();
 
             return View(viewModel);
         }
