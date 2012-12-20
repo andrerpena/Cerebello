@@ -26,8 +26,7 @@
 
     // Separate functionality from object creation
     DropdownMenu.prototype = {
-
-        init: function () {
+        init: function() {
             var _this = this;
 
             // creates a new balloon for this dropdown
@@ -45,59 +44,68 @@
 
             for (var i = 0; i < _this.opts.items.length; i++) {
                 var $li = $("<li/>").appendTo($dropdownList);
-                
+
                 var $a;
                 if (_this.opts.items[i].href) {
                     $a = $("<a/>")
                         .appendTo($li)
                         .attr("href", _this.opts.items[i].href);
-                }
-                else {
+                } else {
                     $a = $("<span/>").appendTo($li);
                 }
-                
+
                 $a.attr("data-val-item-id", _this.opts.items[i].id);
-                
+
                 $a.text(_this.opts.items[i].text);
-                
+
                 if (_this.opts.items[i].cssClass)
                     $a.addClass(_this.opts.items[i].cssClass);
-            };
+            }
+            ;
 
-            $("a", $dropdownList).bind("click", function (e) {
+            $("a", $dropdownList).bind("click", function(e) {
                 _this.opts.onItemClicked($(e.target).attr("data-val-item-id"));
             });
 
-            _this.$el.bind("click", function (e) {
-                e.stopPropagation();
+            var showFunc, hideFunc;
+            showFunc = function(e) {
                 e.preventDefault();
                 $balloon.css("left", _this.$el.offset().left + _this.opts.offsetX);
                 $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + _this.opts.offsetY);
                 $balloon.show();
-                var handler = function (e2) {
-                    if (!$balloon.has(e2.target).length) {
+                $("html").click("click", hideFunc);
+                _this.$el.unbind("click", showFunc);
+            };
+
+            hideFunc = function(e2) {
+                var reallyHideFunc = function (e2) {
+                    if (!$(".balloon-content", $balloon).has(e2.target).length) {
                         $balloon.hide();
-                        $("html").unbind("click", handler);
+                        _this.$el.bind("click", showFunc);
+                        $("html").unbind("click", reallyHideFunc);
                     }
                 };
-                $("html").click("click", handler);
-            });
+                $("html").click("click", reallyHideFunc);
+                $("html").unbind("click", hideFunc);
+            };
 
-            $(window).resize(function () {
+            _this.$el.bind("click", showFunc);
+
+            $(window).resize(function() {
                 $balloon.hide();
             });
         }
     };
 
-    // The actual plugin
-    $.fn.dropdownMenu = function (options) {
-        if (this.length) {
-            this.each(function () {
-                var rev = new DropdownMenu(this, options);
-                rev.init();
-                $(this).data('dropdownMenu', rev);
-            });
-        }
-        return this;
-    };
+// The actual plugin
+$.fn.dropdownMenu = function (options) {
+    if (this.length) {
+        this.each(function () {
+            var rev = new DropdownMenu(this, options);
+            rev.init();
+            $(this).data('dropdownMenu', rev);
+        });
+    }
+    return this;
+};
 })(jQuery);
