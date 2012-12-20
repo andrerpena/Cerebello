@@ -67,9 +67,10 @@
                 _this.opts.onItemClicked($(e.target).attr("data-val-item-id"));
             });
 
+            _this.$el.bind("click", function (e) { e.preventDefault(); });
+
             var showFunc, hideFunc;
             showFunc = function(e) {
-                e.preventDefault();
                 $balloon.css("left", _this.$el.offset().left + _this.opts.offsetX);
                 $balloon.css("top", _this.$el.offset().top + _this.$el.outerHeight() + _this.opts.offsetY);
                 $balloon.show();
