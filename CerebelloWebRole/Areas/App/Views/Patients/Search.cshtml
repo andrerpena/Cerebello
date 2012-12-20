@@ -1,7 +1,8 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.PatientViewModel>
 @using CerebelloWebRole.Code
 @{
-    ViewBag.Title = "Search";
+    var title = "Pesquisa de pacientes";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
@@ -11,7 +12,7 @@
     grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
 }
 @section Title {
-Pesquisa de pacientes
+    @title
 }
 @section SideBar {
     <ul>

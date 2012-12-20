@@ -23,30 +23,30 @@
     cardView.AddField(m => m.Profissao);
 
     // creating details CardView
-    var cardView1 = Html.CreateCardView();
-    cardView1.AddField(m => m.UserRoles);
+    var cardViewRoles = Html.CreateCardView();
+    cardViewRoles.AddField(m => m.UserRoles);
 
     // creating details CardView
-    var cardView2 = Html.CreateCardView();
-    cardView2.AddField(m => m.MedicCRM);
-    cardView2.AddField(m => m.MedicalSpecialtyName);
-    cardView2.AddField(m => m.MedicalEntityName);
-    cardView2.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeEstadoBrasileiro))</text>);
+    var cardViewDoctor = Html.CreateCardView();
+    cardViewDoctor.AddField(m => m.MedicCRM);
+    cardViewDoctor.AddField(m => m.MedicalSpecialtyName);
+    cardViewDoctor.AddField(m => m.MedicalEntityName);
+    cardViewDoctor.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
 
     // creating details CardView
-    var cardView3 = Html.CreateCardView();
-    cardView3.AddField(m => m.Address.CEP);
-    cardView3.AddField(m => m.Address.StateProvince);
-    cardView3.AddField(m => m.Address.City);
-    cardView3.AddField(m => m.Address.Neighborhood);
-    cardView3.AddField(m => m.Address.Street);
-    cardView3.AddField(m => m.Address.Complement);
+    var cardViewAddress = Html.CreateCardView();
+    cardViewAddress.AddField(m => m.Address.CEP);
+    cardViewAddress.AddField(m => m.Address.StateProvince);
+    cardViewAddress.AddField(m => m.Address.City);
+    cardViewAddress.AddField(m => m.Address.Neighborhood);
+    cardViewAddress.AddField(m => m.Address.Street);
+    cardViewAddress.AddField(m => m.Address.Complement);
 
     // creating details CardView
-    var cardView4 = Html.CreateCardView();
-    cardView4.AddField(m => m.Email);
-    cardView4.AddField(m => m.PhoneCell);
-    cardView4.AddField(m => m.PhoneLand);
+    var cardViewContact = Html.CreateCardView();
+    cardViewContact.AddField(m => m.Email);
+    cardViewContact.AddField(m => m.PhoneCell);
+    cardViewContact.AddField(m => m.PhoneLand);
 }
 @section Title {
     @title
@@ -109,17 +109,17 @@
 @cardView.GetHtml()
 
 <h2>Funções deste usuário</h2>
-@cardView1.GetHtml()
+@cardViewRoles.GetHtml()
 
 @if (this.Model.IsDoctor)
 {
     <h2>Informações do médico</h2>
-    @cardView2.GetHtml()
+    @cardViewDoctor.GetHtml()
 }
 
 <h2>Endereço</h2>
-@cardView3.GetHtml()
+@cardViewAddress.GetHtml()
 
 <h2>Informações de contato</h2>
-@cardView4.GetHtml()
+@cardViewContact.GetHtml()
 

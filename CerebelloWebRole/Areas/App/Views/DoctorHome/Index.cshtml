@@ -5,6 +5,13 @@
     var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutDoctor.cshtml";
+
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(m => m.DoctorName, wholeRow: true);
+    cardView.AddField(m => m.MedicCrm);
+    cardView.AddField(m => m.MedicalSpecialtyName);
+    cardView.AddField(m => m.MedicalEntityName);
+    cardView.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
     
     Func<AppointmentViewModel, string> getCssClass = (vm) =>
         {
@@ -27,11 +34,17 @@
     todaysAppointmentGrid.AddField(model => model.LocalDateTimeSpelled, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new {y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day})">@item.LocalDateTimeSpelled</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.HealthInsuranceId, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "HealthInsurance", new {id = item.HealthInsuranceId})">@item.HealthInsuranceName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)">@item.StatusText</span></text>);
+
+    var nextGenericAppointments = this.Html.CreateGrid(this.Model.NextGenericAppointments);
+    nextGenericAppointments.AddField(model => model.Description);
+    nextGenericAppointments.AddField(model => model.LocalDateTimeSpelled, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new {y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day})">@item.LocalDateTimeSpelled</a></span></text>);
 }
 
 @section Title {
     @title
 }
+
+@cardView.GetHtml()
 
 <div class="widget">
     <h2>Consultas agendadas para hoje (@this.ViewBag.PracticeLocalDate)
@@ -39,3 +52,7 @@
     @todaysAppointmentGrid.GetHtml()
 </div>
 
+<div class="widget">
+    <h2>Próximos compromissos (Exibindo 5)</h2>
+    @nextGenericAppointments.GetHtml()
+</div>

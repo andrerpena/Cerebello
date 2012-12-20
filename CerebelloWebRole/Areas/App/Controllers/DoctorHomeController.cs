@@ -18,10 +18,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var utcNow = this.GetUtcNow();
             var localNow = this.GetPracticeLocalNow();
 
-            // try to find an appointment that should be happening now
-            var appointmentsForNow =
-                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Start <= utcNow && a.End > utcNow && a.Type == (int)TypeAppointment.MedicalAppointment).ToList();
-
             // find today's appointments
             var todayStart = utcNow.Date;
             var todayEnd = todayStart.AddDays(1);
@@ -61,13 +57,35 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     StatusText = getStatusText(a)
                 }).ToList();
 
-            var person = this.Doctor.Users.First().Person;
+            var nextGenericAppointments =
+                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Type == (int) TypeAppointment.GenericAppointment &&  a.Start > utcNow).OrderBy(a => a.Start).Take(5)
+                    .AsEnumerable()
+                    .Select(
+                        a => new AppointmentViewModel()
+                            {
+                                Description = a.Description,
+                                LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start))
+                            }).ToList();
+
+            var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, this.Doctor);
+            var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, this.Doctor);
+
             var viewModel = new DoctorHomeViewModel()
                 {
-                    DoctorName = person.FullName,
+                    DoctorName = this.Doctor.Users.First().Person.FullName,
+                    Gender = (TypeGender) this.Doctor.Users.First().Person.Gender,
                     NextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(this.db, this.Doctor, localNow),
                     TodaysAppointments = todaysAppointments,
-                    Gender = (TypeGender)person.Gender,
+                    NextGenericAppointments = nextGenericAppointments,
+                    MedicCrm = this.Doctor.CRM,
+                    MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?)null,
+                    MedicalSpecialtyName = medicalSpecialty != null ? medicalSpecialty.Name : null,
+                    MedicalEntityId = medicalEntity != null ? medicalEntity.Id : (int?)null,
+                    MedicalEntityName = medicalEntity != null ? medicalEntity.Name : null,
+                    MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
+                    typeof(TypeEstadoBrasileiro),
+                    this.Doctor.MedicalEntityJurisdiction)
                 };
 
             this.ViewBag.PracticeLocalDate = localNow.ToShortDateString();
