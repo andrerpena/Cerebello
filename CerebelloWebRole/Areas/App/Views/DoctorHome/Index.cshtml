@@ -33,7 +33,7 @@
     todaysAppointmentGrid.AddField(model => model.PatientName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new {id = item.PatientId})">@item.PatientName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.LocalDateTimeSpelled, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new {y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day})">@item.LocalDateTimeSpelled</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.HealthInsuranceId, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "HealthInsurance", new {id = item.HealthInsuranceId})">@item.HealthInsuranceName</a></span></text>);
-    todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)">@item.StatusText</span></text>);
+    todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)"><a class="status" href="#" item-id="@item.Id">@item.StatusText</a></span></text>);
 
     var nextGenericAppointments = this.Html.CreateGrid(this.Model.NextGenericAppointments);
     nextGenericAppointments.AddField(model => model.Description);
@@ -42,6 +42,30 @@
 
 @section Title {
     @title
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $("a.status").click(function(e) {
+                e.preventDefault();
+
+                var $el = $(this);
+
+                window.appointmentModal = $.modal({
+                    url: "@Url.Action("Edit", "Schedule")",
+                    title: "Editar consulta",
+                    data: {
+                        id: $el.attr("item-id")
+                    },
+                    width: 480,
+                    height: 200
+                });
+
+            });
+        })
+    </script>
 }
 
 @cardView.GetHtml()
