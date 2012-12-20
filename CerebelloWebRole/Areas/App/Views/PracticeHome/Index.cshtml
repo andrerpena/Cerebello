@@ -23,7 +23,7 @@
     doctorsGrid.AddField(model => model.MedicalSpecialty);
     doctorsGrid.AddField(model => model.CRM, @<text>@item.CRM (@item.MedicalEntity)</text>);
 
-    var usersGrid = this.Html.CreateGrid(this.Model.Users, Constants.GRID_PAGE_SIZE);
+    var usersGrid = this.Html.CreateGrid(this.Model.Users);
     usersGrid.AddField(model => model.FullName, @<text><a href="@Url.Action("Details", "Users", new { id = item.Id })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FullName</a></text>, cssClass: "icon-link-td");
     usersGrid.AddField(model => model.UserRoles);
 }
