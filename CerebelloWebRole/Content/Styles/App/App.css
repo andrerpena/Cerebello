@@ -30,7 +30,7 @@ table {
 }
 
 h2 {
-    border-bottom: 1px solid #E5E5E5;
+    border-bottom: 1px solid #D7D7D7;
     font-weight: bold;
     margin-bottom: 8px;
     padding: 2px 0;
@@ -98,8 +98,8 @@ p {
 }
 
 hr {
-    background-color: #F5F5F5;
-    border: 1px solid #F5F5F5;
+    background-color: #F1F1F1;
+    border: 1px solid #F1F1F1;
     color: white;
     margin: 0;
 }
@@ -212,7 +212,7 @@ input, textarea {
     -moz-border-top-colors: none;
     border: none;
     margin: 1.0em 0px 1.0em 0;
-    border-color: #E5E5E5 -moz-use-text-color #FFFFFF;
+    border-color: #d7d7d7 -moz-use-text-color #FFFFFF;
     border-top: 1px solid #DAD8D4;
     border-bottom: 1px solid white;
     border-left: medium none;
@@ -302,8 +302,8 @@ input, textarea {
 }
 
     .document .document-header {
-        background: none repeat scroll 0 0 #F5F5F5;
-        border-bottom: 1px solid #E7E7E7;
+        background: none repeat scroll 0 0 #F1F1F1;
+        border-bottom: 1px solid #D7D7D7;
         margin: 0;
         padding: 10px 15px;
     }
@@ -326,7 +326,7 @@ input, textarea {
     }
 
     .document .document-body .document-side-column {
-        border-left: 1px solid #E5E5E5;
+        border-left: 1px solid #D7D7D7;
         padding: 15px;
         position: absolute;
         right: 0;
@@ -405,8 +405,8 @@ fieldset {
 }
 
 #app-header {
-    background: none repeat scroll 0 0 #F5F5F5;
-    border-bottom: 1px solid #DADEE5;
+    background: none repeat scroll 0 0 #F1F1F1;
+    border-bottom: 1px solid #D7D7D7;
     color: white;
     margin-bottom: 15px;
     padding: 0 10px;
@@ -864,7 +864,7 @@ a.gotoPractice {
 /* configurations */
 
 ul.dayoff-list > li {
-    background-color: #F5F5F5;
+    background-color: #F1F1F1;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: black;
     margin-top: 10px;
@@ -921,7 +921,7 @@ ul.dayoff-list .delete {
 }
 
     .appointment-panel-wrapper .appointment-panel {
-        background-color: #F5F5F5;
+        background-color: #F1F1F1;
         border: 1px solid rgba(0, 0, 0, 0.05);
         margin: 0 0 10px;
         padding: 10px 10px 0;
@@ -943,7 +943,7 @@ ul.dayoff-list .delete {
 }
 
 .medical-appointment-panel {
-    background-color: #F5F5F5;
+    background-color: #F1F1F1;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: black;
     margin-bottom: 10px;
@@ -966,7 +966,7 @@ ul.dayoff-list .delete {
 }
 
     .new-medical-appointment-panel-wrapper .medical-appointment-details-panel {
-        background-color: #F5F5F5;
+        background-color: #F1F1F1;
         border: 1px solid rgba(0, 0, 0, 0.05);
         margin-bottom: 10px;
         padding: 10px 10px 0;
@@ -986,7 +986,7 @@ ul.dayoff-list .delete {
         }
 
             .new-medical-appointment-panel p.selected span {
-                background-color: #F5F5F5;
+                background-color: #F1F1F1;
                 border-left: 1px solid #E1E1E1;
                 border-right: 1px solid #E1E1E1;
                 border-top: 1px solid #E1E1E1;
@@ -1306,15 +1306,15 @@ div.message-help {
 
 /* calendar */
 .generic-appointment.fc-event-skin, .generic-appointment .fc-event-skin {
-    background-color: #F7F8D8;
-    border-color: #E1E1B0;
+    background-color: #B2E0B2;
+    border-color: #76BA76;
     color: #252525;
 }
 
 
 .medical-appointment.fc-event-skin, .medical-appointment .fc-event-skin {
-    border-color: #DDE3F1;
-    background-color: #F0F3F5;
+    background-color: #E1E6EF;
+    border-color: #C4CCDE;
     color: #252525;
 }
 
