@@ -458,10 +458,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // Verify if we're creating an appointment for the future with a Status set
-            if(!string.IsNullOrEmpty(formModel.Start))
+            if (!string.IsNullOrEmpty(formModel.Start))
             {
                 if (formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start) > this.GetPracticeLocalNow())
-                    if (formModel.Status != (int) TypeAppointmentStatus.Undefined)
+                    if (formModel.Status != (int)TypeAppointmentStatus.Undefined)
                         ModelState.AddModelError<AppointmentViewModel>(
                             model => model.Status,
                             "Não é permitido determinar o Status para consultas agendadas para o futuro");
@@ -501,7 +501,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start));
                 appointment.End = ConvertToUtcDateTime(this.Practice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.End));
-                appointment.Status = (int) formModel.Status;
+                appointment.Status = (int)formModel.Status;
 
                 // Setting the appointment type and associated properties.
                 // - generic appointment: has description, date and time interval
@@ -511,47 +511,41 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     appointment.Description = formModel.Description;
                     appointment.Type = (int)TypeAppointment.GenericAppointment;
                 }
-                else if (formModel.PatientFirstAppointment)
-                {
-                    appointment.Type = (int)TypeAppointment.MedicalAppointment;
-
-                    var patient = new Patient
-                        {
-                            Person =
-                                new Person
-                                    {
-                                        FullName = formModel.PatientName,
-                                        Gender = (short)formModel.PatientGender,
-                                        DateOfBirth =
-                                            ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
-                                        PhoneCell = formModel.PatientPhoneCell,
-                                        PhoneLand = formModel.PatientPhoneLand,
-                                        CreatedOn = this.GetUtcNow(),
-                                        PracticeId = this.DbUser.PracticeId
-                                    },
-                            Doctor = this.Doctor,
-                            PracticeId = this.DbUser.PracticeId,
-                        };
-
-                    patient.Person.Email = formModel.PatientEmail;
-                    patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail);
-
-                    patient.LastUsedHealthInsuranceId = formModel.HealthInsuranceId;
-
-                    appointment.Patient = patient;
-                }
                 else
                 {
                     appointment.Type = (int)TypeAppointment.MedicalAppointment;
+                    appointment.HealthInsuranceId = formModel.HealthInsuranceId;
 
-                    var patient = this.db.Patients.Single(p => p.Id == formModel.PatientId);
-                    patient.LastUsedHealthInsuranceId = formModel.HealthInsuranceId;
-
-                    appointment.PatientId = formModel.PatientId.Value;
+                    if (formModel.PatientFirstAppointment)
+                    {
+                        appointment.Patient = new Patient
+                            {
+                                Person =
+                                    new Person
+                                        {
+                                            FullName = formModel.PatientName,
+                                            Gender = (short)formModel.PatientGender,
+                                            DateOfBirth =
+                                                ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
+                                            PhoneCell = formModel.PatientPhoneCell,
+                                            PhoneLand = formModel.PatientPhoneLand,
+                                            CreatedOn = this.GetUtcNow(),
+                                            PracticeId = this.DbUser.PracticeId,
+                                            Email = formModel.PatientEmail,
+                                            EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail)
+                                        },
+                                LastUsedHealthInsuranceId = formModel.HealthInsuranceId,
+                                Doctor = this.Doctor,
+                                PracticeId = this.DbUser.PracticeId,
+                            };
+                    }
+                    else
+                    {
+                        var patient = this.db.Patients.Single(p => p.Id == formModel.PatientId);
+                        patient.LastUsedHealthInsuranceId = formModel.HealthInsuranceId;
+                        appointment.PatientId = formModel.PatientId.Value;
+                    }
                 }
-
-                Debug.Assert(formModel.HealthInsuranceId != null, "formModel.HealthInsuranceId must not be null");
-                appointment.HealthInsuranceId = (int)formModel.HealthInsuranceId;
 
                 // Returning a JSON result, indicating what has happened.
                 try

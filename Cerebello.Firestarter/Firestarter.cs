@@ -2275,7 +2275,6 @@ GO
                                 End = nextFreeTime.Item2.ToUniversalTime(),
                                 Type = (int)TypeAppointment.GenericAppointment,
                                 // I should not be forced to put a healthinsurance because it's a generic appointment
-                                HealthInsurance = helthInsurances[0],
                                 Description = "Levar o cachorro ao veterinário",
                                 PracticeId = doctor.PracticeId
                             });

@@ -35,7 +35,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Anamnese_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Anamnese), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_SYS_Medicine_SYS_Laboratory", "SYS_Laboratory", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.SYS_Laboratory), "SYS_Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.SYS_Medicine), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "SYS_MedicineActiveIngredient", "SYS_ActiveIngredient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.SYS_ActiveIngredient), "SYS_Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.SYS_Medicine))]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Patient), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_CFG_Schedule_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "CFG_Schedule", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.CFG_Schedule), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "SYS_MedicineLeaflet", "SYS_Leaflet", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.SYS_Leaflet), "SYS_Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.SYS_Medicine))]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "MedicineLeaflet", "Leaflet", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Leaflet), "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Medicine))]
@@ -64,7 +64,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ActiveIngredient_Medicine", "Medicine", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Medicine), "MedicineActiveIngredient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.MedicineActiveIngredient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_Address", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "PersonAddress", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Address), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Person))]
@@ -2146,30 +2146,26 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="createdById">Initial value of the CreatedById property.</param>
         /// <param name="doctorId">Initial value of the DoctorId property.</param>
-        /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="start">Initial value of the Start property.</param>
         /// <param name="end">Initial value of the End property.</param>
         /// <param name="type">Initial value of the Type property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="isPolled">Initial value of the IsPolled property.</param>
-        /// <param name="healthInsuranceId">Initial value of the HealthInsuranceId property.</param>
         /// <param name="reminderEmailSent">Initial value of the ReminderEmailSent property.</param>
-        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.Int32 patientId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean isPolled, global::System.Int32 healthInsuranceId, global::System.Boolean reminderEmailSent)
+        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean isPolled, global::System.Boolean reminderEmailSent)
         {
             Appointment appointment = new Appointment();
             appointment.Id = id;
             appointment.CreatedOn = createdOn;
             appointment.CreatedById = createdById;
             appointment.DoctorId = doctorId;
-            appointment.PatientId = patientId;
             appointment.Start = start;
             appointment.End = end;
             appointment.Type = type;
             appointment.PracticeId = practiceId;
             appointment.Status = status;
             appointment.IsPolled = isPolled;
-            appointment.HealthInsuranceId = healthInsuranceId;
             appointment.ReminderEmailSent = reminderEmailSent;
             return appointment;
         }
@@ -2280,9 +2276,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Int32 PatientId
+        public Nullable<global::System.Int32> PatientId
         {
             get
             {
@@ -2297,8 +2293,8 @@ namespace Cerebello.Model
                 OnPatientIdChanged();
             }
         }
-        private global::System.Int32 _PatientId;
-        partial void OnPatientIdChanging(global::System.Int32 value);
+        private Nullable<global::System.Int32> _PatientId;
+        partial void OnPatientIdChanging(Nullable<global::System.Int32> value);
         partial void OnPatientIdChanged();
     
         /// <summary>
@@ -2472,9 +2468,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Int32 HealthInsuranceId
+        public Nullable<global::System.Int32> HealthInsuranceId
         {
             get
             {
@@ -2489,8 +2485,8 @@ namespace Cerebello.Model
                 OnHealthInsuranceIdChanged();
             }
         }
-        private global::System.Int32 _HealthInsuranceId;
-        partial void OnHealthInsuranceIdChanging(global::System.Int32 value);
+        private Nullable<global::System.Int32> _HealthInsuranceId;
+        partial void OnHealthInsuranceIdChanging(Nullable<global::System.Int32> value);
         partial void OnHealthInsuranceIdChanged();
     
         /// <summary>

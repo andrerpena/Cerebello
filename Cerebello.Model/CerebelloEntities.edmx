@@ -78,6 +78,14 @@
             <End Role="HealthInsurance" EntitySet="HealthInsurance" />
             <End Role="Appointment" EntitySet="Appointment" />
           </AssociationSet>
+          <AssociationSet Name="FK_Appointment_HealthInsurance1" Association="cerebelloModel.Store.FK_Appointment_HealthInsurance1">
+            <End Role="HealthInsurance" EntitySet="HealthInsurance" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Patient" Association="cerebelloModel.Store.FK_Appointment_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
           <AssociationSet Name="FK_Appointment_User" Association="cerebelloModel.Store.FK_Appointment_User">
             <End Role="User" EntitySet="User" />
             <End Role="Appointment" EntitySet="Appointment" />
@@ -304,13 +312,13 @@
           <Property Name="Start" Type="datetime" Nullable="false" />
           <Property Name="End" Type="datetime" Nullable="false" />
           <Property Name="DoctorId" Type="int" Nullable="false" />
-          <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="PatientId" Type="int" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="IsPolled" Type="bit" Nullable="false" />
-          <Property Name="HealthInsuranceId" Type="int" Nullable="false" />
+          <Property Name="HealthInsuranceId" Type="int" />
           <Property Name="ReminderEmailSent" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CFG_DayOff">
@@ -859,7 +867,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Appointment_HealthInsurance">
-          <End Role="HealthInsurance" Type="cerebelloModel.Store.HealthInsurance" Multiplicity="1" />
+          <End Role="HealthInsurance" Type="cerebelloModel.Store.HealthInsurance" Multiplicity="0..1" />
           <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="HealthInsurance">
@@ -867,6 +875,30 @@
             </Principal>
             <Dependent Role="Appointment">
               <PropertyRef Name="HealthInsuranceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_HealthInsurance1">
+          <End Role="HealthInsurance" Type="cerebelloModel.Store.HealthInsurance" Multiplicity="0..1" />
+          <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HealthInsurance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="HealthInsuranceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="0..1" />
+          <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="PatientId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1661,7 +1693,7 @@
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedById" Type="Int32" Nullable="false" />
           <Property Name="DoctorId" Type="Int32" Nullable="false" />
-          <Property Name="PatientId" Type="Int32" Nullable="false" />
+          <Property Name="PatientId" Type="Int32" />
           <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_Appointment_Doctor" FromRole="Appointment" ToRole="Doctor" />
           <NavigationProperty Name="CreatedBy" Relationship="Cerebello.Model.FK_Appointment_User" FromRole="Appointment" ToRole="User" />
           <Property Type="DateTime" Name="Start" Nullable="false" Precision="3" />
@@ -1672,7 +1704,7 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="Int32" Name="Status" Nullable="false" />
           <Property Type="Boolean" Name="IsPolled" Nullable="false" />
-          <Property Type="Int32" Name="HealthInsuranceId" Nullable="false" />
+          <Property Type="Int32" Name="HealthInsuranceId" />
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Appointment_HealthInsurance" FromRole="Appointment" ToRole="HealthInsurance" />
           <Property Type="Boolean" Name="ReminderEmailSent" Nullable="false" />
         </EntityType>
@@ -2108,7 +2140,7 @@
           <End Type="Cerebello.Model.SYS_Medicine" Role="SYS_Medicine" Multiplicity="*" />
         </Association>
         <Association Name="FK_Appointment_Patient">
-          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="0..1" />
           <End Type="Cerebello.Model.Appointment" Role="Appointment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Patient">
@@ -2772,7 +2804,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Appointment_HealthInsurance">
-          <End Type="Cerebello.Model.HealthInsurance" Role="HealthInsurance" Multiplicity="1" />
+          <End Type="Cerebello.Model.HealthInsurance" Role="HealthInsurance" Multiplicity="0..1" />
           <End Type="Cerebello.Model.Appointment" Role="Appointment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="HealthInsurance">
@@ -3394,7 +3426,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="52">
+      <Diagram Name="CerebelloEntities" ZoomLevel="116">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="36.625" PointY="1" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="11.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="39.125" PointY="16.625" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />
