@@ -76,7 +76,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     WorkdayStartTime = config.SundayWorkdayStartTime,
                     WorkdayEndTime = config.SundayWorkdayEndTime,
                     LunchStartTime = config.SundayLunchStartTime,
-                    LunchEndTime = config.SundayWorkdayEndTime
+                    LunchEndTime = config.SundayLunchEndTime
                 });
 
                 viewModel.DaysOfWeek.Add(new ConfigScheduleViewModel.DayOfWeek()
