@@ -82,13 +82,13 @@
             });
             
             // shows the new-appointment notifications
-            @foreach (var appointment in ((List<NewAppointmentNotificationData>) this.ViewBag.AlreadyPolledAppointments))
+            @foreach (var appointment in ((List<NewAppointmentNotificationData>)this.ViewBag.AlreadyPolledAppointments))
             {
                 @:$.notifyNewAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-            }
+                                    }
 
             // shows the generic database notifications
-            @foreach (var notification in ((List<NotificationData>) this.ViewBag.AlreadyPolledNotifications))
+            @foreach (var notification in ((List<NotificationData>)this.ViewBag.AlreadyPolledNotifications))
             {
                 @:$.notifyDb('@notification.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(notification))));
             }

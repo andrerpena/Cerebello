@@ -35,7 +35,7 @@
                 data: {
                     timestamp: $._longPollingData.lastFetchTimeStamp
                 },
-                success: function(data, s) {
+                success: function (data, s) {
                     $._longPollingData.lastFetchTimeStamp = data.Timestamp;
                     for (var i = 0; i < data.Events.length; i++) {
                         var event = data.Events[i];
@@ -45,20 +45,26 @@
                             var listener = $._longPollingData.listeners[event.ProviderName].success;
                             try {
                                 listener(event);
-                            } catch(ex) {
+                            } catch (ex) {
                                 throw "Long polling listener triggered an Exception: " + ex;
                             }
                         }
                     };
-                    doLongPollingRequest();
+
+                    setTimeout(function () {
+                        doLongPollingRequest();
+                    }, 1000);
                 },
-                error: function() {
+                error: function () {
                     for (var providerName in $._longPollingData.listeners) {
                         if ($._longPollingData.listeners[providerName].error)
                             $._longPollingData.listeners[providerName].error.apply(this, arguments);
                     };
+
                     // an error ocurred but life must go on
-                    setTimeout(doLongPollingRequest, 10000);
+                    setTimeout(function () {
+                        doLongPollingRequest();
+                    }, 1000);
                 }
             });
         }
