@@ -53,7 +53,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 PatientId = a.PatientId,
                                 PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
                                 LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
-                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)),
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.End)),
                                 HealthInsuranceId = a.HealthInsuranceId,
                                 HealthInsuranceName = a.HealthInsurance.Name,
                                 IsInThePast = getIsInThePast(a),
@@ -64,14 +64,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             }).ToList();
 
             var nextGenericAppointments =
-                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Type == (int) TypeAppointment.GenericAppointment &&  a.Start > utcNow).OrderBy(a => a.Start).Take(5)
+                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Type == (int)TypeAppointment.GenericAppointment && ((a.Start < utcNow && a.End > utcNow) || a.Start > utcNow)).OrderBy(a => a.Start).Take(5)
                     .AsEnumerable()
                     .Select(
                         a => new AppointmentViewModel()
                             {
                                 Description = a.Description,
                                 LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
-                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start))
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.End)),
+                                IsNow = getIsNow(a)
                             }).ToList();
 
             var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, this.Doctor);
@@ -80,7 +81,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var viewModel = new DoctorHomeViewModel()
                 {
                     DoctorName = this.Doctor.Users.First().Person.FullName,
-                    Gender = (TypeGender) this.Doctor.Users.First().Person.Gender,
+                    Gender = (TypeGender)this.Doctor.Users.First().Person.Gender,
                     NextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(this.db, this.Doctor, localNow),
                     TodaysAppointments = todaysAppointments,
                     NextGenericAppointments = nextGenericAppointments,
