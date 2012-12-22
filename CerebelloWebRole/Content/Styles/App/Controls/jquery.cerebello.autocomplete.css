@@ -1,5 +1,5 @@
 ﻿.autocomplete.disabled {
-    background-color: #F1F1F1;
+    background-color: #EEEEEE;
 }
 
 .autocomplete {
@@ -60,13 +60,13 @@
 }
 
     .autocomplete-dropdown-wrapper table tr:hover {
-        background-color: #F1F1F1;
+        background-color: #EEEEEE;
         color: #060606;
         cursor: pointer;
     }
 
     .autocomplete-dropdown-wrapper table thead tr td {
-        background-color: #F1F1F1;
+        background-color: #EEEEEE;
         padding: 5px;
     }
 

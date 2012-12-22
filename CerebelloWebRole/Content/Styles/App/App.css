@@ -98,8 +98,8 @@ p {
 }
 
 hr {
-    background-color: #F1F1F1;
-    border: 1px solid #F1F1F1;
+    background-color: #EEEEEE;
+    border: 1px solid #EEEEEE;
     color: white;
     margin: 0;
 }
@@ -305,7 +305,7 @@ input, textarea {
 }
 
     .document .document-header {
-        background: none repeat scroll 0 0 #F1F1F1;
+        background: none repeat scroll 0 0 #EEEEEE;
         border-bottom: 1px solid #D7D7D7;
         margin: 0;
         padding: 10px 15px;
@@ -408,7 +408,7 @@ fieldset {
 }
 
 #app-header {
-    background: none repeat scroll 0 0 #F1F1F1;
+    background: none repeat scroll 0 0 #EEEEEE;
     border-bottom: 1px solid #D7D7D7;
     color: white;
     margin-bottom: 15px;
@@ -867,7 +867,7 @@ a.gotoPractice {
 /* configurations */
 
 ul.dayoff-list > li {
-    background-color: #F1F1F1;
+    background-color: #EEEEEE;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: black;
     margin-top: 10px;
@@ -924,7 +924,7 @@ ul.dayoff-list .delete {
 }
 
     .appointment-panel-wrapper .appointment-panel {
-        background-color: #F1F1F1;
+        background-color: #EEEEEE;
         border: 1px solid rgba(0, 0, 0, 0.05);
         margin: 0 0 10px;
         padding: 10px 10px 0;
@@ -946,7 +946,7 @@ ul.dayoff-list .delete {
 }
 
 .medical-appointment-panel {
-    background-color: #F1F1F1;
+    background-color: #EEEEEE;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: black;
     margin-bottom: 10px;
@@ -969,7 +969,7 @@ ul.dayoff-list .delete {
 }
 
     .new-medical-appointment-panel-wrapper .medical-appointment-details-panel {
-        background-color: #F1F1F1;
+        background-color: #EEEEEE;
         border: 1px solid rgba(0, 0, 0, 0.05);
         margin-bottom: 10px;
         padding: 10px 10px 0;
@@ -989,7 +989,7 @@ ul.dayoff-list .delete {
         }
 
             .new-medical-appointment-panel p.selected span {
-                background-color: #F1F1F1;
+                background-color: #EEEEEE;
                 border-left: 1px solid #E1E1E1;
                 border-right: 1px solid #E1E1E1;
                 border-top: 1px solid #E1E1E1;
@@ -1096,7 +1096,7 @@ a.loading {
 }
 
 a.inline-link {
-    color: #8C9BAA;
+    color: #4A7099;
     display: inline-block;
     font-size: 11px;
     margin: 0 10px 0 0;
@@ -1308,21 +1308,21 @@ div.message-help {
 }
 
 /* calendar */
-.generic-appointment.fc-event-skin, .generic-appointment .fc-event-skin {
+.fc-event.medical-appointment, .fc-event.medical-appointment .fc-event-skin {
+    background-color: #CFD7E7;
+    border-color: #BCC9E4;
+    color: #252525;
+}
+
+.fc-event.generic-appointment, .fc-event.generic-appointment .fc-event-skin {
     background-color: #B2E0B2;
-    border-color: #76BA76;
+    border-color: #86C685;
     color: #252525;
 }
 
-
-.medical-appointment.fc-event-skin, .medical-appointment .fc-event-skin {
-    background-color: #E1E6EF;
-    border-color: #C4CCDE;
-    color: #252525;
-}
-
-.medical-appointment.fc-event-skin, .medical-appointment.not-accomplished .fc-event-skin {
-    background-color: #FEEAEA !important;
+.fc-event.medical-appointment.not-accomplished, .fc-event.medical-appointment.not-accomplished .fc-event-skin{
+    background-color: #FFAEAE !important;
+    border-color: #FF8C8C !important;
 }
 
 /* add new (global) */
