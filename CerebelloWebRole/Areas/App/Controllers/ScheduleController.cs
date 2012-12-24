@@ -74,6 +74,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 case TypeAppointmentStatus.NotAccomplished:
                     classes.Add("not-accomplished");
                     break;
+                case TypeAppointmentStatus.Discarded:
                 case TypeAppointmentStatus.Undefined:
                     break;
                 default:

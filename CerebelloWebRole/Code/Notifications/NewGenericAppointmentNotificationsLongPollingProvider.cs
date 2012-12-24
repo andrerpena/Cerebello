@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Notifications
 {
-    public class NewAppointmentNotificationsLongPollingProvider : LongPollingProvider
+    public class NewGenericAppointmentNotificationsLongPollingProvider : LongPollingProvider
     {
         private Func<DateTime> utcNowGetter = null;
 
@@ -33,7 +33,7 @@ namespace CerebelloWebRole.Code.Notifications
                 db.SetCurrentUserById(userId);
 
                 var result = new List<LongPollingEvent>();
-                var notificationData = NewAppointmentNotificationsHelper.GetNewAppointmentNotifications(
+                var notificationData = NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(
                     db, practiceId, userId, this.utcNowGetter, controller.Url, false);
 
                 if (notificationData.Any())
@@ -42,7 +42,7 @@ namespace CerebelloWebRole.Code.Notifications
                         result.Add(
                             new LongPollingEvent()
                                 {
-                                    ProviderName = "new-appointment",
+                                    ProviderName = "new-generic-appointment",
                                     EventKey = notification.NotificationClientId,
                                     Data = notification
                                 });

@@ -96,9 +96,12 @@ namespace CerebelloWebRole.Code
             this.ViewBag.LocalNow = this.GetPracticeLocalNow();
 
             // discover the appointments that have already been polled and sent to the client
-            this.ViewBag.AlreadyPolledAppointments =
-                NewAppointmentNotificationsHelper.GetNewAppointmentNotifications(this.db, this.Practice.Id, this.DbUser.Id,
+            this.ViewBag.AlreadyPolledMedicalAppointments =
+                NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(this.db, this.Practice.Id, this.DbUser.Id,
                                                                                  this.UtcNowGetter, this.Url, true);
+            this.ViewBag.AlreadyPolledGenericAppointments =
+                NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(this.db, this.Practice.Id, this.DbUser.Id,
+                                                                                this.UtcNowGetter, this.Url, true);
 
             // discover the notifications that have already been polled and sent to to the client
             this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(this.db, this.DbUser.Id, this, true);

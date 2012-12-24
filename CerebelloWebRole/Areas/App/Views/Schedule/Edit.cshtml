@@ -211,12 +211,12 @@
             }
         });
 
-        $("#Date").mask("99/99/9999");
+        $("#LocalDateTime").mask("99/99/9999");
         $("#PatientDateOfBirth").mask("99/99/9999");
         $("#Start").mask("99:99");
         $("#End").mask("99:99");
 
-        $("#Date").bind("keyup", function (e) {
+        $("#LocalDateTime").bind("keyup", function (e) {
             $.getJSON("@Url.Action("GetSpelledDate")", { date: $(this).val() }, function (result) {
                 $(".date-spelled").html(result.success ? result.text : "");
             });
@@ -302,7 +302,7 @@
         });
 
         function populateTimeInfo(data) {
-            $("#Date").val(data.date);
+            $("#LocalDateTime").val(data.date);
             $("#Start").val(data.start);
             $("#End").val(data.end);
             $(".date-spelled").html(data.dateSpelled);
@@ -313,7 +313,7 @@
 
             data: function () {
                 return {
-                    date: $("#Date").val(),
+                    date: $("#LocalDateTime").val(),
                     start: $("#Start").val(),
                     end: $("#End").val(),
                     patientId: $("#PatientId").val()
@@ -348,7 +348,7 @@
             url: "@Url.Action("FindNextFreeTime")",
             data: function () {
                 return {
-                    date: $("#Date").val(),
+                    date: $("#LocalDateTime").val(),
                     time: $("#End").val()
                 };
             },

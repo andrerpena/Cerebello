@@ -99,6 +99,30 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         /// <summary>
+        /// Sets the appointment status to discarded
+        /// </summary>
+        /// <remarks>
+        /// This is only for generic appointments
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public JsonResult SetAppointmentAsDiscarded(int id)
+        {
+            try
+            {
+                var appointment = this.db.Appointments.First(a => a.Id == id);
+                appointment.Status = (int)TypeAppointmentStatus.Discarded;
+                this.db.SaveChanges();
+                return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                this.Response.StatusCode = (int)(HttpStatusCode.InternalServerError);
+                return this.Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
         /// Sets the notification as polled. The notifications cannot be set as polled by the time
         /// they are sent to the client because there is a possibility that the notification
         /// was polled by a "dead thread", that is, a thread that was running but is never going

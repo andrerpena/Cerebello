@@ -18,7 +18,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             // register providers here
             this.providers.Add(new ChatLongPollingProvider());
-            this.providers.Add(new NewAppointmentNotificationsLongPollingProvider());
+            this.providers.Add(new NewMedicalAppointmentNotificationsLongPollingProvider());
+            this.providers.Add(new NewGenericAppointmentNotificationsLongPollingProvider());
             this.providers.Add(new NotificationsLongPollingProvider());
 
             foreach (var provider in this.providers)

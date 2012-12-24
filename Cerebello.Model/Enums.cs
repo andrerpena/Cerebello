@@ -24,7 +24,14 @@ namespace Cerebello.Model
         NotAccomplished = 1,
 
         [Display(Name = "Realizada")]
-        Accomplished = 10
+        Accomplished = 10,
+
+        /// <summary>
+        /// This status is only for generic appointments. 
+        /// It indicates the user received the notification and then discarded
+        /// </summary>
+        [Display(Name = "Descartada")]
+        Discarded = 50
     }
 
     public enum TypeMaritalStatus

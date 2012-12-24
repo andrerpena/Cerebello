@@ -1246,6 +1246,7 @@ ul.time-table li {
     position: relative;
     top: 3px;
     width: 16px;
+    background-image: url("/content/images/app/icons16/warning.png");
 }
 
 .string-list li {

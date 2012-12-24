@@ -43,7 +43,8 @@
 
 
     $('#calendar').fullCalendar({
-
+        // this is how you disable the vertical scroll. Ugly but this is the way.
+        height: 999999999,
         header: { left: 'agendaWeek,agendaDay', center: '', right: 'today prev,next' },
         aspectRatio: 1,
         events: window.eventsUrl,

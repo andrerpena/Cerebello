@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Code.Notifications
     /// <summary>
     /// Data about a notification that is sent to the client
     /// </summary>
-    public class NewAppointmentNotificationData
+    public class NewGenericAppointmentNotificationData
     {
         /// <summary>
         /// This is the Id of the object in the database.
@@ -34,26 +34,6 @@ namespace CerebelloWebRole.Code.Notifications
         public string DoctorName { get; set; }
 
         /// <summary>
-        /// Doctor URL (used to create a link)
-        /// </summary>
-        public string DoctorUrl { get; set; }
-
-        /// <summary>
-        /// Patient Id
-        /// </summary>
-        public int PatientId { get; set; }
-
-        /// <summary>
-        /// Patient Name
-        /// </summary>
-        public string PatientName { get; set; }
-
-        /// <summary>
-        /// Patient URL (used to create a link)
-        /// </summary>
-        public string PatientUrl { get; set; }
-
-        /// <summary>
         /// Appointment time
         /// E.g: 18:00h
         /// </summary>
@@ -62,16 +42,16 @@ namespace CerebelloWebRole.Code.Notifications
         /// <summary>
         /// The URL to be called to make the appointment accomplished
         /// </summary>
-        public string AppointmentAccomplishedUrl { get; set; }
-
-        /// <summary>
-        /// The URL to be called to make the appointment canceled
-        /// </summary>
-        public string AppointmentCanceledUrl { get; set; }
+        public string AppointmentDiscardedUrl { get; set; }
 
         /// <summary>
         /// The URL to be called to make the appointment polled
         /// </summary>
         public string AppointmentIsPolledUrl { get; set; }
+
+        /// <summary>
+        /// Appointment description
+        /// </summary>
+        public string Description { get; set; }
     }
 }

@@ -150,9 +150,11 @@
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
     <Compile Include="Code\Helpers\EmailHelper.cs" />
+    <Compile Include="Code\Notifications\NewGenericAppointmentNotificationsLongPollingProvider.cs" />
+    <Compile Include="Code\Notifications\NewGenericAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
-    <Compile Include="Code\Notifications\NewAppointmentNotificationData.cs" />
-    <Compile Include="Code\Notifications\NewAppointmentNotificationsLongPollingProvider.cs" />
+    <Compile Include="Code\Notifications\NewMedicalAppointmentNotificationData.cs" />
+    <Compile Include="Code\Notifications\NewMedicalAppointmentNotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Notifications\NotificationData.cs" />
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
@@ -455,9 +457,10 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.notify.new.generic.appointment.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.modal.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.notify.db.notification.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.notify.new.appointment.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.notify.new.medical.appointment.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.long.polling.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.notify.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.confirmation.js" />
