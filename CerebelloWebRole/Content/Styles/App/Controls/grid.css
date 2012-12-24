@@ -47,6 +47,7 @@
 
  .webgrid .action-column {
      width: 1px;
+     padding: 0 8px;
  }
 
  .webgrid .grid-action-link {
