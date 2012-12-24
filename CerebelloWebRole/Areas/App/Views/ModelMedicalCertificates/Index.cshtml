@@ -12,6 +12,7 @@
 
     var grid = this.Html.CreateGrid(this.Model.Objects);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
+    grid.AddEditField("Edit", "ModelMedicalCertificates", model => new { model.Id });
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
