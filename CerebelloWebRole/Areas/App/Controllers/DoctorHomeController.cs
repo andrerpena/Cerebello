@@ -69,6 +69,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     .Select(
                         a => new AppointmentViewModel()
                             {
+                                Id = a.Id,
                                 Description = a.Description,
                                 LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
                                 LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.End)),

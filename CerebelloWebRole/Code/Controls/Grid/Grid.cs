@@ -79,6 +79,20 @@ namespace CerebelloWebRole.Code.Controls
                 });
         }
 
+        public void AddEditField(
+            [JetBrains.Annotations.AspMvcAction] string actionName,
+            [JetBrains.Annotations.AspMvcController] string controllerName,
+            Func<TModel, object> routeValuesFunc)
+        {
+            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+
+            this.AddField<object>(
+                null,
+                item => new MvcHtmlString(string.Format(@"<a href=""{0}"" class=""grid-action-link icon-link-edit""></a>", urlHelper.Action(actionName, controllerName, routeValuesFunc(item)))),
+                cssClass: "action-column");
+        }
+
+
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
             if (this.model.Any())
@@ -104,19 +118,26 @@ namespace CerebelloWebRole.Code.Controls
 
                 foreach (var field in this.Fields)
                 {
+                    PropertyInfo propertyInfo = null;
                     var expressionPropertyValue = ((dynamic)field).Expression;
-                    var funcType = expressionPropertyValue.GetType().GetGenericArguments()[0];
-                    var valueType = funcType.GetGenericArguments()[1];
-                    var propertyInfo = (PropertyInfo)((MemberExpression)((LambdaExpression)expressionPropertyValue).Body).Member;
+                    if (expressionPropertyValue != null)
+                        propertyInfo = (PropertyInfo)((MemberExpression)((LambdaExpression)expressionPropertyValue).Body).Member;
+                    else
+                    {
+                        if (field.Format == null)
+                            throw new Exception("When the format is not specified, the field expression cannot be null");
+                    }
 
                     string columnHeader;
                     if (field.Header != null)
                         columnHeader = field.Header;
                     else
                     {
-                        var displayAttribute = propertyInfo.GetCustomAttributes(true)
-                            .OfType<DisplayAttribute>()
-                            .FirstOrDefault();
+                        var displayAttribute = propertyInfo != null
+                                                   ? propertyInfo.GetCustomAttributes(true)
+                                                                 .OfType<DisplayAttribute>()
+                                                                 .FirstOrDefault()
+                                                   : null;
 
                         if (displayAttribute != null)
                         {
@@ -125,7 +146,7 @@ namespace CerebelloWebRole.Code.Controls
                                 columnHeader = propertyInfo.Name;
                         }
                         else
-                            columnHeader = propertyInfo.Name;
+                            columnHeader = propertyInfo != null ? propertyInfo.Name : "";
                     }
 
                     var format = field.Format ?? (x => propertyInfo.GetValue(((WebGridRow)x).Value, null));
