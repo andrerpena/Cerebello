@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.App_GlobalResources;
+using System.Xml.Serialization;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
+    [XmlRoot("Diagnosis", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("Diagnosis")]
     public class DiagnosisViewModel
     {
         public int? Id { get; set; }

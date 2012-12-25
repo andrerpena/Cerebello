@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Objects;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -24,38 +23,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public DateTime LocalDate { get; set; }
         }
 
-        private PatientViewModel GetViewModel([NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments)
+        protected static PatientViewModel GetViewModel(DoctorController controller, [NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments)
         {
             if (patient == null) throw new ArgumentNullException("patient");
-            var address = patient.Person.Addresses.Single();
 
-            var viewModel = new PatientViewModel
-            {
-                Id = patient.Id,
-                BirthPlace = patient.Person.BirthPlace,
-                CoverageId = patient.CoverageId,
-                FullName = patient.Person.FullName,
-                Gender = patient.Person.Gender,
-                MaritalStatus = patient.Person.MaritalStatus,
-                Observations = patient.Person.Observations,
-                CPFOwner = patient.Person.CPFOwner,
-                DateOfBirth = ConvertToLocalDateTime(this.Practice, patient.Person.DateOfBirth),
-                Profissao = patient.Person.Profession,
-                CoverageText = patient.Coverage != null ? patient.Coverage.Name : "",
-                CPF = patient.Person.CPF,
-                Email = patient.Person.Email,
-                PhoneCell = patient.Person.PhoneCell,
-                PhoneLand = patient.Person.PhoneLand,
-                Address = new AddressViewModel
-                {
-                    CEP = address.CEP,
-                    City = address.City,
-                    Complement = address.Complement,
-                    Neighborhood = address.Neighborhood,
-                    StateProvince = address.StateProvince,
-                    Street = address.Street,
-                },
-            };
+            // Person, address, and patient basic properties.
+            var viewModel = new PatientViewModel();
+
+            FillPersonViewModel(controller, patient.Person, viewModel);
+
+            var address = patient.Person.Addresses.Single();
+            viewModel.Id = patient.Id;
+            viewModel.Observations = patient.Person.Observations;
+            viewModel.Address = GetAddressViewModel(address);
+
+            // Other (more complex) properties.
 
             if (includeFutureAppointments)
             {
@@ -65,7 +47,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var result = s.ToShortDateString();
                     result += ", " + DateTimeHelper.GetFormattedTime(s);
                     result += ", " +
-                              DateTimeHelper.ConvertToRelative(s, this.GetPracticeLocalNow(),
+                              DateTimeHelper.ConvertToRelative(s, controller.GetPracticeLocalNow(),
                                                                DateTimeHelper.RelativeDateOptions.IncludeSuffixes |
                                                                DateTimeHelper.RelativeDateOptions.IncludePrefixes |
                                                                DateTimeHelper.RelativeDateOptions.ReplaceToday |
@@ -75,11 +57,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
 
                 // get appointments scheduled for the future
-                var utcNow = this.GetUtcNow();
-                var appointments = this.db.Appointments
+                var utcNow = controller.GetUtcNow();
+
+                var appointments = patient.Appointments
                     .Where(
-                        a => a.PatientId == patient.Id
-                             && a.DoctorId == patient.DoctorId
+                        a => a.DoctorId == patient.DoctorId
                              && a.Start > utcNow)
                     .ToList();
 
@@ -88,133 +70,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                                 {
                                                     PatientId = a.PatientId,
                                                     PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                                                    LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
-                                                    LocalDateTimeSpelled = getRelativeDate(ConvertToLocalDateTime(this.Practice, a.Start))
+                                                    LocalDateTime = ConvertToLocalDateTime(controller.DbPractice, a.Start),
+                                                    LocalDateTimeSpelled = getRelativeDate(ConvertToLocalDateTime(controller.DbPractice, a.Start))
                                                 }).ToList();
             }
 
             if (includeSessions)
             {
-                var eventDates = new List<DateTime>();
-
-                // anamneses
-                var anamnesesByDate =
-                                    (from avm in
-                                         (from r in patient.Anamneses
-                                          select new SessionEvent
-                                          {
-                                              LocalDate = ConvertToLocalDateTime(this.Practice, r.CreatedOn),
-                                              Id = r.Id
-                                          })
-                                     group avm by avm.LocalDate.Date into g
-                                     select g).ToDictionary(g => g.Key, g => g.ToList());
-
-                eventDates.AddRange(anamnesesByDate.Keys);
-
-                // receipts
-                var receiptsByDate =
-                                    (from rvm in
-                                         (from r in patient.Receipts
-                                          select new SessionEvent
-                                          {
-                                              LocalDate = ConvertToLocalDateTime(this.Practice, r.CreatedOn),
-                                              Id = r.Id
-                                          })
-                                     group rvm by rvm.LocalDate.Date into g
-                                     select g).ToDictionary(g => g.Key, g => g.ToList());
-
-                eventDates.AddRange(receiptsByDate.Keys);
-
-                // certificates
-                var certificatesByDate =
-                                    (from cvm in
-                                         (from c in patient.MedicalCertificates
-                                          select new SessionEvent
-                                          {
-                                              LocalDate = ConvertToLocalDateTime(this.Practice, c.CreatedOn),
-                                              Id = c.Id
-                                          })
-                                     group cvm by cvm.LocalDate.Date into g
-                                     select g).ToDictionary(g => g.Key, g => g.ToList());
-
-                eventDates.AddRange(certificatesByDate.Keys);
-
-                // exam requests
-                var examRequestsByDate =
-                                 (from ervm in
-                                      (from c in patient.ExaminationRequests
-                                       select new SessionEvent
-                                       {
-                                           LocalDate = ConvertToLocalDateTime(this.Practice, c.CreatedOn),
-                                           Id = c.Id
-                                       })
-                                  group ervm by ervm.LocalDate.Date into g
-                                  select g).ToDictionary(g => g.Key, g => g.ToList());
-
-                eventDates.AddRange(examRequestsByDate.Keys);
-
-                // exam results
-                var examResultsByDate =
-                                 (from ervm in
-                                      (from c in patient.ExaminationResults
-                                       select new SessionEvent
-                                       {
-                                           LocalDate = ConvertToLocalDateTime(this.Practice, c.CreatedOn),
-                                           Id = c.Id
-                                       })
-                                  group ervm by ervm.LocalDate.Date into g
-                                  select g).ToDictionary(g => g.Key, g => g.ToList());
-
-                eventDates.AddRange(examResultsByDate.Keys);
-
-                // diagnosis
-                var diagnosisByDate =
-                                 (from dvm in
-                                      (from d in patient.Diagnoses
-                                       select new SessionEvent
-                                       {
-                                           LocalDate = ConvertToLocalDateTime(this.Practice, d.CreatedOn),
-                                           Id = d.Id
-                                       })
-                                  group dvm by dvm.LocalDate.Date into g
-                                  select g).ToDictionary(g => g.Key, g => g.ToList());
-
-                eventDates.AddRange(diagnosisByDate.Keys);
-
-                // discover what dates have events
-                eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
-
-                // creating sessions
-                var sessions = eventDates.Select(
-                    eventDate => new SessionViewModel
-                        {
-                            PatientId = patient.Id,
-                            Date = eventDate,
-                            AnamneseIds =
-                                anamnesesByDate.ContainsKey(eventDate)
-                                    ? anamnesesByDate[eventDate].Select(a => a.Id).ToList()
-                                    : new List<int>(),
-                            ReceiptIds =
-                                receiptsByDate.ContainsKey(eventDate)
-                                    ? receiptsByDate[eventDate].Select(v => v.Id).ToList()
-                                    : new List<int>(),
-                            MedicalCertificateIds =
-                                certificatesByDate.ContainsKey(eventDate)
-                                    ? certificatesByDate[eventDate].Select(c => c.Id).ToList()
-                                    : new List<int>(),
-                            ExaminationRequestIds =
-                                examRequestsByDate.ContainsKey(eventDate)
-                                    ? examRequestsByDate[eventDate].Select(v => v.Id).ToList()
-                                    : new List<int>(),
-                            ExaminationResultIds =
-                                examResultsByDate.ContainsKey(eventDate)
-                                    ? examResultsByDate[eventDate].Select(v => v.Id).ToList()
-                                    : new List<int>(),
-                            DiagnosisIds =
-                                diagnosisByDate.ContainsKey(eventDate)
-                                    ? diagnosisByDate[eventDate].Select(v => v.Id).ToList()
-                                    : new List<int>()
-                        }).ToList();
+                var sessions = GetSessionViewModels(controller, patient);
 
                 viewModel.Sessions = sessions;
             }
@@ -222,40 +85,206 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return viewModel;
         }
 
+        public static AddressViewModel GetAddressViewModel(Address address)
+        {
+            if (address == null)
+                return null;
+
+            return new AddressViewModel
+                       {
+                           CEP = address.CEP,
+                           City = address.City,
+                           Complement = address.Complement,
+                           Neighborhood = address.Neighborhood,
+                           StateProvince = address.StateProvince,
+                           Street = address.Street,
+                       };
+        }
+
+        public static void FillPersonViewModel(DoctorController controller, Person person, PersonViewModel viewModel)
+        {
+            viewModel.BirthPlace = person.BirthPlace;
+            viewModel.FullName = person.FullName;
+            viewModel.Gender = person.Gender;
+            viewModel.MaritalStatus = person.MaritalStatus;
+            viewModel.CpfOwner = person.CPFOwner;
+            viewModel.DateOfBirth = ConvertToLocalDateTime(controller.DbPractice, person.DateOfBirth);
+            viewModel.Profissao = person.Profession;
+            viewModel.Cpf = person.CPF;
+            viewModel.Email = person.Email;
+            viewModel.PhoneCell = person.PhoneCell;
+            viewModel.PhoneLand = person.PhoneLand;
+        }
+
+        public static List<SessionViewModel> GetSessionViewModels(DoctorController controller, Patient patient)
+        {
+            var eventDates = new List<DateTime>();
+
+            // anamneses
+            var anamnesesByDate =
+                (from avm in
+                     (from r in patient.Anamneses
+                      select new SessionEvent
+                                 {
+                                     LocalDate = ConvertToLocalDateTime(controller.DbPractice, r.CreatedOn),
+                                     Id = r.Id
+                                 })
+                 group avm by avm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(anamnesesByDate.Keys);
+
+            // receipts
+            var receiptsByDate =
+                (from rvm in
+                     (from r in patient.Receipts
+                      select new SessionEvent
+                                 {
+                                     LocalDate = ConvertToLocalDateTime(controller.DbPractice, r.CreatedOn),
+                                     Id = r.Id
+                                 })
+                 group rvm by rvm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(receiptsByDate.Keys);
+
+            // certificates
+            var certificatesByDate =
+                (from cvm in
+                     (from c in patient.MedicalCertificates
+                      select new SessionEvent
+                                 {
+                                     LocalDate = ConvertToLocalDateTime(controller.DbPractice, c.CreatedOn),
+                                     Id = c.Id
+                                 })
+                 group cvm by cvm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(certificatesByDate.Keys);
+
+            // exam requests
+            var examRequestsByDate =
+                (from ervm in
+                     (from c in patient.ExaminationRequests
+                      select new SessionEvent
+                                 {
+                                     LocalDate = ConvertToLocalDateTime(controller.DbPractice, c.CreatedOn),
+                                     Id = c.Id
+                                 })
+                 group ervm by ervm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(examRequestsByDate.Keys);
+
+            // exam results
+            var examResultsByDate =
+                (from ervm in
+                     (from c in patient.ExaminationResults
+                      select new SessionEvent
+                                 {
+                                     LocalDate = ConvertToLocalDateTime(controller.DbPractice, c.CreatedOn),
+                                     Id = c.Id
+                                 })
+                 group ervm by ervm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(examResultsByDate.Keys);
+
+            // diagnosis
+            var diagnosisByDate =
+                (from dvm in
+                     (from d in patient.Diagnoses
+                      select new SessionEvent
+                                 {
+                                     LocalDate = ConvertToLocalDateTime(controller.DbPractice, d.CreatedOn),
+                                     Id = d.Id
+                                 })
+                 group dvm by dvm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(diagnosisByDate.Keys);
+
+            // discover what dates have events
+            eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
+
+            // creating sessions
+            var sessions = eventDates.Select(
+                eventDate => new SessionViewModel
+                                 {
+                                     PatientId = patient.Id,
+                                     Date = eventDate,
+                                     AnamneseIds =
+                                         anamnesesByDate.ContainsKey(eventDate)
+                                             ? anamnesesByDate[eventDate].Select(a => a.Id).ToList()
+                                             : new List<int>(),
+                                     ReceiptIds =
+                                         receiptsByDate.ContainsKey(eventDate)
+                                             ? receiptsByDate[eventDate].Select(v => v.Id).ToList()
+                                             : new List<int>(),
+                                     MedicalCertificateIds =
+                                         certificatesByDate.ContainsKey(eventDate)
+                                             ? certificatesByDate[eventDate].Select(c => c.Id).ToList()
+                                             : new List<int>(),
+                                     ExaminationRequestIds =
+                                         examRequestsByDate.ContainsKey(eventDate)
+                                             ? examRequestsByDate[eventDate].Select(v => v.Id).ToList()
+                                             : new List<int>(),
+                                     ExaminationResultIds =
+                                         examResultsByDate.ContainsKey(eventDate)
+                                             ? examResultsByDate[eventDate].Select(v => v.Id).ToList()
+                                             : new List<int>(),
+                                     DiagnosisIds =
+                                         diagnosisByDate.ContainsKey(eventDate)
+                                             ? diagnosisByDate[eventDate].Select(v => v.Id).ToList()
+                                             : new List<int>()
+                                 }).ToList();
+            return sessions;
+        }
+
         //
         // GET: /App/Patients/
 
         public ActionResult Index()
         {
-            var model = new PatientsIndexViewModel
-                {
-                    LastRegisteredPatients = (from p in
-                                                  (from Patient patient in this.db.Patients
-                                                   where patient.DoctorId == this.Doctor.Id
-                                                   orderby patient.Person.CreatedOn descending 
-                                                   select patient).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
-                                              select new PatientViewModel
-                                                  {
-                                                      Id = p.Id,
-                                                      DateOfBirth = ConvertToLocalDateTime(this.Practice, p.Person.DateOfBirth),
-                                                      FullName = p.Person.FullName
-                                                  }).ToList()
-                };
+            var model =
+                new PatientsIndexViewModel
+                    {
+                        LastRegisteredPatients =
+                            (from p in
+                                 (from Patient patient in this.db.Patients
+                                  where patient.DoctorId == this.Doctor.Id
+                                  orderby patient.Person.CreatedOn descending
+                                  select patient).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
+                             select
+                                 new PatientViewModel
+                                     {
+                                         Id = p.Id,
+                                         DateOfBirth =
+                                             ConvertToLocalDateTime(this.DbPractice, p.Person.DateOfBirth),
+                                         FullName = p.Person.FullName
+                                     }).ToList(),
+                        TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id)
+                    };
 
-            model.TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id);
             return View(model);
         }
 
         public ActionResult Details(int id)
         {
-            var patient = this.db.Patients.First(p => p.Id == id);
+            var patient = this.db.Patients.Single(p => p.Id == id);
 
             // Only the doctor and the patient can see the medical records.
             var canAccessMedicalRecords = this.DbUser.Id == patient.Doctor.Users.Single().Id;
             this.ViewBag.CanAccessMedicalRecords = canAccessMedicalRecords;
 
             // Creating the view-model object.
-            var model = this.GetViewModel(patient, canAccessMedicalRecords, true);
+            var model = GetViewModel(this, patient, canAccessMedicalRecords, true);
 
             return View(model);
         }
@@ -280,7 +309,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (id != null)
             {
                 var patient = this.db.Patients.First(p => p.Id == id);
-                viewModel = this.GetViewModel(patient, false, false);
+                viewModel = GetViewModel(this, patient, false, false);
 
                 ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
             }
@@ -313,13 +342,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Doctor = this.Doctor;
 
                 patient.Person.BirthPlace = formModel.BirthPlace;
-                patient.Person.CPF = formModel.CPF;
-                patient.Person.CPFOwner = formModel.CPFOwner;
+                patient.Person.CPF = formModel.Cpf;
+                patient.Person.CPFOwner = formModel.CpfOwner;
                 patient.Person.CreatedOn = this.GetUtcNow();
-                patient.Person.DateOfBirth = ConvertToUtcDateTime(this.Practice, formModel.DateOfBirth);
+                patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.Gender = (short)formModel.Gender;
-                patient.Person.MaritalStatus = (short?)formModel.MaritalStatus;
+                patient.Person.MaritalStatus = formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
                 patient.Person.Profession = formModel.Profissao;
                 patient.Person.Email = !string.IsNullOrEmpty(formModel.Email) ? formModel.Email.ToLower() : null;
@@ -515,7 +544,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Converting all dates from Utc to local practice time-zone.
             foreach (var eachPatientViewModel in model.Objects)
-                eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.Practice, eachPatientViewModel.DateOfBirth);
+                eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
 
             return View(model);
         }

@@ -13,7 +13,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public ActionResult Index()
         {
-            var mainContract = this.Practice.AccountContract;
+            var mainContract = this.DbPractice.AccountContract;
             var viewModel = new ConfigAccountViewModel();
             // Get all the billings of this practice.
             // Billings must be grouped by year, and be in reverse order,
@@ -66,7 +66,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Upgrade(string id)
         {
-            var mainContract = this.Practice.AccountContract;
+            var mainContract = this.DbPractice.AccountContract;
             var viewModel = new ConfigAccountViewModel();
 
             // Get plan informations of this practice.

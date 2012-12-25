@@ -41,7 +41,7 @@
     editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
-    editPanel.AddField(m => m.CPF);
+    editPanel.AddField(m => m.Cpf);
     editPanel.AddField(m => m.Profissao);
 
     var editPanelRoles = this.Html.CreateEditPanel();

@@ -97,7 +97,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth),
                 MaritalStatus = user.Person.MaritalStatus,
                 BirthPlace = user.Person.BirthPlace,
-                CPF = user.Person.CPF,
+                Cpf = user.Person.CPF,
                 Profissao = user.Person.Profession,
                 Email = user.Person.Email,
 
@@ -154,7 +154,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var medicalEntity = GetDoctorEntity(this.db.SYS_MedicalEntity, user.Doctor);
                 var medicalSpecialty = GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, user.Doctor);
 
-                model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
+                model = GetViewModel(user, this.DbPractice, medicalEntity, medicalSpecialty);
 
                 ViewBag.Title = "Alterando usuário: " + model.FullName;
             }
@@ -297,10 +297,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (user != null)
             {
-                user.Person.DateOfBirth = ConvertToUtcDateTime(this.Practice, formModel.DateOfBirth);
+                user.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
                 user.Person.BirthPlace = formModel.BirthPlace;
-                user.Person.CPF = formModel.CPF;
-                user.Person.CPFOwner = formModel.CPFOwner;
+                user.Person.CPF = formModel.Cpf;
+                user.Person.CPFOwner = formModel.CpfOwner;
                 user.Person.CreatedOn = this.GetUtcNow();
                 user.Person.MaritalStatus = formModel.MaritalStatus;
                 user.Person.Profession = formModel.Profissao;
@@ -366,7 +366,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This does not consider UrlIdentifier's used by other kinds of objects.
-                    string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, this.Practice.Id);
+                    string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, this.DbPractice.Id);
                     if (urlId == null)
                     {
                         this.ModelState.AddModelError(
@@ -448,7 +448,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.db.Notifications.AddObject(new Notification()
                         {
                             CreatedOn = this.GetUtcNow(),
-                            PracticeId = this.Practice.Id,
+                            PracticeId = this.DbPractice.Id,
                             UserId = this.DbUser.Id,
                             Text =
                                 string.Format(
@@ -464,7 +464,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 db.SaveChanges();
 
                 // Making user available in the Chat
-                ChatServerHelper.SetupUserIfNonexisting(this.db, this.Practice.Id, user.Id);
+                ChatServerHelper.SetupUserIfNonexisting(this.db, this.DbPractice.Id, user.Id);
 
                 return RedirectToAction("Details", new { id = user.Id });
             }
@@ -516,7 +516,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var medicalEntity = GetDoctorEntity(this.db.SYS_MedicalEntity, user.Doctor);
             var medicalSpecialty = GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, user.Doctor);
 
-            var model = GetViewModel(user, this.Practice, medicalEntity, medicalSpecialty);
+            var model = GetViewModel(user, this.DbPractice, medicalEntity, medicalSpecialty);
 
             this.ViewBag.IsSelf = user.Id == this.DbUser.Id;
 
@@ -578,7 +578,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.db.SaveChanges();
 
                     // Makes user unavailable in the Chat
-                    ChatServerHelper.RemoveUserIfExisting(this.Practice.Id, userIdBackup);
+                    ChatServerHelper.RemoveUserIfExisting(this.DbPractice.Id, userIdBackup);
 
                     return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
                 }

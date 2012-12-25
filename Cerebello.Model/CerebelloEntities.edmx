@@ -15,7 +15,6 @@
           <EntitySet Name="CFG_Documents" EntityType="cerebelloModel.Store.CFG_Documents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CFG_Schedule" EntityType="cerebelloModel.Store.CFG_Schedule" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ChatMessage" EntityType="cerebelloModel.Store.ChatMessage" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Coverage" EntityType="cerebelloModel.Store.Coverage" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Diagnosis" EntityType="cerebelloModel.Store.Diagnosis" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
@@ -76,14 +75,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Appointment_HealthInsurance" Association="cerebelloModel.Store.FK_Appointment_HealthInsurance">
             <End Role="HealthInsurance" EntitySet="HealthInsurance" />
-            <End Role="Appointment" EntitySet="Appointment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Appointment_HealthInsurance1" Association="cerebelloModel.Store.FK_Appointment_HealthInsurance1">
-            <End Role="HealthInsurance" EntitySet="HealthInsurance" />
-            <End Role="Appointment" EntitySet="Appointment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Appointment_Patient" Association="cerebelloModel.Store.FK_Appointment_Patient">
-            <End Role="Patient" EntitySet="Patient" />
             <End Role="Appointment" EntitySet="Appointment" />
           </AssociationSet>
           <AssociationSet Name="FK_Appointment_User" Association="cerebelloModel.Store.FK_Appointment_User">
@@ -177,10 +168,6 @@
           <AssociationSet Name="FK_Notification_User" Association="cerebelloModel.Store.FK_Notification_User">
             <End Role="User" EntitySet="User" />
             <End Role="Notification" EntitySet="Notification" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Patient_Coverage" Association="cerebelloModel.Store.FK_Patient_Coverage">
-            <End Role="Coverage" EntitySet="Coverage" />
-            <End Role="Patient" EntitySet="Patient" />
           </AssociationSet>
           <AssociationSet Name="FK_Patient_Doctor" Association="cerebelloModel.Store.FK_Patient_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
@@ -398,13 +385,6 @@
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Message" Type="varchar(max)" Nullable="false" />
         </EntityType>
-        <EntityType Name="Coverage">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
-        </EntityType>
         <EntityType Name="Diagnosis">
           <Key>
             <PropertyRef Name="Id" />
@@ -595,7 +575,6 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="CoverageId" Type="int" />
           <Property Name="Registration" Type="varchar" MaxLength="100" />
           <Property Name="DoctorId" Type="int" Nullable="false" />
           <Property Name="PersonId" Type="int" Nullable="false" />
@@ -878,30 +857,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Appointment_HealthInsurance1">
-          <End Role="HealthInsurance" Type="cerebelloModel.Store.HealthInsurance" Multiplicity="0..1" />
-          <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="HealthInsurance">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Appointment">
-              <PropertyRef Name="HealthInsuranceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Appointment_Patient">
-          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="0..1" />
-          <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Appointment">
-              <PropertyRef Name="PatientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Appointment_User">
           <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
           <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
@@ -1178,18 +1133,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Patient_Coverage">
-          <End Role="Coverage" Type="cerebelloModel.Store.Coverage" Multiplicity="0..1" />
-          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coverage">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Patient">
-              <PropertyRef Name="CoverageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Patient_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
           <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="*" />
@@ -1431,7 +1374,6 @@
         <EntityContainer Name="CerebelloEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
           <EntitySet Name="Addresses" EntityType="Cerebello.Model.Address" />
           <EntitySet Name="Appointments" EntityType="Cerebello.Model.Appointment" />
-          <EntitySet Name="Coverages" EntityType="Cerebello.Model.Coverage" />
           <EntitySet Name="Doctors" EntityType="Cerebello.Model.Doctor" />
           <EntitySet Name="Laboratories" EntityType="Cerebello.Model.Laboratory" />
           <EntitySet Name="Patients" EntityType="Cerebello.Model.Patient" />
@@ -1448,10 +1390,6 @@
           <AssociationSet Name="FK_Appointment_User" Association="Cerebello.Model.FK_Appointment_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Appointment" EntitySet="Appointments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Patient_Coverage" Association="Cerebello.Model.FK_Patient_Coverage">
-            <End Role="Coverage" EntitySet="Coverages" />
-            <End Role="Patient" EntitySet="Patients" />
           </AssociationSet>
           <AssociationSet Name="FK_Laboratory_Doctor" Association="Cerebello.Model.FK_Laboratory_Doctor">
             <End Role="Doctor" EntitySet="Doctors" />
@@ -1708,14 +1646,6 @@
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Appointment_HealthInsurance" FromRole="Appointment" ToRole="HealthInsurance" />
           <Property Type="Boolean" Name="ReminderEmailSent" Nullable="false" />
         </EntityType>
-        <EntityType Name="Coverage">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_Coverage" FromRole="Coverage" ToRole="Patient" />
-        </EntityType>
         <EntityType Name="Doctor">
           <Key>
             <PropertyRef Name="Id" />
@@ -1758,11 +1688,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="CoverageId" Type="Int32" />
           <Property Name="Registration" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="DoctorId" Type="Int32" Nullable="false" />
           <Property Name="PersonId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Coverage" Relationship="Cerebello.Model.FK_Patient_Coverage" FromRole="Patient" ToRole="Coverage" />
           <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_Patient_Doctor" FromRole="Patient" ToRole="Doctor" />
           <NavigationProperty Name="Person" Relationship="Cerebello.Model.FK_Patient_Person" FromRole="Patient" ToRole="Person" />
           <NavigationProperty Name="Receipts" Relationship="Cerebello.Model.FK_Receipt_Patient" FromRole="Patient" ToRole="Receipt" />
@@ -1910,18 +1838,6 @@
             </Principal>
             <Dependent Role="Appointment">
               <PropertyRef Name="CreatedById" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Patient_Coverage">
-          <End Role="Coverage" Type="Cerebello.Model.Coverage" Multiplicity="0..1" />
-          <End Role="Patient" Type="Cerebello.Model.Patient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coverage">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Patient">
-              <PropertyRef Name="CoverageId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2885,10 +2801,6 @@
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
             <ScalarProperty Name="PatientId" ColumnName="PatientId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Coverages"><EntityTypeMapping TypeName="Cerebello.Model.Coverage"><MappingFragment StoreEntitySet="Coverage">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Name" ColumnName="Name" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Doctors"><EntityTypeMapping TypeName="Cerebello.Model.Doctor"><MappingFragment StoreEntitySet="Doctor">
             <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="MedicalSpecialtyName" ColumnName="MedicalSpecialtyName" />
@@ -2912,7 +2824,6 @@
             <ScalarProperty Name="LastUsedHealthInsuranceId" ColumnName="LastUsedHealthInsuranceId" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="CoverageId" ColumnName="CoverageId" />
             <ScalarProperty Name="Registration" ColumnName="Registration" />
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
@@ -3426,10 +3337,9 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="116">
+      <Diagram Name="CerebelloEntities" ZoomLevel="82">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="36.625" PointY="1" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="11.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
-        <EntityTypeShape EntityType="Cerebello.Model.Coverage" Width="1.5" PointX="39.125" PointY="16.625" Height="1.5956835937499978" IsExpanded="true" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="20" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
         <EntityTypeShape EntityType="Cerebello.Model.Laboratory" Width="1.5" PointX="20.125" PointY="26" Height="1.9802864583333317" IsExpanded="true" FillColor="RoyalBlue" />
         <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="3.25" PointX="34.5" PointY="18.375" Height="3.7109993489583335" IsExpanded="true" FillColor="LightGreen" />
@@ -3455,10 +3365,6 @@
           <ConnectorPoint PointX="6.380208333333333" PointY="24.591222330729167" />
           <ConnectorPoint PointX="7.0625" PointY="24.591222330729167" />
           <ConnectorPoint PointX="7.0625" PointY="20.951396484375003" />
-        </AssociationConnector>
-        <AssociationConnector Association="Cerebello.Model.FK_Patient_Coverage" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.25" PointY="15.230499674479166" />
-          <ConnectorPoint PointX="6" PointY="15.230499674479166" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Laboratory_Doctor" ManuallyRouted="false">
           <ConnectorPoint PointX="13.5" PointY="23.365143229166666" />

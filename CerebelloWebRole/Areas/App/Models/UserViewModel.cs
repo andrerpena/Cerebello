@@ -3,7 +3,6 @@ using System.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Validation;
-using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -46,7 +45,6 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalSpecialtyName { get; set; }
 
-        // todo: o nome disso deveria ser "Conselho profissional"
         [Display(Name = "Conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntityId { get; set; }

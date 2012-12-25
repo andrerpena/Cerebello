@@ -17,7 +17,7 @@
     cardView.AddField(m => m.DateOfBirth, @<text>  @(@item.DateOfBirth.ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
     cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.BirthPlace);
-    cardView.AddField(m => m.CPF);
+    cardView.AddField(m => m.Cpf);
     cardView.AddField(m => m.Profissao);
 
     // creating details CardView

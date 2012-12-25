@@ -18,7 +18,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </remarks>
         public void SetUserOffline(int userId)
         {
-            var roomId = this.Practice.Id;
+            var roomId = this.DbPractice.Id;
 
             if (ChatServer.RoomExists(roomId) && ChatServer.Rooms[roomId].UserExists(userId))
                 ChatServer.Rooms[roomId].SetUserOffline(userId);
@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult GetUserInfo(int userId)
         {
-            var roomId = this.Practice.Id;
+            var roomId = this.DbPractice.Id;
             var myUserId = this.DbUser.Id;
 
             ChatServerHelper.SetupRoomIfNonexisting(this.db, roomId);
@@ -47,7 +47,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult GetMessageHistory(int otherUserId, long? timeStamp = null)
         {
-            var roomId = this.Practice.Id;
+            var roomId = this.DbPractice.Id;
             var myUserId = this.DbUser.Id;
 
             ChatServerHelper.SetupRoomIfNonexisting(this.db, roomId);
@@ -76,7 +76,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (myUserId == otherUserId)
                 throw new Exception("Cannot send a message to yourself");
 
-            var roomId = this.Practice.Id;
+            var roomId = this.DbPractice.Id;
 
             //ToDo: store this message in the DB.
             ChatServerHelper.SetupRoomIfNonexisting(this.db, roomId);

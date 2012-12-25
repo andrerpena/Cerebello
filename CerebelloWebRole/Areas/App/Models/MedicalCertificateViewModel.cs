@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.App_GlobalResources;
+using System.Web.Mvc;
+using System.Xml.Serialization;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
     /// <summary>
     /// A receipt prescripted to a patient
     /// </summary>
+    [XmlRoot("MedicalCertificate", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("MedicalCertificate")]
     public class MedicalCertificateViewModel
     {
         public MedicalCertificateViewModel()

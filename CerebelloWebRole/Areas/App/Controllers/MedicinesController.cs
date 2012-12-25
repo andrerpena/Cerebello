@@ -251,7 +251,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             medicine.Leaflets.Add(
                                 new Leaflet()
                                     {
-                                        PracticeId = this.Practice.Id,
+                                        PracticeId = this.DbPractice.Id,
                                         Url = leafletViewModel.Url,
                                         Description = leafletViewModel.Description
                                     });
@@ -422,7 +422,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var medicine = new Medicine()
                     {
                         Name = sysMedicine.Name,
-                        PracticeId = this.Practice.Id,
+                        PracticeId = this.DbPractice.Id,
                         DoctorId = this.Doctor.Id,
                         CreatedOn = DateTime.UtcNow
                     };
@@ -432,7 +432,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                  new Laboratory()
                                      {
                                          Name = sysMedicine.Laboratory.Name,
-                                         PracticeId = this.Practice.Id,
+                                         PracticeId = this.DbPractice.Id,
                                          DoctorId = this.Doctor.Id,
                                          CreatedOn = DateTime.UtcNow
                                      };
@@ -444,7 +444,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     medicine.ActiveIngredients.Add(new MedicineActiveIngredient()
                     {
                         Name = ai.Name,
-                        PracticeId = this.Practice.Id,
+                        PracticeId = this.DbPractice.Id,
                     });
                 }
 
@@ -455,7 +455,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             {
                                 Description = l.Description,
                                 Url = l.Url,
-                                PracticeId = this.Practice.Id
+                                PracticeId = this.DbPractice.Id
                             });
 
                 this.db.Medicines.AddObject(medicine);

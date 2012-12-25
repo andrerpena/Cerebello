@@ -8,14 +8,13 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class AnamnesesController : DoctorController
     {
-        private static AnamneseViewModel GetViewModel(Anamnese anamnese)
+        public static AnamneseViewModel GetViewModel(Anamnese anamnese)
         {
             return new AnamneseViewModel()
             {

@@ -60,8 +60,7 @@
 
                 if (_this.opts.items[i].cssClass)
                     $a.addClass(_this.opts.items[i].cssClass);
-            }
-            ;
+            };
 
             $("a", $dropdownList).bind("click", function(e) {
                 _this.opts.onItemClicked($(e.target).attr("data-val-item-id"));

@@ -21,7 +21,6 @@ using System.Xml.Serialization;
 
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Coverage", "Coverage", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Coverage), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Laboratory_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Laboratory", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Laboratory), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Person", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
@@ -150,22 +149,6 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<Appointment> _Appointments;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Coverage> Coverages
-        {
-            get
-            {
-                if ((_Coverages == null))
-                {
-                    _Coverages = base.CreateObjectSet<Coverage>("Coverages");
-                }
-                return _Coverages;
-            }
-        }
-        private ObjectSet<Coverage> _Coverages;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -841,14 +824,6 @@ namespace Cerebello.Model
         public void AddToAppointments(Appointment appointment)
         {
             base.AddObject("Appointments", appointment);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Coverages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToCoverages(Coverage coverage)
-        {
-            base.AddObject("Coverages", coverage);
         }
     
         /// <summary>
@@ -4451,114 +4426,6 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_ChatMessage_ToUser_User", "User", value);
-                }
-            }
-        }
-
-        #endregion
-
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Coverage")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class Coverage : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new Coverage object.
-        /// </summary>
-        /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="name">Initial value of the Name property.</param>
-        public static Coverage CreateCoverage(global::System.Int32 id, global::System.String name)
-        {
-            Coverage coverage = new Coverage();
-            coverage.Id = id;
-            coverage.Name = name;
-            return coverage;
-        }
-
-        #endregion
-
-        #region Simple Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 Id
-        {
-            get
-            {
-                return _Id;
-            }
-            set
-            {
-                if (_Id != value)
-                {
-                    OnIdChanging(value);
-                    ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value, "Id");
-                    ReportPropertyChanged("Id");
-                    OnIdChanged();
-                }
-            }
-        }
-        private global::System.Int32 _Id;
-        partial void OnIdChanging(global::System.Int32 value);
-        partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Name
-        {
-            get
-            {
-                return _Name;
-            }
-            set
-            {
-                OnNameChanging(value);
-                ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false, "Name");
-                ReportPropertyChanged("Name");
-                OnNameChanged();
-            }
-        }
-        private global::System.String _Name;
-        partial void OnNameChanging(global::System.String value);
-        partial void OnNameChanged();
-
-        #endregion
-
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Patient_Coverage", "Patient")]
-        public EntityCollection<Patient> Patients
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Patient>("Cerebello.Model.FK_Patient_Coverage", "Patient");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Patient>("Cerebello.Model.FK_Patient_Coverage", "Patient", value);
                 }
             }
         }
@@ -8692,30 +8559,6 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> CoverageId
-        {
-            get
-            {
-                return _CoverageId;
-            }
-            set
-            {
-                OnCoverageIdChanging(value);
-                ReportPropertyChanging("CoverageId");
-                _CoverageId = StructuralObject.SetValidValue(value, "CoverageId");
-                ReportPropertyChanged("CoverageId");
-                OnCoverageIdChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _CoverageId;
-        partial void OnCoverageIdChanging(Nullable<global::System.Int32> value);
-        partial void OnCoverageIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String Registration
         {
             get
@@ -8834,44 +8677,6 @@ namespace Cerebello.Model
         #endregion
 
         #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Patient_Coverage", "Coverage")]
-        public Coverage Coverage
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Coverage>("Cerebello.Model.FK_Patient_Coverage", "Coverage").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Coverage>("Cerebello.Model.FK_Patient_Coverage", "Coverage").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Coverage> CoverageReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Coverage>("Cerebello.Model.FK_Patient_Coverage", "Coverage");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Coverage>("Cerebello.Model.FK_Patient_Coverage", "Coverage", value);
-                }
-            }
-        }
     
         /// <summary>
         /// No Metadata Documentation available.

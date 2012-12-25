@@ -40,6 +40,14 @@
     nextGenericAppointments.AddField(model => model.LocalDateTimeSpelled, header: "Data", format: @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new { y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day })">@item.LocalDateTimeSpelled</a></span></text>);
 }
 
+@section SideBar
+{
+    <ul>
+        <li><a href="@Url.Action("XmlBackup")" class="icon-link icon-link-import">Xml backup</a> </li>
+        <li><a href="@Url.Action("PdfBackup")" class="icon-link icon-link-import">Pdf backup</a> </li>
+    </ul>
+}
+
 @section Title {
     @title
 }

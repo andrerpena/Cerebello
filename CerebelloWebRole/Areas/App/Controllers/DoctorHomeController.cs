@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
+using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Filters;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -22,7 +27,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var todayEnd = todayStart.AddDays(1);
 
             // returns whether the appointment is in the past
-            Func<Appointment, bool> getIsInThePast = a => ConvertToLocalDateTime(this.Practice, a.Start) < localNow;
+            Func<Appointment, bool> getIsInThePast = a => ConvertToLocalDateTime(this.DbPractice, a.Start) < localNow;
 
             Func<Appointment, bool> getIsNow = a => a.Start <= utcNow && a.End > utcNow;
 
@@ -52,8 +57,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 Description = a.Description,
                                 PatientId = a.PatientId,
                                 PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                                LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
-                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.End)),
+                                LocalDateTime = ConvertToLocalDateTime(this.DbPractice, a.Start),
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.End)),
                                 HealthInsuranceId = a.HealthInsuranceId,
                                 HealthInsuranceName = a.HealthInsurance.Name,
                                 IsInThePast = getIsInThePast(a),
@@ -70,8 +75,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         a => new AppointmentViewModel()
                             {
                                 Description = a.Description,
-                                LocalDateTime = ConvertToLocalDateTime(this.Practice, a.Start),
-                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.Practice, a.End)),
+                                LocalDateTime = ConvertToLocalDateTime(this.DbPractice, a.Start),
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.End)),
                                 IsNow = getIsNow(a)
                             }).ToList();
 
@@ -100,5 +105,123 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(viewModel);
         }
 
+        [SelfPermission]
+        public ActionResult XmlBackup()
+        {
+            var doctor = this.Doctor;
+
+            var docPerson = doctor.Users.Single().Person;
+
+            // Getting all patients data.
+            var doctorData = new DoctorData();
+            PatientsController.FillPersonViewModel(this, docPerson, doctorData);
+
+            doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
+
+            doctorData.Patients = this.Doctor.Patients
+                                      .Select(this.GetPatientData)
+                                      .ToList();
+
+            var stringBuilder = new StringBuilder();
+            using (var writer = new StringWriter(stringBuilder))
+            {
+                var xs = new XmlSerializer(typeof(DoctorData));
+                xs.Serialize(writer, doctorData);
+            }
+
+            return this.Content(stringBuilder.ToString(), "text/xml");
+        }
+
+        private PatientData GetPatientData(Patient patient)
+        {
+            var result = new PatientData();
+
+            result.Id = patient.Id;
+
+            PatientsController.FillPersonViewModel(this, patient.Person, result);
+
+            result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.Single());
+
+            result.Sessions = GetAllSessionsData(this, patient);
+
+            return result;
+        }
+
+        private List<SessionData> GetAllSessionsData(DoctorHomeController doctorHomeController, Patient patient)
+        {
+            var sessions = PatientsController.GetSessionViewModels(this, patient)
+                                             .Select(GetSessionData)
+                                             .ToList();
+
+            return sessions;
+        }
+
+        private SessionData GetSessionData(SessionViewModel arg)
+        {
+            var result = new SessionData();
+
+            result.Date = arg.Date;
+
+            result.Items = new List<object>();
+
+            result.Items.AddRange(
+                this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
+                .Select(AnamnesesController.GetViewModel));
+
+            result.Items.AddRange(
+                this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
+                .Select(ReceiptsController.GetViewModel));
+
+            result.Items.AddRange(
+                this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
+                .Select(ExamsController.GetViewModel));
+
+            result.Items.AddRange(
+                this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
+                .Select(ExamResultsController.GetViewModel));
+
+            result.Items.AddRange(
+                this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
+                .Select(DiagnosisController.GetViewModel));
+
+            result.Items.AddRange(
+                this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
+                .Select(MedicalCertificatesController.GetViewModel));
+
+            return result;
+        }
+
+
+        [XmlRoot("Doctor", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+        [XmlType("Doctor")]
+        public class DoctorData : UserViewModel
+        {
+            public List<PatientData> Patients { get; set; }
+        }
+
+        [XmlRoot("Patient", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+        [XmlType("Patient")]
+        public class PatientData : UserViewModel
+        {
+            public List<AppointmentViewModel> Appointments { get; set; }
+
+            [XmlElementAttribute]
+            public List<SessionData> Sessions { get; set; }
+        }
+
+        [XmlRoot("Session", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+        [XmlType("Session")]
+        public class SessionData
+        {
+            public DateTime Date { get; set; }
+
+            [XmlArrayItem(typeof(AnamneseViewModel))]
+            [XmlArrayItem(typeof(ReceiptViewModel))]
+            [XmlArrayItem(typeof(ExaminationRequestViewModel))]
+            [XmlArrayItem(typeof(ExaminationResultViewModel))]
+            [XmlArrayItem(typeof(DiagnosisViewModel))]
+            [XmlArrayItem(typeof(MedicalCertificateViewModel))]
+            public List<object> Items { get; set; }
+        }
     }
 }

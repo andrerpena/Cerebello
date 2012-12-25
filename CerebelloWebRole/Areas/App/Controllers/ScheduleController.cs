@@ -33,8 +33,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                               select new ScheduleEventViewModel()
                               {
                                   id = a.Id,
-                                  start = ConvertToLocalDateTime(this.Practice, a.Start).ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                                  end = ConvertToLocalDateTime(this.Practice, a.End).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                                  start = ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                                  end = ConvertToLocalDateTime(this.DbPractice, a.End).ToString("yyyy-MM-ddTHH:mm:ssZ"),
                                   title = GetAppointmentText(a),
                                   className = GetAppointmentClass(a),
                               }).ToList(), JsonRequestBehavior.AllowGet);
@@ -343,8 +343,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var localNow = this.GetPracticeLocalNow();
 
-            var appointmentLocalStart = ConvertToLocalDateTime(this.Practice, appointment.Start);
-            var appointmentLocalEnd = ConvertToLocalDateTime(this.Practice, appointment.End);
+            var appointmentLocalStart = ConvertToLocalDateTime(this.DbPractice, appointment.Start);
+            var appointmentLocalEnd = ConvertToLocalDateTime(this.DbPractice, appointment.End);
 
             var viewModel = new AppointmentViewModel()
             {
@@ -498,9 +498,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         return View("NotFound", formModel);
                 }
 
-                appointment.Start = ConvertToUtcDateTime(this.Practice,
+                appointment.Start = ConvertToUtcDateTime(this.DbPractice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start));
-                appointment.End = ConvertToUtcDateTime(this.Practice,
+                appointment.End = ConvertToUtcDateTime(this.DbPractice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.End));
                 appointment.Status = (int)formModel.Status;
 
@@ -527,7 +527,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                             FullName = formModel.PatientName,
                                             Gender = (short)formModel.PatientGender,
                                             DateOfBirth =
-                                                ConvertToUtcDateTime(this.Practice, formModel.PatientDateOfBirth.Value),
+                                                ConvertToUtcDateTime(this.DbPractice, formModel.PatientDateOfBirth.Value),
                                             PhoneCell = formModel.PatientPhoneCell,
                                             PhoneLand = formModel.PatientPhoneLand,
                                             CreatedOn = this.GetUtcNow(),
@@ -1180,8 +1180,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var startTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.Start);
                 var endTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.End);
 
-                var startTimeUtc = ConvertToUtcDateTime(this.Practice, startTimeLocal);
-                var endTimeUtc = ConvertToUtcDateTime(this.Practice, endTimeLocal);
+                var startTimeUtc = ConvertToUtcDateTime(this.DbPractice, startTimeLocal);
+                var endTimeUtc = ConvertToUtcDateTime(this.DbPractice, endTimeLocal);
 
                 var isTimeAvailable = IsTimeAvailableUtc(startTimeUtc, endTimeUtc, this.Doctor.Appointments, excludeAppointmentId);
                 if (!isTimeAvailable)
@@ -1221,13 +1221,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var localFirst = new DateTime(year, month, 1);
             var localLast = localFirst.AddMonths(1);
 
-            var utcFirst = ConvertToUtcDateTime(this.Practice, localFirst);
-            var utcLast = ConvertToUtcDateTime(this.Practice, localLast);
+            var utcFirst = ConvertToUtcDateTime(this.DbPractice, localFirst);
+            var utcLast = ConvertToUtcDateTime(this.DbPractice, localLast);
 
             var result = (from a in db.Appointments
                           where a.Start >= utcFirst && a.End < utcLast
                           select a).ToList()
-                .Select(a => ConvertToLocalDateTime(this.Practice, a.Start).ToString("'d'dd_MM_yyyy"))
+                .Select(a => ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("'d'dd_MM_yyyy"))
                 .Distinct().ToArray();
 
             return this.Json(result, JsonRequestBehavior.AllowGet);

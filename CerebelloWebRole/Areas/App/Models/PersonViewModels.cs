@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
-using CerebelloWebRole.Models;
+using System.Xml.Serialization;
+using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Mvc;
-using Cerebello.Model;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -31,7 +28,15 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Sexo")]
         [EnumDataType(typeof(TypeGender))]
+        [XmlIgnore]
         public int Gender { get; set; }
+
+        [XmlElement("Gender")]
+        public TypeGender TypeGender
+        {
+            get { return (TypeGender)this.Gender; }
+            set { this.Gender = (int)value; }
+        }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Data de Nascimento")]
@@ -40,24 +45,40 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [EnumDataType(typeof(TypeMaritalStatus))]
         [Display(Name = "Estado Civil")]
+        [XmlIgnore]
         public short? MaritalStatus { get; set; }
+
+        [XmlElement("MaritalStatus")]
+        public TypeMaritalStatus? TypeMaritalStatus
+        {
+            get { return (TypeMaritalStatus?)this.MaritalStatus; }
+            set { this.MaritalStatus = (short?)value; }
+        }
 
         [Display(Name = "Naturalidade")]
         public String BirthPlace { get; set; }
 
         [Display(Name = "CPF")]
-        public String CPF { get; set; }
+        public String Cpf { get; set; }
 
         [Display(Name = "Proprietário do CPF")]
         [EnumDataType(typeof(TypeCpfOwner))]
-        public short? CPFOwner { get; set; }
+        [XmlIgnore]
+        public short? CpfOwner { get; set; }
+
+        [XmlElement("CpfOwner")]
+        public TypeCpfOwner? TypeCpfOwner
+        {
+            get { return (TypeCpfOwner?)this.CpfOwner; }
+            set { this.CpfOwner = (short?)value; }
+        }
 
         [Display(Name = "Profissão")]
         public String Profissao { get; set; }
 
         [Display(Name = "E-mail")]
-        [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
-        [CerebelloWebRole.Code.Mvc.EmailAddress]
+        [DataType(DataType.EmailAddress)]
+        [Code.Mvc.EmailAddress]
         public String Email { get; set; }
 
         [Display(Name = "Telefone fixo")]

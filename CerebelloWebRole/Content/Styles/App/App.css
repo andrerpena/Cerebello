@@ -251,6 +251,10 @@ input, textarea {
     background-image: url("/content/images/app/icons16/import.png");
 }
 
+.icon-link-download {
+    background-image: url("/content/images/app/icons16/import.png");
+}
+
 .icon-link-home {
     background-image: url("/content/images/app/icons16/home.png");
 }

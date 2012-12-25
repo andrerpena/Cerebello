@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
+    [XmlRoot("Receipt", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("Receipt")]
     public class ReceiptViewModel
     {
         public ReceiptViewModel()

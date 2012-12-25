@@ -50,7 +50,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String PatientName { get; set; }
 
         [Display(Name = "E-mail")]
-        [CerebelloWebRole.Code.Mvc.EmailAddress]
+        [Code.Mvc.EmailAddress]
         public string PatientEmail { get; set; }
 
         [Display(Name = "Sexo")]

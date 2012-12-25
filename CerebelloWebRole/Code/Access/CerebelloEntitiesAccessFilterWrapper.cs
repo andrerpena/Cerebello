@@ -88,11 +88,6 @@ namespace CerebelloWebRole.Code
             get { return new FilteredObjectSetWrapper<ChatMessage>(this.db.ChatMessages, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
-        public ObjectSet<Coverage> Coverages
-        {
-            get { return this.db.Coverages; }
-        }
-
         public FilteredObjectSetWrapper<Diagnosis> Diagnoses
         {
             get { return new FilteredObjectSetWrapper<Diagnosis>(this.db.Diagnoses, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }

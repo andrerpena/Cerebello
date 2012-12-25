@@ -35,7 +35,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult GetEvents(long timeStamp)
         {
-            var practiceId = this.Practice.Id;
+            var practiceId = this.DbPractice.Id;
             var userId = this.DbUser.Id;
 
             var eventsReturned = new List<LongPollingEvent>();

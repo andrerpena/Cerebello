@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
+    [XmlRoot("ExaminationRequest", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("ExaminationRequest")]
     public class ExaminationRequestViewModel
     {
         /// <summary>

@@ -10,7 +10,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ExamsController : DoctorController
     {
-        private static ExaminationRequestViewModel GetViewModel(ExaminationRequest examRequest)
+        public static ExaminationRequestViewModel GetViewModel(ExaminationRequest examRequest)
         {
             return new ExaminationRequestViewModel()
             {

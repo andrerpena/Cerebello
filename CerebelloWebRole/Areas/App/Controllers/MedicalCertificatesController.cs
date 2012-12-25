@@ -19,21 +19,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Details(int id)
         {
             var model = this.db.MedicalCertificates.Include("ModelMedicalCertificate").FirstOrDefault(m => m.Id == id);
-            var viewModel = new MedicalCertificateViewModel()
-                {
-                    Id = model.Id,
-                    PatientId = model.PatientId,
-                    ModelName = model.ModelMedicalCertificate != null ? model.ModelMedicalCertificate.Name : null,
-                    Fields = (from f in model.Fields
-                              select new MedicalCertificateFieldViewModel()
-                              {
-                                  Id = f.Id,
-                                  Name = f.Name,
-                                  Value = f.Value
-                              }).ToList()
-                };
+            var viewModel = GetViewModel(model);
 
             return View(viewModel);
+        }
+
+        public static MedicalCertificateViewModel GetViewModel(MedicalCertificate model)
+        {
+            var viewModel = new MedicalCertificateViewModel()
+                                {
+                                    Id = model.Id,
+                                    PatientId = model.PatientId,
+                                    ModelName = model.ModelMedicalCertificate != null ? model.ModelMedicalCertificate.Name : null,
+                                    Fields = (from f in model.Fields
+                                              select new MedicalCertificateFieldViewModel()
+                                                         {
+                                                             Id = f.Id,
+                                                             Name = f.Name,
+                                                             Value = f.Value
+                                                         }).ToList()
+                                };
+            return viewModel;
         }
 
         [HttpGet]

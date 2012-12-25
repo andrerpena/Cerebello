@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
+    [XmlRoot("Anamnese", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("Anamnese")]
     public class AnamneseViewModel
     {
         public AnamneseViewModel()
@@ -19,10 +21,10 @@ namespace CerebelloWebRole.Areas.App.Models
         // Propriedade não está sendo usada?
         //public DateTime? Date { get; set; }
 
-        [Display(Name="Notas")]
+        [Display(Name = "Notas")]
         public string Text { get; set; }
 
-        [Display(Name="Sintomas")]
+        [Display(Name = "Sintomas")]
         public List<SymptomViewModel> Symptoms { get; set; }
     }
 }

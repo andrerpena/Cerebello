@@ -14,13 +14,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         private Models.PracticeHomeControllerViewModel GetViewModel()
         {
-            var timeZoneId = this.Practice.WindowsTimeZoneId;
+            var timeZoneId = this.DbPractice.WindowsTimeZoneId;
 
             var timeZone = Enum.GetValues(typeof(TypeTimeZone))
                 .Cast<TypeTimeZone>()
                 .First(tz => TimeZoneDataAttribute.GetAttributeFromEnumValue(tz).Id == timeZoneId);
 
-            var address = this.Practice.Address ?? new Address();
+            var address = this.DbPractice.Address ?? new Address();
 
             var viewModel = new Models.PracticeHomeControllerViewModel
                 {
@@ -33,15 +33,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             StateProvince = address.StateProvince,
                             Street = address.Street,
                         },
-                    Email = this.Practice.Email,
-                    Pabx = this.Practice.PABX,
-                    PhoneAlt = this.Practice.PhoneAlt,
-                    PhoneMain = this.Practice.PhoneMain,
-                    PracticeName = this.Practice.Name,
+                    Email = this.DbPractice.Email,
+                    Pabx = this.DbPractice.PABX,
+                    PhoneAlt = this.DbPractice.PhoneAlt,
+                    PhoneMain = this.DbPractice.PhoneMain,
+                    PracticeName = this.DbPractice.Name,
                     PracticeTimeZone = (short)timeZone,
-                    SiteUrl = this.Practice.SiteUrl,
-                    Doctors = GetDoctorViewModelsFromPractice(this.db, this.Practice, this.GetPracticeLocalNow()),
-                    Users = (from u in this.Practice.Users.OrderBy(u => u.Person.FullName).ToList()
+                    SiteUrl = this.DbPractice.SiteUrl,
+                    Doctors = GetDoctorViewModelsFromPractice(this.db, this.DbPractice, this.GetPracticeLocalNow()),
+                    Users = (from u in this.DbPractice.Users.OrderBy(u => u.Person.FullName).ToList()
                              select UsersController.GetViewModel(u, u.Practice)).ToList()
                 };
 
@@ -119,23 +119,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 formModel.PracticeName = Regex.Replace(formModel.PracticeName.Trim(), @"\s+", " ");
 
-                this.Practice.Name = formModel.PracticeName;
-                this.Practice.WindowsTimeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue(
+                this.DbPractice.Name = formModel.PracticeName;
+                this.DbPractice.WindowsTimeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue(
                     (TypeTimeZone)formModel.PracticeTimeZone).Id;
 
-                this.Practice.PhoneMain = formModel.PhoneMain;
-                this.Practice.PhoneAlt = formModel.PhoneAlt;
-                this.Practice.SiteUrl = formModel.SiteUrl;
-                this.Practice.Email = formModel.Email;
+                this.DbPractice.PhoneMain = formModel.PhoneMain;
+                this.DbPractice.PhoneAlt = formModel.PhoneAlt;
+                this.DbPractice.SiteUrl = formModel.SiteUrl;
+                this.DbPractice.Email = formModel.Email;
 
-                if (this.Practice.Address == null)
-                    this.Practice.Address = new Address();
-                this.Practice.Address.CEP = formModel.Address.CEP;
-                this.Practice.Address.City = formModel.Address.City;
-                this.Practice.Address.Complement = formModel.Address.Complement;
-                this.Practice.Address.Neighborhood = formModel.Address.Neighborhood;
-                this.Practice.Address.StateProvince = formModel.Address.StateProvince;
-                this.Practice.Address.Street = formModel.Address.Street;
+                if (this.DbPractice.Address == null)
+                    this.DbPractice.Address = new Address();
+                this.DbPractice.Address.CEP = formModel.Address.CEP;
+                this.DbPractice.Address.City = formModel.Address.City;
+                this.DbPractice.Address.Complement = formModel.Address.Complement;
+                this.DbPractice.Address.Neighborhood = formModel.Address.Neighborhood;
+                this.DbPractice.Address.StateProvince = formModel.Address.StateProvince;
+                this.DbPractice.Address.Street = formModel.Address.Street;
 
                 this.db.SaveChanges();
 

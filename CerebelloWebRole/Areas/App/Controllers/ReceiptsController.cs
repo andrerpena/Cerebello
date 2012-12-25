@@ -16,7 +16,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ReceiptsController : DoctorController
     {
-        private ReceiptViewModel GetViewModel(Receipt receipt)
+        public static ReceiptViewModel GetViewModel(Receipt receipt)
         {
             return new ReceiptViewModel()
             {
@@ -38,7 +38,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Details(int id)
         {
             var receipt = db.Receipts.Where(r => r.Id == id).First();
-            return this.View(this.GetViewModel(receipt));
+            return this.View(GetViewModel(receipt));
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ReceiptViewModel viewModel = null;
 
             if (id != null)
-                viewModel = this.GetViewModel((from r in db.Receipts where r.Id == id select r).First());
+                viewModel = GetViewModel((from r in db.Receipts where r.Id == id select r).First());
             else
                 viewModel = new ReceiptViewModel()
                 {
@@ -73,7 +73,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(ReceiptViewModel formModel)
         {
-            Receipt receipt = null;
+            Receipt receipt;
 
             if (formModel.ReceiptMedicines == null)
                 this.ModelState.AddModelError("Medicines", "A receita deve ter pelo menos um medicamento");
@@ -131,9 +131,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 db.SaveChanges();
 
-                return View("details", this.GetViewModel(receipt));
+                return View("Details", GetViewModel(receipt));
             }
-            return View("edit", formModel);
+            return View("Edit", formModel);
         }
 
         public ActionResult ReceiptMedicineEditor(ReceiptMedicineViewModel formModel)

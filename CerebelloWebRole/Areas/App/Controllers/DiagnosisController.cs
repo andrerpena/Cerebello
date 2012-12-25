@@ -11,7 +11,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class DiagnosisController : DoctorController
     {
-        private static DiagnosisViewModel GetViewModel(Diagnosis diagnosis)
+        public static DiagnosisViewModel GetViewModel(Diagnosis diagnosis)
         {
             return new DiagnosisViewModel()
             {

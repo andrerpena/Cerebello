@@ -12,8 +12,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Consultório atual
         /// </summary>
-        // todo: this property should be name DBPractice like the DBUser property.
-        protected Practice Practice { get; set; }
+        public Practice DbPractice { get; set; }
 
         /// <summary>
         /// Converts the specified UTC date and time for the location of the current practice.
@@ -46,7 +45,7 @@ namespace CerebelloWebRole.Code
 
         public DateTime GetPracticeLocalNow()
         {
-            return ConvertToLocalDateTime(this.Practice, this.UtcNowGetter());
+            return ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -72,7 +71,7 @@ namespace CerebelloWebRole.Code
                 return;
             }
 
-            this.Practice = practice;
+            this.DbPractice = practice;
             this.ViewBag.Practice = practice;
             this.ViewBag.PracticeName = practice.Name;
 
@@ -84,7 +83,7 @@ namespace CerebelloWebRole.Code
             }
 
             // Redirect to welcome screen if it was not presented yet.
-            if (this.Practice.ShowWelcomeScreen
+            if (this.DbPractice.ShowWelcomeScreen
                 && !(controllerName.ToLowerInvariant() == "practicehome"
                      && actionName.ToLowerInvariant() == "welcome"))
             {
@@ -97,10 +96,10 @@ namespace CerebelloWebRole.Code
 
             // discover the appointments that have already been polled and sent to the client
             this.ViewBag.AlreadyPolledMedicalAppointments =
-                NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(this.db, this.Practice.Id, this.DbUser.Id,
+                NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(this.db, this.DbPractice.Id, this.DbUser.Id,
                                                                                  this.UtcNowGetter, this.Url, true);
             this.ViewBag.AlreadyPolledGenericAppointments =
-                NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(this.db, this.Practice.Id, this.DbUser.Id,
+                NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(this.db, this.DbPractice.Id, this.DbUser.Id,
                                                                                 this.UtcNowGetter, this.Url, true);
 
             // discover the notifications that have already been polled and sent to to the client

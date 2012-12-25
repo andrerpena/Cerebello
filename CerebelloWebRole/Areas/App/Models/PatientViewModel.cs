@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace CerebelloWebRole.Areas.App.Models
@@ -15,10 +13,10 @@ namespace CerebelloWebRole.Areas.App.Models
         }
 
         [Display(Name = "Convênio")]
-        public int? CoverageId { get; set; }
+        public int? HealthInsuranceId { get; set; }
 
         [Display(Name = "Convênio")]
-        public String CoverageText { get; set; }
+        public String HealthInsuranceText { get; set; }
 
         [Display(Name = "Observações")]
         public String Observations { get; set; }

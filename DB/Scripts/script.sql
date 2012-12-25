@@ -206,20 +206,6 @@ CREATE TABLE [dbo].[ChatMessage](
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  Table [dbo].[Coverage] ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Coverage](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](100) NOT NULL,
- CONSTRAINT [PK_Coverage] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
-)
-GO
 /****** Object:  Table [dbo].[Diagnosis] ******/
 SET ANSI_NULLS ON
 GO
@@ -536,7 +522,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Patient](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[CoverageId] [int] NULL,
 	[Registration] [varchar](100) NULL,
 	[DoctorId] [int] NOT NULL,
 	[PersonId] [int] NOT NULL,
@@ -991,18 +976,6 @@ REFERENCES [dbo].[HealthInsurance] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_HealthInsurance]
 GO
-/****** Object:  ForeignKey [FK_Appointment_HealthInsurance1] ******/
-ALTER TABLE [dbo].[Appointment]  WITH CHECK ADD  CONSTRAINT [FK_Appointment_HealthInsurance1] FOREIGN KEY([HealthInsuranceId])
-REFERENCES [dbo].[HealthInsurance] ([Id])
-GO
-ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_HealthInsurance1]
-GO
-/****** Object:  ForeignKey [FK_Appointment_Patient] ******/
-ALTER TABLE [dbo].[Appointment]  WITH CHECK ADD  CONSTRAINT [FK_Appointment_Patient] FOREIGN KEY([PatientId])
-REFERENCES [dbo].[Patient] ([Id])
-GO
-ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Patient]
-GO
 /****** Object:  ForeignKey [FK_Appointment_User] ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_User] FOREIGN KEY([CreatedById])
 REFERENCES [dbo].[User] ([Id])
@@ -1141,12 +1114,6 @@ ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_User]
-GO
-/****** Object:  ForeignKey [FK_Patient_Coverage] ******/
-ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Coverage] FOREIGN KEY([CoverageId])
-REFERENCES [dbo].[Coverage] ([Id])
-GO
-ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Coverage]
 GO
 /****** Object:  ForeignKey [FK_Patient_Doctor] ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Doctor] FOREIGN KEY([DoctorId])
