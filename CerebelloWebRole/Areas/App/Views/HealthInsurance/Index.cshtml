@@ -21,6 +21,7 @@
     {
         grid.AddField(item => item.ReturnDaysInterval);
     }
+    grid.AddEditField("Edit", "HealthInsurance", model => new { model.Id });
 
     var itemsParticular = this.Model.HealthInsurances.Where(hi => hi.IsParticular);
     var gridParticular = this.Html.CreateGrid(itemsParticular);
@@ -34,6 +35,7 @@
     {
         gridParticular.AddField(item => item.ReturnDaysInterval);
     }
+    gridParticular.AddEditField("Edit", "HealthInsurance", model => new { model.Id });
 }
 @section Title {
     @title <span class="lock-title icon-lock" />

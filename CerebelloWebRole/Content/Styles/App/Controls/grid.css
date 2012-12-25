@@ -45,6 +45,16 @@
      font-weight: bold;
  }
 
+ .webgrid .action-column {
+     width: 1px;
+     padding: 0 8px;
+ }
+
+ .webgrid .grid-action-link {
+     width: 16px;
+     height: 16px;
+     display: inline-block;
+ }
  
 /* a grid cell that supports icon links*/
 .icon-link-td {

@@ -33,11 +33,16 @@
     todaysAppointmentGrid.AddField(model => model.PatientName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new {id = item.PatientId})">@item.PatientName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.LocalDateTimeSpelled, header:"Horário", format: @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new {y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day})">@item.LocalDateTimeSpelled</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.HealthInsuranceId, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "HealthInsurance", new {id = item.HealthInsuranceId})">@item.HealthInsuranceName</a></span></text>);
-    todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)"><a class="status" href="#" item-id="@item.Id">@item.StatusText</a></span></text>);
-
+    todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)">@item.StatusText</span></text>);
+    
+    // this is not the normal way to create an edit-column. It's just because there's script involved.
+    todaysAppointmentGrid.AddField<object>(null, cssClass: "action-column", format: @<text><a href="#" data-val-id="@item.Id" class="status grid-action-link icon-link-edit"></a></text>);
+    
     var nextGenericAppointments = this.Html.CreateGrid(this.Model.NextGenericAppointments);
     nextGenericAppointments.AddField(model => model.Description, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new { y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day })">@item.Description</a></span></text>);
     nextGenericAppointments.AddField(model => model.LocalDateTimeSpelled, header: "Data", format: @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new { y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day })">@item.LocalDateTimeSpelled</a></span></text>);
+    // this is not the normal way to create an edit-column. It's just because there's script involved.
+    nextGenericAppointments.AddField<object>(null, cssClass:"action-column", format: @<text><a href="#" data-val-id="@item.Id" class="status grid-action-link icon-link-edit"></a></text>);
 }
 
 @section SideBar
@@ -65,10 +70,13 @@
                     url: "@Url.Action("Edit", "Schedule")",
                     title: "Editar consulta",
                     data: {
-                        id: $el.attr("item-id")
+                        id: $el.attr("data-val-id")
                     },
                     width: 480,
-                    height: 200
+                    height: 200,
+                    ok: function() {
+                        window.location.reload();
+                    }
                 });
 
             });

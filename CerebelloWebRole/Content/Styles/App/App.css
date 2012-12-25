@@ -287,6 +287,10 @@ input, textarea {
     background-image: url("/content/images/app/icons16/delete.png");
 }
 
+.icon-link-key {
+    background-image: url("/content/images/app/icons16/key.png");
+}
+
 .icon-link {
     background-position: 1px 50%;
     background-repeat: no-repeat;
