@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report Width="19cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+  <Items>
+    <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
+      <Style Visible="False" />
+    </PageHeaderSection>
+    <DetailSection Height="0.8663383324941in" Name="detailSection1">
+      <Items>
+        <SubReport KeepTogether="False" Size="18cm, 0.700299620628357cm" Location="0.999895335041414cm, 1.50019967556cm" Name="Patients" />
+        <TextBox Value="=FullName" Size="14.8998976059783cm, 0.600000083446503cm" Location="4.09999994953474cm, 0.199900180101395cm" Name="DoctorName" />
+        <TextBox Value="Pacientes do médico" Size="3.60000020186106cm, 0.600000083446503cm" Location="0.200000002980232cm, 0.199700340628624cm" Name="labelDoctorName" />
+        <Shape Size="18.7998984638878cm, 0.299799602434646cm" Location="0.2cm, 1.00019953965586cm" Name="shape1">
+          <ShapeType>
+            <LineShape Direction="EW" />
+          </ShapeType>
+        </Shape>
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">
+      <Style Visible="False" />
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="1cm" Right="1cm" Top="1cm" Bottom="1cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+</Report>

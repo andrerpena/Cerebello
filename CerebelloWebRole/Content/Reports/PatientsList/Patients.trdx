@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report Width="18cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+  <Items>
+    <PageHeaderSection Height="0.354330698649089in" Name="pageHeaderSection1">
+      <Style Visible="True" />
+    </PageHeaderSection>
+    <DetailSection Height="2.91346454620361in" Name="detailSection1">
+      <Items>
+        <Panel Size="17.9997999556915cm, 7.39999949534736cm" Location="0.00010012308478013cm, 0.00010012308484875cm" Docking="Fill" Name="panel1">
+          <Style Visible="True">
+            <BorderStyle Default="Solid" />
+          </Style>
+          <Items>
+            <SubReport KeepTogether="False" Size="16.6210425013411cm, 0.599999725818634cm" Location="1.17885808208781cm, 6.39114960377198cm" Name="Sessions" />
+            <TextBox Value="Histórico" Size="1.59989988803864cm, 0.600000023841858cm" Location="0.199899775984691cm, 5.7826079540322cm" Name="textBox23" />
+            <TextBox Value="Observações" Size="2.89989972114563cm, 0.600000023841858cm" Location="0.199899775984691cm, 4.98885797611075cm" Name="textBox22" />
+            <TextBox Value="=Observations" Size="14.5043758935506cm, 0.600000023841858cm" Location="3.29552468987833cm, 4.98885797611075cm" Anchoring="Top, Left, Right" Name="textBox21" />
+            <TextBox Value="=CpfOwner" Size="6.01125193723534cm, 0.600000023841858cm" Location="11.7886494536378cm, 2.58114970974903cm" Anchoring="Top, Left, Right" Name="textBox20" />
+            <TextBox Value="Proprietário do CPF" Size="3.59990000724792cm, 0.600000023841858cm" Location="7.97864955961487cm, 2.58114970974903cm" Name="textBox19" />
+            <TextBox Value="CPF" Size="2.89989972114563cm, 0.600000023841858cm" Location="0.199899775984691cm, 2.58114970974903cm" Name="textBox18" />
+            <TextBox Value="=Cpf" Size="4.5cm, 0.600000023841858cm" Location="3.29552468987833cm, 2.58114970974903cm" Anchoring="Top, Left, Right" Name="textBox17" />
+            <TextBox Value="Telefone celular" Size="2.89989972114563cm, 0.600000023841858cm" Location="7.97864955961487cm, 3.37489968767048cm" Name="textBox15" />
+            <TextBox Value="=PhoneCell" Size="4.5cm, 0.600000023841858cm" Location="11.0742744735085cm, 3.37489968767048cm" Anchoring="Top, Left, Right" Name="textBox7" />
+            <TextBox Value="Telefone fixo" Size="2.89989972114563cm, 0.600000023841858cm" Location="0.199899775984691cm, 3.37489968767048cm" Name="textBox16" />
+            <TextBox Value="=PhoneLand" Size="4.5cm, 0.600000023841858cm" Location="3.29552468987833cm, 3.37489968767048cm" Anchoring="Top, Left, Right" Name="textBox8" />
+            <TextBox Value="Estado civil" Size="2.30010151863098cm, 0.600000023841858cm" Location="7.97864955961487cm, 1.78739973182758cm" Name="textBox14" />
+            <TextBox Value="=Profissao" Size="5.39979839324951cm, 0.600000023841858cm" Location="2.39594138156736cm, 1.78739973182758cm" Anchoring="Top, Left, Right" Name="textBox13" />
+            <TextBox Value="Profissão" Size="1.99999976158142cm, 0.600000023841858cm" Location="0.199899775984691cm, 1.78739973182758cm" Name="textBox12" />
+            <TextBox Value="=MaritalStatus" Size="7.30771023450704cm, 0.600000023841858cm" Location="10.4921911563661cm, 1.78739973182758cm" Anchoring="Top, Left, Right" Name="textBox11" />
+            <TextBox Value="Nascimento" Size="2.30010151863098cm, 0.600000023841858cm" Location="7.97864955961487cm, 0.993649753906138cm" Name="textBox6" />
+            <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, DateOfBirth)" Size="7.30771023450704cm, 0.600000023841858cm" Location="10.4921911563661cm, 0.993649753906138cm" Anchoring="Top, Left, Right" Name="textBox5" />
+            <TextBox Value="E-mail" Size="1.99999976158142cm, 0.600000023841858cm" Location="0.199899775984691cm, 4.19510799818931cm" Name="textBox10" />
+            <TextBox Value="=Email" Size="15.40396081675cm, 0.600000023841858cm" Location="2.39594138156736cm, 4.19510799818931cm" Anchoring="Top, Left, Right" Name="textBox9" />
+            <TextBox Value="=Gender" Size="5.39979839324951cm, 0.600000023841858cm" Location="2.39594138156736cm, 0.993649753906138cm" Anchoring="Top, Left, Right" Name="textBox4" />
+            <TextBox Value="Sexo" Size="1.99999976158142cm, 0.600000023841858cm" Location="0.199899775984691cm, 0.993649753906138cm" Name="textBox3" />
+            <TextBox Value="=FullName" Size="15.4039592018616cm, 0.600000023841858cm" Location="2.39594138156736cm, 0.199899775984691cm" Anchoring="Top, Left, Right" Name="textBox2" />
+            <TextBox Value="Nome" Size="1.99999976158142cm, 0.600000023841858cm" Location="0.199899775984691cm, 0.199899775984691cm" Name="textBox1" />
+          </Items>
+        </Panel>
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.252047220865885in" Name="pageFooterSection1">
+      <Style Visible="False" />
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="1cm" Right="1cm" Top="1cm" Bottom="1cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <Bindings>
+    <Binding Path="DataSource" Expression="=Patients" />
+  </Bindings>
+</Report>

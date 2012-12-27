@@ -104,6 +104,7 @@ namespace Cerebello.Model
     {
         [Display(Name = "Masculino")]
         Male = 0,
+
         [Display(Name = "Feminino")]
         Female = 1
     }

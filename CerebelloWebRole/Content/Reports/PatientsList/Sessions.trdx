@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report Width="16cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+  <Items>
+    <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
+      <Style Visible="False" />
+    </PageHeaderSection>
+    <DetailSection Height="0.23629903793335in" Name="detailSection1">
+      <Items>
+        <TextBox Value="Data" Size="3.60000020186106cm, 0.600000083446503cm" Location="0.00010002215425112cm, 0.00009992122372211cm" Name="labelDoctorName" />
+        <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, Date)" Size="4.49999974767368cm, 0.600000023841858cm" Location="3.80000010093053cm, 0.00009992122372211cm" Anchoring="Top, Left, Right" Name="textBox5" />
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">
+      <Style Visible="False" />
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="1cm" Right="1cm" Top="1cm" Bottom="1cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <Bindings>
+    <Binding Path="DataSource" Expression="=Sessions" />
+  </Bindings>
+</Report>

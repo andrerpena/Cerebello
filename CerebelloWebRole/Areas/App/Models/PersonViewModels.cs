@@ -31,13 +31,6 @@ namespace CerebelloWebRole.Areas.App.Models
         [XmlIgnore]
         public int Gender { get; set; }
 
-        [XmlElement("Gender")]
-        public TypeGender TypeGender
-        {
-            get { return (TypeGender)this.Gender; }
-            set { this.Gender = (int)value; }
-        }
-
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Data de Nascimento")]
         [DateOfBirth]
@@ -47,13 +40,6 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Estado Civil")]
         [XmlIgnore]
         public short? MaritalStatus { get; set; }
-
-        [XmlElement("MaritalStatus")]
-        public TypeMaritalStatus? TypeMaritalStatus
-        {
-            get { return (TypeMaritalStatus?)this.MaritalStatus; }
-            set { this.MaritalStatus = (short?)value; }
-        }
 
         [Display(Name = "Naturalidade")]
         public String BirthPlace { get; set; }
@@ -65,13 +51,6 @@ namespace CerebelloWebRole.Areas.App.Models
         [EnumDataType(typeof(TypeCpfOwner))]
         [XmlIgnore]
         public short? CpfOwner { get; set; }
-
-        [XmlElement("CpfOwner")]
-        public TypeCpfOwner? TypeCpfOwner
-        {
-            get { return (TypeCpfOwner?)this.CpfOwner; }
-            set { this.CpfOwner = (short?)value; }
-        }
 
         [Display(Name = "Profissão")]
         public String Profissao { get; set; }

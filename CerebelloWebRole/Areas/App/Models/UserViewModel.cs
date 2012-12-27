@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Validation;
@@ -35,6 +36,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Estado do conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataTypeAttribute(typeof(TypeEstadoBrasileiro))]
+        [XmlIgnore]
         public int? MedicalEntityJurisdiction { get; set; }
 
         [Display(Name = "Especialidade")]

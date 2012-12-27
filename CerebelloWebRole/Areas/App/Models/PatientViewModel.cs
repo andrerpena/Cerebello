@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -21,6 +22,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Observações")]
         public String Observations { get; set; }
 
+        [XmlIgnore]
         public List<SessionViewModel> Sessions { get; set; }
 
         public List<AppointmentViewModel> FutureAppointments { get; set; }

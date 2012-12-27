@@ -4,11 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Xml;
 using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
+using Telerik.Reporting.Processing;
+using Telerik.Reporting.XmlSerialization;
+using Report = Telerik.Reporting.Report;
+using SubReport = Telerik.Reporting.SubReport;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -109,12 +114,77 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult XmlBackup()
         {
+            var doctorData = this.GetBackupData(false);
+
+            var stringBuilder = new StringBuilder();
+            using (var writer = new StringWriter(stringBuilder))
+            {
+                var xs = new XmlSerializer(typeof(XmlDoctorData));
+                xs.Serialize(writer, doctorData);
+            }
+
+            return this.Content(stringBuilder.ToString(), "text/xml");
+        }
+
+        public ActionResult PdfBackup()
+        {
+            var doctorData = (PdfDoctorData)this.GetBackupData(true);
+
+            // Getting URL of the report model.
+            var domain = this.Request.Url.GetLeftPart(UriPartial.Authority);
+            var urlMain = new Uri(string.Format("{0}/Content/Reports/PatientsList/Doctor.trdx", domain));
+
+            // Creating the report and exporting PDF.
+            using (var reportMain = CreateReportFromUrl(urlMain))
+            {
+                reportMain.DataSource = new[] { doctorData };
+
+                // Exporting PDF from report.
+                var reportProcessor = new ReportProcessor();
+                var pdf = reportProcessor.RenderReport("PDF", reportMain, null);
+
+                // Returning the generated PDF as a file.
+                return this.File(pdf.DocumentBytes, pdf.MimeType);
+
+                //var fileName = pdf.DocumentName + "." + pdf.Extension;
+                //return this.File(result.DocumentBytes, result.MimeType, Server.UrlEncode(fileName));
+            }
+        }
+
+        private static Report CreateReportFromUrl(Uri uri)
+        {
+            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
+            using (var xmlReader = XmlReader.Create(uri.ToString(), settings))
+            {
+                var xmlSerializer = new ReportXmlSerializer();
+                var report = (Report)xmlSerializer.Deserialize(xmlReader);
+
+
+                var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
+                foreach (var eachSubReport in subReports)
+                {
+                    var uriSub = new Uri(uri, string.Format("{0}.trdx", eachSubReport.Name));
+                    var reportSub = CreateReportFromUrl(uriSub);
+                    report.Disposed += (s, e) => reportSub.Dispose();
+                    eachSubReport.ReportSource = reportSub;
+                }
+
+                return report;
+            }
+        }
+
+        private bool isPdf;
+
+        private XmlDoctorData GetBackupData(bool isPdf)
+        {
+            this.isPdf = isPdf;
+
             var doctor = this.Doctor;
 
             var docPerson = doctor.Users.Single().Person;
 
             // Getting all patients data.
-            var doctorData = new DoctorData();
+            var doctorData = this.isPdf ? new PdfDoctorData() : new XmlDoctorData();
             PatientsController.FillPersonViewModel(this, docPerson, doctorData);
 
             doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
@@ -122,24 +192,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
             doctorData.Patients = this.Doctor.Patients
                                       .Select(this.GetPatientData)
                                       .ToList();
-
-            var stringBuilder = new StringBuilder();
-            using (var writer = new StringWriter(stringBuilder))
-            {
-                var xs = new XmlSerializer(typeof(DoctorData));
-                xs.Serialize(writer, doctorData);
-            }
-
-            return this.Content(stringBuilder.ToString(), "text/xml");
+            return doctorData;
         }
 
-        private PatientData GetPatientData(Patient patient)
+        private XmlPatientData GetPatientData(Patient patient)
         {
-            var result = new PatientData();
-
-            result.Id = patient.Id;
+            var result = this.isPdf ? new PdfPatientData() : new XmlPatientData();
 
             PatientsController.FillPersonViewModel(this, patient.Person, result);
+
+            result.Id = patient.Id;
+            result.Observations = patient.Person.Observations;
 
             result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.Single());
 
@@ -163,52 +226,168 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             result.Date = arg.Date;
 
-            result.Items = new List<object>();
-
-            result.Items.AddRange(
+            result.Anamneses =
                 this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
-                .Select(AnamnesesController.GetViewModel));
+                .Select(AnamnesesController.GetViewModel).ToList();
 
-            result.Items.AddRange(
+            result.Receipts =
                 this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
-                .Select(ReceiptsController.GetViewModel));
+                .Select(ReceiptsController.GetViewModel).ToList();
 
-            result.Items.AddRange(
+            result.ExaminationRequests =
                 this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
-                .Select(ExamsController.GetViewModel));
+                .Select(ExamsController.GetViewModel).ToList();
 
-            result.Items.AddRange(
+            result.ExaminationResults =
                 this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
-                .Select(ExamResultsController.GetViewModel));
+                .Select(ExamResultsController.GetViewModel).ToList();
 
-            result.Items.AddRange(
+            result.Diagnosis =
                 this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
-                .Select(DiagnosisController.GetViewModel));
+                .Select(DiagnosisController.GetViewModel).ToList();
 
-            result.Items.AddRange(
+            result.MedicalCertificates =
                 this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
-                .Select(MedicalCertificatesController.GetViewModel));
+                .Select(MedicalCertificatesController.GetViewModel).ToList();
 
             return result;
         }
 
 
+
+        public class PdfDoctorData : XmlDoctorData
+        {
+            public new string Gender
+            {
+                get { return EnumHelper.GetValueDisplayDictionary(typeof(TypeGender))[(int)base.Gender]; }
+            }
+
+            public new string MaritalStatus
+            {
+                get
+                {
+                    if (base.MaritalStatus.HasValue)
+                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeMaritalStatus))[(int)base.MaritalStatus.Value];
+                    return null;
+                }
+            }
+
+            public new string CpfOwner
+            {
+                get
+                {
+                    if (base.CpfOwner.HasValue)
+                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value];
+                    return null;
+                }
+            }
+
+            public new string MedicalEntityJurisdiction
+            {
+                get
+                {
+                    if (base.MedicalEntityJurisdiction.HasValue)
+                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeEstadoBrasileiro))[(int)base.MedicalEntityJurisdiction.Value];
+                    return null;
+                }
+            }
+
+            public new List<PdfPatientData> Patients
+            {
+                get { return base.Patients.OfType<PdfPatientData>().ToList(); }
+            }
+        }
+
+        public class PdfPatientData : XmlPatientData
+        {
+            public new string Gender
+            {
+                get { return EnumHelper.GetValueDisplayDictionary(typeof(TypeGender))[(int)base.Gender]; }
+            }
+
+            public new string MaritalStatus
+            {
+                get
+                {
+                    if (base.MaritalStatus.HasValue)
+                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeMaritalStatus))[(int)base.MaritalStatus.Value];
+                    return null;
+                }
+            }
+
+            public new string CpfOwner
+            {
+                get
+                {
+                    if (base.CpfOwner.HasValue)
+                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value];
+                    return null;
+                }
+            }
+        }
+
+
+
         [XmlRoot("Doctor", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
         [XmlType("Doctor")]
-        public class DoctorData : UserViewModel
+        public class XmlDoctorData : UserViewModel
         {
-            public List<PatientData> Patients { get; set; }
+            public new TypeGender Gender
+            {
+                get { return (TypeGender)base.Gender; }
+                set { base.Gender = (int)value; }
+            }
+
+            public new TypeMaritalStatus? MaritalStatus
+            {
+                get { return (TypeMaritalStatus?)base.MaritalStatus; }
+                set { base.MaritalStatus = (short?)value; }
+            }
+
+            public new TypeCpfOwner? CpfOwner
+            {
+                get { return (TypeCpfOwner?)base.CpfOwner; }
+                set { base.CpfOwner = (short?)value; }
+            }
+
+            public new TypeEstadoBrasileiro? MedicalEntityJurisdiction
+            {
+                get { return (TypeEstadoBrasileiro?)base.MedicalEntityJurisdiction; }
+                set { base.MedicalEntityJurisdiction = (int?)value; }
+            }
+
+            public List<XmlPatientData> Patients { get; set; }
         }
 
         [XmlRoot("Patient", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
         [XmlType("Patient")]
-        public class PatientData : UserViewModel
+        public class XmlPatientData : PatientViewModel
         {
+            public new TypeGender Gender
+            {
+                get { return (TypeGender)base.Gender; }
+                set { base.Gender = (int)value; }
+            }
+
+            public new TypeMaritalStatus? MaritalStatus
+            {
+                get { return (TypeMaritalStatus?)base.MaritalStatus; }
+                set { base.MaritalStatus = (short?)value; }
+            }
+
+            public new TypeCpfOwner? CpfOwner
+            {
+                get { return (TypeCpfOwner?)base.CpfOwner; }
+                set { base.CpfOwner = (short?)value; }
+            }
+
             public List<AppointmentViewModel> Appointments { get; set; }
 
             [XmlElementAttribute]
             public List<SessionData> Sessions { get; set; }
         }
+
+
 
         [XmlRoot("Session", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
         [XmlType("Session")]
@@ -216,13 +395,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             public DateTime Date { get; set; }
 
-            [XmlArrayItem(typeof(AnamneseViewModel))]
-            [XmlArrayItem(typeof(ReceiptViewModel))]
-            [XmlArrayItem(typeof(ExaminationRequestViewModel))]
-            [XmlArrayItem(typeof(ExaminationResultViewModel))]
-            [XmlArrayItem(typeof(DiagnosisViewModel))]
-            [XmlArrayItem(typeof(MedicalCertificateViewModel))]
-            public List<object> Items { get; set; }
+            public List<AnamneseViewModel> Anamneses { get; set; }
+            public List<ReceiptViewModel> Receipts { get; set; }
+            public List<ExaminationRequestViewModel> ExaminationRequests { get; set; }
+            public List<ExaminationResultViewModel> ExaminationResults { get; set; }
+            public List<DiagnosisViewModel> Diagnosis { get; set; }
+            public List<MedicalCertificateViewModel> MedicalCertificates { get; set; }
         }
     }
 }
