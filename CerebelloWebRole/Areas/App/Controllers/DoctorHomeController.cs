@@ -191,6 +191,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             doctorData.Patients = this.Doctor.Patients
                                       .Select(this.GetPatientData)
+                                      .OrderBy(x => x.FullName)
                                       .ToList();
             return doctorData;
         }

@@ -4,14 +4,14 @@
     <PageHeaderSection Height="0.354330698649089in" Name="pageHeaderSection1">
       <Style Visible="True" />
     </PageHeaderSection>
-    <DetailSection Height="6.89999934395156cm" Name="detailSection1">
+    <DetailSection Height="5cm" Name="detailSection1">
       <Items>
-        <Panel Size="18cm, 6.89999934395156cm" Location="0.00010012308484875cm, 0.00010012308484875cm" Docking="Fill" Name="panel1">
+        <Panel Size="18cm, 5cm" Location="0.00010012308484875cm, 0.00010012308484875cm" Docking="Fill" Name="panel1">
           <Style Visible="True">
-            <BorderStyle Default="Solid" />
+            <BorderStyle Default="None" Bottom="Solid" />
           </Style>
           <Items>
-            <SubReport KeepTogether="False" Size="16.6210422515869cm, 0.132291659712791cm" Location="1.17885804176331cm, 6.8742055379572cm" Name="Sessions">
+            <SubReport KeepTogether="False" Size="16.6210422515869cm, 0.132291659712791cm" Location="1.17885804176331cm, 5.63239345142542cm" Name="Sessions">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -21,7 +21,7 @@
                 </FormattingRule>
               </ConditionalFormatting>
             </SubReport>
-            <TextBox Value="Histórico" Size="1.59989988803864cm, 0.132291659712791cm" Location="0.199899777770042cm, 6.74171161019015cm" Name="textBox23">
+            <TextBox Value="Histórico" Size="1.59989988803864cm, 0.132291659712791cm" Location="0.199899777770042cm, 5.49989992738048cm" Name="textBox23">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -118,62 +118,62 @@
                 <Font Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="=IsNull(Address.Street,&quot;-&quot;)" Size="14.1000013625621cm, 0.299800006156762cm" Location="3.69989967346191cm, 4.59989997784575cm" Anchoring="Top, Left, Right" Name="textBox24">
+            <TextBox Value="=IsNull(Address.Street,&quot;-&quot;)" Size="13.2001015361122cm, 0.299800008535385cm" Location="4.59989997784575cm, 4.06357210300364cm" Anchoring="Top, Left, Right" Name="textBox24">
               <Style>
                 <Font Size="8pt" />
               </Style>
             </TextBox>
-            <TextBox Value="Logradouro" Size="2.70000005046526cm, 0.29979975383044cm" Location="0.799899876117706cm, 4.70009976982793cm" Name="textBox25">
+            <TextBox Value="Logradouro" Size="2.00000025232632cm, 0.29979975383044cm" Location="2.49989982644996cm, 4.16377189498582cm" Name="textBox25">
               <Style Color="Black">
                 <Font Size="8pt" Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="=IsNull(Address.Complement,&quot;-&quot;)" Size="14.0999981327852cm, 0.3cm" Location="3.69989967346191cm, 5.00010002215425cm" Anchoring="Top, Left, Right" Name="textBox26">
+            <TextBox Value="=Iif(IsNull(Address.Complement,&quot;&quot;) = &quot;&quot;, &quot;----&quot;, Address.Complement)" Size="13.199996568362cm, 0.300000011920929cm" Location="4.59989957412363cm, 4.41272956018008cm" Anchoring="Top, Left, Right" Name="textBox26">
               <Style>
                 <Font Size="8pt" />
               </Style>
             </TextBox>
-            <TextBox Value="Complemento" Size="2.7cm, 0.3cm" Location="0.799899876117706cm, 5.00010002215425cm" Name="textBox27">
+            <TextBox Value="Complemento" Size="2.00000025232632cm, 0.3cm" Location="2.49989942272784cm, 4.46377133986791cm" Name="textBox27">
               <Style Color="Black">
                 <Font Size="8pt" Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="=IsNull(Address.Neighborhood,&quot;-&quot;)" Size="14.0999981327852cm, 0.3cm" Location="3.69989967346191cm, 5.3002997132059cm" Anchoring="Top, Left, Right" Name="textBox28">
+            <TextBox Value="=IsNull(Address.Neighborhood,&quot;-&quot;)" Size="7.00000050465265cm, 0.300000011920929cm" Location="4.59989957412363cm, 4.76437152325868cm" Anchoring="Top, Left, Right" Name="textBox28">
               <Style>
                 <Font Size="8pt" />
               </Style>
             </TextBox>
-            <TextBox Value="Estado" Size="2.7cm, 0.3cm" Location="0.799899876117706cm, 5.5998994731931cm" Name="textBox29">
+            <TextBox Value="Estado" Size="1.20020145733591cm, 0.3cm" Location="11.7996993279541cm, 4.76397143464168cm" Name="textBox29">
               <Style Color="Black">
                 <Font Size="8pt" Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="Bairro" Size="2.70000005046526cm, 0.3cm" Location="0.799899876117706cm, 5.29990002831101cm" Name="textBox30">
+            <TextBox Value="Bairro" Size="2.00000025232632cm, 0.3cm" Location="2.49989942272784cm, 4.7639718383638cm" Name="textBox30">
               <Style Color="Black">
                 <Font Size="8pt" Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="=IsNull(Address.StateProvince,&quot;-&quot;)" Size="14.0999981327852cm, 0.3cm" Location="3.69989967346191cm, 5.64989964982153cm" Anchoring="Top, Left, Right" Name="textBox31">
+            <TextBox Value="=IsNull(Address.StateProvince,&quot;-&quot;)" Size="4.70010128378586cm, 0.300000011920929cm" Location="13.09989982645cm, 4.76332992019928cm" Anchoring="Top, Left, Right" Name="textBox31">
               <Style>
                 <Font Size="8pt" />
               </Style>
             </TextBox>
-            <TextBox Value="=IsNull(Address.CEP,&quot;-&quot;)" Size="14.1000013625621cm, 0.29999944488209cm" Location="3.70000004768372cm, 6.24989934702994cm" Anchoring="Top, Left, Right" Name="textBox32">
+            <TextBox Value="=IsNull(Address.CEP,&quot;-&quot;)" Size="4.70000116070108cm, 0.299999445676804cm" Location="13.0999999495347cm, 5.09695820618189cm" Anchoring="Top, Left, Right" Name="textBox32">
               <Style>
                 <Font Size="8pt" />
               </Style>
             </TextBox>
-            <TextBox Value="Cidade" Size="2.70000005046526cm, 0.299798946386208cm" Location="0.799899876117706cm, 5.89989972551943cm" Name="textBox33">
+            <TextBox Value="Cidade" Size="2.00000025232632cm, 0.535726884007103cm" Location="2.49989982644996cm, 5.06417233685968cm" Name="textBox33">
               <Style Color="Black">
                 <Font Size="8pt" Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="CEP" Size="2.70000005046526cm, 0.299999192555768cm" Location="0.799899876117706cm, 6.19989917040152cm" Name="textBox34">
+            <TextBox Value="CEP" Size="1.20020145733591cm, 0.299999192555768cm" Location="11.7996993279541cm, 5.06357200207311cm" Name="textBox34">
               <Style Color="Black">
                 <Font Size="8pt" Italic="True" />
               </Style>
             </TextBox>
-            <TextBox Value="=IsNull(Address.City,&quot;-&quot;)" Size="14.1000013625621cm, 0.29979919871253cm" Location="3.69989967346191cm, 5.94989990214785cm" Anchoring="Top, Left, Right" Name="textBox35">
+            <TextBox Value="=IsNull(Address.City,&quot;-&quot;)" Size="7.00000050465265cm, 0.299799203872681cm" Location="4.59989997784575cm, 5.1141725134881cm" Anchoring="Top, Left, Right" Name="textBox35">
               <Style>
                 <Font Size="8pt" />
               </Style>

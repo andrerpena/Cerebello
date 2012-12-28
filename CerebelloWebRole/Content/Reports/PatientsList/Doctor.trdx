@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report Width="19cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
   <Items>
-    <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
-      <Style Visible="False" />
-    </PageHeaderSection>
-    <DetailSection Height="0.63023583094279in" Name="detailSection1">
+    <PageHeaderSection Height="0.393621842066447in" Name="pageHeaderSection1">
+      <Style Visible="True" />
       <Items>
-        <SubReport KeepTogether="False" Size="18cm, 0.50059927501601cm" Location="0.999895334243774cm, 1.10019969105165cm" Name="Patients" />
-        <TextBox Value="=FullName" Size="15.0997949596303cm, 0.600000083446503cm" Location="3.90010017355004cm, 0.00029976367116632cm" Name="DoctorName" />
         <TextBox Value="Pacientes do médico" Size="3.60000020186106cm, 0.600000083446503cm" Location="0.00010012308478013cm, 0.00009992122372211cm" Name="labelDoctorName" />
-        <Shape Size="18.9997958175398cm, 0.299799602434646cm" Location="0.00010012308478013cm, 0.60049970704914cm" Name="shape1">
+        <TextBox Value="=FullName" Size="15.0997949596303cm, 0.600000083446503cm" Location="3.90010017355004cm, 0.00029976367116632cm" Name="DoctorName" />
+        <Shape Size="18.9997958175398cm, 0.299799602434646cm" Location="0.00010012308478013cm, 0.599999899069471cm" Name="shape1">
           <ShapeType>
             <LineShape Direction="EW" />
           </ShapeType>
         </Shape>
+      </Items>
+    </PageHeaderSection>
+    <DetailSection Height="0.197086334228516in" Name="detailSection1">
+      <Items>
+        <SubReport KeepTogether="False" Size="18cm, 0.50059927501601cm" Location="0.999895334243774cm, 0cm" Name="Patients" />
       </Items>
     </DetailSection>
     <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">
