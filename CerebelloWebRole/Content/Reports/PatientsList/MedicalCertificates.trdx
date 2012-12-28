@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report Width="12cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+  <Items>
+    <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
+      <Style Visible="False" />
+    </PageHeaderSection>
+    <DetailSection Height="0.669448614120483in" Name="detailSection1">
+      <Style>
+        <Font Size="8pt" />
+      </Style>
+      <Items>
+        <Table ColumnHeadersPrintOnEveryPage="False" Size="11.5999004824984cm, 1.10019969105165cm" Location="0.399999798138942cm, 0.600199741516915cm" Name="table1">
+          <Body>
+            <Cells>
+              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=Name" CanShrink="True" Size="5.7999502412492cm, 0.550099845525825cm" Name="textBox4" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=Value" CanShrink="True" Size="5.7999502412492cm, 0.550099845525825cm" Name="textBox5" />
+                </ReportItem>
+              </TableCell>
+            </Cells>
+            <Columns>
+              <Column Width="5.7999502412492cm" />
+              <Column Width="5.7999502412492cm" />
+            </Columns>
+            <Rows>
+              <Row Height="0.550099845525825cm" />
+            </Rows>
+          </Body>
+          <Corner />
+          <RowGroups>
+            <TableGroup Name="DetailGroup">
+              <Groupings>
+                <Grouping Expression="null" />
+              </Groupings>
+            </TableGroup>
+          </RowGroups>
+          <ColumnGroups>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Value="Nome do campo" CanShrink="True" Size="5.7999502412492cm, 0.550099845525825cm" Name="textBox1">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Value="Valor" CanShrink="True" Size="5.7999502412492cm, 0.550099845525825cm" Name="textBox2">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+          </ColumnGroups>
+          <Bindings>
+            <Binding Path="DataSource" Expression="=Fields" />
+          </Bindings>
+        </Table>
+        <TextBox Value="Modelo" Size="2.00000020186106cm, 0.400099517501606cm" Location="0.00010012308478013cm, 0.00009992122372211cm" Name="textBox9" />
+        <TextBox Value="=ModelName" Size="9.79990017970681cm, 0.400099515914917cm" Location="2.20000010093053cm, 0.0000999212206807cm" Name="textBox10" />
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">
+      <Style Visible="False" />
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="1cm" Right="1cm" Top="1cm" Bottom="1cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <Bindings>
+    <Binding Path="DataSource" Expression="=MedicalCertificates" />
+  </Bindings>
+</Report>

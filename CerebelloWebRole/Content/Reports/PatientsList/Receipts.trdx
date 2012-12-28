@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report Width="12cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+  <Items>
+    <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
+      <Style Visible="False" />
+    </PageHeaderSection>
+    <DetailSection Height="0.511889616648356in" Name="detailSection1">
+      <Style>
+        <Font Size="8pt" />
+      </Style>
+      <Items>
+        <Table ColumnHeadersPrintOnEveryPage="False" Size="12cm, 0.433149496714274in" Location="0cm, 0cm" Docking="None" Name="table1">
+          <Body>
+            <Cells>
+              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=MedicineText" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox4" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=Quantity" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox5" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=Prescription" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox6" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=Observações" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox8" StyleName="" />
+                </ReportItem>
+              </TableCell>
+            </Cells>
+            <Columns>
+              <Column Width="3.00000010093053cm" />
+              <Column Width="3.00000010093053cm" />
+              <Column Width="3.00000010093053cm" />
+              <Column Width="3.00000010093053cm" />
+            </Columns>
+            <Rows>
+              <Row Height="0.550099845525825cm" />
+            </Rows>
+          </Body>
+          <Corner />
+          <RowGroups>
+            <TableGroup Name="DetailGroup">
+              <Groupings>
+                <Grouping Expression="null" />
+              </Groupings>
+            </TableGroup>
+          </RowGroups>
+          <ColumnGroups>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Value="Medicamento" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox1" />
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Value="Quantidade" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox2" />
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Value="Prescrição" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox3" />
+              </ReportItem>
+            </TableGroup>
+            <TableGroup Name="Group1">
+              <ReportItem>
+                <TextBox Value="Observações" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox7" StyleName="" />
+              </ReportItem>
+            </TableGroup>
+          </ColumnGroups>
+          <Bindings>
+            <Binding Path="DataSource" Expression="=ReceiptMedicines" />
+          </Bindings>
+        </Table>
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">
+      <Style Visible="False" />
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="1cm" Right="1cm" Top="1cm" Bottom="1cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <Bindings>
+    <Binding Path="DataSource" Expression="=Receipts" />
+  </Bindings>
+</Report>
