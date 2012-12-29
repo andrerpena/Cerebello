@@ -28,9 +28,9 @@ namespace CerebelloWebRole.Tests.Tests
         }
 
         [TestInitialize]
-        public override void InitializeDb()
+        public override void TestInitialize()
         {
-            base.InitializeDb();
+            base.TestInitialize();
             Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(this.db);
         }
         #endregion
