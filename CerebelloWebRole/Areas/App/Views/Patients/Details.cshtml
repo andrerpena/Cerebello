@@ -35,7 +35,7 @@
 @section SideBar {
     <ul>
         <li><a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
-        <li><a href="@Url.Action("ExportPdf", "DoctorHome", new {patientId = this.Model.Id})" target="_blank" class="icon-link icon-link-import">Exportar Pdf</a> </li>
+        <li><a href="@Url.Action("ExportPatientsPdf", "Report", new {patientId = this.Model.Id})" target="_blank" class="icon-link icon-link-import">Exportar Pdf</a> </li>
     </ul>
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {

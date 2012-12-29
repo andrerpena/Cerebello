@@ -135,6 +135,7 @@
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
+    <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\LockScriptViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
