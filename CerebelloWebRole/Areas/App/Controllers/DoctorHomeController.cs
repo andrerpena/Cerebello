@@ -117,7 +117,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
 
         [SelfPermission]
-        public ActionResult XmlBackup()
+        public ActionResult ExportXml()
         {
             var doctor = this.Doctor;
 
@@ -134,7 +134,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [SelfPermission]
-        public ActionResult PdfBackup(int? patientId)
+        public ActionResult ExportPdf(int? patientId)
         {
             var doctor = this.Doctor;
 
@@ -178,7 +178,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        private static Telerik.Reporting.Report CreateReportFromUrl(Uri uri)
+        private static Report CreateReportFromUrl(Uri uri)
         {
             var settings = new XmlReaderSettings { IgnoreWhitespace = true };
             using (var xmlReader = XmlReader.Create(uri.ToString(), settings))
@@ -206,11 +206,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             this.isPdf = isPdf;
 
-            var docPerson = doctor.Users.Single().Person;
+            var docUser = doctor.Users.Single();
+            var docPerson = docUser.Person;
+
+            var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doctor);
+            var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doctor);
 
             // Getting all patients data.
             var doctorData = this.isPdf ? new PdfDoctorData() : new XmlDoctorData();
             PatientsController.FillPersonViewModel(this, docPerson, doctorData);
+            UsersController.FillUserViewModel(docUser, this.DbPractice, doctorData);
+            UsersController.FillDoctorViewModel(docUser, medicalEntity, medicalSpecialty, doctorData, doctor);
 
             doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
 

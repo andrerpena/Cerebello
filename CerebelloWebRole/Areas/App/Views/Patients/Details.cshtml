@@ -3,7 +3,8 @@
 @using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Extensions
 @{
-    ViewBag.Title = "Paciente: " + this.Model.FullName + " · Cerebello";
+    var title = "Paciente: " + this.Model.FullName;
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
@@ -29,12 +30,12 @@
     futureAppointmentsGrid.AddLinkField(model => model.LocalDateTimeSpelled, "Index", "Schedule", a => new { y = a.LocalDateTime.Year, m = a.LocalDateTime.Month, d = a.LocalDateTime.Day });
 }
 @section Title {
-    Paciente: @Model.FullName
+    @title
 }
 @section SideBar {
     <ul>
         <li><a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
-        <li><a href="@Url.Action("PdfBackup", "DoctorHome", new {patientId = this.Model.Id})" class="icon-link icon-link-import">Pdf</a> </li>
+        <li><a href="@Url.Action("ExportPdf", "DoctorHome", new {patientId = this.Model.Id})" target="_blank" class="icon-link icon-link-import">Exportar Pdf</a> </li>
     </ul>
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {
