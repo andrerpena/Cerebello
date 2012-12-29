@@ -121,7 +121,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var doctor = this.Doctor;
 
-            var doctorData = this.GetBackupData(doctor, false);
+            var doctorData = this.GetBackupData(doctor, null, false);
 
             var stringBuilder = new StringBuilder();
             using (var writer = new StringWriter(stringBuilder))
@@ -137,6 +137,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult PdfBackup(int? patientId)
         {
             var doctor = this.Doctor;
+
+            // todo: must get doctor with everything at once... and use all data
             //// Getting doctors with everything they have.
             //var doctor = this.db.Doctors
             //    .Include("Users")
@@ -153,7 +155,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             //    .Include("Patients.Diagnoses")
             //    .SingleOrDefault(x => x.Id == doctorId);
 
-            var doctorData = (PdfDoctorData)this.GetBackupData(doctor, true);
+            var doctorData = (PdfDoctorData)this.GetBackupData(doctor, patientId, true);
 
             // Getting URL of the report model.
             var domain = this.Request.Url.GetLeftPart(UriPartial.Authority);
@@ -200,7 +202,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private bool isPdf;
 
-        private XmlDoctorData GetBackupData(Doctor doctor, bool isPdf)
+        private XmlDoctorData GetBackupData(Doctor doctor, int? patientId, bool isPdf)
         {
             this.isPdf = isPdf;
 
@@ -212,10 +214,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
 
-            doctorData.Patients = doctor.Patients
-                                      .Select(this.GetPatientData)
-                                      .OrderBy(x => x.FullName)
-                                      .ToList();
+            if (patientId != null)
+            {
+                doctorData.Patients = doctor.Patients
+                                            .Where(p => p.Id == patientId)
+                                            .Select(this.GetPatientData)
+                                            .OrderBy(x => x.FullName)
+                                            .ToList();
+            }
+            else
+            {
+                doctorData.Patients = doctor.Patients
+                                            .Select(this.GetPatientData)
+                                            .OrderBy(x => x.FullName)
+                                            .ToList();
+            }
+
             return doctorData;
         }
 

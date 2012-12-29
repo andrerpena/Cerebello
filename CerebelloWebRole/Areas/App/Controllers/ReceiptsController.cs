@@ -7,7 +7,6 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.iText;
 using CerebelloWebRole.Code.Mvc;
-using CerebelloWebRole.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.draw;
@@ -37,7 +36,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var receipt = db.Receipts.Where(r => r.Id == id).First();
+            var receipt = this.db.Receipts.First(r => r.Id == id);
             return this.View(GetViewModel(receipt));
         }
 
