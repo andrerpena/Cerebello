@@ -4,32 +4,48 @@
     <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
       <Style Visible="False" />
     </PageHeaderSection>
-    <DetailSection Height="0.511889616648356in" Name="detailSection1">
+    <DetailSection KeepTogether="False" Height="0.208333333333333in" Name="detailSection1">
       <Style>
         <Font Size="8pt" />
       </Style>
       <Items>
-        <Table ColumnHeadersPrintOnEveryPage="False" Size="12cm, 0.433149496714274in" Location="0cm, 0cm" Docking="None" Name="table1">
+        <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12cm, 0.208333333333333in" Location="0cm, 0cm" Name="table1">
           <Body>
             <Cells>
               <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
                 <ReportItem>
-                  <TextBox Value="=MedicineText" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox4" />
+                  <TextBox Value="=MedicineText" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox4">
+                    <Style>
+                      <Padding Top="4pt" Bottom="4pt" />
+                    </Style>
+                  </TextBox>
                 </ReportItem>
               </TableCell>
               <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
                 <ReportItem>
-                  <TextBox Value="=Quantity" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox5" />
+                  <TextBox Value="=Quantity" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox5">
+                    <Style>
+                      <Padding Top="4pt" Bottom="4pt" />
+                    </Style>
+                  </TextBox>
                 </ReportItem>
               </TableCell>
               <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
                 <ReportItem>
-                  <TextBox Value="=Prescription" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox6" />
+                  <TextBox Value="=Prescription" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox6">
+                    <Style>
+                      <Padding Top="4pt" Bottom="4pt" />
+                    </Style>
+                  </TextBox>
                 </ReportItem>
               </TableCell>
               <TableCell RowIndex="0" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
                 <ReportItem>
-                  <TextBox Value="=Observações" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox8" StyleName="" />
+                  <TextBox Value="=Observations" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox8" StyleName="">
+                    <Style>
+                      <Padding Top="4pt" Bottom="4pt" />
+                    </Style>
+                  </TextBox>
                 </ReportItem>
               </TableCell>
             </Cells>
@@ -40,7 +56,7 @@
               <Column Width="3.00000010093053cm" />
             </Columns>
             <Rows>
-              <Row Height="0.550099845525825cm" />
+              <Row Height="0.264583325973816cm" />
             </Rows>
           </Body>
           <Corner />
@@ -54,22 +70,38 @@
           <ColumnGroups>
             <TableGroup>
               <ReportItem>
-                <TextBox Value="Medicamento" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox1" />
+                <TextBox Value="Medicamento" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox1">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
               </ReportItem>
             </TableGroup>
             <TableGroup>
               <ReportItem>
-                <TextBox Value="Quantidade" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox2" />
+                <TextBox Value="Quantidade" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox2">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
               </ReportItem>
             </TableGroup>
             <TableGroup>
               <ReportItem>
-                <TextBox Value="Prescrição" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox3" />
+                <TextBox Value="Prescrição" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox3">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
               </ReportItem>
             </TableGroup>
             <TableGroup Name="Group1">
               <ReportItem>
-                <TextBox Value="Observações" CanShrink="True" Size="3cm, 0.550099845525825cm" Name="textBox7" StyleName="" />
+                <TextBox Value="Observações" CanShrink="True" Size="3cm, 0.264583325973816cm" Name="textBox7" StyleName="">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
               </ReportItem>
             </TableGroup>
           </ColumnGroups>

@@ -4,183 +4,180 @@
     <PageHeaderSection Height="0.354330698649089in" Name="pageHeaderSection1">
       <Style Visible="True" />
     </PageHeaderSection>
-    <DetailSection Height="5cm" Name="detailSection1">
+    <DetailSection KeepTogether="True" Height="5.5cm" Name="detailSection1">
+      <Style>
+        <BorderStyle Bottom="Solid" />
+      </Style>
       <Items>
-        <Panel Size="18cm, 5cm" Location="0.00010012308484875cm, 0.00010012308484875cm" Docking="Fill" Name="panel1">
-          <Style Visible="True">
-            <BorderStyle Default="None" Bottom="Solid" />
+        <TextBox Value="Endereço" Size="1.99999976158142cm, 0.600000023841858cm" Location="0.238124993376434cm, 3.99520822220462cm" Name="textBox36" />
+        <TextBox Value="=IsNull(Address.City,&quot;-&quot;)" Size="7.00000047683716cm, 0.299799203872681cm" Location="4.63020820454177cm, 5.0270831935025cm" Name="textBox35">
+          <Style>
+            <Font Size="8pt" />
           </Style>
-          <Items>
-            <SubReport KeepTogether="False" Size="16.6210422515869cm, 0.132291659712791cm" Location="1.17885804176331cm, 5.63239345142542cm" Name="Sessions">
-              <ConditionalFormatting>
-                <FormattingRule>
-                  <Style Visible="False" />
-                  <Filters>
-                    <Filter Expression="=Sessions.Count" Operator="Equal" Value="0" />
-                  </Filters>
-                </FormattingRule>
-              </ConditionalFormatting>
-            </SubReport>
-            <TextBox Value="Histórico" Size="1.59989988803864cm, 0.132291659712791cm" Location="0.199899777770042cm, 5.49989992738048cm" Name="textBox23">
-              <ConditionalFormatting>
-                <FormattingRule>
-                  <Style Visible="False" />
-                  <Filters>
-                    <Filter Expression="=Sessions.Count" Operator="Equal" Value="0" />
-                  </Filters>
-                </FormattingRule>
-              </ConditionalFormatting>
-            </TextBox>
-            <TextBox Value="Observações" Size="2.89989972114563cm, 0.132291662986908cm" Location="0.199899777770042cm, 3.80110064741888cm" Name="textBox22">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-              <ConditionalFormatting>
-                <FormattingRule>
-                  <Style Visible="False" />
-                  <Filters>
-                    <Filter Expression="=IsNull(Observations, &quot;&quot;)" Operator="Equal" Value="=&quot;&quot;" />
-                  </Filters>
-                </FormattingRule>
-              </ConditionalFormatting>
-            </TextBox>
-            <TextBox Value="=Observations" Size="14.5043754577637cm, 0.132291662986908cm" Location="3.29552459716797cm, 3.80110064741888cm" Anchoring="Top, Left, Right" Name="textBox21">
-              <ConditionalFormatting>
-                <FormattingRule>
-                  <Style Visible="False" />
-                  <Filters>
-                    <Filter Expression="=IsNull(Observations, &quot;&quot;)" Operator="Equal" Value="=&quot;&quot;" />
-                  </Filters>
-                </FormattingRule>
-              </ConditionalFormatting>
-            </TextBox>
-            <TextBox Value="=CpfOwner" Size="6.30000153919057cm, 0.600000023841858cm" Location="11.4998998516826cm, 2.00050041356284cm" Anchoring="Top, Left, Right" Name="textBox20" />
-            <TextBox Value="Proprietário do CPF" Size="3.42125142753617cm, 0.600000023841858cm" Location="7.97864961624146cm, 2.00050041356284cm" Name="textBox19">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="CPF" Size="2.39999984860421cm, 0.600000023841858cm" Location="0.199899777770042cm, 2.00050041356284cm" Name="textBox18">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=Cpf" Size="5.09562486342838cm, 0.600000023841858cm" Location="2.69989997784575cm, 2.00050041356284cm" Anchoring="Top, Left, Right" Name="textBox17" />
-            <TextBox Value="Telefone celular" Size="3.42125142753617cm, 0.600000023841858cm" Location="7.97864961624146cm, 2.60070035694082cm" Name="textBox15">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=PhoneCell" Size="6.29999692161886cm, 0.600000023841858cm" Location="11.4998998516826cm, 2.60070037841797cm" Anchoring="Top, Left, Right" Name="textBox7" />
-            <TextBox Value="Telefone fixo" Size="2.39999984860421cm, 0.600000023841858cm" Location="0.199899777770042cm, 2.60070035694082cm" Name="textBox16">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=PhoneLand" Size="5.09562486342838cm, 0.600000023841858cm" Location="2.69989997784575cm, 2.60070035694082cm" Anchoring="Top, Left, Right" Name="textBox8" />
-            <TextBox Value="Estado civil" Size="3.42125193218881cm, 0.600000023841858cm" Location="7.97864961624146cm, 1.40030016739328cm" Name="textBox14">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=Profissao" Size="5.09584070336467cm, 0.600000023841858cm" Location="2.69989964982153cm, 1.40030016739328cm" Anchoring="Top, Left, Right" Name="textBox13" />
-            <TextBox Value="Profissão" Size="2.39999987383684cm, 0.600000023841858cm" Location="0.199899777770042cm, 1.40030016739328cm" Name="textBox12">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=MaritalStatus" Size="6.30000045418738cm, 0.600000023841858cm" Location="11.4999009366858cm, 1.40030016739328cm" Anchoring="Top, Left, Right" Name="textBox11" />
-            <TextBox Value="Nascimento" Size="3.42125193218881cm, 0.600000023841858cm" Location="7.97864961624146cm, 0.800099971688987cm" Name="textBox6">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, DateOfBirth)" Size="6.30000045418738cm, 0.600000023841858cm" Location="11.4999009366858cm, 0.800099971688987cm" Anchoring="Top, Left, Right" Name="textBox5" />
-            <TextBox Value="E-mail" Size="2.39999987383684cm, 0.600000023841858cm" Location="0.199899777770042cm, 3.20090050217985cm" Name="textBox10">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=Email" Size="15.100002195239cm, 0.600000023841858cm" Location="2.69989964982153cm, 3.20090050217985cm" Anchoring="Top, Left, Right" Name="textBox9" />
-            <TextBox Value="=Gender" Size="5.09584070336467cm, 0.600000023841858cm" Location="2.69989964982153cm, 0.800099971688987cm" Anchoring="Top, Left, Right" Name="textBox4" />
-            <TextBox Value="Sexo" Size="2.39999987383684cm, 0.600000023841858cm" Location="0.199899777770042cm, 0.800099971688987cm" Name="textBox3">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=FullName" Size="15.1000016653537cm, 0.600000023841858cm" Location="2.69989964982153cm, 0.199899777770042cm" Anchoring="Top, Left, Right" Name="textBox2">
-              <Style>
-                <Font Size="11pt" Bold="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Nome" Size="2.39999987383684cm, 0.600000023841858cm" Location="0.199899777770042cm, 0.199899777770042cm" Name="textBox1">
-              <Style Color="Black">
-                <Font Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=IsNull(Address.Street,&quot;-&quot;)" Size="13.2001015361122cm, 0.299800008535385cm" Location="4.59989997784575cm, 4.06357210300364cm" Anchoring="Top, Left, Right" Name="textBox24">
-              <Style>
-                <Font Size="8pt" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Logradouro" Size="2.00000025232632cm, 0.29979975383044cm" Location="2.49989982644996cm, 4.16377189498582cm" Name="textBox25">
-              <Style Color="Black">
-                <Font Size="8pt" Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=Iif(IsNull(Address.Complement,&quot;&quot;) = &quot;&quot;, &quot;----&quot;, Address.Complement)" Size="13.199996568362cm, 0.300000011920929cm" Location="4.59989957412363cm, 4.41272956018008cm" Anchoring="Top, Left, Right" Name="textBox26">
-              <Style>
-                <Font Size="8pt" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Complemento" Size="2.00000025232632cm, 0.3cm" Location="2.49989942272784cm, 4.46377133986791cm" Name="textBox27">
-              <Style Color="Black">
-                <Font Size="8pt" Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=IsNull(Address.Neighborhood,&quot;-&quot;)" Size="7.00000050465265cm, 0.300000011920929cm" Location="4.59989957412363cm, 4.76437152325868cm" Anchoring="Top, Left, Right" Name="textBox28">
-              <Style>
-                <Font Size="8pt" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Estado" Size="1.20020145733591cm, 0.3cm" Location="11.7996993279541cm, 4.76397143464168cm" Name="textBox29">
-              <Style Color="Black">
-                <Font Size="8pt" Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Bairro" Size="2.00000025232632cm, 0.3cm" Location="2.49989942272784cm, 4.7639718383638cm" Name="textBox30">
-              <Style Color="Black">
-                <Font Size="8pt" Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=IsNull(Address.StateProvince,&quot;-&quot;)" Size="4.70010128378586cm, 0.300000011920929cm" Location="13.09989982645cm, 4.76332992019928cm" Anchoring="Top, Left, Right" Name="textBox31">
-              <Style>
-                <Font Size="8pt" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=IsNull(Address.CEP,&quot;-&quot;)" Size="4.70000116070108cm, 0.299999445676804cm" Location="13.0999999495347cm, 5.09695820618189cm" Anchoring="Top, Left, Right" Name="textBox32">
-              <Style>
-                <Font Size="8pt" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Cidade" Size="2.00000025232632cm, 0.535726884007103cm" Location="2.49989982644996cm, 5.06417233685968cm" Name="textBox33">
-              <Style Color="Black">
-                <Font Size="8pt" Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="CEP" Size="1.20020145733591cm, 0.299999192555768cm" Location="11.7996993279541cm, 5.06357200207311cm" Name="textBox34">
-              <Style Color="Black">
-                <Font Size="8pt" Italic="True" />
-              </Style>
-            </TextBox>
-            <TextBox Value="=IsNull(Address.City,&quot;-&quot;)" Size="7.00000050465265cm, 0.299799203872681cm" Location="4.59989997784575cm, 5.1141725134881cm" Anchoring="Top, Left, Right" Name="textBox35">
-              <Style>
-                <Font Size="8pt" />
-              </Style>
-            </TextBox>
-            <TextBox Value="Endereço" Size="1.99999976158142cm, 0.600000023841858cm" Location="0.199900045990944cm, 4.09989982644996cm" Name="textBox36" />
-          </Items>
-        </Panel>
+        </TextBox>
+        <TextBox Value="CEP" Size="1.20020151138306cm, 0.299999207258224cm" Location="11.8268746710296cm, 4.97416652830773cm" Name="textBox34">
+          <Style Color="Black">
+            <Font Size="8pt" Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Cidade" Size="2.00000023841858cm, 0.53572690486908cm" Location="2.53999992934863cm, 4.97416652830773cm" Name="textBox33">
+          <Style Color="Black">
+            <Font Size="8pt" Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=IsNull(Address.CEP,&quot;-&quot;)" Size="4.57885885238647cm, 0.299999445676804cm" Location="13.1497913008986cm, 5.00062486090511cm" Name="textBox32">
+          <Style>
+            <Font Size="8pt" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=IsNull(Address.StateProvince,&quot;-&quot;)" Size="4.5789589881897cm, 0.300000011920929cm" Location="13.1497913008986cm, 4.68312486973654cm" Name="textBox31">
+          <Style>
+            <Font Size="8pt" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Bairro" Size="2.00000023841858cm, 0.300000011920929cm" Location="2.53999992934863cm, 4.68312486973654cm" Name="textBox30">
+          <Style Color="Black">
+            <Font Size="8pt" Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Estado" Size="1.20020151138306cm, 0.300000011920929cm" Location="11.8268746710296cm, 4.68312486973654cm" Name="textBox29">
+          <Style Color="Black">
+            <Font Size="8pt" Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=IsNull(Address.Neighborhood,&quot;-&quot;)" Size="7.00000047683716cm, 0.300000011920929cm" Location="4.63020820454177cm, 4.68312486973654cm" Name="textBox28">
+          <Style>
+            <Font Size="8pt" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Complemento" Size="2.00000023841858cm, 0.300000011920929cm" Location="2.53999992934863cm, 4.36562487856796cm" Name="textBox27">
+          <Style Color="Black">
+            <Font Size="8pt" Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=Iif(IsNull(Address.Complement,&quot;&quot;) = &quot;&quot;, &quot;----&quot;, Address.Complement)" Size="13.0788545608521cm, 0.300000011920929cm" Location="4.63020820454177cm, 4.31270821337319cm" Name="textBox26">
+          <Style>
+            <Font Size="8pt" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Logradouro" Size="2.00000023841858cm, 0.299799740314484cm" Location="2.53999992934863cm, 4.07458321999676cm" Name="textBox25">
+          <Style Color="Black">
+            <Font Size="8pt" Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=IsNull(Address.Street,&quot;-&quot;)" Size="13.0789594650269cm, 0.299800008535385cm" Location="4.63020820454177cm, 3.96874988960723cm" Name="textBox24">
+          <Style>
+            <Font Size="8pt" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Nome" Size="2.39999985694885cm, 0.600000023841858cm" Location="0.238124993376434cm, 0.105833330389526cm" Name="textBox1">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=FullName" Size="14.9789590835571cm, 0.600000023841858cm" Location="2.75166659012768cm, 0.105833330389526cm" Name="textBox2">
+          <Style>
+            <Font Size="11pt" Bold="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Sexo" Size="2.39999985694885cm, 0.600000023841858cm" Location="0.238124993376434cm, 0.714374980129302cm" Name="textBox3">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=Gender" Size="5.09584093093872cm, 0.600000023841858cm" Location="2.75166659012768cm, 0.714374980129302cm" Anchoring="None" Name="textBox4" />
+        <TextBox Value="=Email" Size="14.9789590835571cm, 0.600000023841858cm" Location="2.75166659012768cm, 3.09562491389364cm" Name="textBox9" />
+        <TextBox Value="E-mail" Size="2.39999985694885cm, 0.600000023841858cm" Location="0.238124993376434cm, 3.09562491389364cm" Name="textBox10">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, DateOfBirth)" Size="6.17895746231079cm, 0.600000023841858cm" Location="11.5358330124584cm, 0.714374980129302cm" Name="textBox5" />
+        <TextBox Value="Nascimento" Size="3.42125201225281cm, 0.600000023841858cm" Location="8.01687477700661cm, 0.714374980129302cm" Name="textBox6">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=MaritalStatus" Size="6.17895746231079cm, 0.600000023841858cm" Location="11.5358330124584cm, 1.2964582972717cm" Name="textBox11" />
+        <TextBox Value="Profissão" Size="2.39999985694885cm, 0.600000023841858cm" Location="0.238124993376434cm, 1.2964582972717cm" Name="textBox12">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=Profissao" Size="5.09584093093872cm, 0.600000023841858cm" Location="2.75166659012768cm, 1.2964582972717cm" Anchoring="None" Name="textBox13" />
+        <TextBox Value="Estado civil" Size="3.42125201225281cm, 0.600000023841858cm" Location="8.01687477700661cm, 1.2964582972717cm" Name="textBox14">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=PhoneLand" Size="5.09562492370605cm, 0.600000023841858cm" Location="2.75166659012768cm, 2.51354159675125cm" Anchoring="None" Name="textBox8" />
+        <TextBox Value="Telefone fixo" Size="2.39999985694885cm, 0.600000023841858cm" Location="0.238124993376434cm, 2.51354159675125cm" Name="textBox16">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=PhoneCell" Size="6.17895412445068cm, 0.600000023841858cm" Location="11.5358330124584cm, 2.51354159675125cm" Name="textBox7" />
+        <TextBox Value="Telefone celular" Size="3.42125153541565cm, 0.600000023841858cm" Location="8.01687477700661cm, 2.51354159675125cm" Name="textBox15">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=Cpf" Size="5.09562492370605cm, 0.600000023841858cm" Location="2.75166659012768cm, 1.90499994701147cm" Anchoring="None" Name="textBox17" />
+        <TextBox Value="CPF" Size="2.39999985694885cm, 0.600000023841858cm" Location="0.238124993376434cm, 1.90499994701147cm" Name="textBox18">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="Proprietário do CPF" Size="3.42125153541565cm, 0.600000023841858cm" Location="8.01687477700661cm, 1.90499994701147cm" Name="textBox19">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+        </TextBox>
+        <TextBox Value="=CpfOwner" Size="6.17895889282227cm, 0.600000023841858cm" Location="11.5358330124584cm, 1.90499994701147cm" Name="textBox20" />
+        <TextBox Value="=Observations" Size="14.3832340240479cm, 0.132291659712791cm" Location="3.33374990727008cm, 3.70416656363342cm" Name="textBox21">
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=IsNull(Observations, &quot;&quot;)" Operator="Equal" Value="=&quot;&quot;" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </TextBox>
+        <TextBox Value="Observações" Size="2.89989972114563cm, 0.132291659712791cm" Location="0.238124993376434cm, 3.70416656363342cm" Name="textBox22">
+          <Style Color="Black">
+            <Font Italic="True" />
+          </Style>
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=IsNull(Observations, &quot;&quot;)" Operator="Equal" Value="=&quot;&quot;" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </TextBox>
+        <TextBox Value="Histórico" Size="1.59989988803864cm, 0.469999838511154cm" Location="0.238124996423721cm, 5.52979999101718cm" Name="textBox23">
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=Sessions.Count" Operator="Equal" Value="0" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </TextBox>
+        <SubReport KeepTogether="False" Size="16.5cm, 0.47cm" Location="1.2cm, 6cm" Name="Sessions">
+          <Style Visible="True" />
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=Sessions.Count" Operator="Equal" Value="0" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </SubReport>
       </Items>
     </DetailSection>
     <PageFooterSection Height="0.252047220865885in" Name="pageFooterSection1">

@@ -40,3 +40,4 @@ Uncommited.config
 #Exceptions to third-party files.
 !/ThirdParty/*
 !/ThirdParty/**/*
+*.orig

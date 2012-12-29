@@ -13,7 +13,7 @@
         </Shape>
       </Items>
     </PageHeaderSection>
-    <DetailSection Height="0.197086334228516in" Name="detailSection1">
+    <DetailSection KeepTogether="False" Height="0.197086334228516in" Name="detailSection1">
       <Items>
         <SubReport KeepTogether="False" Size="18cm, 0.50059927501601cm" Location="0.999895334243774cm, 0cm" Name="Patients" />
       </Items>

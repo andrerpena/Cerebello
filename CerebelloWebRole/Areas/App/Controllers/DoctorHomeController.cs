@@ -111,10 +111,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View(viewModel);
         }
 
+
+
+
+
+
         [SelfPermission]
         public ActionResult XmlBackup()
         {
-            var doctorData = this.GetBackupData(false);
+            var doctor = this.Doctor;
+
+            var doctorData = this.GetBackupData(doctor, false);
 
             var stringBuilder = new StringBuilder();
             using (var writer = new StringWriter(stringBuilder))
@@ -126,9 +133,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Content(stringBuilder.ToString(), "text/xml");
         }
 
-        public ActionResult PdfBackup()
+        [SelfPermission]
+        public ActionResult PdfBackup(int? patientId)
         {
-            var doctorData = (PdfDoctorData)this.GetBackupData(true);
+            var doctor = this.Doctor;
+            //// Getting doctors with everything they have.
+            //var doctor = this.db.Doctors
+            //    .Include("Users")
+            //    .Include("Users.Person")
+            //    .Include("Users.Person.Addresses")
+            //    .Include("Patients")
+            //    .Include("Patients.Person")
+            //    .Include("Patients.Person.Addresses")
+            //    .Include("Patients.Anamneses")
+            //    .Include("Patients.Receipts")
+            //    .Include("Patients.MedicalCertificates")
+            //    .Include("Patients.ExaminationRequests")
+            //    .Include("Patients.ExaminationResults")
+            //    .Include("Patients.Diagnoses")
+            //    .SingleOrDefault(x => x.Id == doctorId);
+
+            var doctorData = (PdfDoctorData)this.GetBackupData(doctor, true);
 
             // Getting URL of the report model.
             var domain = this.Request.Url.GetLeftPart(UriPartial.Authority);
@@ -151,7 +176,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        private static Report CreateReportFromUrl(Uri uri)
+        private static Telerik.Reporting.Report CreateReportFromUrl(Uri uri)
         {
             var settings = new XmlReaderSettings { IgnoreWhitespace = true };
             using (var xmlReader = XmlReader.Create(uri.ToString(), settings))
@@ -160,7 +185,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var report = (Report)xmlSerializer.Deserialize(xmlReader);
 
 
-                var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
+                var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
                 foreach (var eachSubReport in subReports)
                 {
                     var uriSub = new Uri(uri, string.Format("{0}.trdx", eachSubReport.Name));
@@ -175,11 +200,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private bool isPdf;
 
-        private XmlDoctorData GetBackupData(bool isPdf)
+        private XmlDoctorData GetBackupData(Doctor doctor, bool isPdf)
         {
             this.isPdf = isPdf;
-
-            var doctor = this.Doctor;
 
             var docPerson = doctor.Users.Single().Person;
 
@@ -189,7 +212,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
 
-            doctorData.Patients = this.Doctor.Patients
+            doctorData.Patients = doctor.Patients
                                       .Select(this.GetPatientData)
                                       .OrderBy(x => x.FullName)
                                       .ToList();
@@ -207,14 +230,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.Single());
 
-            result.Sessions = GetAllSessionsData(this, patient);
+            result.Sessions = GetAllSessionsData(patient);
 
             return result;
         }
 
-        private List<SessionData> GetAllSessionsData(DoctorHomeController doctorHomeController, Patient patient)
+        private List<SessionData> GetAllSessionsData(Patient patient)
         {
-            var sessions = PatientsController.GetSessionViewModels(this, patient)
+            var sessions = PatientsController.GetSessionViewModels(this.DbPractice, patient)
                                              .Select(GetSessionData)
                                              .ToList();
 
@@ -384,7 +407,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             public List<AppointmentViewModel> Appointments { get; set; }
 
-            [XmlElementAttribute]
+            [XmlElement]
             public List<SessionData> Sessions { get; set; }
         }
 
@@ -403,5 +426,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public List<DiagnosisViewModel> Diagnosis { get; set; }
             public List<MedicalCertificateViewModel> MedicalCertificates { get; set; }
         }
+
     }
 }

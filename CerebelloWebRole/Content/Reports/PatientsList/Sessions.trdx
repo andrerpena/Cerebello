@@ -4,18 +4,41 @@
     <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
       <Style Visible="False" />
     </PageHeaderSection>
-    <DetailSection Height="1in" Name="detailSection1">
+    <DetailSection PageBreak="None" KeepTogether="False" Height="1cm" Name="detailSection1">
       <Style>
         <Font Size="9pt" />
       </Style>
       <Items>
-        <TextBox Value="Data" Size="3.60000020186106cm, 0.600000083446503cm" Location="0.00010002215425112cm, 0.00009992122372211cm" Name="labelDoctorName" />
-        <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, Date)" Size="12.1998993722626cm, 0.600000023841858cm" Location="3.80000010093053cm, 0.00009992122372211cm" Anchoring="Top, Left, Right" Name="textBox5">
+        <TextBox Value="Data" CanShrink="True" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.10000005364418cm, 0.100199788808823cm" Name="labelData" />
+        <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, Date)" CanShrink="True" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.79989957809448cm, 0.100199788808823cm" Name="textBoxData">
           <Style>
             <Font Size="11pt" Bold="True" />
           </Style>
         </TextBox>
-        <SubReport Size="12.1998993722626cm, 0.132291662986908cm" Location="3.80000019073486cm, 0.800199627876282cm" Name="Anamneses">
+        <Panel Size="15.9998998769152cm, 1.00009961843214cm" Location="0.0000999212206807cm, 1.00019979476929cm" Name="panel1">
+          <Items>
+            <TextBox Value="Anamneses" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAnamneses">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645822662033cm, 0.0999999495347355cm" Name="Anamneses">
+              <Style Visible="True" />
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </SubReport>
+          </Items>
           <ConditionalFormatting>
             <FormattingRule>
               <Style Visible="False" />
@@ -24,18 +47,31 @@
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>
-        </SubReport>
-        <TextBox Value="Anamneses" Size="3.60000020186106cm, 0.132291662986908cm" Location="0.00010002215276472cm, 0.800199627876282cm" Name="textBox1">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </TextBox>
-        <TextBox Value="Receitas" Size="3.60000014305115cm, 0.132291662986908cm" Location="0.00010012308478013cm, 1.10019969105165cm" Name="textBox2">
+        </Panel>
+        <Panel Size="16cm, 0.999699933537247cm" Location="0cm, 2.00049948692322cm" Name="panel2">
+          <Items>
+            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645822662033cm, 0.0997003877246272cm" Name="Receipts">
+              <Style Visible="True" />
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Receipts.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </SubReport>
+            <TextBox Value="Receitas" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998998264499554cm, 0.099700391292572cm" Name="labelReceitas">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Receipts.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+          </Items>
           <ConditionalFormatting>
             <FormattingRule>
               <Style Visible="False" />
@@ -44,132 +80,109 @@
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>
-        </TextBox>
-        <SubReport Size="12.1998996734619cm, 0.132291662986908cm" Location="3.78364168451034cm, 1.10019969105165cm" Name="Receipts">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=Receipts.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </SubReport>
-        <TextBox Value="Pedidos de exame" Size="3.60000014305115cm, 0.132291662986908cm" Location="0.00010002215276472cm, 1.4001993377948cm" Name="textBox3">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=ExaminationRequests.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </TextBox>
-        <TextBox Value="Resultados de exames" Size="3.60000014305115cm, 0.132291662986908cm" Location="0.00010002215276472cm, 2.00019943872533cm" Name="textBox4">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=ExaminationResults.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </TextBox>
-        <SubReport Size="12.1998996734619cm, 0.132291662986908cm" Location="3.80000019073486cm, 3.30009946703634cm" Name="MedicalCertificates">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=MedicalCertificates.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </SubReport>
-        <TextBox Value="Diagnósticos" Size="3.60000014305115cm, 0.132291662986908cm" Location="0.00010002215276472cm, 2.60019953965586cm" Name="textBox6">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=Diagnosis.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </TextBox>
-        <TextBox Value="Atestados" Size="3.60000014305115cm, 0.132291662986908cm" Location="0.00010002215276472cm, 3.30019959012112cm" Name="textBox7">
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=MedicalCertificates.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
-        </TextBox>
-        <Table Size="12cm, 0.208333333333333in" Location="3.78364168451034cm, 1.4001993377948cm" Name="table1">
-          <Body>
-            <Cells>
-              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=MedicineText" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox8" />
-                </ReportItem>
-              </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=MedicalProcedureCode" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox9" />
-                </ReportItem>
-              </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=Notes" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox10" />
-                </ReportItem>
-              </TableCell>
-            </Cells>
-            <Columns>
-              <Column Width="3.99999971548716cm" />
-              <Column Width="3.99999971548716cm" />
-              <Column Width="3.99999971548716cm" />
-            </Columns>
-            <Rows>
-              <Row Height="0.264583325973816cm" />
-            </Rows>
-          </Body>
-          <Corner />
-          <RowGroups>
-            <TableGroup Name="DetailGroup">
-              <Groupings>
-                <Grouping Expression="null" />
-              </Groupings>
-            </TableGroup>
-          </RowGroups>
-          <ColumnGroups>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Procedimento" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox11">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Código do procedimento" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox12">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Notas" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox13">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-          </ColumnGroups>
+        </Panel>
+        <Panel Size="15.9998013687189cm, 0.999800056622027cm" Location="0.0000999212206807cm, 3.00039958953857cm" Name="panel3">
+          <Items>
+            <Table KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0998001070872913cm" Name="tablePedidosDeExame">
+              <Body>
+                <Cells>
+                  <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=MedicalProcedureName" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox8">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                  <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=MedicalProcedureCode" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox9">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                  <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=Notes" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox10">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                </Cells>
+                <Columns>
+                  <Column Width="4.00003282070166cm" />
+                  <Column Width="4.00003282070166cm" />
+                  <Column Width="4.00003282070166cm" />
+                </Columns>
+                <Rows>
+                  <Row Height="0.400049935379229cm" />
+                </Rows>
+              </Body>
+              <Corner />
+              <RowGroups>
+                <TableGroup Name="DetailGroup">
+                  <Groupings>
+                    <Grouping Expression="null" />
+                  </Groupings>
+                </TableGroup>
+              </RowGroups>
+              <ColumnGroups>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Procedimento" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox11">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Código do procedimento" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox12">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Notas" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox13">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+              </ColumnGroups>
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=ExaminationRequests.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+              <Bindings>
+                <Binding Path="DataSource" Expression="=ExaminationRequests" />
+              </Bindings>
+            </Table>
+            <TextBox Value="Pedidos de exame" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998001070872913cm, 0.0998001098632813cm" Name="labelPedidosDeExame">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=ExaminationRequests.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+          </Items>
           <ConditionalFormatting>
             <FormattingRule>
               <Style Visible="False" />
@@ -178,75 +191,109 @@
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>
-          <Bindings>
-            <Binding Path="DataSource" Expression="=ExaminationRequests" />
-          </Bindings>
-        </Table>
-        <Table ColumnHeadersPrintOnEveryPage="False" Size="12cm, 0.208333333333333in" Location="3.80000042915344cm, 2.00019943872533cm" Name="table2">
-          <Body>
-            <Cells>
-              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=MedicalProcedureName" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox14" />
-                </ReportItem>
-              </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=MedicalProcedureCode" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox15" />
-                </ReportItem>
-              </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=Text" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox16" />
-                </ReportItem>
-              </TableCell>
-            </Cells>
-            <Columns>
-              <Column Width="3.99999971548716cm" />
-              <Column Width="3.99999971548716cm" />
-              <Column Width="3.99999971548716cm" />
-            </Columns>
-            <Rows>
-              <Row Height="0.264583325973816cm" />
-            </Rows>
-          </Body>
-          <Corner />
-          <RowGroups>
-            <TableGroup Name="DetailGroup">
-              <Groupings>
-                <Grouping Expression="null" />
-              </Groupings>
-            </TableGroup>
-          </RowGroups>
-          <ColumnGroups>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Procedimento" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox17">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Código do procedimento" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox18">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Notas" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox19">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-          </ColumnGroups>
+        </Panel>
+        <Panel Size="16cm, 1cm" Location="0.00010012308484875cm, 4.00040006637573cm" Name="panel4">
+          <Items>
+            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.84cm, 0.1cm" Name="tableResultadosDeExames">
+              <Body>
+                <Cells>
+                  <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=MedicalProcedureName" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox14">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                  <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=MedicalProcedureCode" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox15">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                  <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=Text" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox16">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                </Cells>
+                <Columns>
+                  <Column Width="4.00003282070166cm" />
+                  <Column Width="4.00003282070166cm" />
+                  <Column Width="4.00003282070166cm" />
+                </Columns>
+                <Rows>
+                  <Row Height="0.400049935379229cm" />
+                </Rows>
+              </Body>
+              <Corner />
+              <RowGroups>
+                <TableGroup Name="DetailGroup">
+                  <Groupings>
+                    <Grouping Expression="null" />
+                  </Groupings>
+                </TableGroup>
+              </RowGroups>
+              <ColumnGroups>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Procedimento" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox17">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Código do procedimento" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox18">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Notas" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox19">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+              </ColumnGroups>
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=ExaminationResults.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+              <Bindings>
+                <Binding Path="DataSource" Expression="=ExaminationResults" />
+              </Bindings>
+            </Table>
+            <TextBox Value="Resultados de exames" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0997997033651752cm, 0.100000001490116cm" Name="labelResultadosDeExames">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=ExaminationResults.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+          </Items>
           <ConditionalFormatting>
             <FormattingRule>
               <Style Visible="False" />
@@ -255,75 +302,109 @@
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>
-          <Bindings>
-            <Binding Path="DataSource" Expression="=ExaminationResults" />
-          </Bindings>
-        </Table>
-        <Table ColumnHeadersPrintOnEveryPage="False" Size="12cm, 0.208333333333333in" Location="3.80000042915344cm, 2.60019953965586cm" Name="table3">
-          <Body>
-            <Cells>
-              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=Cid10Code" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox20" />
-                </ReportItem>
-              </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=Cid10Name" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox21" />
-                </ReportItem>
-              </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
-                <ReportItem>
-                  <TextBox Value="=Text" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox22" />
-                </ReportItem>
-              </TableCell>
-            </Cells>
-            <Columns>
-              <Column Width="3.99999971548716cm" />
-              <Column Width="3.99999971548716cm" />
-              <Column Width="3.99999971548716cm" />
-            </Columns>
-            <Rows>
-              <Row Height="0.264583325973816cm" />
-            </Rows>
-          </Body>
-          <Corner />
-          <RowGroups>
-            <TableGroup Name="DetailGroup">
-              <Groupings>
-                <Grouping Expression="null" />
-              </Groupings>
-            </TableGroup>
-          </RowGroups>
-          <ColumnGroups>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Cid10" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox23">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Nome" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox24">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-            <TableGroup>
-              <ReportItem>
-                <TextBox Value="Texto" CanShrink="True" Size="4.00000011920929cm, 0.264583325973816cm" Name="textBox25">
-                  <Style Color="DimGray">
-                    <BorderStyle Bottom="Dotted" />
-                  </Style>
-                </TextBox>
-              </ReportItem>
-            </TableGroup>
-          </ColumnGroups>
+        </Panel>
+        <Panel Size="16cm, 1cm" Location="0cm, 5.00060081481934cm" Name="panel5">
+          <Items>
+            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0995990534734989cm" Name="tableDiagnosticos">
+              <Body>
+                <Cells>
+                  <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=Cid10Code" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox20">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                  <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=Cid10Name" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox21">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                  <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=Text" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox22">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                </Cells>
+                <Columns>
+                  <Column Width="4.00003282070166cm" />
+                  <Column Width="4.00003282070166cm" />
+                  <Column Width="4.00003282070166cm" />
+                </Columns>
+                <Rows>
+                  <Row Height="0.400049935379229cm" />
+                </Rows>
+              </Body>
+              <Corner />
+              <RowGroups>
+                <TableGroup Name="DetailGroup">
+                  <Groupings>
+                    <Grouping Expression="null" />
+                  </Groupings>
+                </TableGroup>
+              </RowGroups>
+              <ColumnGroups>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Cid10" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox23">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Nome" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox24">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Texto" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox25">
+                      <Style Color="DimGray">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+              </ColumnGroups>
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Diagnosis.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+              <Bindings>
+                <Binding Path="DataSource" Expression="=Diagnosis" />
+              </Bindings>
+            </Table>
+            <TextBox Value="Diagnósticos" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998998284339905cm, 0.0995990534734989cm" Name="labelDiagnosticos">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Diagnosis.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+          </Items>
           <ConditionalFormatting>
             <FormattingRule>
               <Style Visible="False" />
@@ -332,10 +413,40 @@
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>
-          <Bindings>
-            <Binding Path="DataSource" Expression="=Diagnosis" />
-          </Bindings>
-        </Table>
+        </Panel>
+        <Panel Size="15.9998998769152cm, 1.00039837279801cm" Location="0cm, 6.00080108642578cm" Name="panel6">
+          <Items>
+            <TextBox Value="Atestados" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAtestados">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=MedicalCertificates.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.8cm, 0.1cm" Name="MedicalCertificates">
+              <Style Visible="True" />
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=MedicalCertificates.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </SubReport>
+          </Items>
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=MedicalCertificates.Count" Operator="Equal" Value="0" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </Panel>
       </Items>
     </DetailSection>
     <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">
