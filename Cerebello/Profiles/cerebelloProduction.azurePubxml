@@ -11,12 +11,12 @@
     <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
     <AzureHostedServiceLabel>cerebello</AzureHostedServiceLabel>
     <AzureHostedServiceName>cerebello</AzureHostedServiceName>
-    <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
+    <AzureEnableIntelliTrace>True</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
     <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>
     <AzureSolutionConfiguration>Release</AzureSolutionConfiguration>
-    <AzureStorageAccountLabel>cerebello</AzureStorageAccountLabel>
-    <AzureStorageAccountName>cerebello</AzureStorageAccountName>
+    <AzureStorageAccountLabel>portalvhds5kcsmx774n1cq</AzureStorageAccountLabel>
+    <AzureStorageAccountName>portalvhds5kcsmx774n1cq</AzureStorageAccountName>
     <AzureAppendTimestampToDeploymentLabel>True</AzureAppendTimestampToDeploymentLabel>
   </PropertyGroup>
 </Project>

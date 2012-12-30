@@ -13,6 +13,7 @@ namespace Cerebello
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
+            filters.Add(new CanonicalUrlFilter());
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthenticationFilter());
             filters.Add(new FirstAccessFilter());
