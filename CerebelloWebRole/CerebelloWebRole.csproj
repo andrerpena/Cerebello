@@ -64,7 +64,6 @@
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\ThirdParty\JetBrains\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
@@ -477,6 +476,7 @@
     <Content Include="Docs\DataPatterns.txt" />
     <Content Include="Docs\ScreenPatterns.txt" />
     <Content Include="Docs\Tasks.txt" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
