@@ -589,7 +589,6 @@ CREATE TABLE [dbo].[Practice](
 	[OwnerId] [int] NULL,
 	[WindowsTimeZoneId] [varchar](31) NOT NULL,
 	[VerificationDate] [datetime] NULL,
-	[ShowWelcomeScreen] [bit] NOT NULL,
 	[ActiveAccountContractId] [int] NULL,
 	[PhoneMain] [varchar](20) NULL,
 	[PhoneAlt] [varchar](20) NULL,

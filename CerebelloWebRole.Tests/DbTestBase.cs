@@ -10,35 +10,22 @@ namespace CerebelloWebRole.Tests
     [TestClass]
     public class DbTestBase
     {
-        #region InitializeDb, CleanupDb
+        #region TestInitialize, TestCleanup
         protected CerebelloEntities db = null;
+        protected TransactionScope scope = null;
 
         [TestInitialize]
-        public virtual void InitializeDb()
+        public virtual void TestInitialize()
         {
+            scope = new TransactionScope();
             this.db = CreateNewCerebelloEntities();
         }
 
         [TestCleanup]
-        public virtual void CleanupDb()
+        public virtual void TestCleanup()
         {
             if (this.db != null)
                 this.db.Dispose();
-        }
-        #endregion
-
-        #region StartTransaction, RollbackTransaction
-        protected TransactionScope scope = null;
-
-        [TestInitialize]
-        public virtual void StartTransaction()
-        {
-            scope = new TransactionScope();
-        }
-
-        [TestCleanup]
-        public virtual void RollbackTransaction()
-        {
             scope.Dispose();
         }
         #endregion

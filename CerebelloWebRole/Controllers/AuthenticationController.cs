@@ -189,7 +189,6 @@ namespace CerebelloWebRole.Controllers
                     UrlIdentifier = urlPracticeId,
                     CreatedOn = utcNow,
                     WindowsTimeZoneId = timeZoneId,
-                    ShowWelcomeScreen = true,
                 };
 
                 // Setting the BirthDate of the user as a person.
@@ -207,18 +206,27 @@ namespace CerebelloWebRole.Controllers
                     if (user.Doctor == null)
                         user.Doctor = this.db.Doctors.CreateObject();
 
-                    var ms = this.db.SYS_MedicalSpecialty
-                        .Single(ms1 => ms1.Id == registrationData.MedicalSpecialtyId);
 
-                    var me = this.db.SYS_MedicalEntity
-                        .Single(me1 => me1.Id == registrationData.MedicalEntityId);
 
                     user.Doctor.CRM = registrationData.MedicCRM;
-                    user.Doctor.MedicalSpecialtyCode = ms.Code;
-                    user.Doctor.MedicalSpecialtyName = ms.Name;
-                    user.Doctor.MedicalEntityCode = me.Code;
-                    user.Doctor.MedicalEntityName = me.Name;
-                    user.Doctor.MedicalEntityJurisdiction =  ((TypeEstadoBrasileiro) registrationData.MedicalEntityJurisdiction).ToString();
+
+                    if (registrationData.MedicalSpecialtyId != null)
+                    {
+                        var ms = this.db.SYS_MedicalSpecialty
+                                     .Single(ms1 => ms1.Id == registrationData.MedicalSpecialtyId);
+                        user.Doctor.MedicalSpecialtyCode = ms.Code;
+                        user.Doctor.MedicalSpecialtyName = ms.Name;
+                    }
+
+                    if (registrationData.MedicalEntityId != null)
+                    {
+                        var me = this.db.SYS_MedicalEntity
+                                     .Single(me1 => me1.Id == registrationData.MedicalEntityId);
+                        user.Doctor.MedicalEntityCode = me.Code;
+                        user.Doctor.MedicalEntityName = me.Name;
+                    }
+
+                    user.Doctor.MedicalEntityJurisdiction = ((TypeEstadoBrasileiro)registrationData.MedicalEntityJurisdiction).ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.
                     // This is the first doctor, so there will be no conflicts.
@@ -344,17 +352,16 @@ namespace CerebelloWebRole.Controllers
             return this.View(registrationData);
         }
 
-        public ActionResult CreateAccountCompleted(string practice)
+        public ActionResult CreateAccountCompleted(string practice, bool? mustValidateEmail)
         {
+            this.ViewBag.MustValidateEmail = mustValidateEmail;
             return this.View(new VerifyPracticeAndEmailViewModel { Practice = practice });
         }
 
         #region ResetPassword: Request
         [AcceptVerbs(new[] { "Get", "Post" })]
-        public ActionResult VerifyPracticeAndEmail(VerifyPracticeAndEmailViewModel viewModel, bool allowEditToken = false)
+        public ActionResult VerifyPracticeAndEmail(VerifyPracticeAndEmailViewModel viewModel)
         {
-            this.ViewBag.AllowEditToken = allowEditToken || !this.ModelState.IsValid;
-
             var utcNow = this.GetUtcNow();
 
             User user = null;
@@ -368,15 +375,24 @@ namespace CerebelloWebRole.Controllers
                     throw new Exception(
                         "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
 
-                user = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
+                if (authenticatedPrincipal.Profile.PracticeIdentifier == viewModel.Practice)
+                    user = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
             }
-            else
+
+            if (user != null || this.Request.HttpMethod == "GET")
+            {
+                this.ModelState.Remove("UserNameOrEmail");
+                this.ModelState.Remove("Password");
+            }
+
+            if (user == null)
             {
                 var loginModel = new LoginViewModel
                 {
-                    PracticeIdentifier = viewModel.Practice,
-                    UserNameOrEmail = viewModel.UserNameOrEmail,
-                    Password = viewModel.Password,
+                    PracticeIdentifier = viewModel.Practice ?? "",
+                    UserNameOrEmail = viewModel.UserNameOrEmail ?? "",
+                    Password = viewModel.Password ?? "",
+                    RememberMe = viewModel.RememberMe,
                 };
 
                 var cookieCollection = this.HttpContext.Response.Cookies;
@@ -396,12 +412,9 @@ namespace CerebelloWebRole.Controllers
                 }
             }
 
-            if (user == null)
-                this.ModelState.AddModelError(() => viewModel.UserNameOrEmail, "Nome de usuário ou senha incorretos.");
-
             var isTokenValid = TokenId.IsValid(viewModel.Token);
             GLB_Token token = null;
-            if (isTokenValid)
+            if (isTokenValid && user != null)
             {
                 var tokenId = new TokenId(viewModel.Token);
 
@@ -414,11 +427,11 @@ namespace CerebelloWebRole.Controllers
                                                               && tk.Name == tokenName);
             }
 
-            if (token == null)
-                isTokenValid = false;
-
             var practice = this.db.Practices
                 .SingleOrDefault(p => p.UrlIdentifier == viewModel.Practice);
+
+            if (token == null)
+                isTokenValid = false;
 
             if (practice == null)
                 this.ModelState.AddModelError(() => viewModel.Practice, "Consultório não foi achado.");
@@ -442,18 +455,17 @@ namespace CerebelloWebRole.Controllers
                 this.db.SaveChanges();
             }
 
-            if (!isTokenValid)
+            if (!isTokenValid && user != null)
             {
-                this.ModelState.AddModelError(() => viewModel.Token, "Token é inválido, não existe, ou passou do prazo de validade.");
+                this.ModelState.AddModelError(() => viewModel.Token, "Problema com o token.");
             }
 
-            if (this.ModelState.IsValid)
+            if (this.ModelState.IsValid && user != null)
             {
-                return this.RedirectToAction("Welcome", "PracticeHome",
-                                             new { area = "App", practice = practice.UrlIdentifier });
+                return this.RedirectToAction("Welcome", "Home",
+                                             new { area = "", practice = practice.UrlIdentifier });
             }
 
-            viewModel.Token = null;
             viewModel.Password = null; // cannot allow password going to the view.
             return this.View(viewModel);
         }
@@ -466,72 +478,86 @@ namespace CerebelloWebRole.Controllers
         [HttpPost]
         public ActionResult ResetPasswordRequest(ResetPasswordRequestViewModel viewModel)
         {
+            // Can only reset password if practice has already been verified.
+            var practice = this.db.Practices.SingleOrDefault(p => p.UrlIdentifier == viewModel.PracticeIdentifier);
+
             var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 
-            var utcNow = this.GetUtcNow();
+            if (practice == null || user == null)
+                this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "O consultório ou usuário não existem. Por favor verifique se não cometeu nenhum erro de digitação.");
 
-            // Creating confirmation email, with the token.
-            MailMessage message;
+            if (practice != null && practice.VerificationDate == null && user != null)
+                this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Não é possível resetar a senha pois o consultório ainda não foi verificado. Confirme o seu e-mail antes de tentar mudar a senha.");
 
-            if (user.Person.Email != null)
+            if (this.ModelState.IsValid)
             {
-                #region Creating token and e-mail message
+                var utcNow = this.GetUtcNow();
 
-                // Setting verification token.
-                // Note: tokens are safe to save even if validation fails.
-                TokenId tokenId;
-                using (var db2 = this.CreateNewCerebelloEntities())
+                // Creating confirmation email, with the token.
+                MailMessage message;
+
+                if (user.Person.Email != null)
                 {
-                    var token = db2.GLB_Token.CreateObject();
-                    token.Value = Guid.NewGuid().ToString("N");
-                    token.Type = "ResetPassword";
-                    token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier,
-                                               user.UserName);
-                    token.ExpirationDate = utcNow.AddDays(30);
-                    db2.GLB_Token.AddObject(token);
-                    db2.SaveChanges();
+                    #region Creating token and e-mail message
 
-                    tokenId = new TokenId(token.Id, token.Value);
+                    // Setting verification token.
+                    // Note: tokens are safe to save even if validation fails.
+                    TokenId tokenId;
+                    using (var db2 = this.CreateNewCerebelloEntities())
+                    {
+                        var token = db2.GLB_Token.CreateObject();
+                        token.Value = Guid.NewGuid().ToString("N");
+                        token.Type = "ResetPassword";
+                        token.Name = string.Format(
+                            "Practice={0}&UserName={1}",
+                            user.Practice.UrlIdentifier,
+                            user.UserName);
+                        token.ExpirationDate = utcNow.AddDays(30);
+                        db2.GLB_Token.AddObject(token);
+                        db2.SaveChanges();
+
+                        tokenId = new TokenId(token.Id, token.Value);
+                    }
+
+                    // Rendering message bodies from partial view.
+                    var partialViewModel = new EmailViewModel
+                                               {
+                                                   PersonName = user.Person.FullName,
+                                                   UserName = user.UserName,
+                                                   Token = tokenId.ToString(),
+                                                   PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                               };
+                    var bodyText = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
+
+                    partialViewModel.IsBodyHtml = true;
+                    var bodyHtml = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
+
+                    var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
+
+                    message = EmailHelper.CreateEmailMessage(
+                        toAddress,
+                        "Redefinir senha da conta no Cerebello",
+                        bodyHtml,
+                        bodyText);
+
+                    #endregion
+                }
+                else
+                {
+                    return this.RedirectToAction("ResetPasswordManually");
                 }
 
-                // Rendering message bodies from partial view.
-                var partialViewModel = new EmailViewModel
-                                           {
-                                               PersonName = user.Person.FullName,
-                                               UserName = user.UserName,
-                                               Token = tokenId.ToString(),
-                                               PracticeUrlIdentifier = user.Practice.UrlIdentifier,
-                                           };
-                var bodyText = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
-
-                partialViewModel.IsBodyHtml = true;
-                var bodyHtml = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
-
-                var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
-
-                message = EmailHelper.CreateEmailMessage(
-                    toAddress,
-                    "Redefinir senha da conta no Cerebello",
-                    bodyHtml,
-                    bodyText);
-
-                #endregion
-            }
-            else
-            {
-                return this.RedirectToAction("ResetPasswordManually");
-            }
-
-            // If the ModelState is still valid, then save objects to the database,
-            // and send confirmation email message to the user.
-            using (message)
-            {
-                if (this.ModelState.IsValid)
+                // If the ModelState is still valid, then save objects to the database,
+                // and send confirmation email message to the user.
+                using (message)
                 {
-                    // Sending the confirmation e-mail to the new user.
-                    this.SendEmail(message);
+                    if (this.ModelState.IsValid)
+                    {
+                        // Sending the confirmation e-mail to the new user.
+                        this.SendEmail(message);
 
-                    return this.RedirectToAction("ResetPasswordEmailSent");
+                        return this.RedirectToAction("ResetPasswordEmailSent");
+                    }
                 }
             }
 

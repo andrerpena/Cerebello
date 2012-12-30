@@ -12,7 +12,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PracticeHomeController : PracticeController
     {
-        private Models.PracticeHomeControllerViewModel GetViewModel()
+        private PracticeHomeControllerViewModel GetViewModel()
         {
             var timeZoneId = this.DbPractice.WindowsTimeZoneId;
 

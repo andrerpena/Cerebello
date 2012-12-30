@@ -146,3 +146,7 @@ input, textarea {
             margin: 3px 0;
             list-style: none outside none;
         }
+
+ul.link-list li {
+    margin-top: 1em;
+}

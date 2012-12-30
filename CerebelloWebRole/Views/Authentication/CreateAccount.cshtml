@@ -1,5 +1,6 @@
 ﻿@using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code
 @using CerebelloWebRole.Models
 @model CerebelloWebRole.Models.CreateAccountViewModel
 @{
@@ -46,6 +47,18 @@
         {
             <fieldset>
                 <div class="controls-wrapper">
+                    @if (this.ViewData.ModelState.GetAllErrors().Any())
+                    {
+                        <div class="alert alert-block alert-error fade in">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <h4 class="alert-heading">Ocorreram erros</h4>
+                            @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
+                            {
+                                <p>@eachModelError.Item2.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+
                     @*Properties of the practice*@
                     <div class="control-group">
                         @Html.LabelFor(model => model.PracticeName)

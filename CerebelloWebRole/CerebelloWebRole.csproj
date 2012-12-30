@@ -137,6 +137,7 @@
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
+    <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\LockScriptViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
@@ -696,6 +697,7 @@
     <Content Include="Views\MasterAdmin\Index.cshtml" />
     <Content Include="Views\Shared\ObjectNotFound.cshtml" />
     <Content Include="Content\Reports\PatientsList\Patients.trdx" />
+    <Content Include="Views\Home\Welcome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

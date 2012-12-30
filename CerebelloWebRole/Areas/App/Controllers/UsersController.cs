@@ -87,49 +87,59 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var address = user.Person.Addresses.SingleOrDefault();
 
-            var viewModel = new UserViewModel()
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                FullName = user.Person.FullName,
-                ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s16),
-                Gender = user.Person.Gender,
-                DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth),
-                MaritalStatus = user.Person.MaritalStatus,
-                BirthPlace = user.Person.BirthPlace,
-                Cpf = user.Person.CPF,
-                Profissao = user.Person.Profession,
-                Email = user.Person.Email,
+            var viewModel = new UserViewModel();
 
-                IsAdministrador = user.AdministratorId != null,
-                IsDoctor = user.DoctorId != null,
-                IsSecretary = user.SecretaryId != null,
+            FillUserViewModel(user, practice, viewModel);
 
-                Address = address == null ? new AddressViewModel() : new AddressViewModel()
-                {
-                    CEP = address.CEP,
-                    City = address.City,
-                    Complement = address.Complement,
-                    Neighborhood = address.Neighborhood,
-                    StateProvince = address.StateProvince,
-                    Street = address.Street
-                }
-            };
+            viewModel.Address = address == null
+                                    ? new AddressViewModel()
+                                    : new AddressViewModel
+                                          {
+                                              CEP = address.CEP,
+                                              City = address.City,
+                                              Complement = address.Complement,
+                                              Neighborhood = address.Neighborhood,
+                                              StateProvince = address.StateProvince,
+                                              Street = address.Street
+                                          };
 
             var userDoctor = user.Doctor;
             if (userDoctor != null)
-            {
-                viewModel.MedicCRM = userDoctor.CRM;
-                viewModel.MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?)null;
-                viewModel.MedicalSpecialtyName = medicalSpecialty != null ? medicalSpecialty.Name : null;
-                viewModel.MedicalEntityId = medicalEntity != null ? medicalEntity.Id : (int?)null;
-                viewModel.MedicalEntityName = medicalEntity != null ? medicalEntity.Name : null;
-                viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
-                    typeof(TypeEstadoBrasileiro),
-                    user.Doctor.MedicalEntityJurisdiction);
-            }
+                FillDoctorViewModel(user, medicalEntity, medicalSpecialty, viewModel, userDoctor);
 
             return viewModel;
+        }
+
+        internal static void FillUserViewModel(User user, Practice practice, UserViewModel viewModel)
+        {
+            viewModel.Id = user.Id;
+            viewModel.UserName = user.UserName;
+
+            viewModel.FullName = user.Person.FullName;
+            viewModel.ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s16);
+            viewModel.Gender = user.Person.Gender;
+            viewModel.DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth);
+            viewModel.MaritalStatus = user.Person.MaritalStatus;
+            viewModel.BirthPlace = user.Person.BirthPlace;
+            viewModel.Cpf = user.Person.CPF;
+            viewModel.Profissao = user.Person.Profession;
+            viewModel.Email = user.Person.Email;
+
+            viewModel.IsAdministrador = user.AdministratorId != null;
+            viewModel.IsDoctor = user.DoctorId != null;
+            viewModel.IsSecretary = user.SecretaryId != null;
+        }
+
+        internal static void FillDoctorViewModel(User user, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty, UserViewModel viewModel, Doctor doctor)
+        {
+            viewModel.MedicCRM = doctor.CRM;
+            viewModel.MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?)null;
+            viewModel.MedicalSpecialtyName = medicalSpecialty != null ? medicalSpecialty.Name : null;
+            viewModel.MedicalEntityId = medicalEntity != null ? medicalEntity.Id : (int?)null;
+            viewModel.MedicalEntityName = medicalEntity != null ? medicalEntity.Name : null;
+            viewModel.MedicalEntityJurisdiction = (int)(TypeEstadoBrasileiro)Enum.Parse(
+                typeof(TypeEstadoBrasileiro),
+                user.Doctor.MedicalEntityJurisdiction);
         }
 
         [HttpGet]
@@ -331,7 +341,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         // otherwise we create a new doctor instance
                         if (user.Doctor == null)
                         {
-                            user.Doctor = new Doctor {PracticeId = this.DbUser.PracticeId,};
+                            user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
                             user.Doctor.HealthInsurances.Add(
                                 new HealthInsurance
                                     {
