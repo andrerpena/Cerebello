@@ -78,16 +78,7 @@ namespace CerebelloWebRole.Code
             // Redirect to VerifyPracticeAndEmail, if the practice has not been verified yet.
             if (practice.VerificationDate == null)
             {
-                filterContext.Result = this.RedirectToAction("VerifyPracticeAndEmail", "Authentication", new { area = "", practice = practiceName });
-                return;
-            }
-
-            // Redirect to welcome screen if it was not presented yet.
-            if (this.DbPractice.ShowWelcomeScreen
-                && !(controllerName.ToLowerInvariant() == "practicehome"
-                     && actionName.ToLowerInvariant() == "welcome"))
-            {
-                filterContext.Result = this.RedirectToAction("Welcome", "PracticeHome", new { area = "App", practice = practiceName });
+                filterContext.Result = this.RedirectToAction("CreateAccountCompleted", "Authentication", new { area = "", practice = practiceName, mustValidateEmail = true });
                 return;
             }
 

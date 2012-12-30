@@ -9464,8 +9464,7 @@ namespace Cerebello.Model
         /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="windowsTimeZoneId">Initial value of the WindowsTimeZoneId property.</param>
-        /// <param name="showWelcomeScreen">Initial value of the ShowWelcomeScreen property.</param>
-        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean showWelcomeScreen)
+        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId)
         {
             Practice practice = new Practice();
             practice.Id = id;
@@ -9473,7 +9472,6 @@ namespace Cerebello.Model
             practice.UrlIdentifier = urlIdentifier;
             practice.CreatedOn = createdOn;
             practice.WindowsTimeZoneId = windowsTimeZoneId;
-            practice.ShowWelcomeScreen = showWelcomeScreen;
             return practice;
         }
 
@@ -9651,30 +9649,6 @@ namespace Cerebello.Model
         private Nullable<global::System.DateTime> _VerificationDate;
         partial void OnVerificationDateChanging(Nullable<global::System.DateTime> value);
         partial void OnVerificationDateChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Boolean ShowWelcomeScreen
-        {
-            get
-            {
-                return _ShowWelcomeScreen;
-            }
-            set
-            {
-                OnShowWelcomeScreenChanging(value);
-                ReportPropertyChanging("ShowWelcomeScreen");
-                _ShowWelcomeScreen = StructuralObject.SetValidValue(value, "ShowWelcomeScreen");
-                ReportPropertyChanged("ShowWelcomeScreen");
-                OnShowWelcomeScreenChanged();
-            }
-        }
-        private global::System.Boolean _ShowWelcomeScreen;
-        partial void OnShowWelcomeScreenChanging(global::System.Boolean value);
-        partial void OnShowWelcomeScreenChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

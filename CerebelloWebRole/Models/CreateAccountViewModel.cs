@@ -84,7 +84,6 @@ namespace CerebelloWebRole.Models
         public int? MedicalSpecialtyId { get; set; }
 
         [Display(Name = "Especialidade")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalSpecialtyName { get; set; }
 
         [Display(Name = "Conselho médico")]

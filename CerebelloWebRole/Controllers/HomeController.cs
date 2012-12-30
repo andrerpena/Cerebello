@@ -12,5 +12,10 @@ namespace CerebelloWebRole.Controllers
         {
             return View();
         }
+
+        public ActionResult Welcome(string practice)
+        {
+            return this.View();
+        }
     }
 }

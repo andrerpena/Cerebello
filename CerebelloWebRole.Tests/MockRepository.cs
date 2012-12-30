@@ -59,13 +59,14 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Sets up André as the current logged user, in a valid sittuation.
         /// </summary>
-        public void SetCurrentUser_Andre_CorrectPassword(int? userId = null)
+        public void SetCurrentUser_Andre_CorrectPassword(int? userId = null, string practice = "consultoriodrhouse")
         {
             // Setting user details.
             this.IsAuthenticated = true;
             this.FullName = "André Rodrigues Pena";
             this.UserNameOrEmail = "andrerpena@gmail.com";
             this.Password = "ph4r40h";
+            this.UserPracticeIdentifier = practice;
 
             // Setting DB info.
             if (userId.HasValue)
@@ -82,13 +83,14 @@ namespace CerebelloWebRole.Tests
         /// <summary>
         /// Sets up Miguel as the current logged user, in a valid sittuation.
         /// </summary>
-        public void SetCurrentUser_Miguel_CorrectPassword(int? userId = null)
+        public void SetCurrentUser_Miguel_CorrectPassword(int? userId = null, string practice = "consultoriodrhouse")
         {
             // Setting user details.
             this.IsAuthenticated = true;
             this.FullName = "Phill Austin";
             this.UserNameOrEmail = "masbicudo@gmail.com";
             this.Password = "masban";
+            this.UserPracticeIdentifier = practice;
 
             // Setting DB info.
             if (userId.HasValue)
@@ -112,6 +114,7 @@ namespace CerebelloWebRole.Tests
             this.FullName = user.Person.FullName;
             this.UserNameOrEmail = loginWithUserName ? user.UserName : user.Person.Email;
             this.Password = Code.Constants.DEFAULT_PASSWORD;
+            this.UserPracticeIdentifier = user.Practice.UrlIdentifier;
 
             // Setting DB info.
             this.UserDbId = user.Id;
@@ -132,6 +135,7 @@ namespace CerebelloWebRole.Tests
             this.UserNameOrEmail = user.UserName;
             this.Password = password;
             this.UserDbId = user.Id;
+            this.UserPracticeIdentifier = user.Practice.UrlIdentifier;
         }
 
         public void SetRouteData_ConsultorioDrHouse_GregoryHouse(Type controllerType, string action)
@@ -257,6 +261,11 @@ namespace CerebelloWebRole.Tests
         public int UserDbId { get; set; }
 
         /// <summary>
+        /// Practice identifier of the User object, that represents the current user in the data-store.
+        /// </summary>
+        public string UserPracticeIdentifier { get; set; }
+
+        /// <summary>
         /// RouteData that will be used.
         /// </summary>
         public RouteData RouteData { get; set; }
@@ -371,6 +380,7 @@ namespace CerebelloWebRole.Tests
                                                                                       Email = this.UserNameOrEmail,
                                                                                       Id = this.UserDbId,
                                                                                       IsUsingDefaultPassword = this.Password == Code.Constants.DEFAULT_PASSWORD,
+                                                                                      PracticeIdentifier = this.UserPracticeIdentifier,
                                                                                   });
                 }
                 else

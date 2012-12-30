@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Models
@@ -11,8 +12,16 @@ namespace CerebelloWebRole.Models
 
         public string Practice { get; set; }
 
-        public string UserNameOrEmail { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Display(Name = "Nome de usuário ou e-mail")]
+        public String UserNameOrEmail { get; set; }
 
-        public string Password { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Display(Name = "Senha")]
+        [DataType(DataType.Password)]
+        public String Password { get; set; }
+
+        [Display(Name = "Lembrar de mim neste computador")]
+        public bool RememberMe { get; set; }
     }
 }

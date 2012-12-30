@@ -700,6 +700,7 @@
     <Content Include="Views\MasterAdmin\Index.cshtml" />
     <Content Include="Views\Shared\ObjectNotFound.cshtml" />
     <Content Include="Content\Reports\PatientsList\Patients.trdx" />
+    <Content Include="Views\Home\Welcome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

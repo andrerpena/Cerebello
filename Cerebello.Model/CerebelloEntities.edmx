@@ -621,7 +621,6 @@
           <Property Name="OwnerId" Type="int" />
           <Property Name="WindowsTimeZoneId" Type="varchar" Nullable="false" MaxLength="31" />
           <Property Name="VerificationDate" Type="datetime" />
-          <Property Name="ShowWelcomeScreen" Type="bit" Nullable="false" />
           <Property Name="ActiveAccountContractId" Type="int" />
           <Property Name="PhoneMain" Type="varchar" MaxLength="20" />
           <Property Name="PhoneAlt" Type="varchar" MaxLength="20" />
@@ -1741,7 +1740,6 @@
           <NavigationProperty Name="Users" Relationship="Cerebello.Model.FK_User_Practice" FromRole="Practice" ToRole="User" />
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="VerificationDate" Precision="3" />
-          <Property Type="Boolean" Name="ShowWelcomeScreen" Nullable="false" />
           <Property Type="Int32" Name="ActiveAccountContractId" />
           <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="Practice" ToRole="ChatMessage" />
           <NavigationProperty Name="AccountContracts" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="Practice" ToRole="AccountContract" />
@@ -2854,7 +2852,6 @@
                 <ScalarProperty Name="PhoneAlt" ColumnName="PhoneAlt" />
                 <ScalarProperty Name="PhoneMain" ColumnName="PhoneMain" />
                 <ScalarProperty Name="ActiveAccountContractId" ColumnName="ActiveAccountContractId" />
-                <ScalarProperty Name="ShowWelcomeScreen" ColumnName="ShowWelcomeScreen" />
                 <ScalarProperty Name="VerificationDate" ColumnName="VerificationDate" />
                 <ScalarProperty Name="WindowsTimeZoneId" ColumnName="WindowsTimeZoneId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

@@ -214,7 +214,7 @@ namespace CerebelloWebRole.Tests.Tests
                         MedicalEntityId = me.Id,
                         MedicalSpecialtyId = ms.Id,
                         MedicalSpecialtyName = ms.Name,
-                        MedicalEntityJurisdiction = (int) TypeEstadoBrasileiro.RJ,
+                        MedicalEntityJurisdiction = (int)TypeEstadoBrasileiro.RJ,
                     };
                     Mvc3TestHelper.SetModelStateErrors(controller, vm);
                 }
@@ -679,8 +679,8 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
             var redirectToRouteResult = (RedirectToRouteResult)actionResult;
             Assert.AreEqual("Welcome", redirectToRouteResult.RouteValues["action"]);
-            Assert.AreEqual("PracticeHome", redirectToRouteResult.RouteValues["controller"]);
-            Assert.AreEqual("App", redirectToRouteResult.RouteValues["area"]);
+            Assert.AreEqual("Home", redirectToRouteResult.RouteValues["controller"]);
+            Assert.AreEqual("", redirectToRouteResult.RouteValues["area"]);
             Assert.AreEqual(practiceName, redirectToRouteResult.RouteValues["practice"]);
         }
 
@@ -735,8 +735,8 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(VerifyPracticeAndEmailViewModel));
             var model = (VerifyPracticeAndEmailViewModel)viewResult.Model;
 
-            // ATENTION: The value of the token must NEVER go out to a view.
-            Assert.AreEqual(null, model.Token);
+            //// ATENTION: The value of the token must NEVER go out to a view.
+            //Assert.AreEqual(null, model.Token);
 
             // ATENTION: The value of the password must NEVER go out to a view.
             Assert.AreEqual(null, model.Password);
@@ -795,8 +795,8 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(VerifyPracticeAndEmailViewModel));
             var model = (VerifyPracticeAndEmailViewModel)viewResult.Model;
 
-            // ATENTION: The value of the token must NEVER go out to a view.
-            Assert.AreEqual(null, model.Token);
+            //// ATENTION: The value of the token must NEVER go out to a view.
+            //Assert.AreEqual(null, model.Token);
 
             // ATENTION: The value of the password must NEVER go out to a view.
             Assert.AreEqual(null, model.Password);
@@ -806,7 +806,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Asserting ModelState.
             Assert.IsTrue(controller.ModelState.ContainsKey("Token"), "ModelState must containt an entry for 'Token'.");
             Assert.AreEqual(1, controller.ModelState["Token"].Errors.Count);
-            Assert.AreEqual("Token é inválido, não existe, ou passou do prazo de validade.", controller.ModelState["Token"].Errors.First().ErrorMessage);
+            Assert.AreEqual("Problema com o token.", controller.ModelState["Token"].Errors.First().ErrorMessage);
         }
 
         /// <summary>
@@ -862,8 +862,8 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsInstanceOfType(viewResult.Model, typeof(VerifyPracticeAndEmailViewModel));
             var model = (VerifyPracticeAndEmailViewModel)viewResult.Model;
 
-            // ATENTION: The value of the token must NEVER go out to a view.
-            Assert.AreEqual(null, model.Token);
+            //// ATENTION: The value of the token must NEVER go out to a view.
+            //Assert.AreEqual(null, model.Token);
 
             // ATENTION: The value of the password must NEVER go out to a view.
             Assert.AreEqual(null, model.Password);
@@ -873,7 +873,7 @@ namespace CerebelloWebRole.Tests.Tests
             // Asserting ModelState.
             Assert.IsTrue(controller.ModelState.ContainsKey("Token"), "ModelState must containt an entry for 'Token'.");
             Assert.AreEqual(1, controller.ModelState["Token"].Errors.Count);
-            Assert.AreEqual("Token é inválido, não existe, ou passou do prazo de validade.", controller.ModelState["Token"].Errors.First().ErrorMessage);
+            Assert.AreEqual("Problema com o token.", controller.ModelState["Token"].Errors.First().ErrorMessage);
         }
         #endregion
 
@@ -927,15 +927,16 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsNotNull(actionResult);
             Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
             var redirectToRouteResult = (RedirectToRouteResult)actionResult;
-            Assert.AreEqual("VerifyPracticeAndEmail", redirectToRouteResult.RouteValues["action"]);
+            Assert.AreEqual("CreateAccountCompleted", redirectToRouteResult.RouteValues["action"]);
             Assert.AreEqual("Authentication", redirectToRouteResult.RouteValues["controller"]);
             Assert.AreEqual("", redirectToRouteResult.RouteValues["area"]);
             Assert.AreEqual(practiceName, redirectToRouteResult.RouteValues["practice"]);
+            Assert.AreEqual(true, redirectToRouteResult.RouteValues["mustValidateEmail"]);
         }
 
         /// <summary>
-        /// Though this is a valid operation, the user should be redirected
-        /// to the Welcome screen, that has informations for the new user.
+        /// This is a valid operation, and the controller OnActionExecuting should not return an action result,
+        /// and let the action being executed.
         /// </summary>
         [TestMethod]
         public void TryAccessPractice_AfterCreateAccountAndValidateEmail()
@@ -985,17 +986,13 @@ namespace CerebelloWebRole.Tests.Tests
 
             ActionResult actionResult;
             {
+                // The controller self-filter should let the action being executed,
+                // so the resulting actionResult from OnActionExecuting, must be null.
                 actionResult = Mvc3TestHelper.RunOnActionExecuting(controller, mr);
             }
 
             // Asserting.
-            Assert.IsNotNull(actionResult);
-            Assert.IsInstanceOfType(actionResult, typeof(RedirectToRouteResult));
-            var redirectToRouteResult = (RedirectToRouteResult)actionResult;
-            Assert.AreEqual("Welcome", redirectToRouteResult.RouteValues["action"]);
-            Assert.AreEqual("PracticeHome", redirectToRouteResult.RouteValues["controller"]);
-            Assert.AreEqual("App", redirectToRouteResult.RouteValues["area"]);
-            Assert.AreEqual(practiceName, redirectToRouteResult.RouteValues["practice"]);
+            Assert.IsNull(actionResult);
         }
         #endregion
 

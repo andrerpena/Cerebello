@@ -568,7 +568,6 @@ namespace Cerebello.Firestarter
                     CreatedOn = new DateTime(2007, 07, 03, 0, 0, 0, DateTimeKind.Utc),
                     WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                     VerificationDate = new DateTime(2007, 07, 12, 0, 0, 0, DateTimeKind.Utc),
-                    ShowWelcomeScreen = false,
                 };
 
             db.Practices.AddObject(practice);
@@ -596,7 +595,6 @@ namespace Cerebello.Firestarter
                     CreatedOn = new DateTime(2009, 02, 27, 0, 0, 0, DateTimeKind.Utc),
                     WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                     VerificationDate = new DateTime(2009, 02, 27, 0, 0, 0, DateTimeKind.Utc),
-                    ShowWelcomeScreen = false,
                 };
 
             db.Practices.AddObject(practice);
@@ -2061,7 +2059,6 @@ GO
                 {
                     Name = name,
                     CreatedOn = DateTime.UtcNow.AddDays(-1),
-                    ShowWelcomeScreen = true,
                     WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
                     VerificationDate = DateTime.UtcNow,
                     UrlIdentifier = urlIdentifier,

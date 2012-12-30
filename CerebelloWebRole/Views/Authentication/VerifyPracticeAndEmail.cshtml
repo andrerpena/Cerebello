@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Models.VerifyPracticeAndEmailViewModel
+﻿@using CerebelloWebRole.Code
+@model CerebelloWebRole.Models.VerifyPracticeAndEmailViewModel
 @{
     ViewBag.Title = "Verifique seu e-mail";
 }
@@ -9,54 +10,138 @@
         </div>
         @if (this.ViewBag.CreatingAccount == true)
         {
-            <p>
-                A conta para o seu consultório foi criada com sucesso!</p>
-            <p>
-                Agora só falta validar o seu e-mail para poder acessar o seu software de gerenciamento
-                de consultório: o Cerebello.</p>
-            <ul>
-                <li><a href="@Url.Action("VerifyPracticeAndEmail", new { practice = this.Model.Practice })">Entre com o TOKEN que foi enviado
-                    ao seu e-mail manualmente</a></li>
-                <li><a href="@Url.Action("Welcome", "PracticeHome", new { area = "App", practice = this.Model.Practice })">Se já passou
-                    pela verificação, comece agora a usar o seu software.</a></li>
-            </ul>
+            <div class="controls-wrapper">
+                @if (this.ViewBag.MustValidateEmail == true)
+                {
+                    <p>
+                        A conta para o seu consultório foi criada, mas ainda não pode ser usada.
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        A conta para o seu consultório foi criada com sucesso!
+                    </p>
+                }
+                <p>
+                    Agora só falta validar o seu e-mail para poder acessar o software de gerenciamento
+                    de consultório: Cerebello.
+                </p>
+                <p>
+                    Por favor, acesse sua conta de e-mail e siga as instruções contidas na mensagem.
+                </p>
+                <ul class="link-list">
+                    <li><a href="@Url.Action("VerifyPracticeAndEmail", new { practice = this.Model.Practice })">Entre com o TOKEN que foi enviado ao seu e-mail manualmente
+                    </a></li>
+                    <li><a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.Practice })">Se já passou pela verificação, comece agora a usar o software.
+                    </a></li>
+                </ul>
+            </div>
         }
         else
         {
             var tokenModelState = this.ViewData.ModelState["Token"];
-            if (tokenModelState != null && tokenModelState.Errors.Any())
+            if (tokenModelState != null && tokenModelState.Errors.Any() && !string.IsNullOrWhiteSpace(this.Model.Token))
             {
-                @:@Html.ValidationMessage(
-                    "Token",
-                    "O token informado não foi encontrado. "
-                    + "É possível que já tenha sido validado, "
-                    + "ou então o tempo para a validação tenha expirado.")
-                <ul>
-                    <li><a href="@Url.Action("VerifyPracticeAndEmail", new { practice = this.Model.Practice })">Entre com o TOKEN que foi enviado
-                        ao seu e-mail manualmente</a></li>
-                    <li><a href="@Url.Action("Welcome", "PracticeHome", new { area = "App", practice = this.Model.Practice })">Quando tiver passado
-                        pela verificação, comece a usar o seu software.</a></li>
+            <div class="controls-wrapper">
+                @if (this.ViewData.ModelState.GetAllErrors().Any())
+                {
+                    <div class="alert alert-block alert-error fade in">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        <h4 class="alert-heading">Token não encontrado</h4>
+                        <p>Possíveis motivos:</p>
+                        <ul>
+                            <li>- O e-mail já foi validado.</li>
+                            <li>- O tempo para validar expirou (30 dias).</li>
+                            <li>- Se você digitou o token manualmente, pode ter havido um erro de digitação.</li>
+                        </ul>
+                    </div>
+                }
+                <ul class="link-list">
+                    <li><a href="@Url.Action("VerifyPracticeAndEmail", new { practice = this.Model.Practice })">Entre com o TOKEN que foi enviado ao seu e-mail manualmente
+                    </a></li>
+                    <li><a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.Practice })">Quando tiver passado pela verificação, comece a usar o software.
+                    </a></li>
                 </ul>
+            </div>
             }
             else
             {
                 using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
                 {
-                <fieldset>
-                    <div class="controls-wrapper">
-                        @Html.HiddenFor(model => model.Practice)
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.Token)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.Token, new { @class = "input-xlarge" })
-                            </div>
-                        </div>
-                        <div class="form-actions" style="margin: 0">
-                            <button class="btn btn-primary btn-large" type="submit">
-                                Confirmar e-mail</button>
+                    if (this.ViewData.ModelState.IsValid && this.ViewBag.LoginFailed != true)
+                    {
+            <fieldset>
+                <div class="controls-wrapper">
+                    @Html.HiddenFor(model => model.Practice)
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Token)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Token, new { @class = "input-xlarge" })
                         </div>
                     </div>
-                </fieldset>
+                </div>
+            </fieldset>
+                    }
+                    else
+                    {
+            <fieldset>
+                <div class="controls-wrapper">
+                    @if (this.ViewData.ModelState.GetAllErrors().Any())
+                    {
+                        <div class="alert alert-block alert-error fade in">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <h4 class="alert-heading">Ocorreram erros</h4>
+                            @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
+                            {
+                                <p>@eachModelError.Item2.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Token)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Token, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Practice)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Practice, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <p style="color: slategray">
+                        Digite nos campos abaixo, os mesmos dados informados no momento em que a conta foi criada.
+                    </p>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.UserNameOrEmail)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.UserNameOrEmail, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Password)
+                        <div class="controls">
+                            @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                            <p style="font-size: 0.8em; color: slategray; margin: 0 2em; width: 20em; text-align: justify">
+                                Se você esqueceu a senha ou nome de usuário usados para criar a conta,
+                                entre em contato conosco para podermos ajudá-lo.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            @Html.CheckBoxFor(model => model.RememberMe) @Html.LabelFor(model => model.RememberMe, new { @class = "remember-me" })
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+                    }
+            <div class="form-actions" style="margin: 0">
+                <button class="btn btn-primary btn-large" type="submit">
+                    Confirmar e-mail</button>
+            </div>
                 }
             }
         }
