@@ -147,7 +147,7 @@ namespace CerebelloWebRole.Tests
             MvcApplication.RegisterGlobalFilters(globalFilters);
             allFilters.AddRange(globalFilters);
 
-            allFilters.AddRange(controller.GetType().GetCustomAttributes());
+            allFilters.AddRange(controller.GetType().GetCustomAttributes(true));
 
             allFilters.AddRange(actionDescriptor.GetCustomAttributes(true));
 

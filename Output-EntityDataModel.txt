@@ -1,0 +1,1 @@
+﻿The namespaces in the storage, conceptual, and mapping sections of the .edmx files in the project Cerebello.Model were successfully updated to match the project's targeted .NET framework.

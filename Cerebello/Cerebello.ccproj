@@ -51,7 +51,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PublishProfile Include="Profiles\CerebelloHostedServiceProduction.azurePubxml" />
+    <PublishProfile Include="Profiles\cerebelloProduction.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
