@@ -27,8 +27,5 @@
       <Import moduleName="RemoteForwarder" />
       <Import moduleName="WebDeploy" />
     </Imports>
-    <ConfigurationSettings>
-      <Setting name="CloudToolsDiagnosticAgentVersion" />
-    </ConfigurationSettings>
   </WebRole>
 </ServiceDefinition>

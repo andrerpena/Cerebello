@@ -114,8 +114,8 @@ namespace CerebelloWebRole.Code.Chat
                                                select m
                                               ).ToList().Select(m => new ChatMessage()
                                               {
-                                                  UserFrom = GetChatUserFromUser(m.UserTo),
-                                                  UserTo = GetChatUserFromUser(m.UserFrom),
+                                                  UserFrom = GetChatUserFromUser(m.UserFrom),
+                                                  UserTo = GetChatUserFromUser(m.UserTo),
                                                   Message = m.Message,
                                                   Timestamp = m.Date.Ticks
                                               }).Take(400).AsEnumerable().Reverse());

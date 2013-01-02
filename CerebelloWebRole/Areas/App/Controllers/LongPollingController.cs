@@ -45,6 +45,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // the current connection string [DO NOT PUT THIS CODE INSIDE THE ThreadPool.QueueUserWorkItem. Leave it here]
             var connectionString = this.db.Connection.ConnectionString;
+            if (connectionString == null)
+                throw new Exception("There's something wrong with the current connection. Cannot find connection string");
 
             foreach (var provider in this.providers)
             {
@@ -65,10 +67,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                     wait.Set();
                                 }
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             // The long polling cannot stop because a provider triggered an exception
-                            // todo: log exception here
+                            throw new Exception(
+                                "There was an error waiting for events in a provider. Provider: " + providerClosure.GetType().FullName, ex);
                         }
 
                     }, provider);
