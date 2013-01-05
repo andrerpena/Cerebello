@@ -33,6 +33,9 @@ namespace Cerebello.Firestarter
 
         private void Run()
         {
+            if(string.IsNullOrEmpty(this.rootCerebelloPath))
+                throw new Exception("Cannot start FireStarter. Cannot find Cerebello root path configuration");
+
             bool isToChooseDb = true;
 
             bool showHidden = false;

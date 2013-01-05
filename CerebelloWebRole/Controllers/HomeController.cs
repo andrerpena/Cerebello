@@ -17,5 +17,10 @@ namespace CerebelloWebRole.Controllers
         {
             return this.View();
         }
+
+        public ActionResult PricesAndPlans()
+        {
+            return this.View();
+        }
     }
 }
