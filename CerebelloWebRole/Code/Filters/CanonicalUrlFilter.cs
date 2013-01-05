@@ -12,7 +12,7 @@ namespace CerebelloWebRole.Code.Filters
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var request = filterContext.RequestContext.HttpContext.Request;
-            if (!request.IsAjaxRequest() && request.Url.Host != "localhost" && request.Url.Host != ConfigurationManager.AppSettings["CanonicalUrlHost"])
+            if (!request.IsAjaxRequest() && request.Url.Host != "localhost" && request.Url.Host != "127.0.0.1" && request.Url.Host != ConfigurationManager.AppSettings["CanonicalUrlHost"])
             {
                 var uriBuilder = new UriBuilder(request.Url) { Host = ConfigurationManager.AppSettings["CanonicalUrlHost"] };
                 filterContext.Result = new RedirectResult(uriBuilder.ToString());

@@ -416,6 +416,7 @@
     <Content Include="Content\Images\App\Icons\stats-on.png" />
     <Content Include="Content\Images\arrow-black.png" />
     <Content Include="Content\Images\bkgd-pinstripe-bc.png" />
+    <Content Include="Content\Images\brain.png" />
     <Content Include="Content\Images\button-bg-template.png" />
     <Content Include="Content\Images\button-bg.png" />
     <Content Include="Content\Images\horizon-tour - Copy.png" />
@@ -427,11 +428,13 @@
     <Content Include="Content\Images\Site\1.jpg" />
     <Content Include="Content\Images\Site\1.png" />
     <Content Include="Content\Images\Site\agenda.png" />
+    <Content Include="Content\Images\Site\arrow.png" />
     <Content Include="Content\Images\Site\descubra.png" />
     <Content Include="Content\Images\Site\documentos.png" />
     <Content Include="Content\Images\Site\escolha.png" />
     <Content Include="Content\Images\Site\experimente.png" />
     <Content Include="Content\Images\Site\green-tick.png" />
+    <Content Include="Content\Images\Site\hero_bg - Copy - Copy.jpg" />
     <Content Include="Content\Images\Site\hero_bg - Copy.jpg" />
     <Content Include="Content\Images\Site\hero_bg.jpg" />
     <Content Include="Content\Images\Site\logo_transp.png" />
