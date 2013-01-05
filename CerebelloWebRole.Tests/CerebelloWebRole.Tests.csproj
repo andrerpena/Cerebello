@@ -179,7 +179,6 @@
     </None>
     <None Include="Uncommited.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Test References\CerebelloWebRole.accessor" />
   </ItemGroup>

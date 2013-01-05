@@ -430,10 +430,22 @@
     <Content Include="Content\Images\red-underline.png" />
     <Content Include="Content\Images\Site\1.jpg" />
     <Content Include="Content\Images\Site\1.png" />
+    <Content Include="Content\Images\Site\agenda.png" />
     <Content Include="Content\Images\Site\descubra.png" />
+    <Content Include="Content\Images\Site\documentos.png" />
     <Content Include="Content\Images\Site\escolha.png" />
     <Content Include="Content\Images\Site\experimente.png" />
+    <Content Include="Content\Images\Site\green-tick.png" />
+    <Content Include="Content\Images\Site\hero_bg - Copy.jpg" />
+    <Content Include="Content\Images\Site\hero_bg.jpg" />
+    <Content Include="Content\Images\Site\logo_transp.png" />
+    <Content Include="Content\Images\Site\medicamentos.png" />
+    <Content Include="Content\Images\Site\prontuario.png" />
+    <Content Include="Content\Images\Site\screenshot1.png" />
     <Content Include="Content\Images\Site\screenshots.jpg" />
+    <Content Include="Content\Images\Site\screenshot_TMP.png" />
+    <Content Include="Content\Images\Site\twitter.png" />
+    <Content Include="Content\Images\Site\usuarios.png" />
     <Content Include="Content\Images\step-1.png" />
     <Content Include="Content\Images\step-2.png" />
     <Content Include="Content\Images\step-3.png" />
@@ -703,6 +715,7 @@
     <Content Include="Views\Shared\ObjectNotFound.cshtml" />
     <Content Include="Content\Reports\PatientsList\Patients.trdx" />
     <Content Include="Views\Home\Welcome.cshtml" />
+    <Content Include="Views\Home\PricesAndPlans.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

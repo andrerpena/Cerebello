@@ -70,8 +70,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         catch (Exception ex)
                         {
                             // The long polling cannot stop because a provider triggered an exception
-                            throw new Exception(
-                                "There was an error waiting for events in a provider. Provider: " + providerClosure.GetType().FullName, ex);
+                            // ADD SOME AZURE DIAGNOSTICS HERE
                         }
 
                     }, provider);
