@@ -92,7 +92,7 @@ input, textarea {
 }
 
 .authentication-container {
-    margin: 90px auto;
+    margin: 120px auto;
     max-width: 470px;
     width: 100%;
 }
@@ -103,13 +103,6 @@ input, textarea {
     }
 
         .authentication-container .authentication-container-wrapper .input-validation-error {
-        }
-
-        .authentication-container .login-logo {
-            background-image: url("/Content/Images/top-logo.png");
-            background-position: 150px 50%;
-            background-repeat: no-repeat;
-            height: 70px;
         }
 
     .authentication-container .header {
