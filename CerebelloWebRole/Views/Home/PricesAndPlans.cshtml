@@ -12,8 +12,10 @@
 </header>
 <div class="container">
     <div class="well">
-        <p>O Cerbello é um software <a href="http://pt.wikipedia.org/wiki/Software_como_servi%C3%A7o" target="blank">SaaS</a>, isto é, ele é oferecido como um serviço pago mensalmente e nós nos responsabilizamos por toda a infraestrutura de rede, segurança, hospedagem e backup dos dados. Nós somente oferecemos um plano, no qual todos os recursos estão disponíveis e tudo é ilimitado.
-            No entanto, nós oferecemos descontos caso o cliente opte por uma periodicidade maior que a mensal. Confira as opções:</p>
+        <p>
+            O Cerbello é um <a href="http://pt.wikipedia.org/wiki/Software_como_servi%C3%A7o" target="blank">SaaS</a>, isto é, ele é oferecido como um serviço pago mensalmente e nós nos responsabilizamos por toda a infraestrutura de rede, segurança, hospedagem e backup dos dados. Há somente um plano, no qual todos os recursos estão disponíveis e tudo é ilimitado.
+            No entanto, nós oferecemos descontos caso o cliente opte por uma periodicidade maior que a mensal. Confira as opções:
+        </p>
         <table class="table table-outer-bordered prices">
             <thead>
                 <tr>
@@ -39,7 +41,7 @@
                             <small>Usuários ilimitados</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="https://secure.fleetio.com/register?plan=super" class="btn btn-success">Começar
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
                             </a>
                         </p>
                     </td>
@@ -56,7 +58,7 @@
                             <small>Usuários ilimitados</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="https://secure.fleetio.com/register?plan=large" class="btn btn-success">Começar
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
                             </a>
                         </p>
                     </td>
@@ -72,7 +74,7 @@
                             <small>Usuários ilimitados</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="https://secure.fleetio.com/register?plan=large" class="btn btn-success">Começar
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
                             </a>
                         </p>
                     </td>
@@ -88,24 +90,32 @@
                             <small>Usuários ilimitados</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="https://secure.fleetio.com/register?plan=large" class="btn btn-success">Começar
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
                             </a>
                         </p>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <p style="text-align: right; margin: 0">É possível experimentar o Cerebello gratuitamente pelo tempo que desejar. <a href="#">Começar →</a></p>
+        <div style="clear: both"></div>
+        <div class="row-fluid">
+            <div class="span6">
+                <h4>Todas as opções incluem:</h4>
+                <ul>
+                    <li>Criptografia SSL (a mesma utilizada em bancos).</li>
+                    <li>Número ilimitado de registros (pacientes, medicamentos, consultas, tudo).</li>
+                    <li>Suporte ao cliente por e-mail.</li>
+                    <li>Exportação dos dados para XML ou PDF.</li>
+                </ul>
+            </div>
+            <div class="span6">
+                <p style="text-align: right; margin: 0">Experimente o Cerebello gratuitamente pelo tempo que desejar. <a href="@Url.Action("CreateAccount", "Authentication")" style="white-space: nowrap">Começar →</a></p>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="span6">
-            <h4>Todas as opções incluem:</h4>
-            <ul>
-                <li>Criptografia SSL (a mesma utilizada em bancos).</li>
-                <li>Número ilimitado de registros (pacientes, medicamentos, consultas, tudo).</li>
-                <li>Suporte ao cliente por e-mail.</li>
-                <li>Exportação dos dados para XML ou PDF.</li>
-            </ul>
+
             <h4>Experimente pelo tempo que desejar</h4>
             <p>
                 Nós queremos que você teste o Cerebello pelo tempo que julgar necessário. Todos os recursos estão incluídos gratuitamente, inclusive o suporte a múltiplos usuários.
@@ -115,23 +125,34 @@
                 A qualquer momento é possível cancelar o período de experiência e nada será cobrado. Também é possível migrar para o plano pago onde tudo é ilimitado. Caso você tenha qualquer dúvida, não exite em nos contactar.
                 Caso o Cerebello não tenha alguma funcionalidade que você julgue importante, nos comunique para que possamos estudar o caso e possivelmente implementá-la. Seu feedback é fundamental.
             </p>
-        </div>
-        <div class="span6">
+            <h4>Quais browsers são suportados? De onde eu posso acessar o Cerebello?</h4>
+            <p>
+                O Cerebello suporta o IE 9 ou superior, FireFox 4 ou superior, Chrome 10 ou superior e Safari 5 ou superior.
+                Atualmente não existe uma versão específica do Cerebello para dispositivos móveis, porém, é perfeitamente possível
+                acessá-lo de smartphones e tablets modernos. Nós estamos trabalhando em uma versão adaptada para dispositivos móveis.
+            </p>
             <h4>Existe alguma taxa de adesão?</h4>
-            <p>Não. Para começar a utilizar o Cerebello não é necessário pagar nada. O pagamento somente é necessário quando houver intenção de eliminar o limite de 50
+            <p>
+                Não. Para começar a utilizar o Cerebello não é necessário pagar nada. O pagamento somente é necessário quando houver intenção de eliminar o limite de 50
                 usuários. Neste caso, uma das opções de periodicidade de pagamento deve ser escolhida e o pagamento deve ser feito antecipadamente para cada período.
             </p>
+
+        </div>
+        <div class="span6">
             <h4>Quais são os meios de pagamento disponíveis?</h4>
-            <p>Atualmente trabalhamos com "invoices" do PayPal que podem ser pagas utilizando VISA ou MasterCard. No início de cada período (mensal, trimestral...),
-                você receberá um e-mail contendo esta "invoice" e nós seremos notificados do pagamento quando este for realizado.
+            <p>
+                Atualmente trabalhamos com faturas do PayPal que podem ser pagas utilizando VISA ou MasterCard. No início de cada período (mensal, trimestral...),
+                você receberá um e-mail contendo esta fatura e nós seremos notificados do pagamento quando este for realizado.
             </p>
             <h4>Eu tenho que assinar algum contrato de fidelidade?</h4>
-            <p>Não. Você pode cancelar a qualquer momento e o Cerebello ficará indisponível a partir do fim da vigência do período já pago. Exemplo: Se você optou pelo 
+            <p>
+                Não. Você pode cancelar a qualquer momento e o Cerebello ficará indisponível a partir do fim da vigência do período já pago. Exemplo: Se você optou pelo 
                 pagamento trimestral, caso deseje cancelar, não será emitida outra fatura e o sistema somente ficará disponível até o vencimento desse trimestre. O mesmo
                 vale para todas as periodicidades.
             </p>
             <h4>Se, no futuro, eu quiser sair do Cerebello e ir para outro software, o que acontece com meus dados?</h4>
-            <p>O Cerbello exporta todas as informações dos seus pacientes para XML. Esses dados podem ser importados por outro software caso ele seja programado para isto.
+            <p>
+                O Cerbello exporta todas as informações dos seus pacientes para XML. Esses dados podem ser importados por outro software caso ele seja programado para isto.
                 É provável que a outra empresa vá cobrar uma taxa de desenvolvimento e importação desses dados, mas não é nada que impossibilite que você leve os seus
                 dados do Cerebello para outro software.
             </p>

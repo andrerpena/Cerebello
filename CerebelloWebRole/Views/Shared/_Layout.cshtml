@@ -39,7 +39,7 @@
                     }
                     else
                     {
-                        <li class="@(this.IsAction("Login", "Authentication") ? "active" : "")"><a href="@Url.Action("Login", "Authentication", new { area = "" })">Login</a></li>
+                        <a class="btn btn-success btn-small" style="margin-left: 20px;margin-top: 2px;" href="@Url.Action("Login", "Authentication", new { area = "" })">Login</a>
                     }
                 </ul>
             </div>
@@ -53,13 +53,13 @@
             <div class="row links-horizontal">
                 <div class="span12">
                     <ul>
-                        <li><a href="@Url.Action("Index", "Home")">Produto</a></li>
-                        <li><a href="@Url.Action("PricesAndPlans", "Home")">Preços e Planos</a></li>
-                        <li><a href="#">Documentação</a></li>
+                        <li><a href="@Url.Action("Index", "Home", new { area = "" })">Produto</a></li>
+                        <li><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Preços e Planos</a></li>
+                        <li><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentação</a></li>
                         <li><a href="#">Fale Conosco</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="span12">
                     <a class="twitter-link" href="http://twitter.com/cerebello">Siga o Cerebello no Twitter</a>
                 </div>
