@@ -1,5 +1,7 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@using CerebelloWebRole.Code.Extensions
+@{
+    this.Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 @section Header {
@@ -12,17 +14,13 @@
         <div class="span3">
             <div class="well">
                 <ul class="nav nav-list">
-                    <li class="nav-header">
-                        Sobre o Cerebello
+                    <li class="nav-header">Sobre o Cerebello
                     </li>
-                    <li class="active">
-                        <a href="#">Introdução</a>
+                    <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("Index", "HomeDocs")">Introdução</a>
                     </li>
-                    <li>
-                        <a href="#">Requisitos mínimos de sistema</a>
-                    </li>
-                    <li>
-                        <a href="#">Criando uma conta</a>
+                    <li class="@(this.IsAction("CreatingAnAccount", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("CreatingAnAccount", "HomeDocs")">Criando uma conta</a>
                     </li>
                     <li>
                         <a href="#">Gerenciando licenças</a>
@@ -33,8 +31,7 @@
                     <li>
                         <a href="#">Obtendo ajuda e suporte</a>
                     </li>
-                    <li class="nav-header">
-                        Agenda
+                    <li class="nav-header">Agenda
                     </li>
                     <li>
                         <a href="#">Configurando sua agenda</a>
@@ -45,8 +42,7 @@
                     <li>
                         <a href="#">Descobrindo horários livres</a>
                     </li>
-                    <li class="nav-header">
-                        Prontuário
+                    <li class="nav-header">Prontuário
                     </li>
                     <li>
                         <a href="#">Cadastrando pacientes</a>
@@ -60,8 +56,7 @@
                     <li>
                         <a href="#">Agendando retornos</a>
                     </li>
-                    <li class="nav-header">
-                        Medicamentos
+                    <li class="nav-header">Medicamentos
                     </li>
                     <li>
                         <a href="#">Cadastrando medicamentos</a>
@@ -69,8 +64,7 @@
                     <li>
                         <a href="#">Importando medicamentos da Anvisa</a>
                     </li>
-                    <li class="nav-header">
-                        Convênios
+                    <li class="nav-header">Convênios
                     </li>
                     <li>
                         <a href="#">Cadastrando convênios</a>
@@ -78,8 +72,7 @@
                     <li>
                         <a href="#">Configurando convênios</a>
                     </li>
-                    <li class="nav-header">
-                        Documentos para impressão
+                    <li class="nav-header">Documentos para impressão
                     </li>
                     <li>
                         <a href="#">Configurando receitas</a>

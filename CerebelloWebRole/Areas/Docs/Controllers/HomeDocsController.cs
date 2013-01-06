@@ -10,8 +10,12 @@ namespace CerebelloWebRole.Areas.Docs.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
+        public ActionResult CreatingAnAccount()
+        {
+            return this.View();
+        }
     }
 }

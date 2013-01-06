@@ -689,6 +689,7 @@
     <Content Include="Areas\App\Views\Laboratories\Medicines.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Search.cshtml" />
     <Content Include="Areas\App\Views\Shared\LockScript.cshtml" />
+    <Content Include="Areas\Docs\Views\HomeDocs\CreatingAnAccount.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
