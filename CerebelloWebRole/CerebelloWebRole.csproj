@@ -702,6 +702,9 @@
     <Content Include="Content\Reports\PatientsList\Anamneses.trdx" />
     <Content Include="Content\Reports\PatientsList\Receipts.trdx" />
     <Content Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
+    <Content Include="App.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\ConfirmationEmail.cshtml" />
     <Content Include="Views\Authentication\VerifyPracticeAndEmail.cshtml" />

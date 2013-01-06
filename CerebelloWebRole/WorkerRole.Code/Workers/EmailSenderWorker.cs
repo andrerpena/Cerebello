@@ -3,7 +3,6 @@ using System.Net.Mail;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
@@ -24,6 +23,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                     // One e-mail will be sent 40 hours before the appointment.
                     var items = db.Appointments
                         .Where(a => a.Start > utcNow && a.Start < next40H && !a.ReminderEmailSent)
+                        .Where(a => a.PatientId != null)
                         .Select(
                             a => new
                                 {
@@ -74,42 +74,43 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 
                     foreach (var eachItem in items)
                     {
-                        if (!string.IsNullOrWhiteSpace(eachItem.EmailViewModel.PatientEmail))
+                        if (string.IsNullOrWhiteSpace(eachItem.EmailViewModel.PatientEmail))
+                            continue;
+
+                        // Rendering message bodies from partial view.
+                        var emailViewModel = eachItem.EmailViewModel;
+
+                        var bodyText = this.RenderView("AppointmentReminderEmail", emailViewModel);
+
+                        emailViewModel.IsBodyHtml = true;
+                        var bodyHtml = this.RenderView("AppointmentReminderEmail", emailViewModel);
+
+                        var toAddress = new MailAddress(
+                            eachItem.EmailViewModel.PatientEmail,
+                            eachItem.EmailViewModel.PatientName);
+
+                        var message = EmailHelper.CreateEmailMessage(
+                            toAddress,
+                            string.Format("Confirmação de consulta - {0}", eachItem.EmailViewModel.PracticeName),
+                            bodyHtml,
+                            bodyText);
+
+                        try
                         {
-                            // Rendering message bodies from partial view.
-                            var emailViewModel = eachItem.EmailViewModel;
+                            // TODO: uncomment the following line when no fake data is inside db, and source email address is configured.
+                            //this.SendEmail(message);
 
-                            var bodyText = this.RenderView("AppointmentReminderEmail", emailViewModel);
+                            this.EmailsCount++;
 
-                            emailViewModel.IsBodyHtml = true;
-                            var bodyHtml = this.RenderView("AppointmentReminderEmail", emailViewModel);
+                            eachItem.Appointment.ReminderEmailSent = true;
 
-                            var toAddress = new MailAddress(
-                                eachItem.EmailViewModel.PatientEmail,
-                                eachItem.EmailViewModel.PatientName);
-
-                            var message = EmailHelper.CreateEmailMessage(
-                                toAddress,
-                                string.Format("Confirmação de consulta - {0}", eachItem.EmailViewModel.PracticeName),
-                                bodyHtml,
-                                bodyText);
-
-                            try
-                            {
-                                this.SendEmail(message);
-
-                                this.EmailsCount++;
-
-                                eachItem.Appointment.ReminderEmailSent = true;
-
-                                db.SaveChanges();
-                            }
-                            catch
-                            {
-                                // Just ignore any errors... if e-mail was not sent,
-                                // it is not marked with ReminderEmailSent = true,
-                                // and so, it will just be sent later.
-                            }
+                            db.SaveChanges();
+                        }
+                        catch
+                        {
+                            // Just ignore any errors... if e-mail was not sent,
+                            // it is not marked with ReminderEmailSent = true,
+                            // and so, it will just be sent later.
                         }
                     }
                 }
