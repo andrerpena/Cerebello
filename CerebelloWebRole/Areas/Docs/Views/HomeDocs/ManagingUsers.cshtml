@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-header">
+    <h2>Gerenciando usuários</h2>
+</div>
+
+<p>
+    O Cerebello suporta um número ilimitado de usuários por consultório. Como já foi dito na seção de <a href="@Url.Action("CreatingAnAccount")">criação de contas</a>, cada usuário possui
+    uma ou mais funções que determinam quais informações e recursos do software aquele usuário tem acesso. Existem 3 funções no Cerebello: Administrador, Médico e Secretária. 
+    Além dessas existe o função de proprietário da conta mas esta não pode ser atribuído a um usuário. Somente o usuário que criou a conta possui esta função.
+</p>
+<p>
+    Todas as informações no software que não podem ser visualizadas por qualquer usuário ou ações que não podem ser executadas por qualquer
+    usuário aparecem marcadas com um cadeado. Ao clicar no cadeado, uma caixa exibe quais funções de usuário possuem permissão para visualizar/
+    executar aquela informação/ação.
+</p>
+<p>
+    Ao efetuar login no Cerebello, a primeira tela é a do consultório. Nesta tela é possível ver a listagem de usuários e a de médicos. Todo médico
+    é também um usuário, mas as listagens são separadas porque as ficha são diferentes. Ao clicar em um item da lista de usuários você verá a ficha
+    do usuário. Ao clicar em um item da lista médicos você verá a ficha do médico. A ficha do médico é aonde a agenda e os prontuários do médico
+    estão disponíveis.
+</p>
+<p>
+    Além da listagem de usuários, na tela do consultório também há o link <span class="text-highlight">Novo usuário</span> onde é possível adicionar um novo usuário ao sistema. Todos
+    os usuários novos são criados com a senha <span class="text-highlight">123abc</span>. Quando o usuário efetuar login ele terá a oportunidade de alterar esta senha antes de começar
+    a utilizar o software. Os usuários criados podem efetuar login tanto acessando <span class="text-highlight">http://www.cerebello.com.br</span> e digitando
+    o identificador do consultório quanto acessando <span class="text-highlight">http://www.cerebello.com.br/p/[identificador_do_consultório]</span>. 
+    Para saber mais sobre o identificador do consultório acesse a seção de <a href="@Url.Action("CreatingAnAccount")">criação de contas</a>.
+</p>
+<p>
+    Ao criar um novo usuário é possível determinar as funções desse usuário. Cada usuário possui uma ou mais funções e cada função define quais ações ou telas ele pode executar ou visualizar.
+    Para determinar que o usuário possui uma determinado função, marque os check-boxes disponíveis na seção <span class="text-highlight">Funções deste usuário</span>. Se o usuário é um administrador,
+    ele terá acesso a todas as funcionalidades do software, com exceção do cancelamento da conta, das configurações de pagamento e dos prontuários dos médicos. Se o usuário é uma secretária, ele somente terá
+    acesso às informações básicas do pacientes e à agenda. Os históricos dos clínicos dos pacientes, opções de configuração e outros recursos do software não estarão disponíveis. Se o usuário
+    é um médico, ele terá seus próprios prontuários e sua agenda. É comum que o médico tenha os papéis de médico e administrador do sistema. No caso de um usuário ter mais de uma função,
+    os recursos que o usuário tem acesso são somados. No caso de um médico administrador, o usuário terá acesso aos recursos do médico mais aos recursos do administrador.
+</p>
+<p>
+    É possível editar um usuário clicando no link <span class="text-highlight">Editar usuário</span> na tela do consultório e excluir um usuário clicando no link
+    <span class="text-highlight">Excluir usuário</span>. Não é possível excluir o usuário criador da conta, para isso é necessário cancelar. E importante lembrar também
+    que quando um usuário médico é excluído, todos os dados dos pacientes são excluídos também. É importante exportar os dados dos pacientes para XML ou PDF antes de excluir
+    um médico.
+</p>

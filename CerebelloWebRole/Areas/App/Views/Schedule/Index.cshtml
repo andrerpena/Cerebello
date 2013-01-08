@@ -48,6 +48,11 @@ Agenda
     <ul style="margin-top: 10px;">
         <li><a href="@Url.Action("Edit", "ConfigSchedule", new { returnUrl = Url.Action(null) })" class="icon-link icon-link-config">Configurações da agenda</a> </li>
     </ul>
+    <hr/>
+    <ul>
+        <li><a class="icon-link icon-link-help" href="@Url.Action("RegisteringNewAppointments", "HomeDocs", new { area = "Docs" })" target="_blank">Agendando consultas e compromissos</a></li>
+        <li><a class="icon-link icon-link-help" href="@Url.Action("ConsultingTheSchedule", "HomeDocs", new { area = "Docs" })" target="_blank">Consultando a agenda</a></li>
+    </ul>
 }
 <div id="calendar">
 </div>

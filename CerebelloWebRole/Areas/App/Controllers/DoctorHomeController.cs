@@ -44,6 +44,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         a =>
                         a.DoctorId == this.Doctor.Id && a.Start >= todayStart && a.Start < todayEnd &&
                         a.Type == (int)TypeAppointment.MedicalAppointment)
+                    .OrderBy(a => a.Start)
                     .AsEnumerable()
                     .Select(
                         a => new AppointmentViewModel()

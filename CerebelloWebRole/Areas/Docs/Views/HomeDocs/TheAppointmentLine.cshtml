@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-header">
+    <h2>A fila de atendimento</h2>
+</div>
+<p>
+    A fila de atendimento mostra as consultas marcadas para o dia corrente, bem como seus status: Quais aconteceram, quais não, e quais pacientes já chegaram
+    para consultas futuras. Para acessar a fila de atendimento, na ficha do médico, clique no submenu <span class="text-highlight">Início</span>. A fila de atendimento aparece logo
+    abaixo das informações básicas do médico.
+</p>
+<p>
+    As consultas que já deveriam ter ocorrido hoje aparecem acinzentadas, as que ainda irão acontecer aparecem em azul, e a consulta agendada
+    para acontecer agora aparece em negrito. A fila de atendimento exibe o nome do paciente, o convênio e o status da consulta. Os status das consultas
+    são sempre <span class="text-highlight">Agendadas</span> até que sejam modificados por interação do usuário.
+</p>
+<p>
+    10 minutos antes do horário marcado para uma consulta, a secretária receberá uma notificação questionando se o paciente compareceu ou não. Esta notificação
+    possui duas opções de resposta: "O paciente chegou" e "O paciente não irá comparecer". A secretária irá visualizar esta notificação por 40 minutos,
+    ou até que ela responda uma das respostas. Uma vez que a secretária responde, a notificação não será exibida novamente. Esta notificação de consulta é importante
+    por duas razões: Primeiro porque, caso a secretária responda "O paciente chegou", o médico será automaticamente informado de que o paciente chegou. E segundo porque 
+    o status da consulta é automaticamente alterado para "Realizada" neste ponto (o médico visualiza como "O paciente chegou", caso ainda não estiver no horário da consulta).
+    Caso a secretária responda "O paciente não irá comparecer" o médico não é notificado mas o status da consulta é alterado para "Não realizada". O médico consegue ter uma visão de quais pacientes já chegaram ao visualizar sua fila de atendimento.
+</p>
+<p>
+    Caso haja um imprevisto na determinação do status da consulta, isto é, ou a secretária respondeu "O paciente chegou" mas depois o paciente foi embora sem realizar
+    a consulta ou a secretária respondeu "O paciente não irá comparecer" e o paciente compareceu, o status da consulta deve ser manualmente alterado. Para alterar 
+    o status da consulta existem duas opções: A primeira é clicar no ícone de edição na lista de atendimento, no canto direito e alterar o status da consulta.
+    A outra é encontrar a consulta na agenda, clicar e alterar o status.
+</p>

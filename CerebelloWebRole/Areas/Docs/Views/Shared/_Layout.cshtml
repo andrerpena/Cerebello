@@ -22,44 +22,38 @@
                     <li class="@(this.IsAction("CreatingAnAccount", "HomeDocs") ? "active" : "")">
                         <a href="@Url.Action("CreatingAnAccount", "HomeDocs")">Criando uma conta</a>
                     </li>
-                    <li>
-                        <a href="#">Gerenciando licenças</a>
+                    <li class="@(this.IsAction("ManagingUsers", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ManagingUsers", "HomeDocs")">Gerenciando usuários</a>
                     </li>
-                    <li>
-                        <a href="#">Gerenciando usuários</a>
-                    </li>
-                    <li>
-                        <a href="#">Obtendo ajuda e suporte</a>
+                    <li class="@(this.IsAction("MigratingToAProfessionalAccount", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("MigratingToAProfessionalAccount", "HomeDocs")">Migrando para a conta profissional</a>
                     </li>
                     <li class="nav-header">Agenda
                     </li>
-                    <li>
-                        <a href="#">Configurando sua agenda</a>
+                    <li class="@(this.IsAction("ConfiguringTheSchedule", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ConfiguringTheSchedule", "HomeDocs")">Configurando sua agenda</a>
                     </li>
-                    <li>
-                        <a href="#">Agendando consultas</a>
+                    <li class="@(this.IsAction("RegisteringNewAppointments", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringNewAppointments", "HomeDocs")">Agendando consultas e compromissos</a>
                     </li>
-                    <li>
-                        <a href="#">Descobrindo horários livres</a>
+                    <li class="@(this.IsAction("ConsultingTheSchedule", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ConsultingTheSchedule", "HomeDocs")">Consultando a agenda</a>
+                    </li>
+                    <li class="@(this.IsAction("TheAppointmentLine", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("TheAppointmentLine", "HomeDocs")">A fila de atendimento</a>
                     </li>
                     <li class="nav-header">Prontuário
                     </li>
-                    <li>
-                        <a href="#">Cadastrando pacientes</a>
+                    <li class="@(this.IsAction("RegisteringPatients", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringPatients", "HomeDocs")">Cadastrando pacientes</a>
                     </li>
-                    <li>
-                        <a href="#">Criando anamneses</a>
-                    </li>
-                    <li>
-                        <a href="#">Criando receitas</a>
-                    </li>
-                    <li>
-                        <a href="#">Agendando retornos</a>
+                    <li class="@(this.IsAction("PerformingAnAppointment", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("PerformingAnAppointment", "HomeDocs")">Realizando uma consulta</a>
                     </li>
                     <li class="nav-header">Medicamentos
                     </li>
-                    <li>
-                        <a href="#">Cadastrando medicamentos</a>
+                    <li class="@(this.IsAction("RegisteringMedicines", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringMedicines", "HomeDocs")">Cadastrando medicamentos</a>
                     </li>
                     <li>
                         <a href="#">Importando medicamentos da Anvisa</a>

@@ -14,6 +14,16 @@
     <link href="@Url.Content("/Bootstrap/css/bootstrap-responsive.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/Site/Site.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/Site/Media.css")" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        var uvOptions = {};
+        (function () {
+            var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+            uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/tFTjUbJ2Ov4QGQqsVCp3HQ.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+        })();
+    </script>
+
     @RenderSection("Header", false)
 
     @RenderSection("Scripts", false)
@@ -56,12 +66,12 @@
                         <li><a href="@Url.Action("Index", "Home", new { area = "" })">Produto</a></li>
                         <li><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Preços e Planos</a></li>
                         <li><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentação</a></li>
-                        <li><a href="#">Fale Conosco</a></li>
+                        <li><a href="mailto:cerebello@cerebello.com.br">Fale Conosco</a></li>
                     </ul>
                 </div>
 
                 <div class="span12">
-                    <a class="twitter-link" href="http://twitter.com/cerebello">Siga o Cerebello no Twitter</a>
+                    <a class="twitter-link" href="http://twitter.com/cerebello" target="_blank">Siga o Cerebello no Twitter</a>
                 </div>
             </div>
         </div>

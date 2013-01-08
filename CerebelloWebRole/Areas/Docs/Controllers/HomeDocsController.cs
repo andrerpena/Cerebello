@@ -17,5 +17,50 @@ namespace CerebelloWebRole.Areas.Docs.Controllers
         {
             return this.View();
         }
+
+        public ActionResult ManagingUsers()
+        {
+            return this.View();
+        }
+
+        public ActionResult MigratingToAProfessionalAccount()
+        {
+            return this.View();
+        }
+
+        public ActionResult ConfiguringTheSchedule()
+        {
+            return this.View();
+        }
+
+        public ActionResult RegisteringNewAppointments()
+        {
+            return this.View();
+        }
+
+        public ActionResult ConsultingTheSchedule()
+        {
+            return this.View();
+        }
+
+        public ActionResult TheAppointmentLine()
+        {
+            return this.View();
+        }
+
+        public ActionResult RegisteringPatients()
+        {
+            return this.View();
+        }
+
+        public ActionResult PerformingAnAppointment()
+        {
+            return this.View();
+        }
+
+        public ActionResult RegisteringMedicines()
+        {
+            return this.View();
+        }
     }
 }
