@@ -22,6 +22,9 @@
                     <li class="@(this.IsAction("CreatingAnAccount", "HomeDocs") ? "active" : "")">
                         <a href="@Url.Action("CreatingAnAccount", "HomeDocs")">Criando uma conta</a>
                     </li>
+                    <li class="@(this.IsAction("ConfiguringDocuments", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ConfiguringDocuments", "HomeDocs")">Configurando documentos</a>
+                    </li>
                     <li class="@(this.IsAction("ManagingUsers", "HomeDocs") ? "active" : "")">
                         <a href="@Url.Action("ManagingUsers", "HomeDocs")">Gerenciando usuários</a>
                     </li>

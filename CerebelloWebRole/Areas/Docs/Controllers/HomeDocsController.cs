@@ -18,6 +18,11 @@ namespace CerebelloWebRole.Areas.Docs.Controllers
             return this.View();
         }
 
+        public ActionResult ConfiguringDocuments()
+        {
+            return this.View();
+        }
+
         public ActionResult ManagingUsers()
         {
             return this.View();

@@ -703,6 +703,7 @@
     <Content Include="Areas\Docs\Views\HomeDocs\ReferenceFields.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\RegisteringHealthInsurances.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\RegisteringMedicalCertificates.cshtml" />
+    <Content Include="Areas\Docs\Views\HomeDocs\ConfiguringDocuments.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
