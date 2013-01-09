@@ -60,13 +60,10 @@
                     <li class="@(this.IsAction("RegisteringHealthInsurances", "HomeDocs") ? "active" : "")">
                         <a href="@Url.Action("RegisteringHealthInsurances", "HomeDocs")">Cadastrando convênios e formas de atendimento particular</a>
                     </li>
-                    <li class="nav-header">Documentos para impressão
+                    <li class="nav-header">Atestados médicos
                     </li>
-                    <li>
-                        <a href="#">Configurando receitas</a>
-                    </li>
-                    <li>
-                        <a href="#">Configurando atestados</a>
+                    <li class="@(this.IsAction("RegisteringMedicalCertificates", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringMedicalCertificates", "HomeDocs")">Cadastrando modelos de atestados médicos</a>
                     </li>
                     <li class="nav-header">Geral
                     <li class="@(this.IsAction("ReferenceFields", "HomeDocs") ? "active" : "")">

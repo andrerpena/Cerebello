@@ -19,14 +19,19 @@
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
-    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de modelos de
-        atestados</a>
+    <ul>
+        <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de modelos de atestados</a></li>
+    </ul>
     <hr />
     @Html.MessageHelp("Ao criar um modelo de atestado, "
             + "é possível declarar campos que deverão ser definidos ao criar um novo atestado. "
             + "Para definir um campo, basta clicar em 'adicionar campo' e digitar seu nome. "
             + "Para referenciar um campo no texto, use o padrão <%nome_do_campo%>. "
             + "O campo <%paciente%> é definido automaticamente.")
+    <hr/>
+    <ul>
+        <li><a href="@Url.Action("RegisteringMedicalCertificates", "HomeDocs", new { area = "Docs"})" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
+    </ul>
 }
 @using (Html.BeginForm())
 {

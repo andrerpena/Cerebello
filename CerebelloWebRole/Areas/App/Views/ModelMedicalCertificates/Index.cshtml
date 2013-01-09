@@ -4,8 +4,8 @@
 @{
     var title =
         this.ViewBag.IsFiltered == true
-            ? "Busca por modelos de atestado médico"
-            : "Modelos de atestado médico";
+            ? "Busca por modelos de atestados médicos"
+            : "Modelos de atestados médicos";
 
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.Watermark = "Pesquisar pelo nome do atestado";
@@ -22,7 +22,7 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo modelo de atestado</a> </li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo modelo de atestado médico</a> </li>
         <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
 }
