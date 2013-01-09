@@ -27,12 +27,7 @@ namespace CerebelloWebRole.Areas.Docs.Controllers
         {
             return this.View();
         }
-
-        public ActionResult MigratingToAProfessionalAccount()
-        {
-            return this.View();
-        }
-
+        
         public ActionResult ConfiguringTheSchedule()
         {
             return this.View();

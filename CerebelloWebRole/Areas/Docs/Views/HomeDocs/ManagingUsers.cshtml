@@ -9,7 +9,7 @@
 <p>
     O Cerebello suporta um número ilimitado de usuários por consultório. Como já foi dito na seção de <a href="@Url.Action("CreatingAnAccount")">criação de contas</a>, cada usuário possui
     uma ou mais funções que determinam quais informações e recursos do software aquele usuário tem acesso. Existem 3 funções no Cerebello: Administrador, Médico e Secretária. 
-    Além dessas existe o função de proprietário da conta mas esta não pode ser atribuído a um usuário. Somente o usuário que criou a conta possui esta função.
+    Além dessas existe a função de proprietário da conta mas esta não pode ser atribuído a um usuário. Somente o usuário que criou a conta possui esta função.
 </p>
 <p>
     Todas as informações no software que não podem ser visualizadas por qualquer usuário ou ações que não podem ser executadas por qualquer
@@ -35,11 +35,11 @@
     ele terá acesso a todas as funcionalidades do software, com exceção do cancelamento da conta, das configurações de pagamento e dos prontuários dos médicos. Se o usuário é uma secretária, ele somente terá
     acesso às informações básicas do pacientes e à agenda. Os históricos dos clínicos dos pacientes, opções de configuração e outros recursos do software não estarão disponíveis. Se o usuário
     é um médico, ele terá seus próprios prontuários e sua agenda. É comum que o médico tenha os papéis de médico e administrador do sistema. No caso de um usuário ter mais de uma função,
-    os recursos que o usuário tem acesso são somados. No caso de um médico administrador, o usuário terá acesso aos recursos do médico mais aos recursos do administrador.
+    os recursos que o usuário tem acesso são somados. No caso de um médico administrador, o usuário terá acesso aos recursos do médico mais os recursos do administrador.
 </p>
 <p>
     É possível editar um usuário clicando no link <span class="text-highlight">Editar usuário</span> na tela do consultório e excluir um usuário clicando no link
-    <span class="text-highlight">Excluir usuário</span>. Não é possível excluir o usuário criador da conta, para isso é necessário cancelar. E importante lembrar também
+    <span class="text-highlight">Excluir usuário</span>. Não é possível excluir o usuário criador da conta, para isso é necessário cancelar a conta em si. E importante lembrar também
     que quando um usuário médico é excluído, todos os dados dos pacientes são excluídos também. É importante exportar os dados dos pacientes para XML ou PDF antes de excluir
     um médico.
 </p>
