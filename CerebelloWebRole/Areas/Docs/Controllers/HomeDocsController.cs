@@ -62,5 +62,15 @@ namespace CerebelloWebRole.Areas.Docs.Controllers
         {
             return this.View();
         }
+
+        public ActionResult RegisteringHealthInsurances()
+        {
+            return this.View();
+        }
+
+        public ActionResult ReferenceFields()
+        {
+            return this.View();
+        }
     }
 }

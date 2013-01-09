@@ -55,16 +55,10 @@
                     <li class="@(this.IsAction("RegisteringMedicines", "HomeDocs") ? "active" : "")">
                         <a href="@Url.Action("RegisteringMedicines", "HomeDocs")">Cadastrando medicamentos</a>
                     </li>
-                    <li>
-                        <a href="#">Importando medicamentos da Anvisa</a>
-                    </li>
                     <li class="nav-header">Convênios
                     </li>
-                    <li>
-                        <a href="#">Cadastrando convênios</a>
-                    </li>
-                    <li>
-                        <a href="#">Configurando convênios</a>
+                    <li class="@(this.IsAction("RegisteringHealthInsurances", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringHealthInsurances", "HomeDocs")">Cadastrando convênios e formas de atendimento particular</a>
                     </li>
                     <li class="nav-header">Documentos para impressão
                     </li>
@@ -73,6 +67,10 @@
                     </li>
                     <li>
                         <a href="#">Configurando atestados</a>
+                    </li>
+                    <li class="nav-header">Geral
+                    <li class="@(this.IsAction("ReferenceFields", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ReferenceFields", "HomeDocs")">Campos de referência</a>
                     </li>
                 </ul>
             </div>

@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-header">
+    <h2>Cadastrando convênios</h2>
+</div>
+<p>
+    Para cadastrar um novo convênio, na ficha do médico, clique no menu <span class="text-highlight">Configurações</span> e depois no submenu
+    <span class="text-highlight">Configurações de convênios</span>. Dentro de convênios, é possível cadastrar tanto formas de atendimento particular quanto
+    convênios em si. As duas opções possuem os mesmo campos. Para adicionar uma forma de atendimento particular, dentro de 
+    <span class="text-highlight">Configurações de convênios</span> clique em <span class="text-highlight">Nova forma de atendimento particular</span>.
+    Para adicionar um convênio, na mesma tela clique em <span class="text-highlight">Novo convênio</span>.
+</p>
+<p>
+    Na tela de novo convênio ou forma de atendimento particular, é possível determinar valores para uma nova consulta e para retornos. Estes valores representam
+    o quanto o médico recebe por consulta ou retorno naquele convênio. Uma consulta é automaticamente definida como retorno quando o intervalo de tempo entre ela
+    e a consulta principal é inferior ao definido no campo <span class="text-highlight">Intervalo de retorno em dias</span>. Estas informações são utilizadas
+    para gerar relatórios financeiros. Exemplo: Digamos que um paciente compareceu a três consultas. Uma no dia 01/03, outra no dia 15/03 e outra vez no dia 10/04.
+    Se o intervalo de retorno em dias estiver configurado para 30 dias, estas três consultas serão definidas, respectivamente, como: nova, retorno e nova nos cálculos financeiros.
+    Se o valor da consulta nova for de $40,00 e de retorno for $0,00. O médico terá recebido $80,00 por essas três consultas nos relatórios.
+</p>

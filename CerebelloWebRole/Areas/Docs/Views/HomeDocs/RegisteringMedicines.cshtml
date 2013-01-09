@@ -1,7 +1,27 @@
-﻿@mod@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
 <div class="page-header">
     <h2>Cadastrando medicamentos</h2>
 </div>
+<p>
+    Para prescrever receitas aos pacientes é necessário, antes, cadastrar os medicamentos a serem utilizados. Existem duas formas de cadastrar um medicamento, a primeira
+    é a partir do <a href="http://www4.anvisa.gov.br/BularioEletronico/default.asp">banco de dados de bulas da Anvisa</a> . O Cerebello é capaz de importar todas as informações sobre o medicamento: Nome, laboratório, princípios ativos
+    e bulas. A outra forma é inserir informações sobre o medicamento manualmente. Quando o medicamento em questão existir no banco da anvisa, essa é a forma recomendável.
+</p>
+<p>
+    Para cadastrar um medicamento a partir da Anvisa,
+    na ficha do médico, clique no menu <span class="text-highlight">Medicamentos</span> e em seguida no submenu <span class="text-highlight">Importar da Anvisa</span>.
+    O campo <span class="text-highlight">Medicamento</span> é um <a href="@Url.Action("ReferenceFields")">campo de referência</a> para os medicamentos da Anvisa. Selecione o medicamento desejado. Para salvar, clique em <span class="text-highlight">Importar medicamento</span>. Se o medicamento
+    não for encontrado no banco da Anvisa, será necessário cadastrá-lo manualmente.
+</p>
+<p>
+    Para cadastrar um medicamento manualmente, 
+    na ficha do médico, clique no menu <span class="text-highlight">Medicamentos</span> e em seguida no submenu <span class="text-highlight">Novo medicamento</span>. 
+    O campo laboratório é um <a href="@Url.Action("ReferenceFields")">campo de referência</a> para os laboratórios cadastrados. É
+    possível cadastrar um laboratório neste tela clicando no ícone (+) no campo do laboratório. É possível adicionar múltiplos princípios ativos
+    e múltiplas bulas. Para as bulas, ao preencher o campo <span class="text-highlight">Url</span>, copie e cole o endereço da internet correspondente à bula. 
+    O arquivo da bula deve estar publicamente disponível na internet. Nesta versão do Cerebello, o upload de arquivos não é suportado.
+</p>
+

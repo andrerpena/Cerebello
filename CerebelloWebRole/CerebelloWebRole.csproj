@@ -155,7 +155,6 @@
     <Compile Include="Code\ActionResults\JsonForbiddenResult.cs" />
     <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
-    <Compile Include="Code\Controllers\TransactionScopeAttribute.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
@@ -701,6 +700,8 @@
     <Content Include="Areas\Docs\Views\HomeDocs\RegisteringPatients.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\PerformingAnAppointment.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\RegisteringMedicines.cshtml" />
+    <Content Include="Areas\Docs\Views\HomeDocs\ReferenceFields.cshtml" />
+    <Content Include="Areas\Docs\Views\HomeDocs\RegisteringHealthInsurances.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
