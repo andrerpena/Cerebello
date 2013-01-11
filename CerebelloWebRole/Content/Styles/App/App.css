@@ -259,6 +259,10 @@ input, textarea {
     background-image: url("/content/images/app/icons16/home.png");
 }
 
+.icon-link-help {
+    background-image: url("/content/images/app/icons16/help.png");
+}
+
 .icon-link-config {
     background-image: url("/content/images/app/icons16/config.png");
 }
@@ -350,6 +354,10 @@ input, textarea {
 
     .document .document-body.large-side-bar .document-main-column {
         margin-right: 340px;
+    }
+
+    .document .document-body .document-side-column hr {
+        margin: 10px 0;
     }
 
 .input-water-mark-blured {

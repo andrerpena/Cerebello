@@ -22,10 +22,10 @@ namespace CerebelloWebRole.Areas.App.Models
             [Display(Name = "Horário de fim de expediente")]
             public string WorkdayEndTime { get; set; }
             [TimeDataType]
-            [Display(Name = "Horário de início de almoço")]
+            [Display(Name = "Horário de início do intervalo")]
             public string LunchStartTime { get; set; }
             [TimeDataType]
-            [Display(Name = "Horário de fim de almoço")]
+            [Display(Name = "Horário de fim do intervalo")]
             public string LunchEndTime { get; set; }
         }
 

@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Realizando uma consulta · Cerebello";
+}
+
+<div class="page-header">
+    <h2>Realizando uma consulta</h2>
+</div>
+<p>
+    Caso seja o médico do paciente acessando a ficha do paciente, no canto inferior da tela aparece uma seção chamada <span class="text-highlight">Nova consulta</span>. Dentro
+    dessa seção aparecem vários links de ações. Cada link corresponde a um tipo de informação que pode ser inserida durante uma consulta.
+</p>
+<p>
+    A primeira ação é <span class="text-highlight">Nova anamnese</span>. Nesta ação é possível inserir notas sobre a anamnese, bem como queixa pricipal, hitórico familiar e etc, bem 
+    como sintomas no formato CID-10. Cada anamnese pode possuir vários sintomas, para adicionar um sintoma, é necessário clicar no link <span class="text-highlight">Novo sintoma</span>.
+    Quando o usuário começa a digitar o sintoma, o Cerebello automaticamente faz sugestões. É necessário escolher uma das opções sugeridas com o teclado ou com o mouse.
+</p>
+<p>
+    Para adicionar uma nova receita, clique em <span class="text-highlight">Nova receita</span>. É necessário adicionar um ou mais medicamentos. Para adicionar um medicamento,
+    clique no link <span class="text-highlight">Incluir medicamento</span>. Caso o medicamento não esteja previamente cadastrado, click em <span class="text-highlight">Gerenciar medicamentos</span>.
+    Este link levará à tela de medicamentos onde é possível efetuar um novo cadastro. De volta à receita, para incluir um medicamento à receita é necessário informar o medicamento,
+    a quantidade, a prescrição e, opcionalmente, observações. Essas informações serão adicionadas à receita. Uma vez que a receita estiver pronta, clique em <span class="Salvar receita"></span>.
+    A partir daí, aparecerá a opção <span class="text-highlight">Visualizar para impressão</span> que exibirá um arquivo PDF capaz de ser impresso.
+</p>
+<p>
+    Para adicionar uma solicitação de exame, clique em <span class="text-highlight">Nova solicitação de exame ou procedimento</span>. É necessário informar o procedimento,
+    de acordo com a <a href="http://www.amb.org.br/teste/cbhpm_2010.htm">tabela CBHPM</a> e, opcionalmente, notas adicionais.
+</p>
+<p>
+    Para adicionar um resultado de exame, clique em <span class="text-highlight">Novo resultado de exame</span>. Os campos são ps mesmos de solicitação de exame. É necessário informar o procedimento,
+    de acordo com a <a href="http://www.amb.org.br/teste/cbhpm_2010.htm">tabela CBHPM</a> e, opcionalmente, notas adicionais.
+</p>
+<p>
+    Para novo diagnóstico, clique em <span class="text-highlight">Novo diagnóstico</span>. O campo diagnóstico é um item da tabela CID-10. Também é possível registrar notas
+    adicionais.
+</p>
+<p>
+    Para adicionar um atestado médico, clique em <span class="text-highlight">Novo atestado médico</span>. Selecione um entre os modelos de atestado médico cadastrados. Caso 
+    o modelo de atestado desejado não esteja cadastrado, clique em <span class="text-highlight">Gerenciar modelos de atestados</span> e será exibida a tela de modelos de atestados
+    onde será possível cadastrar um novo modelo. Voltando à receita, uma vez que o modelo de atestado é selecionado, preencha os campos do modelo. Para saber mais sobre modelos
+    de atestado, acesse <span class="text-error">Configurando modelos de atestados</span>.
+</p>
+<p>
+    Finalmente, para marcar um retorno para o paciente em questão, clique em <span class="text-highlight">Marcar retorno</span>. A data sugerida será o próximo horário
+    válido a partir de 30 dias após a data corrente. Caso o médico queira marcar uma consulta para o próximo horário livre após um dia específico, selecione o dia no calendário
+    e clique em <span class="text-highlight">Próximo horário livre a partir deste</span>. Para mais informações sobre a marcação de consultas, visite
+    <a href="@Url.Action("RegisteringNewAppointments")">Agendando consultas e compromissos</a>.
+</p>

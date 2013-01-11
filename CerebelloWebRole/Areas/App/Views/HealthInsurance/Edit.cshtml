@@ -14,12 +14,20 @@
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
 }
 @section SideBar {
-    <a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de convênios e formas de atendimento</a>
+    <ul>
+        <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de convênios e formas de atendimento</a></li>
+    </ul>
     <hr />
     @Html.MessageHelp(
         "Os valores definidos nesta tela são usados para estimar o valor de cada consulta, "
         + "portanto devem ser preenchidos com um valor médio, para que os relatórios e projeções sejam calculados "
         + "corretamente.")
+    <hr />
+    <ul>
+        <li>
+            <li><a href="@Url.Action("RegisteringHealthInsurances", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
+        </li>
+    </ul>
 }
 @using (Html.BeginForm())
 {

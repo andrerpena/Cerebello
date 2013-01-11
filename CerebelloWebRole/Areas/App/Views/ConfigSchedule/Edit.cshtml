@@ -19,6 +19,12 @@
                 Configurações de dias sem expediente</a> </li>
         <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
+    <hr/>
+    <ul>
+        <li>
+            <a class="icon-link icon-link-help" href="@Url.Action("ConfiguringTheSchedule", "HomeDocs", new { area = "Docs" })" target="_blank">Ajuda</a>
+        </li>
+    </ul>
 }
 @using (Html.BeginForm())
 {
@@ -64,7 +70,7 @@ if (ViewBag.ReturnUrl != null)
                                 </div>
                                 <div class="period">
                                     <div class="period-title">
-                                        Almoço
+                                        Intervalo
                                     </div>
                                     <div class="period-editors">
                                         @Html.EditorFor(model => model.DaysOfWeek[i].LunchStartTime)

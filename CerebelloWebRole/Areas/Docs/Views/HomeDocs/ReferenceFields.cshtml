@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Campos de referência · Cerebello";
+}
+
+<div class="page-header">
+    <h2>Campos de referência</h2>
+</div>
+<p>
+    Um campo de referência é um campo que associa um registro do banco de dados a outro. Por exemplo, cada medicamento está associado com um laboratório.
+    Neste caso, o campo laboratório dentro de medicamento é um campo de referência para o registro do laboratório. No entanto, o campo laboratório dentro
+    de medicamento deve refletir um dos laboratórios cadastrados do sistema. Se o laboratório de um medicamento é a <em>Alliance</em>, então <em>Alliance</em> tem
+    que existir como registro no banco de dados.
+</p>
+<p>
+    O componente visual utilizado para editar campos de referência é o <em>Autocomplete</em>. O <em>Autocomplete</em> possui um campo de texto de uma
+    caixa de resultado da pesquisa. Quando o usuário começa a digitar dentro do campo de texto, ele vai, automaticamente, pesquisar por registros que 
+    contenham o termo pesquisado e exibir os valores possíveis. O usuário deve, necessariamente, selecionar um dos valores possíveis, ainda que o texto
+    digitado coincida com um valor válido. Por exemplo, se o usuário estiver cadastrando um medicamento do laboratório <em>Alliance</em>, e digitar
+    <em>Alli</em>, o sistema vai automaticamente sugerir <em>Alliance</em>. O usuário deve clicar em um item na lista de opções, ou navegar com o teclado (seta
+    para baixo) e apertar a tecla enter para selecionar o item desejado. Se o usuário digitar <em>Alliance</em> porém não selecionar um item da lista,
+    o campo não será válido.
+</p>
+<p>
+    Alguns campos de referência possuem a opção de cadastrar um novo registro caso este ainda não exista. Neste caso, haverá um ícone de um mais (+) no lado
+    direito do componente visual. Por exemplo, se o usuário está cadastrando um medicamento para o laboratório <em>Alliance</em> mas este laboratório inda
+    não estiver sido cadastrado, o usuário pode clicar no ícone (+) no campo de laboratório na tela de medicamento, e cadastrar o laboratório ali mesmo. 
+    Quando um registro novo é criado a partir do <em>Autocomplete/em>, o registro criado é automaticamente selecionado.
+</p>

@@ -39,6 +39,8 @@
     {
         <a href="@Url.Action("Create", "Users")" class="icon-link icon-link-plus">Novo usuário</a>
     }
+    <hr/>
+    <a href="@Url.Action("ManagingUsers", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a>
 }
 
 @cardView.GetHtml()

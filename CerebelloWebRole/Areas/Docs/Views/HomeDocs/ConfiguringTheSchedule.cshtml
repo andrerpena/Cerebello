@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Configurando a agenda · Cerebello";
+}
+
+<div class="page-header">
+    <h2>Configurando a agenda</h2>
+</div>
+
+<p>
+    Antes de começar a trabalhar com a agenda é necessário configurá-la. Para configurar a agenda, o médico deve entrar na ficha do médico e depois 
+    no menu <span class="text-highlight">Agenda</span> e depois no submenu <span class="text-highlight">Configurações da Agenda</span> ou, na ficha 
+    do médico, entrar no no menu <span class="text-highlight">Configurações</span> e depois no submenu <span class="text-highlight">Configurações da agenda</span>.
+</p>
+
+<p>
+    A primeira configuração da agenda é a duração padrão da consulta. Sempre que uma consulta nova for criada, esta será a duração sugerida. Porém, uma duração
+    diferente pode ser configurada para cada consulta. Esta configuração pode ser alterada a qualquer momento, mesmo se já existirem consultas marcadas com a
+    duração definida anteriormente. No entanto, as consultas antigas não ficarão alinhadas com a grade da agenda.
+</p>
+<p>
+    Além da duração da consulta, é importante configurar qual o horário de atendimento do médico. É possível determinar em quais dias haverão atendimento e,
+    para cada dia, qual o horário de início do expediente e horário de início e fim de um intervalo, que normalmente é utilizado para almoço. O Cerebello
+    não suporta a marcação de consultas fora dos limites de horário configurados na agenda. Por exemplo: Se o médico configurou que o horário de expediente da terça-feira
+    é de 9:00h às 18:00h, não será possível marcar uma consulta antes das 9:00h ou depois das 18:00h. No entando, se um paciente comparecer para uma consulta
+    em qualquer horário, mesmo que fora do horário configurado, é possível que o médico faça o atendimento e cadastre todas as informações necessárias. O Cerebello não limita
+    a realização de consultas, somente a marcação em um horário fora da grade configurada. Diferente do horário de expediente, o horário de intervalo permite
+    a marcação de consultas, porém um alerta será exibido indicando que aquele é um horário de intervalo.
+</p>
+<p>
+    É possível, ainda, determinar intervalos de dias que não haverão expediente. Seja, sejam por feriados, férias ou por outras razões. Para configurar esses dias,
+    na tela de <span class="text-highlight">Configurações da Agenda</span>, clique no submenu <span class="text-highlight">Configurações de dias sem expediente</span>.
+    Nesta tela, é possível adicionar, visualizar e remover dias sem expediente. Ao entrar na tela, os intervalos serão exibidos. Para adicionar, selecione a data início e fim e clique no botão <span class="text-highlight">Adicionar intervalo</span>.
+    Para remover, basta clicar no <span class="text-highlight">x</span> ao lado do intervalo desejado. É possível também remover dias específicos dentro de um 
+    intervalo. Para isso, selecione o intervalo clicando no link. Neste momento, todos os dias do intervalo aparecerão separadamente. Agora, clique no
+    <span class="text-highlight">x</span> correspondente ao dia que deseja excluir.
+</p>

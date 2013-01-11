@@ -45,8 +45,8 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Create", new { isParticular = false })" class="icon-link icon-link-plus">Novo convênio</a> </li>
         <li><a href="@Url.Action("Create", new { isParticular = true })" class="icon-link icon-link-plus">Nova forma de atendimento particular</a> </li>
+        <li><a href="@Url.Action("Create", new { isParticular = false })" class="icon-link icon-link-plus">Novo convênio</a> </li>
         <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
 }

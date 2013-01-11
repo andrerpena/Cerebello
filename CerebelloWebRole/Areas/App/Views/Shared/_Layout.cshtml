@@ -86,13 +86,13 @@
             @foreach (var appointment in ((List<NewMedicalAppointmentNotificationData>)this.ViewBag.AlreadyPolledMedicalAppointments))
             {
                 @:$.notifyNewMedicalAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-            }
+                        }
             
             // shows the new-appointment notifications
             @foreach (var appointment in ((List<NewGenericAppointmentNotificationData>)this.ViewBag.AlreadyPolledGenericAppointments))
             {
                 @:$.notifyNewGenericAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-            }
+                        }
 
             // shows the generic database notifications
             @foreach (var notification in ((List<NotificationData>)this.ViewBag.AlreadyPolledNotifications))
@@ -171,9 +171,9 @@
             </div>
             <div class="footer">
                 <ul>
-                    <li class="first"><a href="#">Comunidade</a></li>
-                    <li><a href="#">UserVoice</a></li>
-                    <li><a href="#">Blog</a></li>
+                    <li class="first"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })" target="_blank">Documentação</a></li>
+                    <li><a href="http://cerebello.uservoice.com" target="_blank">Dê sua opinião</a></li>
+                    <li><a href="mailto:cerebello@cerebello.com.br">Fale Conosco</a></li>
                 </ul>
             </div>
         </div>

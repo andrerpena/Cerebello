@@ -15,8 +15,8 @@
     ViewBag.Title = string.Format("{0} · Cerebello", title);
 
     var editPanel = this.Html.CreateEditPanel(null);
-    editPanel.AddField(model => model.Name, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
-    editPanel.AddField(model => model.LaboratoryName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("CreateModal", "Laboratories"), "Novo laboratório", 500, 100)</text>);
+    editPanel.AddField(model => model.Name, EditPanelFieldSize.Large);
+    editPanel.AddField(model => model.LaboratoryName, EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("CreateModal", "Laboratories"), "Novo laboratório", 500, 100)</text>);
     editPanel.AddField(model => model.Usage);
     editPanel.AddField(model => model.ActiveIngredients, @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
     editPanel.AddField(model => model.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>);
@@ -39,8 +39,15 @@
 }
 
 @section SideBar {
-    <a href="@Url.Action("anvisaimport")" class="icon-link icon-link-import">Importar da Anvisa</a>
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a>
+    <ul>
+        <li><a href="@Url.Action("anvisaimport")" class="icon-link icon-link-import">Importar da Anvisa</a></li>
+        <li><a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
+    </ul>
+    <hr/>
+    <ul>
+        <li><a href="@Url.Action("RegisteringMedicines", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
+    </ul>
+    
 }
 @using (Html.BeginForm())
 {

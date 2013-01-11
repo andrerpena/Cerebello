@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Cadastrando modelos de atestados médicos · Cerebello";
+}
+
+<div class="page-header">
+    <h2>Cadastrando modelos de atestados médicos</h2>
+</div>
+<p>
+    O Cerebello suporta modelos de atestados médicos customizados. Para cadastrar um novo modelo, na ficha do médico, clique no menu <span class="text-highlight">Configurações</span>,
+     depois no submenu <span class="text-highlight">Configurações de modelos de atestados</span> e, por fim, no submenu <span class="text-highlight">Novo modelo de atestado médico</span>.
+</p>
+<p>
+    Os modelos de atestados são constítuídos de um texto e de campos customizados. Um campo customizado é um campo que deverá ser preenchido pelo
+    médico durante a emissão de um atestado. É possível criar múltiplos campos. O campo <span class="text-highlight">Paciente</span> é criado automaticamente
+    e não é necessário definir.
+</p>
+<p>
+    Para definir um campo, clique no link <span class="text-highlight">Adicionar campo</span>. Os nomes de campos só podem possuir caracteres alfa-numéricos
+    e underline (_) e não podem conter caracteres acentuados. Para referenciar um campo no texto, utilize a sintaxe <code><%nome_do_campo%></code>.
+    Exemplo de texto:
+</p>
+<blockquote>
+    <code>O paciente <%paciente%> compareceu a uma consulta médica às <%horario%>.</code>
+</blockquote>
+<p>
+    Neste atestado, o campo <span class="text-highlight">paciente</span> já é definido automaticamente. O campo <span class="text-highlight">horario</span> precisa
+    ser definido manualmente. Digamos que o nome dado a este modelo é <span class="text-highlight">Atestado de consulta</span>. Durante a consulta, ao acessar
+    o menu <span class="text-highlight">Novo atestado médico</span>, a opção <span class="text-highlight">Atestado de consulta</span> poderá ser selecionada.
+    Neste caso o campo <span class="text-highlight">Horario</span> terá que ser preenchido pelo médico. Se ele preencher, por exemplo, 17:00h e o nome do 
+    paciente for "José da Silva", ao visualizar o atestado para impressão, o texto no PDF será:
+</p>
+<blockquote>
+    O paciente José da Silva compareceu a uma consulta médica às 17:00h.
+</blockquote>

@@ -38,7 +38,13 @@
     }
 }
 @section SideBar {
-    <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>
+    <ul>
+        <li><a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
+    </ul>
+    <hr />
+    <ul>
+        <li><a href="@Url.Action("RegisteringPatients", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
+    </ul>
 }
 @using (Html.BeginForm())
 {

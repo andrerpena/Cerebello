@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Agendando consultas e compromissos · Cerebello";
+}
+
+<div class="page-header">
+    <h2>Agendando consultas e compromissos</h2>
+</div>
+<p>
+    A tela de nova consulta ou compromisso é a mesma. Para facilitar a documentação, nos referimos a esta tela como <span class="text-highlight">Nova consulta</span>, já que este 
+    é o cenário mais comum.
+</p>
+<p>
+    Existem várias formas de agendar uma consulta. Na ficha do médico, clique no botão <span class="text-highlight">Agendar consulta</span>, na barra do topo da aplicação.
+    Nesta opção, a tela de <span class="text-highlight">Nova consulta</span> virá com o horário automaticamente configurado para o próximo horário livre do médico.
+    . Alternativamente, na tela de agenda, clique sobre o intervalo de tempo no qual deseja agendar a consulta. Desta forma, o horário virá automaticamente configurado para o 
+    intervalo selecionado É possível clicar e arrastar para agendar uma consulta em um intervalo maior do que o padrão. Ainda é possível, se o usuário for um médico, agendar uma consulta
+    a partir da ficha de um paciente clicando no link <span class="text-highlight">Agendar retorno</span>. Qualquer uma dessas opções vai trazer 
+    a tela de <span class="text-highlight">Nova consulta</span>
+</p>
+<p>
+    A primeira coisa a se fazer na tela de nova consulta ou comprisso é determinar se é uma consulta ou compromisso. Para isto, selecione a aba <span class="text-highlight">Consulta</span>
+    ou <span class="text-highlight">Compromisso</span> no topo. A opção padrão é <span class="text-highlight">Consulta</span>, já que é o mais comum.
+</p>
+<p>
+    Caso se deseje cadastrar um compromisso, as opções sobre o paciente não estarão disponíveis e é necessário entrar com uma descrição. Compromissos aparecem na agenda 
+    de forma diferenciada.
+</p>
+<p>
+    Ao agendar uma consulta é necessário determinar o paciente. Caso o paciente já for cadastrado, ao começar a digitar o nome, o Cerebello vai automaticamente sugerir
+    pacientes cujo o nome bate com o termo digitado. É necessário selecionar um na lista dropdown utilizando o mouse ou o teclado (as setas para baixo ou para cima navegam na lista).
+    Caso o paciente não seja cadastrado, é necessário clicar no link <span class="text-highlight">O paciente ainda não é cadastrado</span>. Esta opção trará novos campos
+    para os dados básicos do paciente. Após o agendamento da consulta é possível refinar essas informações na ficha do paciente.
+</p>
+<p>
+    Durante a consulta é necessário determinar também o convênio. Para este campo, um dos convênios cadastrados devem ser selecionados.
+    Caso o convênio não tenha sido cadastrado ainda, é necessário <a href="#" class="text-error">cadastrá-lo</a> e reabrir a tela de nova consulta.
+</p>
+<p>
+    Quanto ao status da consulta, não é necessário informar. O status da consulta determina se ela foi ou não realizada. O valor padrão para novas consultas é
+    <span class="text-highlight">Agendada</span>. Este é também o único valor possível para consultas agendadas para o futuro. Só é possível modificar este campo
+    para consultas agendadas para o passado. O valor <span class="text-highlight">Agendada</span> significa que a consulta foi agendada e que não é ainda possível
+    determinar se ela acontecerá ou não. Este valor automaticamente muda quando a secretária indica que um paciente chegou. Este procedimento será visto com detalhes
+    <span class="text-error">em outra seção</span>. Esta informação é importante para fins estatísticos.
+</p>
+<p>
+    A data e horário, é claro, determinam quando e qual será a duração esperada da consulta. A duração padrão e os intervalos válidos para marcação de consulta são
+    determinados na <a href="@Url.Action("ConsultingTheSchedule")">configuração da agenda</a>. Como já vimos, não é possível agendar consultas com horários fora
+    dos determinados nas configurações.
+</p>
+<p>
+    Além dos campos, existem ferramentas importantes nesta tela. <span class="text-highlight">Verificar disponibilidade deste horário</span> permite determinar
+    se a data e horários definidos são válidos. Um ícone de alerta será exibido caso seja possível porém não recomendável que uma consulta seja agendada para este horário.
+    Isto acontece quando o horário está dentro do horário de intervalo definido nas configurações ou quando já existir uma outra consulta ou compromisso agendada para
+    o mesmo horário. Um ícone de erro será exibido caso não seja possível agendar uma consulta para esta data e horário. A razão para isto é o horário estar fora
+    do intervalo definido nas configurações. Como já foi dito, apesar de ser possível realizar uma consulta normalmente fora dos horários definidos nas configurações, não
+    é possível agendar a consulta.
+</p>
+<p>
+    Outra ferramenta é <span class="text-highlight">Próximo horário livre a partir deste</span>. Esta opção irá trazer o próximo horário livre logo após o definido nos
+    campos de data e horário. Esta opção leva em conta as configurações de horário e os dias sem expediente, determinados nas <a href="@Url.Action("ConsultingTheSchedule")">configuração da agenda</a>.
+</p>
+<p>
+    A ferramenta <span class="text-highlight">Próximo horário livre a partir de agora</span> vai trazer o próximo horário válido para marcação de consultas a partir de agora,
+    novamente, levando em consideração as configurações da agenda. Esta é a ferramenta mais importante desta tela. Caso a tela de <span class="text-highlight">Nova consulta</span>
+    tenha sido exibida a partir do link <span class="text-highlight">Agendar consulta</span> no topo, o horário informado já será o próximo horário livre a partir de agora.
+</p>

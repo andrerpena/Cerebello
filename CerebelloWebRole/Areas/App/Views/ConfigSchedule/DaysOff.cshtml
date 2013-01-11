@@ -17,6 +17,12 @@
         <li><a href="@Url.Action("edit", "configschedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">Configurações de agenda</a> </li>
         <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
+    <hr />
+    <ul>
+        <li>
+            <a class="icon-link icon-link-help" href="@Url.Action("ConfiguringTheSchedule", "HomeDocs", new { area = "Docs" })" target="_blank">Ajuda</a>
+        </li>
+    </ul>
 }
 @using (Html.BeginForm())
 {

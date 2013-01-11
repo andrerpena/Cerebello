@@ -1,8 +1,29 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Introdução ao Cerebello · Cerebello";
 }
 
 <div class="page-header">
-    <h1>Introdução ao Cerebello <small> O que você deve saber antes de começar</small></h1>
+    <h2>Introdução ao Cerebello</h2>
 </div>
-O cerebello é um software de gerenciamento para consultórios médicos
+
+<p>
+    O Cerebello é um software de gestão de consultórios médicos e pequenas clínicas com foco no <a href="http://pt.wikipedia.org/wiki/Prontu%C3%A1rio_m%C3%A9dico">prontuário eletrônico</a> e agenda.
+    O Cerbello funciona online, isto é, não é necessário nenhum tipo de instalação, nem se preocupar com infra-estrutura de rede, backup, segurança e etc. Todos os dados ficam armazenados com segurança nas núvens, 
+    <a href="http://www.windowsazure.com/pt-br/">nos servidores da Microsoft</a>.
+</p>
+
+<p>
+    Apesar de não obrigatório, o cenário padrão de funcionamento do Cerebello é um consultório que possua pelo menos um médico e uma secretária, ambos com acesso a internet. Quando o médico cria uma conta no Cerebello,
+    é necessário que ele <a href="@Url.Action("ManagingUsers")">cadastre um usuário para a secretária</a>. A partir deste momento ela pode efetuar login normalmente. Uma vez que tanto o médico quanto a secretária estão conectados, eles poderão se
+    comunicar pelo software e trabalhar em conjunto.
+</p>
+<p>
+    Pelo fato do Cerebello e os dados serem hosdedados nas núvens, o médico pode acessar informações dos seus pacientes de qualquer lugar, a qualquer momento, inclusive pelo celular. É possível
+    também exportar os dados dos pacientes para PDF, de forma eles possam ser impressos e acessados off-line, caso seja necessário.
+</p>
+<p>
+    Nós esperamos que você tenha a melhor experiência possível com o Cerebello. <a href="@Url.Action("CreateAccount", "Authentication", new { area = ""})">Crie uma conta de experiência</a>, leia a <a href="@Url.Action("Index")">documentação</a> e,
+    caso tenha dúvidas, <a href="mailto:cerebello@cerebello.com.br">entre em contato conosco</a>. Nós vamos estar à sua disposição para sanar qualquer dúvida. Caso o Cerebello não supra suas expectativas ou
+    caso você tenha alguma sugestão de melhoria, sinta-se a vontade em <a href="http://cerebello.uservoice.com" target="_blank">sugerir as funcionalidades que você julga necessárias</a>. Nós vamos analizar todas as sugestões
+    e pensar na melhor maneira de torná-las realidade. Nosso interesse é fazer a melhor ferramenta e ajudar o máximo possível no seu dia-a-dia.
+</p>

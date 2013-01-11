@@ -1,5 +1,7 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@using CerebelloWebRole.Code.Extensions
+@{
+    this.Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 @section Header {
@@ -12,80 +14,60 @@
         <div class="span3">
             <div class="well">
                 <ul class="nav nav-list">
-                    <li class="nav-header">
-                        Sobre o Cerebello
+                    <li class="nav-header">Sobre o Cerebello
                     </li>
-                    <li class="active">
-                        <a href="#">Introdução</a>
+                    <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("Index", "HomeDocs")">Introdução</a>
                     </li>
-                    <li>
-                        <a href="#">Requisitos mínimos de sistema</a>
+                    <li class="@(this.IsAction("CreatingAnAccount", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("CreatingAnAccount", "HomeDocs")">Criando uma conta</a>
                     </li>
-                    <li>
-                        <a href="#">Criando uma conta</a>
+                    <li class="@(this.IsAction("ConfiguringDocuments", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ConfiguringDocuments", "HomeDocs")">Configurando documentos</a>
                     </li>
-                    <li>
-                        <a href="#">Gerenciando licenças</a>
+                    <li class="@(this.IsAction("ManagingUsers", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ManagingUsers", "HomeDocs")">Gerenciando usuários</a>
                     </li>
-                    <li>
-                        <a href="#">Gerenciando usuários</a>
+                    <li class="nav-header">Agenda
                     </li>
-                    <li>
-                        <a href="#">Obtendo ajuda e suporte</a>
+                    <li class="@(this.IsAction("ConfiguringTheSchedule", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ConfiguringTheSchedule", "HomeDocs")">Configurando a agenda</a>
                     </li>
-                    <li class="nav-header">
-                        Agenda
+                    <li class="@(this.IsAction("RegisteringNewAppointments", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringNewAppointments", "HomeDocs")">Agendando consultas e compromissos</a>
                     </li>
-                    <li>
-                        <a href="#">Configurando sua agenda</a>
+                    <li class="@(this.IsAction("ConsultingTheSchedule", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ConsultingTheSchedule", "HomeDocs")">Consultando a agenda</a>
                     </li>
-                    <li>
-                        <a href="#">Agendando consultas</a>
+                    <li class="@(this.IsAction("TheAppointmentLine", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("TheAppointmentLine", "HomeDocs")">A fila de atendimento</a>
                     </li>
-                    <li>
-                        <a href="#">Descobrindo horários livres</a>
+                    <li class="nav-header">Prontuário
                     </li>
-                    <li class="nav-header">
-                        Prontuário
+                    <li class="@(this.IsAction("RegisteringPatients", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringPatients", "HomeDocs")">Cadastrando pacientes</a>
                     </li>
-                    <li>
-                        <a href="#">Cadastrando pacientes</a>
+                    <li class="@(this.IsAction("PerformingAnAppointment", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("PerformingAnAppointment", "HomeDocs")">Realizando uma consulta</a>
                     </li>
-                    <li>
-                        <a href="#">Criando anamneses</a>
+                    <li class="nav-header">Medicamentos
                     </li>
-                    <li>
-                        <a href="#">Criando receitas</a>
+                    <li class="@(this.IsAction("RegisteringMedicines", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringMedicines", "HomeDocs")">Cadastrando medicamentos</a>
                     </li>
-                    <li>
-                        <a href="#">Agendando retornos</a>
+                    <li class="nav-header">Convênios
                     </li>
-                    <li class="nav-header">
-                        Medicamentos
+                    <li class="@(this.IsAction("RegisteringHealthInsurances", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringHealthInsurances", "HomeDocs")">Cadastrando convênios e formas de atendimento particular</a>
                     </li>
-                    <li>
-                        <a href="#">Cadastrando medicamentos</a>
+                    <li class="nav-header">Atestados médicos
                     </li>
-                    <li>
-                        <a href="#">Importando medicamentos da Anvisa</a>
+                    <li class="@(this.IsAction("RegisteringMedicalCertificates", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("RegisteringMedicalCertificates", "HomeDocs")">Cadastrando modelos de atestados médicos</a>
                     </li>
-                    <li class="nav-header">
-                        Convênios
-                    </li>
-                    <li>
-                        <a href="#">Cadastrando convênios</a>
-                    </li>
-                    <li>
-                        <a href="#">Configurando convênios</a>
-                    </li>
-                    <li class="nav-header">
-                        Documentos para impressão
-                    </li>
-                    <li>
-                        <a href="#">Configurando receitas</a>
-                    </li>
-                    <li>
-                        <a href="#">Configurando atestados</a>
+                    <li class="nav-header">Geral
+                    <li class="@(this.IsAction("ReferenceFields", "HomeDocs") ? "active" : "")">
+                        <a href="@Url.Action("ReferenceFields", "HomeDocs")">Campos de referência</a>
                     </li>
                 </ul>
             </div>
