@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -21,7 +22,7 @@ namespace CerebelloWebRole.Code.Helpers
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("mig.ang.san.bic@gmail.com", "50kf96wu")
+                Credentials = new NetworkCredential("cerebello@cerebello.com.br", "26uj27oP")
             };
 
             return smtpClient;
@@ -48,8 +49,8 @@ namespace CerebelloWebRole.Code.Helpers
             if (string.IsNullOrEmpty(bodyText))
                 throw new ArgumentException("bodyText must be provided.", "bodyText");
 
-            // NOTE: The string "mig.ang.san.bic@gmail.com" is repeated in other place.
-            var fromAddress = new MailAddress("mig.ang.san.bic@gmail.com", sourceName ?? "www.cerebello.com");
+            // NOTE: The string "cerebello@cerebello.com.br" is repeated in other place.
+            var fromAddress = new MailAddress("cerebello@cerebello.com.br", sourceName ?? "www.cerebello.com.br");
             var mailMessage = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyText.Trim() };
 
             // Adding Html body.
