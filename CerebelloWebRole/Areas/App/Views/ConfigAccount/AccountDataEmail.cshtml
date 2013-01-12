@@ -1,0 +1,56 @@
+﻿@using CerebelloWebRole.Models
+@model EmailViewModel
+@{
+    var urlWithData = this.Url.Action("VerifyPracticeAndEmail", "Authentication",
+        new { Model.Token, practice = this.Model.PracticeUrlIdentifier }, "http");
+    var urlLogin = this.Url.Action("Index", "PracticeHome",
+        new { practice = this.Model.PracticeUrlIdentifier, area = "App" }, "http");
+}
+@if (this.Model.IsBodyHtml)
+{
+    <html>
+    <head>
+        <title>Dados da conta</title>
+    </head>
+    <body class="markdown-body">
+        Olá <strong>@Model.PersonName</strong>,<br />
+        <p>
+            Em virtude do cancelamento da conta no cerebello.com.br,
+            estamos te enviando este e-mail
+            contendo anexos, com os dados cadastrados do consultório <code style="
+                                      white-space: nowrap;
+                                      background-color: #F8F8F8;
+                                      border: 1px solid #EAEAEA;
+                                      border-radius: 3px 3px 3px 3px;
+                                      margin: 0 2px;
+                                      padding: 0 5px;
+                                      font-family: Consolas,'Liberation Mono',Courier,monospace;
+                                      font-size: 1.1em;
+                                      line-height: 1.6;
+                                      color: #333333;
+                                  ">@this.Model.PracticeUrlIdentifier</code> no 
+            <a href="@this.Url.Action("Index", "Home", new { }, "http")">cerebello.com.br</a>.
+        </p>
+        <p>
+            Atenciosamente<br/>
+                equipe cerebello.com.br
+        </p>
+    </body>
+    </html>
+
+    return;
+}
+Dados da conta
+==============
+
+Olá @Html.Raw(Model.PersonName),
+
+    Em virtude do cancelamento da conta
+no cerebello.com.br, estamos te enviando
+este e-mail contendo anexos, com os
+dados cadastrados do consultório
+"@this.Model.PracticeUrlIdentifier" no
+cerebello.com.br
+
+Atenciosamente
+    equipe cerebello.com.br

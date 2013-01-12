@@ -9491,7 +9491,8 @@ namespace Cerebello.Model
         /// <param name="urlIdentifier">Initial value of the UrlIdentifier property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="windowsTimeZoneId">Initial value of the WindowsTimeZoneId property.</param>
-        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId)
+        /// <param name="accountDisabled">Initial value of the AccountDisabled property.</param>
+        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean accountDisabled)
         {
             Practice practice = new Practice();
             practice.Id = id;
@@ -9499,6 +9500,7 @@ namespace Cerebello.Model
             practice.UrlIdentifier = urlIdentifier;
             practice.CreatedOn = createdOn;
             practice.WindowsTimeZoneId = windowsTimeZoneId;
+            practice.AccountDisabled = accountDisabled;
             return practice;
         }
 
@@ -9844,6 +9846,30 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _AddressId;
         partial void OnAddressIdChanging(Nullable<global::System.Int32> value);
         partial void OnAddressIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean AccountDisabled
+        {
+            get
+            {
+                return _AccountDisabled;
+            }
+            set
+            {
+                OnAccountDisabledChanging(value);
+                ReportPropertyChanging("AccountDisabled");
+                _AccountDisabled = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AccountDisabled");
+                OnAccountDisabledChanged();
+            }
+        }
+        private global::System.Boolean _AccountDisabled;
+        partial void OnAccountDisabledChanging(global::System.Boolean value);
+        partial void OnAccountDisabledChanged();
 
         #endregion
 

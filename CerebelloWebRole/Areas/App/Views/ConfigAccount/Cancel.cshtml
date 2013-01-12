@@ -1,0 +1,42 @@
+﻿@using CerebelloWebRole.Areas.App.Models
+@model CancelAccountViewModel
+@{
+    var title = string.Format("Cancelar {0}", this.Model.CurrentContract.PlanTitle);
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    var partialViewName = string.Format("Cancel{0}Partial", this.Model.CurrentContract.UrlIdentifier);
+    var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("Index", "ConfigAccount");
+}
+@section Title {
+    @title <span class="lock-title icon-lock" />
+}
+@section Scripts {
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
+}
+<div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
+    @Html.Partial(partialViewName)
+</div>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    
+    <table class="form-table">
+        <tr>
+            <th>@Html.LabelFor(model => model.SendDataByEmail)</th>
+            <td>@Html.CheckBoxFor(model => model.SendDataByEmail)</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Reason)</th>
+            <td>@Html.TextAreaFor(model => model.Reason, new { rows = 10 })</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Confirm)</th>
+            <td>@Html.CheckBoxFor(model => model.Confirm)</td>
+        </tr>
+    </table>
+    
+    <div class="submit-bar">
+        <input type="submit" value="cancelar a conta" />
+        <span class="separator">ou</span> <a href="@cancelUrl">cancelar</a>
+    </div>
+}

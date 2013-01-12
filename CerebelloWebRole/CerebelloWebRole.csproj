@@ -143,6 +143,7 @@
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
+    <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\LockScriptViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
@@ -445,6 +446,7 @@
     <Content Include="Content\Images\Site\logo_transp.png" />
     <Content Include="Content\Images\Site\medicamentos.png" />
     <Content Include="Content\Images\Site\prontuario.png" />
+    <Content Include="Content\Images\Site\sad_cancel_account.jpg" />
     <Content Include="Content\Images\Site\screenshot1.png" />
     <Content Include="Content\Images\Site\screenshots.jpg" />
     <Content Include="Content\Images\Site\screenshot_TMP.png" />
@@ -704,6 +706,9 @@
     <Content Include="Areas\Docs\Views\HomeDocs\RegisteringHealthInsurances.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\RegisteringMedicalCertificates.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\ConfiguringDocuments.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Cancel.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\CancelTrialContractPartial.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\AccountDataEmail.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -737,6 +742,7 @@
     <Content Include="Content\Reports\PatientsList\Patients.trdx" />
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Home\PricesAndPlans.cshtml" />
+    <Content Include="Views\Home\AccountCanceled.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

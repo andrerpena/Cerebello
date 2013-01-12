@@ -596,6 +596,7 @@ CREATE TABLE [dbo].[Practice](
 	[Email] [varchar](200) NULL,
 	[SiteUrl] [nvarchar](max) NULL,
 	[AddressId] [int] NULL,
+	[AccountDisabled] [bit] NOT NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -709,7 +710,7 @@ CREATE TABLE [dbo].[SYS_ContractType](
 	[Name] [varchar](150) NOT NULL,
 	[CreatedOn] [date] NOT NULL,
 	[IsTrial] [bit] NOT NULL,
-	[UrlIdentifier] [nchar](50) NOT NULL,
+	[UrlIdentifier] [nvarchar](50) NOT NULL,
 	[Text] [nvarchar](max) NULL,
  CONSTRAINT [PK_SYS_Contract] PRIMARY KEY CLUSTERED 
 (
@@ -1134,13 +1135,13 @@ GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Person]
 GO
 /****** Object:  ForeignKey [FK_PersonAddress_Address] ******/
-ALTER TABLE [dbo].[PersonAddress]  WITH CHECK ADD  CONSTRAINT [FK_PersonAddress_Address] FOREIGN KEY([AddressId])
+ALTER TABLE [dbo].[PersonAddress]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonAddress_Address] FOREIGN KEY([AddressId])
 REFERENCES [dbo].[Address] ([Id])
 GO
 ALTER TABLE [dbo].[PersonAddress] CHECK CONSTRAINT [FK_PersonAddress_Address]
 GO
 /****** Object:  ForeignKey [FK_PersonAddress_Person] ******/
-ALTER TABLE [dbo].[PersonAddress]  WITH CHECK ADD  CONSTRAINT [FK_PersonAddress_Person] FOREIGN KEY([PersonId])
+ALTER TABLE [dbo].[PersonAddress]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonAddress_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 GO
 ALTER TABLE [dbo].[PersonAddress] CHECK CONSTRAINT [FK_PersonAddress_Person]

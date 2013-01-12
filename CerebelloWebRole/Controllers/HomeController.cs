@@ -22,5 +22,10 @@ namespace CerebelloWebRole.Controllers
         {
             return this.View();
         }
+
+        public ActionResult AccountCanceled(string practice)
+        {
+            return this.View();
+        }
     }
 }

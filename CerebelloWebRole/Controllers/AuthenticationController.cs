@@ -281,8 +281,7 @@ namespace CerebelloWebRole.Controllers
                     var message = EmailHelper.CreateEmailMessage(
                         toAddress,
                         "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.",
-                        bodyHtml,
-                        bodyText);
+                        bodyText, bodyHtml);
 
                     // If the ModelState is still valid, then save objects to the database,
                     // and send confirmation email message to the user.
@@ -537,8 +536,7 @@ namespace CerebelloWebRole.Controllers
                     message = EmailHelper.CreateEmailMessage(
                         toAddress,
                         "Redefinir senha da conta no Cerebello",
-                        bodyHtml,
-                        bodyText);
+                        bodyText, bodyHtml);
 
                     #endregion
                 }

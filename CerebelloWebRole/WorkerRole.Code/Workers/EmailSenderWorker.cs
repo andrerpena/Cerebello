@@ -20,6 +20,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                 using (var db = this.CreateNewCerebelloEntities())
                 {
                     var next40H = utcNow.AddHours(40.0);
+
                     // One e-mail will be sent 40 hours before the appointment.
                     var items = db.Appointments
                         .Where(a => a.Start > utcNow && a.Start < next40H && !a.ReminderEmailSent)
@@ -92,13 +93,11 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         var message = EmailHelper.CreateEmailMessage(
                             toAddress,
                             string.Format("Confirmação de consulta - {0}", eachItem.EmailViewModel.PracticeName),
-                            bodyHtml,
-                            bodyText);
+                            bodyText, bodyHtml);
 
                         try
                         {
-                            // TODO: uncomment the following line when no fake data is inside db, and source email address is configured.
-                            //this.SendEmail(message);
+                            this.SendEmail(message);
 
                             this.EmailsCount++;
 

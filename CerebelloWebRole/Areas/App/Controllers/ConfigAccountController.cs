@@ -1,9 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using System.Web.Mvc;
+using System.Web.Security;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Controllers;
+using CerebelloWebRole.Models;
 using PayPal.Version940;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -51,7 +59,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 viewModel.Migrations = new List<ConfigAccountViewModel.Migration>
                 {
-                    RenewPlanInfo(),
+                    //RenewPlanInfo(),
                     PaidPlanInfo(),
                 };
             }
@@ -59,9 +67,111 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
             }
 
-            viewModel.Migrations.Add(CancelPlanInfo());
+            viewModel.Migrations.Add(CancelTrialPlanInfo());
 
             return View(viewModel);
+        }
+
+        public ActionResult Cancel()
+        {
+            var mainContract = this.DbPractice.AccountContract;
+            var viewModel = new CancelAccountViewModel();
+
+            // Get plan informations of this practice.
+            // Contract text, title, description, and other things to display.
+            viewModel.CurrentContract = new ConfigAccountViewModel.Contract
+            {
+                PlanTitle = mainContract.SYS_ContractType.Name,
+                UrlIdentifier = mainContract.SYS_ContractType.UrlIdentifier.Trim(),
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Cancel(CancelAccountViewModel viewModel)
+        {
+            if (!viewModel.Confirm)
+            {
+                var mainContract = this.DbPractice.AccountContract;
+
+                // Get plan informations of this practice.
+                // Contract text, title, description, and other things to display.
+                viewModel.CurrentContract = new ConfigAccountViewModel.Contract
+                {
+                    PlanTitle = mainContract.SYS_ContractType.Name,
+                    UrlIdentifier = mainContract.SYS_ContractType.UrlIdentifier.Trim(),
+                };
+
+                this.ModelState.AddModelError(() => viewModel.Confirm, "A caixa de checagem de confirmação precisa ser marcada para prosseguir.");
+
+                return this.View(viewModel);
+            }
+
+            // Sending e-mail with data.
+            if (viewModel.SendDataByEmail)
+            {
+                foreach (var eachDoctorUser in this.DbPractice.Users.Where(u => u.DoctorId != null))
+                {
+                    // Rendering message bodies from partial view.
+                    var partialViewModel = new EmailViewModel
+                        {
+                            PersonName = eachDoctorUser.Person.FullName,
+                            UserName = eachDoctorUser.UserName,
+                            PracticeUrlIdentifier = eachDoctorUser.Practice.UrlIdentifier,
+                        };
+                    var bodyText = this.RenderPartialViewToString("AccountDataEmail", partialViewModel);
+
+                    partialViewModel.IsBodyHtml = true;
+                    var bodyHtml = this.RenderPartialViewToString("AccountDataEmail", partialViewModel);
+
+                    var toAddress = new MailAddress(eachDoctorUser.Person.Email, eachDoctorUser.Person.FullName);
+
+                    var message = EmailHelper.CreateEmailMessage(
+                        toAddress,
+                        "Dados de prontuário de seus pacientes",
+                        bodyText, bodyHtml);
+
+                    // attaching pdf
+                    var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor, this.Request);
+
+                    message.Attachments.Add(
+                        new Attachment(
+                            new MemoryStream(pdf.DocumentBytes), "Prontuários.pdf", pdf.MimeType));
+
+                    // attaching xml
+                    var xml = ReportController.ExportDoctorXml(this.db, this.DbPractice, eachDoctorUser.Doctor);
+
+                    message.Attachments.Add(
+                        new Attachment(
+                            new MemoryStream(Encoding.UTF8.GetBytes(xml)), "Prontuários.xml", "text/xml"));
+
+                    // sending message
+                    using (message)
+                    {
+                        this.SendEmail(message);
+                    }
+                }
+            }
+
+            // sending self e-mail with user reason for canceling
+            using (var message = EmailHelper.CreateEmailMessage(
+                        new MailAddress("cerebello@cerebello.com.br"),
+                        string.Format("Conta cancelada pelo usuário: {0}", this.DbPractice.UrlIdentifier),
+                        viewModel.Reason))
+            {
+                this.SendEmail(message);
+            }
+
+            // logging off
+            FormsAuthentication.SignOut();
+
+            // disabling account
+            this.DbPractice.AccountDisabled = true;
+            this.db.SaveChanges();
+
+            // redirecting user to success message (outside of the app, because the account was canceled)
+            return this.RedirectToAction("AccountCanceled", "Home", new { area = "", practice = this.DbPractice.UrlIdentifier });
         }
 
         public ActionResult Upgrade(string id)
@@ -143,7 +253,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 new PayPalPaymentRequest
                 {
-                    Description = "Cerebello - Pacote premium",
+                    Description = "Cerebello - Pacote profissional",
 
                     Items = new PayPalList<PayPalPaymentRequestItem>
                     {
@@ -177,7 +287,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         /// <summary>
-        /// Action that cancels the payment process, and the redirects to PaymentCanceled action.
+        /// Action that cancels the payment process, and then redirects to PaymentCanceled action.
         /// </summary>
         /// <returns></returns>
         public ActionResult PayPalCancel()
@@ -190,7 +300,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.View();
         }
 
-        private static ConfigAccountViewModel.Migration CancelPlanInfo()
+        private static ConfigAccountViewModel.Migration CancelTrialPlanInfo()
         {
             return new ConfigAccountViewModel.Migration
             {
@@ -200,12 +310,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PlanTitle = "Nenhum plano",
                     Status = ConfigAccountViewModel.ContractStatus.Suggestion,
                     Text = "NENHUM", // 
-                    Description = @"O cancelamento pode ser feito a qualquer momento, observando-se apenas
-                        as regras de cancelamento do contrato atual. O cancelamento de uma conta paga, na
-                        verdade permite que o usuário tenha acesso a opção de download do banco de dados,
-                        que permanece disponível por 6 meses a contar da data do cancelamento. Se a conta
-                        for trial, então todos os dados serão apagados.",
-                    UrlIdentifier = "Cancel",
+                    Description = @"O cancelamento da conta de teste pode ser feito a qualquer momento.
+                        Como essa é uma conta de teste, todos os dados serão apagados do sistema,
+                        não sendo possível reativar a mesma, e nem fazer download dos dados após o cancelamento.",
+                    UrlIdentifier = "CancelTrial",
+                }
+            };
+        }
+
+        private static ConfigAccountViewModel.Migration CancelProfessionalPlanInfo()
+        {
+            return new ConfigAccountViewModel.Migration
+            {
+                Type = ConfigAccountViewModel.MigrationType.Cancel,
+                Contract = new ConfigAccountViewModel.Contract
+                {
+                    PlanTitle = "Nenhum plano",
+                    Status = ConfigAccountViewModel.ContractStatus.Suggestion,
+                    Text = "NENHUM", // 
+                    Description = @"O cancelamento pode ser feito a qualquer momento, observando-se
+                        as regras de cancelamento do contrato atual. O cancelamento da conta profissional,
+                        permite que o usuário tenha acesso a opção de download dos dados em Xml ou Pdf,
+                        que permanece disponível por 6 meses a contar da data do cancelamento.",
+                    UrlIdentifier = "CancelProfessional",
                 }
             };
         }
@@ -217,7 +344,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Type = ConfigAccountViewModel.MigrationType.Renovation,
                 Contract = new ConfigAccountViewModel.Contract
                 {
-                    PlanTitle = "Plano pago",
+                    PlanTitle = "Plano profissional",
                     Status = ConfigAccountViewModel.ContractStatus.Suggestion,
                     Text = "TEXTO DO CONTRATO", // 
                     Description = @"A renovação do plano já está disponível. Para continuar usando
@@ -237,7 +364,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Type = ConfigAccountViewModel.MigrationType.Upgrade,
                 Contract = new ConfigAccountViewModel.Contract
                 {
-                    PlanTitle = "Plano pago",
+                    PlanTitle = "Plano profissional",
                     Status = ConfigAccountViewModel.ContractStatus.Suggestion,
                     Text = "TEXTO DO CONTRATO", // 
                     Description = @"Plano sem os limites da conta trial. A conta trial possui um limite
