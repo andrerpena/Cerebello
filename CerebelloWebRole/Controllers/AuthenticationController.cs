@@ -68,7 +68,13 @@ namespace CerebelloWebRole.Controllers
             User user;
 
             var cookieCollection = this.HttpContext.Response.Cookies;
-            if (!this.ModelState.IsValid || !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
+
+            if (!SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
+            {
+                this.ModelState.AddModelError(loginModel.PracticeIdentifier, "O login falhou. Um dos campos abaixo está incorreto.");
+            }
+
+            if (!this.ModelState.IsValid)
             {
                 this.ViewBag.LoginFailed = true;
                 return this.View(loginModel);

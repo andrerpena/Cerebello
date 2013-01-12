@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Data;
@@ -82,6 +83,18 @@ namespace CerebelloWebRole.Code
 
                 this.DbUser = result;
             }
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            // Signout user if the account has been disabled.
+            if (this.db.AccountDisabled)
+            {
+                filterContext.Result = new HttpUnauthorizedResult();
+                FormsAuthentication.SignOut();
+            }
+
+            base.OnActionExecuting(filterContext);
         }
 
         protected override void Dispose(bool disposing)
