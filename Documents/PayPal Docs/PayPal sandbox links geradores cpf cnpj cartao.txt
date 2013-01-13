@@ -1,0 +1,252 @@
+﻿[̲̅м̲̅α̲̅ร̲̅b̲̅i̲̅c̲̅υ̲̅d̲̅σ̲̅]
+
+██ Alternativas ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    CIELO: http://forum.imasters.com.br/topic/470241-meu-proprio-gateway-de-pagamento-php/
+
+██ Instruções gerais ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+Gerando dados:
+
+    Os CPFs, CNPJs, números de cartões, e outras
+    informações foram todas geradas. Eu usei
+    geradores online para isso, veja no final
+    do arquivo.
+
+Remover limite:
+
+    A conta verificada não possui limite de créditos
+    na sandbox. Para confirmar o cartão de crédito
+    na sandbox, basta usar o valor 5,73 (que é o que
+    aparece na imagem de confirmação).
+
+Alterar balanço:
+
+    Para mudar o Balanço de uma conta na sandbox,
+    basta criar uma conta verificada, e mandar
+    dinheiro para as contas que quiser que recebam.
+    O envio é feito usando o e-mail do destinatário.
+    A transação é instantânea, e simula as taxas
+    cobradas pelo PayPal, por isso o valor
+    transferido não será exato.
+
+Criando credencial da API:
+
+    Entre na conta do vendedor na sandbox, e vá para
+    https://www.sandbox.paypal.com/br/webscr?cmd=_profile-api-signature
+    Entre na opção 2, e escolha se quer assinatura
+    ou certificado... e pronto!
+
+Teste de Digital Goods:
+
+    Não é possível criar uma conta de vendedor
+    brasileiro de teste, para a venda de Digital
+    Goods. Então temos que usar uma conta predefinida
+    dos EUA, que a princípio não aceita pagamentos
+    em BRL. Basta alterar a opção para aceitar
+    pagamentos em outras moedas:
+    https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-pref
+
+Conta oficial:
+
+    Criar a conta com CNPJ, do tipo business.
+    Configurar solução de pagamento para Digital Goods:
+        https://www.sandbox.paypal.com/br/cgi-bin/webscr?cmd=_accountsetup-ppbasics
+
+██ Sandbox owner ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    mig.ang.san.bic@gmail.com ..gimasb
+
+██ Sandbox user - FirstBuyer ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    country:    United States
+    name:       First Buyer
+    type:       Personal  Unverified
+    email:      n1_buy_1349308132_per@gmail.com  Confirmed
+    pwd:        82688E434EEE4DF8
+    card:       VISA  4859 3358 1447 9022  10/2017
+
+██ Sandbox user - UsuarioTeste ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    email:      usuario_teste_1@gmail.com  Confirmed
+    pwd:        0)o9(i8*u7&
+
+    name:       Usuário  Teste
+    type:       Premier  Verified
+    country:    Brazil
+    cpf:        274.409.883-37 (27440988337)
+    cep:        20260-160
+    province:   Rio de Janeiro
+    addr:       Rua dos testes
+    city:       Teste Cidade
+    tel-num:    (21)1234-9876
+    card:       VISA  4024 0071 8216 4128  08/2018  123
+    type:       Personal  Unverified
+    q&a:        xxx
+
+██ Sandbox user - CerebelloTest ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    email:      n1_m@gmail.com  Confirmed
+    pwd:        1!q2@w3#e4$
+
+    bus-name:   Teste Cerebello
+    country:    Brazil
+    type:       Business  Verified
+    card:       VISA  4271 6448 7050 7224  10/2020
+    cnpj:       97.212.996/0001-30
+    merc-id:    3MWVJ7CDTZEKL
+    api-user:   n1_m_api1.gmail.com
+    api-pwd:    UYQYSDYEKQHYXQTQ
+    api-sig:    An5ns1Kso7MWUdW4ErQKJJJ4qi4-AjWbxlImJ3TgYa7IEkOqmTEks5by
+
+██ Sandbox user - Cerebello2 ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    email:      n1_m_1349310230_biz@gmail.com  Confirmed
+    pwd:        3#4$5%6rty
+
+    bus-name:   Cerebello Santos Bicudo's Test Store
+    country:    United States
+    type:       Business  Verified
+    card:       VISA  4460 2318 5245 4830  10/2017
+    cnpj:       
+    merc-id:    LE3NQFMVMQGNG
+    api-user:   n1_m_1349310230_biz_api1.gmail.com
+    api-pwd:    1349310253
+    api-sig:    AiObqW3zwxxoUThk-DQjIYAnhF8cAkBKiRzCZzEivzC5iNROjjJUxgu8
+
+██ Geradores de números ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    CARD:   (só funciona no IE) http://credicard.querodescontos.com/
+    CARD:   http://www.cartao-de-credito.com/gerador-de-cartao-de-credito/
+    CNPJ:   http://www.geradorcnpj.com/
+    CPF:    http://www.geradorcpf.com/
+    CPF:    http://www.geradordecpf.org/
+    Nick:   http://www.gerardocumentos.com.br/gerador-de-nicks
+    CPF:    http://www.gerardocumentos.com.br/gerador-de-cpf
+    CEP:    http://www.gerardocumentos.com.br/gerador-de-cep
+    RG:     http://www.gerardocumentos.com.br/gerador-de-rg
+    CNPJ:   http://www.gerardocumentos.com.br/gerador-de-cnpj
+
+██ Números de cartão para testes ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    O PayPal recusa a maior parte desses números que
+    achei na internet. O melhor a fazer mesmo, é usar
+    um dos geradores de cartões apresentados acima.
+
+    AMEX: 376411112222331
+    MASTERCARD: 5555666677778884
+    DINERS: 30111122223331
+    VISA: 4073020000000002
+    HIPERCARD: 3841001111222233334
+    AURA: 5078601870000127985 ou 5078601800003247449
+
+    American Express: 3111-1111-1111-1117
+    Visa: 4111-1111-1111-1111
+    MasterCard: 5111-1111-1111-1118
+    Descubra: 6111-1111-1111-1116
+
+    Visa
+    4923993827951627
+    4968283450042753
+    4906519808898635
+    4010448268188472
+    4557759360725444
+
+    Mastercard
+    5100425299127164
+    5100178609671534
+    5100035367101767
+    5100997245003962
+
+    Diners
+    38592893778458
+    38899942060048
+    38991996405813
+    38337125684102
+    38051170510027
+
+    American Express
+    346060826516426
+    342137356326758
+    342244058602724
+    340844506071745
+    341556801213322
+
+    Aura
+    5078600000032665296
+    5078600000019300917
+    5078600000040473725
+    5078601800003745756
+
+    Hipercard
+    1234567891234
+    4234567891234
+    6234567891234
+
+    Mastercard
+    5411203172227391
+    5501775098293624
+    5553485215490056
+    511287386579 2943
+    5140293789994499
+    5574403060990497
+    5347027921417964
+    5541012002407930
+    51 63433657826462
+    5426438431949970
+
+    VISA (16 dígitos)
+    4539515941529884
+    4532953697441649
+    4716983402296713
+    4045508868287112
+    4 929122999126008
+    4556526514297070
+    4532632765754881
+    4539997040601121
+    4108755 303113098
+    4532611820018581
+
+    VISA (13 dígitos)
+    4421552498499
+    4916371399877
+    4197750248643
+    4485869624477
+    4716452601245
+
+    American Express
+    343913522118462
+    341816863887300
+    344168608834057
+    373086267854139
+    349 732149019992
+
+    Discover
+    6011398922008265
+    6011120353236557
+    6011452351681488
+
+    Dinners Club
+    36101331694921
+    30047293428699
+    36945456689755
+
+    enRoute
+    214941388581008
+    214906431535186
+    201474072565975
+
+    JCB (15 dígitos)
+    180055675771733
+    180051513331830
+    180094582477944
+
+    JCB (16 dígitos)
+    3112260621247385
+    3088798089934853
+    3337843103735081
+
+    Voyager
+    8699463162 14117
+    869960366657596
+    869960443042382

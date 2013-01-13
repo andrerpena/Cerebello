@@ -1,0 +1,572 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0141)chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/activesessionview.html?type=main&focusNodeId=tab2&altFocusNodeId=win1&scrollToViewWinId=1 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- Copyright 2012 Vladyslav Volovyk --><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+
+<link href="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/favicon.png" rel="shortcut icon">
+    
+<title>Tabs Outliner</title>
+
+<link type="text/css" rel="stylesheet" href="correlatestyle.css">
+</head>
+<body id="ID_activeSessionTreeScrollableContainer">
+<div class="mainToolbarContainer" id="mainToolbar"><!--
+--><div class="mainToolbarInnerArea"><!--
+         --><a title="Window" data-fabric="newWindowNodeConstructor_" class="actionButton actionLink" id="newWindowActionLink"></a><!--
+         --><a title="Group
+(Saved Window)" data-fabric="newGroupNodeConstructor_" class="actionButton actionLink" id="newGroupNodeActionLink"></a><!--
+         --><a title="Separator" data-fabric="newSeparatorNodeConstructor_" class="actionButton actionLink" id="newSeparatorNodeActionLink"></a><!--
+         --><a title="Note" data-fabric="newNoteNodeConstructor_" class="actionButton actionLink" id="newTextNodeActionLink"></a><!--
+         --><a title="Google Doc" data-fabric="newGoogleDocNodeConstructor_" class="actionButton actionLink" id="newGoogleDocNodeActionLink"></a><!--
+         -- <a id="newTreeNodeActionLink"      class="actionButton actionLink" data-fabric="newWindowNodeConstructor_"    title="New Tree&#10;(under construction)"></a>--
+         --><hr><!--
+         --><a title="Clone View
+(Cloned views does not autoscroll on window switch. Use Undo Scroll in cloned view to scroll it in to the same position as current)" class="actionButton" id="cloneViewButton"></a><!--
+         --><a title="Undo Scroll" class="actionButton" id="undoScrollButton"></a><!--
+         --><a title="Scroll Up To Next Open Window" class="actionButton" id="nextOpenWindowButton"></a><!--
+         -- <a id="groupOpenWindowsButton"     class="actionButton"            title="Group All Open Windows"></a>--
+         --><a title="Save &amp; Close All Open Windows
+(All closed window nodes will be highlighted till browser restart)" class="actionButton" id="savecloseAllWindowsButton"></a><!--
+         --><a title="Expand All Collapsed Nodes
+(Can be undone by next click, useful for performing search by Ctrl-F)" class="actionButton hidden" id="expandAllButton"></a><!--
+         --><a title="Undo Expand All" class="actionButton" id="undoExpandAllButton"></a><!--
+         -- <a id="undoDeleteButton"           class="actionButton"            title="Open Recycle Bin&#10;(under construction)"></a>--
+
+--></div><!--
+--><div class="mainToolbarInfoSettingsHelpArea"><!--
+    --><a title="" class="aboutButton" id="infoButton"></a><!--
+    --><a title="" class="aboutButton" id="helpButton"></a><!--
+    --><a title="" class="aboutButton" id="settingsButton"></a><!--
+--></div><!--
+--></div>
+
+
+
+
+<script type="text/javascript">
+function hereDoc(f) {
+  return f.toString().replace(/^[^\/]+\/\*!?/, '').replace(/\*\/[^\/]+$/, '');
+}
+
+var helpBlockHtmlContent = hereDoc(function() { /*
+    &lt;h2&gt;How To Use &lt;a class="hideInPrintFriendly" href="javascript:void(0)" onclick="onPrintClick();"&gt;&lt;img src="../../img/help_block/print.png" alt="print friendly version" title="print friendly version"/&gt;&lt;/a&gt;&lt;/h2&gt;
+    &lt;span class="hideInPrintFriendly"&gt;(please resize the window to see all of the text)&lt;/span&gt;
+
+    &lt;p&gt;This extension is aimed at solving a complex problem (it is a really working solution to the "too many open tabs" trouble) so, inevitably,
+       there is a learning curve and some new concepts. Not too much, but there's some mental effort required.&lt;/p&gt;
+
+    &lt;hr /&gt;
+    &lt;h3&gt;Most important basics (learn how to use this program  in 30 seconds)&lt;/h3&gt;
+    &lt;ul&gt;
+    &lt;li&gt;&lt;img src="../../img/help_block/preserve_btn_v2.png" alt="close &amp; preserve button" style="vertical-align: middle;
+                    margin-bottom: -18px;
+                                margin-left: -0px;
+                                margin-right: -4px;
+                                margin-top: -18px;"/&gt; this button will close tabs or windows but will leave links to them listed (saved) in the tree.&lt;/li&gt;
+    &lt;li&gt;&lt;b&gt;Double click&lt;/b&gt; to &lt;b&gt;activate&lt;/b&gt; (open) windows or tabs, &lt;b&gt;restore&lt;/b&gt; saved items, &lt;b&gt;edit&lt;/b&gt; notes, or to &lt;b&gt;change&lt;/b&gt; separator appearance.&lt;/li&gt;
+    &lt;li&gt;&lt;img src="../../img/help_block/delete_btn_v2.png" alt="delete button" style="vertical-align: middle;
+                        margin-bottom: -18px;
+                                    margin-left: -0px;
+                                    margin-right: -2px;
+                                    margin-top: -18px;"/&gt; delete removes only the higlighted node; to delete a node and all subnodes, &lt;b&gt;collapse&lt;/b&gt; it first.&lt;/li&gt;
+
+    &lt;li&gt;Drag &amp; drop &lt;b&gt;blue buttons&lt;/b&gt; to the tree to create additional nodes, like &lt;b&gt;notes&lt;/b&gt; or separators
+    &lt;li&gt;Open tabs by default disappear from tree after being closed by Chrome (this includes the case when you delete theirs window, by the delete button, in Tabs Outliner).
+    But, if they have any &lt;b&gt;notes in direct subnodes&lt;/b&gt;, or saved tabs, or groups, or window, (or in future versions: an icon, label or custom style applied to this node) they will
+    be stay in tree after being closed (will be saved), to preserve the context of your marks and manualy placed items.
+
+    &lt;div class="remark"&gt;
+    A rule to understand when open tabs will be auto converted to saved(preserved) after close :&lt;p&gt;
+    If a node has something special and manually changed or edited, like custom style, or this is a note node, or saved tab, group,
+    other window, changed title, icon (future),
+    then, if the related tab is closed in Chrome, the node will preserve itself (to not lose your edits and marks) AND the node will preserve
+    its &lt;b&gt;parent&lt;/b&gt; node (to not lose the context for placed marks).
+    &lt;p&gt;This is why &lt;b style="color:#3362cd"&gt;Google Doc node&lt;/b&gt;  created from main toolbar can be used to secure other tabs. It is created with a custom color style for title.
+    Thus it will preserve itself on close, and, also, any nodes below itself.
+    &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;hr /&gt;
+    &lt;h3&gt;Some helpful screencasts that demonstrate useful techniques&lt;/h3&gt;
+    &lt;ul&gt;
+        &lt;li&gt;[To be released] A quick overview of all of the features and buttons.&lt;/li&gt;
+        &lt;li&gt;[To be released] A reading technique for handling a high RSS load (hundreds of articles in a day).
+            &lt;div class="remark"&gt;
+            This video presents a method for productive skimming over a big pile of online material (you RSS feeds, news sites, etc.) by utilizing this extension.
+            I highly recommend you watch this video if you monitor a large number of RSS channels, or some with many posts per day.
+            &lt;br/&gt;This technique is also also applicable for skimming over a news site with a large number of interesting articles in archives.&lt;/div&gt;&lt;/li&gt;
+        &lt;li&gt;[This one is done!:] &lt;a target="_blank" href="http://www.youtube.com/watch?v=VvlK1ttZ3dI"&gt;How to quickly clean up a messy browsing session.&lt;/a&gt;
+            &lt;div class="remark"&gt;
+            I highly recommend you watch this video; it is a demonstration of main aspects and features of this extension with respect to some common, everyday tasks.&lt;/div&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;hr /&gt;
+
+    &lt;h3&gt;Common problems and questions from new users (FAQ)&lt;/h3&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;span id="q1" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        How do I place a node &lt;b&gt;inbetween&lt;/b&gt; other nodes, or &lt;b&gt;as the last&lt;/b&gt; subnode? The drop area is too small?
+        &lt;div id="q1-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            To place a node between other nodes on the same level you must drop it not between node titles,
+            but on the &lt;b&gt;vertical line&lt;/b&gt; which connects nodes on this level (from which they “grow”).
+            To place the node as the last subnode on a level drop it on trailing dot of the level line or
+            on the empty area beneath the dot (it will be highlighted on hover). See these illustrations:
+            &lt;img style="display:block" src="../../img/help_block/where_to_drag.png"/&gt;
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+
+        &lt;li&gt;&lt;span id="q2" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        Where is the &lt;b&gt;main toolbar&lt;/b&gt; with all the buttons?
+        &lt;div id="q2-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            Hover your mouse cursor over the bottom left corner of this window (it is an emerging on hover panel; not everyone spots it at first).
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+
+        &lt;li&gt;&lt;span id="q3" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        Is there a &lt;b&gt;Tree Style Tabs&lt;/b&gt; mode and how to enable it?
+        &lt;div id="q3-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            Yes. See the options (&lt;img src="../../img/main_toolbar/about/options-normal.png" alt="options button"
+            style="vertical-align: middle;
+                   margin-left: -8px;
+                   margin-right: -12px;"/&gt; icon in the main toolbar).
+
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+
+        &lt;li&gt;&lt;span id="q4" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        Some tabs and windows have a &lt;b&gt;green mark&lt;/b&gt; like this &lt;img style="margin-bottom: -2px;" src="../../img/help_block/node_anchor_colapsed_protected.png"/&gt; or &lt;img style="margin-bottom: -2px;" src="../../img/help_block/node_anchor_no_subnodes_protected.png"/&gt; - what does this mean?
+        &lt;div id="q4-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            This means that such a node is protected from deletion from the tree, when the corresponding Chrome tab or window is closed by you.
+            &lt;p&gt;Nodes become protected when they contains in direct subnodes some othere node which is not regular open tab. Or if the node has a custom title (this is only for windows),
+            or a custom/special style (currently this is only aplicable for the Google Doc nodes created from main toolbar).
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+
+        &lt;li&gt;&lt;span id="q5" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        If delete removes only the &lt;b&gt;highlighted&lt;/b&gt; node, then why when I delete a window, all of its tabs also gone?
+        &lt;div id="q5-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            This is because the tabs will go through the standard close by the Chrome process as a result
+            of their containing window closing. The tabs are treated the same as if they were closed by you in Chrome.
+            If the tabs have some notes or marks (future feature) they will stay in the tree and will be converted to saved tabs.
+            &lt;p&gt;
+            If you delete an expanded saved window, all its saved tabs will remain in tree.
+
+
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+
+        &lt;!--&lt;li&gt;&lt;span&gt; How can I &lt;b&gt;protect open tab&lt;/b&gt; from disappearance from tree on close (light the green light on them)?&lt;/li&gt;--&gt;
+
+        &lt;li&gt;&lt;span id="q6" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        How to set a &lt;b&gt;custom color&lt;/b&gt; for a node, as in Google Doc node created from main toolbar?
+        &lt;div id="q6-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            Currently nohow, it is not implemented meanwhile. &lt;br/&gt;Donations can make this available sooner. Many other cool
+            features are also planned and really depend on you for donations.
+            &lt;p&gt;
+            Note that custom styles (and everything else - position in hierarchy, notes,
+            and in the future icons and labels) are not a property of the URL, but a property of a node in the tree.
+            So if you reload the corresponding tab with another URL the title will remain blue, and will continue to protect
+            the current tab URL from disappearing when containing tab will be &lt;b&gt;closed&lt;/b&gt;.
+            Yet if you open same document manually in a new tab its node will not be any different from other nodes.
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+
+        &lt;li&gt;&lt;span id="q7" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;
+        I like this project and want to &lt;b&gt;help&lt;/b&gt;, where to put the &lt;b&gt;money&lt;/b&gt;?
+        &lt;div id="q7-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+        &lt;div class="answer"&gt;
+            Honestly this question is not one anyone asks, but just in case....
+            &lt;p&gt;
+            Currently I try to work on this project full-time. So, what I need most are
+            donations. They will directly, and very significantly, affect the future of this project.
+            &lt;p&gt;
+            A donate button is in the About window (use the &lt;img src="../../img/main_toolbar/about/info-normal.png" alt="help button" style="vertical-align: middle; margin-bottom: -28px;
+                margin-left: -9px;
+                margin-right: -12px;
+                margin-top: -32px;"/&gt; icon in the main toolbar to open). That also mentions some other ways you can help and what help is needed.
+
+        &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;hr /&gt;
+    &lt;h3 id="howToUseV1" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;Slightly more detailed version of basic use instructions&lt;/h3&gt;
+    &lt;div id="howToUseV1-body" style="position:relative;left:-30px;padding-left:30px;width: 100%;" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+    &lt;ul&gt;
+    &lt;li class="tip"&gt;&lt;span class="tipimg"&gt;&lt;img src="../../img/help_block/tree_illustration.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        You are now in the Main View. This shows you all your open windows and tabs in the form of a tree. This tree is completely
+        rearrangeable by drag &amp; drop. You can drag &amp; drop window nodes to tabs, assign some special subnodes (like notes)
+        to othere nodes (more on this later), change the order of windows, liberate tab nodes to new windows by dropping
+        them between window nodes (try it, tip: when dragging a tab from a window to liberate it in a new window, aim (and drop)
+        at the left-most vertical line which connects the window nodes to the root of tree).
+        &lt;p&gt;
+        The main view &lt;b&gt;autoscroll itself&lt;/b&gt; on every browser window switch to show you currently active Chrome window
+        &lt;b&gt;in the first line&lt;/b&gt; - so you can always easily see all of the tabs in the currently active window.
+        &lt;p&gt;
+        Closed tabs and windows by default disappear from the tree. However, this behavior can be changed - see below
+        (this is one of the most useful feature in this extension).&lt;/span&gt;&lt;/li&gt;
+
+    &lt;!--&lt;li class="tip"&gt;&lt;span class="tipimg"&gt;&lt;img src="../../img/help_block/preserve_btn.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;--&gt;
+    &lt;li class="tip"&gt;&lt;span class="tipimg" style="overflow:visible"&gt;&lt;img src="../../img/help_block/preserve_btn_v2.png" style="position:relative; top:1px; left:-29px"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        This is the Close &amp; Preserve (Save) button. It appears only on
+        nodes which represent open windows or tabs. It will close them (unload from memory), but leaves links to them
+        in the tree! So you will be able to restore closed this way tabs and entire windows anytime you want and in same context.
+        &lt;p&gt;
+        Note that you may close/preserve individual tabs in a window, they will not dissappear from tree even if you close its parent window.
+        They will also preserve their direct ancestor node in the tree - an open window or tab node.
+        &lt;/span&gt;&lt;/li&gt;
+
+    &lt;li class="tip"&gt;&lt;span class="tipimg"&gt;&lt;img src="../../img/help_block/dblcklick_illustration.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        Use Double-Click to reopen preserved (saved) tabs &amp; windows &lt;br/&gt;or bring them to the front if they already open.
+        &lt;p&gt;
+        Alternatively, because preserved(saved) tabs are represented by standard html links, you can shift-click to open
+        them in a new window, or cntrl-click to open them in last focused window, or drag&amp;drop them to any open browser window
+        (this will not affect a clicked node, it will create new tabs &amp; windows).
+        &lt;p&gt;
+        Try all of this to better understand and remember!&lt;/span&gt;&lt;/li&gt;
+
+    &lt;!--&lt;li class="tip"&gt;&lt;span class="tipimg"&gt;&lt;img src="../../img/help_block/delete_btn.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;--&gt;
+    &lt;li class="tip"&gt;&lt;span class="tipimg" style="overflow:visible"&gt;&lt;img src="../../img/help_block/delete_btn_v2.png" style="position:relative; top:1px; left:-29px"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        This button will completely delete a highlighted node from the tree (and if this node represents an open tab or window they
+        will be closed), all subnodes will be promoted in place of the deleted node (to remove an entire subtree first
+        collapse it).
+        &lt;p&gt;
+        The delete operation does not delete subnodes (if the node is not collapsed), only the highlighted node. But, if you delete a node
+        which represents an open window, then, during window closing, all open tabs of this window will be also automatically
+        shut down and as a result (if they do not have some special subnodes - see below) they will disappear from tree.&lt;/span&gt;&lt;/li&gt;
+
+    &lt;li class="tip"&gt;&lt;span class="tipimg tipimgbtn"&gt;&lt;img src="../../img/help_block/draged_btn.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        Buttons with a blue background are expected to be drag&amp;droped somewhere in the tree, not just clicked. They represent
+        additional nodes (read tooltips on them to learn what). If just clicked they add corresponding nodes to the end of the tree.
+        &lt;p&gt;
+        Click, or better, &lt;b&gt;drag to tree&lt;/b&gt;, all of them, to learn what nodes they create.&lt;/span&gt;&lt;/li&gt;
+
+    &lt;li class="tip"&gt;&lt;span class="tipimg" style="overflow: visible;"&gt;&lt;img src="../../img/help_block/close_vs_preserved.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        The most complex concept of this extension is understanding when nodes which represent open tabs &amp; windows disappear from tree,
+        after the corresponding object was closed in Chrome and when they stay.
+        &lt;p&gt;
+        The idea is that windows and tabs nodes are preserved in the tree if you close them by the
+        &lt;img src="../../img/help_block/preserve_cuted2.png" alt="close button" style="vertical-align: middle;
+                        margin-bottom: -18px;
+                                    margin-left: -3px;
+                                    margin-right: -2px;
+                                    margin-top: -15px;"/&gt;
+        button, or! if they have some manually assigned subnodes which are not a regular open tabs.
+        &lt;p&gt;
+        So if you close some tab using the standard Chrome tab close button
+        &lt;img src="../../img/help_block/chrome_tab_close.png" alt="close button" style="vertical-align: middle;
+        margin-bottom: -28px;
+            margin-left: -2px;
+            margin-right: -2px;
+            margin-top: -32px;"/&gt; or by closing the Chrome window
+        &lt;img src="../../img/help_block/chrome_win_close.png" alt="close button" style="vertical-align: middle;
+        margin-bottom: -28px;
+                    margin-left: -3px;
+                    margin-right: -1px;
+                    margin-top: -32px;"/&gt;,
+        the corresponding node will be removed from the tree. But only if they do not have any special subnodes, like notes, saved tabs, other
+        windows, groups - anything that is not an open tab. If they have some of these nodes, as children, then they will be preserved in tree,
+        the same as if you pressed
+        &lt;img src="../../img/help_block/preserve_cuted.png" alt="close button" style="vertical-align: middle;
+                margin-bottom: -18px;
+                            margin-left: -3px;
+                            margin-right: -2px;
+                            margin-top: -15px;"/&gt;
+        on them. So you will not lose the context for your notes.
+        &lt;p&gt;
+        In future releases this will expand to cover manually placed icons, tags, labels, custom styles.
+        &lt;p&gt;
+        The idea is - everything you place manualy on an open tab node will protect it from deletion after the tab is closed.
+        &lt;p&gt;
+        Additionally, all nodes for open tabs &amp; windows will be &lt;b&gt;automaticaly preserved&lt;/b&gt; in case of sudden pc or &lt;b&gt;browser crash&lt;/b&gt;.
+        &lt;/span&gt;&lt;/li&gt;
+
+    &lt;li class="tip"&gt;&lt;span class="tipimg tipimgbtn"&gt;&lt;img src="../../img/help_block/clone_btn.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        This button will clone the current view. &lt;b&gt;Cloned views do not auto-scroll&lt;/b&gt; when active Chrome window switches and allow easier drag &amp; drop between distant parts of the tree.
+        &lt;p&gt;
+        Сloned views, on open, scroll self to show end of the tree (drag from middle of the tree in one view to the end of the tree in the other is most common and useful operation).
+        To scroll a cloned view to the &lt;b&gt;same position&lt;/b&gt; as the view from which it is cloned click the Undo Scroll button &lt;img src="../../img/help_block/undoscroll_btn.png" style="margin-top: -17px; margin-bottom: -17px;"/&gt; in cloned view.
+        &lt;p&gt;
+        Cloned views have one notable difference from the main view - they will not autoscroll themselves when the active Chrome window changes
+        (the main view constantly autoscrolls to always show the tabs of the current window). When you need to greatly rearrange
+        your tree use cloned views as they will not needlessly jump.
+        &lt;p&gt;
+        The &lt;b&gt;Undo Scroll&lt;/b&gt; button can also be used to &lt;b&gt;undo the last autoscroll&lt;/b&gt; in the main view.&lt;/span&gt;&lt;/li&gt;
+
+    &lt;li class="tip"&gt;&lt;span class="tipimg tipimgbtn"&gt;&lt;img src="../../img/help_block/closeall_btn.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        This is Close &amp; Preserve All Open Windows Button - will be very handy in times when you cannot stop yourself from procrastinating
+        by net surfing and need to start working.
+        &lt;p&gt;
+        This will warn you before acting with a confirmation dialog; and not unreversible, as you will be able to easily find
+        and reload any of the closed windows and tabs at a more convenient time.
+        &lt;p&gt;
+        If you constantly accumulate a pile of open tabs you can actually save yourself a lot of productive time and computer
+        resources by regularly using this feature. Because all of the saved tabs become much less tempting after some time,
+        and most of them actually was open only to remind you of something, not because their content is constantly needed.
+        &lt;p&gt;
+        Often this "remind me" information is not in some specific tab, but rather in the context as whole (all of the open tabs and windows) -
+        all of these tabs and windows will be preserved during close, so you will no longer fear losing this context during a total browser shutdown
+        (as it is often the case). Thus this total close of all Chrome windows will become psychologicaly much more easy.
+        &lt;p&gt;
+        Usually you will reopen only a small number of closed tabs later, delete others, or simple leave
+        them as is. It is harmless to keep the tabs as saved in tree; you do not need to constantly clean-up your tree; the tree over time will become you browsing workbook and diary.
+        &lt;p&gt;
+        Please note that the content of tab is not saved locally during close-preserving (this feature is actually planed)
+        so you will need Internet access when you decide to restore them.&lt;/span&gt;&lt;/li&gt;
+
+
+    &lt;li class="tip"&gt;&lt;span class="tipimg tipimgbtn"&gt;&lt;img src="../../img/help_block/separator_btn.png"/&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        Сycle through different appearances (&lt;img src="../../img/help_block/separator_cycles.png" style="margin-bottom: -0.23em;"/&gt;) by double clicking on
+        placed in tree separator node.
+        &lt;p&gt;
+        Learn all other buttons by reading their tooltips and clicking them. It is safe to experiment; they do not do anything
+        radical.&lt;/span&gt;&lt;/li&gt;
+
+    &lt;!--
+    &lt;li class="tip"&gt;&lt;span class="tipimg"&gt;&lt;/span&gt;&lt;span class="tiptext"&gt;
+        See additional tips &lt;a href="http://gdfg/"&gt;there&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;
+    --&gt;
+    &lt;/ul&gt;
+    &lt;/div&gt;&lt;/div&gt;
+    &lt;hr /&gt;
+    &lt;h3 id="tips" class="expandable-block-title" onclick="toggleHlpBlock(this)"&gt;Some useful tips (yet nothing urgent to read)&lt;/h3&gt;
+    &lt;div id="tips-body" class="help_block_expandable_section_body block_body_collapsed"&gt;&lt;div style="display:inline-block"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;Drag and Drop with &lt;b&gt;Alt key&lt;/b&gt; pressed to &lt;b&gt;copy&lt;/b&gt; nodes. Open tabs and windows will be copied as saved (preserved).
+            &lt;div class="remark"&gt;
+            One handy use case for this feature: you can quickly clone by this method some already placed nearby notes
+            (like: “to read” or “to see comments”) to other tabs, without retyping them from scratch every time (also
+            handy for separators).
+            &lt;p&gt;
+            Other useful case - to make saved window copy with all tabs, without closing it.
+            &lt;p&gt;
+            Note: it is also possible to do the same with more standart &lt;b&gt;Ctrl key&lt;/b&gt;, but unfortunately, drags with
+            Ctrl key have some weird zoom behaviour in Chrome, near the left and right sides of window. So, a non standart
+            (for such use case) &lt;b&gt;Alt key&lt;/b&gt; is a way around this problem.
+            &lt;/div&gt;
+
+        &lt;li&gt;Selected &lt;b&gt;text&lt;/b&gt; or a &lt;b&gt;link&lt;/b&gt; can be dragged from the outside into the Tabs Outliner window and dropped
+        on the tree as note or saved tab. Very useful for quickly creating notes from selected text or links. Link from
+        Chrome adressbar also can be draged and copyed this way.
+
+        &lt;li&gt;To quickly collapse and expand subnodes (before delete/save hierarchy action) click on the circle in hovering menu:
+        &lt;img src="../../img/help_block/collapse_circle_btn.png" style="margin-bottom: -12px;"/&gt;
+
+        &lt;li&gt;You can export and share your tree by dragging it to a Google Doc document.
+            &lt;div class="remark"&gt;This is a also a way to do manual
+            backup of your tree, and a temporary solution to access it from your other computers.
+            &lt;p&gt;
+            Please note that only expanded nodes will be exported, so click Expand All button before this operation (expand all
+            can be undone by second click on this button).&lt;/div&gt;
+
+        &lt;li&gt;To restore accidentally closed or deleted windows and tabs you can right click in Chrome tab strip (in any
+        open Chrome window) and select "Reopen closed tab" or "Reopen closed window". Also, any new empty tab in Chrome
+        have in right bottom corner dropdown menu with a list of all recently closed tabs and windows.
+            &lt;div class="remark"&gt;Hope this help as temporary solution till there will be undo feature in Tabs Outliner.
+            &lt;/div&gt;
+
+        &lt;li&gt;You can use Cntrl-’+’ and Cntrl-’-’ to zoom in or out in the Tabs Outliner window. Useful for a quick overview
+        of your tree, or if font is too small for you (The zoom level is preserved between reopens).
+        Ctrl-'0' will reset the zoom to default.
+            &lt;div class="remark"&gt;Currently this mode is not very polished and some visual imperfections exist; please email me
+            if you use this mode often and this is an issue for you, I will work on a fix if this functionality is something
+            used by many users.&lt;/div&gt;
+
+        &lt;li&gt;You can multi select several tabs in Chrome and drag them to other windows or to a new window. To multiselect
+        several tabs click
+        on them (in the Chrome tab strip, not in Tabs Outliner) with Ctrl pressed to select individual tabs, or, and this is
+        more useful, Shift click to select a range of tabs. Then move the tabs as a whole.
+            &lt;div class="remark"&gt;This will allow you to perform move operations with a set of tabs; until a similar function
+            in this extension, as a multiselect functionality for nodes, will be implemented. Moving tabs like this is
+            especialy handy if you are not using the Tree Style Tabs mode and need separate a set of new tabs with a topics not
+            related to tabs in their original window (TST automaticaly groups related tabs, so most of the time you need to
+            drag only the parent node in Tabs Outliner to move a whole group - this is one of main reason why you might
+            whant to enable TST mode).&lt;/div&gt;
+
+        &lt;li&gt;Differences between Group and Note nodes. Besides the visual difference there is also a behavioral one.
+        Either can serve as a subfolder on which you can place other nodes, but Group will transform itself to an open
+        window if you move to it or restore inside of it a open tab.
+        &lt;p&gt;
+        Group is actually simple a saved window, with a fancy icon and name.
+            &lt;div class="remark"&gt;
+            If you place a Group inside some window and then move some of the open tabs from this window to this group,
+            these tabs will detach themselves from the original window and will appear in a new window, created in place
+            of the group node. Instead if you do the same with a Note, all of the tabs will remain in the original window.
+            Try it to gain a better understanding.
+            &lt;p&gt;
+            Basically the main usage for Group is to group other windows. To be a folder. And Note to be a final node,
+            something like Post It notes. Yet they can be used one instead of the other.
+            &lt;/div&gt;
+
+        &lt;li&gt;Cloned Tab Outiliner views &lt;b&gt;does not auto-scroll&lt;/b&gt; when the active Chrome window changes. They are very handy
+        when you need perform a lot of rearranging in your tree or drag nodes between distant parts of the tree (you can
+        drag nodes between different windows).
+            &lt;div class="remark"&gt;Undo Scroll button if pressed immediately after cloning, in the new (cloned) view will synchronize
+            its scroll position to the position which was in original view.&lt;/div&gt;
+
+        &lt;li&gt;Expand All button will expand all collapsed nodes and &lt;b&gt;allows undoing&lt;/b&gt; this action with the
+        next click (collapse back all which where collapsed before expand).&lt;br/&gt;
+            &lt;div class="remark"&gt;This is here mainly to allow you to use the &lt;b&gt;built-in Chrome search&lt;/b&gt; functionality
+            (hit Ctrl-F), as it is doing search only on visible nodes.&lt;/div&gt;
+
+        &lt;li&gt;You can reopen tabs represented by saved nodes without restoring them in place, by using cntrl/middle/shift
+        click (or by their context menu). This is also a way to duplicate some tabs.
+            &lt;div class="remark"&gt;All tab nodes are represented by HTML links and there is a standard browser
+            operations which can be performed on any link which many are not aware of:
+                &lt;ul&gt;
+                &lt;li style="list-style-type: circle; padding:0;"&gt;Shift click will always open the link in a new window.
+                &lt;li style="list-style-type: circle; padding:0;"&gt;Ctrl click (or middle click) in Tabs Outliner will open
+                a link in the last focused Chrome window.
+                &lt;/ul&gt;
+            You can combine these - create a new window by first clicking the link with shift-click, then,
+            even without selecting the new window, open all additional links inside them with ctrl-click.
+        &lt;/li&gt;
+
+        &lt;li&gt;Be aware of a nasty Chrome bug (already fixed in Chrome Dev builds) which manifest itself as tabs with grayed content.
+        They appear after tabs are moved by any extension, if the source window was closed in process (because there were
+        no more tabs in it). Then the moved tabs become grayed, and even a refresh will not fix this. Yet you can close-save
+        them, and then restore again, to get rid of this.
+
+        &lt;li&gt;It is very useful and often needed to liberate several tabs grouped in a subtree to a new window, which is
+        near-by to the original window (in Tabs Outliner tree). To do this drag tabs to the vertical root level line which
+        connects all windows. Once dropped they will create new window in the location is was dropped.
+
+        &lt;li&gt;Up to Next Open Window button is an effective way to find the first open window in tree, especially when it is
+        buried deep inside the tree and surrounded by many saved windows. You can click it until it will stop scrolling
+        because there where no more open windows above, or scroll manually to the top of tree and then press this button
+        to scroll back to the first open window.
+
+        &lt;li&gt;This extension saves all open tabs in case of sudden Chrome or PC crash. It is better to restore them from
+        the Tabs Outliner, &lt;b&gt;not by the restore feature built in Chrome&lt;/b&gt;.
+        &lt;p&gt;The Chrome restore feature will create new nodes for restored items, so you will have duplicates for all crashed-saved
+        tabs (this is not critical of course, and sometimes useful, so you have the option).
+            &lt;div class="remark"&gt;This is annoying at first, but it is actually
+            something that can be fixed by forming a useful new habit as most of the time it is a bad idea to restore
+            everything which crashed (maybe it will also be adressed someway in the future)
+            &lt;/div&gt;
+
+        &lt;li&gt;If you often need reopen some predefined sets of tabs, bookmarks bar is actually more useful for this than
+        Tabs Outliner. I recommend enable bookmarks bar and put all often visited sites on it, before all the garbage,
+        which probably was accumulated in your bookmarks.
+            &lt;div class="remark"&gt;Take note that you can rename bookmarks, and the more shorter names you will give to
+            them the more bookmarks will be visible in the bookmarks bar. You can even completely delete bookmark title
+            and leave only the favicon visible.
+            &lt;p&gt;
+            One more useful tip - you can group bookmarks in a folder in the bookmarks bar, then, by Ctrl or middle
+            click on the folder title you can reopen simultaneously all of the bookmarks in this folder.
+            &lt;/div&gt;
+
+        &lt;li&gt;If you close-save tab with a form in which you enter some data (but not submit) your data will be lost. This is often the case when
+        you write some message in forum or comments section in some blog, yet for some reason not ready to send it, so it is hanging and waiting
+        for you decision, and suddenly you decide that it is time to do some work, and close-preserve all open windows, forgetting about this form.
+        Exist solutions for this problem. Extensions like “Lazarus Form Recovery” constantly monitor all your tabs and save all entered data,
+        so when you reopen saved tab with some form in it, you will be able to easily restore all previously entered text.
+            &lt;div class="remark"&gt;But I never use such extensions, so cannot recommend them, and don't know if they work confidently (yet Lazarus seems work ok).
+            Also note that all such extension declare access rights for all you data in all tabs. For me, this is something absolutely unacceptable, yet
+            such extensions really cannot work without such rights, so it is up to you to decide.
+            &lt;/div&gt;
+
+        &lt;li&gt;If you open a lot of tabs - set the Flash plugin to “Click to play mode” -
+        here's is how: &lt;a target="_blank" href="http://www.mytechguide.org/9445/disable-flash-content-google-chrome"&gt;www.mytechguide.org/9445/disable-flash-content-google-chrome&lt;/a&gt;.
+        This helps saving your computer resources and to prevent videos from autoplaying.  Without this it is impossible to have several hundred tabs open.
+            &lt;div class="remark"&gt; Then pray that Flash will not die and be replaced by HTML5 completely (as the occupyflash.org horde desire) - as it is
+            hard to control HTML5 rich media content as easily.  Note that even if you click play you can unload the
+            downloaded by Flash content from RAM, stop video downloading and bandwidth usage, CPU usage, and free resources without
+            closing the page, simply by clicking refresh - this is not the case with HTML5 based solutions currently, and I think it will never be so .
+            &lt;/div&gt;
+        &lt;/li&gt;
+
+    &lt;/ul&gt;
+    &lt;/div&gt;&lt;/div&gt;
+    &lt;hr /&gt;
+
+    &lt;h3&gt;Prepare self for adaptation period&lt;/h3&gt;
+    &lt;p&gt;
+    Most effective this extension become when you start use it instead of the system taskbar to observe and bring to front already
+    open browser windows. Then cognitive difference between saved (preserved) and open tabs will gone, and you will be
+    able to close-save your windows &amp; tabs, mix them with open, and basically treat them in a same way. There will be no
+    need anymore to leave something open in hope to find it later in the taskbar (to read it later, or to reminding you about something).
+    &lt;p&gt;
+    This will result in much less open tabs, you even be able close them all without hesitations. And there of course
+    organizing and outlining features, to note why you leave all this tabs in tree, or to triage and prioritize you postponed
+    readings.
+    &lt;p&gt;
+    But be prepared that this behaviour change will not happen instantly. I find that new users, for some time, instinctively
+    continue to use familiar OS taskbar to find own open chrome windows. This will last up until a week.&lt;/p&gt;
+
+    &lt;hr /&gt;
+
+    &lt;h3&gt;Please help spread the world about this extension&lt;/h3&gt;
+    &lt;p&gt;
+    This software is actually completely sanitize my system from very severe and continues tabs polution (have too many interests)
+    and I am sure it can help for a lot of people. Spreading the world will help all of us, as with more users there will more
+    donations &amp; feedbacks, and as so, faster evolution and arriving of new features (and there a lot, to be done).
+    &lt;p&gt;
+    A simplest option to help is by going in &lt;a target="_blank" href="https://chrome.google.com/webstore/detail/eggkanocgddhmamlbiijnphhppkpkmkl/reviews"&gt;reviews section for this extension&lt;/a&gt;,
+    and set good rate for it, even without any comment. The more user will set 5 stars for this extension, the more prominent it will be presented in different Chrome Web Store
+    lists. You help is really needed there, please do this.
+    &lt;p&gt;
+    Social media buttons are in about window (use &lt;img src="../../img/main_toolbar/about/info-normal.png" alt="help button" style="vertical-align: middle; margin-bottom: -28px;
+    margin-left: -9px;
+    margin-right: -12px;
+    margin-top: -32px;"/&gt; to open).
+    And if you can blog about it or simple send some emails to friends, this might be an awesome idea, and beneficially for you readers. ;-)
+    &lt;p&gt;
+    Thank You!
+    &lt;p&gt;
+    PS And if you really go and set a rate above the current average - Thank You!!! one more time : )
+
+    &lt;div class="hideInPrintFriendly"&gt;
+    &lt;hr /&gt;
+    &lt;span class="hide-btn" onclick="window.hideHelpBlock()"&gt;Hide&lt;/span&gt;
+    &lt;input type="checkbox" id="doNotShowHelpBlockOnStartV2" onchange="if(this.checked) localStorage['doNotShowHelpBlockOnStartV2'] = 'true'; else delete localStorage['doNotShowHelpBlockOnStartV2'];"/&gt; do not show on open (can be shown again using
+
+    &lt;img src="../../img/main_toolbar/about/help-normal.png" alt="help button" style="vertical-align: middle;margin-left: -7px;margin-right: -11px;margin-top: -1px;"/&gt; button)
+    &lt;/div&gt;
+*/});
+</script>
+<script src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/tree/js/animator.js" type="text/javascript"></script>
+<script src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/tree/js/treeview.js?dgffdsfg" type="text/javascript"></script>
+<script src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/activesessionview.js?dgffdsfg" type="text/javascript"></script><li id="undefined" class="nodeTitleAndSubnodesContainer sessionNTASC NTASC-windowFrame"><div tabindex="-1" class="nodeTitleContainer sessionNTC NTC-windowFrame expandedsubnodes"><div class="nodeFaviconAndTextHelperContainer session"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/favicon.png" class="node_favicon session_favicon"><span class="node_text session_text">Current Session</span></div></div><ul class="subnodeslist"><li id="group" class="nodeTitleAndSubnodesContainer groupNTASC NTASC-windowFrame currentNode"><div tabindex="1" class="nodeTitleContainer groupNTC NTC-windowFrame expandedsubnodes currentNode"><div class="nodeFaviconAndTextHelperContainer group"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/group-icon.png" class="node_favicon group_favicon"><span class="node_text group_text">Working with PayPal</span></div></div><ul class="subnodeslist"><li id="savedwin" class="nodeTitleAndSubnodesContainer savedwinNTASC NTASC-windowFrame"><div tabindex="-1" class="nodeTitleContainer savedwinNTC NTC-windowFrame expandedsubnodes"><div class="nodeFaviconAndTextHelperContainer savedwin"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/chrome-window-icon-gold.png" class="node_favicon savedwin_favicon"><span class="node_text savedwin_text">WebservicesX, Unicode Map, Country ISO Codes</span></div></div><ul class="subnodeslist"><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://www.webservicex.net/WS/faq.aspx" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/nofavicon.png" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">WebserviceX.NET :: Web Services FAQ</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://www.iso.org/iso/home/standards/country_codes.htm#2012_iso3166_MA" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes"><img src="chrome://favicon/http://www.iso.org/iso/home/standards/country_codes.htm#2012_iso3166_MA" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">ISO 3166 - Country codes - ISO</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://www.mclean.net.nz/ucf/" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes"><img src="chrome://favicon/http://www.mclean.net.nz/ucf/" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Unicode Character Finder</span></a></li></ul></li><li id="savedwin" class="nodeTitleAndSubnodesContainer savedwinNTASC NTASC-windowFrame"><div class="nodeTitleContainer savedwinNTC NTC-windowFrame expandedsubnodes"><div class="nodeFaviconAndTextHelperContainer savedwin"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/chrome-window-icon-gold.png" class="node_favicon savedwin_favicon"><span class="node_text savedwin_text">PayPal Sandbox</span></div></div><ul class="subnodeslist"><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://developer.paypal.com/us/cgi-bin/devscr?cmd=_sandbox-acct-session" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/nofavicon.png" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">PayPal Sandbox - Sandbox</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.paypal.com/br/cgi-bin/webscr?cmd=_login-done&amp;login_access=1350242889" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.paypal.com/br/cgi-bin/webscr?cmd=_login-done&amp;login_access=1350242889" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Error - Login - PayPal</span></a></li></ul></li><li id="savedwin" class="nodeTitleAndSubnodesContainer savedwinNTASC NTASC-windowFrame"><div class="nodeTitleContainer savedwinNTC NTC-windowFrame expandedsubnodes"><div class="nodeFaviconAndTextHelperContainer savedwin"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/chrome-window-icon-gold.png" class="node_favicon savedwin_favicon"><span class="node_text savedwin_text">PayPal Recurring Payments</span></div></div><ul class="subnodeslist"><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/uk/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_WPRecurringPayments" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/uk/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_WPRecurringPayments" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Integrating Recurring Payments</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/mx/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECRecurringPayments" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/mx/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECRecurringPayments" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Handling Recurring Payments</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_r_CreateRecurringPayments" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_r_CreateRecurringPayments" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">CreateRecurringPaymentsProfile API Operation</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.paypalobjects.com/en_US/ebook/PP_ExpressCheckout_IntegrationGuide/RecurringPayments.html" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes"><img src="chrome://favicon/https://www.paypalobjects.com/en_US/ebook/PP_ExpressCheckout_IntegrationGuide/RecurringPayments.html" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Recurring Payments</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.google.com.br/search?oq=nvp+recurring+TaxId&amp;sugexp=chrome,mod=0&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=nvp+recurring+TaxId" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes"><img src="chrome://favicon/https://www.google.com.br/search?oq=nvp+recurring+TaxId&amp;sugexp=chrome,mod=0&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=nvp+recurring+TaxId" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">nvp recurring taxid - Pesquisa Google</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.x.com/developers/paypal/documentation-tools/api/getexpresscheckoutdetails-api-operation-nvp" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes"><img src="chrome://favicon/https://www.x.com/developers/paypal/documentation-tools/api/getexpresscheckoutdetails-api-operation-nvp" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">GetExpressCheckoutDetails API Operation (NVP) | X.commerce</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/es/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_PreviousAPIVersionsNVP" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes"><img src="chrome://favicon/https://cms.paypal.com/es/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_PreviousAPIVersionsNVP" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">About Previous Versions of the API</span></a></li></ul></li><li id="savedwin" class="nodeTitleAndSubnodesContainer savedwinNTASC NTASC-windowFrame"><div class="nodeTitleContainer savedwinNTC NTC-windowFrame expandedsubnodes"><div class="nodeFaviconAndTextHelperContainer savedwin"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/chrome-window-icon-gold.png" class="node_favicon savedwin_favicon"><span class="node_text savedwin_text">PayPal ExpressCheckout</span></div></div><ul class="subnodeslist"><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECGettingStarted" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECGettingStarted" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Getting Started With Express Checkout</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.x.com/developers/paypal/documentation-tools/quick-start-guides/paypal-sandbox-getting-started-guide#users" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.x.com/developers/paypal/documentation-tools/quick-start-guides/paypal-sandbox-getting-started-guide#users" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">PayPal Sandbox Getting Started Guide | X.commerce</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.x.com/developers/paypal/documentation-tools/paypal-sdk-index" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.x.com/developers/paypal/documentation-tools/paypal-sdk-index" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">SDK Index | X.commerce</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_testing_SBTestTools" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_testing_SBTestTools" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Sandbox Test Tools</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.paypal-brasil.com.br/x/tutoriais" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.paypal-brasil.com.br/x/tutoriais" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Tutoriais | PayPal X Brasil</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECCustomizing" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECCustomizing" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Customizing Express Checkout</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_r_SetExpressCheckout" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_r_SetExpressCheckout" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">SetExpressCheckout API Operation</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECGettingStarted" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_ECGettingStarted" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Getting Started With Express Checkout</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_r_DoExpressCheckoutPayment" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_r_DoExpressCheckoutPayment" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">DoExpressCheckoutPayment API Operation</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://www.phpkode.com/source/s/paypal-payments-pro/includes/paypal.class.php" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/http://www.phpkode.com/source/s/paypal-payments-pro/includes/paypal.class.php" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">paypal.class.php at PayPal Payments Pro - Free PHP Code</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://coding.smashingmagazine.com/2011/09/05/getting-started-with-the-paypal-api/" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/http://coding.smashingmagazine.com/2011/09/05/getting-started-with-the-paypal-api/" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Getting Started With The PayPal API | Smashing Coding</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://stackoverflow.com/questions/12681135/setexpresscheckout-and-ssl-tls-error" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/http://stackoverflow.com/questions/12681135/setexpresscheckout-and-ssl-tls-error" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">c# - setExpressCheckout and SSL/TLS error - Stack Overflow</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://www.codeproject.com/Articles/42894/Introduction-to-PayPal-for-C-ASP-NET-developers#ExpressCheckout" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/http://www.codeproject.com/Articles/42894/Introduction-to-PayPal-for-C-ASP-NET-developers#ExpressCheckout" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Introduction to PayPal for C# - ASP.NET developers - CodeProject</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://github.com/paypal/SDKs/tree/master/Merchant/merchant-dotnet-sdk" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://github.com/paypal/SDKs/tree/master/Merchant/merchant-dotnet-sdk" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">SDKs/Merchant/merchant-dotnet-sdk at master · paypal/SDKs</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.x.com/developers/paypal/documentation-tools/going-live-with-your-application#register" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.x.com/developers/paypal/documentation-tools/going-live-with-your-application#register" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Going Live with Your Application | X.commerce</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://shopsandbox.de/api/ec/?call=DoExpressCheckoutPayment" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome-extension://eggkanocgddhmamlbiijnphhppkpkmkl/img/nofavicon.png" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">PayPal API Playground</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://stackoverflow.com/questions/10782658/paypal-html-variable-can-i-set-a-maximum-and-minimum-payment-amount" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/http://stackoverflow.com/questions/10782658/paypal-html-variable-can-i-set-a-maximum-and-minimum-payment-amount" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">paypal html variable ( Can I set a maximum and minimum payment amount) - Stack Overflow</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_errorcodes" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&amp;content_ID=developer/e_howto_api_nvp_errorcodes" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">API Error Codes</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.paypal.com/us/webapps/mpp/digital-goods" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.paypal.com/us/webapps/mpp/digital-goods" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Selling Digital Goods? PayPal Makes it Easy to Collect Payments</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.paypal-brasil.com.br/x/xblog/2011/11/23/revisao-instantanea-de-pagamentos-sendo-ativada-no-brasil/" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.paypal-brasil.com.br/x/xblog/2011/11/23/revisao-instantanea-de-pagamentos-sendo-ativada-no-brasil/" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Revisão Instantânea de Pagamentos sendo ativada no Brasil | Use Cases PayPal X Brasil</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.paypal-brasil.com.br/x/tutoriais/conteudo-online-com-digital-goods/" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.paypal-brasil.com.br/x/tutoriais/conteudo-online-com-digital-goods/" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Express Checkout e Digital Goods &ndash; Vendendo produtos digitais | PayPal X Brasil</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="http://stackoverflow.com/questions/8570046/what-kind-of-paypal-sandbox-account-is-necessary-for-express-payments-rails-modu" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/http://stackoverflow.com/questions/8570046/what-kind-of-paypal-sandbox-account-is-necessary-for-express-payments-rails-modu" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">What kind of PayPal sandbox account is necessary for Express Payments rails module? - Stack Overflow</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://www.google.com.br/search?aq=0&amp;oq=chrome+sa&amp;sugexp=chrome,mod=0&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=chrome+salvar+abas" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://www.google.com.br/search?aq=0&amp;oq=chrome+sa&amp;sugexp=chrome,mod=0&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=chrome+salvar+abas" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">chrome salvar abas - Pesquisa Google</span></a></li><li id="savedtabundefined" class="nodeTitleAndSubnodesContainer savedtabNTASC NTASC-tabFrame"><a href="https://chrome.google.com/webstore/detail/tabs-outliner/eggkanocgddhmamlbiijnphhppkpkmkl/related" class="nodeTitleContainer savedtabNTC NTC-tabFrame nosubnodes selectedtab"><img src="chrome://favicon/https://chrome.google.com/webstore/detail/tabs-outliner/eggkanocgddhmamlbiijnphhppkpkmkl/related" class="node_favicon savedtab_favicon"><span class="node_text savedtab_text">Chrome Web Store - Tabs Outliner</span></a></li></ul></li></ul></li></ul></li><div style="height: 994px;"></div>
+<script language="javascript">
+function toggleHlpBlock(controlelement) {
+
+	var bodyelement = document.getElementById(controlelement.id+"-body");
+
+	if(bodyelement.offsetHeight == 0)
+	{
+		// Expand
+    	bodyelement.style.height = bodyelement.firstChild.offsetHeight+"px";
+
+		controlelement.classList.add("expanded");
+		controlelement.classList.remove("collapsed");
+
+        bodyelement.addEventListener("webkitTransitionEnd", onExpandTransitionEnd /*must be same as in Expand!*/, false );
+  	}
+	else
+	{   // Close
+		bodyelement.classList.add("block_body_collapsed");
+		bodyelement.classList.remove("block_body_expanded");
+    	bodyelement.style.height = "";
+		controlelement.classList.remove("expanded");
+		controlelement.classList.add("collapsed");
+	}
+}
+
+function onExpandTransitionEnd()
+{
+	this.removeEventListener("webkitTransitionEnd", onExpandTransitionEnd );
+	var isExpanded = parseInt(this.style.height) != 0; // parseInt to trim "px", "em", "%", ... sufixes
+
+	if(isExpanded) {
+		this.classList.add("block_body_expanded");
+		this.classList.remove("block_body_collapsed");
+		this.style.height = "";
+	}
+}
+</script></body></html>

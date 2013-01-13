@@ -1,0 +1,56 @@
+Gateways de pagamentos:
+    PayPal: Nem precisa falar nada (lider mundial na área)
+    Cielo: dizem ter a melhor integração para processamento de pagamento via cartão. Requer checkout implementado manualmente.
+        Home: http://www.cielo.com.br
+        API: http://cielo.codeplex.com/
+    PagSeguro (UOL): 
+    Pagamento Digital: parece muito bom (pelo jeito o b!Cash é o sucessor)
+        API: http://developer.buscape.com/api/
+    b!Cach (Buscapé): o design página inicial deles é muito maneira
+        API: https://www.bcash.com.br/integracao-bcash.html
+    moip: http://site.moip.com.br/
+    iPagare: atrelado a uma solução de e-commerce chamada Magento
+        Home: http://www.ipagare.com.br/
+    CobreDireto (UOL): dá para receber direto na conta
+        Home: https://www.cobredireto.com.br/
+        API:  https://www.cobredireto.com.br/integracao/integracao-via-webservices/integracao/
+    maxiPago: integra com muita coisa
+        API: https://github.com/maxipago
+    MercadoPago: dizem que não é muito bom quando se tem problemas
+        API: https://developers.mercadopago.com/integracao-checkout
+    Gateway de Pagamento Locaweb: tem que pagar um plano (possui API, possui Sandbox)
+        Home:      http://www.locaweb.com.br/produtos/gateway-pagamento.html
+        Sugestões: http://sugestoes.locaweb.com.br/forums/88555-com-rcio-eletr-nico
+        API Docs:  http://docs.gatewaylocaweb.com.br/
+    CobreBem:
+        Home:              http://www.cobrebem.com.br
+        API (ActiveX COM): http://www.cobrebem.com.br/cobrebemx.html
+    ernet/SuperPay:
+        Home: http://www.ernet.com.br/
+    BoldCron/BPag (UOL): para empresas grandes, tem que entrar em contato :\
+        Home:        http://www.boldcron.com.br/
+        Recorrência: http://www.boldcron.com.br/servicos/recorrencia
+    BrasPag: para empresas grandes, atende a empresas realmente enormes
+        Home: http://www.braspag.com.br
+    coolpay: site bugado, não parece sério - http://www.coolde.com.br/?pg=coolpay
+    akatus: bem fraquinho, só para lojas virtuais mesmo, sem API - https://www.akatus.com/
+    Google Wallet: Ainda em faze Beta no Brazil.
+    WePay: Concorrente PayPal nos EUA.
+
+
+Soluções (e-commerce)
+    Magento: http://www.mbmarketing.com.br/loja-virtual?AdWords=magento&gclid=CLuN56L19rICFQKCnQodf1AAvA
+    ezcommerce: http://www.ezcommerce.com.br
+    moovin: http://www.moovin.com.br/
+    bring: Site muito agradável - http://bringcommerce.com.br/
+    innodigital: http://www.innodigital.com.br/
+
+Referências:
+    http://forum.imasters.com.br/topic/398738-qual-melhor-gateway-de-pagamento-sem-ser-a-locaweb/
+    http://www.slideshare.net/designinfnet/palestra-infnet-qual-o-meio-de-pagamento-online-para-a-sua-loja-virtual
+    http://www.slideshare.net/adrianoaguiar/arteccom-workshop-magento-cobre-direto
+
+Outros:
+    Novidades: http://ecommercenews.com.br/
+    Softwares Saas: http://www.uses.com.br/
+    Recebimento presencial pelo celular: http://www.pagpop.com.br/
