@@ -9492,7 +9492,8 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="windowsTimeZoneId">Initial value of the WindowsTimeZoneId property.</param>
         /// <param name="accountDisabled">Initial value of the AccountDisabled property.</param>
-        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean accountDisabled)
+        /// <param name="accountCancelRequest">Initial value of the AccountCancelRequest property.</param>
+        public static Practice CreatePractice(global::System.Int32 id, global::System.String name, global::System.String urlIdentifier, global::System.DateTime createdOn, global::System.String windowsTimeZoneId, global::System.Boolean accountDisabled, global::System.Boolean accountCancelRequest)
         {
             Practice practice = new Practice();
             practice.Id = id;
@@ -9501,6 +9502,7 @@ namespace Cerebello.Model
             practice.CreatedOn = createdOn;
             practice.WindowsTimeZoneId = windowsTimeZoneId;
             practice.AccountDisabled = accountDisabled;
+            practice.AccountCancelRequest = accountCancelRequest;
             return practice;
         }
 
@@ -9870,6 +9872,30 @@ namespace Cerebello.Model
         private global::System.Boolean _AccountDisabled;
         partial void OnAccountDisabledChanging(global::System.Boolean value);
         partial void OnAccountDisabledChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean AccountCancelRequest
+        {
+            get
+            {
+                return _AccountCancelRequest;
+            }
+            set
+            {
+                OnAccountCancelRequestChanging(value);
+                ReportPropertyChanging("AccountCancelRequest");
+                _AccountCancelRequest = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AccountCancelRequest");
+                OnAccountCancelRequestChanged();
+            }
+        }
+        private global::System.Boolean _AccountCancelRequest;
+        partial void OnAccountCancelRequestChanging(global::System.Boolean value);
+        partial void OnAccountCancelRequestChanged();
 
         #endregion
 

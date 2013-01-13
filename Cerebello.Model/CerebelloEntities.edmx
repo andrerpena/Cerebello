@@ -629,6 +629,7 @@
           <Property Name="SiteUrl" Type="nvarchar(max)" />
           <Property Name="AddressId" Type="int" />
           <Property Name="AccountDisabled" Type="bit" Nullable="false" />
+          <Property Name="AccountCancelRequest" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1754,6 +1755,7 @@
           <Property Type="Int32" Name="AddressId" />
           <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Practice" ToRole="Address" />
           <Property Type="Boolean" Name="AccountDisabled" Nullable="false" />
+          <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2847,6 +2849,7 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
+                <ScalarProperty Name="AccountCancelRequest" ColumnName="AccountCancelRequest" />
                 <ScalarProperty Name="AccountDisabled" ColumnName="AccountDisabled" />
                 <ScalarProperty Name="AddressId" ColumnName="AddressId" />
                 <ScalarProperty Name="SiteUrl" ColumnName="SiteUrl" />

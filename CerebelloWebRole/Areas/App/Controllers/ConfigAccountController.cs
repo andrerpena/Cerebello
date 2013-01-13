@@ -85,12 +85,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 UrlIdentifier = mainContract.SYS_ContractType.UrlIdentifier.Trim(),
             };
 
+            this.ViewBag.IsTrial = mainContract.SYS_ContractType.IsTrial;
+
             return View(viewModel);
         }
 
         [HttpPost]
         public ActionResult Cancel(CancelAccountViewModel viewModel)
         {
+            // Payd accounts are canceled manually.
+            if (!this.DbPractice.AccountContract.SYS_ContractType.IsTrial)
+            {
+                this.DbPractice.AccountCancelRequest = true;
+
+                this.db.SaveChanges();
+
+                this.ViewBag.CancelRequested = true;
+
+                return this.View(viewModel);
+            }
+
             if (!viewModel.Confirm)
             {
                 var mainContract = this.DbPractice.AccountContract;
@@ -168,6 +182,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // disabling account
             this.DbPractice.AccountDisabled = true;
+            this.DbPractice.UrlIdentifier += " !disabled"; // change this, so that a new practice with this name can be created.
             this.db.SaveChanges();
 
             // redirecting user to success message (outside of the app, because the account was canceled)

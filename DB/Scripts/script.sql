@@ -597,6 +597,7 @@ CREATE TABLE [dbo].[Practice](
 	[SiteUrl] [nvarchar](max) NULL,
 	[AddressId] [int] NULL,
 	[AccountDisabled] [bit] NOT NULL,
+	[AccountCancelRequest] [bit] NOT NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
