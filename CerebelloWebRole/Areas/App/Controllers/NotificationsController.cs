@@ -58,7 +58,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     var notification = new Notification()
                         {
-                            CreatedOn = this.GetUtcNow(),
+                            CreatedOn = DateTimeHelper.UtcNow,
                             UserId = appointment.DoctorId,
                             PracticeId = appointment.PracticeId,
                             Text = notificationText

@@ -479,7 +479,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     appointment = new Appointment
                         {
                             PracticeId = this.DbUser.PracticeId,
-                            CreatedOn = this.UtcNowGetter(),
+                            CreatedOn = DateTimeHelper.UtcNow,
                             DoctorId = formModel.DoctorId,
                             CreatedById = this.DbUser.Id,
                         };
@@ -530,7 +530,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                                 ConvertToUtcDateTime(this.DbPractice, formModel.PatientDateOfBirth.Value),
                                             PhoneCell = formModel.PatientPhoneCell,
                                             PhoneLand = formModel.PatientPhoneLand,
-                                            CreatedOn = this.GetUtcNow(),
+                                            CreatedOn = DateTimeHelper.UtcNow,
                                             PracticeId = this.DbUser.PracticeId,
                                             Email = formModel.PatientEmail,
                                             EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail)

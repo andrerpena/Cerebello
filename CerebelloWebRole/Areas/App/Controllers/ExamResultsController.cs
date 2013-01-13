@@ -85,7 +85,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 dbObject = new ExaminationResult
                 {
-                    CreatedOn = this.GetUtcNow(),
+                    CreatedOn = DateTimeHelper.UtcNow,
                     PatientId = formModel.PatientId.Value,
                     PracticeId = this.DbUser.PracticeId,
                 };

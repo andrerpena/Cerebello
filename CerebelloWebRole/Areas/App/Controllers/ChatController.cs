@@ -64,7 +64,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(new
             {
                 Messages = messages,
-                Timestamp = this.GetUtcNow().Ticks.ToString()
+                Timestamp = DateTimeHelper.UtcNow.Ticks.ToString()
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -89,7 +89,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             db.ChatMessages.AddObject(new Cerebello.Model.ChatMessage()
             {
-                Date = this.GetUtcNow(),
+                Date = DateTimeHelper.UtcNow,
                 Message = message,
                 UserFromId = myUserId,
                 UserToId = otherUserId,

@@ -57,7 +57,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
 
                 // get appointments scheduled for the future
-                var utcNow = controller.GetUtcNow();
+                var utcNow = DateTimeHelper.UtcNow;
 
                 var appointments = patient.Appointments
                     .Where(
@@ -344,7 +344,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.BirthPlace = formModel.BirthPlace;
                 patient.Person.CPF = formModel.Cpf;
                 patient.Person.CPFOwner = formModel.CpfOwner;
-                patient.Person.CreatedOn = this.GetUtcNow();
+                patient.Person.CreatedOn = DateTimeHelper.UtcNow;
                 patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.Gender = (short)formModel.Gender;

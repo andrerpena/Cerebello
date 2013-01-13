@@ -63,7 +63,8 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
@@ -208,7 +209,8 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
@@ -263,7 +265,8 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
@@ -500,7 +503,7 @@ namespace CerebelloWebRole.Tests.Tests
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 // - this view-model must be valid for this test... if some day it becomes invalid,
@@ -625,7 +628,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
 
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 // - this view-model must be valid for this test... if some day it becomes invalid,
@@ -730,7 +733,7 @@ namespace CerebelloWebRole.Tests.Tests
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 // - this view-model must be valid for this test... if some day it becomes invalid,
@@ -840,7 +843,7 @@ namespace CerebelloWebRole.Tests.Tests
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 // - this view-model must be valid for this test... if some day it becomes invalid,
@@ -941,7 +944,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
 
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 // - this view-model must be valid for this test... if some day it becomes invalid,
@@ -1040,7 +1043,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
 
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 // - this view-model must be valid for this test... if some day it becomes invalid,
@@ -1116,7 +1119,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>();
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 vm = new AppointmentViewModel
@@ -1184,7 +1187,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>();
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 vm = new AppointmentViewModel
@@ -1249,7 +1252,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>();
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 vm = new AppointmentViewModel
@@ -1313,7 +1316,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>();
 
                 // Mocking 'Now' values.
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Setting view-model values to create a new appointment.
                 vm = new AppointmentViewModel
@@ -1379,7 +1382,7 @@ namespace CerebelloWebRole.Tests.Tests
                 mr.SetRouteData_ConsultorioDrHouse_GregoryHouse(typeof(ScheduleController), "Create");
                 controller = mr.CreateController<ScheduleController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
@@ -1436,7 +1439,8 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>(
                     callOnActionExecuting: true,
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
@@ -1492,7 +1496,8 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ScheduleController>(
                     callOnActionExecuting: true,
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { isDbChanged = true; });
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {

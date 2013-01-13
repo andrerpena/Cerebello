@@ -218,7 +218,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditingOrCreating = isEditingOrCreating;
 
-            var utcNow = this.GetUtcNow();
+            var utcNow = DateTimeHelper.UtcNow;
 
             User user;
 
@@ -311,7 +311,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 user.Person.BirthPlace = formModel.BirthPlace;
                 user.Person.CPF = formModel.Cpf;
                 user.Person.CPFOwner = formModel.CpfOwner;
-                user.Person.CreatedOn = this.GetUtcNow();
+                user.Person.CreatedOn = DateTimeHelper.UtcNow;
                 user.Person.MaritalStatus = formModel.MaritalStatus;
                 user.Person.Profession = formModel.Profissao;
                 user.Person.Email = formModel.Email;
@@ -457,7 +457,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // to be placed if an error occur
                     this.db.Notifications.AddObject(new Notification()
                         {
-                            CreatedOn = this.GetUtcNow(),
+                            CreatedOn = DateTimeHelper.UtcNow,
                             PracticeId = this.DbPractice.Id,
                             UserId = this.DbUser.Id,
                             Text =
@@ -653,7 +653,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Salvando informações do usuário.
                 var user = this.db.Users.Single(u => u.Id == loggedUser.Id);
                 user.Password = newPasswordHash;
-                user.LastActiveOn = this.GetUtcNow();
+                user.LastActiveOn = DateTimeHelper.UtcNow;
 
                 this.db.SaveChanges();
 
@@ -666,7 +666,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         PracticeIdentifier = string.Format("{0}", this.RouteData.Values["practice"]),
                         RememberMe = false,
                         UserNameOrEmail = loggedUser.UserName,
-                    }, this.db.Users, out user, this.GetUtcNow());
+                    }, this.db.Users, out user, DateTimeHelper.UtcNow);
 
                 if (!ok || user == null)
                     throw new Exception("This should never happen as the login uses the same data provided by the user.");

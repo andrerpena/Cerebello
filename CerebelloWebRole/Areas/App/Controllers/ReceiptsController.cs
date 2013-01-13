@@ -95,7 +95,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 receipt = new Receipt()
                 {
-                    CreatedOn = this.GetUtcNow(),
+                    CreatedOn = DateTimeHelper.UtcNow,
                     PatientId = formModel.PatientId.Value,
                     PracticeId = this.DbUser.PracticeId,
                 };

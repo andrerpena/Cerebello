@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Net.Mail;
-using System.Transactions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Helpers;
@@ -13,23 +10,10 @@ namespace CerebelloWebRole.Code.Controllers
     {
         public RootController()
         {
-            this.UtcNowGetter = () => DateTime.UtcNow;
-
             this.CerebelloEntitiesCreator = () => new CerebelloEntities();
         }
 
-        public Func<DateTime> UtcNowGetter { get; set; }
-
         public Func<CerebelloEntities> CerebelloEntitiesCreator { get; set; }
-
-        /// <summary>
-        /// Mockable version of the DateTime.UtcNow property.
-        /// </summary>
-        /// <returns></returns>
-        public virtual DateTime GetUtcNow()
-        {
-            return this.UtcNowGetter();
-        }
 
         /// <summary>
         /// Renders a partial view to a string.
