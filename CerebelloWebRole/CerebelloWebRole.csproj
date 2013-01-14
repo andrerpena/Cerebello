@@ -379,6 +379,7 @@
     <Content Include="Content\Images\App\Icons16\clear.png" />
     <Content Include="Content\Images\App\Icons16\config.png" />
     <Content Include="Content\Images\App\Icons16\delete.png" />
+    <Content Include="Content\Images\App\Icons16\dropdown.png" />
     <Content Include="Content\Images\App\Icons16\edit.png" />
     <Content Include="Content\Images\App\Icons16\exclamation.png" />
     <Content Include="Content\Images\App\Icons16\help.png" />

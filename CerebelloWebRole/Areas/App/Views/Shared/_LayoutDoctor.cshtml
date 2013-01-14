@@ -65,6 +65,7 @@
         $("#global-search").autocomplete({
             contentUrl: "@Url.Action("LookupEverything", "App")",
             inputHiddenName: "global-search-hidden",
+            showDropdownButton: false,            
             ajaxParams: {
                 doctorId: @doctor.Id
             },
