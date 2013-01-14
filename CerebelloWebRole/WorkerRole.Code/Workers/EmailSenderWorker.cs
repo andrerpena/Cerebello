@@ -2,7 +2,6 @@
 using System.Net.Mail;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
@@ -17,7 +16,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
         {
             lock (locker)
             {
-                var utcNow = DateTimeHelper.UtcNow;
+                var utcNow = this.GetUtcNow();
                 using (var db = this.CreateNewCerebelloEntities())
                 {
                     var next40H = utcNow.AddHours(40.0);

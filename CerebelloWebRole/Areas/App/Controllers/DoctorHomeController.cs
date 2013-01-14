@@ -14,7 +14,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Index()
         {
-            var utcNow = DateTimeHelper.UtcNow;
+            var utcNow = this.GetUtcNow();
             var localNow = this.GetPracticeLocalNow();
 
             // find today's appointments

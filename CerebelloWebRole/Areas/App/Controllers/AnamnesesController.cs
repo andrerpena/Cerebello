@@ -84,7 +84,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     anamnese = new Anamnese
                     {
-                        CreatedOn = DateTimeHelper.UtcNow,
+                        CreatedOn = this.GetUtcNow(),
                         PatientId = formModel.PatientId.Value,
                         PracticeId = this.DbUser.PracticeId,
                     };

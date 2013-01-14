@@ -17,25 +17,6 @@ namespace CerebelloWebRole.Code
             IncludePrefixes = 8
         }
 
-        private static DateTime? testUtcNow;
-
-        /// <summary>
-        /// Mockable version of the DateTime.UtcNow property.
-        /// </summary>
-        public static DateTime UtcNow
-        {
-            get { return testUtcNow ?? DateTime.UtcNow; }
-        }
-
-        /// <summary>
-        /// This is only for tests.
-        /// </summary>
-        /// <param name="newUtcNow"></param>
-        public static void SetUtcNow(DateTime newUtcNow)
-        {
-            testUtcNow = newUtcNow;
-        }
-
         // Methods
 
         public static IEnumerable<DateTime> Range(DateTime start, int count, Func<DateTime, DateTime> nextGetter)

@@ -69,7 +69,7 @@ namespace CerebelloWebRole.Controllers
 
             var cookieCollection = this.HttpContext.Response.Cookies;
 
-            if (!SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, DateTimeHelper.UtcNow))
+            if (!SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
             {
                 this.ModelState.AddModelError(loginModel.PracticeIdentifier, "O login falhou. Um dos campos abaixo está incorreto.");
             }
@@ -80,7 +80,7 @@ namespace CerebelloWebRole.Controllers
                 return this.View(loginModel);
             }
 
-            user.LastActiveOn = DateTimeHelper.UtcNow;
+            user.LastActiveOn = this.GetUtcNow();
 
             this.db.SaveChanges();
 
@@ -151,7 +151,7 @@ namespace CerebelloWebRole.Controllers
                     "Nome do consultório já está em uso.");
             }
 
-            var utcNow = DateTimeHelper.UtcNow;
+            var utcNow = this.GetUtcNow();
 
             // Creating the new user.
             User user;
@@ -299,7 +299,7 @@ namespace CerebelloWebRole.Controllers
                         // adding message to the user so that he/she completes his/her profile informations
                         this.db.Notifications.AddObject(new Notification()
                         {
-                            CreatedOn = DateTimeHelper.UtcNow,
+                            CreatedOn = this.GetUtcNow(),
                             PracticeId = user.Practice.Id,
                             UserId = user.Id,
                             ViewName = "NotificationFillUserProfile",
@@ -308,7 +308,7 @@ namespace CerebelloWebRole.Controllers
 
                         this.db.Notifications.AddObject(new Notification()
                         {
-                            CreatedOn = DateTimeHelper.UtcNow,
+                            CreatedOn = this.GetUtcNow(),
                             PracticeId = user.Practice.Id,
                             UserId = user.Id,
                             ViewName = "NotificationFillPracticeProfile",
@@ -332,7 +332,7 @@ namespace CerebelloWebRole.Controllers
                             UserNameOrEmail = registrationData.UserName,
                         };
 
-                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, this.db.Users, out user, DateTimeHelper.UtcNow))
+                        if (!SecurityManager.Login(this.HttpContext.Response.Cookies, loginModel, this.db.Users, out user, this.GetUtcNow()))
                         {
                             throw new Exception("Login cannot fail.");
                         }
@@ -367,7 +367,7 @@ namespace CerebelloWebRole.Controllers
         [AcceptVerbs(new[] { "Get", "Post" })]
         public ActionResult VerifyPracticeAndEmail(VerifyPracticeAndEmailViewModel viewModel)
         {
-            var utcNow = DateTimeHelper.UtcNow;
+            var utcNow = this.GetUtcNow();
 
             User user = null;
 
@@ -402,13 +402,13 @@ namespace CerebelloWebRole.Controllers
 
                 var cookieCollection = this.HttpContext.Response.Cookies;
                 if (!this.ModelState.IsValid ||
-                    !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, DateTimeHelper.UtcNow))
+                    !SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
                 {
                     this.ViewBag.LoginFailed = true;
                 }
                 else
                 {
-                    user.LastActiveOn = DateTimeHelper.UtcNow;
+                    user.LastActiveOn = this.GetUtcNow();
 
                     this.db.SaveChanges();
 
@@ -496,7 +496,7 @@ namespace CerebelloWebRole.Controllers
 
             if (this.ModelState.IsValid)
             {
-                var utcNow = DateTimeHelper.UtcNow;
+                var utcNow = this.GetUtcNow();
 
                 // Creating confirmation email, with the token.
                 MailMessage message;
@@ -590,7 +590,7 @@ namespace CerebelloWebRole.Controllers
         [HttpPost]
         public ActionResult ResetPassword(ResetPasswordViewModel viewModel)
         {
-            var utcNow = DateTimeHelper.UtcNow;
+            var utcNow = this.GetUtcNow();
 
             var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 
@@ -626,7 +626,7 @@ namespace CerebelloWebRole.Controllers
 
         public ActionResult ResetPasswordCancel(ResetPasswordViewModel viewModel)
         {
-            var utcNow = DateTimeHelper.UtcNow;
+            var utcNow = this.GetUtcNow();
 
             var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 

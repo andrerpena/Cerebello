@@ -170,7 +170,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<ExamsController>();
                 Debug.Assert(doctor != null, "doctor must not be null");
                 utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.First().Practice, localNow);
-                DateTimeHelper.SetUtcNow(utcNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 var medicalProc = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
@@ -250,8 +250,7 @@ namespace CerebelloWebRole.Tests.Tests
                         setupNewDb: db => db.SavingChanges += (s, e) => { isDbChangesSaved = true; });
                 Debug.Assert(doctor != null, "doctor must not be null");
                 var utcNow = PracticeController.ConvertToUtcDateTime(doctor.Users.First().Practice, localNow);
-
-                DateTimeHelper.SetUtcNow(utcNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 examRequest = new ExaminationRequest
@@ -328,8 +327,7 @@ namespace CerebelloWebRole.Tests.Tests
                         setupNewDb: db => db.SavingChanges += (s, e) => { isDbChangesSaved = true; });
                 Debug.Assert(drandre != null, "drandre must not be null");
                 var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
-
-                DateTimeHelper.SetUtcNow(utcNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
@@ -405,8 +403,7 @@ namespace CerebelloWebRole.Tests.Tests
                         setupNewDb: db => db.SavingChanges += (s, e) => { isDbChangesSaved = true; });
                 Debug.Assert(drandre != null, "drandre must not be null");
                 var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
-
-                DateTimeHelper.SetUtcNow(utcNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");
@@ -487,8 +484,7 @@ namespace CerebelloWebRole.Tests.Tests
                         setupNewDb: db => db.SavingChanges += (s, e) => { isDbChangesSaved = true; });
                     Debug.Assert(drandre != null, "drandre must not be null");
                     var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
-
-                    DateTimeHelper.SetUtcNow(utcNow);
+                    controller.UtcNowGetter = () => utcNow;
 
                     // saving the object that will be edited
                     var medicalProc1 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.01.03.55-2");
@@ -607,8 +603,7 @@ namespace CerebelloWebRole.Tests.Tests
                         setupNewDb: db => db.SavingChanges += (s, e) => { isDbChangesSaved = true; });
                 Debug.Assert(drandre != null, "drandre must not be null");
                 var utcNow = PracticeController.ConvertToUtcDateTime(drandre.Users.First().Practice, localNow);
-
-                DateTimeHelper.SetUtcNow(utcNow);
+                controller.UtcNowGetter = () => utcNow;
 
                 // saving the object that will be edited
                 var medicalProc0 = this.db.SYS_MedicalProcedure.Single(x => x.Code == "4.03.04.36-1");

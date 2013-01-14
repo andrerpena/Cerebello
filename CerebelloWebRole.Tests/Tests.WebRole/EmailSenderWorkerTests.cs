@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net.Mail;
 using Cerebello.Firestarter;
 using Cerebello.Model;
-using CerebelloWebRole.Code;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -59,11 +58,10 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
                     db2.SavingChanges += (e, s) => isDbChanged = true;
                     return db2;
                 });
+                workerMock.Setup(w => w.GetUtcNow()).Returns(utcNow);
                 workerMock.Setup(w => w.GetWorkerType()).Returns(typeof(EmailSenderWorker));
                 workerMock.Setup(w => w.SendEmail(It.IsAny<MailMessage>())).Callback((MailMessage mm) => { mailMessage = mm; });
                 worker = workerMock.Object;
-
-                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
