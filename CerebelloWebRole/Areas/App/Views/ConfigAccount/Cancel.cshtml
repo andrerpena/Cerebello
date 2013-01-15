@@ -1,0 +1,93 @@
+﻿@using CerebelloWebRole.Areas.App.Models
+@model CancelAccountViewModel
+@{
+    var title = string.Format("Cancelar {0}", this.Model.CurrentContract.PlanTitle);
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    var partialViewName = string.Format("Cancel{0}Partial", this.Model.CurrentContract.UrlIdentifier);
+    var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("Index", "ConfigAccount");
+}
+@section Title {
+    @title <span class="lock-title icon-lock" />
+}
+@section Scripts {
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
+}
+<div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
+    @Html.Partial(partialViewName)
+</div>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    
+    if (this.ViewBag.CancelRequested == true)
+    {
+    <p>
+        Sua requisição para o cancelamento da conta foi enviado.
+    </p>
+    <p>
+        Em breve (próximas 24h) entraremos em contato para definir os termos
+        de cancelamento, tal como o que fazer com os seus dados,
+        e o que fazer com o restante do tempo já contratado.
+    </p>
+    <p>
+        Se for de seu interesse podemos negociar os valores,
+        assim como tentar solucionar os problemas que motivam
+        o pedido de cancelamento.
+    </p>
+    <p>
+        Enquanto isso você pode continuar usando o software
+        normalmente.
+    </p>
+    <p>
+        Para adiantar o processo, é possível entrar em contato conosco,
+            pelo chat interno do software, por e-mail, ou por nosso telefone
+            comercial.
+    </p>
+    }
+    else
+    {
+    <table class="form-table">
+        <tr>
+            <td colspan="2">
+                <p>
+                    É com grande pesar que recebemos a notícia do cancelamento de sua conta.
+                </p>
+                <p>
+                    Entretanto, vemos com bons olhos a experiência, e gostariamos de aprender
+                    com os nossos erros, e nos tornarmos cada dia melhores, desde o atendimento ao cliente,
+                    até a qualidade do produto em si.
+                </p>
+                <p>
+                    Por favor, nos permita saber os motivos de sua desistência, para assim,
+                    podermos construir uma experiência cada vez melhor para nossos usuários.
+                    Sua franqueza é nossa maior recompensa nesse momento.
+                </p>
+                <p>
+                    Muito obrigado!
+                </p>
+            </td>
+        </tr>
+        @if (this.ViewBag.IsTrial)
+        {
+            <tr>
+                <th>@Html.LabelFor(model => model.SendDataByEmail)</th>
+                <td>@Html.CheckBoxFor(model => model.SendDataByEmail)</td>
+            </tr>
+        }
+        <tr>
+            <th>@Html.LabelFor(model => model.Reason)</th>
+            <td>@Html.TextAreaFor(model => model.Reason, new { rows = 10 })</td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(model => model.Confirm)</th>
+            <td>@Html.CheckBoxFor(model => model.Confirm)</td>
+        </tr>
+    </table>
+
+    <div class="submit-bar">
+        <input type="submit" value="cancelar a conta" />
+        <span class="separator">ou</span> <a href="@cancelUrl">cancelar</a>
+    </div>
+    }
+}

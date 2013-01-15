@@ -34,7 +34,7 @@ namespace CerebelloWebRole.Code.Notifications
 
                 var result = new List<LongPollingEvent>();
                 var notificationData = NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(
-                    db, practiceId, userId, this.utcNowGetter, controller.Url, false);
+                    db, practiceId, userId, controller.Url, false);
 
                 if (notificationData.Any())
                 {

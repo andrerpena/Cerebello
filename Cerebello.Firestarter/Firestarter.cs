@@ -832,7 +832,7 @@ namespace Cerebello.Firestarter
 
         public static void Initialize_SYS_Contracts(CerebelloEntities db)
         {
-            // Contratos de uso para o Cerebello.com
+            // Contratos de uso para o cerebello.com.br
             db.SYS_ContractType.AddObject(
                 new SYS_ContractType
                     {

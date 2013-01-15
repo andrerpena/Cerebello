@@ -19,10 +19,9 @@ namespace CerebelloWebRole.Code.Notifications
         /// <param name="practiceId"></param>
         /// <param name="polled"></param>
         /// <returns></returns>
-        public static List<NewMedicalAppointmentNotificationData> GetNewMedicalAppointmentNotifications([NotNull] CerebelloEntitiesAccessFilterWrapper db, int practiceId, int userId, [NotNull] Func<DateTime> utcNowGetter, [NotNull] UrlHelper urlHelper, bool polled = false)
+        public static List<NewMedicalAppointmentNotificationData> GetNewMedicalAppointmentNotifications([NotNull] CerebelloEntitiesAccessFilterWrapper db, int practiceId, int userId, [NotNull] UrlHelper urlHelper, bool polled = false)
         {
             if (db == null) throw new ArgumentNullException("db");
-            if (utcNowGetter == null) throw new ArgumentNullException("utcNowGetter");
             if (urlHelper == null) throw new ArgumentNullException("urlHelper");
 
             var practice = db.Practices.First(p => p.Id == practiceId);
@@ -32,7 +31,7 @@ namespace CerebelloWebRole.Code.Notifications
 
             if (user.Secretary != null)
             {
-                var utcNow = utcNowGetter();
+                var utcNow = DateTimeHelper.UtcNow;
                 var timeThresholdMin = utcNow.AddMinutes(-30);
                 var timeThresholdMax = utcNow.AddMinutes(10);
 
@@ -96,10 +95,9 @@ namespace CerebelloWebRole.Code.Notifications
         /// <param name="practiceId"></param>
         /// <param name="polled"></param>
         /// <returns></returns>
-        public static List<NewGenericAppointmentNotificationData> GetNewGenericAppointmentNotifications([NotNull] CerebelloEntitiesAccessFilterWrapper db, int practiceId, int userId, [NotNull] Func<DateTime> utcNowGetter, [NotNull] UrlHelper urlHelper, bool polled = false)
+        public static List<NewGenericAppointmentNotificationData> GetNewGenericAppointmentNotifications([NotNull] CerebelloEntitiesAccessFilterWrapper db, int practiceId, int userId, [NotNull] UrlHelper urlHelper, bool polled = false)
         {
             if (db == null) throw new ArgumentNullException("db");
-            if (utcNowGetter == null) throw new ArgumentNullException("utcNowGetter");
             if (urlHelper == null) throw new ArgumentNullException("urlHelper");
 
             var practice = db.Practices.First(p => p.Id == practiceId);
@@ -109,7 +107,7 @@ namespace CerebelloWebRole.Code.Notifications
 
             if (user.Doctor != null)
             {
-                var utcNow = utcNowGetter();
+                var utcNow = DateTimeHelper.UtcNow;
                 var timeThresholdMin = utcNow.AddMinutes(-10);
                 var timeThresholdMax = utcNow.AddMinutes(30);
 

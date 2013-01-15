@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -8,6 +9,14 @@ namespace CerebelloWebRole.Code.Helpers
 {
     public class EmailHelper
     {
+        private static string emailAddressOverride;
+
+        static EmailHelper()
+        {
+            emailAddressOverride = ConfigurationManager.AppSettings["EmailAddressOverride"];
+            if (string.IsNullOrWhiteSpace(emailAddressOverride)) emailAddressOverride = null;
+        }
+
         /// <summary>
         /// Creates an SmtpClient that will be used to send e-mails.
         /// </summary>
@@ -21,7 +30,7 @@ namespace CerebelloWebRole.Code.Helpers
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("mig.ang.san.bic@gmail.com", "50kf96wu")
+                Credentials = new NetworkCredential("cerebello@cerebello.com.br", "26uj27oP")
             };
 
             return smtpClient;
@@ -33,23 +42,26 @@ namespace CerebelloWebRole.Code.Helpers
         /// </summary>
         /// <param name="toAddress">Address to send the message to.</param>
         /// <param name="subject">Subject of the message.</param>
-        /// <param name="bodyHtml">Body of the message in Html format.</param>
         /// <param name="bodyText">Body of the message in plain text format.</param>
+        /// <param name="bodyHtml">Body of the message in Html format.</param>
         /// <param name="sourceName"></param>
         /// <returns>Returns a 'MailMessage' that can be sent using the 'SendEmail' method.</returns>
         public static MailMessage CreateEmailMessage(
             MailAddress toAddress,
             [Localizable(true)] string subject,
-            [Localizable(true)] string bodyHtml,
             [Localizable(true)] string bodyText,
+            [Localizable(true)] string bodyHtml = null,
             string sourceName = null)
         {
             // note: this method was copied to EmailSenderWorker
             if (string.IsNullOrEmpty(bodyText))
                 throw new ArgumentException("bodyText must be provided.", "bodyText");
 
-            // NOTE: The string "mig.ang.san.bic@gmail.com" is repeated in other place.
-            var fromAddress = new MailAddress("mig.ang.san.bic@gmail.com", sourceName ?? "www.cerebello.com");
+            if (emailAddressOverride != null)
+                toAddress = new MailAddress(emailAddressOverride, toAddress.DisplayName);
+
+            // NOTE: The string "cerebello@cerebello.com.br" is repeated in other place.
+            var fromAddress = new MailAddress("cerebello@cerebello.com.br", sourceName ?? "www.cerebello.com.br");
             var mailMessage = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyText.Trim() };
 
             // Adding Html body.

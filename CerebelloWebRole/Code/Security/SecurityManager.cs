@@ -225,13 +225,12 @@ namespace CerebelloWebRole.Code
         {
             var isEmail = userNameOrEmail.Contains("@");
 
-            var query =
-                dbUserSet.Where(u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
+            var query = dbUserSet.Where(u => !u.Practice.AccountDisabled);
 
             User loggedInUser = isEmail
-                ? dbUserSet.FirstOrDefault(
+                ? query.FirstOrDefault(
                     u => u.Person.Email == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier)
-                : dbUserSet.FirstOrDefault(
+                : query.FirstOrDefault(
                     u => u.UserName == userNameOrEmail && u.Practice.UrlIdentifier == practiceIdentifier);
 
             return loggedInUser;

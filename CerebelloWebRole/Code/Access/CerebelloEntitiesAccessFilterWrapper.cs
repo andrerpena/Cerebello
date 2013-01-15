@@ -17,6 +17,7 @@ namespace CerebelloWebRole.Code
     {
         private readonly CerebelloEntities db;
         private User user;
+        private Practice practice;
 
         public CerebelloEntitiesAccessFilterWrapper([NotNull] CerebelloEntities db)
         {
@@ -33,9 +34,17 @@ namespace CerebelloWebRole.Code
 
         public User SetCurrentUserById(int userId)
         {
-            this.user = this.db.Users.SingleOrDefault(u => u.Id == userId);
+            this.user = this.db.Users.Include("Practice").SingleOrDefault(u => u.Id == userId);
+
+            if (this.user != null)
+                this.practice = this.user.Practice;
+
+            this.AccountDisabled = this.practice == null || this.practice.AccountDisabled;
+
             return this.user;
         }
+
+        public bool AccountDisabled { get; set; }
 
         public FilteredObjectSetWrapper<AccountContract> AccountContracts
         {
@@ -193,9 +202,13 @@ namespace CerebelloWebRole.Code
             get { return new FilteredObjectSetWrapper<Symptom>(this.db.Symptoms, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
+        /// <summary>
+        /// Gets the users of the current account, but only if the account is enabled.
+        /// When disabled, none will be returned. This kills app usage when account is disabled.
+        /// </summary>
         public FilteredObjectSetWrapper<User> Users
         {
-            get { return new FilteredObjectSetWrapper<User>(this.db.Users, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<User>(this.db.Users, s => s.Where(a => a.PracticeId == this.user.PracticeId && !this.AccountDisabled)); }
         }
 
         public FilteredObjectSetWrapper<Notification> Notifications

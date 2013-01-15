@@ -30,7 +30,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Person, address, and patient basic properties.
             var viewModel = new PatientViewModel();
 
-            FillPersonViewModel(controller, patient.Person, viewModel);
+            FillPersonViewModel(controller.DbPractice, patient.Person, viewModel);
 
             var address = patient.Person.Addresses.Single();
             viewModel.Id = patient.Id;
@@ -57,7 +57,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
 
                 // get appointments scheduled for the future
-                var utcNow = controller.GetUtcNow();
+                var utcNow = DateTimeHelper.UtcNow;
 
                 var appointments = patient.Appointments
                     .Where(
@@ -101,14 +101,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                        };
         }
 
-        public static void FillPersonViewModel(PracticeController controller, Person person, PersonViewModel viewModel)
+        public static void FillPersonViewModel(Practice practice, Person person, PersonViewModel viewModel)
         {
             viewModel.BirthPlace = person.BirthPlace;
             viewModel.FullName = person.FullName;
             viewModel.Gender = person.Gender;
             viewModel.MaritalStatus = person.MaritalStatus;
             viewModel.CpfOwner = person.CPFOwner;
-            viewModel.DateOfBirth = ConvertToLocalDateTime(controller.DbPractice, person.DateOfBirth);
+            viewModel.DateOfBirth = ConvertToLocalDateTime(practice, person.DateOfBirth);
             viewModel.Profissao = person.Profession;
             viewModel.Cpf = person.CPF;
             viewModel.Email = person.Email;
@@ -344,7 +344,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.BirthPlace = formModel.BirthPlace;
                 patient.Person.CPF = formModel.Cpf;
                 patient.Person.CPFOwner = formModel.CpfOwner;
-                patient.Person.CreatedOn = this.GetUtcNow();
+                patient.Person.CreatedOn = DateTimeHelper.UtcNow;
                 patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.Gender = (short)formModel.Gender;

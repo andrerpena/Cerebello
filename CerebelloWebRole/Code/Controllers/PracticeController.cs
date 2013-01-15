@@ -45,7 +45,7 @@ namespace CerebelloWebRole.Code
 
         public DateTime GetPracticeLocalNow()
         {
-            return ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
+            return ConvertToLocalDateTime(this.DbPractice, DateTimeHelper.UtcNow);
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -88,10 +88,10 @@ namespace CerebelloWebRole.Code
             // discover the appointments that have already been polled and sent to the client
             this.ViewBag.AlreadyPolledMedicalAppointments =
                 NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(this.db, this.DbPractice.Id, this.DbUser.Id,
-                                                                                 this.UtcNowGetter, this.Url, true);
+                                                                                 this.Url, true);
             this.ViewBag.AlreadyPolledGenericAppointments =
                 NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(this.db, this.DbPractice.Id, this.DbUser.Id,
-                                                                                this.UtcNowGetter, this.Url, true);
+                                                                                this.Url, true);
 
             // discover the notifications that have already been polled and sent to to the client
             this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(this.db, this.DbUser.Id, this, true);

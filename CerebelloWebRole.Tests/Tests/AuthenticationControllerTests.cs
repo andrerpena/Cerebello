@@ -71,7 +71,7 @@ namespace CerebelloWebRole.Tests.Tests
                     controller = mr.CreateController<AuthenticationController>(
                         setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
-                    controller.UtcNowGetter = () => utcNow;
+                    DateTimeHelper.SetUtcNow(utcNow);
 
                     controller.EmailSender = mm =>
                     {
@@ -514,7 +514,7 @@ namespace CerebelloWebRole.Tests.Tests
                 controller = mr.CreateController<AuthenticationController>(
                     setupNewDb: db2 => db2.SavingChanges += (s, e) => { hasBeenSaved = true; });
 
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Creating ViewModel, and setting the ModelState of the controller.
                 vm = new LoginViewModel
@@ -585,7 +585,8 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 var mr = new MockRepository();
                 controller = mr.CreateController<AuthenticationController>();
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 // Creating ViewModel, and setting the ModelState of the controller.
                 vm = new LoginViewModel
@@ -658,7 +659,8 @@ namespace CerebelloWebRole.Tests.Tests
                 }
 
                 controller = mr.CreateController<AuthenticationController>();
-                controller.UtcNowGetter = () => utcNow;
+
+                DateTimeHelper.SetUtcNow(utcNow);
             }
             catch (Exception ex)
             {
@@ -970,7 +972,7 @@ namespace CerebelloWebRole.Tests.Tests
                 // setup with an invalid MockRepository for it,
                 // however this does not prevent proper operation.
                 var authController = mr.CreateController<AuthenticationController>();
-                authController.UtcNowGetter = () => utcNow.AddDays(15.0); // this is up to 30 days
+                DateTimeHelper.SetUtcNow(utcNow.AddDays(15.0)); // this is up to 30 days
                 authController.VerifyPracticeAndEmail(
                     new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName });
 
@@ -1024,7 +1026,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                 var controller = mr.CreateController<AuthenticationController>();
 
-                controller.UtcNowGetter = () => utcNow;
+                DateTimeHelper.SetUtcNow(utcNow);
 
                 controller.EmailSender = mm =>
                     {
@@ -1100,7 +1102,8 @@ namespace CerebelloWebRole.Tests.Tests
 
                     controller = mr.CreateController<AuthenticationController>(
                         setupNewDb: db1 => { db1.SavingChanges += (s, e) => hasBeenSaved = true; });
-                    controller.UtcNowGetter = () => utcNow;
+
+                    DateTimeHelper.SetUtcNow(utcNow);
 
                     controller.EmailSender += mm =>
                     {
@@ -1194,7 +1197,7 @@ namespace CerebelloWebRole.Tests.Tests
                                        });
 
                     var controller0 = mr.CreateController<AuthenticationController>();
-                    controller0.UtcNowGetter = () => utcNow;
+                    DateTimeHelper.SetUtcNow(utcNow);
 
                     // requesting password reset
                     controller0.ResetPasswordRequest(
@@ -1206,7 +1209,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                     var mr1 = new MockRepository();
                     controller = mr1.CreateController<AuthenticationController>();
-                    controller.UtcNowGetter = () => utcNow;
+                    DateTimeHelper.SetUtcNow(utcNow);
                 }
                 catch (Exception ex)
                 {
@@ -1239,7 +1242,9 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     var mr2 = new MockRepository();
                     var controller2 = mr2.CreateController<AuthenticationController>();
-                    controller2.UtcNowGetter = () => utcNow;
+
+                    DateTimeHelper.SetUtcNow(utcNow);
+
                     loginActionResult = controller2.Login(
                         new LoginViewModel
                             {

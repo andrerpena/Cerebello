@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
@@ -19,30 +20,44 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ReportController : DoctorController
     {
-        private bool isPdf;
-
         [SelfPermission]
-        public ActionResult ExportDoctorXml()
+        public ContentResult ExportDoctorXml()
         {
-            var doctor = this.Doctor;
+            var xml = ExportDoctorXml(this.db, this.DbPractice, this.Doctor);
 
-            var doctorData = this.GetBackupData(doctor, null, false);
+            return this.Content(xml, "text/xml");
+        }
+
+        internal static string ExportDoctorXml(CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
+        {
+            var rg = new ReportData(db, practice);
+
+            var doctorData = rg.GetXml(doctor, null);
 
             var stringBuilder = new StringBuilder();
             using (var writer = new StringWriter(stringBuilder))
             {
-                var xs = new XmlSerializer(typeof(XmlDoctorData));
+                var xs = new XmlSerializer(typeof(ReportData.XmlDoctorData));
                 xs.Serialize(writer, doctorData);
             }
 
-            return this.Content(stringBuilder.ToString(), "text/xml");
+            return stringBuilder.ToString();
         }
 
         [SelfPermission]
-        public ActionResult ExportPatientsPdf(int? patientId)
+        public FileContentResult ExportPatientsPdf(int? patientId)
         {
-            var doctor = this.Doctor;
+            var pdf = ExportPatientsPdf(patientId, this.db, this.DbPractice, this.Doctor, this.Request);
 
+            // Returning the generated PDF as a file.
+            return this.File(pdf.DocumentBytes, pdf.MimeType);
+
+            //var fileName = pdf.DocumentName + "." + pdf.Extension;
+            //return this.File(result.DocumentBytes, result.MimeType, Server.UrlEncode(fileName));
+        }
+
+        internal static RenderingResult ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor, HttpRequestBase request)
+        {
             // todo: must get doctor with everything at once... and use all data
             //// Getting doctors with everything they have.
             //var doctor = this.db.Doctors
@@ -60,10 +75,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             //    .Include("Patients.Diagnoses")
             //    .SingleOrDefault(x => x.Id == doctorId);
 
-            var doctorData = (PdfDoctorData)this.GetBackupData(doctor, patientId, true);
+            var rg = new ReportData(db, practice);
+            var doctorData = rg.GetPdf(doctor, patientId);
 
             // Getting URL of the report model.
-            var domain = this.Request.Url.GetLeftPart(UriPartial.Authority);
+            var domain = request.Url.GetLeftPart(UriPartial.Authority);
             var urlMain = new Uri(String.Format("{0}/Content/Reports/PatientsList/Doctor.trdx", domain));
 
             // Creating the report and exporting PDF.
@@ -74,12 +90,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Exporting PDF from report.
                 var reportProcessor = new ReportProcessor();
                 var pdf = reportProcessor.RenderReport("PDF", reportMain, null);
-
-                // Returning the generated PDF as a file.
-                return this.File(pdf.DocumentBytes, pdf.MimeType);
-
-                //var fileName = pdf.DocumentName + "." + pdf.Extension;
-                //return this.File(result.DocumentBytes, result.MimeType, Server.UrlEncode(fileName));
+                return pdf;
             }
         }
 
@@ -104,6 +115,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return report;
             }
         }
+    }
+
+    public class ReportData
+    {
+        private bool isPdf;
+        private readonly CerebelloEntitiesAccessFilterWrapper db;
+        private readonly Practice practice;
+
+        public ReportData(CerebelloEntitiesAccessFilterWrapper db, Practice practice)
+        {
+            this.db = db;
+            this.practice = practice;
+        }
+
+        public XmlDoctorData GetXml(Doctor doctor, int? patientId)
+        {
+            return this.GetBackupData(doctor, patientId, false);
+        }
+
+        public PdfDoctorData GetPdf(Doctor doctor, int? patientId)
+        {
+            return (PdfDoctorData)this.GetBackupData(doctor, patientId, true);
+        }
 
         private XmlDoctorData GetBackupData(Doctor doctor, int? patientId, bool isPdf)
         {
@@ -117,8 +151,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Getting all patients data.
             var doctorData = this.isPdf ? new PdfDoctorData() : new XmlDoctorData();
-            PatientsController.FillPersonViewModel(this, docPerson, doctorData);
-            UsersController.FillUserViewModel(docUser, this.DbPractice, doctorData);
+            PatientsController.FillPersonViewModel(this.practice, docPerson, doctorData);
+            UsersController.FillUserViewModel(docUser, this.practice, doctorData);
             UsersController.FillDoctorViewModel(docUser, medicalEntity, medicalSpecialty, doctorData, doctor);
 
             doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
@@ -146,7 +180,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var result = this.isPdf ? new PdfPatientData() : new XmlPatientData();
 
-            PatientsController.FillPersonViewModel(this, patient.Person, result);
+            PatientsController.FillPersonViewModel(this.practice, patient.Person, result);
 
             result.Id = patient.Id;
             result.Observations = patient.Person.Observations;
@@ -160,7 +194,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private List<SessionData> GetAllSessionsData(Patient patient)
         {
-            var sessions = PatientsController.GetSessionViewModels(this.DbPractice, patient)
+            var sessions = PatientsController.GetSessionViewModels(this.practice, patient)
                                              .Select(GetSessionData)
                                              .ToList();
 

@@ -13,15 +13,6 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
         }
 
         /// <summary>
-        /// Mockable version of the DateTime.UtcNow property.
-        /// </summary>
-        /// <returns>Returns DateTime.UtcNow.</returns>
-        public virtual DateTime GetUtcNow()
-        {
-            return DateTime.UtcNow;
-        }
-
-        /// <summary>
         /// Sends an e-mail message using the default SmtpClient.
         /// </summary>
         /// <param name="message">MailMessage containing the informations about the message to be sent.</param>

@@ -3,6 +3,7 @@ using System.Linq;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -72,7 +73,7 @@ namespace CerebelloWebRole.Tests.Tests
             var controller = mr.CreateController<DiagnosisController>();
 
             var referenceTime = DateTime.UtcNow;
-            controller.UtcNowGetter = () => referenceTime;
+            DateTimeHelper.SetUtcNow(referenceTime);
 
             controller.Edit(new[] { formModel });
 
