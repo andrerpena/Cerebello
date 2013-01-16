@@ -2,8 +2,10 @@
 @using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code
 @using CerebelloWebRole.Models
-@model CerebelloWebRole.Models.CreateAccountViewModel
+@model CreateAccountViewModel
 @{
+    this.Layout = "../Shared/_EmptyLayout.cshtml";
+
     ViewBag.Title = "Login";
 
     // These objects must be filled, otherwise obscure exceptions may happen.
@@ -37,11 +39,87 @@
 {
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.autocomplete.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.paginator.css")" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        .authentication-container
+        {
+            margin: 50px auto;
+        }
+
+        @@media screen and (min-width: 768px)
+        {
+            .controls-wrapper
+            {
+                overflow: hidden;
+            }
+
+                .controls-wrapper hr
+                {
+                    display: none;
+                }
+
+            .practice-properties
+            {
+                float: left;
+                overflow: hidden;
+                margin-right: 20px;
+            }
+
+            .person-properties
+            {
+                float: right;
+                overflow: hidden;
+            }
+
+            .user-properties
+            {
+                float: left;
+                overflow: hidden;
+            }
+
+                .user-properties hr
+                {
+                    display: block !important;
+                }
+
+            .authentication-container
+            {
+                max-width: 720px;
+            }
+        }
+
+        @@media screen and (max-width: 1000px)
+        {
+            .practice-properties
+            {
+            }
+        }
+
+        @@media screen and (max-width: 500px)
+        {
+            .authentication-container
+            {
+                margin: 20px auto;
+            }
+
+            .optional {
+                display: none;
+            }
+        }
+
+        body
+        {
+            min-width: 300px;
+        }
+    </style>
 }
 <div class="authentication-container">
     <div class="authentication-container-wrapper">
         <div class="header">
-            <h2>Criar uma conta no Cerebello</h2>
+            <h2>Criar uma conta <span class="optional">no Cerebello</span></h2>
+            <div class="buttons-wrapper">
+                <a class="btn btn-small" href="@Url.Action("Login")" class="link">Voltar</a>
+            </div>
         </div>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
         {
@@ -51,7 +129,6 @@
                     {
                         <div class="alert alert-block alert-error fade in">
                             <button data-dismiss="alert" class="close" type="button">×</button>
-                            <h4 class="alert-heading">Ocorreram erros</h4>
                             @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
                             {
                                 <p>@eachModelError.Item2.ErrorMessage</p>
@@ -60,102 +137,110 @@
                     }
 
                     @*Properties of the practice*@
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.PracticeName)
-                        <div class="controls">
-                            @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge" })
+                    <div class="practice-properties">
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PracticeName)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PracticeTimeZone)
+                            <div class="controls">
+                                @Html.EnumDropdownListFor(model => model.PracticeTimeZone)
+                            </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.PracticeTimeZone)
-                        <div class="controls">
-                            @Html.EnumDropdownListFor(model => model.PracticeTimeZone)
-                        </div>
-                    </div>
-                    <hr />
+
                     @*Properties of the user as a person and as a doctor*@
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.FullName)
-                        <div class="controls">
-                            @Html.TextBoxFor(model => model.FullName, new { @class = "input-xlarge" })
+                    <div class="person-properties">
+                        <hr />
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.FullName)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.FullName, new { @class = "input-xlarge" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Gender)
+                            <div class="controls">
+                                @Html.EnumDropdownListFor(model => model.Gender)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.DateOfBirth)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.DateOfBirth)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsDoctor)
+                            <div class="controls">
+                                @Html.CheckBoxFor(model => model.IsDoctor)
+                            </div>
+                        </div>
+                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                            @Html.LabelFor(model => model.MedicalSpecialtyId)
+                            <div class="controls">
+                                @(Html.AutocompleteGridFor<CreateAccountViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+                                      m => m.MedicalSpecialtyId,
+                                      m => m.MedicalSpecialtyName,
+                                      Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
+                                      pm => pm.Id,
+                                      pm => pm.Name,
+                                      new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }
+                                      ))
+                            </div>
+                        </div>
+                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                            @Html.LabelFor(model => model.MedicalEntityId)
+                            <div class="controls">
+                                @Html.DropDownListFor(
+                                    m => m.MedicalEntityId,
+                                    (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
+                                    "")
+                            </div>
+                        </div>
+                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                            @Html.LabelFor(model => model.MedicalEntityJurisdiction)
+                            <div class="controls">
+                                @Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)
+                            </div>
+                        </div>
+                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                            @Html.LabelFor(model => model.MedicCRM)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.MedicCRM)
+                            </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.Gender)
-                        <div class="controls">
-                            @Html.EnumDropdownListFor(model => model.Gender)
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.DateOfBirth)
-                        <div class="controls">
-                            @Html.TextBoxFor(model => model.DateOfBirth)
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.IsDoctor)
-                        <div class="controls">
-                            @Html.CheckBoxFor(model => model.IsDoctor)
-                        </div>
-                    </div>
-                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                        @Html.LabelFor(model => model.MedicalEntityId)
-                        <div class="controls">
-                            @Html.DropDownListFor(
-                                m => m.MedicalEntityId,
-                                (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
-                                "")
-                        </div>
-                    </div>
-                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                        @Html.LabelFor(model => model.MedicalEntityJurisdiction)
-                        <div class="controls">
-                            @Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)
-                        </div>
-                    </div>
-                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                        @Html.LabelFor(model => model.MedicCRM)
-                        <div class="controls">
-                            @Html.TextBoxFor(model => model.MedicCRM)
-                        </div>
-                    </div>
-                    <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                        @Html.LabelFor(model => model.MedicalSpecialtyId)
-                        <div class="controls">
-                            @(Html.AutocompleteGridFor<CreateAccountViewModel, MedicalSpecialtiesLookupGridModel, int?>(
-                                m => m.MedicalSpecialtyId,
-                                m => m.MedicalSpecialtyName,
-                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
-                                pm => pm.Id,
-                                pm => pm.Name,
-                                new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }
-                            ))
-                        </div>
-                    </div>
-                    <hr />
+
                     @* Properties of the user as an user *@
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.UserName)
-                        <div class="controls">
-                            @Html.TextBoxFor(model => model.UserName, new { @class = "input-xlarge" })
+                    <div class="user-properties">
+                        <hr />
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.UserName)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.UserName, new { @class = "input-xlarge" })
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.EMail)
-                        <div class="controls">
-                            @Html.TextBoxFor(model => model.EMail, new { @class = "input-xlarge" })
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.EMail)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.EMail, new { @class = "input-xlarge" })
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.Password)
-                        <div class="controls">
-                            @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Password)
+                            <div class="controls">
+                                @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        @Html.LabelFor(model => model.ConfirmPassword)
-                        <div class="controls">
-                            @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "input-xlarge" })
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ConfirmPassword)
+                            <div class="controls">
+                                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "input-xlarge" })
+                            </div>
                         </div>
                     </div>
                 </div>

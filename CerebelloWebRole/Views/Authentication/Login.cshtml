@@ -1,94 +1,66 @@
 ﻿@using CerebelloWebRole.Code
 @model CerebelloWebRole.Models.LoginViewModel
 @{
-    this.Layout = null;
+    this.Layout = "../Shared/_AuthenticationLayout.cshtml";
     this.ViewBag.Title = "Login · Cerebello";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@this.ViewBag.Title</title>
-
-    <script src="@Url.Content("~/Scripts/jquery-1.8.1.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/modernizr-1.7.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Bootstrap/js/bootstrap.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")" type="text/javascript"></script>
-
-    <link href="@Url.Content("/Bootstrap/css/bootstrap.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("/Bootstrap/css/bootstrap-responsive.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/Styles/Site/Site.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/Styles/Site/Media.css")" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <div class="authentication-container">
-        <div class="authentication-container-wrapper">
-            <div class="header">
-                <h2>Login no Cerebello</h2>
-                <div class="login-buttons-wrapper">
-                    @if (!this.ViewData.ModelState.GetAllErrors().Any())
-                    {
-                        <a class="btn btn-small" href="@Url.Action("Index", "Home")" class="link">Voltar</a>
-                        <a class="btn btn-small" href="@Url.Action("CreateAccount")" class="link">Criar uma conta</a>
-                    }
-                </div>
+<div class="authentication-container">
+    <div class="authentication-container-wrapper">
+        <div class="header">
+            <h2>Login <span class="optional">no Cerebello</span></h2>
+            <div class="buttons-wrapper">
+                <a class="btn btn-small" href="@Url.Action("Index", "Home")" class="link">Voltar</a>
+                <a class="btn btn-small" href="@Url.Action("CreateAccount")" class="link">Criar uma conta</a>
             </div>
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
-            {
-                <fieldset>
-                    <div class="controls-wrapper">
-                        @if (this.ViewData.ModelState.GetAllErrors().Any())
-                        {
-                            <div class="alert alert-info alert fade in">
-                                <p>
-                                    Se você não tem uma conta ainda crie uma agora
-                                    <a href="@Url.Action("CreateAccount")" class="btn btn-block btn-large">Criar uma conta</a>
-                                </p>
-                            </div>
-                            <div class="alert alert-block alert-error fade in">
-                                <button data-dismiss="alert" class="close" type="button">×</button>
-                                <h4 class="alert-heading">Ocorreram erros</h4>
-                                @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
-                                {
-                                    <p>@eachModelError.Item2.ErrorMessage</p>
-                                }
-                            </div>
-                        }
-
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.PracticeIdentifier)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.PracticeIdentifier, new { @class = "input-xlarge" })
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.UserNameOrEmail)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.UserNameOrEmail, new { @class = "input-xlarge" })
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.Password)
-                            <div class="controls">
-                                @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
-                                <p>
-                                    <a href="@Url.Action("ResetPasswordRequest")" title="Se você esqueceu sua senha clique aqui para criar uma nova senha.">Esqueceu sua senha?</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                @Html.CheckBoxFor(model => model.RememberMe) @Html.LabelFor(model => model.RememberMe, new { @class = "remember-me" })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions" style="margin: 0">
-                        <button class="btn btn-primary btn-large" type="submit">
-                            Login</button>
-                    </div>
-                </fieldset>
-            }
         </div>
-    </div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
+        {
+            <fieldset>
+                <div class="controls-wrapper">
+                    @if (this.ViewData.ModelState.GetAllErrors().Any())
+                    {
+                        <div class="alert alert-block alert-error fade in">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
+                            {
+                                <p>@eachModelError.Item2.ErrorMessage</p>
+                            }
+                        </div>
+                    }
 
-</body>
-</html>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.PracticeIdentifier)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.PracticeIdentifier, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.UserNameOrEmail)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.UserNameOrEmail, new { @class = "input-xlarge" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Password)
+                        <div class="controls">
+                            @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                            <p>
+                                <a href="@Url.Action("ResetPasswordRequest")" title="Se você esqueceu sua senha clique aqui para criar uma nova senha.">Esqueceu sua senha?</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            @Html.CheckBoxFor(model => model.RememberMe)
+                            <label for="@Html.FieldName(model => model.RememberMe)" class = "remember-me">Lembrar de mim <span class="optional">neste computador</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions" style="margin: 0">
+                    <button class="btn btn-primary btn-large" type="submit">
+                        Login</button>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

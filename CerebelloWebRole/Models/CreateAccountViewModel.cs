@@ -21,14 +21,14 @@ namespace CerebelloWebRole.Models
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Data de Nascimento")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         // todo: This view-model should contain the BirthPlace property as well.
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeGender))]
         [Display(Name = "Sexo")]
-        public short Gender { get; set; }
+        public short? Gender { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "E-Mail")]
@@ -67,7 +67,7 @@ namespace CerebelloWebRole.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeTimeZone))]
         [Display(Name = "Fuso-horário do consultório")]
-        public short PracticeTimeZone { get; set; }
+        public short? PracticeTimeZone { get; set; }
 
         [Display(Name = "Sou médico neste consultório")]
         public bool IsDoctor { get; set; }
@@ -75,7 +75,7 @@ namespace CerebelloWebRole.Models
         // Information of this user when he/she is a medic.
         // If IsDoctor is false, these properties have no meaning, so the validation can be discarded by the code.
 
-        [Display(Name = "CRM")]
+        [Display(Name = "Número de registro no conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicCRM { get; set; }
 
@@ -93,6 +93,6 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Estado do conselho")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeEstadoBrasileiro))]
-        public int MedicalEntityJurisdiction { get; set; }
+        public int? MedicalEntityJurisdiction { get; set; }
     }
 }

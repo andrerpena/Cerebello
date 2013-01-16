@@ -68,7 +68,7 @@ namespace CerebelloWebRole.Code
                         {
                             // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
                             // The caller of this method must set the property.
-                            Gender = registrationData.Gender,
+                            Gender = registrationData.Gender ?? 0,
                             FullName = registrationData.FullName,
                             CreatedOn = utcNow,
                             Email = registrationData.EMail,

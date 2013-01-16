@@ -71,7 +71,8 @@ namespace CerebelloWebRole.Controllers
 
             if (!SecurityManager.Login(cookieCollection, loginModel, this.db.Users, out user, this.GetUtcNow()))
             {
-                this.ModelState.AddModelError(loginModel.PracticeIdentifier, "O login falhou. Um dos campos abaixo está incorreto.");
+                this.ModelState.Clear();
+                this.ModelState.AddModelError(() => loginModel.PracticeIdentifier, "As credenciais informadas não estão corretas.");
             }
 
             if (!this.ModelState.IsValid)
@@ -130,6 +131,9 @@ namespace CerebelloWebRole.Controllers
         [HttpPost]
         public ActionResult CreateAccount(CreateAccountViewModel registrationData)
         {
+            if (this.ModelState.Remove(e => e.ErrorMessage.Contains("requerido")))
+                this.ModelState.AddModelError("MultipleItems", "É necessário preencher todos os campos.");
+
             // Normalizing name properties.
             if (!string.IsNullOrEmpty(registrationData.PracticeName))
                 registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
@@ -198,7 +202,7 @@ namespace CerebelloWebRole.Controllers
                 };
 
                 // Setting the BirthDate of the user as a person.
-                user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth);
+                user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth ?? new DateTime());
 
                 user.IsOwner = true;
 

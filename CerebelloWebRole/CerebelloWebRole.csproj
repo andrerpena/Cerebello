@@ -743,6 +743,8 @@
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Home\PricesAndPlans.cshtml" />
     <Content Include="Views\Home\AccountCanceled.cshtml" />
+    <Content Include="Views\Shared\_EmptyLayout.cshtml" />
+    <Content Include="Views\Shared\_AuthenticationLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

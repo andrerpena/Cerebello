@@ -27,6 +27,11 @@ namespace CerebelloWebRole.Code.Extensions
             return original.Replace('[', '_').Replace(']', '_').Replace('.', '_');
         }
 
+        public static string FieldName<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
+        {
+            return ExpressionHelper.GetPropertyInfoFromMemberExpression(expression).Name;
+        }
+
         public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
         {
             var tagBuilder = new TagBuilder("div");

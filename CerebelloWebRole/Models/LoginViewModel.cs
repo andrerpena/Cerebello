@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Models
         [DataType(DataType.Password)]
         public String Password { get; set; }
 
-        [Display(Name = "Lembrar de mim neste computador")]
+        [Display(Name = "Lembrar de mim")]
         public bool RememberMe { get; set; }
     }
 }

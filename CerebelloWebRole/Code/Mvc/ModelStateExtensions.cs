@@ -95,6 +95,30 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
+        /// Remove the validation messages indicated by a predicate.
+        /// </summary>
+        /// <param name="modelState">ModelState object from which the model property will be removed, and thus be considered as valid.</param>
+        /// <param name="predicate">ModelError predicate that indicates which errors to remove.</param>
+        /// <returns>True if any items were removed. Otherwise False.</returns>
+        public static bool Remove(this ModelStateDictionary modelState, Predicate<ModelError> predicate)
+        {
+            bool anyRemoved = false;
+            foreach (var modelStateItem in modelState.ToArray())
+            {
+                foreach (var eachModelError in modelStateItem.Value.Errors.ToArray())
+                    if (predicate(eachModelError))
+                    {
+                        modelStateItem.Value.Errors.Remove(eachModelError);
+                        anyRemoved = true;
+                    }
+
+                if (!modelStateItem.Value.Errors.Any())
+                    modelState.Remove(modelStateItem);
+            }
+            return anyRemoved;
+        }
+
+        /// <summary>
         /// Clears the validation messages and exceptions associated with a model property,
         /// making the value in that property valid.
         /// </summary>

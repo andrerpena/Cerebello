@@ -1,0 +1,38 @@
+﻿@{
+    this.Layout = "_EmptyLayout.cshtml";
+}
+@section Header
+{
+    <style type="text/css">
+        @@media screen and (max-width: 500px)
+        {
+            .authentication-container
+            {
+                margin: 20px auto;
+            }
+
+            .optional
+            {
+                display: none;
+            }
+        }
+
+        body
+        {
+            min-width: 300px;
+        }
+
+        .input-large, .input-xlarge, .input-xxlarge, input[class*="span"], select[class*="span"], textarea[class*="span"], .uneditable-input
+        {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            min-height: 30px;
+        }
+    </style>
+    @RenderSection("Header", false)
+}
+@section Scripts
+{
+    @RenderSection("Scripts", false)
+}
+@RenderBody()
