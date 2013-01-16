@@ -1,40 +1,41 @@
-﻿.autocomplete.disabled {
+﻿input.autocomplete.disabled {
     background-color: #EEEEEE;
 }
 
-.autocomplete {
+input.autocomplete {
     background-image: url("/content/images/app/icons16/search.png");
     background-position: 0 -3px;
     background-repeat: no-repeat;
     padding-left: 25px !important;
+    padding-right: 25px;
 }
 
     .autocomplete.autocomplete-new {
-        padding-right: 25px !important;
+        padding-right: 38px !important;
     }
 
-    .autocomplete .input-wrapper {
+    input.autocomplete .input-wrapper {
         overflow: auto;
         width: auto;
     }
 
-    .autocomplete .buttons-wrapper {
+    input.autocomplete .buttons-wrapper {
         float: right;
         width: 21px;
     }
 
-    .autocomplete input[type="text"] {
+    input.autocomplete input[type="text"] {
         background-color: transparent;
         margin-top: -1px;
         vertical-align: top;
         width: 100% !important;
     }
 
-    .autocomplete input {
+    input.autocomplete input {
         display: inline-block;
     }
 
-    .autocomplete input {
+    input.autocomplete input {
         -moz-box-sizing: border-box;
         border: 0 none;
     }
@@ -114,13 +115,23 @@
     position: relative;
 }
 
+    .autocomplete-text-wrapper .dropdown-button {
+        background: url("/content/images/app/icons16/dropdown.png") repeat scroll 0 center transparent;
+        cursor: pointer;
+        display: block;
+        height: 16px;
+        position: absolute;
+        top: -2px;
+        width: 16px;
+        z-index: 1;
+    }
+
     .autocomplete-text-wrapper .new-button {
         background: url("/content/images/app/icons16/new.png") repeat scroll 0 center transparent;
         cursor: pointer;
         display: block;
         height: 16px;
         position: absolute;
-        right: 5px;
         top: -2px;
         width: 16px;
         z-index: 1;

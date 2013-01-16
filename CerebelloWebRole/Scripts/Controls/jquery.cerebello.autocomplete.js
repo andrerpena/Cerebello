@@ -12,6 +12,9 @@
             searchParamName: 'term',
             pageIndexParamName: 'pageIndex',
             pageSizeParamName: 'pageSize',
+            
+            // whether should show the dropdown-menu
+            showDropdownButton: true,
 
             pageSize: 5,
             ajaxParams: {},
@@ -60,9 +63,15 @@
 
             var _this = this;
 
+            // wrap this in a span
+            var $wrapper = _this.$el.wrap($("<span/>").addClass("autocomplete-text-wrapper"));
+
+            // current button off-set to the right
+            var rightButtonsOffSet = 5;
+
             // add the wrapper and the new button
             if (_this.opts.newWindowUrl) {
-                _this.$el.wrap($("<span/>").addClass("autocomplete-text-wrapper")).after($('<span/>').addClass("new-button").click(function() {
+                $wrapper.after($('<span/>').addClass("new-button").css("right", rightButtonsOffSet + "px").click(function () {
 
                     $.modal({
                         url: _this.opts.newWindowUrl,
@@ -75,9 +84,27 @@
                         }
                     });
 
+
                 }));
                 _this.$el.addClass("autocomplete-new");
+                
+                // increases the off-set due to the new added button
+                rightButtonsOffSet += 18;
             }
+
+            if (_this.opts.showDropdownButton) {
+                $wrapper.after($('<span/>').addClass("dropdown-button").css("right", rightButtonsOffSet + "px").click(function(e) {
+                    e.stopPropagation();
+                    if (_this.intervalHandler)
+                        clearTimeout(_this.intervalHandler);
+
+                    if (_this.isDropdownVisible())
+                        _this.$dropdown.hide();
+                    else
+                        _this.fetchData(null, null, _this.$el.val());
+                }));
+            }
+
             _this.$inputHidden = $("input[name='" + _this.opts.inputHiddenName + "']");
             if (!_this.$inputHidden.length)
                 throw "Couldn't find the $inputHiddenName";
