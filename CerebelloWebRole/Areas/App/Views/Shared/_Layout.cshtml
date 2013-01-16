@@ -106,8 +106,15 @@
 
 </head>
 <body>
-    <div class="top-bar">
-    </div>
+    @if (this.ViewBag.IsTrial == true)
+    {
+        <div class="top-bar">
+            <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">
+                Assine agora o <strong>Cerebello</strong>!
+                <span class="small">Livre-se desta barra e do limite de 50 pacientes.</span>
+            </a>
+        </div>
+    }
     <div id="app-header">
         <div class="top-menu">
         </div>

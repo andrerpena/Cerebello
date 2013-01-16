@@ -95,6 +95,8 @@ namespace CerebelloWebRole.Code
 
             // discover the notifications that have already been polled and sent to to the client
             this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(this.db, this.DbUser.Id, this, true);
+
+            this.ViewBag.IsTrial = this.DbPractice.AccountContract.SYS_ContractType.IsTrial;
         }
 
         public virtual bool IsSelfUser(User user)

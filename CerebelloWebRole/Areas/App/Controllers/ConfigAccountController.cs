@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Security;
+using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Controllers;
 using CerebelloWebRole.Models;
 using PayPal.Version940;
 
@@ -21,55 +20,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public ActionResult Index()
         {
+            // Getting the plan contract (that is the main contract)
+            // other contracts can be attatched to the main,
+            // like SMS, and additional support contracts.
             var mainContract = this.DbPractice.AccountContract;
-            var viewModel = new ConfigAccountViewModel();
-            // Get all the billings of this practice.
-            // Billings must be grouped by year, and be in reverse order,
-            // that is, newest ones come first.
 
-            // Get plan informations of this practice.
-            // Contract text, title, description, and other things to display.
-            viewModel.CurrentContract = new ConfigAccountViewModel.Contract
-            {
-                PlanTitle = mainContract.SYS_ContractType.Name,
-            };
-
-            //viewModel.CurrentContract.Additions.AddRange(new List<ConfigAccountViewModel.Contract>
-            //{
-            //    new ConfigAccountViewModel.Contract
-            //    {
-            //        Description = "Adiciona a capacidade de envio de SMS para os paciente, para lembrá-lo de suas consultas com até 48h de antecedência.",
-            //        PlanTitle = "Plano de SMS",
-            //        Status = ConfigAccountViewModel.ContractStatus.Suggestion,
-            //        UrlIdentifier = "SmsPlanAddition",
-            //    },
-            //    new ConfigAccountViewModel.Contract
-            //    {
-            //        Description = "Adiciona suporte on-line instantâneo via chat, na mesma janela de chat usada para se comunicar com outros membros do consultório.",
-            //        PlanTitle = "Plano de suporte via chat",
-            //        Status = ConfigAccountViewModel.ContractStatus.Suggestion,
-            //        UrlIdentifier = "ChatSupportPlanAddition",
-            //    },
-            //});
-
-            // Get available plan migrations.
-            // Only migrations that can be done may be placed in this list.
+            // because each plan has a different set of features,
+            // this is going to be used by the view, to define the partial page that will be shown
+            this.ViewBag.CurrentContractName = mainContract.SYS_ContractType.UrlIdentifier;
 
             if (mainContract.SYS_ContractType.IsTrial)
             {
-                viewModel.Migrations = new List<ConfigAccountViewModel.Migration>
-                {
-                    //RenewPlanInfo(),
-                    PaidPlanInfo(),
-                };
+                return View();
             }
             else
             {
+                // todo: fill in the billings
+                var viewModel = new ConfigAccountViewModel
+                    {
+                    };
+
+                return View();
             }
-
-            viewModel.Migrations.Add(CancelTrialPlanInfo());
-
-            return View(viewModel);
         }
 
         public ActionResult Cancel()
@@ -192,29 +164,58 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Upgrade(string id)
         {
             var mainContract = this.DbPractice.AccountContract;
-            var viewModel = new ConfigAccountViewModel();
 
-            // Get plan informations of this practice.
-            // Contract text, title, description, and other things to display.
-            viewModel.CurrentContract = new ConfigAccountViewModel.Contract
-            {
-                PlanTitle = mainContract.SYS_ContractType.Name,
-            };
+            // because each plan has a different set of features,
+            // this is going to be used by the view, to define the partial page that will be shown
+            this.ViewBag.CurrentContractName = mainContract.SYS_ContractType.UrlIdentifier;
 
             if (mainContract.SYS_ContractType.IsTrial)
             {
-                var paidPlan = PaidPlanInfo();
-
-                if (id == paidPlan.Contract.UrlIdentifier)
-                {
-                    viewModel.Migrations = new List<ConfigAccountViewModel.Migration>
+                var viewModel = new ChangeContractViewModel
                     {
-                        paidPlan,
+                        ContractUrlId = id,
                     };
+
+                return View(viewModel);
+            }
+
+            return this.HttpNotFound();
+        }
+
+        [HttpPost]
+        public ActionResult Upgrade(string id, ChangeContractViewModel viewModel)
+        {
+            var mainContract = this.DbPractice.AccountContract;
+
+            // because each plan has a different set of features,
+            // this is going to be used by the view, to define the partial page that will be shown
+            this.ViewBag.CurrentContractName = mainContract.SYS_ContractType.UrlIdentifier;
+
+            if (!viewModel.AcceptedByUser)
+            {
+                this.ModelState.AddModelError(
+                    () => viewModel.AcceptedByUser, "A caixa de checagem de aceitação do contrato precisa ser marcada para concluir o processo.");
+            }
+
+            if (mainContract.SYS_ContractType.IsTrial)
+            {
+                if (id == "ProfessionalPlan")
+                {
+                    if (this.ModelState.IsValid)
+                    {
+                        // sending e-mail to cerebello@cerebello.com.br
+                        // to remember us to send the payment request
+                        // todo: send email
+
+                        return this.RedirectToAction("UpgradeRequested");
+                    }
+
+                    viewModel.ContractUrlId = id;
+                    return this.View(viewModel);
                 }
             }
 
-            return View(viewModel);
+            return this.HttpNotFound();
         }
 
         public ActionResult PayPalCheckout()
@@ -315,29 +316,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.View();
         }
 
-        private static ConfigAccountViewModel.Migration CancelTrialPlanInfo()
+        private static ConfigAccountViewModel.ContractChangeData CancelTrialPlanInfo()
         {
-            return new ConfigAccountViewModel.Migration
+            return new ConfigAccountViewModel.ContractChangeData
             {
-                Type = ConfigAccountViewModel.MigrationType.Cancel,
+                Type = ConfigAccountViewModel.ContractChangeType.Cancel,
                 Contract = new ConfigAccountViewModel.Contract
                 {
                     PlanTitle = "Nenhum plano",
                     Status = ConfigAccountViewModel.ContractStatus.Suggestion,
                     Text = "NENHUM", // 
-                    Description = @"O cancelamento da conta de teste pode ser feito a qualquer momento.
-                        Como essa é uma conta de teste, todos os dados serão apagados do sistema,
-                        não sendo possível reativar a mesma, e nem fazer download dos dados após o cancelamento.",
+                    Description = @"",
                     UrlIdentifier = "CancelTrial",
                 }
             };
         }
 
-        private static ConfigAccountViewModel.Migration CancelProfessionalPlanInfo()
+        private static ConfigAccountViewModel.ContractChangeData CancelProfessionalPlanInfo()
         {
-            return new ConfigAccountViewModel.Migration
+            return new ConfigAccountViewModel.ContractChangeData
             {
-                Type = ConfigAccountViewModel.MigrationType.Cancel,
+                Type = ConfigAccountViewModel.ContractChangeType.Cancel,
                 Contract = new ConfigAccountViewModel.Contract
                 {
                     PlanTitle = "Nenhum plano",
@@ -352,11 +351,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             };
         }
 
-        private static ConfigAccountViewModel.Migration RenewPlanInfo()
+        private static ConfigAccountViewModel.ContractChangeData RenewPlanInfo()
         {
-            return new ConfigAccountViewModel.Migration
+            return new ConfigAccountViewModel.ContractChangeData
             {
-                Type = ConfigAccountViewModel.MigrationType.Renovation,
+                Type = ConfigAccountViewModel.ContractChangeType.Renovation,
                 Contract = new ConfigAccountViewModel.Contract
                 {
                     PlanTitle = "Plano profissional",
@@ -372,22 +371,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
             };
         }
 
-        private static ConfigAccountViewModel.Migration PaidPlanInfo()
+        private static ConfigAccountViewModel.ContractChangeData ProfessionalPlanInfo()
         {
-            return new ConfigAccountViewModel.Migration
+            return new ConfigAccountViewModel.ContractChangeData
             {
-                Type = ConfigAccountViewModel.MigrationType.Upgrade,
+                Type = ConfigAccountViewModel.ContractChangeType.Upgrade,
                 Contract = new ConfigAccountViewModel.Contract
                 {
                     PlanTitle = "Plano profissional",
                     Status = ConfigAccountViewModel.ContractStatus.Suggestion,
                     Text = "TEXTO DO CONTRATO", // 
-                    Description = @"Plano sem os limites da conta trial. A conta trial possui um limite
-                        total de 50 pacientes, o que é pouco para um consultório funcionar. Além disso
-                        a conta paga possui suporte prioritário, e maior segurança dos dados.",
-                    UrlIdentifier = "PaidPlan",
+                    Description = @"",
+                    UrlIdentifier = "ProfessionalPlan",
                 }
             };
+        }
+
+        public ActionResult UpgradeRequested(string id)
+        {
+            return this.View(new ChangeContractViewModel { ContractUrlId = id });
         }
     }
 }

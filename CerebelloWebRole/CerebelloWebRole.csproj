@@ -144,6 +144,7 @@
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
+    <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
     <Compile Include="Areas\App\Models\LockScriptViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
@@ -675,7 +676,7 @@
     <Content Include="Areas\App\Views\Diagnosis\Details.cshtml" />
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\PaidPlanPartial.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Contract_ProfessionalPlan.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Index.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Index.cshtml" />
@@ -709,6 +710,8 @@
     <Content Include="Areas\App\Views\ConfigAccount\Cancel.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\CancelTrialContractPartial.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\AccountDataEmail.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Index_TrialContract.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\UpgradeRequested.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

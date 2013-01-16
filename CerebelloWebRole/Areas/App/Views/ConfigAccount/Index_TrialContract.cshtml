@@ -1,0 +1,85 @@
+﻿@model CerebelloWebRole.Areas.App.Models.ConfigAccountViewModel
+<style type="text/css">
+    a.button
+    {
+        margin-top: 1em;
+        float: right;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .option-cancel .button {
+        color: darkred
+    }
+
+    .option-upgrade .button {
+        color: darkgreen;
+        font-size: 1.5em;
+    }
+
+    div.option
+    {
+        vertical-align: middle;
+        padding: 3em 3em 1em;
+        margin: 15px auto;
+        overflow: hidden;
+        max-width: 400px;
+        line-height: 1.5em;
+        word-spacing: 0.2em;
+        text-align: justify;
+        color: black;
+    }
+
+    div.option-cancel {
+        background: #FDD;
+    }
+
+    div.option-upgrade {
+        background: #CFC;
+    }
+
+    .option-title
+    {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+</style>
+<div class="widget">
+    <p class="title">Plano de teste do Cerebello</p>
+    <div class="text-description">
+        <p>
+            O plano de testes do Cerebello permite testar o software,
+            sem limite de funcionalidades,
+            antes decidir pela assinatura do serviço.
+        </p>
+        <p>
+            Este plano pode ser usado para fins comerciais, entretanto possui
+            um limite máximo de <strong>50 pacientes</strong> cadastrados, o que é insuficiente
+            para um consultório funcionar. Para usar o software sem este limite,
+            faça upgrade para a versão profissional.
+        </p>
+        <p>
+            <a href="@Url.Action("Contract")">Contrato do plano de testes</a>
+        </p>
+    </div>
+
+    <p class="title">Opções do plano</p>
+    <div class="option option-upgrade">
+        <div>
+            <span class="option-title">Upgrade para plano profissional:</span>
+            Plano sem os limites da conta trial. A conta trial possui um limite
+                        total de 50 pacientes, o que é pouco para um consultório funcionar. Além disso
+                        a conta profissional possui suporte prioritário, e maior segurança dos dados.
+        </div>
+        <a class="button" href="@Url.Action("Upgrade", new { id = "ProfessionalPlan" })">Fazer upgrade</a>
+    </div>
+    <div class="option option-cancel">
+        <div>
+            <span class="option-title">Cancelamento:</span>
+            O cancelamento da conta de teste pode ser feito a qualquer momento.
+                        Como essa é uma conta de teste, todos os dados serão apagados do sistema,
+                        não sendo possível reativar a mesma, e nem fazer download dos dados após o cancelamento.
+        </div>
+        <a class="button" href="@Url.Action("Cancel")">Cancelar</a>
+    </div>
+</div>

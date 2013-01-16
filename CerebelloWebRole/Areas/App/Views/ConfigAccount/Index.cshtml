@@ -4,27 +4,6 @@
     var title = "Configurações da conta";
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
-
-    var buttonTexts = new string[5];
-    buttonTexts[(int)ConfigAccountViewModel.MigrationType.Renovation] = "Renovar";
-    buttonTexts[(int)ConfigAccountViewModel.MigrationType.Upgrade] = "Fazer upgrade";
-    buttonTexts[(int)ConfigAccountViewModel.MigrationType.Downgrade] = "Fazer downgrade";
-    buttonTexts[(int)ConfigAccountViewModel.MigrationType.Migration] = "Migrar";
-    buttonTexts[(int)ConfigAccountViewModel.MigrationType.Cancel] = "Cancelar";
-
-    var boldText = new string[5];
-    boldText[(int)ConfigAccountViewModel.MigrationType.Renovation] = "Renovação";
-    boldText[(int)ConfigAccountViewModel.MigrationType.Upgrade] = "Upgrade para {0}";
-    boldText[(int)ConfigAccountViewModel.MigrationType.Downgrade] = "Downgrade para {0}";
-    boldText[(int)ConfigAccountViewModel.MigrationType.Migration] = "Migração para {0}";
-    boldText[(int)ConfigAccountViewModel.MigrationType.Cancel] = "Cancelamento";
-
-    var actionName = new string[5];
-    actionName[(int)ConfigAccountViewModel.MigrationType.Renovation] = "renew";
-    actionName[(int)ConfigAccountViewModel.MigrationType.Upgrade] = "upgrade";
-    actionName[(int)ConfigAccountViewModel.MigrationType.Downgrade] = "downgrade";
-    actionName[(int)ConfigAccountViewModel.MigrationType.Migration] = "migrate";
-    actionName[(int)ConfigAccountViewModel.MigrationType.Cancel] = "cancel";
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
@@ -32,45 +11,4 @@
 @section Scripts {
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
-<div class="widget">
-    <p class="title">
-        Faturas
-    </p>
-    <div style="border: 1px solid black; height: 100px; text-align: center; vertical-align: middle;
-        line-height: 100px;">
-        Lista de faturas</div>
-</div>
-<div class="widget">
-    <p class="title">
-        Planos e contratos
-    </p>
-    @{
-        var cardView = Html.CreateCardView();
-        cardView.AddField(m => m.CurrentContract.PlanTitle);
-    }
-    @cardView.GetHtml()
-    <style type="text/css">
-        a.button
-        {
-            margin-top: 1em;
-            float: right;
-            cursor: pointer;
-        }
-    </style>
-    @if (this.Model.Migrations.Any())
-    {
-        @:Opções do plano
-        foreach (var eachMigration in this.Model.Migrations)
-        {
-            <div style="border: 1px solid #CCC; vertical-align: middle; padding: 3em 3em 1em;
-                background: #EEE; margin: 15px auto; overflow: hidden; max-width: 400px; line-height: 1.5em;
-                word-spacing: 0.2em; text-align: justify;">
-                <div>
-                    <b style="font-size: 1.2em;">@(string.Format(boldText[(int)eachMigration.Type], eachMigration.Contract.PlanTitle)):</b>
-                    @eachMigration.Contract.Description
-                </div>
-                <a class="button" href="@Url.Action(actionName[(int)eachMigration.Type], new { id = eachMigration.Contract.UrlIdentifier })">@(buttonTexts[(int)eachMigration.Type])</a>
-            </div>
-        }
-    }
-</div>
+@Html.Partial((string)string.Format("Index_{0}", this.ViewBag.CurrentContractName), (object)this.Model)

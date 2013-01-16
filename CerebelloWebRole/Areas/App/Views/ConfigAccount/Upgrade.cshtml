@@ -1,10 +1,15 @@
 ﻿@using CerebelloWebRole.Areas.App.Models
-@model CerebelloWebRole.Areas.App.Models.ConfigAccountViewModel
+@model ChangeContractViewModel
 @{
-    var title = string.Format("Upgrade para {0}", this.Model.Migrations[0].Contract.PlanTitle);
+    var planTitles = new Dictionary<string, string>
+        {
+            { "ProfessionalPlan", "plano profissional" }
+        };
+
+    var title = string.Format("Upgrade para {0}", planTitles[this.Model.ContractUrlId]);
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
-    var partialViewName = string.Format("{0}Partial", this.Model.Migrations[0].Contract.UrlIdentifier);
+    var partialViewName = string.Format("Contract_{0}", this.Model.ContractUrlId);
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
@@ -12,97 +17,148 @@
 @section Scripts {
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
-<div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
-    @Html.Partial(partialViewName)
-</div>
+<style type="text/css">
+    .upgrade-block
+    {
+        margin: 1em;
+        padding: 1em;
+        overflow: hidden;
+    }
 
-<div style="margin: 1em; padding: 1em; border: 1px solid #DDD; overflow: hidden;">
-    <h2 style="margin-bottom: 1em;">
-        Forma de pagamento</h2>
-    <style type="text/css">
-        table.paymethod
+    table.prices
+    {
+        color: black;
+        margin: 1em auto;
+        font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+    }
+
+        table.prices td, table.prices th
         {
-            display: inline-block;
-            vertical-align: top;
-            margin: 1em;
-            border-top: 4px solid;
-            width: 180px;
-            height: 90px;
+            padding: 0.5em 1em;
         }
-        
-        .paymethod > tbody > tr > td
+
+        table.prices .irrelevant
         {
-            width: 180px;
-            height: 90px;
+            color: gray;
+        }
+
+        table.prices .important
+        {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        table.prices invisible
+        {
+            visibility: hidden;
+            color: transparent;
+        }
+
+        table.prices *
+        {
             text-align: center;
-            vertical-align: middle;
         }
-        
-        .paymethod > tbody > tr > td > div
+
+        table.prices th
         {
-            display: inline-block; /*border: 1px solid black;*/
+            font-weight: bold;
         }
-    </style>
-    <table class="paymethod user_select_none" style="border-color: orange;">
-        <tbody>
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post))
+{
+    @Html.ValidationSummary(false)
+
+    @Html.HiddenFor(vm => vm.ContractUrlId)
+
+    <div class="upgrade-block">
+        <h2>Contrato</h2>
+        @Html.Partial(partialViewName)
+
+        <table>
             <tr>
-                <td>
-                    <div>
-                        <!-- PayPal Logo -->
-                        <table border="0" cellpadding="0" cellspacing="0" align="center">
-                            <tr>
-                                <td align="center">
-                                    <a href="@(Url.Action("PayPalCheckout"))">
-                                        <img src="https://www.paypal-brasil.com.br/logocenter/util/img/btPagarAgora_1.png"
-                                            border="0" alt="Imagens de solução"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">
-                                    <a href="#" onclick="javascript:window.open('http://www.paypal-brasil.com.br/popupcheckout/','olcwhatispaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, width=809, height=320');">
-                                        <img src="https://www.paypal-brasil.com.br/logocenter/util/img/btPagarAgora_2.png"
-                                            border="0" alt="Imagens de solução" /></a>
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- PayPal Logo -->
-                    </div>
-                </td>
+                <th>@Html.LabelFor(vm => vm.AcceptedByUser)</th>
+                <td>@Html.CheckBoxFor(vm => vm.AcceptedByUser)</td>
             </tr>
-        </tbody>
-    </table>
-    <table class="paymethod user_select_none" style="border-color: green;">
-        <tbody>
-            <tr>
-                <td>
-                    <div>
-                        <!-- INICIO FORMULARIO BOTAO PAGSEGURO -->
-                        <form target="pagseguro" action="https://pagseguro.uol.com.br/v2/pre-approvals/request.html"
-                        method="post">
-                        <input type="hidden" name="code" value="432B4F9F7474DC25547D1FB4F0B7AF95" />
-                        <input type="image" src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/assinaturas/120x53-assinar.gif"
-                            name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!" />
-                        </form>
-                        <!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="paymethod user_select_none" style="border-color: blue;">
-        <tbody>
-            <tr>
-                <td>
-                    <div>
-                        <!-- INICIO FORMULARIO BOTAO GOOGLE -->
-                        <form method="POST" action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/1234567890">
-                        <input type="image" name="Google Checkout" alt="Fast checkout through Google" src="https://checkout.google.com/buttons/checkout.gif?merchant_id=&w=168&h=44&style=white&variant=text&loc=pt_BR"
-                            height="44" width="168">
-                        </form>
-                        <!-- FINAL FORMULARIO BOTAO GOOGLE -->
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+        </table>
+    </div>
+
+    <div class="upgrade-block">
+        <h2 style="margin-bottom: 1em;">Meio de pagamento</h2>
+        <div class="text-description">
+            <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
+
+            <strong>Cobrança por e-mail:</strong>
+            Nós lhe enviaremos uma cobraça por e-mail com o título <strong style="white-space: nowrap">Fatura Cerebello</strong>.
+            Essa fatura pode ser paga com cartão de crédito, ou então usando saldo disponível em uma conta do PayPal.
+            Sua conta será atualizada para o plano profissional, assim que confirmarmos o seu pagamento.
+            Por conta do tempo de processamento do pagamento, pedimos um prazo de 2 dias úteis após o pagamento para a ativação
+            do novo plano.
+        </div>
+    </div>
+
+    <div class="upgrade-block">
+        <h2 style="margin-bottom: 1em;">Forma de pagamento</h2>
+        <div class="text-description">
+            A assinatura será cobrada com a frequência indicada abaixo,
+                sempre de forma adiantada. Quanto maior a quantidade de tempo paga,
+                maior será o desconto, como indicado na tabela.
+                <table class="prices">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Valor</th>
+                            <th class="irrelevant">Equivalente mensal</th>
+                            <th>Frequência</th>
+                            <th>Desconto</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>
+                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="MONTH"/></td>
+                        <td>R$
+                            <invisible>0</invisible>
+                            119,00</td>
+                        <td class="irrelevant">R$ 119,00</td>
+                        <td>mensal</td>
+                        <td class="irrelevant">sem desconto</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="3-MONTHS"/></td>
+                        <td>R$
+                            <invisible>0</invisible>
+                            339,00</td>
+                        <td class="irrelevant">R$ 113,00</td>
+                        <td>trimestral</td>
+                        <td>5%&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="6-MONTHS"/></td>
+                        <td>R$
+                            <invisible>0</invisible>
+                            642,00</td>
+                        <td class="irrelevant">R$ 107,00</td>
+                        <td>semestral</td>
+                        <td>10%&nbsp;</td>
+                    </tr>
+                    <tr class="important">
+                        <td>
+                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="12-MONTHS"/></td>
+                        <td>R$ 1068,00</td>
+                        <td class="irrelevant">R$
+                            <invisible>0</invisible>
+                            89,00</td>
+                        <td>anual</td>
+                        <td class="important">25%&nbsp;</td>
+                    </tr>
+                </table>
+        </div>
+    </div>
+
+    <div class="submit-bar">
+        <input type="submit" value="concluir" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
+    </div>
+}

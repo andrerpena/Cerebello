@@ -1,0 +1,35 @@
+﻿@using CerebelloWebRole.Areas.App.Models
+@model ChangeContractViewModel
+@{
+    var planTitles = new Dictionary<string, string>
+        {
+            { "ProfessionalPlan", "plano profissional" }
+        };
+
+    var title = string.Format("Upgrade requisitado");
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+}
+@section Title {
+    @title <span class="lock-title icon-lock" />
+}
+@section Scripts {
+    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
+}
+<div class="upgrade-block">
+    <h2 style="margin-bottom: 1em;">Requisição de upgrade para plano @</h2>
+    <div class="text-description">
+        <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
+
+        <strong>Cobrança por e-mail:</strong>
+        Nós lhe enviaremos uma cobraça por e-mail com o título <strong style="white-space: nowrap">Fatura Cerebello</strong>.
+            Essa fatura pode ser paga com cartão de crédito, ou então usando saldo disponível em uma conta do PayPal.
+            Sua conta será atualizada para o plano profissional, assim que confirmarmos o seu pagamento.
+            Por conta do tempo de processamento do pagamento, pedimos um prazo de 2 dias úteis após o pagamento para a ativação
+            do novo plano.
+    </div>
+</div>
+
+<div class="submit-bar">
+    @Html.ActionLink("voltar", "Index")
+</div>

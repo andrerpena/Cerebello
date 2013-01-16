@@ -127,7 +127,7 @@ namespace CerebelloWebRole.Areas.App.Models
             public string UrlIdentifier { get; set; }
         }
 
-        public enum MigrationType
+        public enum ContractChangeType
         {
             /// <summary>
             /// The destination plan is the same, but is being renewed.
@@ -155,12 +155,12 @@ namespace CerebelloWebRole.Areas.App.Models
             Cancel,
         }
 
-        public class Migration
+        public class ContractChangeData
         {
             /// <summary>
             /// Type of migration. This will influence the text of the button.
             /// </summary>
-            public MigrationType Type { get; set; }
+            public ContractChangeType Type { get; set; }
 
             /// <summary>
             /// The contract that is being suggested.
@@ -191,6 +191,6 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// List of available migrations.
         /// </summary>
-        public List<Migration> Migrations { get; set; }
+        public List<ContractChangeData> Migrations { get; set; }
     }
 }

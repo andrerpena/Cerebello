@@ -104,11 +104,32 @@ hr {
     margin: 0;
 }
 
-.top-bar {
+.top-bar
+{
     color: White;
-    background-color: Black;
-    height: 22px;
+    background-color: darkslategrey;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
 }
+
+    .top-bar > *
+    {
+        vertical-align: middle;
+    }
+
+    .top-bar a {
+        color: lightblue;
+    }
+
+    .top-bar a strong {
+        color: white;
+    }
+
+    .top-bar .small {
+        font-size: 0.8em;
+        color: lightskyblue;
+    }
 
 p.text {
     line-height: 1.4em;
@@ -1410,4 +1431,15 @@ div.message-help {
     .webgrid .now a {
         color: #336699 !important;
         font-weight: bold;
+    }
+
+.text-description
+{
+    font-size: 1.1em;
+    line-height: 1.4em;
+}
+
+    .text-description p
+    {
+        margin: 1em 5em 1em 5em;
     }
