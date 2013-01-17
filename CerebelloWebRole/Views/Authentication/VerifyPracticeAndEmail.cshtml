@@ -1,6 +1,7 @@
 ﻿@using CerebelloWebRole.Code
 @model CerebelloWebRole.Models.VerifyPracticeAndEmailViewModel
 @{
+    this.Layout = "../Shared/_AuthenticationLayout.cshtml";
     ViewBag.Title = "Verifique seu e-mail";
 }
 <div class="authentication-container">
@@ -131,8 +132,9 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <div class="controls">
-                            @Html.CheckBoxFor(model => model.RememberMe) @Html.LabelFor(model => model.RememberMe, new { @class = "remember-me" })
+                        <div class="controls" title="Só marque esta caixa se estiver usando um computador que não é compartilhado com outras pessoas.">
+                            @Html.CheckBoxFor(model => model.RememberMe)
+                            <label for="@Html.FieldName(model => model.RememberMe)" class = "remember-me">Lembrar de mim <span class="optional">neste computador</span></label>
                         </div>
                     </div>
                 </div>
