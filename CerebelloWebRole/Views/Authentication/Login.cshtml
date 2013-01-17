@@ -57,8 +57,21 @@
                     </div>
                 </div>
                 <div class="form-actions" style="margin: 0">
-                    <button class="btn btn-primary btn-large" type="submit">
-                        Login</button>
+                    <table>
+                        <tr>
+                            <td style="width: 100%">
+                                <button class="btn btn-primary btn-large" type="submit">
+                                    Login</button>
+                            </td>
+                            @if (!string.IsNullOrWhiteSpace(this.Request["ReturnUrl"]))
+                            {
+                                <td title="Use este botão caso já tenha feito login em outra janela.">
+                                    <a style="white-space: nowrap" class="btn btn-mini" href="@this.Request["ReturnUrl"]">
+                                        Tentar novamente</a>
+                                </td>
+                            }
+                        </tr>
+                    </table>
                 </div>
             </fieldset>
         }

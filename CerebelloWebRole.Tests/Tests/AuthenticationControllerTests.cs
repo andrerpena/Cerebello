@@ -152,7 +152,7 @@ namespace CerebelloWebRole.Tests.Tests
                     Token = new TokenId(savedToken.Id, savedToken.Value).ToString(),
                     UserName = savedUser.UserName,
                     PersonName = savedUser.Person.FullName,
-                    PracticeUrlIdentifier = savedUser.Practice.UrlIdentifier,
+                    PracticeIdentifier = savedUser.Practice.UrlIdentifier,
                 };
                 var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                 Assert.AreEqual(emailExpected, emailBody);
@@ -669,7 +669,7 @@ namespace CerebelloWebRole.Tests.Tests
             ActionResult actionResult;
             {
                 actionResult = controller.VerifyPracticeAndEmail(
-                    new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName, });
+                    new VerifyPracticeAndEmailViewModel { Token = token, PracticeIdentifier = practiceName, });
             }
 
             // Asserting.
@@ -725,7 +725,7 @@ namespace CerebelloWebRole.Tests.Tests
             ActionResult actionResult;
             {
                 actionResult = controller.VerifyPracticeAndEmail(
-                    new VerifyPracticeAndEmailViewModel { Practice = practiceName });
+                    new VerifyPracticeAndEmailViewModel { PracticeIdentifier = practiceName });
             }
 
             // Asserting.
@@ -741,7 +741,7 @@ namespace CerebelloWebRole.Tests.Tests
             // ATENTION: The value of the password must NEVER go out to a view.
             Assert.AreEqual(null, model.Password);
 
-            Assert.AreEqual(practiceName, model.Practice);
+            Assert.AreEqual(practiceName, model.PracticeIdentifier);
         }
 
         /// <summary>
@@ -785,7 +785,7 @@ namespace CerebelloWebRole.Tests.Tests
             ActionResult actionResult;
             {
                 actionResult = controller.VerifyPracticeAndEmail(
-                    new VerifyPracticeAndEmailViewModel { Token = "Invalid-Token-Value", Practice = practiceName });
+                    new VerifyPracticeAndEmailViewModel { Token = "Invalid-Token-Value", PracticeIdentifier = practiceName });
             }
 
             // Asserting.
@@ -801,7 +801,7 @@ namespace CerebelloWebRole.Tests.Tests
             // ATENTION: The value of the password must NEVER go out to a view.
             Assert.AreEqual(null, model.Password);
 
-            Assert.AreEqual(practiceName, model.Practice);
+            Assert.AreEqual(practiceName, model.PracticeIdentifier);
 
             // Asserting ModelState.
             Assert.IsTrue(controller.ModelState.ContainsKey("Token"), "ModelState must containt an entry for 'Token'.");
@@ -852,7 +852,7 @@ namespace CerebelloWebRole.Tests.Tests
             ActionResult actionResult;
             {
                 actionResult = controller.VerifyPracticeAndEmail(
-                    new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName });
+                    new VerifyPracticeAndEmailViewModel { Token = token, PracticeIdentifier = practiceName });
             }
 
             // Asserting.
@@ -868,7 +868,7 @@ namespace CerebelloWebRole.Tests.Tests
             // ATENTION: The value of the password must NEVER go out to a view.
             Assert.AreEqual(null, model.Password);
 
-            Assert.AreEqual(practiceName, model.Practice);
+            Assert.AreEqual(practiceName, model.PracticeIdentifier);
 
             // Asserting ModelState.
             Assert.IsTrue(controller.ModelState.ContainsKey("Token"), "ModelState must containt an entry for 'Token'.");
@@ -972,7 +972,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var authController = mr.CreateController<AuthenticationController>();
                 authController.UtcNowGetter = () => utcNow.AddDays(15.0); // this is up to 30 days
                 authController.VerifyPracticeAndEmail(
-                    new VerifyPracticeAndEmailViewModel { Token = token, Practice = practiceName });
+                    new VerifyPracticeAndEmailViewModel { Token = token, PracticeIdentifier = practiceName });
 
                 Assert.IsTrue(authController.ModelState.IsValid, "Could not validate email.");
 
@@ -1119,7 +1119,7 @@ namespace CerebelloWebRole.Tests.Tests
                 ActionResult actionResult;
                 {
                     actionResult = controller.ResetPasswordRequest(
-                        new ResetPasswordRequestViewModel
+                        new IdentityViewModel
                             {
                                 PracticeIdentifier = user.Practice.UrlIdentifier,
                                 UserNameOrEmail = user.UserName,
@@ -1154,7 +1154,7 @@ namespace CerebelloWebRole.Tests.Tests
                                                  Token = emailToken,
                                                  UserName = user.UserName,
                                                  PersonName = user.Person.FullName,
-                                                 PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                                 PracticeIdentifier = user.Practice.UrlIdentifier,
                                              };
                     var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                     Assert.AreEqual(emailExpected, emailBody);
@@ -1198,7 +1198,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                     // requesting password reset
                     controller0.ResetPasswordRequest(
-                        new ResetPasswordRequestViewModel
+                        new IdentityViewModel
                             {
                                 PracticeIdentifier = user.Practice.UrlIdentifier,
                                 UserNameOrEmail = user.UserName,

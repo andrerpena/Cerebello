@@ -4,7 +4,7 @@ using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Models
 {
-    public class ResetPasswordViewModel
+    public class ResetPasswordViewModel : IdentityViewModel
     {
         public ResetPasswordViewModel()
         {
@@ -22,14 +22,6 @@ namespace CerebelloWebRole.Models
             this.PracticeIdentifier = practiceIdentifier;
             this.UserNameOrEmail = userNameOrEmail;
         }
-
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Identificador do consultório")]
-        public String PracticeIdentifier { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Nome de usuário ou e-mail")]
-        public String UserNameOrEmail { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Token")]

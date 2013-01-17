@@ -4,7 +4,7 @@ using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Models
 {
-    public class ResetPasswordRequestViewModel
+    public class IdentityViewModel
     {
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Identificador do consultório")]

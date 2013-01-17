@@ -232,6 +232,9 @@ namespace CerebelloWebRole.Code
         /// <returns></returns>
         public static User GetUser(IObjectSet<User> dbUserSet, string practiceIdentifier, string userNameOrEmail)
         {
+            if (string.IsNullOrWhiteSpace(userNameOrEmail))
+                return null;
+
             var isEmail = userNameOrEmail.Contains("@");
 
             var query = dbUserSet.Where(u => !u.Practice.AccountDisabled);

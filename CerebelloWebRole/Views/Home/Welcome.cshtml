@@ -15,11 +15,14 @@
         color: #333333;
     }
 </style>
-<div class="hero ac">
-    <div class="container">
-        <h1>Seja bem vindo ao Cerebello!</h1>
+<header id="header">
+    <div class="showcase">
+        <div class="container">
+            <h1>Seja bem vindo ao Cerebello!</h1>
+            <h2>Sua conta foi criada e está pronta para ser usada.</h2>
+        </div>
     </div>
-</div>
+</header>
 <div class="container">
     <div class="row">
         <h3>Já criei a minha conta, e agora?</h3>
@@ -64,9 +67,11 @@
             Para atender você melhor, recomendamos que faça upgrade para o <span class="xpto">Plano de Profissional</span>.
             Neste plano não existe nenhuma limitação, e não possui a barra no topo da tela, além de possuir suporte prioritário.
         </p>
-        <p>
-            O upgrade pode ser feito a partir do menu <span class="xpto">Configurações da conta</span>,
-            que aparece dentro da aplicação.
-        </p>
+        @if (this.User.Identity.IsAuthenticated)
+        {
+            <p>
+                Se você deseja fazer o upgrade agora, basta seguir o link: <a href="@Url.Action("Upgrade", "ConfigAccount", new { area = "App", id = "ProfessionalPlan", practice = this.Request["practice"] })">Fazer upgrade para o plano profissional</a>
+            </p>
+        }
     </div>
 </div>

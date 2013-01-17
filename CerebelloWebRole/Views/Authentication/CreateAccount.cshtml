@@ -88,13 +88,6 @@
             }
         }
 
-        @@media screen and (max-width: 1000px)
-        {
-            .practice-properties
-            {
-            }
-        }
-
         @@media screen and (max-width: 500px)
         {
             .authentication-container
@@ -182,7 +175,7 @@
                         <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
                             @Html.LabelFor(model => model.MedicalSpecialtyId)
                             <div class="controls">
-                                @(Html.AutocompleteGridFor<CreateAccountViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+                                @(Html.AutocompleteGridFor(
                                       m => m.MedicalSpecialtyId,
                                       m => m.MedicalSpecialtyName,
                                       Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),

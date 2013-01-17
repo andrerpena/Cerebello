@@ -1,10 +1,14 @@
 ﻿@using CerebelloWebRole.Models
 @model EmailViewModel
 @{
-    var urlWithData = this.Url.Action("VerifyPracticeAndEmail", "Authentication",
-        new { Model.Token, practice = this.Model.PracticeUrlIdentifier }, "http");
+    var urlWithData = this.Url.Action(
+        "VerifyPracticeAndEmail",
+        "Authentication",
+        new VerifyPracticeAndEmailViewModel { Token = Model.Token, PracticeIdentifier = this.Model.PracticeIdentifier },
+        "http");
+
     var urlLogin = this.Url.Action("Index", "PracticeHome",
-        new { practice = this.Model.PracticeUrlIdentifier, area = "App" }, "http");
+        new { area = "App", practice = this.Model.PracticeIdentifier }, "http");
 }
 @if (this.Model.IsBodyHtml)
 {
@@ -12,7 +16,7 @@
     <head>
         <title>E-mail de confirmação</title>
     </head>
-    <body class="markdown-body">
+    <body>
         Olá <strong>@Model.PersonName</strong>,<br />
         <p>
             Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
@@ -37,7 +41,7 @@
                                                font-size: 1.1em;
                                                line-height: 1.6;
                                                color: #333333;
-                                           ">@this.Model.PracticeUrlIdentifier</code>.
+                                           ">@this.Model.PracticeIdentifier</code>.
             Você pode fazer login informando este identificador ou acessando diretamente a url
             <a href="@urlLogin">@urlLogin</a>
         </p>
@@ -71,7 +75,7 @@ criação de sua conta:
 @Html.Raw(urlWithData)
 
 O identificador do seu consultório é
-"@this.Model.PracticeUrlIdentifier"
+"@this.Model.PracticeIdentifier"
 (sem as aspas duplas).
 
     Você pode fazer login informando este

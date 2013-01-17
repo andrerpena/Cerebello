@@ -104,7 +104,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         {
                             PersonName = eachDoctorUser.Person.FullName,
                             UserName = eachDoctorUser.UserName,
-                            PracticeUrlIdentifier = eachDoctorUser.Practice.UrlIdentifier,
+                            PracticeIdentifier = eachDoctorUser.Practice.UrlIdentifier,
                         };
                     var bodyText = this.RenderPartialViewToString("AccountDataEmail", partialViewModel);
 

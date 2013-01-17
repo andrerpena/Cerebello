@@ -1,4 +1,5 @@
 ﻿@{
+    this.Layout = "../Shared/_AuthenticationLayout.cshtml";
     ViewBag.CreatingAccount = true;
 }
-@Html.Partial("VerifyPracticeAndEmail", (ViewDataDictionary)this.ViewData)
+@Html.Partial("VerifyPracticeAndEmail", this.ViewData)

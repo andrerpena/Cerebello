@@ -614,7 +614,6 @@ namespace Cerebello.Firestarter
         /// <param name="practice"></param>
         private static AccountContract SetupPracticeWithTrialContract(CerebelloEntities db, Practice practice)
         {
-            var trialContractType = db.SYS_ContractType.Where(ct => ct.Id == (int)ContractTypes.TrialContract).Single();
             var accountContract = practice.AccountContract = new AccountContract
                 {
                     ContractTypeId = (int)ContractTypes.TrialContract,
@@ -622,16 +621,17 @@ namespace Cerebello.Firestarter
                     StartDate = new DateTime(2012, 02, 10),
                     EndDate = null,
                     Fee = 0.00M,
-                    SYS_ContractType = trialContractType,
                     Practice = practice,
                 };
             practice.AccountContract.Text = StringHelper.ReflectionReplace(
                 practice.AccountContract.SYS_ContractType.Text,
                 practice.AccountContract);
 
+            db.AccountContracts.AddObject(accountContract);
+
             db.SaveChanges();
 
-            return practice.AccountContract;
+            return accountContract;
         }
 
         /// <summary>

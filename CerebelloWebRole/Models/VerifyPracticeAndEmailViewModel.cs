@@ -4,19 +4,12 @@ using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Models
 {
-    public class VerifyPracticeAndEmailViewModel
+    public class VerifyPracticeAndEmailViewModel : IdentityViewModel
     {
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [RegularExpression(@"^(\d+)-([\da-fA-F]{32})$")]
         [Display(Name = "Token (código enviado no e-mail)")]
         public string Token { get; set; }
-
-        [Display(Name = "Identificador do consultório")]
-        public string Practice { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Nome de usuário ou e-mail")]
-        public String UserNameOrEmail { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Senha")]

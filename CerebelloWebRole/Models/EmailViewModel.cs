@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace CerebelloWebRole.Models
+﻿namespace CerebelloWebRole.Models
 {
     public class EmailViewModel
     {
@@ -13,7 +11,7 @@ namespace CerebelloWebRole.Models
         /// </summary>
         public string Token { get; set; }
 
-        public string PracticeUrlIdentifier { get; set; }
+        public string PracticeIdentifier { get; set; }
 
         public bool IsBodyHtml { get; set; }
     }

@@ -172,6 +172,7 @@
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Compile Include="Controllers\MasterAdminController.cs" />
+    <Compile Include="Models\IdentityViewModel.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
@@ -339,7 +340,6 @@
     </Compile>
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Models\EmailViewModel.cs" />
-    <Compile Include="Models\ResetPasswordRequestViewModel.cs" />
     <Compile Include="Models\VerifyPracticeAndEmailViewModel.cs" />
     <Compile Include="Models\CreatePracticeViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />

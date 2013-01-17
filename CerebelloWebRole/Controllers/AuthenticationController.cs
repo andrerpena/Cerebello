@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.Security;
@@ -34,17 +35,29 @@ namespace CerebelloWebRole.Controllers
             var viewModel = new LoginViewModel();
 
             if (!string.IsNullOrEmpty(returnUrl))
+            {
                 try
                 {
                     // extract practice name from returnUrl
                     var routeData = RouteHelper.GetRouteDataByUrl("~" + returnUrl);
                     if (routeData.Values.ContainsKey("practice"))
                         viewModel.PracticeIdentifier = (string)routeData.Values["practice"];
+
+                    if (this.User.Identity.IsAuthenticated)
+                        this.ModelState.AddModelError(
+                            "returnUrl",
+                            "Suas credenciais não te permitem acessar esta área do Cerebello. "
+                            + "Entre com as credenciais apropriadas nos campos abaixo.");
+                    else
+                        this.ModelState.AddModelError(
+                            "returnUrl",
+                            "Entre com suas credenciais para poder acessar o Cerebello.");
                 }
                 catch
                 {
                     // the returnUrl must be invalid, let's just ignore it
                 }
+            }
 
             return this.View(viewModel);
         }
@@ -192,24 +205,12 @@ namespace CerebelloWebRole.Controllers
             {
                 var timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeTimeZone)registrationData.PracticeTimeZone).Id;
 
-                // Creating a new medical practice.
-                var trialContract = new AccountContract
-                    {
-                        ContractTypeId = (int)ContractTypes.TrialContract,
-                        StartDate = utcNow,
-                        IssuanceDate = utcNow,
-                        Text = "Texto do contrato exibido para o cliente.",
-                        EndDate = null,
-                        Fee = 0.00m,
-                    };
-
                 user.Practice = new Practice
                 {
                     Name = registrationData.PracticeName,
                     UrlIdentifier = urlPracticeId,
                     CreatedOn = utcNow,
                     WindowsTimeZoneId = timeZoneId,
-                    AccountContract = trialContract,
                 };
 
                 // Setting the BirthDate of the user as a person.
@@ -290,7 +291,7 @@ namespace CerebelloWebRole.Controllers
                                                    PersonName = user.Person.FullName,
                                                    UserName = user.UserName,
                                                    Token = tokenId.ToString(),
-                                                   PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                                   PracticeIdentifier = user.Practice.UrlIdentifier,
                                                };
                     var bodyText = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
 
@@ -309,6 +310,24 @@ namespace CerebelloWebRole.Controllers
                     using (message)
                     {
                         // Saving changes to the DB.
+                        this.db.SaveChanges();
+
+                        // Creating a new medical practice.
+                        var trialContract = new AccountContract
+                        {
+                            ContractTypeId = (int)ContractTypes.TrialContract,
+                            StartDate = utcNow,
+                            IssuanceDate = utcNow,
+                            Text = "Texto do contrato exibido para o cliente.",
+                            EndDate = null,
+                            Fee = 0.00m,
+                            Practice = user.Practice,
+                        };
+
+                        user.Practice.AccountContract = trialContract;
+
+                        this.db.AccountContracts.AddObject(trialContract);
+
                         this.db.SaveChanges();
 
                         // adding message to the user so that he/she completes his/her profile informations
@@ -375,7 +394,7 @@ namespace CerebelloWebRole.Controllers
         public ActionResult CreateAccountCompleted(string practice, bool? mustValidateEmail)
         {
             this.ViewBag.MustValidateEmail = mustValidateEmail;
-            return this.View(new VerifyPracticeAndEmailViewModel { Practice = practice });
+            return this.View(new VerifyPracticeAndEmailViewModel { PracticeIdentifier = practice });
         }
 
         #region ResetPassword: Request
@@ -395,21 +414,22 @@ namespace CerebelloWebRole.Controllers
                     throw new Exception(
                         "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
 
-                if (authenticatedPrincipal.Profile.PracticeIdentifier == viewModel.Practice)
+                if (authenticatedPrincipal.Profile.PracticeIdentifier == viewModel.PracticeIdentifier)
                     user = this.db.Users.FirstOrDefault(u => u.Id == authenticatedPrincipal.Profile.Id);
             }
 
             if (user != null || this.Request.HttpMethod == "GET")
             {
-                this.ModelState.Remove("UserNameOrEmail");
-                this.ModelState.Remove("Password");
+                this.ModelState.Remove(() => viewModel.PracticeIdentifier);
+                this.ModelState.Remove(() => viewModel.UserNameOrEmail);
+                this.ModelState.Remove(() => viewModel.Password);
             }
 
             if (user == null)
             {
                 var loginModel = new LoginViewModel
                 {
-                    PracticeIdentifier = viewModel.Practice ?? "",
+                    PracticeIdentifier = viewModel.PracticeIdentifier ?? "",
                     UserNameOrEmail = viewModel.UserNameOrEmail ?? "",
                     Password = viewModel.Password ?? "",
                     RememberMe = viewModel.RememberMe,
@@ -439,7 +459,7 @@ namespace CerebelloWebRole.Controllers
                 var tokenId = new TokenId(viewModel.Token);
 
                 // Getting verification token, using the informations.
-                var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.Practice, user.UserName);
+                var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.PracticeIdentifier, user.UserName);
                 token = this.db.GLB_Token.SingleOrDefault(tk =>
                                                               tk.Id == tokenId.Id
                                                               && tk.Value == tokenId.Value
@@ -448,13 +468,13 @@ namespace CerebelloWebRole.Controllers
             }
 
             var practice = this.db.Practices
-                .SingleOrDefault(p => p.UrlIdentifier == viewModel.Practice);
+                .SingleOrDefault(p => p.UrlIdentifier == viewModel.PracticeIdentifier);
 
             if (token == null)
                 isTokenValid = false;
 
             if (practice == null)
-                this.ModelState.AddModelError(() => viewModel.Practice, "Consultório não foi achado.");
+                this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório não foi achado.");
 
             if (token != null && practice != null)
             {
@@ -496,15 +516,27 @@ namespace CerebelloWebRole.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResetPasswordRequest(ResetPasswordRequestViewModel viewModel)
+        public ActionResult ResetPasswordRequest(IdentityViewModel viewModel)
         {
+            if (string.IsNullOrWhiteSpace(viewModel.PracticeIdentifier))
+                return this.View(viewModel);
+
+            if (string.IsNullOrWhiteSpace(viewModel.UserNameOrEmail))
+                return this.View(viewModel);
+
             // Can only reset password if practice has already been verified.
             var practice = this.db.Practices.SingleOrDefault(p => p.UrlIdentifier == viewModel.PracticeIdentifier);
 
             var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
 
             if (practice == null || user == null)
-                this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "O consultório ou usuário não existem. Por favor verifique se não cometeu nenhum erro de digitação.");
+            {
+                this.ModelState.ClearPropertyErrors(() => viewModel.PracticeIdentifier);
+                this.ModelState.ClearPropertyErrors(() => viewModel.UserNameOrEmail);
+                this.ModelState.AddModelError(
+                    () => viewModel.PracticeIdentifier,
+                    "O consultório ou usuário não existem. Por favor verifique se não cometeu nenhum erro de digitação.");
+            }
 
             if (practice != null && practice.VerificationDate == null && user != null)
                 this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Não é possível resetar a senha pois o consultório ainda não foi verificado. Confirme o seu e-mail antes de tentar mudar a senha.");
@@ -545,7 +577,7 @@ namespace CerebelloWebRole.Controllers
                                                    PersonName = user.Person.FullName,
                                                    UserName = user.UserName,
                                                    Token = tokenId.ToString(),
-                                                   PracticeUrlIdentifier = user.Practice.UrlIdentifier,
+                                                   PracticeIdentifier = user.Practice.UrlIdentifier,
                                                };
                     var bodyText = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
 
@@ -572,8 +604,17 @@ namespace CerebelloWebRole.Controllers
                 {
                     if (this.ModelState.IsValid)
                     {
-                        // Sending the confirmation e-mail to the new user.
-                        this.SendEmail(message);
+                        try
+                        {
+                            // Sending the password reset e-mail to the user.
+                            this.SendEmail(message);
+                        }
+                        catch (SmtpException)
+                        {
+                            // if e-mail was not sent, try to send it again, after 10 seconds
+                            Thread.Sleep(10000);
+                            this.SendEmail(message);
+                        }
 
                         return this.RedirectToAction("ResetPasswordEmailSent");
                     }
@@ -595,9 +636,27 @@ namespace CerebelloWebRole.Controllers
         #endregion
 
         #region ResetPassword: Action
-        public ActionResult ResetPassword(ResetPasswordViewModel viewModel, bool allowEditToken = false)
+        public ActionResult ResetPassword(ResetPasswordViewModel viewModel, bool getRequest = true)
         {
-            this.ViewBag.AllowEditToken = allowEditToken;
+            var utcNow = this.GetUtcNow();
+
+            var user = SecurityManager.GetUser(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail);
+
+            // Getting token information, so that we can locate the token in the database.
+            var tokenInfo = new TokenId(viewModel.Token);
+
+            var tokenName = string.Format("Practice={0}&UserName={1}", viewModel.PracticeIdentifier, user.UserName);
+
+            // Destroying the token.
+            var token = this.db.GLB_Token.SingleOrDefault(tk =>
+                                                          tk.Id == tokenInfo.Id
+                                                          && tk.Value == tokenInfo.Value
+                                                          && tk.ExpirationDate >= utcNow
+                                                          && tk.Type == "ResetPassword"
+                                                          && tk.Name == tokenName);
+
+            if (token == null)
+                this.ViewBag.CannotRedefinePassword = true;
 
             return this.View();
         }
@@ -624,7 +683,13 @@ namespace CerebelloWebRole.Controllers
                                                               && tk.Type == "ResetPassword"
                                                               && tk.Name == tokenName);
 
-                if (token != null && this.ModelState.IsValid)
+                if (token == null)
+                {
+                    this.ViewBag.CannotRedefinePassword = true;
+                    return this.View();
+                }
+
+                if (this.ModelState.IsValid)
                 {
                     SecurityManager.SetUserPassword(this.db.Users, viewModel.PracticeIdentifier, viewModel.UserNameOrEmail, viewModel.NewPassword);
 
@@ -632,7 +697,13 @@ namespace CerebelloWebRole.Controllers
 
                     this.db.SaveChanges();
 
-                    return this.RedirectToAction("ResetPasswordSuccess");
+                    return this.RedirectToAction(
+                        "ResetPasswordSuccess",
+                        new IdentityViewModel
+                            {
+                                PracticeIdentifier = viewModel.PracticeIdentifier,
+                                UserNameOrEmail = viewModel.UserNameOrEmail
+                            });
                 }
             }
 
@@ -660,17 +731,22 @@ namespace CerebelloWebRole.Controllers
                                                               && tk.Type == "ResetPassword"
                                                               && tk.Name == tokenName);
 
-                this.db.GLB_Token.DeleteObject(token);
+                if (token != null)
+                {
+                    this.db.GLB_Token.DeleteObject(token);
 
-                this.db.SaveChanges();
+                    this.db.SaveChanges();
+                }
+                else
+                    this.ViewBag.CannotRedefinePassword = true;
             }
 
             return this.View();
         }
 
-        public ActionResult ResetPasswordSuccess()
+        public ActionResult ResetPasswordSuccess(IdentityViewModel viewModel)
         {
-            return this.View();
+            return this.View(viewModel);
         }
         #endregion
 
