@@ -354,13 +354,13 @@ namespace CerebelloWebRole.Tests
                 if (this.IsAuthenticated)
                 {
                     User user;
-
-                    var securityToken = SecurityManager.AuthenticateUser(
+                    string securityToken;
+                    user = SecurityManager.AuthenticateUser(
                         this.UserNameOrEmail,
                         this.Password,
                         string.Format("{0}", this.RouteData.Values["practice"]),
                         db.Users,
-                        out user);
+                        out securityToken);
 
                     user.LastActiveOn = DateTime.UtcNow;
 

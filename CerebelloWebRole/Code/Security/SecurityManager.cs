@@ -116,34 +116,40 @@ namespace CerebelloWebRole.Code
 
             try
             {
-                var securityToken = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, dbUserSet, out loggedInUser);
+                string securityToken;
+                loggedInUser = AuthenticateUser(loginModel.UserNameOrEmail, loginModel.Password, loginModel.PracticeIdentifier, dbUserSet, out securityToken);
 
-                var expiryDate = utcNow.AddYears(1);
-                var ticket = new FormsAuthenticationTicket(
-                    1,
-                    loginModel.UserNameOrEmail,
-                    utcNow,
-                    expiryDate,
-                    loginModel.RememberMe,
-                    securityToken,
-                    FormsAuthentication.FormsCookiePath);
+                if (loggedInUser != null)
+                {
+                    var expiryDate = utcNow.AddYears(1);
+                    var ticket = new FormsAuthenticationTicket(
+                        1,
+                        loginModel.UserNameOrEmail,
+                        utcNow,
+                        expiryDate,
+                        loginModel.RememberMe,
+                        securityToken,
+                        FormsAuthentication.FormsCookiePath);
 
-                var encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
-                    {
-                        Expires = loginModel.RememberMe ? utcNow.AddYears(1) : DateTime.MinValue
-                    };
+                    var encryptedTicket = FormsAuthentication.Encrypt(ticket);
+                    var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+                        {
+                            Expires = loginModel.RememberMe ? utcNow.AddYears(1) : DateTime.MinValue
+                        };
 
-                cookieCollection.Add(cookie);
+                    cookieCollection.Add(cookie);
 
-                return true;
+                    return true;
+                }
             }
-            catch (Exception)
+            catch
             {
-                // add log information about this exception
-                FormsAuthentication.SignOut();
-                return false;
+                // Any excpetion will be ignored here, and the login will just fail.
             }
+
+            // add log information about this exception
+            FormsAuthentication.SignOut();
+            return false;
         }
 
         public static void SetPrincipal(HttpContextBase httpContext)
@@ -174,34 +180,35 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
-        /// Authenticates the given user and returns a string corresponding to his/her
-        /// identity
+        /// Authenticates the user, given it's login informations.
         /// </summary>
         /// <param name="practiceIdentifier"> </param>
         /// <param name="dbUserSet"></param>
         /// <param name="userNameOrEmail"> </param>
         /// <param name="password"> </param>
-        /// <param name="loggedInUser"> </param>
+        /// <param name="securityTokenString">String representing the identity of the authenticated user.</param>
         /// <returns></returns>
-        public static String AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, IObjectSet<User> dbUserSet, out User loggedInUser)
+        public static User AuthenticateUser(String userNameOrEmail, String password, string practiceIdentifier, IObjectSet<User> dbUserSet, out string securityTokenString)
         {
             // Note: this method was setting the user.LastActiveOn property, but now the caller must do this.
             // This is because it is not allowed to use DateTime.Now, because this makes the value not mockable.
 
-            loggedInUser = GetUser(dbUserSet, practiceIdentifier, userNameOrEmail);
+            securityTokenString = null;
+
+            var loggedInUser = GetUser(dbUserSet, practiceIdentifier, userNameOrEmail);
 
             if (loggedInUser == null)
-                throw new Exception("UserName/Email [" + userNameOrEmail + "] not found");
+                return null;
 
             // comparing password
             var passwordHash = CipherHelper.Hash(password, loggedInUser.PasswordSalt);
             if (loggedInUser.Password != passwordHash)
-                throw new Exception("Password [" + password + "] is invalid");
+                return null;
 
             var securityToken = new SecurityToken
             {
                 Salt = new Random().Next(0, 2000),
-                UserData = new UserData()
+                UserData = new UserData
                 {
                     Id = loggedInUser.Id,
                     Email = loggedInUser.Person.Email,
@@ -211,7 +218,9 @@ namespace CerebelloWebRole.Code
                 }
             };
 
-            return SecurityTokenHelper.ToString(securityToken);
+            securityTokenString = SecurityTokenHelper.ToString(securityToken);
+
+            return loggedInUser;
         }
 
         /// <summary>
