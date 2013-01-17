@@ -193,12 +193,23 @@ namespace CerebelloWebRole.Controllers
                 var timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeTimeZone)registrationData.PracticeTimeZone).Id;
 
                 // Creating a new medical practice.
+                var trialContract = new AccountContract
+                    {
+                        ContractTypeId = (int)ContractTypes.TrialContract,
+                        StartDate = utcNow,
+                        IssuanceDate = utcNow,
+                        Text = "Texto do contrato exibido para o cliente.",
+                        EndDate = null,
+                        Fee = 0.00m,
+                    };
+
                 user.Practice = new Practice
                 {
                     Name = registrationData.PracticeName,
                     UrlIdentifier = urlPracticeId,
                     CreatedOn = utcNow,
                     WindowsTimeZoneId = timeZoneId,
+                    AccountContract = trialContract,
                 };
 
                 // Setting the BirthDate of the user as a person.

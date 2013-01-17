@@ -2,8 +2,7 @@
     ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos";
 }
 <style type="text/css">
-    .xpto
-    {
+    .xpto {
         white-space: nowrap;
         background-color: #F8F8F8;
         border: 1px solid #EAEAEA;
@@ -24,10 +23,22 @@
 <div class="container">
     <div class="row">
         <h3>Já criei a minha conta, e agora?</h3>
-        <p>
-            Para começar a usar o software, basta clicar no botão <span class="xpto">Entrar</span>
-            que se encontra no topo da página.
-        </p>
+        @if (this.User.Identity.IsAuthenticated)
+        {
+            <p>
+                Para começar a usar o software, basta clicar no botão <span class="xpto">Entrar</span>
+                que se encontra no topo da página.
+            </p>
+        }
+        else
+        {
+            <p>
+                Para começar a usar o software, você deve informar suas credênciais,
+                clicando no botão <span class="xpto">Login</span>
+                que se encontra no topo da página.
+            </p>
+        }
+
         <h3>Documentação</h3>
         <p>
             O Cerebello possui uma extensa documentação sobre todos os recursos presentes no software.
@@ -41,6 +52,21 @@
                 <li><a>Secretária</a> - visão da secretária para o software</li>
                 <li><a>Gerenciamento da conta</a> - visão administrativa da conta</li>
             </ul>
+        </p>
+
+        <h3>Plano Profissional</h3>
+        <p>
+            Neste momento a sua conta está configurada para o <span class="xpto">Plano de Avaliação</span>.
+            Você pode usar este plano idefinidamente se quiser, entretanto este possui um limite de 50 pacientes,
+            e uma barra no topo que fica sempre visível com um link para fazer o upgrade.
+        </p>
+        <p>
+            Para atender você melhor, recomendamos que faça upgrade para o <span class="xpto">Plano de Profissional</span>.
+            Neste plano não existe nenhuma limitação, e não possui a barra no topo da tela, além de possuir suporte prioritário.
+        </p>
+        <p>
+            O upgrade pode ser feito a partir do menu <span class="xpto">Configurações da conta</span>,
+            que aparece dentro da aplicação.
         </p>
     </div>
 </div>
