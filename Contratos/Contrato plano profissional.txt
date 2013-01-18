@@ -1,0 +1,109 @@
+Contrato de Software como Serviço (SAAS) denominado Cerebello
+=============================================================
+
+Partes
+------
+
+Pelo presente instrumento particular de Software como Serviço (SAAS),
+de um lado
+
+  XPTO
+  C.N.P.J.: 
+  Sede: 
+
+doravante denominada simplesmente CONTRATADA,
+e de outro lado
+
+  a pessoa física ou jurídica, contratante do Software como Serviço
+  na núvem (SAAS) denominado CEREBELLO, doravante  denominada  simplesmente
+  ASSINANTE ou CONTRATANTE.
+
+ambas as partes qualificadas no FORMULÁRIO DE ADESÃO,
+
+
+
+,
+em meio digital na forma de ARQUIVO PDF ASSINADO DIGITALMENTE,
+enviado por E-MAIL ao ASSINANTE, e também armazenado no BANCO
+DE DADOS da CONTRATADA.
+
+Definições
+----------
+
+CONTRATADA: é a pessoa jurídica que projeta, desenvolve e
+disponibiliza primariamente o Software como Serviço
+na núvem denominado CEREBELLO, assim como filiais;
+excluindo-se representantes comerciais.
+
+ASSINANTE, CONTRATANTE ou CLIENTE: pessoa física ou jurídica que
+possui vínculo contratual com a XPTO, para fruição do
+Software como Serviço na núvem denominado CEREBELLO.
+
+CEREBELLO ou SISTEMA: é o Software como Serviço na núvem,
+para consultórios e clínicas da área de saúde,
+cujas normas de fruição são definidas neste contrato
+e doravante simplesmente denominado SISTEMA.
+
+SOFTWARE COMO SERVIÇO (SAAS): é o modelo de software em que
+o prestador do serviço mantémo software acessível e funcionando
+pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO (SLA)
+que define métricas de desempenho e segurança.
+Neste modelo o cliente possui direitos sobre seus dados
+e uso de software, sem precisar adquirir uma licença,
+ou comprar o software como produto.
+
+ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT):
+é a parte do contrato que define métricas do serviço prestado
+referentes a desempenho e segurança.
+
+FORMULÁRIO DE ADESÃO: instrumento com
+
+
+
+Objeto
+------
+
+    Tornar disponível ao ASSINANTE, o uso do SISTEMA
+através de uma CONTA, sendo esta acessada pela
+INTERNET, mediante a digitação das CREDENCIAIS para entrar
+no sistema. [Este modelo designa-se SAAS]
+
+    Armazenar e trafegar em SEGURANÇA os DADOS entrados no SISTEMA.
+
+
+
+Objeto: SaaS
+  Serviços agregados:
+    suporte (online, e-mail e telefone),
+    armazenamento de dados,
+    segurança de dados (contra perdas, adulteração, roubo),
+    atualização constante,
+
+
+Valores:
+  preços:
+  condições,
+  periodicidade,
+  faturamento,
+  reajustes,
+  penalidades,
+  tributos
+
+
+Condições de prestação de serviços: limites de usuários, pacientes, propriedade intelectual, engenharia reversa, código fonte
+
+
+Acordo de nível de serviço (desempenho)
+  tempo máximo para solução de defeitos,
+  tempo máximo de atendimento em suporte,
+  
+
+
+Responsabilidades:
+  senhas
+  informações do cliente: devem ser verdadeiras e corretas
+
+
+Recisão
+
+
