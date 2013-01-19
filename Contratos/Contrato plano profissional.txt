@@ -53,24 +53,105 @@ e uso de software, sem precisar adquirir uma licença,
 ou comprar o software como produto.
 
 ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT):
-é a parte do contrato que define métricas do serviço prestado
-referentes a desempenho e segurança.
+é a parte do contrato que define métricas referentes à qualidade
+do serviço prestado, assim como os direitos do CONTRATANTE
+perante à possíveis falhas da CONTRATADA nos aspectos apresentados.
 
-FORMULÁRIO DE ADESÃO: instrumento com
+FORMULÁRIO DE ADESÃO: documento que qualifica o CONTRATANTE,
+assim como parâmetros com relação ao serviço prestado.
+Esses parâmetros constam primariamente de informações sobre COBRANÇAS
+(valor, dia de emissão da fatura e periodicidade), e também de
+outras informações que dizem respeito à variações da oferta de serviço,
+que são específicas para o CEREBELLO. As possíveis combinações e
+valores desses parâmetros são determinadas pela CONTRATADA, cabendo
+à CONTRATANTE escolher uma dentre as opções apresentadas.
 
+USUÁRIO: Uma CONTA permite o acesso de vários usuários cadastrados
+pela CONTRATANTE. Cada usuário cadastrado recebe suas próprias credenciais
+e deve criar uma SENHA secreta para acessar o SISTEMA. As credenciais conferem
+poderes aos usuários, de acordo com o grupo ao qual eles pertencem:
+Médicos, Secretárias ou Administradores.
 
+CREDENCIAIS: São as informações usadas pelo USUÁRIO para ter acesso ao
+SISTEMA. Dentre essas informações está a SENHA, da qual o USUÁRIO se
+resposabiliza por manter em segredo absoluto.
 
-Objeto
+SENHA: é uma sequência de letras, símbolos e números, criada por cada usuário,
+e que deve ser mantida em segredo. É de responsabilidade de cada USUÁRIO,
+usar a sua senha em computadores ou dispositivos seguros, de conhecimento
+da CONTRATADA, de forma a evitar o roubo da SENHA.
+
+OBJETO
 ------
 
-    Tornar disponível ao ASSINANTE, o uso do SISTEMA
-através de uma CONTA, sendo esta acessada pela
-INTERNET, mediante a digitação das CREDENCIAIS para entrar
-no sistema. [Este modelo designa-se SAAS]
+    Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA,
+sendo esta acessada pela INTERNET, mediante a digitação das CREDENCIAIS para
+entrar no SISTEMA.
 
-    Armazenar e trafegar em SEGURANÇA os DADOS entrados no SISTEMA.
+    Manter o SISTEMA em condições de uso, de acordo com o definido no
+ACORDO DE NÍVEL DE SERVIÇO presente neste contrato.
 
+ACORDO DE NÍVEL DE SERVIÇO
+--------------------------
 
+SEGURANÇA:
+
+ - Os DADOS do CLIENTE terão backups feitos [diariamente/semanalmente/etc..].
+   Esses backups são mantidos por um tempo XXXX no banco de dados e depois
+   descartados.
+
+ - Os DADOS entrados no SISTEMA, são transmitidos pela INTERNET de
+   forma criptografada e certificada. A criptografia serve para impedir
+   que terceiros tenham acesso à informação sendo transmitida. A certificação
+   serve para ter certeza de que nenhum impostor tenha a capacidade de obter
+   os dados, se fazendo passar pela CONTRATADA.
+
+ - As alterações feitas por qualquer USUÁRIO serão catalogadas a partir de
+   01 de Abril de 2013 (por limitações técnicas no presente momento), de forma a
+   permitir a atribuição de responsabilidade sobre dados inseridos, alterados
+   e apagados.
+
+ - A CONTA do CONTRATANTE é protegida através do uso de CREDENCIAIS
+   que devem ser digitadas ao se acessar o SISTEMA. Cada USUÁRIO da CONTA
+   possui suas próprias CREDENCIAIS, e é responsável por manter a SENHA em
+   segredo absoluto. A senha dos usuários nunca é armazenada diretamente,
+   ao invés disso ela é armazenada como um código HASH, que é uma versão
+   ilegível e irreversível da senha.
+
+ - DADOS médicos sigilosos, só podem ser acessados usando-se as CREDENCIAIS
+   do próprio médico que cadastrou esses DADOS. Esses dados são armazenados
+   no banco de dados da CONTRATADA e o acesso a eles é protegido por senha
+   conhecida somente pelo administrador do banco de dados. O poder de
+   acessar dados sigilosos conferido a esse administrador não será usado
+   em circunstâncias normais, e caso contrário, requer concentimento
+   justificado pela CONTRATANTE e assinado por ambas as partes.
+   Nenhum outro empregado ou membro da CONTRATADA, no presente ou no futuro,
+   terá acesso a essas informações.
+
+ - O SISTEMA não aceita que o USUÁRIO crie uma SENHA fácil de ser adivinhada.
+     É obrigatórios o uso de pelo menos 3 dos seguintes grupos de caracteres:
+       letras minúsculas, letras maiúsculas, números, símbolos/espaço em branco;
+     É obrigatório pelo menos 6 caracteres;
+     A senha não pode conter o IDENTIFICADOR DE USUÁRIO;
+     A senha não pode parecer com uma data;
+     A senha não pode conter uma sequência de mais de três caracteres repetidos;
+
+ - Não nos responsabilizamos pela segurança do computador ou dispositivo usado
+   para acessar o SISTEMA. Não recomendamos o uso do SISTEMA em
+   computadores ou dispositivos desconhecidos da CONTRATANTE. Em caso de
+   furto do computador ou dispositivo em que o SISTEMA tenha sido usado,
+   recomenda-se a alteração imediata da SENHA de todos os USUÁRIOS que
+   tenham usado este mesmo computador ou dispositivo.
+
+DESEMPENHO:
+
+ - Tempo on-line: 99,5% do tempo por semana, o que equivale a 50 minutos
+   fora do ar por semana.
+
+SIGILO DOS DADOS DE PRONTUÁRIO DO PACIENTE
+------------------------------------------
+
+ - Os DADOS DE PRONTUÁRIO DO PACIENTE são gravados no 
 
 Objeto: SaaS
   Serviços agregados:
