@@ -307,7 +307,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var certificateController = mr.CreateController<MedicalCertificatesController>();
-            var certificateControllerResult = certificateController.Edit(formModel);
+            var certificateControllerResult = certificateController.Edit(new[] { formModel });
 
             var certificate = this.db.MedicalCertificates.First();
 

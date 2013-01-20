@@ -29,6 +29,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Certificate model name
         /// </summary>
+        [Display(Name = "Modelo de atestado")]
         public string ModelName { get; set; }
 
         /// <summary>

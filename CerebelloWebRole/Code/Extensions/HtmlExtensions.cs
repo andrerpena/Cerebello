@@ -12,6 +12,7 @@ using System.Web.Routing;
 using System.Web.Script.Serialization;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Controls;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Extensions
 {
@@ -310,6 +311,21 @@ namespace CerebelloWebRole.Code.Extensions
             tagBuilder.Append(scriptTag.ToString());
 
             return new MvcHtmlString(tagBuilder.ToString());
+        }
+
+        /// <summary>
+        /// Returns a component name based on an expression
+        /// </summary>
+        public static string GetComponentNameFor<TModel>([NotNull] this HtmlHelper<TModel> html,
+                                                  [NotNull] Expression<Func<TModel, object>> expression)
+        {
+            if (html == null) throw new ArgumentNullException("html");
+            if (expression == null) throw new ArgumentNullException("expression");
+
+            var prefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
+            var expressionText = ExpressionHelper.GetExpressionText((expression));
+
+            return !string.IsNullOrEmpty(prefix) ? (prefix + "." + expressionText) : expressionText;
         }
 
         /// <summary>

@@ -10,33 +10,40 @@
     {
         certificateId = Model.Id.ToString();
     }
+
+    string autocompleteName = null;
+    string htmlFieldPrefix = null;
 }
 <div class="certificate-edit appointment-panel" data-val-id="certificate-@certificateId">
     @using (Html.BeginForm(null, null, FormMethod.Post))
     {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+        using (Html.BeginScope("MedicalCertificates"))
+        {
+            var editPanel = this.Html.CreateEditPanel();
+            editPanel.AddField(model => model.ModelId, @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, @Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
 
-        <table class="form-table">
-            <tr>
-                <th>@Html.LabelFor(model => model.ModelId)
-                </th>
-                <td class="large">@Html.DropDownListFor(model => model.ModelId, this.Model.ModelOptions, "")
-                </td>
-            </tr>
-        </table>
-        
-        <div class="fields-wrapper">
-            @Html.Partial("MedicalCertificateFieldsEditor")        
-        </div>
-        <div class="inline-link-bar">
-            <a href="@Url.Action("index", "modelmedicalcertificates")" target="_blank" class="inline-link" >Gerenciar modelos de atestados</a>
-        </div>
-        <div class="submit-bar">
-            <input type="submit" value="salvar atestado" />
-            <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
-        </div>
+            var a = this.Html.GetComponentNameFor(model => model.ModelName);
+            
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.PatientId)
+            @Html.HiddenFor(model => model.Id)
+
+            @editPanel.GetHtml()
+
+            autocompleteName = this.Html.GetComponentNameFor(model => model.ModelName);
+            htmlFieldPrefix = this.ViewData.TemplateInfo.HtmlFieldPrefix;
+            
+            <div class="fields-wrapper">
+                @Html.Partial("MedicalCertificateFieldsEditor")        
+            </div>
+            <div class="inline-link-bar">
+                <a href="@Url.Action("index", "modelmedicalcertificates")" target="_blank" class="inline-link" >Gerenciar modelos de atestados</a>
+            </div>
+            <div class="submit-bar">
+                <input type="submit" value="salvar atestado" />
+                <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
+            </div>
+        }
     }
     <script type="text/javascript">
         (function() {
@@ -48,19 +55,21 @@
                 }
             });
 
-            $("select", $container).change(function(e) {
+            $("input[name='@autocompleteName']").data("autocomplete").opts.change = function(data) {
+                console.log(data);
+                console.log(data.Id);
                 $.ajax({
                     url: "@Url.Action("MedicalCertificateFieldsEditor")",
-                    data: { modelId: $(this).val(), certificateId: @(Model.Id != null ? Model.Id.ToString() : "null") },
-                    success: function(result) {
-                        $(".fields-wrapper", $container).html(result);
-                    },
-                    error: function(e) {
-                        alert("algo deu errado");
-                    }
-                });
-            });
-
+                    data: { modelId: data.Id, certificateId: @(Model.Id != null ? Model.Id.ToString() : "null"), htmlFieldPrefix: '@htmlFieldPrefix' },
+                        success: function(result) {
+                            $(".fields-wrapper", $container).html(result);
+                        },
+                        error: function(e) {
+                            alert("algo deu errado");
+                        }
+                    });
+            };
+            
             $('a.cancel', $container).click(function(e) {
                 e.preventDefault();
                 @if (Model.Id != null)
