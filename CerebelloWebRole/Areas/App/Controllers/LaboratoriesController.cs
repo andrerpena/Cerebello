@@ -120,20 +120,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.Json(new { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-
-        [HttpGet]
-        public ActionResult CreateModal()
-        {
-            return this.Edit((int?)null);
-        }
-
-        [HttpPost]
-        public ActionResult CreateModal([NotNull] MedicineLaboratoryViewModel formModel)
-        {
-            if (formModel == null) throw new ArgumentNullException("formModel");
-            return this.Edit(formModel);
-        }
-
+        
         [HttpGet]
         public ActionResult Create()
         {
@@ -159,7 +146,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = this.GetViewModel(laboratory);
             }
 
-            return View("edit", viewModel);
+            // the resulting view will depend on the request type
+            return this.Request.IsAjaxRequest() ? View("CreateModal", viewModel) : View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -212,7 +200,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 return this.RedirectToAction("details", new { id = laboratory.Id });
             }
 
-            return this.View("edit", formModel);
+            // the resulting view will depend on the request type
+            return this.Request.IsAjaxRequest() ? View("CreateModal", formModel) : View("Edit", formModel);
         }
 
         public ActionResult Search(SearchModel searchModel)
