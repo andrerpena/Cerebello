@@ -49,9 +49,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(MedicalCertificateViewModel formModel)
+        public ActionResult Create(MedicalCertificateViewModel[] medicalCertificates)
         {
-            return this.Edit(formModel);
+            return this.Edit(medicalCertificates);
         }
 
         /// <summary>
@@ -70,11 +70,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id.HasValue)
             {
-                MedicalCertificate certificate = db.MedicalCertificates.Where(mc => mc.Id == id.Value).FirstOrDefault();
+                var certificate = this.db.MedicalCertificates.FirstOrDefault(mc => mc.Id == id.Value);
                 viewModel = new MedicalCertificateViewModel()
                 {
                     Id = certificate.Id,
                     PatientId = certificate.PatientId,
+                    ModelName = certificate.ModelMedicalCertificate.Name,
                     ModelId = certificate.ModelMedicalCertificateId,
                     Fields = (from f in certificate.Fields
                               select new MedicalCertificateFieldViewModel()
@@ -93,15 +94,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PatientId = patientId
                 };
             }
-
-            // NOTE: The ModelMedicalCertificateController is responsible for keeping medical certificate
-            // fields up to date with the model
-            // At this point, viewModel.Fields must be fully populated
-            string selectedModelValue = viewModel.ModelId.HasValue ? viewModel.ModelId.ToString() : null;
-            viewModel.ModelOptions = this.db.ModelMedicalCertificates
-                .ToList()
-                .Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() })
-                .ToList();
 
             return View("Edit", viewModel);
         }
@@ -128,8 +120,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="formModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(MedicalCertificateViewModel formModel)
+        public ActionResult Edit(MedicalCertificateViewModel[] medicalCertificates)
         {
+            var formModel = medicalCertificates[0];
+
             ModelMedicalCertificate certificateModel = null;
 
             // validates the existence and the compliance of the certificate model
@@ -281,10 +275,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         ///         but taking into account fields already registered for the given certificate
         /// </remarks>
         [HttpGet]
-        public ActionResult MedicalCertificateFieldsEditor(int? modelId, int? certificateId)
+        public ActionResult MedicalCertificateFieldsEditor(int? modelId, int? certificateId, string htmlFieldPrefix)
         {
             var viewModel = new MedicalCertificateViewModel() { Fields = new List<MedicalCertificateFieldViewModel>() };
-            var model = this.db.ModelMedicalCertificates.Where(mmc => mmc.Id == modelId).FirstOrDefault();
+            var model = this.db.ModelMedicalCertificates.FirstOrDefault(mmc => mmc.Id == modelId);
 
             if (model != null)
             {
@@ -307,6 +301,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
             }
 
+            this.ViewData.TemplateInfo.HtmlFieldPrefix = htmlFieldPrefix;
             return this.View(viewModel);
         }
 

@@ -1,4 +1,5 @@
 ﻿@using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code.Controls
 @model ModelMedicalCertificateViewModel
 @{
     string title;
@@ -11,6 +12,11 @@
         title = "Novo modelo de atestado médico";
     }
     ViewBag.Title = string.Format("{0} · Cerebello", title);
+
+    var editPanel = this.Html.CreateEditPanel();
+    editPanel.AddField(model => model.Name);
+    editPanel.AddField(model => model.Text, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new { rows = 10 })</text>);
+    editPanel.AddField(model => model.Fields, EditPanelFieldSize.Large, @<text>@Html.CollectionEditorInlineFor(m => m.Fields, "FieldEditor", "Adicionar campo")</text>);
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
@@ -38,27 +44,8 @@
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
     
-    <table class="form-table">
-        <tr>
-            <th>@Html.LabelFor(model => model.Name)
-            </th>
-            <td class="large">@Html.TextBoxFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.Text)
-            </th>
-            <td class="large">@Html.TextAreaFor(model => model.Text, new { rows = 10 })
-            </td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.Fields)
-            </th>
-            <td>
-                @Html.CollectionEditorInlineFor(m => m.Fields, "FieldEditor", "Adicionar campo")
-            </td>
-        </tr>
-    </table>
+    @editPanel.GetHtml()
+        
     <div class="submit-bar">
         <input type="submit" value="salvar modelo de atestado" />
         <span class="separator">ou</span>

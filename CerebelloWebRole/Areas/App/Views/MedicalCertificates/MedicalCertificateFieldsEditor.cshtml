@@ -2,12 +2,12 @@
 @{
     this.Layout = null;
 }
-<table class="form-table">
+<table class="edit-panel">
     @for (var i = 0; i < this.Model.Fields.Count; i++)
     {
         <tr>
-            <th>@Html.LabelFor(model => this.Model.Fields[i].Value, this.Model.Fields[i].Name)</th>
-            <td>
+            <th class="first header">@Html.LabelFor(model => this.Model.Fields[i].Value, this.Model.Fields[i].Name)</th>
+            <td class="first value">
                 @Html.HiddenFor(model => model.Fields[i].Name)
                 @Html.EditorFor(model => model.Fields[i].Value)
             </td>

@@ -1,16 +1,14 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.MedicalCertificateViewModel
 @{
     Layout = null;
+
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(model => model.ModelName);
 }
 <div class="medical-certificate-details medical-appointment-details-panel" data-val-id="medical-certificate-@Model.Id">
-    <div>
-        <table class="view-table">
-            <tr>
-                <th>Modelo: </th>
-                <td>@this.Model.ModelName</td>
-            </tr>
-        </table>
-    </div>
+    
+    @cardView.GetHtml()
+
     <div class="inline-link-bar">
         <a href="#" class="edit-medical-certificate inline-link">Editar atestado</a>
         <a href="#" class="delete-medical-certificate inline-link">Excluir atestado</a>

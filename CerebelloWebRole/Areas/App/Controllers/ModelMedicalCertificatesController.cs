@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.Mvc;
@@ -66,7 +68,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Edit(int? id, int? anvisaId = null)
         {
-            ModelMedicalCertificateViewModel viewModel = new ModelMedicalCertificateViewModel();
+            var viewModel = new ModelMedicalCertificateViewModel();
 
             if (id != null)
             {
@@ -260,6 +262,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 return this.Json(new JsonDeleteMessage { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        /// <summary>
+        /// Model medical certificate autocomplete
+        /// </summary>
+        [HttpGet]
+        public JsonResult AutocompleteModelMedicalCertificates(string term, int pageSize, int pageIndex)
+        {
+            IQueryable<ModelMedicalCertificate> baseQuery = this.db.ModelMedicalCertificates;
+            if (!string.IsNullOrEmpty(term))
+                baseQuery = baseQuery.Where(c => c.Name.Contains(term));
+
+
+            var queryResult = (from c in baseQuery.OrderBy(c => c.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
+                               select new AutocompleteRow
+                               {
+                                   Id = c.Id.ToString(),
+                                   Value = c.Name
+                               }).ToList();
+
+            var result = new AutocompleteJsonResult
+            {
+                Rows = new ArrayList(queryResult),
+                Count = baseQuery.Count()
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult FieldEditor(ModelMedicalCertificateFieldViewModel viewModel)

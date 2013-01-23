@@ -52,7 +52,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var mr = new MockRepository(true);
             var controller = mr.CreateController<MedicalCertificatesController>();
-            var controllerResult = controller.Edit(formModel);
+            var controllerResult = controller.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
             Assert.AreEqual(false, controller.ModelState.IsValid);
@@ -70,7 +70,6 @@ namespace CerebelloWebRole.Tests.Tests
             };
             var mr = new MockRepository(true);
             var certificateModelController = mr.CreateController<ModelMedicalCertificatesController>();
-            var certificateModelControllerResult = certificateModelController.Edit(certificateModelFormModel);
             int modelId = this.db.ModelMedicalCertificates.First().Id;
 
             // tries to save
@@ -82,7 +81,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var controller = mr.CreateController<MedicalCertificatesController>();
-            var controllerResult = controller.Edit(formModel);
+            var controllerResult = controller.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
             Assert.AreEqual(false, controller.ModelState.IsValid);
@@ -98,7 +97,7 @@ namespace CerebelloWebRole.Tests.Tests
             var patientId = this.db.Patients.First().Id;
 
             // tries to save
-            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            var formModel = new MedicalCertificateViewModel()
             {
                 // both EXISTING
                 ModelId = null,
@@ -113,7 +112,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var mr = new MockRepository(true);
             var controller = mr.CreateController<MedicalCertificatesController>();
-            var controllerResult = controller.Edit(formModel);
+            var controllerResult = controller.Edit(new [] { formModel });
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
             Assert.AreEqual(false, controller.ModelState.IsValid);
@@ -153,7 +152,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var target = mr.CreateController<MedicalCertificatesController>();
-            var result = target.Edit(formModel);
+            var result = target.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             Assert.AreEqual(false, target.ModelState.IsValid);
@@ -196,7 +195,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var target = mr.CreateController<MedicalCertificatesController>();
-            var result = target.Edit(formModel);
+            var result = target.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             Assert.AreEqual(true, target.ModelState.IsValid);
@@ -218,7 +217,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             target = mr.CreateController<MedicalCertificatesController>();
-            result = target.Edit(formModel);
+            result = target.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             Assert.AreEqual(true, target.ModelState.IsValid);
@@ -233,7 +232,7 @@ namespace CerebelloWebRole.Tests.Tests
             var patientId = this.db.Patients.First().Id;
 
             // obtains a valid certificate model
-            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            var certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
                 Text = "This is a reference: <%FIELD_1%>",
@@ -260,7 +259,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var target = mr.CreateController<MedicalCertificatesController>();
-            var result = target.Edit(formModel);
+            var result = target.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             Assert.AreEqual(true, target.ModelState.IsValid);
@@ -306,7 +305,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var certificateController = mr.CreateController<MedicalCertificatesController>();
-            var certificateControllerResult = certificateController.Edit(formModel);
+            var certificateControllerResult = certificateController.Edit(new[] { formModel });
             var certificate = this.db.MedicalCertificates.First();
 
             // tries to delete the certificate
@@ -360,7 +359,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             var certificateController = mr.CreateController<MedicalCertificatesController>();
-            var certificateControllerResult = certificateController.Edit(formModel);
+            var certificateControllerResult = certificateController.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(certificateControllerResult, typeof(ViewResult));
             Assert.AreEqual(true, certificateController.ModelState.IsValid);
@@ -505,7 +504,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             // save the certificate
-            controller.Edit(formModel);
+            controller.Edit(new[] { formModel });
             var certificateId = this.db.MedicalCertificates.Select(c => c.Id).First();
 
             // at this point we have 2 certificate models, "modelId" and "anotherModelId" and we have a certificate using "modelId". The point is 
@@ -560,7 +559,7 @@ namespace CerebelloWebRole.Tests.Tests
             };
 
             // save the certificate
-            controller.Edit(formModel);
+            controller.Edit(new[] { formModel });
             var certificateId = this.db.MedicalCertificates.Select(c => c.Id).First();
 
             // at this point we have 2 certificate models, "modelId" and "anotherModelId" and we have a certificate using "modelId". The point is 
