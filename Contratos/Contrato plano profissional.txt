@@ -1,132 +1,128 @@
 Contrato de Software como Serviço (SAAS) denominado Cerebello
 =============================================================
 
+
+
+
 Partes
 ------
 
-Pelo presente instrumento particular de Software como Serviço (SAAS),
-de um lado
+Pelo presente instrumento particular, de um lado
 
   XPTO
   C.N.P.J.: 
   Sede: 
 
-doravante denominada simplesmente CONTRATADA,
-e de outro lado
+doravante denominada simplesmente CONTRATADA, e de outro lado
 
-  a pessoa física ou jurídica, contratante do Software como Serviço
-  na núvem (SAAS) denominado CEREBELLO, doravante  denominada  simplesmente
-  ASSINANTE ou CONTRATANTE.
-
-ambas as partes qualificadas no FORMULÁRIO DE ADESÃO,
-
+  a pessoa física ou jurídica, contratante do Software como Serviço na núvem (SAAS)
+  denominado CEREBELLO, doravante  denominada simplesmente ASSINANTE, sendo este
+  qualificado no FORMULÁRIO DE ADESÃO,
+    
+têm entre si contratado os termos presentes neste documento.
 
 
-,
-em meio digital na forma de ARQUIVO PDF ASSINADO DIGITALMENTE,
-enviado por E-MAIL ao ASSINANTE, e também armazenado no BANCO
-DE DADOS da CONTRATADA.
+
 
 Definições
 ----------
 
-CONTRATADA: é a pessoa jurídica que projeta, desenvolve e
-disponibiliza primariamente o Software como Serviço
-na núvem denominado CEREBELLO, assim como filiais;
-excluindo-se representantes comerciais.
+Para o perfeito entendimento e interpretação do presente contrato, são adotadas as
+seguintes definições:
 
-ASSINANTE, CONTRATANTE ou CLIENTE: pessoa física ou jurídica que
-possui vínculo contratual com a XPTO, para fruição do
-Software como Serviço na núvem denominado CEREBELLO.
+ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT): é a parte do contrato que
+  define métricas referentes à qualidade do serviço prestado, assim como os direitos do
+  ASSINANTE perante à possíveis falhas da CONTRATADA nos aspectos apresentados.
 
-CEREBELLO ou SISTEMA: é o Software como Serviço na núvem,
-para consultórios e clínicas da área de saúde,
-cujas normas de fruição são definidas neste contrato
-e doravante simplesmente denominado SISTEMA.
+ASSINANTE: pessoa física ou jurídica que possui vínculo contratual com a XPTO, para
+  fruição do Software como Serviço na núvem denominado CEREBELLO.
 
-SOFTWARE COMO SERVIÇO (SAAS): é o modelo de software em que
-o prestador do serviço mantémo software acessível e funcionando
-pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO (SLA)
-que define métricas de desempenho e segurança.
-Neste modelo o cliente possui direitos sobre seus dados
-e uso de software, sem precisar adquirir uma licença,
-ou comprar o software como produto.
+CONTRATADA: é a pessoa jurídica que projeta, desenvolve e disponibiliza primariamente o
+  Software como Serviço na núvem denominado CEREBELLO, assim como filiais; excluindo-se
+  representantes comerciais.
 
-ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT):
-é a parte do contrato que define métricas referentes à qualidade
-do serviço prestado, assim como os direitos do CONTRATANTE
-perante à possíveis falhas da CONTRATADA nos aspectos apresentados.
+CREDENCIAIS: São as informações usadas pelo USUÁRIO para ter acesso ao SISTEMA. Dentre
+  essas informações está a SENHA, da qual o USUÁRIO se resposabiliza por manter em segredo
+  absoluto.
 
-FORMULÁRIO DE ADESÃO: documento que qualifica o CONTRATANTE,
-assim como parâmetros com relação ao serviço prestado.
-Esses parâmetros constam primariamente de informações sobre COBRANÇAS
-(valor, dia de emissão da fatura e periodicidade), e também de
-outras informações que dizem respeito à variações da oferta de serviço,
-que são específicas para o CEREBELLO. As possíveis combinações e
-valores desses parâmetros são determinadas pela CONTRATADA, cabendo
-à CONTRATANTE escolher uma dentre as opções apresentadas.
+FORMULÁRIO DE ADESÃO: documento que qualifica o ASSINANTE, assim como parâmetros com
+  relação ao serviço prestado. É enviado por E-MAIL ao ASSINANTE em formato de ARQUIVO PDF,
+  e também armazenado no BANCO DE DADOS da CONTRATADA. Os parâmetros constam primariamente
+  de informações sobre COBRANÇAS (valor, dia de emissão da fatura e periodicidade), e
+  também de outras informações que dizem respeito à variações da oferta de serviço, que
+  são específicas para o CEREBELLO. As possíveis combinações e valores desses parâmetros
+  são determinadas pela CONTRATADA, cabendo à ASSINANTE escolher uma dentre as opções
+  apresentadas.
 
-USUÁRIO: Uma CONTA permite o acesso de vários usuários cadastrados
-pela CONTRATANTE. Cada usuário cadastrado recebe suas próprias credenciais
-e deve criar uma SENHA secreta para acessar o SISTEMA. As credenciais conferem
-poderes aos usuários, de acordo com o grupo ao qual eles pertencem:
-Médicos, Secretárias ou Administradores.
+SISTEMA: é o Software como Serviço na núvem denominado CEREBELLO, para consultórios e
+  clínicas da área de saúde, cujas normas de fruição são definidas neste contrato.
 
-CREDENCIAIS: São as informações usadas pelo USUÁRIO para ter acesso ao
-SISTEMA. Dentre essas informações está a SENHA, da qual o USUÁRIO se
-resposabiliza por manter em segredo absoluto.
+SOFTWARE COMO SERVIÇO (SAAS): é o modelo de software em que o prestador do serviço mantémo
+  software acessível e funcionando pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO (SLA)
+  que define métricas de desempenho e segurança. Neste modelo o cliente possui direitos
+  sobre seus dados e uso de software, sem precisar adquirir uma licença, ou comprar o
+  software como produto.
 
-SENHA: é uma sequência de letras, símbolos e números, criada por cada usuário,
-e que deve ser mantida em segredo. É de responsabilidade de cada USUÁRIO,
-usar a sua senha em computadores ou dispositivos seguros, de conhecimento
-da CONTRATADA, de forma a evitar o roubo da SENHA.
+SENHA: é uma sequência de letras, símbolos e números, criada por cada usuário, e que deve
+  ser mantida em segredo. É de responsabilidade de cada USUÁRIO, usar a sua senha em
+  computadores ou dispositivos seguros, de conhecimento da CONTRATADA, de forma a evitar o
+  roubo da SENHA.
+
+USUÁRIO: Uma CONTA permite o acesso de vários usuários cadastrados pelo ASSINANTE. Cada
+  usuário cadastrado recebe suas próprias credenciais e deve criar uma SENHA secreta para
+  acessar o SISTEMA. As credenciais conferem poderes aos usuários, de acordo com o grupo
+  ao qual eles pertencem: Médicos, Secretárias ou Administradores. Ao criar uma CONTA, é
+  criado também um USUÁRIO denominado "proprietário", que é o único que pode acessar
+  as informações e funções do ASSINANTE, tais como faturas, alteração do contrato
+  adicionando ou removendo opções, ou cancelamento do contrato.
+
+
+
 
 OBJETO
 ------
 
-    Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA,
-sendo esta acessada pela INTERNET, mediante a digitação das CREDENCIAIS para
-entrar no SISTEMA.
+  Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA, assim como
+outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET, mediante a digitação das
+CREDENCIAIS de acesso individuais de cada USUÁRIO.
 
-    Manter o SISTEMA em condições de uso, de acordo com o definido no
+  Manter o SISTEMA em condições de uso, de acordo com o definido no
 ACORDO DE NÍVEL DE SERVIÇO presente neste contrato.
+
+
+
 
 ACORDO DE NÍVEL DE SERVIÇO
 --------------------------
 
 SEGURANÇA:
 
- - Os DADOS do CLIENTE terão backups feitos [diariamente/semanalmente/etc..].
-   Esses backups são mantidos por um tempo XXXX no banco de dados e depois
+ - Os DADOS do CLIENTE terão backups feitos [TODO: diariamente/semanalmente/etc..].
+   Esses backups são mantidos por um tempo [TODO: XXXX] no banco de dados e depois
    descartados.
 
- - Os DADOS entrados no SISTEMA, são transmitidos pela INTERNET de
-   forma criptografada e certificada. A criptografia serve para impedir
-   que terceiros tenham acesso à informação sendo transmitida. A certificação
-   serve para ter certeza de que nenhum impostor tenha a capacidade de obter
-   os dados, se fazendo passar pela CONTRATADA.
+ - Os DADOS entrados no SISTEMA, são transmitidos pela INTERNET de forma criptografada e
+   certificada. A criptografia serve para impedir que terceiros tenham acesso à informação
+   sendo transmitida. A certificação serve para ter certeza de que nenhum impostor tenha a
+   capacidade de obter os dados, se fazendo passar pela CONTRATADA.
 
  - As alterações feitas por qualquer USUÁRIO serão catalogadas a partir de
-   01 de Abril de 2013 (por limitações técnicas no presente momento), de forma a
-   permitir a atribuição de responsabilidade sobre dados inseridos, alterados
-   e apagados.
+   01 de Abril de 2013 (por limitações técnicas no presente momento), de forma a permitir
+   a atribuição de responsabilidade sobre dados inseridos, alterados e apagados.
 
- - A CONTA do CONTRATANTE é protegida através do uso de CREDENCIAIS
-   que devem ser digitadas ao se acessar o SISTEMA. Cada USUÁRIO da CONTA
-   possui suas próprias CREDENCIAIS, e é responsável por manter a SENHA em
-   segredo absoluto. A senha dos usuários nunca é armazenada diretamente,
-   ao invés disso ela é armazenada como um código HASH, que é uma versão
-   ilegível e irreversível da senha.
+ - A CONTA do ASSINANTE é protegida através do uso de CREDENCIAIS que devem ser digitadas
+   ao se acessar o SISTEMA. Cada USUÁRIO da CONTA possui suas próprias CREDENCIAIS, e é
+   responsável por manter a SENHA em segredo absoluto. A senha dos usuários nunca é
+   armazenada diretamente, ao invés disso ela é armazenada como um código HASH, que é uma
+   versão ilegível e irreversível da senha.
 
- - DADOS médicos sigilosos, só podem ser acessados usando-se as CREDENCIAIS
-   do próprio médico que cadastrou esses DADOS. Esses dados são armazenados
-   no banco de dados da CONTRATADA e o acesso a eles é protegido por senha
-   conhecida somente pelo administrador do banco de dados. O poder de
-   acessar dados sigilosos conferido a esse administrador não será usado
-   em circunstâncias normais, e caso contrário, requer concentimento
-   justificado pela CONTRATANTE e assinado por ambas as partes.
-   Nenhum outro empregado ou membro da CONTRATADA, no presente ou no futuro,
-   terá acesso a essas informações.
+ - Dados médicos sigilosos, só podem ser acessados usando-se as CREDENCIAIS do próprio
+   médico que cadastrou esses dados. Esses dados são armazenados no banco de dados da
+   CONTRATADA e o acesso a eles é protegido por senha conhecida somente pelo administrador
+   do banco de dados. O poder de acessar dados sigilosos conferido a esse administrador
+   não será usado em circunstâncias normais, e caso contrário, requer concentimento
+   justificado pelo ASSINANTE e assinado por ambas as partes. Nenhum outro empregado ou
+   membro da CONTRATADA, no presente ou no futuro, terá acesso a esses dados.
 
  - O SISTEMA não aceita que o USUÁRIO crie uma SENHA fácil de ser adivinhada.
      É obrigatórios o uso de pelo menos 3 dos seguintes grupos de caracteres:
@@ -136,22 +132,74 @@ SEGURANÇA:
      A senha não pode parecer com uma data;
      A senha não pode conter uma sequência de mais de três caracteres repetidos;
 
- - Não nos responsabilizamos pela segurança do computador ou dispositivo usado
-   para acessar o SISTEMA. Não recomendamos o uso do SISTEMA em
-   computadores ou dispositivos desconhecidos da CONTRATANTE. Em caso de
-   furto do computador ou dispositivo em que o SISTEMA tenha sido usado,
-   recomenda-se a alteração imediata da SENHA de todos os USUÁRIOS que
-   tenham usado este mesmo computador ou dispositivo.
+ - Não nos responsabilizamos pela segurança do computador ou dispositivo usado para
+   acessar o SISTEMA. Não recomendamos o uso do SISTEMA em computadores ou dispositivos
+   desconhecidos do ASSINANTE. Em caso de furto do computador ou dispositivo em que o
+   SISTEMA tenha sido usado, recomenda-se a alteração imediata da SENHA de todos os
+   USUÁRIOS que tenham usado este mesmo computador ou dispositivo.
 
 DESEMPENHO:
 
- - Tempo on-line: 99,5% do tempo por semana, o que equivale a 50 minutos
-   fora do ar por semana.
+ - Tempo on-line: 99,5% do tempo por semana, o que equivale a 50 minutos fora do ar por
+   semana, em intervalos não superiores a 10 minutos por vez. O tempo fora do ar
+   destina-se à manutenção do sistema.
+
+ - 
+
+
+
 
 SIGILO DOS DADOS DE PRONTUÁRIO DO PACIENTE
 ------------------------------------------
 
- - Os DADOS DE PRONTUÁRIO DO PACIENTE são gravados no 
+ - Todas as informações do PRONTUÁRIO DO PACIENTE são gravados no 
+
+REAJUSTE DE PREÇOS
+------------------
+
+  A CONTRATADA reserva-se o direito de alterar os preços praticados de forma justa, para
+os seguintes efeitos:
+
+ A) Refletir a variação do poder aquisitivo da moeda nacional, com periodicidade anual,
+    tomando como base um dos índices a seguir, em ordem de preferência em caso de extinção
+    ou não divulgação:
+     - Índice Geral de Preços – Mercado/IGP-M, divulgado pela Fundação Getúlio Vargas;
+     - Índice Geral de Preços - Disponibilidade Interna/IGP-DI, divulgado pela Fundação
+       Getúlio Vargas;
+     - Índice de Preços ao Consumidor – IPC (FIPE);
+     - outro índice que melhor reflita a variação do poder aquisitivo da moeda nacional.
+
+ B) Refletir a variação do custo operacional, assim como de preços praticados por
+    fornecedores, desde que com aviso prévio de 30 dias por parte da CONTRATADA.
+
+ C) Refletir a variação causada por impostos e outras taxas, que tenham efeito sobre o
+    serviço prestado ao ASSINTANTE. O aumento, diminuição, criação ou extinção desses
+    encargos implicará automaticamente na alteração dos valores praticados.
+
+ D) Cobrir custos com eventos ou fatos fora do controle da CONTRATADA, sejam de causa
+    natural ou não, com o propósito de restaurar o mais rápido possível a normalidade do
+    serviço prestado, desde que com aviso prévio de 30 dias por parte da CONTRATADA.
+
+  Caso o aumento de custos seja por demais oneroso, ou seja, mais que 10% nos últimos 365
+dias, e inviabilize a continuação do contratado entre as partes, fica assegurado a ambos o
+direito de desistir, sem quaisquer ônus, desde que com aviso prévio de 30 dias.
+
+  Não são considerados reajustes de preços, as variações causadas pelo próprio ASSINANTE,
+nem variações que não causam prejuizo ao ASSINTANTE, listados a seguir:
+
+ - Variações causadas por promoções, dentro do tempo de vigência da promoção, ao iniciar,
+   a promoção, ou ao término da promoção, previamente acordado entre as partes;
+
+ - Descontos concedidos pela CONTRATADA ao ASSINANTE, na forma e tempo em que a CONTRATADA
+   achar melhor, mesmo sem concentimento do ASSINTANTE (por se tratar de um desconto),
+   desde que devidamente informado na fatura do ASSINTANTE (para evitar desentendimentos).
+
+ - Custos decorrente do uso de recursos cobrados à parte no SISTEMA, assim como custos de
+   contratos de serviços/produtos secundários que funcionam em conjunto com o SISTEMA.
+
+
+Pagamento antecipado... é um serviço pré-pago.
+
 
 Objeto: SaaS
   Serviços agregados:
@@ -162,7 +210,7 @@ Objeto: SaaS
 
 
 Valores:
-  preços:
+  x preços:
   condições,
   periodicidade,
   faturamento,
@@ -172,6 +220,7 @@ Valores:
 
 
 Condições de prestação de serviços: limites de usuários, pacientes, propriedade intelectual, engenharia reversa, código fonte
+    Quem pode usar: médicos, secretárias e administradores de um único consultório por CONTA.
 
 
 Acordo de nível de serviço (desempenho)
