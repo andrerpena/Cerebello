@@ -1,12 +1,6 @@
 Contrato de Software como Serviço (SAAS) denominado Cerebello
 =============================================================
 
-
-
-
-Partes
-------
-
 Pelo presente instrumento particular, de um lado
 
   XPTO
@@ -27,7 +21,7 @@ têm entre si contratado os termos presentes neste documento.
 Definições
 ----------
 
-Para o perfeito entendimento e interpretação do presente contrato, são adotadas as
+  Para o perfeito entendimento e interpretação do presente contrato, são adotadas as
 seguintes definições:
 
 ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT): é a parte do contrato que
@@ -37,27 +31,43 @@ ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT): é a parte do contrat
 ASSINANTE: pessoa física ou jurídica que possui vínculo contratual com a XPTO, para
   fruição do Software como Serviço na núvem denominado CEREBELLO.
 
+BROWSER: é um programa de computador de terceiro, que permite navegar na WEB. O SISTEMA
+  pode ser acessado através de qualquer BROWSER suportado, indicados na lista de browsers
+  suportados no site, que é mantida sempre atualizada.
+
+CONTA: é o cadastro do ASSINANTE junto à CONTRATADA, com a qual é associado um único
+  consultório ou clínica médica, podendo conter vários USUÁRIOS cadastrados, sendo a
+  quantidade de médicos cadastrados limitada ao indicado no FORMULÁRIO DE ADESÃO.
+  A CONTA possui um "Identificador de Conta" único entre todas as contas, que faz parte
+  das CREDENCIAIS do USUÁRIO.
+
 CONTRATADA: é a pessoa jurídica que projeta, desenvolve e disponibiliza primariamente o
   Software como Serviço na núvem denominado CEREBELLO, assim como filiais; excluindo-se
   representantes comerciais.
 
-CREDENCIAIS: São as informações usadas pelo USUÁRIO para ter acesso ao SISTEMA. Dentre
-  essas informações está a SENHA, da qual o USUÁRIO se resposabiliza por manter em segredo
+CREDENCIAIS: São as informações usadas pelo USUÁRIO para ter acesso ao SISTEMA. São elas:
+  "Identificador de Conta"; "Identificador de Usuário"; "Senha de Usuário"
+  doravante denominada SENHA, da qual o USUÁRIO se resposabiliza por manter em segredo
   absoluto.
 
-FORMULÁRIO DE ADESÃO: documento que qualifica o ASSINANTE, assim como parâmetros com
-  relação ao serviço prestado. É enviado por E-MAIL ao ASSINANTE em formato de ARQUIVO PDF,
-  e também armazenado no BANCO DE DADOS da CONTRATADA. Os parâmetros constam primariamente
-  de informações sobre COBRANÇAS (valor, dia de emissão da fatura e periodicidade), e
-  também de outras informações que dizem respeito à variações da oferta de serviço, que
-  são específicas para o CEREBELLO. As possíveis combinações e valores desses parâmetros
-  são determinadas pela CONTRATADA, cabendo à ASSINANTE escolher uma dentre as opções
-  apresentadas.
+FORMULÁRIO DE ADESÃO: é o documento que qualifica o ASSINANTE, assim como parâmetros com
+  relação ao serviço prestado, sendo parte integrante e indissociável deste contrato. Será
+  enviado por E-MAIL ao ASSINANTE em formato de arquivo PDF, e também armazenado no BANCO
+  DE DADOS da CONTRATADA. Os parâmetros constam primariamente de informações sobre
+  COBRANÇAS (valor, dia de emissão da fatura e periodicidade), informações sobre o início
+  da fruição do serviço, e de informações que dizem respeito à variações da oferta de
+  serviço, que são específicas para o CEREBELLO. As possíveis combinações e valores desses
+  parâmetros são determinadas pela CONTRATADA, cabendo à ASSINANTE escolher uma dentre as
+  opções apresentadas.
+
+FORMULÁRIO DE ALTERAÇÃO DE SERVIÇO: é um documento usado para alterar o serviço prestado,
+  assim como alterar informações do FORMULÁRIO DE ADESÃO ou deste contrato, por vontade do
+  próprio ASSINANTE.
 
 SISTEMA: é o Software como Serviço na núvem denominado CEREBELLO, para consultórios e
   clínicas da área de saúde, cujas normas de fruição são definidas neste contrato.
 
-SOFTWARE COMO SERVIÇO (SAAS): é o modelo de software em que o prestador do serviço mantémo
+SOFTWARE COMO SERVIÇO (SaaS): é o modelo de software em que o prestador do serviço mantémo
   software acessível e funcionando pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO (SLA)
   que define métricas de desempenho e segurança. Neste modelo o cliente possui direitos
   sobre seus dados e uso de software, sem precisar adquirir uma licença, ou comprar o
@@ -69,12 +79,12 @@ SENHA: é uma sequência de letras, símbolos e números, criada por cada usuário, e
   roubo da SENHA.
 
 USUÁRIO: Uma CONTA permite o acesso de vários usuários cadastrados pelo ASSINANTE. Cada
-  usuário cadastrado recebe suas próprias credenciais e deve criar uma SENHA secreta para
-  acessar o SISTEMA. As credenciais conferem poderes aos usuários, de acordo com o grupo
-  ao qual eles pertencem: Médicos, Secretárias ou Administradores. Ao criar uma CONTA, é
-  criado também um USUÁRIO denominado "proprietário", que é o único que pode acessar
-  as informações e funções do ASSINANTE, tais como faturas, alteração do contrato
-  adicionando ou removendo opções, ou cancelamento do contrato.
+  usuário cadastrado recebe um "Identificador de Usuário" e deve criar uma SENHA secreta
+  para acessar o SISTEMA. As CREDENCIAIS conferem poderes aos usuários, de acordo com o
+  grupo ao qual eles pertencem: médicos, secretárias ou administradores. Ao criar uma
+  CONTA, é criado também um USUÁRIO denominado "proprietário", que é o único que pode
+  acessar as informações e funções do ASSINANTE, tais como faturas, alteração do contrato
+  adicionando ou removendo opções, e cancelamento do contrato.
 
 
 
@@ -83,11 +93,109 @@ OBJETO
 ------
 
   Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA, assim como
-outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET, mediante a digitação das
-CREDENCIAIS de acesso individuais de cada USUÁRIO.
+outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET em plataforma WEB através
+de um BROWSER suportado, mediante a digitação das CREDENCIAIS de acesso individuais de
+cada USUÁRIO.
 
-  Manter o SISTEMA em condições de uso, de acordo com o definido no
-ACORDO DE NÍVEL DE SERVIÇO presente neste contrato.
+
+
+
+OBRIGAÇÕES DA CONTRATADA
+------------------------
+
+  Manter o SISTEMA em condições de uso, de acordo com o definido no ACORDO DE NÍVEL DE
+SERVIÇO presente neste contrato. Atualizar o SISTEMA constantemente com correçõs de vícios
+e defeitos, e com melhorias de qualidades funcionais e não funcionais, visando melhorar a
+experiência geral dos usuários.
+
+  Fornecer documentação dos recursos do SISTEMA, que é acessível em site público e de
+fácil acesso.
+
+  Fornecer suporte via e-mail e pelo próprio site, de acordo com o definido no ACORDO DE
+NÍVEL DE SERVIÇO presente neste contrato.
+
+
+
+
+TERMOS DE USO E OBRIGAÇÕES DO ASSINANTE
+---------------------------------------
+
+  Uma CONTA permite o uso do SISTEMA, assim como dos serviços/produtos associados, por uma
+única pessoa física ou jurídica. No caso de pessoa jurídica, é permitido o cadastro de
+múltiplos USUÁRIOS, que sejam colaboradores da mesma. No caso de pessoa física, somente
+um USUÁRIO é permitido.
+
+  Não é permitido relizar engenharia reversa, nem traduzir, descompilar, copiar,
+modificar, alterar, corrigir, traduzir, atualizar desenvolver novas versões ou elaborar
+obra derivada do CEREBELLO ou de qualquer de suas partes ou componentes.
+
+  Não é permitido vender, distribuir, sublicenciar, alugar, arrendar, empresar, dar
+dispor, ceder ou transferir de qualquer forma, total ou parcialmente o SISTEMA ou
+serviços/produtos associados, e/ou quaisquer direitos relacionados à estes, à terceiros,
+incluindo, mas não se limitando, as sociedades controladas, controladoras, coligadas ou
+sucessoras do ASSINANTE, salvo se e de acordo com os termos deste contrato.
+
+  Não é permitido usar ou se aproveitar de vícios ou defeitos do SISTEMA, ou de funções
+não previstas, seja para fins lícitos ou ilícitos.
+
+  O ASSINANTE obriga-se ao cumprimento dos seguintes termos, sem prejuízo às demais
+obrigações previstas neste contrato:
+
+   [ToDo: OS ITENS ABAIXO SÃO NECESSÁRIO??? OU O BOM SENSO BASTA??? QUAIS DELES???]
+
+ - Efetuar o pagamento das mensalidades até o dia do vencimento, estando sujeito às
+   penalidades previstas pelo inadimplemento [ToDo: colocar referência];
+
+ - Garantir que os USUÁRIOS cumprirão os TERMOS DE USO e a POLÍTICA DE PRIVACIDADE, que
+   são parte integrante e indissociável deste contrato; [ToDo: Política de Privacidade???]
+
+ - Assumir plena responsabilidade pela exatidão, qualidade, integridade e legalidade dos
+   dados e informações fornecidas à CONTRATADA, seja pelo próprio ASSINANTE ou por
+   USUÁRIOS cadastrados no SISTEMA;
+
+ - Não permitir o acesso a pessoas não autorizadas ao SISTEMA, e comunicar à CONTRATADA
+   sua ocorrência, seguindo então as instruções da CONTRATADA com o intuito de proteger
+   ambas as partes, da melhor forma possível, contra prejuízos que possam ser causados por
+   esta pessoa não autorizada;
+
+ - Seguir as normas de segurança, e garantir que todos os USUÁRIOS seguem as normas de
+   segurança, de forma a prevenir prejuízos causados por pessoas mal intencionadas, ou
+   eventos adversos de qualquer natureza;
+
+ - Utilizar o SISTEMA, e garantir que todos os USUÁRIOS cadastrados utilizem o SISTEMA,
+   em conformidade com a legislação vigente;
+
+ - Manter atualizados os dados do ASSINANTE, incluindo mas não se limitando a: informações
+   de contato, endereço, nome (em caso de alteração de nome do ASSINANTE), e informações
+   necessárias à cobrança, sob a penalidade de em não o fazendo, assumir todos os
+   prejuízos causados para si ou para a CONTRATADA, em decorrência das informações
+   erradas;
+
+ - Obedecer e garantir que todos os USUÁRIOS cadastrados na CONTA obedeçam aos
+   TERMOS DE USO do site público do CEREBELLO, que compreende as áreas de interação com a
+   comunidade, a documentação, entre outras áreas de livre acesso. Em especial, sabendo
+   que as áreas que permitem aos visitantes enviarem textos e comentários, estendem a
+   responsabilidade dos conteúdos enviados por USUÁRIOS ao ASSINANTE.
+
+ - Não utilizar, e não permitir que USUÁRIOS utilizem o SISTEMA ou serviços/produtos
+   associados, com intuito de desinformar, ou induzir ao erro, pacientes ou outras
+   pessoas ou entidades. Não difamar, ofender, assediar, perseguir, ameaçar ou violar de
+   alguma forma os direitos legais (como os de privacidade e publicidade) de outras
+   pessoas. Não publicar, postar, carregar, distribuir ou disseminar nenhuma informação,
+   material, nome ou tópico inadequado, profano, difamatório, obsceno, indecente,
+   incorreto ou ilegal.
+
+ - Não utilizar e não permitir que os USUÁRIOS utilizem informações de pacientes, ou de
+   outros USUÁRIOS do sistema, que não estejam de acordo com os fins apropriados.
+
+ - Não utilizar e não permitir que os USUÁRIO utilizem o SISTEMA e/ou serviços/produtos
+   associados, incluindo o site público do CEREBELLO, para divulgar informações, imagens
+   ou arquivos sejam quais forem, de forma pública ou não, que não estejam de acordo com
+   os fins apropriados.
+
+ - Não divulgar ou disponibilizar e não permitir que os USUÁRIOS o divulguem ou
+   disponibilizem, imagens ou fotografias, ou informações pessoais, ou de prontuário
+   médico dos pacientes, ou quaisquer informações cadastradas protegidas por lei.
 
 
 
@@ -95,19 +203,40 @@ ACORDO DE NÍVEL DE SERVIÇO presente neste contrato.
 ACORDO DE NÍVEL DE SERVIÇO
 --------------------------
 
+  Assegura métricas de segurança, desempenho e outros fatores de qualidade de serviço
+(QoS), que se descumpridos pela CONTRATADA permitem ao ASSINANTE uma das seguinte ações:
+
+ - cancelamento da CONTA sem nenhum ônus, mesmo nas opções de fidelidade, ou em casos de
+   promoções, sendo o valor proporcional ao tempo não usado devolvido ao ASSINANTE;
+
+ - direito à multa estipulada nos itens correspondentes às faltas observadas.
+
+  Na ocorrência de danos ao ASSINANTE, por inobservância dos itens de qualidade de serviço
+asseguradas por parte da CONTRATADA, cabe ainda indenização justa, vistas as
+responsabilidades de ambas as partes, de acordo com o bom senso, e com o descrito em cada
+item.
+
 SEGURANÇA:
 
- - Os DADOS do CLIENTE terão backups feitos [TODO: diariamente/semanalmente/etc..].
-   Esses backups são mantidos por um tempo [TODO: XXXX] no banco de dados e depois
+ - Os DADOS do CLIENTE terão backups feitos [ToDo: diariamente/semanalmente/etc..].
+   Esses backups são mantidos por um tempo [ToDo: XXXX] no banco de dados e depois
    descartados.
 
  - Os DADOS entrados no SISTEMA, são transmitidos pela INTERNET de forma criptografada e
-   certificada. A criptografia serve para impedir que terceiros tenham acesso à informação
-   sendo transmitida. A certificação serve para ter certeza de que nenhum impostor tenha a
-   capacidade de obter os dados, se fazendo passar pela CONTRATADA.
+   certificada, por protocolo SSL (Secure Server Layer).
+
+   A criptografia serve para impedir que terceiros tenham acesso à informação sendo
+   transmitida, lendo a transmissão de forma passiva. A certificação serve para ter
+   certeza de que nenhum impostor tenha a capacidade de obter ou adulterar os dados, se
+   fazendo passar pela CONTRATADA, mesmo tendo acesso à rede interna do consultório.
+
+   Para tal, o usuário deve usar sempre um Browser moderno e seguro, sempre atualizado,
+   e tomar as medidas e precauções como verificar periodicamente o certificado do site,
+   usar somente computadores e dispositivos confiáveis, que não sejam acessados por
+   pessoas desconhecidas, e sempre conectar na internet através de redes seguras.
 
  - As alterações feitas por qualquer USUÁRIO serão catalogadas a partir de
-   01 de Abril de 2013 (por limitações técnicas no presente momento), de forma a permitir
+   01 de Junho de 2013 (por limitações técnicas no presente momento), de forma a permitir
    a atribuição de responsabilidade sobre dados inseridos, alterados e apagados.
 
  - A CONTA do ASSINANTE é protegida através do uso de CREDENCIAIS que devem ser digitadas
@@ -142,9 +271,58 @@ DESEMPENHO:
 
  - Tempo on-line: 99,5% do tempo por semana, o que equivale a 50 minutos fora do ar por
    semana, em intervalos não superiores a 10 minutos por vez. O tempo fora do ar
-   destina-se à manutenção do sistema.
+   destina-se à manutenção do sistema. A não observância gera multa de 1000% do valor do
+   serviço, proporcional ao tempo fora do ar.
 
- - 
+ - Correção de defeitos/vícios: será feita de acordo com a gravidade do defeito, sendo os
+   mais graves priorizados. Defeitos que impedem o uso do software, possuem garantia de
+   correção de 72 horas, e a partir disso geram multa de 100% do valor do serviço
+   proporcional ao tempo passado das 72 horas, até o momento da entrega da correção.
+
+
+
+
+ATUALIZAÇÃO DO SOFTWARE
+-----------------------
+
+  A CONTRATADA se reserva o direito de atualizar características funcionais e não
+funcionais do SISTEMA, de forma não abrupta, ou seja, que não altere a forma de trabalhar
+dos USUÁRIOS, ou que altere pouco, sem o concentimento expresso do ASSINANTE, com o
+objetivo de melhor servir sua base de clientes.
+
+  Alterações mais significativas podem ser feitas, e a atualização do SISTEMA requer
+concentimento expresso do ASSINANTE, sendo que os ASSINANTES que optarem pela opção
+obsoleta perdem 
+
+  Todas as alterações são embasadas na constante comunicação com a comunidade, através de
+site público na internet, no estudo de casos de clientes, assim como em pesquisas
+destinadas ao propósito de melhorar o SISTEMA.
+
+
+
+
+SUPORTE AOS BROWSERS
+--------------------
+
+  Dada a imensa diversidade de BROWSERS existentes para todos os diversos dispositivos e
+sistemas operacionais, a CONTRATADA se reserva o direito de suportar o uso do SISTEMA
+somente em um subconjunto desses BROWSERS, sendo que os escolhidos são em sua maior parte
+os mais usados, e os mais seguros.
+
+  A CONTRATADA mantém uma lista de BROWSERS suportados em site público, sempre atualizado,
+e garante o funcionamento do SISTEMA em todos os BROWSERS suportados, sendo que ao se
+tornarem obsoletos, esses podem ser removidos da lista, com aviso prévio de 30 dias. Novos
+BROWSERS podem ser adicionados na lista sem aviso.
+
+  O uso de BROWSERS que não estão na lista não é recomendado, e podem acarretar prejuizos
+ao ASSINANTE, sendo que neste caso a CONTRATADA não poderá ser responsabilizada por tais
+prejuizos. Ao acessar o SISTEMA usando um BROWSER não suportado, o USUÁRIO será avisado
+de forma clara, e deve aceitar a responsabilidade por possíveis danos e/ou prejuízos, além
+de abrir mão ao suporte técnico, e à correção de vícios e defeitos apresentados ao usar o
+SISTEMA no BROWSER não suportado.
+
+  A CONTRATADA reserva-se ainda o direito de impedir totalmente o uso do SISTEMA, em
+BROWSERS reconhecidamente inseguros, instáveis ou defeituosos.
 
 
 
@@ -154,20 +332,63 @@ SIGILO DOS DADOS DE PRONTUÁRIO DO PACIENTE
 
  - Todas as informações do PRONTUÁRIO DO PACIENTE são gravados no 
 
-REAJUSTE DE PREÇOS
-------------------
+PREÇOS E COBRANÇAS, TAXAS E REAJUSTES
+-------------------------------------
+
+Índices de correção monetária:
+
+  Serão usados os seguintes índices de inflação, em ordem de preferência em caso de
+extinção ou não divulgação:
+ - Índice Geral de Preços – Mercado/IGP-M, divulgado pela Fundação Getúlio Vargas;
+ - Índice Geral de Preços - Disponibilidade Interna/IGP-DI, divulgado pela Fundação
+   Getúlio Vargas;
+ - Índice de Preços ao Consumidor – IPC (FIPE);
+ - outro índice que melhor reflita a variação do poder aquisitivo da moeda nacional.
+
+Preços e Cobranças:
+
+  O preço pago pelo ASSINANTE é composto pelo valor da assinatura, mais os valores dos
+recursos adicionados opcionalmente pelo próprio ASSINANTE. Todos os valores serão
+discriminados na FATURA. A cobrança é feita de acordo com as opções de cobrança escolhidas
+pelo ASSINANTE no FORMULÁRIO DE ADESÃO, sendo ai definidos valores e datas das cobranças.
+
+  As FATURAS podem ser acessadas no próprio SISTEMA, na área destinada ao ASSINANTE,
+por meio do USUÁRIO denominado "proprietário", e também por e-mail caso opte por
+recebê-las desta forma. O não recebimento das faturas por outros meios que não sejam a
+área do ASSINANTE, não desobriga o ASSINANTE ao pagamento dos valores devidos com a
+incidência das penalidades previstas neste contrato.
+
+  A adição de USUÁRIOS para outros médicos do consultório na CONTA, está sujeita a um
+limite definido no FORMULÁRIO DE ADESÃO, e que possui um custo por unidade adicional.
+O limite pode ser alterado pelo ASSINANTE, mediante aceitação de um FORMULÁRIO DE
+ALTERAÇÃO DE SERVIÇO, então substituindo informações do FORMULÁRIO DE ADESÃO.
+
+Taxas:
+
+ - Inadimplência: O atraso no pagamento das faturas até o dia do vencimento, ficará
+   sujeito a correção com a base nos índices na listagem "Índices de correção monetária",
+   assim como outros reajustes monetários, e adicionalmente juros de 1% ao mês e multa de
+   2%, podendo além disso causar o bloqueio da CONTA, e em casos extremos a rescisão deste
+   contrato (vide seção RESCISÃO).
+
+   O cancelamento da CONTA não isenta o ASSINANTE de seu débito, e nem da multa de 2%, mas
+   congela o juros de 1% ao mês a partir do momento do cancelamento, passando o valor da
+   dívida a ser reajustada somente com a inflação, usando-se os índices na listagem
+   "Índices de correção monetária", e outros rejustes monetários.
+
+ - Adesão/Cancelamento: Não há taxa de adesão e não há taxa de cancelamento, com exceção
+   de promoções, opções de fidelidade, ou condições especialmente concedidas à um
+   ASSINANTE no FORMULÁRIO DE ADESÃO.
+
+Reajustes:
 
   A CONTRATADA reserva-se o direito de alterar os preços praticados de forma justa, para
 os seguintes efeitos:
 
  A) Refletir a variação do poder aquisitivo da moeda nacional, com periodicidade anual,
-    tomando como base um dos índices a seguir, em ordem de preferência em caso de extinção
-    ou não divulgação:
-     - Índice Geral de Preços – Mercado/IGP-M, divulgado pela Fundação Getúlio Vargas;
-     - Índice Geral de Preços - Disponibilidade Interna/IGP-DI, divulgado pela Fundação
-       Getúlio Vargas;
-     - Índice de Preços ao Consumidor – IPC (FIPE);
-     - outro índice que melhor reflita a variação do poder aquisitivo da moeda nacional.
+    ou na menor periodicidade permitida pela legislação em vigor à época, tomando como
+    base os índices na listagem "Índices de correção monetária", assim como outros
+    reajustes monetários.
 
  B) Refletir a variação do custo operacional, assim como de preços praticados por
     fornecedores, desde que com aviso prévio de 30 dias por parte da CONTRATADA.
@@ -180,15 +401,17 @@ os seguintes efeitos:
     natural ou não, com o propósito de restaurar o mais rápido possível a normalidade do
     serviço prestado, desde que com aviso prévio de 30 dias por parte da CONTRATADA.
 
-  Caso o aumento de custos seja por demais oneroso, ou seja, mais que 10% nos últimos 365
-dias, e inviabilize a continuação do contratado entre as partes, fica assegurado a ambos o
-direito de desistir, sem quaisquer ônus, desde que com aviso prévio de 30 dias.
+  Caso o aumento de custos seja por demais oneroso, passando de 10% nos últimos 365 dias,
+e inviabilize a continuação do contratado entre as partes, fica assegurado a ambos o
+direito de desistir deste contrato, sem quaisquer ônus, desde que com aviso prévio de 30
+dias.
 
   Não são considerados reajustes de preços, as variações causadas pelo próprio ASSINANTE,
 nem variações que não causam prejuizo ao ASSINTANTE, listados a seguir:
 
  - Variações causadas por promoções, dentro do tempo de vigência da promoção, ao iniciar,
-   a promoção, ou ao término da promoção, previamente acordado entre as partes;
+   a promoção, ou ao término da promoção, previamente acordado entre as partes em contrato
+   referente à promoção.
 
  - Descontos concedidos pela CONTRATADA ao ASSINANTE, na forma e tempo em que a CONTRATADA
    achar melhor, mesmo sem concentimento do ASSINTANTE (por se tratar de um desconto),
@@ -198,8 +421,36 @@ nem variações que não causam prejuizo ao ASSINTANTE, listados a seguir:
    contratos de serviços/produtos secundários que funcionam em conjunto com o SISTEMA.
 
 
+
+
+RESCISÃO E RESILIÇÃO
+--------------------
+
+  O presente instrumento será dado por rescindido, independentemente de qualquer aviso ou
+interpelação judicial ou extrajudicial, no caso de descumprimento de qualquer de suas
+cláusulas, na ocorrência de uma das seguintes hipóteses:
+
+ A) Dissolução total ou parcial, judicial ou extrajudicial, liquidação, requerimento de
+    recuperação judicial ou extrajudicial, decretação de falência de qualquer uma das
+    partes;
+
+ B) Quando uma das partes violar ou deixar de cumprir quaisquer das cláusulas e condições
+    estabelecidas neste contrato;
+
+ C) Por inadimplência nos pagamentos superior a 30 (trinta) dias;
+
+ D) A ocorrência de caso fortuito ou força maior que impeça a continuidade da prestação
+    dos serviços contratados.
+
+
+
+
+
 Pagamento antecipado... é um serviço pré-pago.
 
+Quais são os custos:
+  x Assinatura
+  x Adicional por médico
 
 Objeto: SaaS
   Serviços agregados:
@@ -214,20 +465,28 @@ Valores:
   condições,
   periodicidade,
   faturamento,
-  reajustes,
+  x reajustes,
   penalidades,
   tributos
 
+Recolhimento de informações: google analytics, entre outros.
 
-Condições de prestação de serviços: limites de usuários, pacientes, propriedade intelectual, engenharia reversa, código fonte
-    Quem pode usar: médicos, secretárias e administradores de um único consultório por CONTA.
+Direito à documentação (manual de instruções)
+
+Condições de prestação de serviços:
+  limites de usuários,
+  pacientes,
+  propriedade intelectual,
+  engenharia reversa,
+  código fonte
+  Quem pode usar: médicos, secretárias e administradores de um único consultório por CONTA.
 
 
 Acordo de nível de serviço (desempenho)
   tempo máximo para solução de defeitos,
   tempo máximo de atendimento em suporte,
-  
 
+  atualizações e correções de defeitos/vícios
 
 Responsabilidades:
   senhas
