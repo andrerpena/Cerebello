@@ -34,6 +34,21 @@
     @RenderSection("Styles", false)
 
     @* language specific scripts *@
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37908571-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
     <script src="@Url.Content("~/Scripts/cerebello.pt-BR.js")" type="text/javascript"></script>
     @* other scripts *@
     <script src="@Url.Content("~/Scripts/jquery-1.8.1.min.js")" type="text/javascript"></script>
@@ -86,13 +101,13 @@
             @foreach (var appointment in ((List<NewMedicalAppointmentNotificationData>)this.ViewBag.AlreadyPolledMedicalAppointments))
             {
                 @:$.notifyNewMedicalAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-                        }
+                                    }
             
             // shows the new-appointment notifications
             @foreach (var appointment in ((List<NewGenericAppointmentNotificationData>)this.ViewBag.AlreadyPolledGenericAppointments))
             {
                 @:$.notifyNewGenericAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-                        }
+                                    }
 
             // shows the generic database notifications
             @foreach (var notification in ((List<NotificationData>)this.ViewBag.AlreadyPolledNotifications))
@@ -109,8 +124,7 @@
     @if (this.ViewBag.IsTrial == true)
     {
         <div class="top-bar">
-            <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">
-                Assine agora o <strong>Cerebello</strong>!
+            <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Assine agora o <strong>Cerebello</strong>!
                 <span class="small">Livre-se desta barra e do limite de 50 pacientes.</span>
             </a>
         </div>
