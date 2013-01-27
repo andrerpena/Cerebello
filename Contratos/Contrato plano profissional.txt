@@ -10,9 +10,9 @@ Pelo presente instrumento particular, de um lado
 doravante denominada simplesmente CONTRATADA, e de outro lado
 
   a pessoa física ou jurídica, contratante do Software como Serviço na núvem (SAAS)
-  denominado CEREBELLO, doravante  denominada simplesmente ASSINANTE, sendo este
+  denominado CEREBELLO, doravante denominada simplesmente ASSINANTE, sendo este
   qualificado no FORMULÁRIO DE ADESÃO,
-    
+
 têm entre si contratado os termos presentes neste documento.
 
 
@@ -21,7 +21,8 @@ têm entre si contratado os termos presentes neste documento.
 Definições
 ----------
 
-  Para o perfeito entendimento e interpretação do presente contrato, são adotadas as
+  Para o perfeito entendimento e interpretação do presente contrato, assim como de outros
+documentos integrantes deste, são adotadas, independentemente de sua digitação, as
 seguintes definições:
 
 ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT): é a parte do contrato que
@@ -65,7 +66,8 @@ FORMULÁRIO DE ALTERAÇÃO DE SERVIÇO: é um documento usado para alterar o serviço 
   próprio ASSINANTE.
 
 SISTEMA: é o Software como Serviço na núvem denominado CEREBELLO, para consultórios e
-  clínicas da área de saúde, cujas normas de fruição são definidas neste contrato.
+  clínicas da área de saúde, cujas normas de fruição são definidas neste contrato. Pode
+  ainda referir-se ao site público do CEREBELLO.
 
 SOFTWARE COMO SERVIÇO (SaaS): é o modelo de software em que o prestador do serviço mantémo
   software acessível e funcionando pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO (SLA)
@@ -95,7 +97,7 @@ OBJETO
   Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA, assim como
 outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET em plataforma WEB através
 de um BROWSER suportado, mediante a digitação das CREDENCIAIS de acesso individuais de
-cada USUÁRIO.
+cada USUÁRIO, e respeitando-se todos os termos deste contrato.
 
 
 
@@ -108,35 +110,62 @@ SERVIÇO presente neste contrato. Atualizar o SISTEMA constantemente com correçõs
 e defeitos, e com melhorias de qualidades funcionais e não funcionais, visando melhorar a
 experiência geral dos usuários.
 
-  Fornecer documentação dos recursos do SISTEMA, que é acessível em site público e de
-fácil acesso.
+  Fornecer documentação atualizada dos recursos do SISTEMA, que é acessível em site
+público e de fácil acesso.
 
-  Fornecer suporte via e-mail e pelo próprio site, de acordo com o definido no ACORDO DE
-NÍVEL DE SERVIÇO presente neste contrato.
-
-
+  Fornecer suporte via e-mail e pelo próprio SISTEMA, de acordo com o definido no ACORDO
+DE NÍVEL DE SERVIÇO presente neste contrato.
 
 
-TERMOS DE USO E OBRIGAÇÕES DO ASSINANTE
----------------------------------------
+
+
+TERMOS DE USO
+-------------
+
+  O SISTEMA deve ser usado única e exclusivamente para o fim de auxiliar nas atividades do
+consultório médico, clínica, ou médico individual, no exercício de sua função ou em
+atividades relacionadas, sem prejuizo de outras limitações legais e/ou contratuais.
 
   Uma CONTA permite o uso do SISTEMA, assim como dos serviços/produtos associados, por uma
 única pessoa física ou jurídica. No caso de pessoa jurídica, é permitido o cadastro de
 múltiplos USUÁRIOS, que sejam colaboradores da mesma. No caso de pessoa física, somente
-um USUÁRIO é permitido.
+um USUÁRIO é permitido, que neste caso é criado junto com a CONTA.
 
-  Não é permitido relizar engenharia reversa, nem traduzir, descompilar, copiar,
-modificar, alterar, corrigir, traduzir, atualizar desenvolver novas versões ou elaborar
-obra derivada do CEREBELLO ou de qualquer de suas partes ou componentes.
+  Não é permitido relizar engenharia reversa, traduzir, descompilar, copiar, modificar,
+alterar, corrigir, traduzir, atualizar, imitar, desenvolver novas versões ou elaborar obra
+derivada do CEREBELLO ou de qualquer de suas partes ou componentes.
 
   Não é permitido vender, distribuir, sublicenciar, alugar, arrendar, empresar, dar
 dispor, ceder ou transferir de qualquer forma, total ou parcialmente o SISTEMA ou
 serviços/produtos associados, e/ou quaisquer direitos relacionados à estes, à terceiros,
 incluindo, mas não se limitando, as sociedades controladas, controladoras, coligadas ou
-sucessoras do ASSINANTE, salvo se e de acordo com os termos deste contrato.
+sucessoras do ASSINANTE, salvo se e de acordo com os termos deste contrato, ou se
+expressamente permitido pela CONTRATADA.
 
   Não é permitido usar ou se aproveitar de vícios ou defeitos do SISTEMA, ou de funções
 não previstas, seja para fins lícitos ou ilícitos.
+
+
+
+
+PROPRIEDADE INTELECTUAL
+-----------------------
+
+  Todas as partes e componentes do CEREBELLO, seja o software em si ou o site público,
+são de propriedade intelectual da CONTRATADA, e quando não for este o caso, são
+garantidamente de domínio público, ou então possuem licença de uso de forma exclusiva para
+a CONTRATADA ou que se estenda à CONTRATADA, tais como as imagens usadas, e componentes de
+software abertos, ou licenciados para a CONTRATADA.
+
+  Todos os dados gravados no Banco de Dados, que tenham sido entrados pelo ASSINANTE ou
+por quaisquer USUÁRIO cadastrado na CONTA do ASSINANTE, são de responsabilidade do
+ASSINANTE, que deve garantir que possui os devidos direitos sobre as informações enviadas.
+
+
+
+
+OBRIGAÇÕES DO ASSINANTE
+-----------------------
 
   O ASSINANTE obriga-se ao cumprimento dos seguintes termos, sem prejuízo às demais
 obrigações previstas neste contrato:
@@ -168,8 +197,7 @@ obrigações previstas neste contrato:
  - Manter atualizados os dados do ASSINANTE, incluindo mas não se limitando a: informações
    de contato, endereço, nome (em caso de alteração de nome do ASSINANTE), e informações
    necessárias à cobrança, sob a penalidade de em não o fazendo, assumir todos os
-   prejuízos causados para si ou para a CONTRATADA, em decorrência das informações
-   erradas;
+   prejuízos causados para si ou para outrem, em decorrência das informações erradas;
 
  - Obedecer e garantir que todos os USUÁRIOS cadastrados na CONTA obedeçam aos
    TERMOS DE USO do site público do CEREBELLO, que compreende as áreas de interação com a
@@ -186,7 +214,7 @@ obrigações previstas neste contrato:
    incorreto ou ilegal.
 
  - Não utilizar e não permitir que os USUÁRIOS utilizem informações de pacientes, ou de
-   outros USUÁRIOS do sistema, que não estejam de acordo com os fins apropriados.
+   outros USUÁRIOS do sistema, para fins impróprios.
 
  - Não utilizar e não permitir que os USUÁRIO utilizem o SISTEMA e/ou serviços/produtos
    associados, incluindo o site público do CEREBELLO, para divulgar informações, imagens
@@ -216,11 +244,29 @@ asseguradas por parte da CONTRATADA, cabe ainda indenização justa, vistas as
 responsabilidades de ambas as partes, de acordo com o bom senso, e com o descrito em cada
 item.
 
+MULTA MÁXIMA:
+
+   O valor máximo somado de todas as multas à CONTRATADA, no decorrer de 30 dias seguidos
+   da infração, é de 100% do valor proporcional aos mesmos 30 dias do serviço, se excluido
+   os dias após possível cancelamento do contrato. Em resumo, qualquer falha da CONTRATADA
+   pode no máximo tornar o serviço gratuito pelos 30 dias seguintes à falha, ou até um
+   possível cancelamento nesses 30 dias.
+
+   Exemplo: dados um valor mensal de 100,00 e uma multa de 100 vezes o valor proporcional,
+   cada hora vale 0,1389 multiplicado por 100, o que resulta em 13,89 de multa por hora
+   que passar do tempo regulamentado, sendo que multa pode chegar ao máximo de 100,00 no
+   intervalo de 30 dias seguidos da infração.
+
+MULTA POR TEMPO:
+
+   As multas por tempo são sempre uma multiplicação de um número pelo valor proporcional
+   ao intervalo de tempo de serviço, que passar do limite tolerável definido.
+
 SEGURANÇA:
 
- - Os DADOS do CLIENTE terão backups feitos [ToDo: diariamente/semanalmente/etc..].
-   Esses backups são mantidos por um tempo [ToDo: XXXX] no banco de dados e depois
-   descartados.
+ - Backups: de todos os dados do ASSINANTE feitos em localização geográfica diferente do
+   servidor principal, em todos os finais de semana, e também antes das atualizações do
+   software do CEREBELLO.
 
  - Os DADOS entrados no SISTEMA, são transmitidos pela INTERNET de forma criptografada e
    certificada, por protocolo SSL (Secure Server Layer).
@@ -236,8 +282,8 @@ SEGURANÇA:
    pessoas desconhecidas, e sempre conectar na internet através de redes seguras.
 
  - As alterações feitas por qualquer USUÁRIO serão catalogadas a partir de
-   01 de Junho de 2013 (por limitações técnicas no presente momento), de forma a permitir
-   a atribuição de responsabilidade sobre dados inseridos, alterados e apagados.
+   01 de Junho de 2013, de forma a permitir a atribuição de responsabilidade sobre dados
+   inseridos, alterados e apagados.
 
  - A CONTA do ASSINANTE é protegida através do uso de CREDENCIAIS que devem ser digitadas
    ao se acessar o SISTEMA. Cada USUÁRIO da CONTA possui suas próprias CREDENCIAIS, e é
@@ -271,13 +317,22 @@ DESEMPENHO:
 
  - Tempo on-line: 99,5% do tempo por semana, o que equivale a 50 minutos fora do ar por
    semana, em intervalos não superiores a 10 minutos por vez. O tempo fora do ar
-   destina-se à manutenção do sistema. A não observância gera multa de 1000% do valor do
-   serviço, proporcional ao tempo fora do ar.
+   destina-se à manutenção do sistema. A não observância gera multa de 100 vezes do valor
+   do serviço, proporcional ao tempo fora do ar, se respeitando a MÚLTA MÁXIMA.
 
  - Correção de defeitos/vícios: será feita de acordo com a gravidade do defeito, sendo os
    mais graves priorizados. Defeitos que impedem o uso do software, possuem garantia de
-   correção de 72 horas, e a partir disso geram multa de 100% do valor do serviço
-   proporcional ao tempo passado das 72 horas, até o momento da entrega da correção.
+   correção de 72 horas, e a partir disso geram multa de 100 vezes do valor do serviço
+   proporcional ao tempo passado das 72 horas, até o momento da entrega da correção, se
+   respeitando a MÚLTA MÁXIMA.
+
+SUPORTE:
+
+ - Tempo de resposta: 24 horas a partir da criação do "Ticket de suporte", que identifica
+   uma ocorrência de forma única, desde que o ASSINANTE esteja disponível para a resposta
+   por um dos possíveis meios de contato. Passadas as 24 horas, gera multa de 100 vezes o
+   valor do serviço proporcional ao tempo de espera passados das 24 horas, se respeitando
+   a MÚLTA MÁXIMA.
 
 
 
@@ -427,19 +482,19 @@ RESCISÃO E RESILIÇÃO
 --------------------
 
   O presente instrumento será dado por rescindido, independentemente de qualquer aviso ou
-interpelação judicial ou extrajudicial, no caso de descumprimento de qualquer de suas
-cláusulas, na ocorrência de uma das seguintes hipóteses:
+interpelação judicial ou extrajudicial, na ocorrência de uma das seguintes hipóteses:
 
  A) Dissolução total ou parcial, judicial ou extrajudicial, liquidação, requerimento de
     recuperação judicial ou extrajudicial, decretação de falência de qualquer uma das
     partes;
 
  B) Quando uma das partes violar ou deixar de cumprir quaisquer das cláusulas e condições
-    estabelecidas neste contrato;
+    estabelecidas neste contrato, a não ser que a contra-parte se manisfeste contrária;
 
- C) Por inadimplência nos pagamentos superior a 30 (trinta) dias;
+ C) Por inadimplência do ASSINANTE nos pagamentos superior a 30 (trinta) dias, a não ser
+    que a CONTRATADA se manisfeste contrária;
 
- D) A ocorrência de caso fortuito ou força maior que impeça a continuidade da prestação
+ D) A ocorrência de caso fortuito ou força maior, que impeça a continuidade da prestação
     dos serviços contratados.
 
 
@@ -448,12 +503,12 @@ cláusulas, na ocorrência de uma das seguintes hipóteses:
 
 Pagamento antecipado... é um serviço pré-pago.
 
-Quais são os custos:
+x Quais são os custos:
   x Assinatura
   x Adicional por médico
 
-Objeto: SaaS
-  Serviços agregados:
+x Objeto: SaaS
+  x Serviços agregados:
     suporte (online, e-mail e telefone),
     armazenamento de dados,
     segurança de dados (contra perdas, adulteração, roubo),
