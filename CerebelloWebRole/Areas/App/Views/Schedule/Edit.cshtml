@@ -316,7 +316,8 @@
                     date: $("#LocalDateTime").val(),
                     start: $("#Start").val(),
                     end: $("#End").val(),
-                    patientId: $("#PatientId").val()
+                    patientId: $("#PatientId").val(),
+                    excludeAppointmentId: "@this.Model.Id",
                 };
             },
             success: function (result) {
