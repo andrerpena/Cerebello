@@ -403,7 +403,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var patientId = this.db.Patients.First().Id;
             var controller = mr.CreateController<MedicalCertificatesController>();
-            var controllerResult = controller.MedicalCertificateFieldsEditor(null, 37);
+            var controllerResult = controller.MedicalCertificateFieldsEditor(null, 37, null);
 
             // obtaining the view-model
             ViewResult view = (ViewResult)controllerResult;
@@ -442,7 +442,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var patientId = this.db.Patients.First().Id;
             var controller = mr.CreateController<MedicalCertificatesController>();
-            var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, null);
+            var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, null, null);
 
             // obtaining the view-model
             ViewResult view = (ViewResult)controllerResult;
@@ -510,7 +510,7 @@ namespace CerebelloWebRole.Tests.Tests
             // at this point we have 2 certificate models, "modelId" and "anotherModelId" and we have a certificate using "modelId". The point is 
             // to call MedicalCertificateFieldsEditor passing "anotherModelId" 
 
-            var controllerResult = controller.MedicalCertificateFieldsEditor(anotherModelId, certificateId);
+            var controllerResult = controller.MedicalCertificateFieldsEditor(anotherModelId, certificateId, null);
 
             // obtaining the view-model
             ViewResult view = (ViewResult)controllerResult;
@@ -565,7 +565,7 @@ namespace CerebelloWebRole.Tests.Tests
             // at this point we have 2 certificate models, "modelId" and "anotherModelId" and we have a certificate using "modelId". The point is 
             // to call MedicalCertificateFieldsEditor passing "anotherModelId" 
 
-            var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, certificateId);
+            var controllerResult = controller.MedicalCertificateFieldsEditor(modelId, certificateId, null);
 
             // obtaining the view-model
             ViewResult view = (ViewResult)controllerResult;
