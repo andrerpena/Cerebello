@@ -1,15 +1,19 @@
 ﻿@using CerebelloWebRole.Areas.App.Models
 @model ChangeContractViewModel
 @{
-    var planTitles = new Dictionary<string, string>
+    var planTitles = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
-            { "ProfessionalPlan", "plano profissional" }
+            { "ProfessionalPlan", "Upgrade para plano profissional" }
         };
 
-    var title = string.Format("Upgrade para {0}", planTitles[this.Model.ContractUrlId]);
+    var correctPlanCase = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "ProfessionalPlan", "ProfessionalPlan" }
+        };
+
+    var title = planTitles[this.Model.ContractUrlId];
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
-    var partialViewName = string.Format("Contract_{0}", this.Model.ContractUrlId);
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
@@ -18,49 +22,41 @@
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
 <style type="text/css">
-    .upgrade-block
-    {
+    .upgrade-block {
         margin: 1em;
         padding: 1em;
         overflow: hidden;
     }
 
-    table.prices
-    {
+    table.prices {
         color: black;
         margin: 1em auto;
         font-family: 'Lucida Console', 'Courier New', Courier, monospace;
     }
 
-        table.prices td, table.prices th
-        {
+        table.prices td, table.prices th {
             padding: 0.5em 1em;
         }
 
-        table.prices .irrelevant
-        {
+        table.prices .irrelevant {
             color: gray;
         }
 
-        table.prices .important
-        {
+        table.prices .important {
             font-size: 1.2em;
             font-weight: bold;
         }
 
-        table.prices invisible
-        {
+        table.prices invisible {
             visibility: hidden;
             color: transparent;
         }
 
-        table.prices *
-        {
+        table.prices * {
             text-align: center;
         }
 
-        table.prices th
-        {
+        table.prices th {
             font-weight: bold;
         }
 </style>
@@ -70,91 +66,12 @@
 
     @Html.HiddenFor(vm => vm.ContractUrlId)
 
-    <div class="upgrade-block">
-        <h2>Contrato</h2>
-        @Html.Partial(partialViewName)
-
-        <table>
-            <tr>
-                <th>@Html.LabelFor(vm => vm.AcceptedByUser)</th>
-                <td>@Html.CheckBoxFor(vm => vm.AcceptedByUser)</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="upgrade-block">
-        <h2 style="margin-bottom: 1em;">Meio de pagamento</h2>
-        <div class="text-description">
-            <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
-
-            <strong>Cobrança por e-mail:</strong>
-            Nós lhe enviaremos uma cobraça por e-mail com o título <strong style="white-space: nowrap">Fatura Cerebello</strong>.
-            Essa fatura pode ser paga com cartão de crédito, ou então usando saldo disponível em uma conta do PayPal.
-            Sua conta será atualizada para o plano profissional, assim que confirmarmos o seu pagamento.
-            Por conta do tempo de processamento do pagamento, pedimos um prazo de 2 dias úteis após o pagamento para a ativação
-            do novo plano.
-        </div>
-    </div>
-
-    <div class="upgrade-block">
-        <h2 style="margin-bottom: 1em;">Forma de pagamento</h2>
-        <div class="text-description">
-            A assinatura será cobrada com a frequência indicada abaixo,
-                sempre de forma adiantada. Quanto maior a quantidade de tempo paga,
-                maior será o desconto, como indicado na tabela.
-                <table class="prices">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Valor</th>
-                            <th class="irrelevant">Equivalente mensal</th>
-                            <th>Frequência</th>
-                            <th>Desconto</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>
-                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="MONTH"/></td>
-                        <td>R$
-                            <invisible>0</invisible>
-                            119,00</td>
-                        <td class="irrelevant">R$ 119,00</td>
-                        <td>mensal</td>
-                        <td class="irrelevant">sem desconto</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="3-MONTHS"/></td>
-                        <td>R$
-                            <invisible>0</invisible>
-                            339,00</td>
-                        <td class="irrelevant">R$ 113,00</td>
-                        <td>trimestral</td>
-                        <td>5%&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="6-MONTHS"/></td>
-                        <td>R$
-                            <invisible>0</invisible>
-                            642,00</td>
-                        <td class="irrelevant">R$ 107,00</td>
-                        <td>semestral</td>
-                        <td>10%&nbsp;</td>
-                    </tr>
-                    <tr class="important">
-                        <td>
-                            <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="12-MONTHS"/></td>
-                        <td>R$ 1068,00</td>
-                        <td class="irrelevant">R$
-                            <invisible>0</invisible>
-                            89,00</td>
-                        <td>anual</td>
-                        <td class="important">25%&nbsp;</td>
-                    </tr>
-                </table>
-        </div>
-    </div>
+    switch (correctPlanCase[this.Model.ContractUrlId])
+    {
+        case "ProfessionalPlan":
+    @:@Html.Partial("Upgrade_ProfessionalPlan", this.Model)
+            break;
+    }
 
     <div class="submit-bar">
         <input type="submit" value="concluir" />

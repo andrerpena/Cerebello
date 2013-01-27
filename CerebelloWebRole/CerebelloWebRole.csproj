@@ -713,6 +713,7 @@
     <Content Include="Areas\App\Views\ConfigAccount\AccountDataEmail.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index_TrialContract.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\UpgradeRequested.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Upgrade_ProfessionalPlan.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
