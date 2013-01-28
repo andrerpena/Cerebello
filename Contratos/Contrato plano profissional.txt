@@ -99,6 +99,22 @@ outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET em plataforma WEB
 de um BROWSER suportado, mediante a digitação das CREDENCIAIS de acesso individuais de
 cada USUÁRIO, e respeitando-se todos os termos deste contrato.
 
+  O SISTEMA é disponibilizado na modalidade SaaS (Software as a Service), não particular,
+atualizado de forma compulsória e involuntaria, características estas presentes em todos
+os serviços do mesmo gênero.
+
+ - Não particular: quer dizer que o software é o mesmo para todos os ASSINANTES do mesmo
+   plano de serviço, sem exceções, e que visa atender de forma geral a todos esses
+   ASSINANTES, se orientando sempre pela maioria.
+
+ - Atualização compulsória e involuntaria: quer dizer que todas as correções de vícios e
+   defeitos, todas as melhorias, assim como todas as alterações no SISTEMA, valem para
+   todos os ASSINANTES do mesmo plano. Ver seção sobre ATUALIZAÇÃO DO SOFTWARE.
+
+  Não fazem parte do objeto deste contrato: código fonte, partes ou componentes do
+sistema, a propriedade intelectual, esquema do banco de dados, acesso direto ao banco de
+dados, e outros não mencionados neste contrato, em quaisquer hipóteses.
+
 
 
 
@@ -108,13 +124,21 @@ OBRIGAÇÕES DA CONTRATADA
   Manter o SISTEMA em condições de uso, de acordo com o definido no ACORDO DE NÍVEL DE
 SERVIÇO presente neste contrato. Atualizar o SISTEMA constantemente com correçõs de vícios
 e defeitos, e com melhorias de qualidades funcionais e não funcionais, visando melhorar a
-experiência geral dos usuários.
+experiência geral dos usuários, vista a modalidade de Software como Serviço na Núvem.
 
-  Fornecer documentação atualizada dos recursos do SISTEMA, que é acessível em site
-público e de fácil acesso.
+  Fornecer documentação dos recursos do SISTEMA, que é acessível em site público e de
+fácil acesso. Atualizar a documentação constantemente, de forma a torná-la mais eficiente,
+correta, fácil de entender, fácil de navegar e consultar, e mais agradável aos sentidos do
+leitor, e mais acessível à medida do possível.
 
-  Fornecer suporte via e-mail e pelo próprio SISTEMA, de acordo com o definido no ACORDO
-DE NÍVEL DE SERVIÇO presente neste contrato.
+  Fornecer suporte, de acordo com o definido no ACORDO DE NÍVEL DE SERVIÇO presente neste
+contrato, e atender o ASSINANTE e seus colaboradores USUÁRIOS do SISTEMA, em prazo
+aceitável, com objetivo de resolver os problemas enfrentados com relação ao SISTEMA,
+serviços/produtos associados, e ao site público.
+
+  Garantir de todas as formas que estiverem ao alcance tecnológico, econômico e humano da
+CONTRATADA, a segurança das informações de prontuário do paciente, em todos os quesitos
+que digam respeito a prontuários eletrônicos de pacientes.
 
 
 
@@ -127,13 +151,21 @@ consultório médico, clínica, ou médico individual, no exercício de sua função ou
 atividades relacionadas, sem prejuizo de outras limitações legais e/ou contratuais.
 
   Uma CONTA permite o uso do SISTEMA, assim como dos serviços/produtos associados, por uma
-única pessoa física ou jurídica. No caso de pessoa jurídica, é permitido o cadastro de
-múltiplos USUÁRIOS, que sejam colaboradores da mesma. No caso de pessoa física, somente
-um USUÁRIO é permitido, que neste caso é criado junto com a CONTA.
+única pessoa física ou jurídica (ASSINANTE), de forma exclusiva e intransferível.
 
-  Não é permitido relizar engenharia reversa, traduzir, descompilar, copiar, modificar,
-alterar, corrigir, traduzir, atualizar, imitar, desenvolver novas versões ou elaborar obra
-derivada do CEREBELLO ou de qualquer de suas partes ou componentes.
+ A) No caso de pessoa jurídica, é permitido o cadastro de múltiplos USUÁRIOS pessoas
+    físicas, que sejam colaboradoras da ASSINANTE, por vínculo de contrato societário ou
+    de contrato de emprego, sendo pessoais e intransferíveis da pessoa que é/representa o
+    USUÁRIO.
+
+ B) No caso de pessoa física, somente um USUÁRIO é permitido, que neste caso é criado
+    junto com a CONTA.
+
+  Não é permitido relizar engenharia reversa, reproduzir, descompilar, copiar, modificar,
+alterar, corrigir, traduzir, atualizar, imitar, publicar, transmitir de qualquer forma, ou
+desenvolver novas versões ou elaborar obra derivada do CEREBELLO, de serviços/produtos
+associados, ou mesmo do site público, em sua totalidade ou de qualquer de suas partes ou
+componentes proprietários da CONTRATADA ou licenciados para a CONTRATADA.
 
   Não é permitido vender, distribuir, sublicenciar, alugar, arrendar, empresar, dar
 dispor, ceder ou transferir de qualquer forma, total ou parcialmente o SISTEMA ou
@@ -234,8 +266,9 @@ ACORDO DE NÍVEL DE SERVIÇO
   Assegura métricas de segurança, desempenho e outros fatores de qualidade de serviço
 (QoS), que se descumpridos pela CONTRATADA permitem ao ASSINANTE uma das seguinte ações:
 
- - cancelamento da CONTA sem nenhum ônus, mesmo nas opções de fidelidade, ou em casos de
-   promoções, sendo o valor proporcional ao tempo não usado devolvido ao ASSINANTE;
+ - resilição do contrato sem nenhum ônus, mesmo nas opções de fidelidade, ou em casos de
+   promoções, sendo o valor proporcional ao tempo não usado devolvido ao ASSINANTE, sem
+   dispensar o ASSINANTE de suas pendências;
 
  - direito à multa estipulada nos itens correspondentes às faltas observadas.
 
@@ -340,18 +373,29 @@ SUPORTE:
 ATUALIZAÇÃO DO SOFTWARE
 -----------------------
 
+  A modalidade em que o SISTEMA é disponibilizado neste contrato, possui por fundamentos
+as seguintes características:
+
   A CONTRATADA se reserva o direito de atualizar características funcionais e não
-funcionais do SISTEMA, de forma não abrupta, ou seja, que não altere a forma de trabalhar
-dos USUÁRIOS, ou que altere pouco, sem o concentimento expresso do ASSINANTE, com o
+funcionais do SISTEMA, de forma não abrupta, ou seja, que não altere ou altere pouco a
+forma de trabalhar dos USUÁRIOS, sem o concentimento expresso do ASSINANTE, com o
 objetivo de melhor servir sua base de clientes.
 
-  Alterações mais significativas podem ser feitas, e a atualização do SISTEMA requer
-concentimento expresso do ASSINANTE, sendo que os ASSINANTES que optarem pela opção
-obsoleta perdem 
+  Alterações mais significativas podem ser feitas, com aviso prévio de 30 dias, e com a
+disponibilização do novo SISTEMA para treinamento, e aceitação. A não aceitação, pode ser
+indicada dentro do prazo, com justificativa, sendo que a não aceitação de mais de 50% dos
+ASSINANTES (sem peso na quantidade de USUÁRIOS), pode determinar o cancelamento das
+alterações, ou redução das características alteradas de acordo com as justificativas
+apresentadas.
+
+  O ASSINANTE que discordar de alterações feitas, com justificativa plausível e de boa fé,
+pode optar pela resilição do contrato, ou migração para outro plano, sem nenhum ônus nos
+casos de promoções ou opções de fidelidade.
 
   Todas as alterações são embasadas na constante comunicação com a comunidade, através de
 site público na internet, no estudo de casos de clientes, assim como em pesquisas
-destinadas ao propósito de melhorar o SISTEMA.
+destinadas ao propósito de melhorar o SISTEMA, tendo sempre em vista a maioria dos
+ASSINANTES, e também ao propósito do SISTEMA, que é atender clínicas e consultórios.
 
 
 
@@ -385,7 +429,12 @@ BROWSERS reconhecidamente inseguros, instáveis ou defeituosos.
 SIGILO DOS DADOS DE PRONTUÁRIO DO PACIENTE
 ------------------------------------------
 
- - Todas as informações do PRONTUÁRIO DO PACIENTE são gravados no 
+  Todas as informações do PRONTUÁRIO DO PACIENTE são, por lei, de propriedade única e
+exclusiva do próprio sujeito, que fornece tais informações em uma relação de
+confidencialidade entre médico e paciente, para realização do seu tratamento e cuidado
+médicos. Fica garantido, portanto, que a CONTRATADA tem o dever e obrigação de tomar todas
+as medidas de segurança que estiverem ao alcance, com o intuito de proteger essas
+informações de acordo com o disposto nas OBRIGAÇÕES DA CONTRATADA.
 
 PREÇOS E COBRANÇAS, TAXAS E REAJUSTES
 -------------------------------------
@@ -426,10 +475,10 @@ Taxas:
    2%, podendo além disso causar o bloqueio da CONTA, e em casos extremos a rescisão deste
    contrato (vide seção RESCISÃO).
 
-   O cancelamento da CONTA não isenta o ASSINANTE de seu débito, e nem da multa de 2%, mas
-   congela o juros de 1% ao mês a partir do momento do cancelamento, passando o valor da
-   dívida a ser reajustada somente com a inflação, usando-se os índices na listagem
-   "Índices de correção monetária", e outros rejustes monetários.
+   O cancelamento da CONTA não isenta o ASSINANTE de seus débitos, e nem da multa de 2%,
+   mas congela o juros de 1% ao mês a partir do momento do cancelamento, passando o valor
+   da dívida a ser reajustada somente com a inflação, usando-se os índices na listagem
+   "Índices de correção monetária", além de outros rejustes monetários.
 
  - Adesão/Cancelamento: Não há taxa de adesão e não há taxa de cancelamento, com exceção
    de promoções, opções de fidelidade, ou condições especialmente concedidas à um
@@ -509,45 +558,48 @@ x Quais são os custos:
 
 x Objeto: SaaS
   x Serviços agregados:
-    suporte (online, e-mail e telefone),
-    armazenamento de dados,
-    segurança de dados (contra perdas, adulteração, roubo),
-    atualização constante,
+    x suporte (online, e-mail e telefone),
+    x armazenamento de dados,
+    x segurança de dados (contra perdas, adulteração, roubo),
+    x atualização constante,
 
 
-Valores:
+x Valores:
   x preços:
-  condições,
-  periodicidade,
-  faturamento,
+  x condições,
+  x periodicidade,
+  x faturamento,
   x reajustes,
-  penalidades,
-  tributos
+  x penalidades,
+  x tributos
 
-Recolhimento de informações: google analytics, entre outros.
+Recolhimento de informações:
+  google analytics,
+  entre outros.
 
-Direito à documentação (manual de instruções)
+x Direito à documentação (manual de instruções)
 
-Condições de prestação de serviços:
-  limites de usuários,
-  pacientes,
-  propriedade intelectual,
-  engenharia reversa,
-  código fonte
-  Quem pode usar: médicos, secretárias e administradores de um único consultório por CONTA.
+x Condições de prestação de serviços:
+  x limites de usuários,
+  x pacientes,
+  x propriedade intelectual,
+  x engenharia reversa,
+  x código fonte
+  x Quem pode usar: médicos, secretárias e administradores de um único consultório por CONTA.
+
+e-mail e sms para pacientes
+
+Acordo de nível de serviço
+  x tempo máximo para solução de defeitos,
+  x tempo máximo de atendimento em suporte,
+
+  x atualizações e correções de defeitos/vícios
+
+x Responsabilidades:
+  x senhas
+  x informações do cliente: devem ser verdadeiras e corretas
 
 
-Acordo de nível de serviço (desempenho)
-  tempo máximo para solução de defeitos,
-  tempo máximo de atendimento em suporte,
-
-  atualizações e correções de defeitos/vícios
-
-Responsabilidades:
-  senhas
-  informações do cliente: devem ser verdadeiras e corretas
-
-
-Recisão
+x Recisão
 
 
