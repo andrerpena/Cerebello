@@ -18,7 +18,7 @@ têm entre si contratado os termos presentes neste documento.
 
 
 
-Definições
+DEFINIÇÕES
 ----------
 
   Para o perfeito entendimento e interpretação do presente contrato, assim como de outros
@@ -202,13 +202,11 @@ OBRIGAÇÕES DO ASSINANTE
   O ASSINANTE obriga-se ao cumprimento dos seguintes termos, sem prejuízo às demais
 obrigações previstas neste contrato:
 
-   [ToDo: OS ITENS ABAIXO SÃO NECESSÁRIO??? OU O BOM SENSO BASTA??? QUAIS DELES???]
-
  - Efetuar o pagamento das mensalidades até o dia do vencimento, estando sujeito às
-   penalidades previstas pelo inadimplemento [ToDo: colocar referência];
+   penalidades previstas pelo inadimplemento [vide a seção RESCISÃO];
 
  - Garantir que os USUÁRIOS cumprirão os TERMOS DE USO e a POLÍTICA DE PRIVACIDADE, que
-   são parte integrante e indissociável deste contrato; [ToDo: Política de Privacidade???]
+   são parte integrante e indissociável deste contrato;
 
  - Assumir plena responsabilidade pela exatidão, qualidade, integridade e legalidade dos
    dados e informações fornecidas à CONTRATADA, seja pelo próprio ASSINANTE ou por
@@ -268,32 +266,39 @@ ACORDO DE NÍVEL DE SERVIÇO
 
  - resilição do contrato sem nenhum ônus, mesmo nas opções de fidelidade, ou em casos de
    promoções, sendo o valor proporcional ao tempo não usado devolvido ao ASSINANTE, sem
-   dispensar o ASSINANTE de suas pendências;
+   dispensar o ASSINANTE de suas pendências passadas;
 
- - direito à multa estipulada nos itens correspondentes às faltas observadas.
+ - direito à multa estipulada nos itens correspondentes às infrações observadas.
 
   Na ocorrência de danos ao ASSINANTE, por inobservância dos itens de qualidade de serviço
 asseguradas por parte da CONTRATADA, cabe ainda indenização justa, vistas as
 responsabilidades de ambas as partes, de acordo com o bom senso, e com o descrito em cada
 item.
 
+PAGAMENTO DA MULTA:
+
+   A multa será paga ao ASSINANTE sendo descontada do valor da próxima fatura que houver
+   nos próximos 30 dias, ou na auxência de tal fatura, como no caso de uma promoção com
+   periodicidade maior que a mensal, as partes devem entrar num acordo quanto à forma de
+   pagamento.
+
 MULTA MÁXIMA:
 
    O valor máximo somado de todas as multas à CONTRATADA, no decorrer de 30 dias seguidos
    da infração, é de 100% do valor proporcional aos mesmos 30 dias do serviço, se excluido
-   os dias após possível cancelamento do contrato. Em resumo, qualquer falha da CONTRATADA
-   pode no máximo tornar o serviço gratuito pelos 30 dias seguintes à falha, ou até um
-   possível cancelamento nesses 30 dias.
-
-   Exemplo: dados um valor mensal de 100,00 e uma multa de 100 vezes o valor proporcional,
-   cada hora vale 0,1389 multiplicado por 100, o que resulta em 13,89 de multa por hora
-   que passar do tempo regulamentado, sendo que multa pode chegar ao máximo de 100,00 no
-   intervalo de 30 dias seguidos da infração.
+   os dias após possível término do contrato. Em resumo, qualquer falha da CONTRATADA pode
+   no máximo tornar o serviço gratuito pelos 30 dias seguintes à falha, ou até um possível
+   cancelamento nesses 30 dias.
 
 MULTA POR TEMPO:
 
    As multas por tempo são sempre uma multiplicação de um número pelo valor proporcional
    ao intervalo de tempo de serviço, que passar do limite tolerável definido.
+
+   Exemplo: dados um valor mensal de R$ 100,00 e uma MULTA POR TEMPO de 100 vezes o valor
+   proporcional, cada hora vale R$ 0,1389 multiplicado por 100, o que resulta em R$ 13,89
+   de multa por hora que passar do tempo regulamentado, sendo que multa pode chegar ao
+   máximo de R$ 100,00 no intervalo de 30 dias seguidos da infração.
 
 SEGURANÇA:
 
@@ -333,18 +338,15 @@ SEGURANÇA:
    membro da CONTRATADA, no presente ou no futuro, terá acesso a esses dados.
 
  - O SISTEMA não aceita que o USUÁRIO crie uma SENHA fácil de ser adivinhada.
-     É obrigatórios o uso de pelo menos 3 dos seguintes grupos de caracteres:
-       letras minúsculas, letras maiúsculas, números, símbolos/espaço em branco;
-     É obrigatório pelo menos 6 caracteres;
-     A senha não pode conter o IDENTIFICADOR DE USUÁRIO;
-     A senha não pode parecer com uma data;
-     A senha não pode conter uma sequência de mais de três caracteres repetidos;
 
  - Não nos responsabilizamos pela segurança do computador ou dispositivo usado para
-   acessar o SISTEMA. Não recomendamos o uso do SISTEMA em computadores ou dispositivos
-   desconhecidos do ASSINANTE. Em caso de furto do computador ou dispositivo em que o
-   SISTEMA tenha sido usado, recomenda-se a alteração imediata da SENHA de todos os
-   USUÁRIOS que tenham usado este mesmo computador ou dispositivo.
+   acessar o SISTEMA, e nem da rede à qual este se conecta para acessar a INTERNET. Não
+   recomendamos o uso do SISTEMA em computadores ou dispositivos desconhecidos do
+   ASSINANTE, e nem o uso de redes desconhecidas para conectar na INTERNET.
+
+   Em caso de furto do computador ou dispositivo em que o SISTEMA tenha sido usado,
+   recomendamos a alteração imediata da SENHA de todos os USUÁRIOS que tenham usado este
+   mesmo computador ou dispositivo.
 
 DESEMPENHO:
 
@@ -381,11 +383,11 @@ funcionais do SISTEMA, de forma não abrupta, ou seja, que não altere ou altere p
 forma de trabalhar dos USUÁRIOS, sem o concentimento expresso do ASSINANTE, com o
 objetivo de melhor servir sua base de clientes.
 
-  Alterações mais significativas podem ser feitas, com aviso prévio de 30 dias, e com a
-disponibilização do novo SISTEMA para treinamento, e aceitação. A não aceitação, pode ser
+  Atualizações mais significativas podem ser feitas, com aviso prévio de 30 dias, e com a
+disponibilização do novo SISTEMA para treinamento e aceitação. A não aceitação, pode ser
 indicada dentro do prazo, com justificativa, sendo que a não aceitação de mais de 50% dos
-ASSINANTES (sem peso na quantidade de USUÁRIOS), pode determinar o cancelamento das
-alterações, ou redução das características alteradas de acordo com as justificativas
+ASSINANTES (sem peso na quantidade de USUÁRIOS), pode determinar o cancelamento da
+atualização, ou redução das características alteradas de acordo com as justificativas
 apresentadas.
 
   O ASSINANTE que discordar de alterações feitas, com justificativa plausível e de boa fé,
@@ -435,6 +437,64 @@ confidencialidade entre médico e paciente, para realização do seu tratamento e c
 médicos. Fica garantido, portanto, que a CONTRATADA tem o dever e obrigação de tomar todas
 as medidas de segurança que estiverem ao alcance, com o intuito de proteger essas
 informações de acordo com o disposto nas OBRIGAÇÕES DA CONTRATADA.
+
+
+
+
+POLÍTICA DE PRIVACIDADE
+-----------------------
+
+  O SISTEMA recolhe informações e estatísticas dos USUÁRIOS e de como eles utilizam o
+software, de forma direta (ou seja, o próprio SISTEMA recolhe os dados) ou usando serviços
+de terceiros, como o Google Analytics.
+
+  Serviços de terceiros como Google Analytics, Facebook, Twitter, Gravatar e YouTube
+podem acabar recolhendo informações, nas páginas onde esses serviços são usados. Essas
+informações incluem: IP, URL, cookies do próprio serviço e dados de "local-storage" do
+navegador. Nenhum desses serviços pode recolher informações digitadas no SISTEMA, sendo
+isso uma impossibilidade técnica que não pode ser contornada, portanto é uma garantia,
+desde que um browser moderno e seguro seja usado. (vide SUPORTE AOS BROWSERS)
+
+  As informações recolhidas dos USUÁRIOS podem ou não ser disponibilizadas ao ASSINANTE,
+quando a CONTRATADA julgar necessário. Essas informações podem ser disponibilizadas pelo
+próprio SISTEMA ao ASSINANTE, e para os USUÁRIOS cadastrados na mesma CONTA.
+
+  As informações podem ser reveladas, no caso de exigência da justiça, podendo o ASSINANTE
+ou USUÁRIO serem avisados de tal acontecimento, se isso não fizer parte da exigência.
+
+Dados recolhidos:
+
+  Podem ser usadas várias fontes de dados, de forma a permitir o funcionamento do sistema,
+ou para pesquisas e melhorias relacionados ao próprio SISTEMA, incluindo:
+
+ - Informações fornecidas pelos USUÁRIOS usando o SISTEMA
+ - Informações solicitadas aos USUÁRIOS
+ - Informações do Browser e Sistema Operacional
+ - Informações de geo-localização do dispositivo
+ - Informações de IP
+ - Informações armazenadas
+ - Estatísticas de uso do SISTEMA
+ - URLs das páginas usadas
+ - Cookies e dados pertinentes ao domínio da CONTRATADA
+ - Mensagens enviadas usando o SISTEMA, incluindo o chat interno
+
+Finalidades:
+
+  Toda informação recolhida tem o fim exclusivamente de melhorar o próprio SISTEMA, ou de
+informar o próprio ASSINANTE. Não será comercializada, nem divulgada de qualquer forma,
+para o público ou para terceiros, salvo quando permitido pelo próprio ASSINANTE.
+
+  Os dados entrados pelo USUÁRIO no SISTEMA, não podem ser comercializados, nem
+disponibilizados para terceiros, por qualquer razão que seja, sem a autorização do próprio
+USUÁRIO.
+
+  As comunicações feitas usando os meios disponibilizados dentro do SISTEMA, como o CHAT,
+são gravados e identificados, exclusivamente com o propósito de informação do próprio
+ASSINANTE. Essas mensagens nunca serão vendidas, nem disponibilizadas para terceiros, e
+nem mesmo acessada por funcionários da CONTRATADA.
+
+
+
 
 PREÇOS E COBRANÇAS, TAXAS E REAJUSTES
 -------------------------------------
@@ -527,8 +587,8 @@ nem variações que não causam prejuizo ao ASSINTANTE, listados a seguir:
 
 
 
-RESCISÃO E RESILIÇÃO
---------------------
+RESCISÃO
+--------
 
   O presente instrumento será dado por rescindido, independentemente de qualquer aviso ou
 interpelação judicial ou extrajudicial, na ocorrência de uma das seguintes hipóteses:
@@ -546,60 +606,28 @@ interpelação judicial ou extrajudicial, na ocorrência de uma das seguintes hipót
  D) A ocorrência de caso fortuito ou força maior, que impeça a continuidade da prestação
     dos serviços contratados.
 
+  Os ônus da RESILIÇÃO aplicar-se-ão à RESCISÃO do contrato.
 
 
 
 
-Pagamento antecipado... é um serviço pré-pago.
+RESILIÇÃO
+---------
 
-x Quais são os custos:
-  x Assinatura
-  x Adicional por médico
+  Ambas as partes podem optar por resilir este contrato, de forma a interromper sua
+continuidade. Em caso de resilição unilateral por parte do ASSINANTE, aplicam-se os
+seguintes termos:
 
-x Objeto: SaaS
-  x Serviços agregados:
-    x suporte (online, e-mail e telefone),
-    x armazenamento de dados,
-    x segurança de dados (contra perdas, adulteração, roubo),
-    x atualização constante,
+ A) Em caso de promoção ou desconto, oferecido pela permanência do ASSINATE por um tempo
+    predeterminado (fidelidade), ou pela antecipação do pagamento (como nas opções de
+    pagamento trimestral, semestral ou anual):
 
+    - no caso de pagamento antecipado: devolução de 90% do valor proporcional ao tempo
+      restante do tempo de uso contratado;
 
-x Valores:
-  x preços:
-  x condições,
-  x periodicidade,
-  x faturamento,
-  x reajustes,
-  x penalidades,
-  x tributos
+    - no caso de pagamento parcelado: cobrança de 10% do valor proporcional ao tempo
+      restante do tempo de uso contratado.
 
-Recolhimento de informações:
-  google analytics,
-  entre outros.
-
-x Direito à documentação (manual de instruções)
-
-x Condições de prestação de serviços:
-  x limites de usuários,
-  x pacientes,
-  x propriedade intelectual,
-  x engenharia reversa,
-  x código fonte
-  x Quem pode usar: médicos, secretárias e administradores de um único consultório por CONTA.
-
-e-mail e sms para pacientes
-
-Acordo de nível de serviço
-  x tempo máximo para solução de defeitos,
-  x tempo máximo de atendimento em suporte,
-
-  x atualizações e correções de defeitos/vícios
-
-x Responsabilidades:
-  x senhas
-  x informações do cliente: devem ser verdadeiras e corretas
-
-
-x Recisão
-
-
+ B) Para o cálculo do tempo de utilização, toma-se como base a unidade DIÁRIA. Com ínicio
+    na data de ativação do plano, e término na data em que o pedido de cancelamento for
+    comunicado à CONTRATADA.
