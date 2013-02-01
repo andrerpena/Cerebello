@@ -407,8 +407,10 @@ ASSINANTES, e também ao propósito do SISTEMA, que é atender clínicas e consultór
 
 
 
-SUPORTE AOS BROWSERS
---------------------
+REQUISITOS DO SISTEMA
+---------------------
+
+Suporte aos browsers:
 
   Dada a imensa diversidade de BROWSERS existentes para todos os diversos dispositivos e
 sistemas operacionais, a CONTRATADA se reserva o direito de suportar o uso do SISTEMA
@@ -429,6 +431,22 @@ SISTEMA no BROWSER não suportado.
 
   A CONTRATADA reserva-se ainda o direito de impedir totalmente o uso do SISTEMA, em
 BROWSERS reconhecidamente inseguros, instáveis ou defeituosos.
+
+JavaScript:
+
+  A tecnologia JavaScript é necessária para o SISTEMA funcionar, portanto deve estar
+ativada no BROWSER em que o USUÁRIO escolher, dentre os suportados.
+
+Conexão com a Internet:
+
+  O SISTEMA funciona em plataforma web, pela INTERNET, portanto é necessário que o
+USUÁRIO possua um serviço de acesso a INTERNET, acessível pelo dispositivo em que deseja
+usar o SISTEMA.
+
+Dispositivo com Internet:
+
+  É necessário que o USUÁRIO possua acesso a um dispositivo capaz de acessar a INTERNET,
+conectado em uma reda com acesso à INTERNET, ou conectado diretamente à INTERNET.
 
 
 
@@ -458,7 +476,7 @@ podem acabar recolhendo informações, nas páginas onde esses serviços são usados.
 informações incluem: IP, URL, cookies do próprio serviço e dados de "local-storage" do
 navegador. Nenhum desses serviços pode recolher informações digitadas no SISTEMA, sendo
 isso uma impossibilidade técnica que não pode ser contornada, portanto é uma garantia,
-desde que um browser moderno e seguro seja usado. (vide SUPORTE AOS BROWSERS)
+desde que um browser moderno e seguro seja usado. (vide REQUISITOS DO SISTEMA)
 
   As informações recolhidas dos USUÁRIOS podem ou não ser disponibilizadas ao ASSINANTE,
 quando a CONTRATADA julgar necessário. Essas informações podem ser disponibilizadas pelo
