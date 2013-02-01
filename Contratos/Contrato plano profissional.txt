@@ -229,6 +229,10 @@ obrigações previstas neste contrato:
    necessárias à cobrança, sob a penalidade de em não o fazendo, assumir todos os
    prejuízos causados para si ou para outrem, em decorrência das informações erradas;
 
+ - Garantir que pode, e que todos os USUÁRIOS cadastrados na CONTA podem, assumir as
+   responsabilidades previstas neste contrato, assim como responder por suas ações, por
+   todo o tempo de vigência deste contrato.
+
  - Obedecer e garantir que todos os USUÁRIOS cadastrados na CONTA obedeçam aos
    TERMOS DE USO do site público do CEREBELLO, que compreende as áreas de interação com a
    comunidade, a documentação, entre outras áreas de livre acesso. Em especial, sabendo
@@ -516,6 +520,18 @@ são gravados e identificados, exclusivamente com o propósito de informação do pr
 ASSINANTE. Essas mensagens nunca serão vendidas, nem disponibilizadas para terceiros, e
 nem mesmo acessada por funcionários da CONTRATADA.
 
+Informações para pagamentos:
+
+  O SISTEMA usa serviços de terceiros para o recolhimento de pagamentos dos ASSINANTES.
+Esses serviços pedem informações bancárias ao ASSINANTE, tais como número de cartão de
+crédito, número da conta, ou quaisquer outras informações necessárias para se recolher o
+pagamento do ASSINANTE. Todos os serviços usados são seguros, e bem conhecidos no mercado,
+tais como PayPal, PagSeguro, entre outros.
+
+  A CONTRATADA não possui acesso às informações bancárias dos ASSINANTES, que são
+informadas à esses serviços de terceiros que fazem o recolhimento de pagamentos dos
+ASSINANTES.
+
 
 
 
@@ -556,6 +572,22 @@ estiver a uma distância de tempo menor que 10 dias, então ela será emitida com o
 vencimento para o mesmo dia do mês seguinte à contratação do plano. Se o dia escolhido
 para o vencimento não existir em um dado mês, será considerado automaticamente o último
 dia deste mês.
+
+Meios de pagamento:
+
+  As cobranças são feitas através de serviços de terceiros, tais como PayPal, PagSeguro ou
+outros, de acordo com a disponibilidade. Esses serviços geralmente fazem a cobrança usando
+cartão de crédito, mas podem oferecer também opções como boleto bancário, ou outras, de
+acordo com cada serviço.
+
+  A CONTRATADA pode também fornecer, meios de pagamento diretos, por cartão de crédito,
+boleto, ou outros, mas não se obriga a tal. No caso de fornecimento dessas opções, podem
+os serviços de terceiros supra mencionados, serem indisponibilizados, caso as opções sejam
+compatíveis com as já fornecidas por estes serviços.
+
+  Somente em último caso, se o ASSINANTE não conseguir efetuar o pagamento pelos meios já
+mencionados, poderá optar pela opção de depósito bancário, devendo o ASSINANTE entrar em
+contato com a CONTRATADA, para obter as informações bancárias para efetuar o pagamento.
 
 Taxas:
 
