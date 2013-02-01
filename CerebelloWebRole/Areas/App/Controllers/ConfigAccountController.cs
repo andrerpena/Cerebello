@@ -140,11 +140,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
             }
 
+            var userReason = string.IsNullOrWhiteSpace(viewModel.Reason) ? "No reason provided by user." : viewModel.Reason;
             // sending self e-mail with user reason for canceling
             using (var message = EmailHelper.CreateEmailMessage(
                         new MailAddress("cerebello@cerebello.com.br"),
                         string.Format("Conta cancelada pelo usuário: {0}", this.DbPractice.UrlIdentifier),
-                        viewModel.Reason))
+                        userReason))
             {
                 this.SendEmail(message);
             }
