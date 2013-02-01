@@ -65,6 +65,7 @@
                             </td>
                             @if (!string.IsNullOrWhiteSpace(this.Request["ReturnUrl"]))
                             {
+                                @Html.HiddenFor(m => m.ReturnUrl)
                                 <td title="Use este botão caso já tenha feito login em outra janela.">
                                     <a style="white-space: nowrap" class="btn btn-mini" href="@this.Request["ReturnUrl"]">
                                         Tentar novamente</a>

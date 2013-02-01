@@ -52,6 +52,8 @@ namespace CerebelloWebRole.Controllers
                         this.ModelState.AddModelError(
                             "returnUrl",
                             "Entre com suas credenciais para poder acessar o Cerebello.");
+
+                    viewModel.ReturnUrl = returnUrl;
                 }
                 catch
                 {
@@ -98,9 +100,36 @@ namespace CerebelloWebRole.Controllers
 
             this.db.SaveChanges();
 
+            // We only use the returnUrl if it is a valid URL
+            // allowing an invalid URL is a security issue
+            {
+                bool useReturnUrl = false;
+                if (!string.IsNullOrEmpty(loginModel.ReturnUrl))
+                {
+                    try
+                    {
+                        // extract practice name from returnUrl
+                        var routeData = RouteHelper.GetRouteDataByUrl("~" + loginModel.ReturnUrl);
+                        if (routeData.Values.ContainsKey("practice"))
+                            useReturnUrl = loginModel.PracticeIdentifier == (string)routeData.Values["practice"];
+                    }
+                    catch
+                    {
+                        // the returnUrl must be invalid, let's just ignore it
+                    }
+                }
+
+                if (!useReturnUrl)
+                    loginModel.ReturnUrl = null;
+            }
+
             if (loginModel.Password == Constants.DEFAULT_PASSWORD)
             {
                 return this.RedirectToAction("ChangePassword", "Users", new { area = "App", practice = loginModel.PracticeIdentifier });
+            }
+            else if (!string.IsNullOrWhiteSpace(loginModel.ReturnUrl))
+            {
+                return this.Redirect(loginModel.ReturnUrl);
             }
             else
             {

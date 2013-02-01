@@ -13,5 +13,7 @@ namespace CerebelloWebRole.Models
 
         [Display(Name = "Lembrar de mim")]
         public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }
