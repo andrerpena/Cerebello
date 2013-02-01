@@ -107,7 +107,7 @@ hr {
 .top-bar
 {
     color: White;
-    background-color: darkslategrey;
+    background-color: #333333;
     height: 20px;
     line-height: 20px;
     text-align: center;
@@ -119,16 +119,16 @@ hr {
     }
 
     .top-bar a {
-        color: lightblue;
+        color: white;
     }
 
     .top-bar a strong {
-        color: white;
+        color: #ffaeae;
     }
 
     .top-bar .small {
         font-size: 0.8em;
-        color: lightskyblue;
+        color: #cccccc;
     }
 
 p.text {
