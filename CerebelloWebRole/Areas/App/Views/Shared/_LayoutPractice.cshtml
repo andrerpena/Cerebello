@@ -15,7 +15,7 @@
         {
             <li class="@(this.IsController("ConfigAccount") ? "youarehere" : "")">
                 <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
-                    <span class="lock-account-config icon-lock" />
+                    @*<span class="lock-account-config icon-lock" />*@
                 </a>
             </li>
         }
@@ -37,7 +37,7 @@
 
 @section Scripts {
     @RenderSection("Scripts", false)
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner, elementAction: LockElementActionType.SoftwareAreaAccess, cssClass: "lock-account-config"))
+    @*@Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner, elementAction: LockElementActionType.SoftwareAreaAccess, cssClass: "lock-account-config"))*@
 }
 
 @section Title {
