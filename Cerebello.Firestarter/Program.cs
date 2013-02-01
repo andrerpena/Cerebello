@@ -33,7 +33,7 @@ namespace Cerebello.Firestarter
 
         private void Run()
         {
-            if(string.IsNullOrEmpty(this.rootCerebelloPath))
+            if (string.IsNullOrEmpty(this.rootCerebelloPath))
                 throw new Exception("Cannot start FireStarter. Cannot find Cerebello root path configuration");
 
             bool isToChooseDb = true;
@@ -409,8 +409,11 @@ namespace Cerebello.Firestarter
             using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
             {
                 if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__redo__");
-                if (Firestarter.RestoreBackup(db, "__undo__"))
+                var fileName = Firestarter.RestoreBackup(db, "__undo__");
+                if (fileName != null)
                 {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine("File name: {0}", fileName);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Undone!");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -433,8 +436,11 @@ namespace Cerebello.Firestarter
             using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
             {
                 if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
-                if (Firestarter.RestoreBackup(db, "__zero__"))
+                var fileName = Firestarter.RestoreBackup(db, "__zero__");
+                if (fileName != null)
                 {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine("File name: {0}", fileName);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Zeroed!");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -456,8 +462,11 @@ namespace Cerebello.Firestarter
         {
             using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
             {
-                if (Firestarter.RestoreBackup(db, "__redo__"))
+                var fileName = Firestarter.RestoreBackup(db, "__redo__");
+                if (fileName != null)
                 {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine("File name: {0}", fileName);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Done!");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -480,8 +489,11 @@ namespace Cerebello.Firestarter
             using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
             {
                 if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
-                if (Firestarter.RestoreBackup(db, "__reset__"))
+                var fileName = Firestarter.RestoreBackup(db, "__reset__");
+                if (fileName != null)
                 {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine("File name: {0}", fileName);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Done!");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -919,10 +931,11 @@ namespace Cerebello.Firestarter
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Backup name: ");
             var ssName = Console.ReadLine();
+            string fileName = null;
             try
             {
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
-                    if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, ssName);
+                    if (this.isFuncBackupEnabled) fileName = Firestarter.CreateBackup(db, ssName);
             }
             catch (Exception ex)
             {
@@ -930,9 +943,15 @@ namespace Cerebello.Firestarter
                 return;
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Done!");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            if (fileName != null)
+                Console.WriteLine("File name: {0}", fileName);
+
+            Console.ForegroundColor = fileName != null ? ConsoleColor.Green : ConsoleColor.Red;
+            Console.WriteLine(fileName != null ? "Done!" : "File not found");
+
             Console.ForegroundColor = ConsoleColor.White;
+            PressAnyKeyToContinue();
         }
 
         private static void InfoBkr()
@@ -955,10 +974,16 @@ namespace Cerebello.Firestarter
             Console.Write("Backup name: ");
             Console.ForegroundColor = ConsoleColor.Yellow;
             var ssNameRestore = Console.ReadLine();
+            string fileName = null;
+            bool fileExists;
             try
             {
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
-                    Firestarter.RestoreBackup(db, ssNameRestore);
+                {
+                    fileExists = Firestarter.BackupExists(db, ssNameRestore);
+                    if (fileExists)
+                        fileName = Firestarter.RestoreBackup(db, ssNameRestore);
+                }
             }
             catch (Exception ex)
             {
@@ -966,9 +991,22 @@ namespace Cerebello.Firestarter
                 return;
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Done!");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            if (fileName != null)
+            {
+                Console.WriteLine("File name: {0}", fileName);
+
+                Console.ForegroundColor = fileExists ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.WriteLine(fileExists ? "Done!" : "File not found");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Failed!");
+            }
+
             Console.ForegroundColor = ConsoleColor.White;
+            PressAnyKeyToContinue();
         }
 
         private static void InfoR()
