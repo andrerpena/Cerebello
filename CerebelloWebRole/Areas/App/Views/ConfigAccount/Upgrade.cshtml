@@ -21,45 +21,10 @@
 @section Scripts {
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
-<style type="text/css">
-    .upgrade-block {
-        margin: 1em;
-        padding: 1em;
-        overflow: hidden;
-    }
-
-    table.prices {
-        color: black;
-        margin: 1em auto;
-        font-family: 'Lucida Console', 'Courier New', Courier, monospace;
-    }
-
-        table.prices td, table.prices th {
-            padding: 0.5em 1em;
-        }
-
-        table.prices .irrelevant {
-            color: gray;
-        }
-
-        table.prices .important {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        table.prices invisible {
-            visibility: hidden;
-            color: transparent;
-        }
-
-        table.prices * {
-            text-align: center;
-        }
-
-        table.prices th {
-            font-weight: bold;
-        }
-</style>
+@section Styles
+{
+    <link href="@Url.Content("~/Content/Styles/App/PlanPage.css")" rel="Stylesheet" type="text/css" />
+}
 @using (Html.BeginForm(null, null, FormMethod.Post))
 {
     @Html.ValidationSummary(false)

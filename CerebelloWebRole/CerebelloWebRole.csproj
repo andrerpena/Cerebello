@@ -471,6 +471,7 @@
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.paginator.css" />
     <Content Include="Content\Styles\App\Controls\media.css" />
+    <Content Include="Content\Styles\App\PlanPage.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
     <Content Include="Content\Styles\App\jquery-ui-overrides.css" />
     <Content Include="Content\Styles\App\jquery.arp.modal.css" />

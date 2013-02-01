@@ -30,6 +30,14 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string PaymentMethod { get; set; }
 
+        /// <summary>
+        /// Indicates the payment invoice due day-of-month.
+        /// The user may choose the best day for him/her.
+        /// </summary>
+        [Display(Name = "Data de vencimento da fatura")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public int? InvoceDueDayOfMonth { get; set; }
+
         public string ContractUrlId { get; set; }
     }
 }

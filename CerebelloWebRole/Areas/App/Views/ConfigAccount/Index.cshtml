@@ -11,4 +11,8 @@
 @section Scripts {
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
+@section Styles
+{
+    <script src="@Url.Content("~/Content/Styles/App/PlanPage.css")" type="text/javascript"></script>
+}
 @Html.Partial((string)string.Format("Index_{0}", this.ViewBag.CurrentContractName), (object)this.Model)

@@ -1,0 +1,153 @@
+﻿/* Plan main page */
+
+a.button {
+    margin-top: 1em;
+    float: right;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.option-cancel .button {
+    color: darkred;
+}
+
+.option-upgrade .button {
+    color: darkgreen;
+    font-size: 1.5em;
+}
+
+div.option {
+    vertical-align: middle;
+    padding: 3em 3em 1em;
+    margin: 15px auto;
+    overflow: hidden;
+    max-width: 400px;
+    line-height: 1.5em;
+    word-spacing: 0.2em;
+    text-align: justify;
+    color: black;
+}
+
+div.option-cancel {
+    background: #FDD;
+}
+
+div.option-upgrade {
+    background: #CFC;
+}
+
+.option-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* Upgrade page */
+
+.upgrade-block {
+    margin: 1em;
+    padding: 1em;
+    overflow: hidden;
+}
+
+table.prices {
+    color: black;
+    margin: 1em auto;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+}
+
+    table.prices tbody tr {
+        cursor: pointer;
+    }
+
+        table.prices tbody tr:hover {
+            color: #C77405;
+            background: #D6DDEF;
+            font-weight: bold;
+        }
+
+        table.prices tbody tr.selected {
+            color: #DD390D;
+            background: #D6DDEF;
+            font-weight: bold;
+        }
+
+        table.prices tbody tr.selected:hover {
+            color: #DD390D;
+        }
+
+    table.prices td, table.prices th {
+        padding: 0.5em 1em;
+    }
+
+    table.prices .irrelevant {
+        opacity: 0.5;
+    }
+
+    table.prices .important {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    table.prices invisible {
+        visibility: hidden;
+        color: transparent;
+    }
+
+    table.prices * {
+        text-align: center;
+    }
+
+    table.prices th {
+        font-weight: bold;
+    }
+
+table.days-of-month {
+    margin: 10px auto;
+}
+
+    table.days-of-month td {
+        width: 32px;
+        text-align: center;
+        vertical-align: central;
+        line-height: 24px;
+        color: #1c94c4;
+    }
+
+        table.days-of-month td.enabled {
+            background: transparent;
+            cursor: pointer;
+        }
+
+        table.days-of-month td.disabled {
+            background: white;
+        }
+
+        table.days-of-month td.selected {
+            background: #D6DDEF;
+            color: #DD390D;
+            font-weight: bold;
+        }
+
+        table.days-of-month td.enabled:hover {
+            color: #C77405;
+            background: #D6DDEF;
+            font-weight: bold;
+        }
+
+        table.days-of-month td.selected:hover {
+            color: #DD390D;
+        }
+
+.contract-container {
+    margin-top: 1em;
+    color: black;
+}
+
+    .contract-container p {
+        margin: 0.5em;
+    }
+
+    .contract-container .simple {
+        font-size: 1.5em;
+        font-family: 'Open Sans Condensed', sans-serif;
+    }

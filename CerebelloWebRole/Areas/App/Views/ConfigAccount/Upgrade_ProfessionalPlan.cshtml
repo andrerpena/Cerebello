@@ -32,6 +32,15 @@
         A assinatura será cobrada com a frequência indicada abaixo,
         sempre de forma adiantada. Quanto maior a quantidade de tempo paga,
         maior será o desconto, como indicado na tabela.
+        <script type="text/javascript">
+            $(function () {
+                $(".prices > tbody > tr").click(function () {
+                    $(".prices > tbody > tr.selected").toggleClass("selected");
+                    $(this).toggleClass("selected");
+                    $(".prices > tbody > tr input:radio[value='" + $(this).attr("val") + "']").attr("checked", true);
+                });
+            });
+        </script>
         <table class="prices">
             <thead>
                 <tr>
@@ -42,7 +51,7 @@
                     <th>Desconto</th>
                 </tr>
             </thead>
-            <tr>
+            <tr val="MONTH">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="MONTH"/></td>
                 <td>R$
@@ -52,7 +61,7 @@
                 <td>mensal</td>
                 <td class="irrelevant">sem desconto</td>
             </tr>
-            <tr>
+            <tr val="3-MONTHS">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="3-MONTHS"/></td>
                 <td>R$
@@ -62,7 +71,7 @@
                 <td>trimestral</td>
                 <td>5%</td>
             </tr>
-            <tr>
+            <tr val="6-MONTHS">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="6-MONTHS"/></td>
                 <td>R$
@@ -72,7 +81,7 @@
                 <td>semestral</td>
                 <td>10%</td>
             </tr>
-            <tr class="important">
+            <tr class="important" val="12-MONTHS">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="12-MONTHS"/></td>
                 <td>R$ 1200,00</td>
@@ -82,6 +91,49 @@
                 <td>anual</td>
                 <td class="important">15%</td>
             </tr>
+        </table>
+    </div>
+</div>
+
+<div class="upgrade-block">
+    <h2 style="margin-bottom: 1em;">Vencimento da fatura</h2>
+    <div class="text-description">
+
+        <p>
+            A assinatura será cobrada com vencimento no dia indicado do mês.
+            Assim você pode escolher o melhor dia para pagar sua fatura.
+            A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
+            dando o tempo necessário para o pagamento ser efetuado.
+        </p>
+        <p>
+            Nota: se o mês não possuir o dia selecionado, então será usado o último dia deste mês.
+        </p>
+        <script type="text/javascript">
+            $(function () {
+                $(".days-of-month td.enabled").click(function () {
+                    $(".days-of-month td.selected").toggleClass("selected");
+                    $(this).toggleClass("selected");
+                    $("#@Html.FieldName(m => m.InvoceDueDayOfMonth)").val($(this).attr("val"));
+                });
+            });
+        </script>
+        <input type="hidden" id="@Html.FieldName(m => m.InvoceDueDayOfMonth)" name="@Html.FieldName(m => m.InvoceDueDayOfMonth)" value=""/>
+        <table class="days-of-month ui-datepicker-calendar">
+            @for (int line = 0; line < 5; line++)
+            {
+                <tr>
+                    @for (int column = 0; column < 7; column++)
+                    {
+                        var day = line * 7 + column;
+                        <td class="@(day < 31 ? "enabled" : "disabled")" val="@(day + 1)">
+                            @if (day < 31)
+                            {
+                                @:@(day + 1)
+                            }
+                        </td>
+                    }
+                </tr>
+            }
         </table>
     </div>
 </div>

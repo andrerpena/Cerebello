@@ -1439,7 +1439,7 @@ div.message-help {
     line-height: 1.4em;
 }
 
-    .text-description p
+    .widget > .text-description p
     {
         margin: 1em 5em 1em 5em;
     }
