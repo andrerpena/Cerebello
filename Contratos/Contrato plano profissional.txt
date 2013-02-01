@@ -3,9 +3,9 @@ Contrato de Software como Serviço (SAAS) denominado Cerebello
 
 Pelo presente instrumento particular, de um lado
 
-  XPTO
-  C.N.P.J.: 
-  Sede: 
+  NOME-DA-EMPRESA
+  C.N.P.J.: xxxxx
+  Sede: xxxxxxxxx
 
 doravante denominada simplesmente CONTRATADA, e de outro lado
 
@@ -26,8 +26,8 @@ documentos integrantes deste, são adotadas, independentemente de sua digitação, 
 seguintes definições:
 
 ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT): é a parte do contrato que
-  define métricas referentes à qualidade do serviço prestado, assim como os direitos do
-  ASSINANTE perante à possíveis falhas da CONTRATADA nos aspectos apresentados.
+  define métricas referentes à qualidade do serviço prestado, assim como garantias de que
+  essas métricas serão respeitadas e mantidas pela CONTRATADA.
 
 ASSINANTE: pessoa física ou jurídica que possui vínculo contratual com a XPTO, para
   fruição do Software como Serviço na núvem denominado CEREBELLO.
@@ -348,6 +348,11 @@ SEGURANÇA:
    recomendamos a alteração imediata da SENHA de todos os USUÁRIOS que tenham usado este
    mesmo computador ou dispositivo.
 
+ - Não nos responsabilizamos por falhas da rede em que o USUÁRIO se conecta, nem do
+   serviço de INTERNET usado pelo USUÁRIO para se conectar na INTERNET, e nem por falhas
+   nos "backbones" da INTERNET, que possam impedir o uso do SISTEMA, ou de
+   serviços/produtos associados ao SISTEMA.
+
 DESEMPENHO:
 
  - Tempo on-line: 99,5% do tempo por semana, o que equivale a 50 minutos fora do ar por
@@ -527,6 +532,13 @@ limite definido no FORMULÁRIO DE ADESÃO, e que possui um custo por unidade adici
 O limite pode ser alterado pelo ASSINANTE, mediante aceitação de um FORMULÁRIO DE
 ALTERAÇÃO DE SERVIÇO, então substituindo informações do FORMULÁRIO DE ADESÃO.
 
+  O ASSINANTE pode definir o dia do mês (de 1 até 31) do vencimento de suas faturas, sendo
+que a fatura é sempre emitida com no mínimo 10 dias de antecedência. Se a primeira fatura
+estiver a uma distância de tempo menor que 10 dias, então ela será emitida com o
+vencimento para o mesmo dia do mês seguinte à contratação do plano. Se o dia escolhido
+para o vencimento não existir em um dado mês, será considerado automaticamente o último
+dia deste mês.
+
 Taxas:
 
  - Inadimplência: O atraso no pagamento das faturas até o dia do vencimento, ficará
@@ -606,7 +618,8 @@ interpelação judicial ou extrajudicial, na ocorrência de uma das seguintes hipót
  D) A ocorrência de caso fortuito ou força maior, que impeça a continuidade da prestação
     dos serviços contratados.
 
-  Os ônus da RESILIÇÃO aplicar-se-ão à RESCISÃO do contrato.
+  Os ônus da RESILIÇÃO aplicar-se-ão à RESCISÃO do contrato, se for causada direta ou
+indiretamente pelo ASSINANTE.
 
 
 
@@ -614,9 +627,9 @@ interpelação judicial ou extrajudicial, na ocorrência de uma das seguintes hipót
 RESILIÇÃO
 ---------
 
-  Ambas as partes podem optar por resilir este contrato, de forma a interromper sua
-continuidade. Em caso de resilição unilateral por parte do ASSINANTE, aplicam-se os
-seguintes termos:
+  O ASSINANTE pode optar pela resilição, de forma a interromper a continuidade deste
+contrato. Em caso de resilição unilateral por parte do ASSINANTE, aplicam-se os seguintes
+termos:
 
  A) Em caso de promoção ou desconto, oferecido pela permanência do ASSINATE por um tempo
     predeterminado (fidelidade), ou pela antecipação do pagamento (como nas opções de
