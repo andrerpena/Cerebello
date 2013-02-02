@@ -1,5 +1,18 @@
 ﻿/* Plan main page */
 
+strong.doctor-count {
+    color: #DD390D;
+    font-size: 1.2em;
+    display: inline-block;
+    padding: 0 1em;
+    text-align: center;
+    white-space: nowrap;
+}
+
+strong.price {
+    white-space: nowrap;
+}
+
 a.button {
     margin-top: 1em;
     float: right;
@@ -52,45 +65,50 @@ div.option-upgrade {
 table.prices {
     color: black;
     margin: 1em auto;
-    font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+    width: 100%;
 }
 
-    table.prices tbody tr {
+    table.prices tbody tr.enabled {
         cursor: pointer;
+        font-size: 0.9em;
     }
 
-        table.prices tbody tr:hover {
+        table.prices tbody tr.enabled:hover {
             color: #C77405;
             background: #D6DDEF;
             font-weight: bold;
         }
 
-        table.prices tbody tr.selected {
+        table.prices tbody tr.enabled.selected {
             color: #DD390D;
             background: #D6DDEF;
             font-weight: bold;
         }
 
-        table.prices tbody tr.selected:hover {
-            color: #DD390D;
-        }
+            table.prices tbody tr.enabled.selected:hover {
+                color: #DD390D;
+                font-weight: bold;
+            }
 
     table.prices td, table.prices th {
         padding: 0.5em 1em;
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: 100%;
+        vertical-align: middle;
     }
 
-    table.prices .irrelevant {
+        table.prices th.expand {
+            width: 20%;
+        }
+
+    table.prices .irrelevant, table.prices .disabled td {
         opacity: 0.5;
+        font-size: 0.8em;
     }
 
-    table.prices .important {
-        font-size: 1.2em;
-        font-weight: bold;
-    }
-
-    table.prices invisible {
-        visibility: hidden;
-        color: transparent;
+    table.prices tr.important td {
+        font-size: 1.25em;
     }
 
     table.prices * {
@@ -100,6 +118,19 @@ table.prices {
     table.prices th {
         font-weight: bold;
     }
+
+table.doctors {
+    width: auto;
+}
+
+    table.doctors th.expand {
+        width: 150px;
+    }
+
+table.summary tbody tr.enabled {
+    cursor: inherit;
+}
+
 
 table.days-of-month {
     margin: 10px auto;

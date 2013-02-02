@@ -34,10 +34,13 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Indicates the payment invoice due day-of-month.
         /// The user may choose the best day for him/her.
         /// </summary>
-        [Display(Name = "Data de vencimento da fatura")]
+        [Display(Name = "Dia de vencimento da fatura")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? InvoceDueDayOfMonth { get; set; }
 
         public string ContractUrlId { get; set; }
+
+        [Display(Name = "Quantidade de médicos")]
+        public int DoctorCount { get; set; }
     }
 }

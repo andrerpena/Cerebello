@@ -175,6 +175,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var viewModel = new ChangeContractViewModel
                     {
                         ContractUrlId = id,
+                        DoctorCount = this.DbPractice.Users.Count(x => x.DoctorId != null),
                     };
 
                 return View(viewModel);

@@ -13,6 +13,7 @@ using System.Web.Script.Serialization;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Controls;
 using JetBrains.Annotations;
+using System.Linq;
 
 namespace CerebelloWebRole.Code.Extensions
 {
@@ -31,6 +32,15 @@ namespace CerebelloWebRole.Code.Extensions
         public static string FieldName<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
         {
             return ExpressionHelper.GetPropertyInfoFromMemberExpression(expression).Name;
+        }
+
+        public static string FieldLabelText<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
+        {
+            var propInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            var displayAttr = propInfo
+                .GetCustomAttributes(true).OfType<DisplayAttribute>()
+                .SingleOrDefault();
+            return displayAttr != null ? displayAttr.Name : propInfo.Name;
         }
 
         public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)

@@ -158,6 +158,7 @@
     <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
+    <Compile Include="Code\Buz.cs" />
     <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />

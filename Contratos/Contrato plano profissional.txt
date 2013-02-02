@@ -688,7 +688,7 @@ termos:
     - no caso de pagamento antecipado: devolução de 90% do valor proporcional ao tempo
       restante do tempo de uso contratado;
 
-    - no caso de pagamento parcelado: cobrança de 10% do valor proporcional ao tempo
+    - no caso de pagamento pendente: cobrança de 10% do valor proporcional ao tempo
       restante do tempo de uso contratado.
 
  B) Para o cálculo do tempo de utilização, toma-se como base a unidade DIÁRIA. Com ínicio

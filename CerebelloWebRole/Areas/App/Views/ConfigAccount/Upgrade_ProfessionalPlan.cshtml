@@ -1,4 +1,4 @@
-﻿@using CerebelloWebRole.Areas.App.Models
+﻿@using System.Globalization
 @model ChangeContractViewModel
 <div class="upgrade-block">
     <h2>Contrato</h2>
@@ -13,7 +13,7 @@
 </div>
 
 <div class="upgrade-block">
-    <h2 style="margin-bottom: 1em;">Meio de pagamento</h2>
+    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.PaymentMethod)</h2>
     <div class="text-description">
         <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
 
@@ -26,77 +26,216 @@
     </div>
 </div>
 
+@{
+    var ptBr = CultureInfo.GetCultureInfo("pt-BR");
+    var invariant = CultureInfo.InvariantCulture;
+}
+
 <div class="upgrade-block">
-    <h2 style="margin-bottom: 1em;">Forma de pagamento</h2>
+    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.PaymentModelName)</h2>
     <div class="text-description">
-        A assinatura será cobrada com a frequência indicada abaixo,
-        sempre de forma adiantada. Quanto maior a quantidade de tempo paga,
-        maior será o desconto, como indicado na tabela.
+        <p>
+            A assinatura será cobrada com a frequência selecionada abaixo,
+            sempre de forma adiantada. Quanto maior a quantidade de tempo paga,
+            maior será o desconto, como indicado na tabela.
+        </p>
         <script type="text/javascript">
+            function UpdateSummary() {
+                var $base = $("table.frequency > tbody > tr.selected");
+                var $doctors = $("table.doctors > tbody > tr.selected > td.price");
+
+                var rate = 1 - parseFloat($base.attr("discount")) / 100;
+
+                var basePrice = parseFloat($base.attr("price"));
+                var months = parseFloat($base.attr("months"));
+
+                var basePriceMonth = parseFloat("@(Buz.Pro.PRICE_MONTH.ToString("0.00", invariant))");
+                var basePriceMonthDisc = basePrice / months;
+                var baseSaved = basePriceMonth * months - basePrice;
+
+                var doctorsPriceMonth = parseFloat($doctors.attr("price"));
+
+                var doctorsPriceMonthDisc = doctorsPriceMonth * rate;
+                var doctorsPrice = doctorsPriceMonthDisc * months;
+                var doctorsSaved = doctorsPriceMonth * months - doctorsPrice;
+
+                var totalPriceMonthDisc = doctorsPriceMonthDisc + basePriceMonthDisc;
+                var totalPrice = doctorsPrice + basePrice;
+                var totalSaved = doctorsSaved + baseSaved;
+
+                if (!isNaN(basePrice)) {
+                    $("#summary-discount").text($base.attr("discount") + "%");
+                    $(".summary-frequency").text({ "1": "mensal", "3": "trimestral", "6": "semestral", "12": "anual" }["" + months]);
+
+                    $("#summary-base-price").text("R$ " + basePrice.toFixed(2).replace('.', ','));
+                    $("#summary-base-price-month").text("R$ " + basePriceMonthDisc.toFixed(2).replace('.', ','));
+                    $("#summary-base-saved").text("R$ " + baseSaved.toFixed(2).replace('.', ','));
+                }
+
+                if (!isNaN(basePrice) && !isNaN(doctorsPrice)) {
+                    $("#summary-doctors-price").text("R$ " + doctorsPrice.toFixed(2).replace('.', ','));
+                    $("#summary-doctors-price-month").text("R$ " + doctorsPriceMonthDisc.toFixed(2).replace('.', ','));
+                    $("#summary-doctors-saved").text("R$ " + doctorsSaved.toFixed(2).replace('.', ','));
+                }
+
+                if (!isNaN(basePrice) && !isNaN(doctorsPrice)) {
+                    $(".summary-total-price").text("R$ " + totalPrice.toFixed(2).replace('.', ','));
+                    $("#summary-total-price-month").text("R$ " + totalPriceMonthDisc.toFixed(2).replace('.', ','));
+                    $("#summary-total-saved").text("R$ " + totalSaved.toFixed(2).replace('.', ','));
+                }
+            }
+
             $(function () {
-                $(".prices > tbody > tr").click(function () {
-                    $(".prices > tbody > tr.selected").toggleClass("selected");
+                $("table.frequency > tbody > tr").click(function () {
+                    $("table.frequency > tbody > tr.selected").toggleClass("selected");
                     $(this).toggleClass("selected");
-                    $(".prices > tbody > tr input:radio[value='" + $(this).attr("val") + "']").attr("checked", true);
+                    $("table.frequency > tbody > tr input:radio[value='" + $(this).attr("model-name") + "']").attr("checked", true);
+
+                    var rate = 1 - parseFloat($(this).attr("discount")) / 100;
+                    var mul = parseFloat($(this).attr("months"));
+                    $("table.doctors > tbody > tr > td.price").each(function (index) {
+                        $(this).text("R$ " + (rate * parseFloat($(this).attr("price")) * mul).toFixed(2).replace('.', ','));
+                    });
+                    $("table.doctors > tbody > tr input:radio").attr("discount", false);
+
+                    UpdateSummary();
                 });
             });
         </script>
-        <table class="prices">
+        <table class="frequency prices">
             <thead>
                 <tr>
                     <th></th>
-                    <th>Valor</th>
-                    <th class="irrelevant">Equivalente mensal</th>
-                    <th>Frequência</th>
                     <th>Desconto</th>
+                    <th class="expand">Valor</th>
+                    <th class="expand">Frequência</th>
+                    <th class="expand irrelevant">Equivalente mensal</th>
+                    <th class="expand">Economia</th>
                 </tr>
             </thead>
-            <tr val="MONTH">
+            <tr model-name="MONTH" class="enabled" discount="0" months="1" price="@(Buz.Pro.PRICE_MONTH.ToString("0.00", invariant))">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="MONTH"/></td>
-                <td>R$
-                    <invisible>0</invisible>
-                    119,00</td>
-                <td class="irrelevant">R$ 119,00</td>
+                <td class="irrelevant">0%</td>
+                <td>@(Buz.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr))</td>
                 <td>mensal</td>
-                <td class="irrelevant">sem desconto</td>
+                <td class="irrelevant">@(Buz.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr))</td>
+                <td class="irrelevant">R$ 0,00</td>
             </tr>
-            <tr val="3-MONTHS">
+
+            <tr model-name="3-MONTHS" class="enabled" discount="@(Buz.Pro.DISCOUNT_QUARTER)" months="3" price="@(Buz.Pro.PRICE_QUARTER.ToString("0.00", invariant))">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="3-MONTHS"/></td>
-                <td>R$
-                    <invisible>0</invisible>
-                    339,00</td>
-                <td class="irrelevant">R$ 113,00</td>
+                <td>@(Buz.Pro.DISCOUNT_QUARTER)%</td>
+                <td>@(Buz.Pro.PRICE_QUARTER.ToString("R$ 0.00", ptBr))</td>
                 <td>trimestral</td>
-                <td>5%</td>
+                <td class="irrelevant">@((Buz.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</td>
+                <td>@((Buz.Pro.PRICE_MONTH * 3 - Buz.Pro.PRICE_QUARTER).ToString("R$ 0.00", ptBr))</td>
             </tr>
-            <tr val="6-MONTHS">
+
+            <tr model-name="6-MONTHS" class="enabled" discount="@(Buz.Pro.DISCOUNT_SEMESTER)" months="6" price="@(Buz.Pro.PRICE_SEMESTER.ToString("0.00", invariant))">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="6-MONTHS"/></td>
-                <td>R$
-                    <invisible>0</invisible>
-                    642,00</td>
-                <td class="irrelevant">R$ 107,00</td>
+                <td>@(Buz.Pro.DISCOUNT_SEMESTER)%</td>
+                <td>@(Buz.Pro.PRICE_SEMESTER.ToString("R$ 0.00", ptBr))</td>
                 <td>semestral</td>
-                <td>10%</td>
+                <td class="irrelevant">@((Buz.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</td>
+                <td>@((Buz.Pro.PRICE_MONTH * 6 - Buz.Pro.PRICE_SEMESTER).ToString("R$ 0.00", ptBr))</td>
             </tr>
-            <tr class="important" val="12-MONTHS">
+
+            <tr class="important enabled" model-name="12-MONTHS" discount="@(Buz.Pro.DISCOUNT_YEAR)" months="12" price="@(Buz.Pro.PRICE_YEAR.ToString("0.00", invariant))">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="12-MONTHS"/></td>
-                <td>R$ 1200,00</td>
-                <td class="irrelevant">R$
-                    <invisible>0</invisible>
-                    100,00</td>
+                <td>@(Buz.Pro.DISCOUNT_YEAR)%</td>
+                <td>@(Buz.Pro.PRICE_YEAR.ToString("R$ 0.00", ptBr))</td>
                 <td>anual</td>
-                <td class="important">15%</td>
+                <td class="irrelevant">@((Buz.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</td>
+                <td>@((Buz.Pro.PRICE_MONTH * 12 - Buz.Pro.PRICE_YEAR).ToString("R$ 0.00", ptBr))</td>
             </tr>
         </table>
     </div>
 </div>
 
 <div class="upgrade-block">
-    <h2 style="margin-bottom: 1em;">Vencimento da fatura</h2>
+    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.DoctorCount)</h2>
+    <div class="text-description">
+        <p>
+            O preço do plano profissional varia de acordo com o tamanho de seu consultório ou clínica.
+            Por esta razão, você deve indicar quantos médicos serão cadastrados, na tabela abaixo.
+            Note que o desconto dado no item anterior se aplica aos valores mostrados na tabela abaixo.
+            @if (this.Model.DoctorCount == 0)
+            {
+                @:Atualmente <strong class="doctor-count">não existem médicos</strong> cadastrado em sua conta.
+            }
+            else if (this.Model.DoctorCount == 1)
+            {
+                @:Atualmente existe <strong class="doctor-count">1 médico</strong> cadastrado em sua conta.
+            }
+            else
+            {
+                @:Atualmente existem <strong class="doctor-count">@Model.DoctorCount médicos</strong> cadastrados em sua conta.
+            }
+        </p>
+        <script type="text/javascript">
+            $(function () {
+                $("table.doctors > tbody > tr.disabled input:radio").attr("disabled", true);
+                $("table.doctors > tbody > tr.enabled").click(function () {
+                    $("table.doctors > tbody > tr.selected").toggleClass("selected");
+                    $(this).toggleClass("selected");
+                    $("table.doctors > tbody > tr input:radio[value='" + $(this).attr("value") + "']").attr("checked", true);
+
+                    UpdateSummary();
+                });
+            });
+        </script>
+        <table class="doctors prices">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="expand">Tamanho</th>
+                    <th class="expand">Valor adicional</th>
+                </tr>
+            </thead>
+            <tr value="1" class="@(this.Model.DoctorCount <= 1 ? "enabled" : "disabled")">
+                <td>
+                    <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="1"/></td>
+                <td>somente 1 médico</td>
+                <td class="irrelevant">R$ 0,00</td>
+            </tr>
+            <tr value="2" class="@(this.Model.DoctorCount <= 2 ? "enabled" : "disabled")">
+                <td>
+                    <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="2"/></td>
+                <td>2 médicos</td>
+                <td class="price" price="@(1 * 10)">R$ @(1 * 10),00</td>
+            </tr>
+            <tr value="5" class="@(this.Model.DoctorCount <= 5 ? "enabled" : "disabled")">
+                <td>
+                    <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="5"/></td>
+                <td>até 5 médicos</td>
+                <td class="price" price="@(4 * 9)">R$ @(4 * 9),00</td>
+            </tr>
+            <tr value="10" class="@(this.Model.DoctorCount <= 10 ? "enabled" : "disabled")">
+                <td>
+                    <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="10"/></td>
+                <td>até 10 médicos</td>
+                <td class="price" price="@((9 * 8.25).ToString("0"))">R$ @((9 * 8.25).ToString("0")),00</td>
+            </tr>
+            <tr value="15" class="@(this.Model.DoctorCount <= 15 ? "enabled" : "disabled")">
+                <td>
+                    <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="15"/></td>
+                <td>até 15 médicos</td>
+                <td class="price" price="@((14 * 7.6875).ToString("0"))">R$ @((14 * 7.6875).ToString("0")),00</td>
+            </tr>
+        </table>
+        <p>
+            Se você deseja cadastrar mais de 15 médicos em seu consultório ou clínica,
+            por favor entre em contato conosco.
+        </p>
+    </div>
+</div>
+
+<div class="upgrade-block">
+    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.InvoceDueDayOfMonth)</h2>
     <div class="text-description">
 
         <p>
@@ -135,5 +274,48 @@
                 </tr>
             }
         </table>
+    </div>
+</div>
+
+<div class="upgrade-block">
+    <h2 style="margin-bottom: 1em;">Resumo</h2>
+    <div class="text-description">
+        <p>
+            Resumindo suas escolhas anteriores:
+        </p>
+        <table class="prices summary">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Desconto</th>
+                    <th class="expand">Valor</th>
+                    <th class="expand">Frequência</th>
+                    <th class="expand irrelevant">Equivalente mensal</th>
+                    <th class="expand">Economia</th>
+                </tr>
+            </thead>
+            <tr class="enabled selected">
+                <td style="background: white">Base</td>
+                <td id="summary-discount" rowspan="3">?%</td>
+                <td id="summary-base-price">R$ -</td>
+                <td class="summary-frequency" rowspan="3">-</td>
+                <td id="summary-base-price-month" class="irrelevant">R$ -</td>
+                <td id="summary-base-saved">R$ -</td>
+            </tr>
+            <tr class="enabled selected">
+                <td style="background: white">Médicos</td>
+                <td id="summary-doctors-price">R$ -</td>
+                <td id="summary-doctors-price-month" class="irrelevant">R$ -</td>
+                <td id="summary-doctors-saved">R$ -</td>
+            </tr>
+            <tr class="enabled selected important">
+                <td style="background: white">Total</td>
+                <td class="important summary-total-price">R$ -</td>
+                <td id="summary-total-price-month" class="irrelevant">R$ -</td>
+                <td id="summary-total-saved">R$ -</td>
+            </tr>
+        </table>
+        <div style="text-align: right">Valor total: <span style="font-size: 2em; font-weight: bold" class="summary-total-price">R$ -</span></div>
+        <div style="text-align: right">Intervalo: <span style="font-size: 1.3em; font-weight: bold" class="summary-frequency">-</span></div>
     </div>
 </div>
