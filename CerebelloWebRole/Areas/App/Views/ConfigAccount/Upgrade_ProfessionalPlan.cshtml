@@ -196,6 +196,12 @@
                     <th class="expand">Valor adicional</th>
                 </tr>
             </thead>
+            @{
+                var price2 = 1 * 1.0 * Buz.Pro.DOCTOR_PRICE;
+                var price5 = 4 * 0.9 * Buz.Pro.DOCTOR_PRICE;
+                var price10 = 9 * 0.825 * Buz.Pro.DOCTOR_PRICE;
+                var price15 = 14 * 0.76875 * Buz.Pro.DOCTOR_PRICE;
+            }
             <tr value="1" class="@(this.Model.DoctorCount <= 1 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="1"/></td>
@@ -206,25 +212,26 @@
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="2"/></td>
                 <td>2 médicos</td>
-                <td class="price" price="@(1 * 10)">R$ @(1 * 10),00</td>
+                <td class="price" price="@(price2.ToString("0"))">R$ @(price2.ToString("0")),00</td>
             </tr>
             <tr value="5" class="@(this.Model.DoctorCount <= 5 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="5"/></td>
                 <td>até 5 médicos</td>
-                <td class="price" price="@(4 * 9)">R$ @(4 * 9),00</td>
+                <td class="price" price="@(price5.ToString("0"))">R$ @(price5.ToString("0")),00</td>
             </tr>
             <tr value="10" class="@(this.Model.DoctorCount <= 10 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="10"/></td>
                 <td>até 10 médicos</td>
-                <td class="price" price="@((9 * 8.25).ToString("0"))">R$ @((9 * 8.25).ToString("0")),00</td>
+                <td class="price" price="@(price10.ToString("0"))">R$ @(price10.ToString("0")),00</td>
             </tr>
+
             <tr value="15" class="@(this.Model.DoctorCount <= 15 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="15"/></td>
                 <td>até 15 médicos</td>
-                <td class="price" price="@((14 * 7.6875).ToString("0"))">R$ @((14 * 7.6875).ToString("0")),00</td>
+                <td class="price" price="@(price15.ToString("0"))">R$ @(price15.ToString("0")),00</td>
             </tr>
         </table>
         <p>

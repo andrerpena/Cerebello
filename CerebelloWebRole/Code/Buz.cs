@@ -20,16 +20,16 @@
         public static class Pro
         {
             /// <summary> 92.00m </summary>
-            public const decimal PRICE_MONTH = 92.00m;
+            public const decimal PRICE_MONTH = 89.00m;
 
             /// <summary> 262.20m </summary>
-            public const decimal PRICE_QUARTER = 262.20m;
+            public const decimal PRICE_QUARTER = PRICE_MONTH * (1 - DISCOUNT_QUARTER / 100m) * 3;
 
             /// <summary> 496.80m </summary>
-            public const decimal PRICE_SEMESTER = 496.80m;
+            public const decimal PRICE_SEMESTER = PRICE_MONTH * (1 - DISCOUNT_SEMESTER / 100m) * 6;
 
             /// <summary> 938.40m </summary>
-            public const decimal PRICE_YEAR = 938.40m;
+            public const decimal PRICE_YEAR = PRICE_MONTH * (1 - DISCOUNT_YEAR / 100m) * 12;
 
             /// <summary> 5 </summary>
             public const int DISCOUNT_QUARTER = 5;
@@ -41,7 +41,7 @@
             public const int DISCOUNT_YEAR = 15;
 
             /// <summary> 10 </summary>
-            public const int DOCTOR_PRICE = 10;
+            public const int DOCTOR_PRICE = 30;
         }
 
         public static class ProOld
