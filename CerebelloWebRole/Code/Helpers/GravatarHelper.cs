@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using System.Web;
 
 namespace CerebelloWebRole.Code
 {
@@ -35,6 +36,20 @@ namespace CerebelloWebRole.Code
                 default:
                     throw new Exception("Size not supported");
             }
+
+            try
+            {
+                var path = "/Content/Local/GravatarImages/" + gravatarEMailHash + "_" + sizeAsString + ".png";
+                if (HttpContext.Current != null && HttpContext.Current.Request.Url.IsLoopback)
+                    if (File.Exists(HttpContext.Current.Request.MapPath("~" + path)))
+                        return path;
+
+                path = "/Content/Local/GravatarImages/" + sizeAsString + ".png";
+                if (HttpContext.Current != null && HttpContext.Current.Request.Url.IsLoopback)
+                    if (File.Exists(HttpContext.Current.Request.MapPath("~" + path)))
+                        return path;
+            }
+            catch { }
 
             return "http://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + GravatarHelper.Ampersand + "d=identicon" + GravatarHelper.Ampersand + "r=PG&d=mm";
         }

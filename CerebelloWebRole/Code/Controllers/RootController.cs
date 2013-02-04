@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Transactions;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -52,7 +54,36 @@ namespace CerebelloWebRole.Code.Controllers
         /// <param name="message">MailMessage containing the informations about the message to be sent.</param>
         public virtual void SendEmail(MailMessage message)
         {
-            (this.EmailSender ?? EmailHelper.SendEmail)(message);
+            try
+            {
+                (this.EmailSender ?? EmailHelper.SendEmail)(message);
+            }
+            catch (SmtpException exception)
+            {
+                if (this.HttpContext.Request.Url == null || !this.HttpContext.Request.Url.IsLoopback)
+                    throw;
+                this.SaveEmailLocal(message);
+            }
+        }
+
+        public virtual void SaveEmailLocal(MailMessage message)
+        {
+            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            var emailsPath = Path.Combine(desktopPath, @"Emails");
+
+            Directory.CreateDirectory(emailsPath);
+
+            var name = message.Subject + ".html";
+            name = Regex.Replace(name, @"\s+", ".");
+            name = Regex.Replace(name, @"[^\w\d]", ".", RegexOptions.IgnoreCase);
+            name = Regex.Replace(name, @"\.+", ".");
+
+            var currentEmailPath = Path.Combine(emailsPath, name);
+
+            using (var file = System.IO.File.Create(currentEmailPath))
+            {
+                message.AlternateViews.First().ContentStream.CopyTo(file);
+            }
         }
 
         public virtual CerebelloEntities CreateNewCerebelloEntities()

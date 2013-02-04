@@ -1,5 +1,7 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos";
+    var ptBr = CultureInfo.GetCultureInfo("pt-BR");
 }
 
 <header id="header">
@@ -28,7 +30,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <h2>R$ 119,00</h2>
+                        <h2>@Buz.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr)</h2>
                         <h6>mensais
                             <br />
                             <br />
@@ -46,12 +48,12 @@
                         </p>
                     </td>
                     <td>
-                        <h2>R$ 113,00</h2>
+                        <h2>@((Buz.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</h2>
                         <h6>mensais.
                             <br />
-                            R$ 339,00 a cada 3 meses.</h6>
+                            @Buz.Pro.PRICE_QUARTER.ToString("R$ 0.00", ptBr) a cada 3 meses.</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>5%</strong></span>
+                            <span class="text-success">Desconto de <strong>@Buz.Pro.DISCOUNT_QUARTER%</strong></span>
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
@@ -63,11 +65,11 @@
                         </p>
                     </td>
                     <td>
-                        <h2>R$ 107,00</h2>
+                        <h2>@((Buz.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</h2>
                         <h6>mensais.<br />
-                            R$ 642,00 a cada 6 meses.</h6>
+                            @Buz.Pro.PRICE_SEMESTER.ToString("R$ 0.00", ptBr) a cada 6 meses.</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>10%</strong></span>
+                            <span class="text-success">Desconto de <strong>@Buz.Pro.DISCOUNT_SEMESTER%</strong></span>
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
@@ -79,11 +81,11 @@
                         </p>
                     </td>
                     <td>
-                        <h2>R$ 89,00</h2>
+                        <h2>@((Buz.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</h2>
                         <h6>mensais.<br />
-                            R$ 1068,00 a cada 12 meses.</h6>
+                            @Buz.Pro.PRICE_YEAR.ToString("R$ 0.00", ptBr) a cada 12 meses.</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>25%</strong></span>
+                            <span class="text-success">Desconto de <strong>@Buz.Pro.DISCOUNT_YEAR%</strong></span>
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
