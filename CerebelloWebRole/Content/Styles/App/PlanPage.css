@@ -2,7 +2,6 @@
 
 strong.doctor-count {
     color: #DD390D;
-    font-size: 1.2em;
     display: inline-block;
     padding: 0 1em;
     text-align: center;
@@ -57,14 +56,13 @@ div.option-upgrade {
 /* Upgrade page */
 
 .upgrade-block {
-    margin: 1em;
     padding: 1em;
     overflow: hidden;
 }
 
 table.prices {
     color: black;
-    margin: 1em auto;
+    margin: 1em;
     width: 100%;
 }
 
@@ -74,20 +72,17 @@ table.prices {
     }
 
         table.prices tbody tr.enabled:hover {
-            color: #C77405;
-            background: #D6DDEF;
-            font-weight: bold;
+            background: #F0F3F5;
         }
 
         table.prices tbody tr.enabled.selected {
+            background-color: #F0F3F5;
             color: #DD390D;
-            background: #D6DDEF;
             font-weight: bold;
         }
 
             table.prices tbody tr.enabled.selected:hover {
                 color: #DD390D;
-                font-weight: bold;
             }
 
     table.prices td, table.prices th {
@@ -104,11 +99,9 @@ table.prices {
 
     table.prices .irrelevant, table.prices .disabled td {
         opacity: 0.5;
-        font-size: 0.8em;
     }
 
     table.prices tr.important td {
-        font-size: 1.25em;
     }
 
     table.prices * {
@@ -120,6 +113,7 @@ table.prices {
     }
 
 table.doctors {
+    margin: 1em auto;
     width: auto;
 }
 
@@ -133,7 +127,8 @@ table.summary tbody tr.enabled {
 
 
 table.days-of-month {
-    margin: 10px auto;
+    margin: 0 auto;
+    width: 100%;
 }
 
     table.days-of-month td {
@@ -170,15 +165,33 @@ table.days-of-month {
         }
 
 .contract-container {
-    margin-top: 1em;
     color: black;
 }
 
     .contract-container p {
-        margin: 0.5em;
+        margin: 0 0.5em 0.5em 0;
     }
 
     .contract-container .simple {
+        font-family: 'Open Sans Condensed',sans-serif;
         font-size: 1.5em;
-        font-family: 'Open Sans Condensed', sans-serif;
+        width: 270px;
+    }
+
+        .contract-container .simple p {
+            line-height: 1.2em;
+            margin: 0.5em 0 0.5em 0.5em;
+        }
+
+.billing-calendar-wrapper {
+    overflow: hidden;
+}
+
+    .billing-calendar-wrapper .billing-calendar {
+        width: 250px;
+        float: right;
+    }
+
+    .billing-calendar-wrapper .billing-calendar-description {
+        margin-right: 270px;
     }

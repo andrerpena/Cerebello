@@ -1,0 +1,6 @@
+﻿.cancel-warning {
+    background-color: #FFEDED;
+    border: 1px solid red;
+    line-height: 1.2em;
+    padding: 4px;
+}

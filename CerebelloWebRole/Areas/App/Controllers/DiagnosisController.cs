@@ -153,7 +153,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             IQueryable<SYS_Cid10> baseQuery = this.db.SYS_Cid10;
             if (!string.IsNullOrEmpty(term))
-                baseQuery = baseQuery.Where(c => c.Name.Contains(term));
+                baseQuery = baseQuery.Where(c => c.Name.Contains(term) || c.Cat.Contains(term) || c.SubCat.Contains(term));
 
             var query = from c in baseQuery
                         orderby c.Name

@@ -18,7 +18,7 @@
         <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
 
         <strong>Cobrança por e-mail:</strong>
-        Nós lhe enviaremos uma cobraça por e-mail com o título <strong style="white-space: nowrap">Fatura Cerebello</strong>.
+        Será enviada uma cobraça por e-mail com o título <strong style="white-space: nowrap">Fatura Cerebello</strong>.
         Essa fatura pode ser paga com cartão de crédito, ou então usando saldo disponível em uma conta do PayPal.
         Sua conta será atualizada para o plano profissional, assim que confirmarmos o seu pagamento.
         Por conta do tempo de processamento do pagamento, pedimos um prazo de 2 dias úteis após o pagamento para a ativação
@@ -36,8 +36,7 @@
     <div class="text-description">
         <p>
             A assinatura será cobrada com a frequência selecionada abaixo,
-            sempre de forma adiantada. Quanto maior a quantidade de tempo paga,
-            maior será o desconto, como indicado na tabela.
+            sempre de forma adiantada. Existem descontos para pagamento trimestral, semestral ou anual, como indicado na tabela abaixo.
         </p>
         <script type="text/javascript">
             function UpdateSummary() {
@@ -241,46 +240,50 @@
     </div>
 </div>
 
-<div class="upgrade-block">
+<div class="upgrade-block billing-calendar-wrapper">
     <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.InvoceDueDayOfMonth)</h2>
     <div class="text-description">
-
-        <p>
-            A assinatura será cobrada com vencimento no dia indicado do mês.
-            Assim você pode escolher o melhor dia para pagar sua fatura.
-            A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
-            dando o tempo necessário para o pagamento ser efetuado.
-        </p>
-        <p>
-            Nota: se o mês não possuir o dia selecionado, então será usado o último dia deste mês.
-        </p>
-        <script type="text/javascript">
-            $(function () {
-                $(".days-of-month td.enabled").click(function () {
-                    $(".days-of-month td.selected").toggleClass("selected");
-                    $(this).toggleClass("selected");
-                    $("#@Html.FieldName(m => m.InvoceDueDayOfMonth)").val($(this).attr("val"));
+        <div class="billing-calendar">
+            <script type="text/javascript">
+                $(function () {
+                    $(".days-of-month td.enabled").click(function () {
+                        $(".days-of-month td.selected").toggleClass("selected");
+                        $(this).toggleClass("selected");
+                        $("#@Html.FieldName(m => m.InvoceDueDayOfMonth)").val($(this).attr("val"));
+                    });
                 });
-            });
-        </script>
-        <input type="hidden" id="@Html.FieldName(m => m.InvoceDueDayOfMonth)" name="@Html.FieldName(m => m.InvoceDueDayOfMonth)" value=""/>
-        <table class="days-of-month ui-datepicker-calendar">
-            @for (int line = 0; line < 5; line++)
-            {
-                <tr>
-                    @for (int column = 0; column < 7; column++)
-                    {
-                        var day = line * 7 + column;
-                        <td class="@(day < 31 ? "enabled" : "disabled")" val="@(day + 1)">
-                            @if (day < 31)
-                            {
-                                @:@(day + 1)
-                            }
-                        </td>
-                    }
-                </tr>
-            }
-        </table>
+            </script>
+            <input type="hidden" id="@Html.FieldName(m => m.InvoceDueDayOfMonth)" name="@Html.FieldName(m => m.InvoceDueDayOfMonth)" value=""/>
+            <table class="days-of-month ui-datepicker-calendar">
+                @for (int line = 0; line < 5; line++)
+                {
+                    <tr>
+                        @for (int column = 0; column < 7; column++)
+                        {
+                            var day = line * 7 + column;
+                            <td class="@(day < 31 ? "enabled" : "disabled")" val="@(day + 1)">
+                                @if (day < 31)
+                                {
+                                    @:@(day + 1)
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="billing-calendar-description">
+            <p>
+                A assinatura será cobrada com vencimento no dia indicado do mês.
+                Assim você pode escolher o melhor dia para pagar sua fatura.
+                A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
+                dando o tempo necessário para o pagamento ser efetuado.
+            </p>
+            <p>
+                Nota: se o mês não possuir o dia selecionado, então será usado o último dia deste mês.
+            </p>
+        </div>
+        
     </div>
 </div>
 
