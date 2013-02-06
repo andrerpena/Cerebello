@@ -157,6 +157,7 @@
     <Compile Include="Code\ActionResults\JsonForbiddenResult.cs" />
     <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
+    <Compile Include="Code\Configuration.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Buz.cs" />
     <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
@@ -757,6 +758,7 @@
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ModelStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

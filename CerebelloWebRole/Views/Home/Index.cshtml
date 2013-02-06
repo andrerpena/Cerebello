@@ -29,7 +29,7 @@
         <div class="row">
             <div class="span6">
                 <div class="well">
-                    @if (this.Context.Request.Url != null && this.Context.Request.Url.IsLoopback)
+                    @if (Configuration.Instance.IsLocalPresentation)
                     {
                         <center style="width: 530px; height: 243px; background: #222; line-height: 243px;">
                             <center style="width: 432px; height: 243px; background: black; color: white; vertical-align: middle;">

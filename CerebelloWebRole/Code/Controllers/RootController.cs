@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -54,15 +55,13 @@ namespace CerebelloWebRole.Code.Controllers
         /// <param name="message">MailMessage containing the informations about the message to be sent.</param>
         public virtual void SendEmail(MailMessage message)
         {
-            try
+            if (Configuration.Instance.IsLocalPresentation)
+            {
+                this.SaveEmailLocal(message);
+            }
+            else
             {
                 (this.EmailSender ?? EmailHelper.SendEmail)(message);
-            }
-            catch (SmtpException exception)
-            {
-                if (this.HttpContext.Request.Url == null || !this.HttpContext.Request.Url.IsLoopback)
-                    throw;
-                this.SaveEmailLocal(message);
             }
         }
 
