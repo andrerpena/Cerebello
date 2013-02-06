@@ -75,13 +75,13 @@
         {
             foreach (var session in this.Model.Sessions)
             {
-                var relativeSessionDate = CerebelloWebRole.Code.DateTimeHelper.ConvertToRelative(
+                var relativeSessionDate = DateTimeHelper.ConvertToRelative(
                     session.Date,
                     localNow,
-                    CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludePrefixes
-                    | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.IncludeSuffixes
-                    | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceToday
-                    | CerebelloWebRole.Code.DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+                    DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                    | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                    | DateTimeHelper.RelativeDateOptions.ReplaceToday
+                    | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
 
             <div class="medical-appointment-panel">
                 <h3>Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
@@ -94,6 +94,16 @@
                     foreach (var anamneseId in session.AnamneseIds)
                     {
                     @Html.Action("Details", "Anamneses", new { id = anamneseId })
+                    }
+                }
+                @if (session.PhysicalExaminationIds.Count > 0)
+                {
+                    <p class="subtitle">
+                        Exames físicos
+                    </p>
+                    foreach (var physicalExamination in session.PhysicalExaminationIds)
+                    {
+                    @Html.Action("Details", "PhysicalExamination", new { id = physicalExamination })
                     }
                 }
                 @if (session.ReceiptIds.Count > 0)
@@ -163,6 +173,12 @@
                 <div>
                     <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "anamneses", new { patientId = Model.Id })">Nova anamnese</a>
                     <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
+                    </div>
+                </div>
+                <!-- physical examination -->
+                <div>
+                    <a id="new-physicalExamination" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "PhysicalExamination", new { patientId = Model.Id })">Novo exame físico</a>
+                    <div id="new-physicalExamination-wrapper" class="appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- receipt -->

@@ -142,6 +142,7 @@
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
+    <Compile Include="Areas\App\Controllers\PhysicalExaminationController.cs" />
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
     <Compile Include="Areas\App\Models\LaboratoriesIndexViewModel.cs" />
+    <Compile Include="Areas\App\Models\PhysicalExaminationViewModel.cs" />
     <Compile Include="Areas\App\Models\PrescriptionViewModel.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
     <Compile Include="Code\Access\FilteredObjectQueryWrapper.cs" />
@@ -716,6 +718,8 @@
     <Content Include="Areas\App\Views\ConfigAccount\Index_TrialContract.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\UpgradeRequested.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade_ProfessionalPlan.cshtml" />
+    <Content Include="Areas\App\Views\PhysicalExamination\Details.cshtml" />
+    <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

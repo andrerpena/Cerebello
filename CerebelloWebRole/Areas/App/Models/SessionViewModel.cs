@@ -26,6 +26,11 @@ namespace CerebelloWebRole.Areas.App.Models
         public List<int> AnamneseIds { get; set; }
 
         /// <summary>
+        /// Physical examination ids.
+        /// </summary>
+        public List<int> PhysicalExaminationIds { get; set; }
+
+        /// <summary>
         /// Certificate ids.
         /// </summary>
         public List<int> MedicalCertificateIds { get; set; }

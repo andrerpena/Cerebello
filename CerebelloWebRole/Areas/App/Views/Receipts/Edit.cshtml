@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ReceiptViewModel
+﻿@using System.Diagnostics
+@model ReceiptViewModel
 @{
     Layout = null;
     string receiptId = null;
@@ -8,6 +9,7 @@
     }
     else
     {
+        Debug.Assert(Model != null, "Model != null");
         receiptId = Model.Id.ToString();
     }
 }

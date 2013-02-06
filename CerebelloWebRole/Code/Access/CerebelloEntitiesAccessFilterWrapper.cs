@@ -72,6 +72,11 @@ namespace CerebelloWebRole.Code
             get { return new FilteredObjectSetWrapper<Anamnese>(this.db.Anamnese, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
+        public FilteredObjectSetWrapper<PhysicalExamination> PhysicalExaminations
+        {
+            get { return new FilteredObjectSetWrapper<PhysicalExamination>(this.db.PhysicalExaminations, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
         public FilteredObjectSetWrapper<Appointment> Appointments
         {
             get { return new FilteredObjectSetWrapper<Appointment>(this.db.Appointments, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }

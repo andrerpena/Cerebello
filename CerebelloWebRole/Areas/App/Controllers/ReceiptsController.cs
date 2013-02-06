@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -17,6 +18,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
     {
         public static ReceiptViewModel GetViewModel(Receipt receipt)
         {
+            if (receipt == null)
+                return new ReceiptViewModel();
             return new ReceiptViewModel()
             {
                 Id = receipt.Id,
@@ -62,7 +65,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 viewModel = new ReceiptViewModel()
                 {
-                    Id = id,
+                    Id = null,
                     PatientId = patientId
                 };
 
@@ -93,6 +96,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (formModel.Id == null)
             {
+                Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
                 receipt = new Receipt()
                 {
                     CreatedOn = this.GetUtcNow(),
@@ -102,7 +106,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.db.Receipts.AddObject(receipt);
             }
             else
-                receipt = db.Receipts.Where(r => r.Id == formModel.Id).FirstOrDefault();
+                receipt = this.db.Receipts.FirstOrDefault(r => r.Id == formModel.Id);
 
             if (formModel.ReceiptMedicines.Count == 0)
             {
@@ -115,6 +119,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // Updating receipt medicines. This is only possible when view-model is valid,
                 // otherwise this is going to throw exceptions.
+                Debug.Assert(receipt != null, "receipt != null");
                 receipt.ReceiptMedicines.Update(
                         formModel.ReceiptMedicines,
                         (vm, m) => vm.Id == m.Id,
@@ -148,7 +153,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public JsonResult Delete(int id)
         {
-            var receipt = db.Receipts.Where(m => m.Id == id).First();
+            var receipt = this.db.Receipts.First(m => m.Id == id);
             try
             {
                 this.db.Receipts.DeleteObject(receipt);
@@ -164,7 +169,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public FileStreamResult ViewPDF(int id)
         {
-            var documentSize = PageSize.A4;
             var document = new Document(PageSize.A4, 36, 36, 80, 80);
             var art = new Rectangle(50, 50, 545, 792);
             var documentStream = new MemoryStream();
@@ -176,7 +180,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             document.Open();
 
-            var receipt = this.db.Receipts.Include("ReceiptMedicines").Where(r => r.Id == id).First();
+            var receipt = this.db.Receipts.Include("ReceiptMedicines").First(r => r.Id == id);
 
             var medicinesPerUsage = from rm in receipt.ReceiptMedicines group rm by rm.Medicine.Usage;
             foreach (var medicinesGrouped in medicinesPerUsage)
@@ -186,17 +190,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 document.Add(Chunk.NEWLINE);
 
-                List list = new List(List.UNORDERED);
-                foreach (var receiptMedicine in medicinesGrouped)
+                var list = new List(List.UNORDERED);
+                foreach (var li in medicinesGrouped.Select(receiptMedicine => new ListItem
+                    {
+                        new Phrase(receiptMedicine.Medicine.Name),
+                        new Chunk(new DottedLineSeparator()),
+                        new Phrase(receiptMedicine.Quantity),
+                        Chunk.NEWLINE,
+                        new Phrase(receiptMedicine.Prescription, new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL, BaseColor.GRAY)),
+                        Chunk.NEWLINE,
+                        Chunk.NEWLINE
+                    }))
                 {
-                    var li = new ListItem();
-                    li.Add(new Phrase(receiptMedicine.Medicine.Name));
-                    li.Add(new Chunk(new DottedLineSeparator()));
-                    li.Add(new Phrase(receiptMedicine.Quantity));
-                    li.Add(Chunk.NEWLINE);
-                    li.Add(new Phrase(receiptMedicine.Prescription, new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL, BaseColor.GRAY)));
-                    li.Add(Chunk.NEWLINE);
-                    li.Add(Chunk.NEWLINE);
                     list.Add(li);
                 }
                 document.Add(list);

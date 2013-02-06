@@ -1,0 +1,41 @@
+﻿@model PhysicalExaminationViewModel
+@{
+    this.Layout = null;              
+}
+<div class="physicalExamination-details medical-appointment-details-panel" data-val-id="physicalExamination-@Model.Id">
+    @if (Model != null)
+    {
+        var cardView = this.Html.CreateCardView();
+        cardView.AddField(model => model.Notes);
+        
+        @cardView.GetHtml()
+    }
+    <div class="inline-link-bar">
+        <a href="#" class="edit-physicalExamination inline-link">Editar exame físico</a>
+        <a href="#" class="delete-physicalExamination inline-link">Excluir exame físico</a>
+    </div>
+    <script type="text/javascript">
+        $(".edit-physicalExamination", $("div[data-val-id='physicalExamination-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("Edit", "PhysicalExamination", new { id = Model.Id })",
+                    success: function (result) {
+                        $("div[data-val-id='physicalExamination-@Model.Id']").replaceWith(result);
+                }
+                });
+            });
+
+        $(".delete-physicalExamination", $("div[data-val-id='physicalExamination-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.deleteConfirmation({
+                objectType: "exame físico",
+                url: "@Url.Action("Delete", "PhysicalExamination", new { id = this.Model.Id })",
+                    success: function (data) {
+                        alert("Este exame físico foi excluído");
+                        window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
+                }
+                });
+            });
+
+    </script>
+</div>

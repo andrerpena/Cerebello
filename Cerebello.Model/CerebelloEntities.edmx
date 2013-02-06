@@ -35,6 +35,7 @@
           <EntitySet Name="Patient" EntityType="cerebelloModel.Store.Patient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Person" EntityType="cerebelloModel.Store.Person" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PersonAddress" EntityType="cerebelloModel.Store.PersonAddress" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PhysicalExamination" EntityType="cerebelloModel.Store.PhysicalExamination" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Practice" EntityType="cerebelloModel.Store.Practice" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
@@ -188,6 +189,14 @@
           <AssociationSet Name="FK_PersonAddress_Person" Association="cerebelloModel.Store.FK_PersonAddress_Person">
             <End Role="Person" EntitySet="Person" />
             <End Role="PersonAddress" EntitySet="PersonAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhysicalExamination_Patient" Association="cerebelloModel.Store.FK_PhysicalExamination_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="PhysicalExamination" EntitySet="PhysicalExamination" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhysicalExamination_Practice" Association="cerebelloModel.Store.FK_PhysicalExamination_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="PhysicalExamination" EntitySet="PhysicalExamination" />
           </AssociationSet>
           <AssociationSet Name="FK_Practice_AccountContract" Association="cerebelloModel.Store.FK_Practice_AccountContract">
             <End Role="AccountContract" EntitySet="AccountContract" />
@@ -618,6 +627,16 @@
           </Key>
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="AddressId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PhysicalExamination">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="Notes" Type="text" Nullable="false" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -1205,6 +1224,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PhysicalExamination_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+          <End Role="PhysicalExamination" Type="cerebelloModel.Store.PhysicalExamination" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhysicalExamination">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PhysicalExamination_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="PhysicalExamination" Type="cerebelloModel.Store.PhysicalExamination" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhysicalExamination">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Practice_AccountContract">
           <End Role="AccountContract" Type="cerebelloModel.Store.AccountContract" Multiplicity="0..1" />
           <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="*" />
@@ -1617,6 +1660,15 @@
             <End Role="Address" EntitySet="Addresses" />
             <End Role="Person" EntitySet="People" />
           </AssociationSet>
+          <EntitySet Name="PhysicalExaminations" EntityType="Cerebello.Model.PhysicalExamination" />
+          <AssociationSet Name="FK_PhysicalExamination_Patient" Association="Cerebello.Model.FK_PhysicalExamination_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PhysicalExamination" EntitySet="PhysicalExaminations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhysicalExamination_Practice" Association="Cerebello.Model.FK_PhysicalExamination_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="PhysicalExamination" EntitySet="PhysicalExaminations" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1713,6 +1765,7 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="Int32" Name="LastUsedHealthInsuranceId" />
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Patient_HealthInsurance" FromRole="Patient" ToRole="HealthInsurance" />
+          <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="Patient" ToRole="PhysicalExamination" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -1765,6 +1818,7 @@
           <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Practice" ToRole="Address" />
           <Property Type="Boolean" Name="AccountDisabled" Nullable="false" />
           <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
+          <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Practice" FromRole="Practice" ToRole="PhysicalExamination" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2789,6 +2843,42 @@
           <End Type="Cerebello.Model.Address" Role="Address" Multiplicity="*" />
           <End Type="Cerebello.Model.Person" Role="Person" Multiplicity="*" />
         </Association>
+        <EntityType Name="PhysicalExamination">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PatientId" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Notes" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="PhysicalExamination" ToRole="Patient" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_PhysicalExamination_Practice" FromRole="PhysicalExamination" ToRole="Practice" />
+        </EntityType>
+        <Association Name="FK_PhysicalExamination_Patient">
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
+          <End Type="Cerebello.Model.PhysicalExamination" Role="PhysicalExamination" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhysicalExamination">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PhysicalExamination_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.PhysicalExamination" Role="PhysicalExamination" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhysicalExamination">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3347,6 +3437,17 @@
               <ScalarProperty Name="Id" ColumnName="AddressId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="PhysicalExaminations">
+            <EntityTypeMapping TypeName="Cerebello.Model.PhysicalExamination">
+              <MappingFragment StoreEntitySet="PhysicalExamination">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3413,11 +3514,14 @@
           <ConnectorPoint PointX="3" PointY="13.34375" />
           <ConnectorPoint PointX="6" PointY="13.34375" />
         </AssociationConnector>
-        <AssociationConnector Association="Cerebello.Model.FK_Receipt_Patient" ManuallyRouted="false">
-          <ConnectorPoint PointX="7.75" PointY="13.365143229166666" />
-          <ConnectorPoint PointX="7.916666666666667" PointY="13.365143229166666" />
-          <ConnectorPoint PointX="8.0833333333333339" PointY="13.365143229166666" />
-          <ConnectorPoint PointX="8.25" PointY="13.365143229166666" />
+        <AssociationConnector Association="Cerebello.Model.FK_Receipt_Patient" ManuallyRouted="true">
+          <ConnectorPoint PointX="37.30468875" PointY="22.662903645833335" />
+          <ConnectorPoint PointX="37.30468875" PointY="23.180971822102865" />
+          <ConnectorPoint PointX="37.005210833333336" PointY="23.180971822102865" />
+          <ConnectorPoint PointX="36.838544166666665" PointY="23.180971822102865" />
+          <ConnectorPoint PointX="36.2325339529079" PointY="23.180971822102865" />
+          <ConnectorPoint PointX="36.2325339529079" PointY="27.420187174479167" />
+          <ConnectorPoint PointX="33.625" PointY="27.420187174479167" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Person" ManuallyRouted="false">
           <ConnectorPoint PointX="2.65625" PointY="15.855205078125" />
@@ -3723,6 +3827,9 @@
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
         <AssociationConnector Association="Cerebello.Model.PersonAddress" />
+        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="1.5" PointX="33.375" PointY="23.5" FillColor="Green" />
+        <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
+        <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Practice" />
         </Diagram>
     </Diagrams>
   </Designer>
