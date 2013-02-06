@@ -256,9 +256,7 @@ namespace CerebelloWebRole.Controllers
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
-                        user.Doctor = this.db.Doctors.CreateObject();
-
-
+                        user.Doctor = new Doctor();
 
                     user.Doctor.CRM = registrationData.MedicCRM;
 
@@ -364,7 +362,7 @@ namespace CerebelloWebRole.Controllers
                         this.db.Notifications.AddObject(new Notification()
                         {
                             CreatedOn = this.GetUtcNow(),
-                            PracticeId = user.Practice.Id,
+                            PracticeId = user.PracticeId,
                             UserId = user.Id,
                             ViewName = "NotificationFillUserProfile",
                             ViewData = System.Web.Helpers.Json.Encode(new { id = user.Id, practice = user.Practice.UrlIdentifier }),
@@ -373,7 +371,7 @@ namespace CerebelloWebRole.Controllers
                         this.db.Notifications.AddObject(new Notification()
                         {
                             CreatedOn = this.GetUtcNow(),
-                            PracticeId = user.Practice.Id,
+                            PracticeId = user.PracticeId,
                             UserId = user.Id,
                             ViewName = "NotificationFillPracticeProfile",
                             ViewData = System.Web.Helpers.Json.Encode(new { id = user.Id, practice = user.Practice.UrlIdentifier }),
@@ -382,6 +380,8 @@ namespace CerebelloWebRole.Controllers
                         user.Practice.Owner = user;
                         user.Person.PracticeId = user.PracticeId;
                         user.Administrator.PracticeId = user.PracticeId;
+                        if (user.Doctor != null)
+                            user.Doctor.PracticeId = user.PracticeId;
                         this.db.SaveChanges();
 
                         // Sending the confirmation e-mail to the new user.
