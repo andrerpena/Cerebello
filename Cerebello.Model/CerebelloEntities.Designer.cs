@@ -1994,30 +1994,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String Text
-        {
-            get
-            {
-                return _Text;
-            }
-            set
-            {
-                OnTextChanging(value);
-                ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("Text");
-                OnTextChanged();
-            }
-        }
-        private global::System.String _Text;
-        partial void OnTextChanging(global::System.String value);
-        partial void OnTextChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.Int32 PracticeId
@@ -2038,6 +2014,246 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ChiefComplaint
+        {
+            get
+            {
+                return _ChiefComplaint;
+            }
+            set
+            {
+                OnChiefComplaintChanging(value);
+                ReportPropertyChanging("ChiefComplaint");
+                _ChiefComplaint = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ChiefComplaint");
+                OnChiefComplaintChanged();
+            }
+        }
+        private global::System.String _ChiefComplaint;
+        partial void OnChiefComplaintChanging(global::System.String value);
+        partial void OnChiefComplaintChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String HistoryOfThePresentIllness
+        {
+            get
+            {
+                return _HistoryOfThePresentIllness;
+            }
+            set
+            {
+                OnHistoryOfThePresentIllnessChanging(value);
+                ReportPropertyChanging("HistoryOfThePresentIllness");
+                _HistoryOfThePresentIllness = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("HistoryOfThePresentIllness");
+                OnHistoryOfThePresentIllnessChanged();
+            }
+        }
+        private global::System.String _HistoryOfThePresentIllness;
+        partial void OnHistoryOfThePresentIllnessChanging(global::System.String value);
+        partial void OnHistoryOfThePresentIllnessChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String PastMedicalHistory
+        {
+            get
+            {
+                return _PastMedicalHistory;
+            }
+            set
+            {
+                OnPastMedicalHistoryChanging(value);
+                ReportPropertyChanging("PastMedicalHistory");
+                _PastMedicalHistory = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("PastMedicalHistory");
+                OnPastMedicalHistoryChanged();
+            }
+        }
+        private global::System.String _PastMedicalHistory;
+        partial void OnPastMedicalHistoryChanging(global::System.String value);
+        partial void OnPastMedicalHistoryChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ReviewOfSystems
+        {
+            get
+            {
+                return _ReviewOfSystems;
+            }
+            set
+            {
+                OnReviewOfSystemsChanging(value);
+                ReportPropertyChanging("ReviewOfSystems");
+                _ReviewOfSystems = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ReviewOfSystems");
+                OnReviewOfSystemsChanged();
+            }
+        }
+        private global::System.String _ReviewOfSystems;
+        partial void OnReviewOfSystemsChanging(global::System.String value);
+        partial void OnReviewOfSystemsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String FamilyDiseases
+        {
+            get
+            {
+                return _FamilyDiseases;
+            }
+            set
+            {
+                OnFamilyDiseasesChanging(value);
+                ReportPropertyChanging("FamilyDiseases");
+                _FamilyDiseases = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("FamilyDiseases");
+                OnFamilyDiseasesChanged();
+            }
+        }
+        private global::System.String _FamilyDiseases;
+        partial void OnFamilyDiseasesChanging(global::System.String value);
+        partial void OnFamilyDiseasesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String SocialDiseases
+        {
+            get
+            {
+                return _SocialDiseases;
+            }
+            set
+            {
+                OnSocialDiseasesChanging(value);
+                ReportPropertyChanging("SocialDiseases");
+                _SocialDiseases = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("SocialDiseases");
+                OnSocialDiseasesChanged();
+            }
+        }
+        private global::System.String _SocialDiseases;
+        partial void OnSocialDiseasesChanging(global::System.String value);
+        partial void OnSocialDiseasesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Allergies
+        {
+            get
+            {
+                return _Allergies;
+            }
+            set
+            {
+                OnAllergiesChanging(value);
+                ReportPropertyChanging("Allergies");
+                _Allergies = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Allergies");
+                OnAllergiesChanged();
+            }
+        }
+        private global::System.String _Allergies;
+        partial void OnAllergiesChanging(global::System.String value);
+        partial void OnAllergiesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String SexualHistory
+        {
+            get
+            {
+                return _SexualHistory;
+            }
+            set
+            {
+                OnSexualHistoryChanging(value);
+                ReportPropertyChanging("SexualHistory");
+                _SexualHistory = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("SexualHistory");
+                OnSexualHistoryChanged();
+            }
+        }
+        private global::System.String _SexualHistory;
+        partial void OnSexualHistoryChanging(global::System.String value);
+        partial void OnSexualHistoryChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Conclusion
+        {
+            get
+            {
+                return _Conclusion;
+            }
+            set
+            {
+                OnConclusionChanging(value);
+                ReportPropertyChanging("Conclusion");
+                _Conclusion = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Conclusion");
+                OnConclusionChanged();
+            }
+        }
+        private global::System.String _Conclusion;
+        partial void OnConclusionChanging(global::System.String value);
+        partial void OnConclusionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String RegularAndAcuteMedications
+        {
+            get
+            {
+                return _RegularAndAcuteMedications;
+            }
+            set
+            {
+                OnRegularAndAcuteMedicationsChanging(value);
+                ReportPropertyChanging("RegularAndAcuteMedications");
+                _RegularAndAcuteMedications = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("RegularAndAcuteMedications");
+                OnRegularAndAcuteMedicationsChanged();
+            }
+        }
+        private global::System.String _RegularAndAcuteMedications;
+        partial void OnRegularAndAcuteMedicationsChanging(global::System.String value);
+        partial void OnRegularAndAcuteMedicationsChanged();
 
         #endregion
 

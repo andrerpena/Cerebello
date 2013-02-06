@@ -286,8 +286,17 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="Text" Type="text" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="ChiefComplaint" Type="varchar(max)" />
+          <Property Name="HistoryOfThePresentIllness" Type="varchar(max)" />
+          <Property Name="PastMedicalHistory" Type="varchar(max)" />
+          <Property Name="ReviewOfSystems" Type="varchar(max)" />
+          <Property Name="FamilyDiseases" Type="varchar(max)" />
+          <Property Name="SocialDiseases" Type="varchar(max)" />
+          <Property Name="RegularAndAcuteMedications" Type="varchar(max)" />
+          <Property Name="Allergies" Type="varchar(max)" />
+          <Property Name="SexualHistory" Type="varchar(max)" />
+          <Property Name="Conclusion" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Appointment">
           <Key>
@@ -665,9 +674,9 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="AnamneseId" Type="int" Nullable="false" />
-          <Property Name="Observations" Type="varchar" MaxLength="200" />
+          <Property Name="Observations" Type="text" />
           <Property Name="Cid10Code" Type="varchar" Nullable="false" MaxLength="10" />
-          <Property Name="Cid10Name" Type="varchar" MaxLength="100" />
+          <Property Name="Cid10Name" Type="varchar" MaxLength="500" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SYS_ActiveIngredient">
@@ -1997,9 +2006,18 @@
           <Property Type="Int32" Name="PatientId" Nullable="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_Anamnese_Patient" FromRole="Anamnese" ToRole="Patient" />
-          <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Symptoms" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese1" FromRole="Anamnese" ToRole="Symptom" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="String" Name="ChiefComplaint" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="HistoryOfThePresentIllness" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PastMedicalHistory" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ReviewOfSystems" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="FamilyDiseases" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SocialDiseases" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Allergies" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SexualHistory" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RegularAndAcuteMedications" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Anamnese_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -2580,9 +2598,9 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="AnamneseId" Nullable="false" />
-          <Property Type="String" Name="Observations" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Observations" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Cid10Code" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Cid10Name" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Cid10Name" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Anamnese" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese1" FromRole="Symptom" ToRole="Anamnese" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
         </EntityType>
@@ -2902,8 +2920,17 @@
           <EntitySetMapping Name="Anamnese">
             <EntityTypeMapping TypeName="Cerebello.Model.Anamnese">
               <MappingFragment StoreEntitySet="Anamnese">
+                <ScalarProperty Name="RegularAndAcuteMedications" ColumnName="RegularAndAcuteMedications" />
+                <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
+                <ScalarProperty Name="SexualHistory" ColumnName="SexualHistory" />
+                <ScalarProperty Name="Allergies" ColumnName="Allergies" />
+                <ScalarProperty Name="SocialDiseases" ColumnName="SocialDiseases" />
+                <ScalarProperty Name="FamilyDiseases" ColumnName="FamilyDiseases" />
+                <ScalarProperty Name="ReviewOfSystems" ColumnName="ReviewOfSystems" />
+                <ScalarProperty Name="PastMedicalHistory" ColumnName="PastMedicalHistory" />
+                <ScalarProperty Name="HistoryOfThePresentIllness" ColumnName="HistoryOfThePresentIllness" />
+                <ScalarProperty Name="ChiefComplaint" ColumnName="ChiefComplaint" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="PatientId" ColumnName="PatientId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3440,7 +3467,7 @@
           <ConnectorPoint PointX="13.791669166666667" PointY="14.078837890625" />
           <ConnectorPoint PointX="12" PointY="14.078837890625" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Anamnese" Width="1.875" PointX="38.625" PointY="18.75" Height="2.1725878906249996" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Anamnese" Width="2.25" PointX="38.625" PointY="16.75" Height="2.1725878906249996" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_Anamnese_Patient">
           <ConnectorPoint PointX="6.875" PointY="12.25" />
           <ConnectorPoint PointX="6.875" PointY="9.5862939453125" />

@@ -20,7 +20,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 Id = anamnese.Id,
                 PatientId = anamnese.PatientId,
-                Text = anamnese.Text,
+                Allergies = anamnese.Allergies,
+                ChiefComplaint = anamnese.ChiefComplaint,
+                Conclusion = anamnese.Conclusion,
+                FamilyDeseases = anamnese.FamilyDiseases,
+                HistoryOfThePresentIllness = anamnese.HistoryOfThePresentIllness,
+                PastMedicalHistory = anamnese.PastMedicalHistory,
+                RegularAndAcuteMedications = anamnese.RegularAndAcuteMedications,
+                ReviewOfSystems = anamnese.ReviewOfSystems,
+                SexualHistory = anamnese.SexualHistory,
+                SocialDeseases = anamnese.SocialDiseases,
                 Symptoms = (from s in anamnese.Symptoms
                             select new SymptomViewModel
                             {
@@ -93,7 +102,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     anamnese = this.db.Anamnese.First(a => a.Id == formModel.Id);
 
-                anamnese.Text = formModel.Text;
+                anamnese.Allergies = formModel.Allergies;
+                anamnese.ChiefComplaint = formModel.ChiefComplaint;
+                anamnese.Conclusion = formModel.Conclusion;
+                anamnese.FamilyDiseases = formModel.FamilyDeseases;
+                anamnese.HistoryOfThePresentIllness = formModel.HistoryOfThePresentIllness;
+                anamnese.PastMedicalHistory = formModel.PastMedicalHistory;
+                anamnese.RegularAndAcuteMedications = formModel.RegularAndAcuteMedications;
+                anamnese.ReviewOfSystems = formModel.ReviewOfSystems;
+                anamnese.SexualHistory = formModel.SexualHistory;
+                anamnese.SocialDiseases = formModel.SocialDeseases;
 
                 #region Update Symptomsymptoms
                 // step 1: add new
