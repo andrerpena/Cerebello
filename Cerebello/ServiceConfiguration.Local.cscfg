@@ -12,6 +12,7 @@
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="6CD721517AF8626467976AE019DD11F6C0D695DC" thumbprintAlgorithm="sha1" />
+      <Certificate name="CerebelloSelfSigned" thumbprint="98EC0886CAC024C891A745347E8B49A5E2AC8FD3" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
 </ServiceConfiguration>

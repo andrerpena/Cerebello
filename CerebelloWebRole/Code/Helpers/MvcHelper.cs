@@ -140,7 +140,7 @@ namespace CerebelloWebRole.Code.Helpers
         {
             private readonly Uri url = new Uri(
                 String.Format(
-                    "http://www.{0}{1}/",
+                    "https://www.{0}{1}/",
                     Constants.DOMAIN,
                     Constants.PORT.HasValue ? ":" + Constants.PORT : ""),
                 UriKind.Absolute);

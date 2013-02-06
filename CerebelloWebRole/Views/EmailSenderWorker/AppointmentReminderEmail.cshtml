@@ -100,11 +100,11 @@
     
 @*
     Link no qual o paciente pode ver suas consultas marcadas, e interagir com o consultório
-    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "http")">PracticeHome</a>
+    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "https")">PracticeHome</a>
 *@
 
     <p style="padding-left: 2em; color: gray; font-style: italic">
-        Powered by <a href="@Url.Action("Index", "Home", new { }, "http")">@Constants.EMAIL_POWEREDBY</a>
+        Powered by <a href="@Url.Action("Index", "Home", new { }, "https")">@Constants.EMAIL_POWEREDBY</a>
     </p>
     return;
 }
@@ -176,7 +176,7 @@ else
 
 @*
     Link no qual o paciente pode ver suas consultas marcadas, e interagir com o consultório
-    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "http")">PracticeHome</a>
+    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "https")">PracticeHome</a>
 *@
 
 Atenciosamente,
@@ -184,4 +184,4 @@ Atenciosamente,
 
 
 @(">> Powered by cerebello <<")
-@Url.Action("Index", "Home", new { }, "http")
+@Url.Action("Index", "Home", new { }, "https")

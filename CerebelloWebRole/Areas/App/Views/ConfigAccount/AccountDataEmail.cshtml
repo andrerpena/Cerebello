@@ -2,9 +2,9 @@
 @model EmailViewModel
 @{
     var urlWithData = this.Url.Action("VerifyPracticeAndEmail", "Authentication",
-        new { Model.Token, practice = this.Model.PracticeIdentifier }, "http");
+        new { Model.Token, practice = this.Model.PracticeIdentifier }, "https");
     var urlLogin = this.Url.Action("Index", "PracticeHome",
-        new { practice = this.Model.PracticeIdentifier, area = "App" }, "http");
+        new { practice = this.Model.PracticeIdentifier, area = "App" }, "https");
 }
 @if (this.Model.IsBodyHtml)
 {
@@ -28,12 +28,12 @@
                                       font-size: 1.1em;
                                       line-height: 1.6;
                                       color: #333333;
-                                  ">@this.Model.PracticeIdentifier</code> no 
-            <a href="@this.Url.Action("Index", "Home", new { }, "http")">cerebello.com.br</a>.
+                                  ">@this.Model.PracticeIdentifier</code> em 
+            <a href="@this.Url.Action("Index", "Home", new { }, "https")">www.cerebello.com.br</a>.
         </p>
         <p>
             Atenciosamente<br/>
-                equipe cerebello.com.br
+                equipe www.cerebello.com.br
         </p>
     </body>
     </html>
@@ -49,8 +49,8 @@ Olá @Html.Raw(Model.PersonName),
 no cerebello.com.br, estamos te enviando
 este e-mail contendo anexos, com os
 dados cadastrados do consultório
-"@this.Model.PracticeIdentifier" no
-cerebello.com.br
+"@this.Model.PracticeIdentifier" em
+www.cerebello.com.br
 
 Atenciosamente
-    equipe cerebello.com.br
+    equipe www.cerebello.com.br

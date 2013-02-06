@@ -20,7 +20,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     /// <summary>
     /// Controller for users in the practice.
-    /// Base URL: http://www.cerebello.com.br/p/consultoriodrhouse/users
+    /// Base URL: https://www.cerebello.com.br/p/consultoriodrhouse/users
     /// </summary>
     public class UsersController : PracticeController
     {
@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <summary>
         /// Gets informations for the page used to create new users.
         /// This page has no informations at all.
-        /// URL: http://www.cerebello.com.br/p/consultoriodrhouse/users/create
+        /// URL: https://www.cerebello.com.br/p/consultoriodrhouse/users/create
         /// </summary>
         /// <returns></returns>
         [HttpGet]

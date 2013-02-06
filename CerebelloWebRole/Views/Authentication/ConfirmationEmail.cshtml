@@ -5,10 +5,10 @@
         "VerifyPracticeAndEmail",
         "Authentication",
         new VerifyPracticeAndEmailViewModel { Token = Model.Token, PracticeIdentifier = this.Model.PracticeIdentifier },
-        "http");
+        "https");
 
     var urlLogin = this.Url.Action("Index", "PracticeHome",
-        new { area = "App", practice = this.Model.PracticeIdentifier }, "http");
+        new { area = "App", practice = this.Model.PracticeIdentifier }, "https");
 }
 @if (this.Model.IsBodyHtml)
 {
@@ -21,7 +21,7 @@
         Olá <strong>@Model.PersonName</strong>,<br />
         <p>
             Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
-            nova conta no <a href="@this.Url.Action("Index", "Home", new { }, "http")">cerebello.com.br</a>,
+            nova conta no <a href="@this.Url.Action("Index", "Home", new { }, "https")">cerebello.com.br</a>,
             o seu software de gerenciamento de consultório.
         </p>
         <p>
