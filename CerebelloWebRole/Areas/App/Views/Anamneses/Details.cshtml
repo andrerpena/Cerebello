@@ -6,7 +6,16 @@
     @if (Model != null)
     {
         var cardView = this.Html.CreateCardView();
-        cardView.AddField(model => model.Text, wholeRow: true);
+        cardView.AddField(model => model.ChiefComplaint, wholeRow: true);
+        cardView.AddField(model => model.HistoryOfThePresentIllness, wholeRow: true);
+        cardView.AddField(model => model.PastMedicalHistory, wholeRow: true);
+        cardView.AddField(model => model.FamilyDeseases, wholeRow: true);
+        cardView.AddField(model => model.SocialDeseases, wholeRow: true);
+        cardView.AddField(model => model.ReviewOfSystems, wholeRow: true);
+        cardView.AddField(model => model.Allergies, wholeRow: true);
+        cardView.AddField(model => model.RegularAndAcuteMedications, wholeRow: true);
+        cardView.AddField(model => model.SexualHistory, wholeRow: true);
+        cardView.AddField(model => model.Conclusion, wholeRow: true);
         cardView.AddField(model => model.Symptoms,
             @<text>
                 @{

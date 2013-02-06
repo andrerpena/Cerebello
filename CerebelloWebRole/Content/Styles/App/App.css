@@ -15,7 +15,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 }
 
 body {
-    line-height: 1;
+    line-height: 1.2em;
     color: black;
     background: white;
 }
@@ -110,24 +110,20 @@ hr {
     background-color: #333333;
     height: 20px;
     line-height: 20px;
-    text-align: center;
 }
 
-    .top-bar > *
-    {
-        vertical-align: middle;
+    .top-bar .top-bar-inner {
+        margin: 0 auto;
+        max-width: 1200px;
+        padding: 0 5px;
     }
-
+    
     .top-bar a {
         color: white;
-    }
-
-    .top-bar a strong {
-        color: #ffaeae;
+        font-size: 0.8em;
     }
 
     .top-bar .small {
-        font-size: 0.8em;
         color: #cccccc;
     }
 

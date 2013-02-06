@@ -135,6 +135,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             eventDates.AddRange(anamnesesByDate.Keys);
 
+            // physical examinations
+            var physicalExaminationsByDate =
+                (from pe in
+                     (from r in patient.PhysicalExaminations
+                      select new SessionEvent
+                      {
+                          LocalDate = ConvertToLocalDateTime(practice, r.CreatedOn),
+                          Id = r.Id
+                      })
+                 group pe by pe.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(physicalExaminationsByDate.Keys);
+
             // receipts
             var receiptsByDate =
                 (from rvm in
@@ -223,6 +238,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                          anamnesesByDate.ContainsKey(eventDate)
                                              ? anamnesesByDate[eventDate].Select(a => a.Id).ToList()
                                              : new List<int>(),
+                                     PhysicalExaminationIds = 
+                                        physicalExaminationsByDate.ContainsKey(eventDate)
+                                            ? physicalExaminationsByDate[eventDate].Select(a => a.Id).ToList()
+                                    : new List<int>(),
                                      ReceiptIds =
                                          receiptsByDate.ContainsKey(eventDate)
                                              ? receiptsByDate[eventDate].Select(v => v.Id).ToList()

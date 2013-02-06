@@ -25,7 +25,6 @@
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(
                 m => m.MedicalProcedureId,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.XLarge,
                 format: @<text>
                             @(Html.AutocompleteGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, int?>(
                                     m => m.MedicalProcedureId,

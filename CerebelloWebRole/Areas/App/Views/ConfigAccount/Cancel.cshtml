@@ -13,7 +13,11 @@
 @section Scripts {
     @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
 }
-<div style="margin: 1em; padding: 1em; border: 1px solid #DDD;">
+@section Styles
+{
+    <link type="text/css" href="/Content/Styles/App/CancelAccountPage.css" rel="stylesheet" />
+}
+<div class="cancel-warning">
     @Html.Partial(partialViewName)
 </div>
 @using (Html.BeginForm())
@@ -47,27 +51,26 @@
     }
     else
     {
-    <table class="form-table">
-        <tr>
-            <td colspan="2">
-                <p>
-                    É com grande pesar que recebemos a notícia do cancelamento de sua conta.
-                </p>
-                <p>
-                    Entretanto, vemos com bons olhos a experiência, e gostariamos de aprender
+        
+    <p>
+        É com grande pesar que recebemos a notícia do cancelamento de sua conta.
+    </p>
+    <p>
+        Entretanto, vemos com bons olhos a experiência, e gostariamos de aprender
                     com os nossos erros, e nos tornarmos cada dia melhores, desde o atendimento ao cliente,
                     até a qualidade do produto em si.
-                </p>
-                <p>
-                    Por favor, nos permita saber os motivos de sua desistência, para assim,
+    </p>
+    <p>
+        Por favor, nos permita saber os motivos de sua desistência, para assim,
                     podermos construir uma experiência cada vez melhor para nossos usuários.
                     Sua franqueza é nossa maior recompensa nesse momento.
-                </p>
-                <p>
-                    Muito obrigado!
-                </p>
-            </td>
-        </tr>
+    </p>
+    <p>
+        Muito obrigado!
+    </p>
+        
+        
+    <table class="form-table">
         @if (this.ViewBag.IsTrial)
         {
             <tr>

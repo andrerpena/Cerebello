@@ -101,13 +101,13 @@
             @foreach (var appointment in ((List<NewMedicalAppointmentNotificationData>)this.ViewBag.AlreadyPolledMedicalAppointments))
             {
                 @:$.notifyNewMedicalAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-                                    }
+                                                }
             
             // shows the new-appointment notifications
             @foreach (var appointment in ((List<NewGenericAppointmentNotificationData>)this.ViewBag.AlreadyPolledGenericAppointments))
             {
                 @:$.notifyNewGenericAppointment('@appointment.NotificationClientId', @(Html.Raw(new JavaScriptSerializer().Serialize(appointment))));
-                                    }
+                                                }
 
             // shows the generic database notifications
             @foreach (var notification in ((List<NotificationData>)this.ViewBag.AlreadyPolledNotifications))
@@ -124,9 +124,12 @@
     @if (this.ViewBag.IsTrial == true)
     {
         <div class="top-bar">
-            <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Assine agora o <strong>Cerebello</strong>
-                <span class="small">ilimitado, com suporte prioritário, e sem esta barra.</span>
-            </a>
+            <div class="top-bar-inner">
+                <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Assine agora o Cerebello.
+                    <span class="small">Ilimitado, com suporte prioritário, e sem esta barra.</span>
+                </a>
+            </div>
+
         </div>
     }
     <div id="app-header">
