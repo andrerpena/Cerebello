@@ -6,7 +6,7 @@
         // Defaults:
         this.defaults = {
             // items here must be of the format
-            // {id: "myId", text: "my text", href: "http:\\www.cerebello.com.br" }
+            // {id: "myId", text: "my text", href: "https:\\www.cerebello.com.br" }
             // OR 
             // {id: "myId", text: "my text" } <- in this case, you can handle the click in the onItemClicked event
             items: new Array(),

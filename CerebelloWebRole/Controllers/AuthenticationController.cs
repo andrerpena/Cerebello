@@ -74,7 +74,7 @@ namespace CerebelloWebRole.Controllers
 
         /// <summary>
         /// Logs the user in or not, based on the informations provided.
-        /// URL: http://www.cerebello.com.br/authentication/login
+        /// URL: https://www.cerebello.com.br/authentication/login
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
