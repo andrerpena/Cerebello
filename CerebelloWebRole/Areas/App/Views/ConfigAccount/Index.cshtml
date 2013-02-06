@@ -1,5 +1,4 @@
 ﻿@model ConfigAccountViewModel
-@using CerebelloWebRole.Areas.App.Models
 @{
     var title = "Configurações da conta";
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -13,6 +12,6 @@
 }
 @section Styles
 {
-    <script src="@Url.Content("~/Content/Styles/App/PlanPage.css")" type="text/javascript"></script>
+    <link href="@Url.Content("~/Content/Styles/App/PlanPage.css")" rel="Stylesheet" type="text/css" />
 }
-@Html.Partial((string)string.Format("Index_{0}", this.ViewBag.CurrentContractName), (object)this.Model)
+@Html.Partial((string)string.Format("Index_{0}", this.ViewBag.CurrentContractName), this.Model)
