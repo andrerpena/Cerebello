@@ -613,7 +613,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="localDateTime"></param>
         /// <param name="doctor"></param>
         /// <returns></returns>
-        private static List<Tuple<DateTime, DateTime>> GetDaySlotsInLocalTime(DateTime localDateTime, Doctor doctor)
+        private static IEnumerable<Tuple<DateTime, DateTime>> GetDaySlotsInLocalTime(DateTime localDateTime, Doctor doctor)
         {
             if (localDateTime.Kind != DateTimeKind.Unspecified)
                 throw new ArgumentException("'localDateTime' must be expressed in local practice time-zone.", "localDateTime");
@@ -686,12 +686,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             DateTime todayBeginning = localDateTime.Date;
             var workdayStartTime = todayBeginning + DateTimeHelper.GetTimeSpan(workdayStartTimeAsString);
             var workdayEndTime = todayBeginning + DateTimeHelper.GetTimeSpan(workdayEndTimeAsString);
-            var lunchStartTime = todayBeginning + DateTimeHelper.GetTimeSpan(lunchStartTimeAsString);
-            var lunchEndTime = todayBeginning + DateTimeHelper.GetTimeSpan(lunchEndTimeAsString);
+            var lunchStartTime = !string.IsNullOrEmpty(lunchStartTimeAsString) ? todayBeginning +  DateTimeHelper.GetTimeSpan(lunchStartTimeAsString) : (DateTime?)null;
+            var lunchEndTime = !string.IsNullOrEmpty(lunchEndTimeAsString) ? todayBeginning + DateTimeHelper.GetTimeSpan(lunchEndTimeAsString) : (DateTime?) null;
 
             // ok. Now with all the info we need, let' start building these slots
 
-            List<Tuple<DateTime, DateTime>> result = new List<Tuple<DateTime, DateTime>>();
+            var result = new List<Tuple<DateTime, DateTime>>();
 
             var time = workdayStartTime;
             var appointmentTimeSpan = new TimeSpan(0, doctor.CFG_Schedule.AppointmentTime, 0);
@@ -699,20 +699,45 @@ namespace CerebelloWebRole.Areas.App.Controllers
             while (true)
             {
                 var timeEnd = time + appointmentTimeSpan;
-                if ((time >= workdayStartTime && timeEnd <= lunchStartTime) || (time >= lunchEndTime && timeEnd <= workdayEndTime))
-                {
-                    // in this case this span (time to timeEnd) is absolutely valid and we must add it to the slots
-                    result.Add(new Tuple<DateTime, DateTime>(time, timeEnd));
-                    time = time + appointmentTimeSpan;
-                }
 
-                else if (time >= workdayStartTime && timeEnd > lunchStartTime && timeEnd < workdayEndTime)
+                // the time computation depends on whether or not theres a lunch time configured
+
+                // when there's lunch time
+                if (lunchStartTime.HasValue)
                 {
-                    // this is an exception case in which the appointment would end in the middle of the lunch time
-                    time = lunchEndTime;
+                    if ((time >= workdayStartTime && timeEnd <= lunchStartTime) || (time >= lunchEndTime && timeEnd <= workdayEndTime))
+                    {
+                        // in this case this span (time to timeEnd) is absolutely valid and we must add it to the slots
+                        result.Add(new Tuple<DateTime, DateTime>(time, timeEnd));
+                        time = time + appointmentTimeSpan;
+                    }
+
+                    else if (time >= workdayStartTime && timeEnd > lunchStartTime && timeEnd < workdayEndTime)
+                    {
+                        // this is an exception case in which the appointment would end in the middle of the lunch time
+                        Debug.Assert(lunchEndTime != null, "lunchEndTime != null");
+
+                        // the time is restarted after lunch
+                        time = lunchEndTime.Value;
+                    }
+                    else
+                        // in this case we're getting an inconsistent time and the time slots for the day are over
+                        break;
                 }
+                // when there's no lunch time
                 else
-                    break;
+                {
+                    if (time >= workdayStartTime && timeEnd <= workdayEndTime)
+                    {
+                        // in this case this span (time to timeEnd) is absolutely valid and we must add it to the slots
+                        result.Add(new Tuple<DateTime, DateTime>(time, timeEnd));
+                        time = time + appointmentTimeSpan;
+                    }
+                    // in this case we're getting an inconsistent time and the time slots for the day are over
+                    else
+                        break;
+                }
+               
             }
 
             return result;
