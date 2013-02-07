@@ -977,6 +977,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                 {
                     // Verify the lunch time.
+                    // lunch time can only be a problem when it's set, because it's optional
+                    // when the start time is set, so it is the end time
+                    // I'm checking both here but it could be just one
+                    if (!string.IsNullOrEmpty(lunchStart) && !string.IsNullOrEmpty(lunchEnd))
                     {
                         var lunchStartInteger = GetTimeAsInteger(lunchStart);
                         var lunchEndInteger = GetTimeAsInteger(lunchEnd);

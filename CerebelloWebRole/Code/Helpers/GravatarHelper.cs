@@ -36,7 +36,7 @@ namespace CerebelloWebRole.Code
                     throw new Exception("Size not supported");
             }
 
-            if (Configuration.Instance.IsLocalPresentation)
+            if (Configuration.Instance.IsLocalPresentation && HttpContext.Current != null)
             {
                 var path = "/Content/Local/GravatarImages/" + gravatarEMailHash + "_" + sizeAsString + ".jpeg";
                 if (File.Exists(HttpContext.Current.Request.MapPath("~" + path)))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -193,17 +194,44 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         else
                             lunchEndRegexMatch = TimeDataTypeAttribute.Regex.Match(dayOfWeek.LunchEndTime);
 
-                        int lunchIntegerHourStart = int.Parse(lunchStartRegexMatch.Groups[1].Value) * 100 + int.Parse(lunchStartRegexMatch.Groups[2].Value);
-                        int lunchIntegerHourEnd = int.Parse(lunchEndRegexMatch.Groups[1].Value) * 100 + int.Parse(lunchEndRegexMatch.Groups[2].Value);
+                        // lunch must have a start AND end time. If it's ok, let's continue
+                        if (!string.IsNullOrEmpty(dayOfWeek.LunchStartTime) && !string.IsNullOrEmpty(dayOfWeek.LunchEndTime))
+                        {
+                            Debug.Assert(lunchStartRegexMatch != null, "lunchStartRegexMatch != null");
+                            var lunchIntegerHourStart = int.Parse(lunchStartRegexMatch.Groups[1].Value) * 100 +
+                                                        int.Parse(lunchStartRegexMatch.Groups[2].Value);
+                            Debug.Assert(lunchEndRegexMatch != null, "lunchEndRegexMatch != null");
+                            var lunchIntegerHourEnd = int.Parse(lunchEndRegexMatch.Groups[1].Value) * 100 +
+                                                      int.Parse(lunchEndRegexMatch.Groups[2].Value);
 
-                        if (lunchIntegerHourStart <= workdayIntegerHourStart)
-                            this.ModelState.AddModelError(string.Format("DaysOfWeek[{0}].LunchStartTime", i), string.Format("O campo '{0}' não pode ter um valor igual ou menor que o do campo '{1}'", DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.LunchStartTime), DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.WorkdayStartTime)));
+                            if (lunchIntegerHourStart <= workdayIntegerHourStart)
+                                this.ModelState.AddModelError(
+                                    string.Format("DaysOfWeek[{0}].LunchStartTime", i),
+                                    string.Format(
+                                        "O campo '{0}' não pode ter um valor igual ou menor que o do campo '{1}'",
+                                        DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(
+                                            model => model.LunchStartTime),
+                                        DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(
+                                            model => model.WorkdayStartTime)));
 
-                        if (lunchIntegerHourEnd >= workdayIntegerHourEnd)
-                            this.ModelState.AddModelError(string.Format("DaysOfWeek[{0}].LunchEndTime", i), string.Format("O campo '{0}' não pode ter um valor igual ou maior que o do campo '{1}'", DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.LunchEndTime), DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.WorkdayEndTime)));
+                            if (lunchIntegerHourEnd >= workdayIntegerHourEnd)
+                                this.ModelState.AddModelError(
+                                    string.Format("DaysOfWeek[{0}].LunchEndTime", i),
+                                    string.Format(
+                                        "O campo '{0}' não pode ter um valor igual ou maior que o do campo '{1}'",
+                                        DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.LunchEndTime),
+                                        DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(
+                                            model => model.WorkdayEndTime)));
 
-                        if (lunchIntegerHourStart >= lunchIntegerHourEnd)
-                            this.ModelState.AddModelError(string.Format("DaysOfWeek[{0}].LunchEndTime", i), string.Format("O campo '{0}' não pode ter um valor igual ou menor que o do campo '{1}'", DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.LunchEndTime), DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.LunchStartTime)));
+                            if (lunchIntegerHourStart >= lunchIntegerHourEnd)
+                                this.ModelState.AddModelError(
+                                    string.Format("DaysOfWeek[{0}].LunchEndTime", i),
+                                    string.Format(
+                                        "O campo '{0}' não pode ter um valor igual ou menor que o do campo '{1}'",
+                                        DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(model => model.LunchEndTime),
+                                        DataAnnotationsHelper.GetDisplayName<ConfigScheduleViewModel.DayOfWeek>(
+                                            model => model.LunchStartTime)));
+                        }
                     }
                 }
             };
