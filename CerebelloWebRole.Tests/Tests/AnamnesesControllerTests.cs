@@ -50,7 +50,7 @@ namespace CerebelloWebRole.Tests.Tests
                 formModel = new AnamneseViewModel()
                     {
                         PatientId = patientId,
-                        Text = "This is my anamnese",
+                        Conclusion = "This is my anamnese",
                         Symptoms = new List<SymptomViewModel>()
                             {
                                 new SymptomViewModel() {Text = "Text", Cid10Code = "Q878"},
@@ -97,10 +97,10 @@ namespace CerebelloWebRole.Tests.Tests
             this.db.SaveChanges();
             var patientId = this.db.Patients.First().Id;
 
-            AnamneseViewModel formModel = new AnamneseViewModel()
+            var formModel = new AnamneseViewModel()
             {
                 PatientId = patientId,
-                Text = "This is my anamnese",
+                Conclusion = "This is my anamnese",
                 Symptoms = new List<SymptomViewModel>() {
                         new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
                         new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
