@@ -39,51 +39,6 @@
             sempre de forma adiantada. Existem descontos para pagamento trimestral, semestral ou anual, como indicado na tabela abaixo.
         </p>
         <script type="text/javascript">
-            function UpdateSummary() {
-                var $base = $("table.frequency > tbody > tr.selected");
-                var $doctors = $("table.doctors > tbody > tr.selected > td.price");
-
-                var rate = 1 - parseFloat($base.attr("discount")) / 100;
-
-                var basePrice = parseFloat($base.attr("price"));
-                var months = parseFloat($base.attr("months"));
-
-                var basePriceMonth = parseFloat("@(Buz.Pro.PRICE_MONTH.ToString("0.00", invariant))");
-                var basePriceMonthDisc = basePrice / months;
-                var baseSaved = basePriceMonth * months - basePrice;
-
-                var doctorsPriceMonth = parseFloat($doctors.attr("price"));
-
-                var doctorsPriceMonthDisc = doctorsPriceMonth * rate;
-                var doctorsPrice = doctorsPriceMonthDisc * months;
-                var doctorsSaved = doctorsPriceMonth * months - doctorsPrice;
-
-                var totalPriceMonthDisc = doctorsPriceMonthDisc + basePriceMonthDisc;
-                var totalPrice = doctorsPrice + basePrice;
-                var totalSaved = doctorsSaved + baseSaved;
-
-                if (!isNaN(basePrice)) {
-                    $("#summary-discount").text($base.attr("discount") + "%");
-                    $(".summary-frequency").text({ "1": "mensal", "3": "trimestral", "6": "semestral", "12": "anual" }["" + months]);
-
-                    $("#summary-base-price").text("R$ " + basePrice.toFixed(2).replace('.', ','));
-                    $("#summary-base-price-month").text("R$ " + basePriceMonthDisc.toFixed(2).replace('.', ','));
-                    $("#summary-base-saved").text("R$ " + baseSaved.toFixed(2).replace('.', ','));
-                }
-
-                if (!isNaN(basePrice) && !isNaN(doctorsPrice)) {
-                    $("#summary-doctors-price").text("R$ " + doctorsPrice.toFixed(2).replace('.', ','));
-                    $("#summary-doctors-price-month").text("R$ " + doctorsPriceMonthDisc.toFixed(2).replace('.', ','));
-                    $("#summary-doctors-saved").text("R$ " + doctorsSaved.toFixed(2).replace('.', ','));
-                }
-
-                if (!isNaN(basePrice) && !isNaN(doctorsPrice)) {
-                    $(".summary-total-price").text("R$ " + totalPrice.toFixed(2).replace('.', ','));
-                    $("#summary-total-price-month").text("R$ " + totalPriceMonthDisc.toFixed(2).replace('.', ','));
-                    $("#summary-total-saved").text("R$ " + totalSaved.toFixed(2).replace('.', ','));
-                }
-            }
-
             $(function () {
                 $("table.frequency > tbody > tr").click(function () {
                     $("table.frequency > tbody > tr.selected").toggleClass("selected");
@@ -99,6 +54,11 @@
 
                     UpdateSummary();
                 });
+
+                // loading value, if any already present (e.g. when back/forward browser button is used)
+                if ($("table.frequency > tbody > tr input:radio:checked")) {
+                    $("table.frequency > tbody > tr input:radio:checked").trigger("click");
+                }
             });
         </script>
         <table class="frequency prices">
@@ -164,20 +124,21 @@
             Note que o desconto dado no item anterior se aplica aos valores mostrados na tabela abaixo.
             @if (this.Model.DoctorCount == 0)
             {
-                @:Atualmente <strong class="doctor-count">não existem médicos</strong> cadastrado em sua conta.
+                @:Atualmente <strong class="info">não existem médicos</strong> cadastrado em sua conta.
             }
             else if (this.Model.DoctorCount == 1)
             {
-                @:Atualmente existe <strong class="doctor-count">1 médico</strong> cadastrado em sua conta.
+                @:Atualmente existe <strong class="info">1 médico</strong> cadastrado em sua conta.
             }
             else
             {
-                @:Atualmente existem <strong class="doctor-count">@Model.DoctorCount médicos</strong> cadastrados em sua conta.
+                @:Atualmente existem <strong class="info">@Model.DoctorCount médicos</strong> cadastrados em sua conta.
             }
         </p>
         <script type="text/javascript">
             $(function () {
                 $("table.doctors > tbody > tr.disabled input:radio").attr("disabled", true);
+
                 $("table.doctors > tbody > tr.enabled").click(function () {
                     $("table.doctors > tbody > tr.selected").toggleClass("selected");
                     $(this).toggleClass("selected");
@@ -185,6 +146,11 @@
 
                     UpdateSummary();
                 });
+
+                // loading value, if any already present (e.g. when back/forward browser button is used)
+                if ($("table.doctors > tbody > tr.enabled input:radio:checked")) {
+                    $("table.doctors > tbody > tr.enabled input:radio:checked").trigger("click");
+                }
             });
         </script>
         <table class="doctors prices">
@@ -204,32 +170,32 @@
             <tr value="1" class="@(this.Model.DoctorCount <= 1 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="1"/></td>
-                <td>somente 1 médico</td>
-                <td class="irrelevant">R$ 0,00</td>
+                <td class="label">somente 1 médico</td>
+                <td class="irrelevant" price="0">R$ 0,00</td>
             </tr>
             <tr value="2" class="@(this.Model.DoctorCount <= 2 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="2"/></td>
-                <td>2 médicos</td>
+                <td class="label">2 médicos</td>
                 <td class="price" price="@(price2.ToString("0"))">R$ @(price2.ToString("0")),00</td>
             </tr>
             <tr value="5" class="@(this.Model.DoctorCount <= 5 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="5"/></td>
-                <td>até 5 médicos</td>
+                <td class="label">até 5 médicos</td>
                 <td class="price" price="@(price5.ToString("0"))">R$ @(price5.ToString("0")),00</td>
             </tr>
             <tr value="10" class="@(this.Model.DoctorCount <= 10 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="10"/></td>
-                <td>até 10 médicos</td>
+                <td class="label">até 10 médicos</td>
                 <td class="price" price="@(price10.ToString("0"))">R$ @(price10.ToString("0")),00</td>
             </tr>
 
             <tr value="15" class="@(this.Model.DoctorCount <= 15 ? "enabled" : "disabled")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="15"/></td>
-                <td>até 15 médicos</td>
+                <td class="label">até 15 médicos</td>
                 <td class="price" price="@(price15.ToString("0"))">R$ @(price15.ToString("0")),00</td>
             </tr>
         </table>
@@ -246,11 +212,20 @@
         <div class="billing-calendar">
             <script type="text/javascript">
                 $(function () {
+                    var $invoideDueDay = $("#@Html.FieldName(m => m.InvoceDueDayOfMonth)");
+
                     $(".days-of-month td.enabled").click(function () {
                         $(".days-of-month td.selected").toggleClass("selected");
                         $(this).toggleClass("selected");
-                        $("#@Html.FieldName(m => m.InvoceDueDayOfMonth)").val($(this).attr("val"));
+                        $invoideDueDay.val($(this).attr("val"));
+
+                        UpdateSummary();
                     });
+
+                    // loading value, if any already present (e.g. when back/forward browser button is used)
+                    if ($invoideDueDay.val() != "") {
+                        $(".days-of-month td[val='" + $invoideDueDay.val() + "']").trigger("click");
+                    }
                 });
             </script>
             <input type="hidden" id="@Html.FieldName(m => m.InvoceDueDayOfMonth)" name="@Html.FieldName(m => m.InvoceDueDayOfMonth)" value=""/>
@@ -283,49 +258,115 @@
                 Nota: se o mês não possuir o dia selecionado, então será usado o último dia deste mês.
             </p>
         </div>
-        
+
     </div>
 </div>
 
 <div class="upgrade-block">
     <h2 style="margin-bottom: 1em;">Resumo</h2>
     <div class="text-description">
-        <p>
-            Resumindo suas escolhas anteriores:
-        </p>
-        <table class="prices summary">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Desconto</th>
-                    <th class="expand">Valor</th>
-                    <th class="expand">Frequência</th>
-                    <th class="expand irrelevant">Equivalente mensal</th>
-                    <th class="expand">Economia</th>
+        <script type="text/javascript">
+            function UpdateSummary() {
+                var $base = $("table.frequency > tbody > tr.selected");
+                var $doctors = $("table.doctors > tbody > tr.selected");
+
+                var rate = 1 - parseFloat($base.attr("discount")) / 100;
+
+                var basePrice = parseFloat($base.attr("price"));
+                var months = parseFloat($base.attr("months"));
+
+                var basePriceMonth = parseFloat("@(Buz.Pro.PRICE_MONTH.ToString("0.00", invariant))");
+                var basePriceMonthDisc = basePrice / months;
+                var baseSaved = basePriceMonth * months - basePrice;
+
+                var doctorsPriceMonth = parseFloat($("td.price", $doctors).attr("price"));
+
+                var doctorsPriceMonthDisc = doctorsPriceMonth * rate;
+                var doctorsPrice = doctorsPriceMonthDisc * months;
+                var doctorsSaved = doctorsPriceMonth * months - doctorsPrice;
+
+                var totalPriceMonthDisc = doctorsPriceMonthDisc + basePriceMonthDisc;
+                var totalPrice = doctorsPrice + basePrice;
+                var totalSaved = doctorsSaved + baseSaved;
+
+                var invoiceDueDay = parseFloat($("#@Html.FieldName(m => m.InvoceDueDayOfMonth)").val());
+
+                if (!isNaN(basePrice) && !isNaN(doctorsPrice) && !isNaN(invoiceDueDay)) {
+                    $(".summary-toggle").toggle().toggleClass("summary-toggle");
+
+                    $(".summary-discount").text($base.attr("discount") + "%");
+                    $(".summary-frequency").text({ "1": "mensal", "3": "trimestral", "6": "semestral", "12": "anual" }["" + months]);
+
+                    $(".summary-doctors-label").text($("td.label", $doctors).text());
+                    $(".summary-doctors-count").text($doctors.attr("value") == "1" ? "apenas 1" : "até " + $doctors.attr("value"));
+
+                    $("#summary-invoice-due-day").text("dia " + invoiceDueDay);
+                    if (invoiceDueDay > 28) $("#summary-invoice-29plus").show();
+                    else $("#summary-invoice-29plus").hide();
+
+                    $("#summary-base-price").text("R$ " + basePrice.toFixed(2).replace('.', ','));
+                    $("#summary-base-price-month").text("R$ " + basePriceMonthDisc.toFixed(2).replace('.', ','));
+                    $("#summary-base-saved").text("R$ " + baseSaved.toFixed(2).replace('.', ','));
+
+                    $("#summary-doctors-price").text("R$ " + doctorsPrice.toFixed(2).replace('.', ','));
+                    $("#summary-doctors-price-month").text("R$ " + doctorsPriceMonthDisc.toFixed(2).replace('.', ','));
+                    $("#summary-doctors-saved").text("R$ " + doctorsSaved.toFixed(2).replace('.', ','));
+
+                    $(".summary-total-price").text("R$ " + totalPrice.toFixed(2).replace('.', ','));
+                    $("#summary-total-price-month").text("R$ " + totalPriceMonthDisc.toFixed(2).replace('.', ','));
+                    $("#summary-total-saved").text("R$ " + totalSaved.toFixed(2).replace('.', ','));
+                }
+            }
+        </script>
+        <div class="summary-toggle">
+            As informações ainda estão incompletas. Por favor, preencha todas as informações para poder ver o resumo
+            e então poder prosseguir com o upgrade da sua conta.
+        </div>
+        <div style="display: none" class="summary-toggle">
+            <ul class="summary">
+                <li>Cerebello - <strong class="info">Plano Profissional</strong></li>
+                <li>Cobrança do <strong class="info">PayPal</strong> por <strong class="info">e-mail</strong></li>
+                <li>Frequência de pagamento <strong class="summary-frequency info">-</strong>
+                    com <strong class="summary-discount info">?%</strong> de desconto
+                </li>
+                <li>Dimensionado para <strong class="summary-doctors-label info">- médicos</strong></li>
+                <li>Fatura vence no <strong id="summary-invoice-due-day" class="info">dia -</strong>
+                    <span id="summary-invoice-29plus" style="display: none">, ou no último dia do mês caso não exista</span></li>
+            </ul>
+            <table class="prices summary">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Valor com desconto</th>
+                        <th class="irrelevant">Equivalente mensal</th>
+                        <th>Economia (<span class="summary-discount">?%</span>)</th>
+                    </tr>
+                </thead>
+                <tr class="enabled selected">
+                    <td style="background: white; color: black;">Plano Profissional</td>
+                    <td id="summary-base-price">R$ -</td>
+                    <td id="summary-base-price-month" class="irrelevant">R$ -</td>
+                    <td id="summary-base-saved">R$ -</td>
                 </tr>
-            </thead>
-            <tr class="enabled selected">
-                <td style="background: white">Base</td>
-                <td id="summary-discount" rowspan="3">?%</td>
-                <td id="summary-base-price">R$ -</td>
-                <td class="summary-frequency" rowspan="3">-</td>
-                <td id="summary-base-price-month" class="irrelevant">R$ -</td>
-                <td id="summary-base-saved">R$ -</td>
-            </tr>
-            <tr class="enabled selected">
-                <td style="background: white">Médicos</td>
-                <td id="summary-doctors-price">R$ -</td>
-                <td id="summary-doctors-price-month" class="irrelevant">R$ -</td>
-                <td id="summary-doctors-saved">R$ -</td>
-            </tr>
-            <tr class="enabled selected important">
-                <td style="background: white">Total</td>
-                <td class="important summary-total-price">R$ -</td>
-                <td id="summary-total-price-month" class="irrelevant">R$ -</td>
-                <td id="summary-total-saved">R$ -</td>
-            </tr>
-        </table>
-        <div style="text-align: right">Valor total: <span style="font-size: 2em; font-weight: bold" class="summary-total-price">R$ -</span></div>
-        <div style="text-align: right">Intervalo: <span style="font-size: 1.3em; font-weight: bold" class="summary-frequency">-</span></div>
+                <tr class="enabled selected">
+                    <td style="background: white; color: black;">Médicos (<span class="summary-doctors-count">?%</span>)</td>
+                    <td id="summary-doctors-price">R$ -</td>
+                    <td id="summary-doctors-price-month" class="irrelevant">R$ -</td>
+                    <td id="summary-doctors-saved">R$ -</td>
+                </tr>
+                <tr class="enabled selected important">
+                    <td style="background: white; color: black;">Total</td>
+                    <td class="important summary-total-price">R$ -</td>
+                    <td id="summary-total-price-month" class="irrelevant">R$ -</td>
+                    <td id="summary-total-saved">R$ -</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div style="text-align: right">Valor final: <span style="font-size: 2em; font-weight: bold; line-height: 1em;" class="summary-total-price">R$ -</span></div>
+                        <div style="text-align: right"><span style="font-size: 1.3em; font-weight: bold" class="summary-frequency">-</span></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>

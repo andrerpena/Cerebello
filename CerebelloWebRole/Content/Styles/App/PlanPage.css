@@ -1,9 +1,9 @@
 ﻿/* Plan main page */
 
-strong.doctor-count {
+strong.info {
     color: #DD390D;
     display: inline-block;
-    padding: 0 1em;
+    padding: 0 0.5em;
     text-align: center;
     white-space: nowrap;
 }
@@ -121,8 +121,20 @@ table.doctors {
         width: 150px;
     }
 
-table.summary tbody tr.enabled {
-    cursor: inherit;
+table.summary {
+    width: auto;
+}
+
+    table.summary tbody tr.enabled {
+        cursor: inherit;
+    }
+
+    table.summary tbody td, table.summary tbody th {
+        width: 1px;
+    }
+
+ul.summary li {
+    list-style: disc inside;
 }
 
 
