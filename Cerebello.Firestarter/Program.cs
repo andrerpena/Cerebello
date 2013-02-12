@@ -1027,6 +1027,8 @@ namespace Cerebello.Firestarter
             {
                 bool isTestDb = this.connName.ToUpper().Contains("TEST");
 
+                bool isAzureDb = this.connName.ToUpper().Contains("Azure");
+
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("DB type: {0}", isTestDb ? "TEST" : "WORK");
 
@@ -1047,6 +1049,15 @@ namespace Cerebello.Firestarter
                         if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                         try
                         {
+                            if (!isAzureDb)
+                            {
+                                // recreating the [NT AUTHORITY\NETWORK SERVICE] user
+                                // so that we can debug using IIS, but only for the local databases,
+                                // never for production (i.e. Azure)
+                                Console.WriteLine(@"Creating user: [NT AUTHORITY\NETWORK SERVICE]");
+                                Firestarter.RecreateNetworkServiceUser(db);
+                            }
+
                             Console.WriteLine("DropAllTables");
                             Firestarter.DropAllTables(db);
 

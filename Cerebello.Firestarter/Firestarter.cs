@@ -2323,6 +2323,34 @@ GO
 
             db.SaveChanges();
         }
+
+        /// <summary>
+        /// Recreates the [NT AUTHORITY\NETWORK SERVICE] so that we can debug using IIS.
+        /// </summary>
+        /// <param name="db"></param>
+        internal static void RecreateNetworkServiceUser(CerebelloEntities db)
+        {
+            ExecuteScript(db, @"
+                    USE [cerebello]
+                    GO
+
+                    IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'netserv')
+                    DROP USER [netserv]
+                    GO
+
+                    USE [cerebello]
+                    GO
+
+                    CREATE USER [netserv] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE]
+                    GO
+
+                    USE [cerebello]
+                    GO
+
+                    EXEC sp_addrolemember N'db_owner', N'netserv'
+                    GO
+                    ");
+        }
     }
 }
 
