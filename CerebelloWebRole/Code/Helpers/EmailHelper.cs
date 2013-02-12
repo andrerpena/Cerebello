@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 
 namespace CerebelloWebRole.Code.Helpers
 {
@@ -101,7 +104,45 @@ namespace CerebelloWebRole.Code.Helpers
         /// <param name="mailMessage">The MailMessage to send.</param>
         public static void SendEmail(MailMessage mailMessage)
         {
-            (DefaultEmailSender ?? DefaultSendEmail)(mailMessage);
+            if (Configuration.Instance.IsLocalPresentation)
+            {
+                SaveEmailLocal(mailMessage);
+            }
+            else
+            {
+                (DefaultEmailSender ?? DefaultSendEmail)(mailMessage);
+            }
         }
+
+        private static void SaveEmailLocal(MailMessage message)
+        {
+            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            var emailsPath = Path.Combine(desktopPath, @"Emails");
+
+            foreach (var eachDestinationAddress in message.To)
+            {
+                var inboxPath = Path.Combine(emailsPath,
+                    string.Format("{0}@{1}",
+                        Regex.Replace(eachDestinationAddress.User, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase),
+                        Regex.Replace(eachDestinationAddress.Host, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase)));
+
+                if (!Directory.Exists(emailsPath))
+                    Directory.CreateDirectory(emailsPath);
+
+                if (!Directory.Exists(inboxPath))
+                    Directory.CreateDirectory(inboxPath);
+
+                var name = message.Subject + ".html";
+                name = Regex.Replace(name, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase);
+
+                var currentEmailPath = Path.Combine(inboxPath, name);
+
+                using (var file = System.IO.File.Create(currentEmailPath))
+                {
+                    message.AlternateViews.First().ContentStream.CopyTo(file);
+                }
+            }
+        }
+
     }
 }

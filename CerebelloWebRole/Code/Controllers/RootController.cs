@@ -55,34 +55,7 @@ namespace CerebelloWebRole.Code.Controllers
         /// <param name="message">MailMessage containing the informations about the message to be sent.</param>
         public virtual void SendEmail(MailMessage message)
         {
-            if (Configuration.Instance.IsLocalPresentation)
-            {
-                this.SaveEmailLocal(message);
-            }
-            else
-            {
-                (this.EmailSender ?? EmailHelper.SendEmail)(message);
-            }
-        }
-
-        public virtual void SaveEmailLocal(MailMessage message)
-        {
-            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            var emailsPath = Path.Combine(desktopPath, @"Emails");
-
-            Directory.CreateDirectory(emailsPath);
-
-            var name = message.Subject + ".html";
-            name = Regex.Replace(name, @"\s+", ".");
-            name = Regex.Replace(name, @"[^\w\d]", ".", RegexOptions.IgnoreCase);
-            name = Regex.Replace(name, @"\.+", ".");
-
-            var currentEmailPath = Path.Combine(emailsPath, name);
-
-            using (var file = System.IO.File.Create(currentEmailPath))
-            {
-                message.AlternateViews.First().ContentStream.CopyTo(file);
-            }
+            (this.EmailSender ?? EmailHelper.SendEmail)(message);
         }
 
         public virtual CerebelloEntities CreateNewCerebelloEntities()

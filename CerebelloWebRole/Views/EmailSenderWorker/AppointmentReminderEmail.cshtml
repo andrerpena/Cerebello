@@ -14,98 +14,106 @@
 }
 @if (this.Model.IsBodyHtml)
 {
-    <p>
-        @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
-    </p>
-    <br />
-    <p>
-        Estamos entrando em contato para lhe lembrar de sua consulta, com
-        @o_dr @Model.DoctorName, na seguinte data:
-        <strong>@Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))</strong>.
-    </p>
-    <br />
-    <p>
-        Qualquer dúvida, entre em contato conosco.
-    </p>
-    <br />
-    <h2>@contactPractice</h2>
-    if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
-    {
-    <h3>Contato</h3>
-    <ul>
-        @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
+    <html>
+    <head>
+        <title>E-mail de confirmação</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p>
+            @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
+        </p>
+        <br />
+        <p>
+            Estamos entrando em contato para lhe lembrar de sua consulta, com
+            @o_dr @Model.DoctorName, na seguinte data:
+            <strong>@Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))</strong>.
+        </p>
+        <br />
+        <p>
+            Qualquer dúvida, entre em contato conosco.
+        </p>
+        <br />
+        <h2>@contactPractice</h2>
+        @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt, this.Model.PracticePabx, this.Model.PracticeEmail, this.Model.PracticeSiteUrl }.AnyFilled())
         {
-            <li>telefone: @Model.PracticePhoneMain@{
-            if (new[] { this.Model.PracticePhoneAlt }.AnyFilled())
+            <h3>Contato</h3>
+            <ul>
+                @if (new[] { this.Model.PracticePhoneMain, this.Model.PracticePhoneAlt }.AnyFilled())
             {
-                <text> <i>-ou-</i> @Model.PracticePhoneAlt</text>
+                    <li>telefone: @Model.PracticePhoneMain@{
+                if (new[] { this.Model.PracticePhoneAlt }.AnyFilled())
+                {
+                        <text> <i>-ou-</i> @Model.PracticePhoneAlt</text>
+                }
+                    }</li>
             }
-            }</li>
+                @if (new[] { this.Model.PracticeEmail }.AnyFilled())
+            {
+                    <li>e-mail: @Model.PracticeEmail</li>
+            }
+                @if (new[] { this.Model.PracticePabx }.AnyFilled())
+            {
+                    <li>PABX: @Model.PracticePabx</li>
+            }
+            </ul>
+            if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
+            {
+            <h3>Site</h3>
+            <ul>
+                <li>@Model.PracticeSiteUrl</li>
+            </ul>
+            }
+            if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
+            {
+            <h3>Endereço</h3>
+            <ul>
+                @if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
+            {
+                    <li><b>CEP:</b> @Model.PracticeAddress.CEP</li>
+            }
+                @if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
+            {
+                    <li>Rua/Av @(string.Join(",\r\n    ", new[] {
+                     Model.PracticeAddress.Street,
+                     Model.PracticeAddress.Neighborhood,
+                     Model.PracticeAddress.City,
+                     Model.PracticeAddress.StateProvince,
+                     Model.PracticeAddress.Complement }
+                     .Where(s => !string.IsNullOrWhiteSpace(s))))
+                    </li>
+            }
+            </ul>
+            }
+            <br />
         }
-        @if (new[] { this.Model.PracticeEmail }.AnyFilled())
+        @if (true)
         {
-            <li>e-mail: @Model.PracticeEmail</li>
+            <p>
+                Por favor, não responda este e-mail.
+            </p>
         }
-        @if (new[] { this.Model.PracticePabx }.AnyFilled())
+        else
         {
-            <li>PABX: @Model.PracticePabx</li>
+            <p>
+                Ou então simplesmente respondendo este e-mail.
+            </p>
         }
-    </ul>
-        if (new[] { this.Model.PracticeSiteUrl }.AnyFilled())
-        {
-    <h3>Site</h3>
-    <ul>
-        <li>@Model.PracticeSiteUrl</li>
-    </ul>
-        }
-        if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
-        {
-    <h3>Endereço</h3>
-    <ul>
-        @if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
-        {
-            <li><b>CEP:</b> @Model.PracticeAddress.CEP</li>
-        }
-        @if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
-        {
-            <li>Rua/Av @(string.Join(",\r\n    ", new[] {
-                 Model.PracticeAddress.Street,
-                 Model.PracticeAddress.Neighborhood,
-                 Model.PracticeAddress.City,
-                 Model.PracticeAddress.StateProvince,
-                 Model.PracticeAddress.Complement }
-                 .Where(s => !string.IsNullOrWhiteSpace(s))))
-            </li>
-        }
-    </ul>
-        }
-    <br />
-    }
-    if (true)
-    {
-    <p>
-        Por favor, não responda este e-mail.
-    </p>
-    }
-    else
-    {
-    <p>
-        Ou então simplesmente respondendo este e-mail.
-    </p>
-    }
-    <br />
-    <p>Atenciosamente,</p>
-    <p style="padding-left: 2em; color: darkslategray">@Model.DoctorName</p>
-    <br />
-    
-@*
-    Link no qual o paciente pode ver suas consultas marcadas, e interagir com o consultório
-    Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "https")">PracticeHome</a>
-*@
+        <br />
+        <p>Atenciosamente,</p>
+        <p style="padding-left: 2em; color: darkslategray">@Model.DoctorName</p>
+        <br />
 
-    <p style="padding-left: 2em; color: gray; font-style: italic">
-        Powered by <a href="@Url.Action("Index", "Home", new { }, "https")">@Constants.EMAIL_POWEREDBY</a>
-    </p>
+        @*
+        Link no qual o paciente pode ver suas consultas marcadas, e interagir com o consultório
+        Visit: <a href="@Url.Action("Index", "PracticeHome", new { area = "App", practice = this.Model.PracticeUrlId }, "https")">PracticeHome</a>
+        *@
+
+        <p style="padding-left: 2em; color: gray; font-style: italic">
+            Powered by <a href="@Url.Action("Index", "Home", new { }, "https")">@Constants.EMAIL_POWEREDBY</a>
+        </p>
+    </body>
+    </html>
     return;
 }
 @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,

@@ -11,12 +11,21 @@ namespace CerebelloWebRole.Code
             get { return new Configuration(); }
         }
 
+        private readonly bool isLocalPresentation = ConfigurationManager.AppSettings["IsLocalPresentation"].ToLowerInvariant() == "true";
+
+        /// <summary>
+        /// IsLocalPresentation may be true if IsLocalPresentation app setting is true in the config file,
+        /// and the code is in DEBUG mode.
+        /// </summary>
         public virtual bool IsLocalPresentation
         {
             get
             {
-                return (HttpContext.Current == null || HttpContext.Current.Request.Url.IsLoopback)
-                    && ConfigurationManager.AppSettings["IsLocalPresentation"].ToLowerInvariant() == "true";
+#if DEBUG
+                return isLocalPresentation;
+#else
+                return false;
+#endif
             }
         }
     }

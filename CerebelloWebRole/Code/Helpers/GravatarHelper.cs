@@ -36,6 +36,9 @@ namespace CerebelloWebRole.Code
                     throw new Exception("Size not supported");
             }
 
+            // HttpContext is only allowed in this case,
+            // because it will only ever be called in a local-presentation context,
+            // not ever in production.
             if (Configuration.Instance.IsLocalPresentation && HttpContext.Current != null)
             {
                 var path = "/Content/Local/GravatarImages/" + gravatarEMailHash + "_" + sizeAsString + ".jpeg";
