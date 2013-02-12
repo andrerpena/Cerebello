@@ -32,10 +32,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             FillPersonViewModel(controller.DbPractice, patient.Person, viewModel);
 
-            var address = patient.Person.Addresses.Single();
             viewModel.Id = patient.Id;
             viewModel.Observations = patient.Person.Observations;
-            viewModel.Address = GetAddressViewModel(address);
+
+            var address = patient.Person.Addresses.SingleOrDefault();
+            viewModel.Address = address != null ? GetAddressViewModel(address) : new AddressViewModel();
 
             // Other (more complex) properties.
 

@@ -157,7 +157,7 @@ namespace CerebelloWebRole.Tests.Tests
                 {
                     PatientId = patientId,
                     CreatedOn = DateTime.UtcNow,
-                    Text = "This is my anamnese",
+                    Conclusion = "This is my anamnese",
                     PracticeId = doctor.PracticeId,
                 };
 
