@@ -13,20 +13,11 @@ namespace Cerebello
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new CanonicalUrlFilter());
+            filters.Add(new CanonicalUrlHttpsFilter());
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthenticationFilter());
             filters.Add(new FirstAccessFilter());
             filters.Add(new ValidateInputAttribute(false));
-#if DEBUG
-            if (System.Environment.CommandLine.Contains("iisexpress.exe"))
-                filters.Add(new RequireHttpsPortAttribute(44300));
-            else if (System.Environment.CommandLine.Contains("w3wp.exe"))
-                filters.Add(new RequireHttpsAttribute());
-            // WebDev server does not support HTTPS... no redirects to HTTPS will happen.
-#else
-            filters.Add(new RequireHttpsAttribute());
-#endif
         }
 
         public static void RegisterRoutes(RouteCollection routes)

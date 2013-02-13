@@ -162,8 +162,7 @@
     <Compile Include="Code\Configuration.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Buz.cs" />
-    <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
-    <Compile Include="Code\Filters\RequireHttpsAttribute.cs" />
+    <Compile Include="Code\Filters\CanonicalUrlHttpsFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
     <Compile Include="Code\Helpers\EmailHelper.cs" />
