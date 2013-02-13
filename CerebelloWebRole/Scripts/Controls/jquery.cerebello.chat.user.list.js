@@ -6,11 +6,24 @@
         // Defaults:
         this.defaults = {
             user: null,
-            practice: null
+            practice: null,
+            newMessageUrl: null,
+            messageHistorUrl: null,
+            userInfoUrl: null
         };
 
         //Extending options:
         this.opts = $.extend({}, this.defaults, options);
+        
+        // Validation
+        if (!this.opts.newMessageUrl)
+            throw "newMessageUrl option is required";
+
+        if (!this.opts.messageHistoryUrl)
+            throw "messageHistoryUrl option is required";
+
+        if (!this.opts.userInfoUrl)
+            throw "userInfoUrl option is required";
 
         //Privates:
         this.$el = null;
@@ -21,18 +34,24 @@
         this.lastMessageCheckTimeStamp = null;
         this.chatContainer = null;
 
-        this.createNewChatWindow = function (otherUser, initialToggleState) {
+        this.createNewChatWindow = function (otherUser, initialToggleState, initialFocusState) {
             var _this = this;
 
             if (!initialToggleState)
                 initialToggleState = "maximized";
+
+            if (!initialFocusState)
+                initialFocusState = "focused";
 
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
                 practice: _this.opts.practice,
                 myUser: _this.opts.user,
                 otherUser: otherUser,
+                newMessageUrl: _this.opts.newMessageUrl,
+                messageHistoryUrl: _this.opts.messageHistoryUrl,
                 initialToggleState: initialToggleState,
+                initialFocusState: initialFocusState,
                 onClose: function () {
                     delete _this.chatWindows[otherUser.Id];
                     $.organizeChatContainers();
@@ -120,7 +139,7 @@
                     $.ajax({
                         type: "GET",
                         async: false,
-                        url: "/p/" + _this.opts.practice + "/chat/getuserinfo",
+                        url: _this.opts.userInfoUrl,
                         data: {
                             userId: otherUserId
                         },
@@ -138,7 +157,7 @@
                     });
                     if (user) {
                         if (!_this.chatWindows[otherUserId])
-                            _this.createNewChatWindow(user, initialToggleState);
+                            _this.createNewChatWindow(user, initialToggleState, "blured");
                     } else {
                         // when an error occur, the state of this cookie invalid
                         // it must be destroyed

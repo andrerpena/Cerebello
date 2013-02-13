@@ -1,6 +1,6 @@
 ﻿(function ($) {
 
-    function AjaxForm2(el, options) {
+    function AjaxFileForm(el, options) {
 
         //Defaults:
         this.defaults = {
@@ -15,7 +15,7 @@
         this.$el = $(el);
     }
 
-    AjaxForm2.prototype = {
+    AjaxFileForm.prototype = {
 
         init: function () {
             var _this = this;
@@ -71,12 +71,12 @@
         }
     }
 
-    $.fn.ajaxForm2 = function (options) {
+    $.fn.ajaxFileForm = function (options) {
         if (this.length) {
             this.each(function () {
-                var rev = new AjaxForm2(this, options);
+                var rev = new AjaxFileForm(this, options);
                 rev.init();
-                $(this).data('ajaxForm2', rev);
+                $(this).data('ajaxFileForm', rev);
             });
         }
         return this;

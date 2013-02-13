@@ -8,6 +8,9 @@
             myUser: null,
             otherUser: null,
             initialToggleState: "maximized",
+            initialFocusState: "focused",
+            newMessageUrl: null,
+            messageHistoryUrl: null,
             onClose: function () { },
             // triggers when the window changes it's state: minimized or maximized
             onToggleStateChanged: function (currentState) { }
@@ -23,7 +26,7 @@
 
         this.addMessage = function (message) {
             var _this = this;
-            
+
             // takes a jQuery element and replace it's content that seems like an URL with an
             // actual link or e-mail
             function linkify($element) {
@@ -61,7 +64,6 @@
 
                 // add text
                 linkify($("<p/>").text(message.Message)).appendTo($textWrapper);
-                
 
                 // add image
                 $("<img/>").attr("src", decodeURI(message.UserFrom.GravatarUrl)).appendTo($gravatarWrapper);
@@ -80,7 +82,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: "/p/" + _this.opts.practice + "/chat/newmessage",
+                url: _this.opts.newMessageUrl,
                 data: {
                     otherUserId: _this.opts.otherUser.Id,
                     message: messageText
@@ -101,7 +103,7 @@
             $.ajax({
                 type: "GET",
                 async: false,
-                url: "/p/" + _this.opts.practice + "/chat/getmessagehistory",
+                url: _this.opts.messageHistoryUrl,
                 data: {
                     otherUserId: _this.opts.otherUser.Id
                 },
@@ -119,8 +121,8 @@
                 }
             });
         };
-        
-        this.getToggleState = function() {
+
+        this.getToggleState = function () {
             var _this = this;
             return _this.chatContainer.getToggleState();
         };
@@ -144,7 +146,7 @@
                 onClose: function (e) {
                     _this.opts.onClose(e);
                 },
-                onToggleStateChanged: function(toggleState) {
+                onToggleStateChanged: function (toggleState) {
                     _this.opts.onToggleStateChanged(toggleState)
                 }
             });
@@ -160,9 +162,11 @@
             });
 
             _this.chatContainer.setTitle(_this.opts.otherUser.Name);
-            _this.chatContainer.$textBox.focus();
             _this.loadHistory();
             _this.chatContainer.setVisible(true);
+
+            if (_this.opts.initialFocusState == "focused")
+                _this.chatContainer.$textBox.focus();
         }
     };
 

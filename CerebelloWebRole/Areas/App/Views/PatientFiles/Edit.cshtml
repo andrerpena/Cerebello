@@ -40,7 +40,7 @@
     <script type="text/javascript">
         (function () {
             var $container = $("div[data-val-id='patientFile-@patientFileId']");
-            $('form', $container).ajaxForm2({
+            $('form', $container).ajaxFileForm({
                 success: function (result) {
                     $container.replaceWith(result);
                 }
