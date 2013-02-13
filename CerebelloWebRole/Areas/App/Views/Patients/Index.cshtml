@@ -21,7 +21,10 @@ Prontuário
 @section SideBar {
     <ul>
         <li><a href="@Url.Action("create", "patients")" class="icon-link icon-link-plus">Novo
-            paciente</a></li>
+                paciente</a></li>
+        <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Exportar Xml</a> </li>
+        <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Exportar prontuários em Pdf</a> </li>
+        <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Exportar os arquivos de todos os pacientes em Zip</a> </li>
     </ul>
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))

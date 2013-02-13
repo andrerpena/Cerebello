@@ -14,14 +14,13 @@ namespace CerebelloWebRole.Code
             if (excludeList == null)
                 excludeList = new string[0];
 
-            List<String> processedStrings = new List<string>();
-            foreach (string s in str.Split(' '))
+            var processedStrings = new List<string>();
+            foreach (string s in str.Split(' ').Where(s => !excludeList.Contains(s)))
             {
-                if (!excludeList.Contains(s))
-                    if (s.Length > 1)
-                        processedStrings.Add(char.ToUpper(s[0]).ToString() + s.Substring(1));
-                    else if (s.Length == 1)
-                        processedStrings.Add(char.ToUpper(s[0]).ToString());
+                if (s.Length > 1)
+                    processedStrings.Add(char.ToUpper(s[0]).ToString() + s.Substring(1));
+                else if (s.Length == 1)
+                    processedStrings.Add(char.ToUpper(s[0]).ToString());
             }
 
             return string.Join(" ", processedStrings.ToArray());
@@ -29,31 +28,27 @@ namespace CerebelloWebRole.Code
 
         public static string RemoveDiacritics(string original)
         {
-            string stFormD = original.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
+            var stFormD = original.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
 
-            foreach (var t in stFormD)
-            {
-                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(t);
-                if (uc != UnicodeCategory.NonSpacingMark)
-                    sb.Append(t);
-            }
+            foreach (var t in from t in stFormD let uc = CharUnicodeInfo.GetUnicodeCategory(t) where uc != UnicodeCategory.NonSpacingMark select t)
+                sb.Append(t);
 
             return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
 
         public static bool ValidateCaptalizedWords(string title)
         {
-            String[] vTitleWords = title.Split(' ');
+            var vTitleWords = title.Split(' ');
             if (vTitleWords.Length > 1)
             {
-                int lowerWordsCount = 0;
+                var lowerWordsCount = 0;
 
-                for (int i = 1; i < vTitleWords.Length; i++)
+                for (var i = 1; i < vTitleWords.Length; i++)
                 {
-                    String vString = vTitleWords[i];
-                    bool hasCapitalLetter = false;
-                    for (int j = 1; j < vString.Length; j++)
+                    var vString = vTitleWords[i];
+                    var hasCapitalLetter = false;
+                    for (var j = 1; j < vString.Length; j++)
                     {
                         char vChar = vString[j];
                         if (char.IsUpper(vChar))
@@ -81,8 +76,8 @@ namespace CerebelloWebRole.Code
             if (title == null)
                 return null;
 
-            String normalizedString = title.Normalize(NormalizationForm.FormD);
-            StringBuilder stringBuilder = new StringBuilder();
+            var normalizedString = title.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
 
             foreach (char c in normalizedString)
             {
@@ -126,10 +121,10 @@ namespace CerebelloWebRole.Code
         /// </summary>
         static public string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            int previousIndex = 0;
-            int index = str.IndexOf(oldValue, comparison);
+            var previousIndex = 0;
+            var index = str.IndexOf(oldValue, comparison);
             while (index != -1)
             {
                 sb.Append(str.Substring(previousIndex, index - previousIndex));
@@ -175,7 +170,7 @@ namespace CerebelloWebRole.Code
             return result;
         }
 
-        public static bool AllEmpty(this IEnumerable<string> strs)
+        private static bool AllEmpty(this IEnumerable<string> strs)
         {
             return (strs ?? new string[0]).All(string.IsNullOrWhiteSpace);
         }
@@ -185,7 +180,7 @@ namespace CerebelloWebRole.Code
             return !AnyEmpty(strs);
         }
 
-        public static bool AnyEmpty(this IEnumerable<string> strs)
+        private static bool AnyEmpty(this IEnumerable<string> strs)
         {
             return (strs ?? new string[0]).Any(string.IsNullOrWhiteSpace);
         }

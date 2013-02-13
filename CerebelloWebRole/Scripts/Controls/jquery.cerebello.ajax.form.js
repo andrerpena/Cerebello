@@ -16,17 +16,17 @@
     }
 
     AjaxForm.prototype = {
-
-        init: function () {
+        init: function() {
             var _this = this;
             $.validator.unobtrusive.parse(_this.$el);
-            _this.$el.submit(function () {
+            _this.$el.submit(function() {
                 if ($(this).valid()) {
+                    var formData = $(this).serialize();
                     $.ajax({
                         url: this.action,
                         type: this.method,
-                        data: $(this).serialize(),
-                        success: function (data, status, e) {
+                        data: formData,
+                        success: function(data, status, e) {
                             var contentTypeHeader = e.getResponseHeader("Content-Type");
                             var contentType;
                             if (contentTypeHeader.indexOf("text/html") != -1)
@@ -35,7 +35,7 @@
                                 contentType = "json";
                             _this.opts.success.call(_this.$el, data, contentType);
                         },
-                        error: function () {
+                        error: function() {
                             _this.opts.error.call(_this.$el);
                         }
                     });
@@ -43,7 +43,7 @@
                 return false;
             });
         }
-    }
+    };
 
     $.fn.ajaxForm = function (options) {
         if (this.length) {

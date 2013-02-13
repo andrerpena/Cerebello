@@ -1,4 +1,10 @@
-/****** Object:  Table [dbo].[AccountContract]    Script Date: 08/02/2013 10:10:04 ******/
+
+/****** Object:  User [NT AUTHORITY\NETWORK SERVICE] ******/
+CREATE USER [NT AUTHORITY\NETWORK SERVICE] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE] WITH DEFAULT_SCHEMA=[dbo]
+GO
+sys.sp_addrolemember @rolename = N'db_owner', @membername = N'NT AUTHORITY\NETWORK SERVICE'
+GO
+/****** Object:  Table [dbo].[AccountContract] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19,7 +25,7 @@ CREATE TABLE [dbo].[AccountContract](
 )
 
 GO
-/****** Object:  Table [dbo].[Address]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Address] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -40,7 +46,7 @@ CREATE TABLE [dbo].[Address](
 )
 
 GO
-/****** Object:  Table [dbo].[Administrator]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Administrator] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -55,7 +61,7 @@ CREATE TABLE [dbo].[Administrator](
 )
 
 GO
-/****** Object:  Table [dbo].[Anamnese]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Anamnese] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -82,7 +88,7 @@ CREATE TABLE [dbo].[Anamnese](
 )
 
 GO
-/****** Object:  Table [dbo].[Appointment]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Appointment] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -109,7 +115,7 @@ CREATE TABLE [dbo].[Appointment](
 )
 
 GO
-/****** Object:  Table [dbo].[CFG_DayOff]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[CFG_DayOff] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -127,7 +133,7 @@ CREATE TABLE [dbo].[CFG_DayOff](
 )
 
 GO
-/****** Object:  Table [dbo].[CFG_Documents]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[CFG_Documents] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -148,7 +154,7 @@ CREATE TABLE [dbo].[CFG_Documents](
 )
 
 GO
-/****** Object:  Table [dbo].[CFG_Schedule]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[CFG_Schedule] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -199,7 +205,7 @@ CREATE TABLE [dbo].[CFG_Schedule](
 )
 
 GO
-/****** Object:  Table [dbo].[ChatMessage]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[ChatMessage] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -218,7 +224,7 @@ CREATE TABLE [dbo].[ChatMessage](
 )
 
 GO
-/****** Object:  Table [dbo].[Diagnosis]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Diagnosis] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -238,7 +244,7 @@ CREATE TABLE [dbo].[Diagnosis](
 )
 
 GO
-/****** Object:  Table [dbo].[Doctor]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Doctor] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -260,7 +266,7 @@ CREATE TABLE [dbo].[Doctor](
 )
 
 GO
-/****** Object:  Table [dbo].[ExaminationRequest]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[ExaminationRequest] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -280,7 +286,7 @@ CREATE TABLE [dbo].[ExaminationRequest](
 )
 
 GO
-/****** Object:  Table [dbo].[ExaminationResult]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[ExaminationResult] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -300,7 +306,26 @@ CREATE TABLE [dbo].[ExaminationResult](
 )
 
 GO
-/****** Object:  Table [dbo].[GLB_Token]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[File] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[File](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ContainerName] [varchar](250) NOT NULL,
+	[FileName] [varchar](250) NOT NULL,
+	[Description] [varchar](max) NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[PracticeId] [int] NOT NULL,
+ CONSTRAINT [PK_File] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+/****** Object:  Table [dbo].[GLB_Token] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -318,7 +343,7 @@ CREATE TABLE [dbo].[GLB_Token](
 )
 
 GO
-/****** Object:  Table [dbo].[HealthInsurance]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[HealthInsurance] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -345,7 +370,7 @@ CREATE TABLE [dbo].[HealthInsurance](
 )
 
 GO
-/****** Object:  Table [dbo].[Holiday]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Holiday] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -361,7 +386,7 @@ CREATE TABLE [dbo].[Holiday](
 )
 
 GO
-/****** Object:  Table [dbo].[Laboratory]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Laboratory] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -380,7 +405,7 @@ CREATE TABLE [dbo].[Laboratory](
 )
 
 GO
-/****** Object:  Table [dbo].[Leaflet]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Leaflet] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -397,7 +422,7 @@ CREATE TABLE [dbo].[Leaflet](
 )
 
 GO
-/****** Object:  Table [dbo].[MedicalCertificate]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[MedicalCertificate] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -416,7 +441,7 @@ CREATE TABLE [dbo].[MedicalCertificate](
 )
 
 GO
-/****** Object:  Table [dbo].[MedicalCertificateField]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[MedicalCertificateField] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -434,7 +459,7 @@ CREATE TABLE [dbo].[MedicalCertificateField](
 )
 
 GO
-/****** Object:  Table [dbo].[Medicine]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Medicine] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -455,7 +480,7 @@ CREATE TABLE [dbo].[Medicine](
 )
 
 GO
-/****** Object:  Table [dbo].[MedicineActiveIngredient]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[MedicineActiveIngredient] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -472,7 +497,7 @@ CREATE TABLE [dbo].[MedicineActiveIngredient](
 )
 
 GO
-/****** Object:  Table [dbo].[MedicineLeaflet]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[MedicineLeaflet] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -488,7 +513,7 @@ CREATE TABLE [dbo].[MedicineLeaflet](
 )
 
 GO
-/****** Object:  Table [dbo].[ModelMedicalCertificate]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[ModelMedicalCertificate] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -506,7 +531,7 @@ CREATE TABLE [dbo].[ModelMedicalCertificate](
 )
 
 GO
-/****** Object:  Table [dbo].[ModelMedicalCertificateField]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[ModelMedicalCertificateField] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -523,7 +548,7 @@ CREATE TABLE [dbo].[ModelMedicalCertificateField](
 )
 
 GO
-/****** Object:  Table [dbo].[Notification]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Notification] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -544,7 +569,7 @@ CREATE TABLE [dbo].[Notification](
 )
 
 GO
-/****** Object:  Table [dbo].[Patient]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Patient] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -563,7 +588,24 @@ CREATE TABLE [dbo].[Patient](
 )
 
 GO
-/****** Object:  Table [dbo].[Person]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[PatientFile] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PatientFile](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PatientId] [int] NOT NULL,
+	[FileId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
+ CONSTRAINT [PK_PatientFiles] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+/****** Object:  Table [dbo].[Person] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -592,7 +634,7 @@ CREATE TABLE [dbo].[Person](
 )
 
 GO
-/****** Object:  Table [dbo].[PersonAddress]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[PersonAddress] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -608,7 +650,7 @@ CREATE TABLE [dbo].[PersonAddress](
 )
 
 GO
-/****** Object:  Table [dbo].[PhysicalExamination]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[PhysicalExamination] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -626,7 +668,7 @@ CREATE TABLE [dbo].[PhysicalExamination](
 )
 
 GO
-/****** Object:  Table [dbo].[Practice]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Practice] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -655,7 +697,7 @@ CREATE TABLE [dbo].[Practice](
 )
 
 GO
-/****** Object:  Table [dbo].[Receipt]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Receipt] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -672,7 +714,7 @@ CREATE TABLE [dbo].[Receipt](
 )
 
 GO
-/****** Object:  Table [dbo].[ReceiptMedicine]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[ReceiptMedicine] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -692,7 +734,7 @@ CREATE TABLE [dbo].[ReceiptMedicine](
 )
 
 GO
-/****** Object:  Table [dbo].[Secretary]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Secretary] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -707,7 +749,7 @@ CREATE TABLE [dbo].[Secretary](
 )
 
 GO
-/****** Object:  Table [dbo].[Symptom]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[Symptom] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -726,7 +768,7 @@ CREATE TABLE [dbo].[Symptom](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_ActiveIngredient]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_ActiveIngredient] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -741,7 +783,7 @@ CREATE TABLE [dbo].[SYS_ActiveIngredient](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_Cid10]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_Cid10] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -758,7 +800,7 @@ CREATE TABLE [dbo].[SYS_Cid10](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_ContractType]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_ContractType] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -777,7 +819,7 @@ CREATE TABLE [dbo].[SYS_ContractType](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_Holiday]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_Holiday] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -793,7 +835,7 @@ CREATE TABLE [dbo].[SYS_Holiday](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_Laboratory]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_Laboratory] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -808,7 +850,7 @@ CREATE TABLE [dbo].[SYS_Laboratory](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_Leaflet]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_Leaflet] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -824,7 +866,7 @@ CREATE TABLE [dbo].[SYS_Leaflet](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_MedicalEntity]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_MedicalEntity] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -840,7 +882,7 @@ CREATE TABLE [dbo].[SYS_MedicalEntity](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_MedicalProcedure]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_MedicalProcedure] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -856,7 +898,7 @@ CREATE TABLE [dbo].[SYS_MedicalProcedure](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_MedicalSpecialty]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_MedicalSpecialty] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -872,7 +914,7 @@ CREATE TABLE [dbo].[SYS_MedicalSpecialty](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_Medicine]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_Medicine] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -889,7 +931,7 @@ CREATE TABLE [dbo].[SYS_Medicine](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_MedicineActiveIngredient]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_MedicineActiveIngredient] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -905,7 +947,7 @@ CREATE TABLE [dbo].[SYS_MedicineActiveIngredient](
 )
 
 GO
-/****** Object:  Table [dbo].[SYS_MedicineLeaflet]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[SYS_MedicineLeaflet] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -921,7 +963,7 @@ CREATE TABLE [dbo].[SYS_MedicineLeaflet](
 )
 
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Table [dbo].[User] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -946,7 +988,7 @@ CREATE TABLE [dbo].[User](
 )
 
 GO
-/****** Object:  Index [IX_DayOff_Date]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_DayOff_Date] ******/
 CREATE NONCLUSTERED INDEX [IX_DayOff_Date] ON [dbo].[CFG_DayOff]
 (
 	[Date] ASC
@@ -955,7 +997,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_SYS_MedicalEntity_Code]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_SYS_MedicalEntity_Code] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Code] ON [dbo].[SYS_MedicalEntity]
 (
 	[Code] ASC
@@ -964,7 +1006,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_SYS_MedicalEntity_Name]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_SYS_MedicalEntity_Name] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Name] ON [dbo].[SYS_MedicalEntity]
 (
 	[Name] ASC
@@ -973,7 +1015,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_SYS_MedicalProcedure_Name]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_SYS_MedicalProcedure_Name] ******/
 CREATE NONCLUSTERED INDEX [IX_SYS_MedicalProcedure_Name] ON [dbo].[SYS_MedicalProcedure]
 (
 	[Name] ASC
@@ -982,7 +1024,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_SYS_MedicalProcedures_Code]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_SYS_MedicalProcedures_Code] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalProcedures_Code] ON [dbo].[SYS_MedicalProcedure]
 (
 	[Code] ASC
@@ -991,7 +1033,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_SYS_MedicalSpecialty_Code]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_SYS_MedicalSpecialty_Code] ******/
 CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Code] ON [dbo].[SYS_MedicalSpecialty]
 (
 	[Code] ASC
@@ -1000,13 +1042,13 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_SYS_MedicalSpecialty_Name]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_SYS_MedicalSpecialty_Name] ******/
 CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Name] ON [dbo].[SYS_MedicalSpecialty]
 (
 	[Name] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_AdministratorId]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_User_AdministratorId] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_User_AdministratorId] ON [dbo].[User]
 (
 	[AdministratorId] ASC
@@ -1014,7 +1056,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_User_AdministratorId] ON [dbo].[User]
 WHERE ([AdministratorId] IS NOT NULL)
 WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_DoctorId]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_User_DoctorId] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_User_DoctorId] ON [dbo].[User]
 (
 	[DoctorId] ASC
@@ -1022,7 +1064,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_User_DoctorId] ON [dbo].[User]
 WHERE ([DoctorId] IS NOT NULL)
 WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_PersonId]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_User_PersonId] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_User_PersonId] ON [dbo].[User]
 (
 	[PersonId] ASC
@@ -1030,13 +1072,13 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_User_PersonId] ON [dbo].[User]
 WHERE ([PersonId] IS NOT NULL)
 WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_PracticeId]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_User_PracticeId] ******/
 CREATE NONCLUSTERED INDEX [IX_User_PracticeId] ON [dbo].[User]
 (
 	[PracticeId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_SecretaryId]    Script Date: 08/02/2013 10:10:04 ******/
+/****** Object:  Index [IX_User_SecretaryId] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_User_SecretaryId] ON [dbo].[User]
 (
 	[SecretaryId] ASC
@@ -1119,6 +1161,11 @@ ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_Examinat
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
+GO
+ALTER TABLE [dbo].[File]  WITH CHECK ADD  CONSTRAINT [FK_File_Practice] FOREIGN KEY([PracticeId])
+REFERENCES [dbo].[Practice] ([Id])
+GO
+ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_Practice]
 GO
 ALTER TABLE [dbo].[HealthInsurance]  WITH NOCHECK ADD  CONSTRAINT [FK_HealthInsurance_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
@@ -1206,6 +1253,21 @@ REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Person]
+GO
+ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_File] FOREIGN KEY([FileId])
+REFERENCES [dbo].[File] ([Id])
+GO
+ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_File]
+GO
+ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_Patient] FOREIGN KEY([PatientId])
+REFERENCES [dbo].[Patient] ([Id])
+GO
+ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Patient]
+GO
+ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_Practice] FOREIGN KEY([PracticeId])
+REFERENCES [dbo].[Practice] ([Id])
+GO
+ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Practice]
 GO
 ALTER TABLE [dbo].[PersonAddress]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonAddress_Address] FOREIGN KEY([AddressId])
 REFERENCES [dbo].[Address] ([Id])

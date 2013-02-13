@@ -1,6 +1,5 @@
 ﻿@model PatientViewModel
 @using Cerebello.Model
-@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Extensions
 @{
     var title = "Paciente: " + this.Model.FullName;
@@ -36,6 +35,7 @@
     <ul>
         <li><a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
         <li><a href="@Url.Action("ExportPatientsPdf", "Report", new {patientId = this.Model.Id})" target="_blank" class="icon-link icon-link-import">Exportar Pdf</a> </li>
+        <li><a href="@Url.Action("DownloadZipFile", "PatientFiles", new {patientId = this.Model.Id})" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
     </ul>
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {
@@ -158,6 +158,17 @@
                     @Html.Action("Details", "MedicalCertificates", new { id = certificateId })
                     }
                 }
+                
+                @if (session.PatientFiles.Count > 0)
+                {
+                    <p class="subtitle">
+                        Arquivos
+                    </p>
+                    foreach (var patientFileId in session.PatientFiles)
+                    {
+                    @Html.Action("Details", "PatientFiles", new { id = patientFileId })
+                    }
+                }
 
             </div>
             }
@@ -208,6 +219,12 @@
                 <!-- medical certificate -->
                 <div>
                     <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "medicalcertificates", new { patientId = Model.Id })">Novo atestado médico</a>
+                    <div class="medical-certificate-wrapper appointment-panel-wrapper">
+                    </div>
+                </div>
+                <!-- patient files -->
+                <div>
+                    <a id="new-patientFile" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "PatientFiles", new { patientId = Model.Id })">Enviar arquivo</a>
                     <div class="medical-certificate-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
