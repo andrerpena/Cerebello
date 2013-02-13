@@ -37,7 +37,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.File(fileStream, mimeType, fileName);
         }
 
-
+        /// <summary>
+        /// Downloads a zip file with all patient files
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult DownloadZipFile(int patientId)
         {
@@ -61,6 +65,58 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             zipMemoryStream.Seek(0, SeekOrigin.Begin);
             return this.File(zipMemoryStream, "application/zip", patient.Person.FullName + " - Arquivos - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
+        }
+        
+        /// <summary>
+        /// Downloads a zip file with all files from all patients
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult DownloadAllPatientsZipFile()
+        {
+            var mainZipMemoryStream = new MemoryStream();
+
+            // there will an outer zip file that will contain an inner 
+            // zip file for each patient that has files
+            using (var outerZip = new ZipFile())
+            {
+                foreach (var patient in this.Doctor.Patients)
+                {
+                    // if the patient has no files, he's not going to be included
+                    if (!patient.PatientFiles.Any())
+                        continue;
+
+                    var innerZipMemoryStream = new MemoryStream();
+                    using (var innerZip = new ZipFile())
+                    {
+                        var storageManager = new WindowsAzureStorageManager();
+
+                        foreach (var patientFile in patient.PatientFiles)
+                        {
+                            try
+                            {
+                                var fileStream = storageManager.DownloadFileFromStorage(
+                                    Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.File.FileName);
+
+                                innerZip.AddEntry(patientFile.File.FileName, fileStream);
+                            }
+                            catch (Exception ex)
+                            {
+                                // in this case the file exists in the database but does not exist in the storage.
+                                // LOG HERE
+                            }
+                        }
+                        innerZip.Save(innerZipMemoryStream);
+                    }
+                    innerZipMemoryStream.Seek(0, SeekOrigin.Begin);
+                    outerZip.AddEntry(patient.Person.FullName + ".zip", innerZipMemoryStream);
+                }
+
+                outerZip.Save(mainZipMemoryStream);
+            }
+
+            mainZipMemoryStream.Seek(0, SeekOrigin.Begin);
+            return this.File(mainZipMemoryStream, "application/zip", this.Doctor.Users.ElementAt(0).Person.FullName + " - Arquivos dos pacientes - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
         }
 
         private static PatientFileViewModel GetViewModel(PatientFile patientFile)
