@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.WindowsAzure;
 using Ionic.Zip;
@@ -24,6 +25,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
+        [SelfPermission]
         public ActionResult DownloadFile([NotNull] string fileName)
         {
             if (fileName == null) throw new ArgumentNullException("fileName");
@@ -43,6 +45,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="patientId"></param>
         /// <returns></returns>
         [HttpGet]
+        [SelfPermission]
         public ActionResult DownloadZipFile(int patientId)
         {
             var patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
@@ -72,6 +75,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [SelfPermission]
         public ActionResult DownloadAllPatientsZipFile()
         {
             var mainZipMemoryStream = new MemoryStream();
