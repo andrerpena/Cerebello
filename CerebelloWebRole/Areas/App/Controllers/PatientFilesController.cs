@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             zipMemoryStream.Seek(0, SeekOrigin.Begin);
-            return this.File(zipMemoryStream, "application/zip", patient.Person.FullName + " - Arquivos - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString());
+            return this.File(zipMemoryStream, "application/zip", patient.Person.FullName + " - Arquivos - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
         }
 
         private static PatientFileViewModel GetViewModel(PatientFile patientFile)
@@ -161,10 +161,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     storageManager.UploadFileToStorage(fileContent, Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, fileName);
                     fileContent.Dispose();
 
+                    Debug.Assert(fileName != null, "fileName != null");
+
                     patientFile.File.FileName = fileName;
                     patientFile.File.ContainerName = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
-
-                    Debug.Assert(fileName != null, "fileName != null");
                 }
 
                 Debug.Assert(patientFile != null, "patientFile != null");
