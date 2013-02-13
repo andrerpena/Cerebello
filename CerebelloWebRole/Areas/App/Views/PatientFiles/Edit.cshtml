@@ -1,33 +1,37 @@
 ﻿@using System.Diagnostics
-@model PhysicalExaminationViewModel
+@model PatientFileViewModel
 @{
     this.Layout = null;
-    string physicalExaminationId = null;
+    string patientFileId = null;
     if (this.Model != null && Model.Id == null)
     {
-        physicalExaminationId = "new-" + Guid.NewGuid().ToString();
+        patientFileId = "new-" + Guid.NewGuid().ToString();
     }
     else
     {
         Debug.Assert(Model != null, "Model != null");
-        physicalExaminationId = Model.Id.ToString();
+        patientFileId = Model.Id.ToString();
     }
 }
-<div class="physicalExamination-edit appointment-panel" data-val-id="physicalExamination-@physicalExaminationId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+<div class="patientFile-edit appointment-panel" data-val-id="patientFile-@patientFileId">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.ValidationSummary(false)
         @Html.HiddenFor(model => model.PatientId)
         @Html.HiddenFor(model => model.Id)
 
         var editPanel = this.Html.CreateEditPanel();
-        editPanel.AddField(model => model.Notes,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
+        if (!this.Model.Id.HasValue || this.Model.Id == 0)
+        {
+            editPanel.AddField(model => model.PostedFile, @<text><input type="file" id="PostedFile" name="PostedFile" /></text>);
+        }
+        editPanel.AddField(model => model.Description,
+                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Description, new { rows = 5 })</text>);
 
         @editPanel.GetHtml()
 
         <div class="submit-bar">
-            <input type="submit" value="salvar exame físico" />
+            <input type="submit" value="salvar arquivo" />
             <span class="separator">ou</span>
             <a href="#" class="cancel">cancelar</a>
         </div>
@@ -35,8 +39,8 @@
 
     <script type="text/javascript">
         (function () {
-            var $container = $("div[data-val-id='physicalExamination-@physicalExaminationId']");
-            $('form', $container).ajaxForm({
+            var $container = $("div[data-val-id='patientFile-@patientFileId']");
+            $('form', $container).ajaxForm2({
                 success: function (result) {
                     $container.replaceWith(result);
                 }
@@ -50,8 +54,8 @@
                     else
                     {
                         @:$container.remove();
-                                        }
-                });
+                    }
+            });
         })();
     </script>
 </div>

@@ -2,6 +2,7 @@
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
+using Microsoft.WindowsAzure;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -22,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 FooterRight1 = config.FooterRight1,
                 FooterRight2 = config.FooterRight2
             };
-
+            
             return View(viewModel);
         }
 

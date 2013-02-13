@@ -7,6 +7,7 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code.WindowsAzure;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -226,6 +227,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             eventDates.AddRange(diagnosisByDate.Keys);
 
+            // patientFiles
+            var patientFilesByDate =
+                (from dvm in
+                     (from d in patient.PatientFiles
+                      select new SessionEvent
+                      {
+                          LocalDate = ConvertToLocalDateTime(practice, d.File.CreatedOn),
+                          Id = d.Id
+                      })
+                 group dvm by dvm.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(patientFilesByDate.Keys);
+
             // discover what dates have events
             eventDates = eventDates.Distinct().OrderBy(dt => dt).ToList();
 
@@ -262,6 +278,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      DiagnosisIds =
                                          diagnosisByDate.ContainsKey(eventDate)
                                              ? diagnosisByDate[eventDate].Select(v => v.Id).ToList()
+                                             : new List<int>(),
+                                     PatientFiles =
+                                         patientFilesByDate.ContainsKey(eventDate)
+                                             ? patientFilesByDate[eventDate].Select(v => v.Id).ToList()
                                              : new List<int>()
                                  }).ToList();
             return sessions;
@@ -437,6 +457,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     receipts.Remove(receipt);
                 }
 
+                // delete physical exams requests manually
+                var physicalExams = patient.PhysicalExaminations.ToList();
+                while (physicalExams.Any())
+                {
+                    var physicalExam = physicalExams.First();
+                    this.db.PhysicalExaminations.DeleteObject(physicalExam);
+                    physicalExams.Remove(physicalExam);
+                }
+
                 // delete exam requests manually
                 var examRequests = patient.ExaminationRequests.ToList();
                 while (examRequests.Any())
@@ -488,6 +517,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var appointment = appointments.First();
                     this.db.Appointments.DeleteObject(appointment);
                     appointments.Remove(appointment);
+                }
+
+                // delete files manually
+                var patientFiles = patient.PatientFiles.ToList();
+                while (patientFiles.Any())
+                {
+                    var patientFile = patientFiles.First();
+                    var file = patientFile.File;
+
+                    var storage = new WindowsAzureStorageManager();
+                    storage.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, file.FileName);
+
+                    this.db.PatientFiles.DeleteObject(patientFile);
+                    this.db.Files.DeleteObject(file);
+
+                    patientFiles.Remove(patientFile);
                 }
 
                 this.db.Patients.DeleteObject(patient);

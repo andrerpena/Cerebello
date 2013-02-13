@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter.Helpers
 {
@@ -38,7 +39,7 @@ namespace Cerebello.Firestarter.Helpers
                     "Jorge",
                     "Leonardo",
                     "Marcelo",
-                    "Miguel", // po cara! eu tb!
+                    "Miguel", // po cara! eu tb! // blz! haha
                     "Nelson",
                     "Osvaldo",
                     "Patrício",
@@ -160,7 +161,8 @@ namespace Cerebello.Firestarter.Helpers
                             PracticeId = doctor.PracticeId,
                         };
 
-                    patient.Person.Email = (firstName + string.Join("", chosenMiddleNames)).ToLower() + "@gmail.com";
+                    // it's important do remove diacritics because StmpClient crashes on non-ascii characters
+                    patient.Person.Email =  StringHelper.RemoveDiacritics((firstName + string.Join("", chosenMiddleNames)).ToLower() + "@gmail.com");
                     Debug.Assert(!patient.Person.Addresses.Any());
                     patient.Person.Addresses.Add(
                         new Address

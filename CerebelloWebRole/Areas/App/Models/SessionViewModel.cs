@@ -49,5 +49,10 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Diagnosis ids.
         /// </summary>
         public List<int> DiagnosisIds { get; set; }
+
+        /// <summary>
+        /// Patient file ids.
+        /// </summary>
+        public List<int> PatientFiles { get; set; }
     }
 }

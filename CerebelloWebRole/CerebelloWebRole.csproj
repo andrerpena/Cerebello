@@ -55,6 +55,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\ThirdParty\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp">
       <HintPath>..\ThirdParty\itextsharp.dll</HintPath>
     </Reference>
@@ -67,20 +70,14 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\ref\Microsoft.WindowsAzure.Configuration.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\ref\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="PayPal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\PayPal-API\PayPal.dll</HintPath>
@@ -142,6 +139,7 @@
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
+    <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PhysicalExaminationController.cs" />
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
@@ -151,6 +149,7 @@
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
     <Compile Include="Areas\App\Models\LaboratoriesIndexViewModel.cs" />
+    <Compile Include="Areas\App\Models\PatientFileViewModel.cs" />
     <Compile Include="Areas\App\Models\PhysicalExaminationViewModel.cs" />
     <Compile Include="Areas\App\Models\PrescriptionViewModel.cs" />
     <Compile Include="Code\Access\CerebelloEntitiesAccessFilterWrapper.cs" />
@@ -167,6 +166,9 @@
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
     <Compile Include="Code\Helpers\EmailHelper.cs" />
+    <Compile Include="Code\Helpers\MimeTypesHelper.cs" />
+    <Compile Include="Code\WindowsAzure\IWindowsAzureStorageManager.cs" />
+    <Compile Include="Code\WindowsAzure\WindowsAzureStorageManager.cs" />
     <Compile Include="Code\Notifications\NewGenericAppointmentNotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Notifications\NewGenericAppointmentNotificationData.cs" />
     <Compile Include="Code\Notifications\NewAppointmentNotificationsHelper.cs" />
@@ -511,6 +513,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.ajax.form2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.notify.new.generic.appointment.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.modal.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.notify.db.notification.js" />
@@ -722,6 +725,8 @@
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade_ProfessionalPlan.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Details.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
+    <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />
+    <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

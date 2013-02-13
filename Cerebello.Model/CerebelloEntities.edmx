@@ -19,6 +19,7 @@
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationResult" EntityType="cerebelloModel.Store.ExaminationResult" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="File" EntityType="cerebelloModel.Store.File" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GLB_Token" EntityType="cerebelloModel.Store.GLB_Token" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="HealthInsurance" EntityType="cerebelloModel.Store.HealthInsurance" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Holiday" EntityType="cerebelloModel.Store.Holiday" store:Type="Tables" Schema="dbo" />
@@ -33,6 +34,7 @@
           <EntitySet Name="ModelMedicalCertificateField" EntityType="cerebelloModel.Store.ModelMedicalCertificateField" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Notification" EntityType="cerebelloModel.Store.Notification" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Patient" EntityType="cerebelloModel.Store.Patient" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PatientFile" EntityType="cerebelloModel.Store.PatientFile" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Person" EntityType="cerebelloModel.Store.Person" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PersonAddress" EntityType="cerebelloModel.Store.PersonAddress" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PhysicalExamination" EntityType="cerebelloModel.Store.PhysicalExamination" store:Type="Tables" Schema="dbo" />
@@ -118,6 +120,10 @@
             <End Role="Patient" EntitySet="Patient" />
             <End Role="ExaminationResult" EntitySet="ExaminationResult" />
           </AssociationSet>
+          <AssociationSet Name="FK_File_Practice" Association="cerebelloModel.Store.FK_File_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="File" EntitySet="File" />
+          </AssociationSet>
           <AssociationSet Name="FK_HealthInsurance_Doctor" Association="cerebelloModel.Store.FK_HealthInsurance_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
             <End Role="HealthInsurance" EntitySet="HealthInsurance" />
@@ -181,6 +187,18 @@
           <AssociationSet Name="FK_Patient_Person" Association="cerebelloModel.Store.FK_Patient_Person">
             <End Role="Person" EntitySet="Person" />
             <End Role="Patient" EntitySet="Patient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_File" Association="cerebelloModel.Store.FK_PatientFile_File">
+            <End Role="File" EntitySet="File" />
+            <End Role="PatientFile" EntitySet="PatientFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_Patient" Association="cerebelloModel.Store.FK_PatientFile_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="PatientFile" EntitySet="PatientFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_Practice" Association="cerebelloModel.Store.FK_PatientFile_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="PatientFile" EntitySet="PatientFile" />
           </AssociationSet>
           <AssociationSet Name="FK_PersonAddress_Address" Association="cerebelloModel.Store.FK_PersonAddress_Address">
             <End Role="Address" EntitySet="Address" />
@@ -453,6 +471,17 @@
           <Property Name="MedicalProcedureName" Type="nvarchar" Nullable="false" MaxLength="310" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ContainerName" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="FileName" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="GLB_Token">
           <Key>
             <PropertyRef Name="Id" />
@@ -598,6 +627,15 @@
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="LastUsedHealthInsuranceId" Type="int" />
+        </EntityType>
+        <EntityType Name="PatientFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="FileId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -1006,6 +1044,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_File_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="File" Type="cerebelloModel.Store.File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_HealthInsurance_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
           <End Role="HealthInsurance" Type="cerebelloModel.Store.HealthInsurance" Multiplicity="*" />
@@ -1197,6 +1247,42 @@
             </Principal>
             <Dependent Role="Patient">
               <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_File">
+          <End Role="File" Type="cerebelloModel.Store.File" Multiplicity="1" />
+          <End Role="PatientFile" Type="cerebelloModel.Store.PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+          <End Role="PatientFile" Type="cerebelloModel.Store.PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="PatientFile" Type="cerebelloModel.Store.PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1669,6 +1755,24 @@
             <End Role="Practice" EntitySet="Practices" />
             <End Role="PhysicalExamination" EntitySet="PhysicalExaminations" />
           </AssociationSet>
+          <EntitySet Name="Files" EntityType="Cerebello.Model.File" />
+          <EntitySet Name="PatientFiles" EntityType="Cerebello.Model.PatientFile" />
+          <AssociationSet Name="FK_PatientFile_File" Association="Cerebello.Model.FK_PatientFile_File">
+            <End Role="File" EntitySet="Files" />
+            <End Role="PatientFile" EntitySet="PatientFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_Patient" Association="Cerebello.Model.FK_PatientFile_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientFile" EntitySet="PatientFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_File_Practice" Association="Cerebello.Model.FK_File_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_Practice" Association="Cerebello.Model.FK_PatientFile_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="PatientFile" EntitySet="PatientFiles" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1766,6 +1870,7 @@
           <Property Type="Int32" Name="LastUsedHealthInsuranceId" />
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Patient_HealthInsurance" FromRole="Patient" ToRole="HealthInsurance" />
           <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="Patient" ToRole="PhysicalExamination" />
+          <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="Patient" ToRole="PatientFile" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -1819,6 +1924,8 @@
           <Property Type="Boolean" Name="AccountDisabled" Nullable="false" />
           <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
           <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Practice" FromRole="Practice" ToRole="PhysicalExamination" />
+          <NavigationProperty Name="Files" Relationship="Cerebello.Model.FK_File_Practice" FromRole="Practice" ToRole="File" />
+          <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_Practice" FromRole="Practice" ToRole="PatientFile" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2879,6 +2986,79 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="ContainerName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="FileName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+          <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="File" ToRole="PatientFile" />
+          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_File_Practice" FromRole="File" ToRole="Practice" />
+        </EntityType>
+        <EntityType Name="PatientFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PatientId" Nullable="false" />
+          <Property Type="Int32" Name="FileId" Nullable="false" />
+          <NavigationProperty Name="File" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="PatientFile" ToRole="File" />
+          <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="PatientFile" ToRole="Patient" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_PatientFile_Practice" FromRole="PatientFile" ToRole="Practice" />
+        </EntityType>
+        <Association Name="FK_PatientFile_File">
+          <End Type="Cerebello.Model.File" Role="File" Multiplicity="1" />
+          <End Type="Cerebello.Model.PatientFile" Role="PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_Patient">
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
+          <End Type="Cerebello.Model.PatientFile" Role="PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_File_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.File" Role="File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.PatientFile" Role="PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3448,6 +3628,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Files">
+            <EntityTypeMapping TypeName="Cerebello.Model.File">
+              <MappingFragment StoreEntitySet="File">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ContainerName" ColumnName="ContainerName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientFiles">
+            <EntityTypeMapping TypeName="Cerebello.Model.PatientFile">
+              <MappingFragment StoreEntitySet="PatientFile">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3515,13 +3717,11 @@
           <ConnectorPoint PointX="6" PointY="13.34375" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_Receipt_Patient" ManuallyRouted="true">
-          <ConnectorPoint PointX="37.30468875" PointY="22.662903645833335" />
-          <ConnectorPoint PointX="37.30468875" PointY="23.180971822102865" />
-          <ConnectorPoint PointX="37.005210833333336" PointY="23.180971822102865" />
-          <ConnectorPoint PointX="36.838544166666665" PointY="23.180971822102865" />
-          <ConnectorPoint PointX="36.2325339529079" PointY="23.180971822102865" />
-          <ConnectorPoint PointX="36.2325339529079" PointY="27.420187174479167" />
-          <ConnectorPoint PointX="33.625" PointY="27.420187174479167" />
+          <ConnectorPoint PointX="36.3125" PointY="22.855205078125003" />
+          <ConnectorPoint PointX="36.3125" PointY="27.086293945312498" />
+          <ConnectorPoint PointX="35.98957983333333" PointY="27.086293945312498" />
+          <ConnectorPoint PointX="35.822913166666659" PointY="27.086293945312498" />
+          <ConnectorPoint PointX="33.625" PointY="27.086293945312498" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Person" ManuallyRouted="false">
           <ConnectorPoint PointX="2.65625" PointY="15.855205078125" />
@@ -3830,6 +4030,12 @@
         <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="1.5" PointX="33.375" PointY="23.5" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="42.125" PointY="31.5" FillColor="Fuchsia" />
+        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="38.625" PointY="31.5" FillColor="Fuchsia" />
+        <AssociationConnector Association="Cerebello.Model.FK_PatientFile_File" />
+        <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Patient" />
+        <AssociationConnector Association="Cerebello.Model.FK_File_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Practice" />
         </Diagram>
     </Diagrams>
   </Designer>

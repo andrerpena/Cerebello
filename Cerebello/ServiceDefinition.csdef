@@ -22,5 +22,8 @@
       <Certificate name="CerebelloSelfSigned" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="GoDaddy" storeLocation="LocalMachine" storeName="My" />
     </Certificates>
+    <ConfigurationSettings>
+      <Setting name="StorageConnectionString" />
+    </ConfigurationSettings>
   </WebRole>
 </ServiceDefinition>
