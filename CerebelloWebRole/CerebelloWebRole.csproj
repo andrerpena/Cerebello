@@ -810,4 +810,17 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>rmdir /s /q "$(ProjectDir)obj\Release\AspnetCompileMerge"
+rmdir /s /q "$(ProjectDir)obj\Debug\AspnetCompileMerge"
+rmdir /s /q "$(ProjectDir)obj\Release\Package"
+rmdir /s /q "$(ProjectDir)obj\Debug\Package"
+rmdir /s /q "$(ProjectDir)obj\Release\TransformWebConfig"
+rmdir /s /q "$(ProjectDir)obj\Debug\TransformWebConfig"
+rmdir /s /q "$(ProjectDir)obj\Release\ProfileTransformWebConfig"
+rmdir /s /q "$(ProjectDir)obj\Debug\ProfileTransformWebConfig"
+rmdir /s /q "$(ProjectDir)obj\Release\CSAutoParameterize"
+rmdir /s /q "$(ProjectDir)obj\Debug\CSAutoParameterize"
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>
