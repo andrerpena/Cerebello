@@ -322,8 +322,8 @@ namespace Cerebello.Firestarter
                     FullName = "Marta Cura",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = DateTime.UtcNow,
-                    Email = "martacura@gmail.com",
-                    EmailGravatarHash = GravatarHelper.GetGravatarHash("martacura@gmail.com"),
+                    Email = "martacura@fakemail.com",
+                    EmailGravatarHash = GravatarHelper.GetGravatarHash("martacura@fakemail.com"),
                     PracticeId = practice.Id,
                 };
 
@@ -389,8 +389,8 @@ namespace Cerebello.Firestarter
                 FullName = "Thomas Gray",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = DateTime.UtcNow,
-                Email = "thomasgray@gmail.com",
-                EmailGravatarHash = GravatarHelper.GetGravatarHash("thomasgray@gmail.com"),
+                Email = "thomasgray@fakemail.com",
+                EmailGravatarHash = GravatarHelper.GetGravatarHash("thomasgray@fakemail.com"),
                 PracticeId = practice.Id,
             };
 

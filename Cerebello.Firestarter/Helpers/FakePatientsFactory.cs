@@ -162,7 +162,7 @@ namespace Cerebello.Firestarter.Helpers
                         };
 
                     // it's important do remove diacritics because StmpClient crashes on non-ascii characters
-                    patient.Person.Email =  StringHelper.RemoveDiacritics((firstName + string.Join("", chosenMiddleNames)).ToLower() + "@gmail.com");
+                    patient.Person.Email =  StringHelper.RemoveDiacritics((firstName + string.Join("", chosenMiddleNames)).ToLower() + "@fakemail.com");
                     Debug.Assert(!patient.Person.Addresses.Any());
                     patient.Person.Addresses.Add(
                         new Address

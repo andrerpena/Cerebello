@@ -62,7 +62,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Doctor = doctor,
                 PracticeId = doctor.PracticeId,
             };
-            patient1.Person.Email = "joao@gmail.com";
+            patient1.Person.Email = "joao@fakemail.com";
             patient1.Person.Addresses.Add(
                 new Address
                     {
@@ -94,7 +94,7 @@ namespace CerebelloWebRole.Tests.Tests
                 },
                 Doctor = doctor
             };
-            patient1.Person.Email = "manuela@gmail.com";
+            patient1.Person.Email = "manuela@fakemail.com";
             patient1.Person.Addresses.Add(
                 new Address
                     {

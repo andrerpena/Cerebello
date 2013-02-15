@@ -12,14 +12,6 @@ namespace CerebelloWebRole.Code.Helpers
 {
     public class EmailHelper
     {
-        private static string emailAddressOverride;
-
-        static EmailHelper()
-        {
-            emailAddressOverride = ConfigurationManager.AppSettings["EmailAddressOverride"];
-            if (string.IsNullOrWhiteSpace(emailAddressOverride)) emailAddressOverride = null;
-        }
-
         /// <summary>
         /// Creates an SmtpClient that will be used to send e-mails.
         /// </summary>
@@ -60,8 +52,8 @@ namespace CerebelloWebRole.Code.Helpers
             if (string.IsNullOrEmpty(bodyText))
                 throw new ArgumentException("bodyText must be provided.", "bodyText");
 
-            if (emailAddressOverride != null)
-                toAddress = new MailAddress(emailAddressOverride, toAddress.DisplayName);
+            if (Configuration.Instance.EmailAddressOverride)
+                toAddress = new MailAddress("cerebello@cerebello.com.br", toAddress.DisplayName);
 
             // NOTE: The string "cerebello@cerebello.com.br" is repeated in other place.
             var fromAddress = new MailAddress("cerebello@cerebello.com.br", sourceName ?? "www.cerebello.com.br");
@@ -104,7 +96,20 @@ namespace CerebelloWebRole.Code.Helpers
         /// <param name="mailMessage">The MailMessage to send.</param>
         public static void SendEmail(MailMessage mailMessage)
         {
-            if (Configuration.Instance.IsLocalPresentation)
+#if DEBUG
+            var allowSendEmail = mailMessage.To.All(to => new[]
+                {
+                    // These are the allowed email destinations when debugging.
+                    // If the e-mail address is not in this list, then it will be saved locally.
+                    "masbicudo@gmail.com",
+                    "andrerpena@gmail.com",
+                    "cerebello@cerebello.com.br",
+                }.Contains(to.Address));
+#else
+            var allowSendEmail = true;
+#endif
+
+            if (!allowSendEmail || Configuration.Instance.UseDesktopEmailBox)
             {
                 SaveEmailLocal(mailMessage);
             }
@@ -132,14 +137,17 @@ namespace CerebelloWebRole.Code.Helpers
                 if (!Directory.Exists(inboxPath))
                     Directory.CreateDirectory(inboxPath);
 
-                var name = message.Subject + ".html";
-                name = Regex.Replace(name, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase);
+                var name = message.Subject;
+                name = Regex.Replace(name, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase).Trim('.');
 
-                var currentEmailPath = Path.Combine(inboxPath, name);
-
-                using (var file = System.IO.File.Create(currentEmailPath))
+                using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ".html")))
                 {
-                    message.AlternateViews.First().ContentStream.CopyTo(file);
+                    message.AlternateViews.First(x => x.ContentType.MediaType == "text/html").ContentStream.CopyTo(file);
+                }
+
+                using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ".txt")))
+                {
+                    message.AlternateViews.First(x => x.ContentType.MediaType == "text/plain").ContentStream.CopyTo(file);
                 }
             }
         }

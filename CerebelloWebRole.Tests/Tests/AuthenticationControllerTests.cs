@@ -89,7 +89,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
-                        EMail = "andre@gmail.com",
+                        EMail = "andre@fakemail.com",
                         FullName = "André",
                         Gender = (short)TypeGender.Male,
                     };
@@ -141,7 +141,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var token = SecurityTokenHelper.FromString(ticket.UserData);
                 Assert.AreEqual(savedUser.Id, token.UserData.Id);
                 Assert.AreEqual("André", token.UserData.FullName);
-                Assert.AreEqual("andre@gmail.com", token.UserData.Email);
+                Assert.AreEqual("andre@fakemail.com", token.UserData.Email);
                 Assert.AreEqual(false, token.UserData.IsUsingDefaultPassword);
 
                 // Assertion for email.
@@ -157,7 +157,7 @@ namespace CerebelloWebRole.Tests.Tests
                 var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                 Assert.AreEqual(emailExpected, emailBody);
                 Assert.AreEqual("Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.", emailSubject);
-                Assert.AreEqual("andre@gmail.com", emailToAddress);
+                Assert.AreEqual("andre@fakemail.com", emailToAddress);
             }
         }
 
@@ -206,7 +206,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
-                        EMail = "andre@gmail.com",
+                        EMail = "andre@fakemail.com",
                         FullName = "André",
                         Gender = (short)TypeGender.Male,
                         IsDoctor = true,
@@ -313,7 +313,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
-                        EMail = "masbicudo32784678@gmail.com",
+                        EMail = "masbicudo32784678@fakemail.com",
                         FullName = "Miguel Angelo Santos Bicudo",
                         Gender = (short)TypeGender.Male,
                     };
@@ -390,7 +390,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 05, 04),
-                        EMail = "masbicudo32784678@gmail.com",
+                        EMail = "masbicudo32784678@fakemail.com",
                         FullName = userFullName,
                         Gender = (short)TypeGender.Male,
                     };
@@ -455,7 +455,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Password = "xpto",
                         ConfirmPassword = "xpto",
                         DateOfBirth = new DateTime(1984, 09, 01),
-                        EMail = "andrerpena32784678@gmail.com",
+                        EMail = "andrerpena32784678@fakemail.com",
                         FullName = "André Rodrigues Pena",
                         Gender = (short)TypeGender.Male,
                     };
@@ -1040,7 +1040,7 @@ namespace CerebelloWebRole.Tests.Tests
                         Password = password,
                         ConfirmPassword = password,
                         DateOfBirth = new DateTime(1984, 05, 04),
-                        EMail = "andre@gmail.com",
+                        EMail = "andre@fakemail.com",
                         FullName = "André",
                         Gender = (short)TypeGender.Male,
                     };

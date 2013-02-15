@@ -97,7 +97,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 
                         try
                         {
-                            // xxxx this.SendEmail(message);
+                            this.SendEmail(message);
 
                             this.EmailsCount++;
 
