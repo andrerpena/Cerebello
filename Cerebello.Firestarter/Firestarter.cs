@@ -1862,7 +1862,7 @@ GO
         public static void ExecuteScript(CerebelloEntities db, string script)
         {
             var scripts = SqlHelper.SplitScript(script);
-            ExecuteScripts(db, scripts);
+            ExecuteScriptList(db, scripts);
         }
 
         /// <summary>
@@ -1870,7 +1870,7 @@ GO
         /// </summary>
         /// <param name="db"></param>
         /// <param name="scripts"></param>
-        private static void ExecuteScripts(CerebelloEntities db, IEnumerable<string> scripts)
+        public static void ExecuteScriptList(CerebelloEntities db, IEnumerable<string> scripts)
         {
             foreach (var eachScript in scripts)
                 db.ExecuteStoreCommand(eachScript);
@@ -2334,20 +2334,20 @@ GO
                     USE [cerebello]
                     GO
 
-                    IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'netserv')
-                    DROP USER [netserv]
+                    IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'NT AUTHORITY\NETWORK SERVICE')
+                    DROP USER [NT AUTHORITY\NETWORK SERVICE]
                     GO
 
                     USE [cerebello]
                     GO
 
-                    CREATE USER [netserv] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE]
+                    CREATE USER [NT AUTHORITY\NETWORK SERVICE] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE]
                     GO
 
                     USE [cerebello]
                     GO
 
-                    EXEC sp_addrolemember N'db_owner', N'netserv'
+                    EXEC sp_addrolemember N'db_owner', N'NT AUTHORITY\NETWORK SERVICE'
                     GO
                     ");
         }

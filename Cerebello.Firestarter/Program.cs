@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
+using SqlScriptProcessorForVersioning;
+using File = System.IO.File;
 
 namespace Cerebello.Firestarter
 {
@@ -1049,6 +1051,12 @@ namespace Cerebello.Firestarter
                         if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                         try
                         {
+                            Console.WriteLine("DropAllTables");
+                            Firestarter.DropAllTables(db);
+
+                            Console.WriteLine("CreateDatabaseUsingScript");
+                            this.CreateDatabaseUsingScript(db);
+
                             if (!isAzureDb)
                             {
                                 // recreating the [NT AUTHORITY\NETWORK SERVICE] user
@@ -1057,12 +1065,6 @@ namespace Cerebello.Firestarter
                                 Console.WriteLine(@"Creating user: [NT AUTHORITY\NETWORK SERVICE]");
                                 Firestarter.RecreateNetworkServiceUser(db);
                             }
-
-                            Console.WriteLine("DropAllTables");
-                            Firestarter.DropAllTables(db);
-
-                            Console.WriteLine("CreateDatabaseUsingScript");
-                            this.CreateDatabaseUsingScript(db);
 
                             this.InitSysTables(db);
 
@@ -1441,11 +1443,17 @@ namespace Cerebello.Firestarter
         {
             // ToDo: figure out a way to remove this.. we should have a common path or something
             var path = Path.Combine(this.rootCerebelloPath, @"DB\Scripts");
-            string script = File.ReadAllText(Path.Combine(path, "script.sql"));
-            var script2 = SqlHelper.SetScriptColumnsCollation(script, "Latin1_General_CI_AI");
+            string scriptText = File.ReadAllText(Path.Combine(path, "script.sql"));
+            var scriptText2 = SqlHelper.SetScriptColumnsCollation(scriptText, "Latin1_General_CI_AI");
+
+            // We don't want to create users in this script, so we remove them.
+            var script = new SqlScript();
+            script.Load(scriptText2);
+            script.Items.RemoveAll(x => x.Kind == SqlKinds.User);
+            var scriptText3 = script.ToString();
 
             // Creating tables.
-            Firestarter.ExecuteScript(db, script2);
+            Firestarter.ExecuteScript(db, scriptText3);
         }
 
         private static void ConsoleWriteException(Exception ex)

@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
 using HtmlAgilityPack;
+using File = System.IO.File;
 
 namespace Cerebello.Firestarter.Helpers
 {

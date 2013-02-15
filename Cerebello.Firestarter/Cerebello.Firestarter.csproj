@@ -60,6 +60,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="SqlScriptProcessorForVersioning">
+      <HintPath>..\DB\Scripts\SqlScriptProcessorForVersioning.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
