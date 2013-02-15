@@ -142,12 +142,12 @@ namespace CerebelloWebRole.Code.Helpers
 
                 using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ".html")))
                 {
-                    message.AlternateViews.First(x => x.ContentType.MediaType == "text/html").ContentStream.CopyTo(file);
+                    message.AlternateViews.Single(x => x.ContentType.MediaType == "text/html").ContentStream.CopyTo(file);
                 }
 
                 using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ".txt")))
                 {
-                    message.AlternateViews.First(x => x.ContentType.MediaType == "text/plain").ContentStream.CopyTo(file);
+                    message.AlternateViews.Single(x => x.ContentType.MediaType == "text/plain").ContentStream.CopyTo(file);
                 }
             }
         }

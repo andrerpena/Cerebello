@@ -11,8 +11,21 @@
     <html>
     <head>
         <title>Dados da conta</title>
+        @if (Configuration.Instance.UseDesktopEmailBox)
+        {
+            <style type="text/css">
+                /* GMAIL style (only when local presentation) */
+                /* Style tags have no effect in e-mails */
+                body {
+                    font-size: 13px;
+                    font-family: arial, sans-serif;
+                    color: #222;
+                    background: white;
+                }
+            </style>
+        }
     </head>
-    <body class="markdown-body">
+    <body style="font-family: arial, sans-serif; color: #222; background: white;">
         Olá <strong>@Model.PersonName</strong>,<br />
         <p>
             Em virtude do cancelamento da conta no cerebello.com.br,
@@ -33,7 +46,7 @@
         </p>
         <p>
             Atenciosamente<br/>
-                equipe www.cerebello.com.br
+            <em style="margin-right: 2em; display: inline-block;">equipe CareSys Tecnologias de Informação</em>
         </p>
     </body>
     </html>
@@ -53,4 +66,4 @@ dados cadastrados do consultório
 www.cerebello.com.br
 
 Atenciosamente
-    equipe www.cerebello.com.br
+    equipe CareSys Tecnologias de Informação

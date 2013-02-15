@@ -18,8 +18,21 @@
     <head>
         <title>E-mail de confirmação</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        @if (Configuration.Instance.UseDesktopEmailBox)
+        {
+            <style type="text/css">
+                /* GMAIL style (only when local presentation) */
+                /* Style tags have no effect in e-mails */
+                body {
+                    font-size: 13px;
+                    font-family: arial, sans-serif;
+                    color: #222;
+                    background: white;
+                }
+            </style>
+        }
     </head>
-    <body>
+    <body style="font-family: arial, sans-serif; color: #222; background: white;">
         <p>
             @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
         </p>
