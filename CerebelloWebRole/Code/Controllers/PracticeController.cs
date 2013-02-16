@@ -48,17 +48,20 @@ namespace CerebelloWebRole.Code
             return ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        protected override void OnAuthorization(AuthorizationContext filterContext)
         {
-            base.OnActionExecuting(filterContext);
+            // reference:
+            // if someday we have problems with caching restricted-access pages, the following could be useful:
+            // http://farm-fresh-code.blogspot.com.br/2009/11/customizing-authorization-in-aspnet-mvc.html
+
+            base.OnAuthorization(filterContext);
+
 
             // setting up user
             Debug.Assert(this.DbUser != null);
 
             // setting up practice
             var practiceName = this.RouteData.Values["practice"] as string;
-            var controllerName = this.RouteData.Values["controller"] as string;
-            var actionName = this.RouteData.Values["action"] as string;
 
             var practice = this.db.Users
                 .Where(u => u.Id == this.DbUser.Id && u.Practice.UrlIdentifier == practiceName)
@@ -81,6 +84,12 @@ namespace CerebelloWebRole.Code
                 filterContext.Result = this.RedirectToAction("CreateAccountCompleted", "Authentication", new { area = "", practice = practiceName, mustValidateEmail = true });
                 return;
             }
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
 
             // Setting a common ViewBag value.
             this.ViewBag.LocalNow = this.GetPracticeLocalNow();
