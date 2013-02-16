@@ -56,6 +56,9 @@ namespace CerebelloWebRole.Code
 
             base.OnAuthorization(filterContext);
 
+            // if the base has already set a result, then we just exit this method
+            if (filterContext.Result != null)
+                return;
 
             // setting up user
             Debug.Assert(this.DbUser != null);
@@ -90,6 +93,9 @@ namespace CerebelloWebRole.Code
         {
             base.OnActionExecuting(filterContext);
 
+            // if the base has already set a result, then we just exit this method
+            if (filterContext.Result != null)
+                return;
 
             // Setting a common ViewBag value.
             this.ViewBag.LocalNow = this.GetPracticeLocalNow();

@@ -22,6 +22,11 @@ namespace CerebelloWebRole.Code
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
+
+            // if the base has already set a result, then we just exit this method
+            if (filterContext.Result != null)
+                return;
+            
             this.InitDoctor();
         }
 
