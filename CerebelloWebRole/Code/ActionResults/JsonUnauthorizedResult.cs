@@ -12,13 +12,14 @@ namespace CerebelloWebRole.Code
 
         public JsonUnauthorizedResult(string statusDescription)
         {
-            this.Data = this.Data ?? new
+            this.Data = this.Data ?? new JsonError()
             {
                 success = false,
                 text = statusDescription,
                 error = true,
                 errorType = "unauthorized",
-                errorMessage = statusDescription
+                errorMessage = statusDescription,
+                status = (int)HttpStatusCode.Unauthorized,
             };
 
             this.StatusDescription = statusDescription;

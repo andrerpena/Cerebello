@@ -12,13 +12,14 @@ namespace CerebelloWebRole.Code
 
         public JsonForbiddenResult(string statusDescription)
         {
-            this.Data = this.Data ?? new
+            this.Data = this.Data ?? new JsonError
             {
                 success = false,
                 text = statusDescription,
                 error = true,
                 errorType = "forbidden",
-                errorMessage = statusDescription
+                errorMessage = statusDescription,
+                status = (int)HttpStatusCode.Forbidden,
             };
 
             this.StatusDescription = statusDescription;
