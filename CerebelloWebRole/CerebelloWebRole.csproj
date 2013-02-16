@@ -161,6 +161,7 @@
     <Compile Include="Code\Configuration.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Buz.cs" />
+    <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Filters\CanonicalUrlHttpsFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
@@ -272,7 +273,6 @@
     <Compile Include="Code\Controllers\PracticeController.cs" />
     <Compile Include="Code\Controllers\RootController.cs" />
     <Compile Include="Code\Controls\CardView\CardViewField.cs" />
-    <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Controls\CardView\CardView.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanel.cs" />
     <Compile Include="Code\Controls\EditPanel\EditPanelField.cs" />

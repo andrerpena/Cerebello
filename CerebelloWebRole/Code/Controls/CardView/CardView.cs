@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.Mvc.Html;
 using System.Linq.Expressions;
-using System.Reflection;
+using System.Web.Routing;
 
 namespace CerebelloWebRole.Code.Controls
 {
     public class CardViewResponsive<TModel>
     {
+        private readonly bool suppressEmptyCells;
         private TModel Model { get; set; }
 
         public List<CardViewFieldBase> Fields { get; set; }
@@ -20,18 +19,13 @@ namespace CerebelloWebRole.Code.Controls
 
         public int FieldsPerRow { get; set; }
 
-        public CardViewResponsive(HtmlHelper<TModel> htmlHelper, int fieldsPerRow = 2)
+        public CardViewResponsive(HtmlHelper<TModel> htmlHelper, int fieldsPerRow = 2, bool suppressEmptyCells = false)
         {
+            this.suppressEmptyCells = suppressEmptyCells;
             this.Fields = new List<CardViewFieldBase>();
             this.HtmlHelper = htmlHelper;
             this.FieldsPerRow = fieldsPerRow;
-            //this.Model = htmlHelper.ViewData.Model;
         }
-
-        //public void Bind(TModel model)
-        //{
-        //    this.Model = model;
-        //}
 
         /// <summary>
         /// </summary>
@@ -71,7 +65,7 @@ namespace CerebelloWebRole.Code.Controls
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
-            List<List<CardViewFieldBase>> rows = new List<List<CardViewFieldBase>>();
+            var rows = new List<List<CardViewFieldBase>>();
             // a primeira coisa a fazer é organizar os campos em rows
             {
                 List<CardViewFieldBase> currentRow = null;
@@ -100,6 +94,7 @@ namespace CerebelloWebRole.Code.Controls
             }
 
             var wrapperDiv = new TagBuilder("div");
+            wrapperDiv.MergeAttributes(new RouteValueDictionary(htmlAttributes));
             wrapperDiv.AddCssClass("cardview");
             var wrapperDivContentBuilder = new StringBuilder();
 
@@ -113,6 +108,14 @@ namespace CerebelloWebRole.Code.Controls
 
                 foreach (var field in row)
                 {
+                    var cellValueInnerHtml = field.Display(this.HtmlHelper).ToString();
+
+                    // if this component is configured to supress empty cells, if this cell is empty,
+                    // it must be suppressed. Oh really?
+                    if(string.IsNullOrEmpty(cellValueInnerHtml) && this.suppressEmptyCells)
+                        continue;
+                    var cellHeaderInnerHtml = field.Label(this.HtmlHelper).ToString();
+
                     var divColumn = new TagBuilder("div");
                     divColumn.AddCssClass("span" + (field.WholeRow ? 1 : this.FieldsPerRow));
 
@@ -126,14 +129,13 @@ namespace CerebelloWebRole.Code.Controls
                     if (i == 0)
                         tableValueTd.AddCssClass("first");
 
-                    tableHeaderTd.InnerHtml = field.Label(this.HtmlHelper).ToString();
-                    tableValueTd.InnerHtml = field.Display(this.HtmlHelper).ToString();
+                    tableHeaderTd.InnerHtml = cellHeaderInnerHtml;
+                    tableValueTd.InnerHtml = cellValueInnerHtml;
 
                     divColumn.InnerHtml = tableHeaderTd + tableValueTd.ToString();
 
                     divRowContentBuilder.Append(divColumn);
                 }
-
 
                 if (divRowContentBuilder.Length <= 0)
                     continue;

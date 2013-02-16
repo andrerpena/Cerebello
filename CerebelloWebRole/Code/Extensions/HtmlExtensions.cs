@@ -65,9 +65,9 @@ namespace CerebelloWebRole.Code.Extensions
             return new MvcHtmlString(tagBuilder.ToString());
         }
 
-        public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html)
+        public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html, bool suppressEmptyCells = false)
         {
-            return new CardViewResponsive<TModel>(html);
+            return new CardViewResponsive<TModel>(html, suppressEmptyCells: suppressEmptyCells);
         }
 
         public static EditPanel<TModel> CreateEditPanel<TModel>(this HtmlHelper<TModel> html, object htmlAttributes = null, bool isChildPanel = false, int fieldsPerRow = 1)

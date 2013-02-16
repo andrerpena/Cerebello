@@ -22,7 +22,6 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Id of the medical procedure.
         /// </summary>
         [Display(Name = "Procedimento")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalProcedureId { get; set; }
 
         /// <summary>
@@ -35,7 +34,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Code of the medical procedure.
         /// </summary>
-        [Display(Name = "Código do procedimento")]
+        [Display(Name = "Código CBHPM")]
         public string MedicalProcedureCode { get; set; }
 
         /// <summary>

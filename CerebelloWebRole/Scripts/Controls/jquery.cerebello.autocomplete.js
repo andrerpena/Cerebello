@@ -12,7 +12,7 @@
             searchParamName: 'term',
             pageIndexParamName: 'pageIndex',
             pageSizeParamName: 'pageSize',
-            
+
             // whether should show the dropdown-menu
             showDropdownButton: true,
 
@@ -78,7 +78,7 @@
                         width: _this.opts.newWindowWidth,
                         height: _this.opts.newWindowMinHeight,
                         title: _this.opts.newWindowTitle,
-                        ok: function(data) {
+                        ok: function (data) {
                             _this.$inputHidden.val(data.Id);
                             _this.$el.val(data.Value);
                         }
@@ -87,13 +87,13 @@
 
                 }));
                 _this.$el.addClass("autocomplete-new");
-                
+
                 // increases the off-set due to the new added button
                 rightButtonsOffSet += 18;
             }
 
             if (_this.opts.showDropdownButton) {
-                $wrapper.after($('<span/>').addClass("dropdown-button").css("right", rightButtonsOffSet + "px").click(function(e) {
+                $wrapper.after($('<span/>').addClass("dropdown-button").css("right", rightButtonsOffSet + "px").click(function (e) {
                     e.stopPropagation();
                     if (_this.intervalHandler)
                         clearTimeout(_this.intervalHandler);
@@ -116,7 +116,7 @@
             // the input when pressing the back button, or F5 (firefox only).
             // For this to work, the attribute must be removed when navigating away from the page,
             // in the beforeunload event.
-            $(function() { _this.$el.attr("autocomplete", "off"); });
+            $(function () { _this.$el.attr("autocomplete", "off"); });
             $(window).on('beforeunload', function () {
                 _this.$el.removeAttr("autocomplete");
             });
@@ -128,21 +128,7 @@
             _this.$el.bind("keydown", function (e) {
                 _this.textCache = _this.$el.val();
                 switch (e.keyCode) {
-
-                    // enter                                                                                                                                                                                                                               
-                    case 13:
-                        e.preventDefault();
-
-                        if (_this.intervalHandler)
-                            clearTimeout(_this.intervalHandler);
-
-                        if (_this.isDropdownVisible() && $("tr.selected", _this.$wrapper).length)
-                            _this.selectCurrentlyFocusedRow();
-                            // filter
-                        else
-                            _this.fetchData(null, null, _this.$el.val());
-                        break;
-                        // seta pra baixo                                                                                                                                                                           
+                    // seta pra baixo                                                                                                                                                                           
                     case 40:
                         e.preventDefault();
                         if (!_this.isDropdownVisible())
@@ -166,6 +152,19 @@
                         if (_this.isDropdownCreated())
                             _this.$dropdown.hide();
                         break;
+                        // enter                                                                                                                                                                                                                               
+                    case 13:
+                        e.preventDefault();
+
+                        if (_this.intervalHandler)
+                            clearTimeout(_this.intervalHandler);
+
+                        if (_this.isDropdownVisible() && $("tr.selected", _this.$wrapper).length)
+                            _this.selectCurrentlyFocusedRow();
+                            // filter
+                        else
+                            _this.fetchData(null, null, _this.$el.val());
+                        break;
                     default:
                         $("tr", _this.$wrapper).removeClass("selected");
                         break;
@@ -175,6 +174,7 @@
             _this.$el.bind("keyup", function (e) {
 
                 if (_this.$el.val() != _this.textCache) {
+                    _this.$inputHidden.val(undefined);
                     _this.opts.change(undefined);
                     if (_this.intervalHandler)
                         clearTimeout(_this.intervalHandler);
