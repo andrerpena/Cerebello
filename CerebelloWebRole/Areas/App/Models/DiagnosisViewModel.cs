@@ -18,7 +18,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "Diagnóstico")]
+        [Display(Name = "CID-10")]
         public string Cid10Code { get; set; }
 
         /// <summary>

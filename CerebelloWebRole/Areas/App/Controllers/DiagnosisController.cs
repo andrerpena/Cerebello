@@ -70,23 +70,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var formModel = diagnosis[0];
 
-            if (string.IsNullOrEmpty(formModel.Text) && string.IsNullOrEmpty(formModel.Cid10Code))
+            if (string.IsNullOrEmpty(formModel.Text) && string.IsNullOrEmpty(formModel.Cid10Name))
                 this.ModelState.AddModelError("", "É necessário preencher um diagnóstico CID-10 ou as notas");
-
-            // we cannot trust that the autocomplete has removed incorrect
-            // value from the client.
-            if (string.IsNullOrEmpty(formModel.Cid10Code))
-            {
-                // it's necessary to remove this value from the ModelState to
-                // prevent it from "reappearing"
-                // http://stackoverflow.com/questions/9163445/my-html-editors-are-ignoring-any-value-i-set-and-are-always-taking-their-values
-                this.ModelState.Remove("Cid10Name");
-                formModel.Cid10Name = string.Empty;
-            }
 
             if (this.ModelState.IsValid)
             {
-                Diagnosis dbObject = null;
+                Diagnosis dbObject;
                 if (formModel.Id == null)
                 {
                     dbObject = new Diagnosis()
@@ -159,7 +148,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         orderby c.Name
                         select new // CidAutocompleteGridModel
                         {
-                            Cid10Code = c.Id,
+                            Cid10Code = c.Cat ?? c.SubCat,
                             Cid10Name = c.Name
                         };
 

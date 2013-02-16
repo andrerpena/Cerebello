@@ -1,15 +1,13 @@
-﻿@model CerebelloWebRole.Areas.App.Models.DiagnosisViewModel
+﻿@model DiagnosisViewModel
 @{
     Layout = null;
 }
 <div class="diagnosis-details medical-appointment-details-panel" data-val-id="diagnosis-@Model.Id">
     @if (Model != null)
     {
-        var cardView = this.Html.CreateCardView();
-        cardView.AddField(model => model.Cid10Code,
-            @<text>
-                @(!string.IsNullOrEmpty((string) item.Cid10Code) ? item.Cid10Name +  " (" + item.Cid10Code + ")" : "")
-            </text>, wholeRow: true);
+        var cardView = this.Html.CreateCardView(true);
+        cardView.AddField(model => model.Cid10Name, wholeRow: true);
+        cardView.AddField(model => model.Cid10Code, wholeRow: true);
         cardView.AddField(model => model.Text, wholeRow: true);
 
         @cardView.GetHtml()
