@@ -177,7 +177,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var queryResult = (from c in baseQuery.OrderBy(c => c.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
                                select new CidAutocompleteGridModel
                                    {
-                                       Cid10Code = c.Id.ToString(),
+                                       Cid10Code = c.Cat ?? c.SubCat,
                                        Cid10Name = c.Name
                                    }).ToList();
 

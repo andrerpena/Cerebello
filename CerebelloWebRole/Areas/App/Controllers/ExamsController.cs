@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -70,10 +71,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var formModel = examRequest[0];
 
-            ExaminationRequest dbObject = null;
+            ExaminationRequest dbObject;
 
             if (formModel.Id == null)
             {
+                Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
                 dbObject = new ExaminationRequest
                 {
                     CreatedOn = this.GetUtcNow(),
@@ -89,43 +91,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // If modelObj is null, we must tell the user that this object does not exist.
                 if (dbObject == null)
-                {
                     return View("NotFound", formModel);
-                }
 
                 // Security issue... must check current user practice against the practice of the edited objects.
                 if (this.DbUser.Practice.Id != dbObject.Patient.Doctor.Users.FirstOrDefault().PracticeId)
-                {
                     return View("NotFound", formModel);
-                }
-            }
-
-            dbObject.Text = formModel.Notes;
-
-            // Only sets the MedicalProcedureId when MedicalProcedureText is not null.
-            if (formModel.MedicalProcedureId != null || !string.IsNullOrEmpty(formModel.MedicalProcedureName))
-            {
-                var mp = this.db.SYS_MedicalProcedure.SingleOrDefault(mp1 => mp1.Id == formModel.MedicalProcedureId && mp1.Name == formModel.MedicalProcedureName)
-                         ?? this.db.SYS_MedicalProcedure.FirstOrDefault(mp1 => mp1.Name == formModel.MedicalProcedureName);
-
-                if (mp != null)
-                {
-                    // This means that the user selected something that is in the SYS_MedicalProcedure.
-                    dbObject.MedicalProcedureCode = mp.Code;
-                    dbObject.MedicalProcedureName = mp.Name;
-                }
-                else
-                {
-                    // This means that user edited the procedure name to something that is not in the SYS_MedicalProcedure.
-                    dbObject.MedicalProcedureCode = null;
-                    dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
-
-                    this.ModelState.Remove(() => formModel.MedicalProcedureId);
-                }
             }
 
             if (this.ModelState.IsValid)
             {
+                dbObject.Text = formModel.Notes;
+                dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue
+                    ? this.db.SYS_MedicalProcedure.Where(mp => mp.Id == formModel.MedicalProcedureId).Select(mp => mp.Code).FirstOrDefault()
+                    : null;
+
+                dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
+
                 db.SaveChanges();
 
                 return View("Details", GetViewModel(dbObject));

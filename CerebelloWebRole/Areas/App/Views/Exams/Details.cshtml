@@ -5,7 +5,7 @@
 <div class="examrequest-details medical-appointment-details-panel" data-val-id="examrequest-@Model.Id">
     @if (Model != null)
     {
-        var cardView = this.Html.CreateCardView();
+        var cardView = this.Html.CreateCardView(true);
         cardView.AddField(model => model.MedicalProcedureName, wholeRow: true);
         cardView.AddField(model => model.MedicalProcedureCode, wholeRow: true);
         cardView.AddField(model => model.Notes, wholeRow: true);

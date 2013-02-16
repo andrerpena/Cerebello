@@ -67,7 +67,7 @@ namespace CerebelloWebRole.Code.Controls
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
-            List<List<EditPanelFieldBase>> rows = new List<List<EditPanelFieldBase>>();
+            var rows = new List<List<EditPanelFieldBase>>();
             // a primeira coisa a fazer é organizar os campos em rows
             {
                 List<EditPanelFieldBase> currentRow = null;
