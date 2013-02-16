@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Data;
@@ -85,18 +84,6 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            // Signout user if the account has been disabled.
-            if (this.db.AccountDisabled)
-            {
-                filterContext.Result = new HttpUnauthorizedResult();
-                FormsAuthentication.SignOut();
-            }
-
-            base.OnActionExecuting(filterContext);
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -118,7 +105,12 @@ namespace CerebelloWebRole.Code
         /// <returns></returns>
         public JsonResult ObjectNotFoundJson()
         {
-            return this.Json(new { success = false, text = "O registro solicitado não existe no banco de dados" }, JsonRequestBehavior.AllowGet);
+            return this.Json(new
+                {
+                    success = false,
+                    text = "O registro solicitado não existe no banco de dados",
+                },
+                JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
