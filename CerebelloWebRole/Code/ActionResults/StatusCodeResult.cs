@@ -72,8 +72,11 @@ namespace CerebelloWebRole.Code
                 // redirecting to the login page when the status-code is 401, just end the request.
                 // This response will not be cacheable by using aps.net output-caching, because it
                 // will be skipped, just like the forms-auth... and any other handler or module
-                // that executes at the end of the request (just for 401's though). Read more:
-                // http://www.west-wind.com/weblog/posts/2009/May/21/Dont-use-ResponseEnd-with-OutputCache
+                // that executes at the end of the request (just for 401's though).
+                // ResponseEnd + OutputCache: http://www.west-wind.com/weblog/posts/2009/May/21/Dont-use-ResponseEnd-with-OutputCache
+                // Same solution of this guy: http://stackoverflow.com/questions/2580596/how-do-you-handle-ajax-requests-when-user-is-not-authenticated
+                // Alternative solutions: http://haacked.com/archive/2011/10/04/prevent-forms-authentication-login-page-redirect-when-you-donrsquot-want.aspx
+                // Another alternative: disable FormsAuth redirection in web.config, and do redirects manually, i.e. kind of use RedirectResult instead
                 if (response.StatusCode == 401)
                     response.End();
             }

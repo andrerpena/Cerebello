@@ -92,7 +92,7 @@ namespace CerebelloWebRole.Code
             get
             {
 #if DEBUG
-                return this.currentTimeOffset;
+                return currentTimeOffset;
 #else
                 return TimeSpan.Zero;
 #endif

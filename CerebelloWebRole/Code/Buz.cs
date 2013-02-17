@@ -40,7 +40,7 @@
             /// <summary> 15 </summary>
             public const int DISCOUNT_YEAR = 15;
 
-            /// <summary> 10 </summary>
+            /// <summary> 39 </summary>
             public const int DOCTOR_PRICE = 39;
         }
 
