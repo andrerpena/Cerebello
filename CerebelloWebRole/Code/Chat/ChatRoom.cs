@@ -19,7 +19,12 @@ namespace CerebelloWebRole.Code.Chat
 
         readonly object usersInRoomLock = new object();
         readonly object messageLock = new object();
-        private long lastTimeRoomChanged = DateTime.UtcNow.Ticks;
+        private long lastTimeRoomChanged = GetUtcNow().Ticks;
+
+        private static DateTime GetUtcNow()
+        {
+            return DateTime.UtcNow + DebugConfig.CurrentTimeOffset;
+        }
 
         public ChatRoom(int id)
         {
@@ -103,7 +108,7 @@ namespace CerebelloWebRole.Code.Chat
                 if (!this.Users.ContainsKey(userId))
                     throw new Exception("User not found in the room. User id:" + userId);
 
-                this.Users[userId].LastActiveOn = DateTime.UtcNow;
+                this.Users[userId].LastActiveOn = GetUtcNow();
 
                 // if this user wasn't online previously, make it online and tell everyone
                 if (this.Users[userId].Status == ChatUser.StatusType.Online)
@@ -139,7 +144,7 @@ namespace CerebelloWebRole.Code.Chat
         {
             lock (usersInRoomLock)
             {
-                var referenceTime = DateTime.UtcNow;
+                var referenceTime = GetUtcNow();
                 var inactiveUserIds = from u in this.Users where referenceTime - u.Value.LastActiveOn > TimeSpan.FromSeconds(INACTIVITY_TOLERANCE) select u.Key;
 
                 foreach (var userId in inactiveUserIds)
@@ -188,7 +193,7 @@ namespace CerebelloWebRole.Code.Chat
                 var newMessage = new ChatMessage()
                 {
                     Message = message,
-                    Timestamp = DateTime.UtcNow.Ticks,
+                    Timestamp = GetUtcNow().Ticks,
                     UserFrom = this.Users[userFromId],
                     UserTo = this.Users[userToId]
                 };
@@ -225,7 +230,7 @@ namespace CerebelloWebRole.Code.Chat
         /// <param name="status"></param>
         private void NotifyUsersChanged()
         {
-            this.lastTimeRoomChanged = DateTime.UtcNow.Ticks;
+            this.lastTimeRoomChanged = GetUtcNow().Ticks;
             var usersList = this.GetUsers();
             if (this.UserStatusChanged != null)
                 this.UserStatusChanged(this.Id, usersList);

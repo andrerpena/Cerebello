@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Code.Mvc
             var dateOfBirth = (DateTime)value;
 
             // todo: this must be the current practice local time-zone date and time.
-            var now = DateTime.Now;
+            var now = DateTime.Now + DebugConfig.CurrentTimeOffset;
 
             return (dateOfBirth < now) && (now.Year - dateOfBirth.Year < 150);
         }

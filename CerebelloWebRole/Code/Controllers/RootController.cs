@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System.Transactions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Helpers;
@@ -16,7 +10,7 @@ namespace CerebelloWebRole.Code.Controllers
     {
         public RootController()
         {
-            this.UtcNowGetter = () => DateTime.UtcNow;
+            this.UtcNowGetter = () => DateTime.UtcNow + DebugConfig.CurrentTimeOffset;
 
             this.CerebelloEntitiesCreator = () => new CerebelloEntities();
         }

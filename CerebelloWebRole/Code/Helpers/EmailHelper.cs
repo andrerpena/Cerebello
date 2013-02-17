@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
@@ -52,7 +53,7 @@ namespace CerebelloWebRole.Code.Helpers
             if (string.IsNullOrEmpty(bodyText))
                 throw new ArgumentException("bodyText must be provided.", "bodyText");
 
-            if (Configuration.Instance.EmailAddressOverride)
+            if (DebugConfig.EmailAddressOverride)
                 toAddress = new MailAddress("cerebello@cerebello.com.br", toAddress.DisplayName);
 
             // NOTE: The string "cerebello@cerebello.com.br" is repeated in other place.
@@ -109,7 +110,7 @@ namespace CerebelloWebRole.Code.Helpers
             var allowSendEmail = true;
 #endif
 
-            if (!allowSendEmail || Configuration.Instance.UseDesktopEmailBox)
+            if (!allowSendEmail || DebugConfig.UseDesktopEmailBox)
             {
                 SaveEmailLocal(mailMessage);
             }
@@ -140,14 +141,25 @@ namespace CerebelloWebRole.Code.Helpers
                 var name = message.Subject;
                 name = Regex.Replace(name, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase).Trim('.');
 
-                using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ".html")))
-                {
-                    message.AlternateViews.Single(x => x.ContentType.MediaType == "text/html").ContentStream.CopyTo(file);
-                }
+                var dicMediaTypeExt = new Dictionary<string, string>
+                    {
+                        { "text/plain", ".txt" },
+                        { "text/html", ".html" },
+                    };
 
-                using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ".txt")))
+                // saving main view
+                string ext = message.IsBodyHtml ? ".html" : ".txt";
+                using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ext)))
+                using (var writer = new StreamWriter(file, message.BodyEncoding))
+                    writer.Write(message.Body);
+
+                // saving alternate views
+                foreach (var eachAlternateView in message.AlternateViews)
                 {
-                    message.AlternateViews.Single(x => x.ContentType.MediaType == "text/plain").ContentStream.CopyTo(file);
+                    string ext2;
+                    if (dicMediaTypeExt.TryGetValue(eachAlternateView.ContentType.MediaType, out ext2))
+                        using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ext2)))
+                            eachAlternateView.ContentStream.CopyTo(file);
                 }
             }
         }

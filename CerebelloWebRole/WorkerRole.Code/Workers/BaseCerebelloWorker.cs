@@ -1,6 +1,7 @@
 using System;
 using System.Net.Mail;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
@@ -12,13 +13,15 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             return new CerebelloEntities();
         }
 
+
+
         /// <summary>
         /// Mockable version of the DateTime.UtcNow property.
         /// </summary>
         /// <returns>Returns DateTime.UtcNow.</returns>
         public virtual DateTime GetUtcNow()
         {
-            return DateTime.UtcNow;
+            return DateTime.UtcNow + DebugConfig.CurrentTimeOffset;
         }
 
         /// <summary>
