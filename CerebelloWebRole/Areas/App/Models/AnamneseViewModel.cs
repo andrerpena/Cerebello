@@ -24,7 +24,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "História da doença atual (HDA)")]
         public string HistoryOfThePresentIllness { get; set; }
 
-        [Display(Name = "História médica pregressa ou História patológica pregressa (HMP ou HPP)")]
+        [Display(Name = "História médica pregressa (HMP ou HPP)")]
         public string PastMedicalHistory { get; set; }
 
         [Display(Name = "Revisão de sistemas")]
