@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -81,7 +82,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         // Rendering message bodies from partial view.
                         var emailViewModel = eachItem.EmailViewModel;
 
-                        var bodyText = this.RenderView("AppointmentReminderEmail", emailViewModel);
+                        var bodyText = WebUtility.HtmlDecode(this.RenderView("AppointmentReminderEmail", emailViewModel));
 
                         emailViewModel.IsBodyHtml = true;
                         var bodyHtml = this.RenderView("AppointmentReminderEmail", emailViewModel);

@@ -321,7 +321,7 @@ namespace CerebelloWebRole.Controllers
                                                    Token = tokenId.ToString(),
                                                    PracticeIdentifier = user.Practice.UrlIdentifier,
                                                };
-                    var bodyText = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
+                    var bodyText = WebUtility.HtmlDecode(this.RenderPartialViewToString("ConfirmationEmail", partialViewModel));
 
                     partialViewModel.IsBodyHtml = true;
                     var bodyHtml = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
@@ -609,7 +609,7 @@ namespace CerebelloWebRole.Controllers
                                                    Token = tokenId.ToString(),
                                                    PracticeIdentifier = user.Practice.UrlIdentifier,
                                                };
-                    var bodyText = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
+                    var bodyText = WebUtility.HtmlDecode(this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel));
 
                     partialViewModel.IsBodyHtml = true;
                     var bodyHtml = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);

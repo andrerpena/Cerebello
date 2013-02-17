@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Web.Mvc;
@@ -106,7 +107,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             UserName = eachDoctorUser.UserName,
                             PracticeIdentifier = eachDoctorUser.Practice.UrlIdentifier,
                         };
-                    var bodyText = this.RenderPartialViewToString("AccountDataEmail", partialViewModel);
+                    var bodyText = WebUtility.HtmlDecode(this.RenderPartialViewToString("AccountDataEmail", partialViewModel));
 
                     partialViewModel.IsBodyHtml = true;
                     var bodyHtml = this.RenderPartialViewToString("AccountDataEmail", partialViewModel);
