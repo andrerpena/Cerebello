@@ -188,7 +188,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         {
                             PracticeId = this.DbUser.PracticeId,
                             DoctorId = this.Doctor.Id,
-                            CreatedOn = DateTime.UtcNow
+                            CreatedOn = this.GetUtcNow(),
                         };
                     this.db.Medicines.AddObject(medicine);
                 }
@@ -424,7 +424,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         Name = sysMedicine.Name,
                         PracticeId = this.DbPractice.Id,
                         DoctorId = this.Doctor.Id,
-                        CreatedOn = DateTime.UtcNow
+                        CreatedOn = this.GetUtcNow(),
                     };
 
                 // verify the need to create a new laboratory
@@ -434,7 +434,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                          Name = sysMedicine.Laboratory.Name,
                                          PracticeId = this.DbPractice.Id,
                                          DoctorId = this.Doctor.Id,
-                                         CreatedOn = DateTime.UtcNow
+                                         CreatedOn = this.GetUtcNow(),
                                      };
                 medicine.Laboratory = laboratory;
 

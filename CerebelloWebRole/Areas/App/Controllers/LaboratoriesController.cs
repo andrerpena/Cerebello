@@ -175,7 +175,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         {
                             PracticeId = this.DbUser.PracticeId,
                             DoctorId = this.Doctor.Id,
-                            CreatedOn = DateTime.UtcNow
+                            CreatedOn = this.GetUtcNow(),
                         };
                     this.db.Laboratories.AddObject(laboratory);
                 }

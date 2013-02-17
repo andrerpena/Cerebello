@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using System.Web.Mvc;
-using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Code.Mvc
 {
@@ -29,7 +22,7 @@ namespace CerebelloWebRole.Code.Mvc
             // todo: this must be the current practice local time-zone date and time.
             var now = DateTime.Now + DebugConfig.CurrentTimeOffset;
 
-            return (dateOfBirth < now) && (now.Year - dateOfBirth.Year < 150);
+            return (dateOfBirth < now + TimeSpan.FromHours(3)) && (now.Year - dateOfBirth.Year < 150);
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
