@@ -13,6 +13,7 @@ namespace CerebelloWebRole.Code.Filters
     public abstract class PermissionAttribute : FilterAttribute, IAuthorizationFilter
     {
         // reference:
+        // if someday we have problems with caching restricted-access pages, the following could be useful:
         // http://farm-fresh-code.blogspot.com.br/2009/11/customizing-authorization-in-aspnet-mvc.html
 
         public void OnAuthorization(AuthorizationContext filterContext)
@@ -37,20 +38,8 @@ namespace CerebelloWebRole.Code.Filters
 
                 if (!canAccess)
                 {
-                    // todo: check for json request: Request.AcceptTypes.Contains("application/json")
-                    if (filterContext.HttpContext.Request.IsAjaxRequest())
-                    {
-                        filterContext.Result = new JsonUnauthorizedResult(
-                            this.StatusDescription ?? "The current user is not authorized to access "
-                            + "the resource because it hasn't got permission.")
-                            {
-                                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                            };
-                    }
-                    else
-                    {
-                        filterContext.Result = new HttpUnauthorizedResult(this.StatusDescription);
-                    }
+                    filterContext.Result = new UnauthorizedResult(
+                        "The current user is not authorized to access the resource because it hasn't got permission.");
                 }
             }
         }

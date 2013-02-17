@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests
@@ -202,7 +203,7 @@ namespace CerebelloWebRole.Tests.Tests
                             ?? homeController.Edit();
 
             // Asserts
-            Assert.IsInstanceOfType(actionResult, typeof(HttpUnauthorizedResult));
+            Assert.IsInstanceOfType(actionResult, typeof(UnauthorizedResult));
         }
 
         #endregion
@@ -357,7 +358,7 @@ namespace CerebelloWebRole.Tests.Tests
                             });
 
             // Asserts
-            Assert.IsInstanceOfType(actionResult, typeof(HttpUnauthorizedResult));
+            Assert.IsInstanceOfType(actionResult, typeof(UnauthorizedResult));
         }
 
         #endregion

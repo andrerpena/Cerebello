@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using System;
 using CerebelloWebRole.Code.Notifications;
 
 namespace CerebelloWebRole.Code
@@ -73,7 +73,7 @@ namespace CerebelloWebRole.Code
 
             if (practice == null)
             {
-                filterContext.Result = new HttpUnauthorizedResult();
+                filterContext.Result = new UnauthorizedResult();
                 return;
             }
 

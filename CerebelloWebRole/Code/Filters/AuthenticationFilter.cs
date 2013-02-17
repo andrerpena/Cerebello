@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
 using CerebelloWebRole.Code.Security;
@@ -49,42 +48,11 @@ namespace CerebelloWebRole.Code.Filters
             // if the user is still authenticated, then exit this method
             if (!isAuthenticated)
             {
-                var authenticatedPrincipal = httpContext.User as AuthenticatedPrincipal;
-
-                if (authenticatedPrincipal == null)
-                    throw new Exception("HttpContext.User should be a AuthenticatedPrincipal"
-                                        + " when the user is authenticated");
-            }
-            else
-            {
-                // todo: check for json request: Request.AcceptTypes.Contains("application/json")
-                // if it's an Ajax Request, must return a Json
-                if (httpContext.Request.IsAjaxRequest())
-                {
-                    // todo: shouldn't Response.StatusCode be Unauthorized instead of Forbidden
-                    // todo: replace this code by JsonForbiddenResult or JsonUnauthorizedResult
-
-                    httpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                    filterContext.Result =
-                        new JsonResult
-                            {
-                                Data = new
-                                           {
-                                               error = true,
-                                               errorType = "unauthorized",
-                                               errorMessage = "The current user is not authorized to access "
-                                                              + "the resource because it's not authenticated"
-                                           },
-                                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                            };
-                }
-                // if it's a regular request, the user will be redirected to the login page
-                else
-                {
-                    // if the user is in the "app" area but is not authenticated,
-                    // he/she will be redirected to the login page
-                    filterContext.Result = new HttpUnauthorizedResult();
-                }
+                // if the user is in the "App" area but is not authenticated:
+                // not ajax: user will be redirected to the login page
+                // ajax: return a Json with information
+                filterContext.Result = new UnauthorizedResult(
+                    "The current user is not authorized to access the resource because it's not authenticated");
             }
         }
 
