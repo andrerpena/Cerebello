@@ -16,6 +16,7 @@
           <EntitySet Name="CFG_Schedule" EntityType="cerebelloModel.Store.CFG_Schedule" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ChatMessage" EntityType="cerebelloModel.Store.ChatMessage" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Diagnosis" EntityType="cerebelloModel.Store.Diagnosis" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DiagnosticHypothesis" EntityType="cerebelloModel.Store.DiagnosticHypothesis" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationResult" EntityType="cerebelloModel.Store.ExaminationResult" store:Type="Tables" Schema="dbo" />
@@ -42,7 +43,6 @@
           <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Symptom" EntityType="cerebelloModel.Store.Symptom" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Cid10" EntityType="cerebelloModel.Store.SYS_Cid10" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ContractType" EntityType="cerebelloModel.Store.SYS_ContractType" store:Type="Tables" Schema="dbo" />
@@ -106,7 +106,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_Diagnosis_Anamnese" Association="cerebelloModel.Store.FK_Diagnosis_Anamnese">
             <End Role="Anamnese" EntitySet="Anamnese" />
-            <End Role="Symptom" EntitySet="Symptom" />
+            <End Role="DiagnosticHypothesis" EntitySet="DiagnosticHypothesis" />
           </AssociationSet>
           <AssociationSet Name="FK_Diagnosis_Patient" Association="cerebelloModel.Store.FK_Diagnosis_Patient">
             <End Role="Patient" EntitySet="Patient" />
@@ -314,7 +314,7 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
-          <Property Name="ChiefComplaint" Type="varchar(max)" />
+          <Property Name="ChiefComplaint" Type="varchar(max)" Nullable="false" />
           <Property Name="HistoryOfThePresentIllness" Type="varchar(max)" />
           <Property Name="PastMedicalHistory" Type="varchar(max)" />
           <Property Name="ReviewOfSystems" Type="varchar(max)" />
@@ -431,6 +431,17 @@
           <Property Name="Cid10Name" Type="varchar" MaxLength="100" />
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DiagnosticHypothesis">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Observations" Type="text" />
+          <Property Name="Cid10Code" Type="varchar" MaxLength="10" />
+          <Property Name="Cid10Name" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="AnamneseId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Doctor">
@@ -725,17 +736,6 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Symptom">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="AnamneseId" Type="int" Nullable="false" />
-          <Property Name="Observations" Type="text" />
-          <Property Name="Cid10Code" Type="varchar" Nullable="false" MaxLength="10" />
-          <Property Name="Cid10Name" Type="varchar" MaxLength="500" />
-          <Property Name="PracticeId" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="SYS_ActiveIngredient">
           <Key>
             <PropertyRef Name="Id" />
@@ -998,12 +998,12 @@
         </Association>
         <Association Name="FK_Diagnosis_Anamnese">
           <End Role="Anamnese" Type="cerebelloModel.Store.Anamnese" Multiplicity="1" />
-          <End Role="Symptom" Type="cerebelloModel.Store.Symptom" Multiplicity="*" />
+          <End Role="DiagnosticHypothesis" Type="cerebelloModel.Store.DiagnosticHypothesis" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Anamnese">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Symptom">
+            <Dependent Role="DiagnosticHypothesis">
               <PropertyRef Name="AnamneseId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1696,11 +1696,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="ChatMessage" EntitySet="ChatMessages" />
           </AssociationSet>
-          <EntitySet Name="Symptoms" EntityType="Cerebello.Model.Symptom" />
-          <AssociationSet Name="FK_Diagnosis_Anamnese1" Association="Cerebello.Model.FK_Diagnosis_Anamnese1">
-            <End Role="Anamnese" EntitySet="Anamnese" />
-            <End Role="Symptom" EntitySet="Symptoms" />
-          </AssociationSet>
           <AssociationSet Name="FK_Diagnosis2_Diagnosis2" Association="Cerebello.Model.FK_Diagnosis2_Diagnosis2">
             <End Role="Patient" EntitySet="Patients" />
             <End Role="Diagnosis" EntitySet="Diagnoses" />
@@ -1772,6 +1767,11 @@
           <AssociationSet Name="FK_PatientFile_Practice" Association="Cerebello.Model.FK_PatientFile_Practice">
             <End Role="Practice" EntitySet="Practices" />
             <End Role="PatientFile" EntitySet="PatientFiles" />
+          </AssociationSet>
+          <EntitySet Name="DiagnosticHypotheses" EntityType="Cerebello.Model.DiagnosticHypothesis" />
+          <AssociationSet Name="FK_Diagnosis_Anamnese" Association="Cerebello.Model.FK_Diagnosis_Anamnese">
+            <End Role="Anamnese" EntitySet="Anamnese" />
+            <End Role="DiagnosticHypothesi" EntitySet="DiagnosticHypotheses" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
@@ -2167,9 +2167,8 @@
           <Property Type="Int32" Name="PatientId" Nullable="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_Anamnese_Patient" FromRole="Anamnese" ToRole="Patient" />
-          <NavigationProperty Name="Symptoms" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese1" FromRole="Anamnese" ToRole="Symptom" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <Property Type="String" Name="ChiefComplaint" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ChiefComplaint" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Type="String" Name="HistoryOfThePresentIllness" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="PastMedicalHistory" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ReviewOfSystems" MaxLength="Max" FixedLength="false" Unicode="false" />
@@ -2179,6 +2178,7 @@
           <Property Type="String" Name="SexualHistory" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="RegularAndAcuteMedications" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DiagnosticHypotheses" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese" FromRole="Anamnese" ToRole="DiagnosticHypothesi" />
         </EntityType>
         <Association Name="FK_Anamnese_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -2753,30 +2753,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Symptom">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="AnamneseId" Nullable="false" />
-          <Property Type="String" Name="Observations" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Cid10Code" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Cid10Name" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Anamnese" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese1" FromRole="Symptom" ToRole="Anamnese" />
-          <Property Type="Int32" Name="PracticeId" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_Diagnosis_Anamnese1">
-          <End Type="Cerebello.Model.Anamnese" Role="Anamnese" Multiplicity="1" />
-          <End Type="Cerebello.Model.Symptom" Role="Symptom" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Anamnese">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Symptom">
-              <PropertyRef Name="AnamneseId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Diagnosis2_Diagnosis2">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
           <End Type="Cerebello.Model.Diagnosis" Role="Diagnosis" Multiplicity="*" />
@@ -3056,6 +3032,30 @@
             </Principal>
             <Dependent Role="PatientFile">
               <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DiagnosticHypothesis">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Observations" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Cid10Code" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Cid10Name" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="Int32" Name="AnamneseId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Anamnese" Relationship="Cerebello.Model.FK_Diagnosis_Anamnese" FromRole="DiagnosticHypothesi" ToRole="Anamnese" />
+        </EntityType>
+        <Association Name="FK_Diagnosis_Anamnese">
+          <End Type="Cerebello.Model.Anamnese" Role="Anamnese" Multiplicity="1" />
+          <End Type="Cerebello.Model.DiagnosticHypothesis" Role="DiagnosticHypothesi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anamnese">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DiagnosticHypothesi">
+              <PropertyRef Name="AnamneseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3493,18 +3493,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Symptoms">
-            <EntityTypeMapping TypeName="IsTypeOf(Cerebello.Model.Symptom)">
-              <MappingFragment StoreEntitySet="Symptom">
-                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
-                <ScalarProperty Name="Cid10Name" ColumnName="Cid10Name" />
-                <ScalarProperty Name="Cid10Code" ColumnName="Cid10Code" />
-                <ScalarProperty Name="Observations" ColumnName="Observations" />
-                <ScalarProperty Name="AnamneseId" ColumnName="AnamneseId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="AccountContracts">
             <EntityTypeMapping TypeName="Cerebello.Model.AccountContract">
               <MappingFragment StoreEntitySet="AccountContract">
@@ -3650,6 +3638,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DiagnosticHypotheses">
+            <EntityTypeMapping TypeName="Cerebello.Model.DiagnosticHypothesis">
+              <MappingFragment StoreEntitySet="DiagnosticHypothesis">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="AnamneseId" ColumnName="AnamneseId" />
+                <ScalarProperty Name="Cid10Name" ColumnName="Cid10Name" />
+                <ScalarProperty Name="Cid10Code" ColumnName="Cid10Code" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3719,8 +3719,8 @@
         <AssociationConnector Association="Cerebello.Model.FK_Receipt_Patient" ManuallyRouted="true">
           <ConnectorPoint PointX="36.3125" PointY="22.855205078125003" />
           <ConnectorPoint PointX="36.3125" PointY="27.086293945312498" />
-          <ConnectorPoint PointX="35.98957983333333" PointY="27.086293945312498" />
-          <ConnectorPoint PointX="35.822913166666659" PointY="27.086293945312498" />
+          <ConnectorPoint PointX="36.020832333333338" PointY="27.086293945312498" />
+          <ConnectorPoint PointX="35.854165666666667" PointY="27.086293945312498" />
           <ConnectorPoint PointX="33.625" PointY="27.086293945312498" />
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Person" ManuallyRouted="false">
@@ -4010,8 +4010,6 @@
           <ConnectorPoint PointX="17.468747999999998" PointY="21.625" />
           <ConnectorPoint PointX="17.468747999999998" PointY="21.75" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Symptom" Width="1.5" PointX="41.875" PointY="18.75" FillColor="ForestGreen" />
-        <AssociationConnector Association="Cerebello.Model.FK_Diagnosis_Anamnese1" />
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis2_Diagnosis2" />
         <AssociationConnector Association="Cerebello.Model.FK_User_Secretary" />
         <EntityTypeShape EntityType="Cerebello.Model.GLB_Token" Width="1.5" PointX="5.625" PointY="0.5" FillColor="Khaki" />
@@ -4036,6 +4034,8 @@
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Patient" />
         <AssociationConnector Association="Cerebello.Model.FK_File_Practice" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.DiagnosticHypothesis" Width="2.5" PointX="43" PointY="17.625" FillColor="Green" />
+        <AssociationConnector Association="Cerebello.Model.FK_Diagnosis_Anamnese" />
         </Diagram>
     </Diagrams>
   </Designer>

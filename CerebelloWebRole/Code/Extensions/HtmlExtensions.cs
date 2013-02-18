@@ -341,7 +341,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
-        private static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string listClass, string collectionItemEditor, string addAnotherText)
+        private static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string listClass, [AspMvcAction] string collectionItemEditor, string addAnotherText)
         {
             if (string.IsNullOrEmpty(collectionItemEditor)) throw new ArgumentException("collectionItemEditor cannot be null or empty");
             if (string.IsNullOrEmpty(addAnotherText)) throw new ArgumentException("addAnotherText cannot be null or empty");
@@ -366,7 +366,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
-        public static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor, string addAnotherText)
+        public static MvcHtmlString CollectionEditorFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, [AspMvcAction] string collectionItemEditor, string addAnotherText)
         {
             return CollectionEditorFor(html, expression, "edit-list", collectionItemEditor, addAnotherText);
         }
@@ -375,7 +375,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
-        public static MvcHtmlString CollectionEditorInlineFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, string collectionItemEditor, string addAnotherText)
+        public static MvcHtmlString CollectionEditorInlineFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, ICollection>> expression, [AspMvcAction] string collectionItemEditor, string addAnotherText)
         {
             return CollectionEditorFor(html, expression, "edit-list-single-line", collectionItemEditor, addAnotherText);
         }

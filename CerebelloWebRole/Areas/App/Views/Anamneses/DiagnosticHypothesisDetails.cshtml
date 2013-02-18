@@ -1,0 +1,10 @@
+﻿@model DiagnosticHypothesisViewModel
+@{
+    var cardView = this.Html.CreateCardView(true);
+    cardView.AddField(model => model.Cid10Name, wholeRow: true);
+    cardView.AddField(model => model.Cid10Code, wholeRow: true);
+    cardView.AddField(model => model.Text, wholeRow: true);               
+}
+
+@Html.HiddenFor(model => model.Id)
+@cardView.GetHtml()

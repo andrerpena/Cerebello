@@ -212,9 +212,9 @@ namespace CerebelloWebRole.Code
             get { return new FilteredObjectSetWrapper<Secretary>(this.db.Secretaries, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
-        public FilteredObjectSetWrapper<Symptom> Symptoms
+        public FilteredObjectSetWrapper<DiagnosticHypothesis> DiagnosticHypotheses
         {
-            get { return new FilteredObjectSetWrapper<Symptom>(this.db.Symptoms, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<DiagnosticHypothesis>(this.db.DiagnosticHypotheses, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         /// <summary>

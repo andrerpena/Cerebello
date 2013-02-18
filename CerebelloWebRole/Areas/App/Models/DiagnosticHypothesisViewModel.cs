@@ -4,14 +4,11 @@ using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
-    [XmlRoot("Diagnosis", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
-    [XmlType("Diagnosis")]
-    public class DiagnosisViewModel
+    [XmlRoot("Symptom", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("Symptom")]
+    public class DiagnosticHypothesisViewModel
     {
         public int? Id { get; set; }
-
-        [Required]
-        public int? PatientId { get; set; }
 
         /// <summary>
         /// Cid 10 name
@@ -22,7 +19,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "Diagnóstico")]
+        [Display(Name = "Hipótese de diagnóstico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Cid10Name { get; set; }
 

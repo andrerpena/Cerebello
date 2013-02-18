@@ -15,7 +15,7 @@
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>true</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -199,7 +199,7 @@
     <Compile Include="Areas\App\Models\ConfigAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDaysOffViewModel.cs" />
     <Compile Include="Areas\App\Models\PracticeHomeControllerViewModel.cs" />
-    <Compile Include="Areas\App\Models\SymptomViewModel.cs" />
+    <Compile Include="Areas\App\Models\DiagnosticHypothesisViewModel.cs" />
     <Compile Include="Areas\App\Models\DoctorHomeViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationResultViewModel.cs" />
     <Compile Include="Areas\App\Models\ExaminationRequestViewModel.cs" />
@@ -649,7 +649,7 @@
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\SymptomEditor.cshtml" />
+    <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisEditor.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -729,6 +729,7 @@
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
+    <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisDetails.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -799,11 +800,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/</IISUrl>
+          <IISUrl>http://localhost:12621/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

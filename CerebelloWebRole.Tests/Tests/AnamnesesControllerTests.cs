@@ -51,10 +51,10 @@ namespace CerebelloWebRole.Tests.Tests
                     {
                         PatientId = patientId,
                         Conclusion = "This is my anamnese",
-                        Symptoms = new List<SymptomViewModel>()
+                        DiagnosticHypotheses = new List<DiagnosticHypothesisViewModel>()
                             {
-                                new SymptomViewModel() {Text = "Text", Cid10Code = "Q878"},
-                                new SymptomViewModel() {Text = "Text2", Cid10Code = "Q879"}
+                                new DiagnosticHypothesisViewModel() {Text = "Text", Cid10Code = "Q878"},
+                                new DiagnosticHypothesisViewModel() {Text = "Text2", Cid10Code = "Q879"}
                             }
                     };
 
@@ -78,11 +78,11 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.AreEqual(1, anamneses.Count);
             Assert.AreEqual(2, symptoms.Count);
 
-            Assert.AreEqual(formModel.Symptoms[0].Text, anamneses[0].Symptoms.ElementAt(0).Cid10Name);
-            Assert.AreEqual(formModel.Symptoms[0].Cid10Code, anamneses[0].Symptoms.ElementAt(0).Cid10Code);
+            Assert.AreEqual(formModel.DiagnosticHypotheses[0].Text, anamneses[0].Symptoms.ElementAt(0).Cid10Name);
+            Assert.AreEqual(formModel.DiagnosticHypotheses[0].Cid10Code, anamneses[0].Symptoms.ElementAt(0).Cid10Code);
 
-            Assert.AreEqual(formModel.Symptoms[1].Text, anamneses[0].Symptoms.ElementAt(1).Cid10Name);
-            Assert.AreEqual(formModel.Symptoms[1].Cid10Code, anamneses[0].Symptoms.ElementAt(1).Cid10Code);
+            Assert.AreEqual(formModel.DiagnosticHypotheses[1].Text, anamneses[0].Symptoms.ElementAt(1).Cid10Name);
+            Assert.AreEqual(formModel.DiagnosticHypotheses[1].Cid10Code, anamneses[0].Symptoms.ElementAt(1).Cid10Code);
         }
 
         #endregion
@@ -101,9 +101,9 @@ namespace CerebelloWebRole.Tests.Tests
             {
                 PatientId = patientId,
                 Conclusion = "This is my anamnese",
-                Symptoms = new List<SymptomViewModel>() {
-                        new SymptomViewModel() { Text = "Text", Cid10Code = "Q878" },
-                        new SymptomViewModel() { Text = "Text2", Cid10Code = "Q879" }
+                DiagnosticHypotheses = new List<DiagnosticHypothesisViewModel>() {
+                        new DiagnosticHypothesisViewModel() { Text = "Text", Cid10Code = "Q878" },
+                        new DiagnosticHypothesisViewModel() { Text = "Text2", Cid10Code = "Q879" }
                    }
             };
 

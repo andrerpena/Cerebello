@@ -438,10 +438,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var anamnese = anamneses.First();
 
                     // deletes diagnoses within the anamnese manually
-                    while (anamnese.Symptoms.Any())
+                    while (anamnese.DiagnosticHypotheses.Any())
                     {
-                        var symptom = anamnese.Symptoms.First();
-                        this.db.Symptoms.DeleteObject(symptom);
+                        var symptom = anamnese.DiagnosticHypotheses.First();
+                        this.db.DiagnosticHypotheses.DeleteObject(symptom);
                     }
 
                     this.db.Anamnese.DeleteObject(anamnese);

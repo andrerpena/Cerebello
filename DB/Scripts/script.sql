@@ -71,7 +71,7 @@ CREATE TABLE [dbo].[Anamnese](
 	[PatientId] [int] NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[PracticeId] [int] NOT NULL,
-	[ChiefComplaint] [varchar](max) NULL,
+	[ChiefComplaint] [varchar](max) NOT NULL,
 	[HistoryOfThePresentIllness] [varchar](max) NULL,
 	[PastMedicalHistory] [varchar](max) NULL,
 	[ReviewOfSystems] [varchar](max) NULL,
@@ -238,6 +238,25 @@ CREATE TABLE [dbo].[Diagnosis](
 	[CreatedOn] [datetime] NOT NULL,
 	[PracticeId] [int] NOT NULL,
  CONSTRAINT [PK_Diagnosis2] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+/****** Object:  Table [dbo].[DiagnosticHypothesis] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[DiagnosticHypothesis](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[AnamneseId] [int] NOT NULL,
+	[Observations] [text] NULL,
+	[Cid10Code] [varchar](10) NULL,
+	[Cid10Name] [varchar](500) NOT NULL,
+	[PracticeId] [int] NOT NULL,
+ CONSTRAINT [PK_Diagnosis] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -749,25 +768,6 @@ CREATE TABLE [dbo].[Secretary](
 )
 
 GO
-/****** Object:  Table [dbo].[Symptom] ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Symptom](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[AnamneseId] [int] NOT NULL,
-	[Observations] [text] NULL,
-	[Cid10Code] [varchar](10) NOT NULL,
-	[Cid10Name] [varchar](500) NULL,
-	[PracticeId] [int] NOT NULL,
- CONSTRAINT [PK_Diagnosis] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-)
-
-GO
 /****** Object:  Table [dbo].[SYS_ActiveIngredient] ******/
 SET ANSI_NULLS ON
 GO
@@ -1152,6 +1152,11 @@ REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis_Patient]
 GO
+ALTER TABLE [dbo].[DiagnosticHypothesis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
+REFERENCES [dbo].[Anamnese] ([Id])
+GO
+ALTER TABLE [dbo].[DiagnosticHypothesis] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
+GO
 ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
@@ -1309,11 +1314,6 @@ REFERENCES [dbo].[Receipt] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[ReceiptMedicine] CHECK CONSTRAINT [FK_ReceiptMedicine_Receipt]
-GO
-ALTER TABLE [dbo].[Symptom]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
-REFERENCES [dbo].[Anamnese] ([Id])
-GO
-ALTER TABLE [dbo].[Symptom] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
 GO
 ALTER TABLE [dbo].[SYS_Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_Medicine_SYS_Laboratory] FOREIGN KEY([LaboratoryId])
 REFERENCES [dbo].[SYS_Laboratory] ([Id])

@@ -104,8 +104,7 @@ hr {
     margin: 0;
 }
 
-.top-bar
-{
+.top-bar {
     color: White;
     background-color: #333333;
     height: 20px;
@@ -117,7 +116,7 @@ hr {
         max-width: 1200px;
         padding: 0 5px;
     }
-    
+
     .top-bar a {
         color: white;
         font-size: 0.8em;
@@ -998,6 +997,18 @@ ul.dayoff-list .delete {
         padding-bottom: 4px;
     }
 
+.medical-appointment-details-panel {
+    padding: 0 10px 0 20px;
+}
+
+.medical-appointment-details-panel h3 {
+    border-bottom: 1px solid #E8E7E7;
+    color: gray;
+    font-weight: bold;
+    margin: 20px 0 8px;
+    padding-bottom: 4px;
+}
+
 .new-medical-appointment-panel-wrapper {
 }
 
@@ -1354,7 +1365,7 @@ div.message-help {
     color: #252525;
 }
 
-.fc-event.medical-appointment.not-accomplished, .fc-event.medical-appointment.not-accomplished .fc-event-skin{
+.fc-event.medical-appointment.not-accomplished, .fc-event.medical-appointment.not-accomplished .fc-event-skin {
     background-color: #FFAEAE !important;
     border-color: #FF8C8C !important;
 }
@@ -1429,13 +1440,11 @@ div.message-help {
         font-weight: bold;
     }
 
-.text-description
-{
+.text-description {
     font-size: 1.1em;
     line-height: 1.4em;
 }
 
-    .widget > .text-description p
-    {
-        margin: 1em 5em 1em 5em;
-    }
+.widget > .text-description p {
+    margin: 1em 5em 1em 5em;
+}
