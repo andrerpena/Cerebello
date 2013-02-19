@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
@@ -28,30 +29,30 @@ namespace CerebelloWebRole.Code
             this.InitDb();
 
             // Note that this is not CerebelloController responsability to ensure the user is logged in
-            // or that the user exists, simply because there's no way to return anything here in the 
+            // or that the user exists, simply because there's no way to return anything here in the
             // Initialize method.
-            // The responsability to ensure the user is authenticated and good to go is in the Authorization
-            // filter
+            // The responsability to ensure the user is authenticated and good to go is in the
+            // AuthenticationFilter class.
             if (!this.Request.IsAuthenticated)
                 return;
 
             this.InitDbUser(requestContext);
 
-            if (this.DbUser == null)
-                return;
-
-            // this ViewBag will carry user information to the View
-            this.ViewBag.UserInfo = new UserInfo()
-                {
-                    Id = this.DbUser.Id,
-                    DisplayName = this.DbUser.Person.FullName,
-                    GravatarEmailHash = this.DbUser.Person.EmailGravatarHash,
-                    // the following properties will only be set if the current user is a doctor
-                    DoctorId = this.DbUser.DoctorId,
-                    DoctorUrlIdentifier = this.DbUser.Doctor != null ? this.DbUser.Doctor.UrlIdentifier : null,
-                    AdministratorId = this.DbUser.AdministratorId,
-                    IsOwner = this.DbUser.IsOwner,
-                };
+            if (this.DbUser != null)
+            {
+                // this ViewBag will carry user information to the View
+                this.ViewBag.UserInfo = new UserInfo
+                    {
+                        Id = this.DbUser.Id,
+                        DisplayName = this.DbUser.Person.FullName,
+                        GravatarEmailHash = this.DbUser.Person.EmailGravatarHash,
+                        // the following properties will only be set if the current user is a doctor
+                        DoctorId = this.DbUser.DoctorId,
+                        DoctorUrlIdentifier = this.DbUser.Doctor != null ? this.DbUser.Doctor.UrlIdentifier : null,
+                        AdministratorId = this.DbUser.AdministratorId,
+                        IsOwner = this.DbUser.IsOwner,
+                    };
+            }
         }
 
         internal CerebelloEntitiesAccessFilterWrapper InitDb()
@@ -84,6 +85,17 @@ namespace CerebelloWebRole.Code
             }
         }
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            // if the base has already set a result, then we just exit this method
+            if (filterContext.Result != null)
+                return;
+
+            Debug.Assert(this.DbUser != null, "this.DbUser must not be null");
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -112,10 +124,5 @@ namespace CerebelloWebRole.Code
                 },
                 JsonRequestBehavior.AllowGet);
         }
-
-        /// <summary>
-        /// Database object retrieved using the AccessDbObjectAttribute.
-        /// </summary>
-        public object DbObject { get; set; }
     }
 }

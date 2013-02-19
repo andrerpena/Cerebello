@@ -2,8 +2,10 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Notifications;
+using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Code
 {
@@ -13,6 +15,130 @@ namespace CerebelloWebRole.Code
         /// Consultório atual
         /// </summary>
         public Practice DbPractice { get; set; }
+
+        protected override void Initialize(RequestContext requestContext)
+        {
+            // the base of this class already initializes:
+            // - the database InitDb method
+            // - the user InitDbUser method
+            base.Initialize(requestContext);
+
+            // initializes the practice
+            this.InitDbPractice(requestContext);
+
+            if (this.DbPractice != null)
+            {
+                // Settings practice related view bag values.
+                this.ViewBag.Practice = this.DbPractice;
+                this.ViewBag.PracticeName = this.DbPractice.Name;
+
+                // Setting a common ViewBag value.
+                this.ViewBag.LocalNow = this.GetPracticeLocalNow();
+            }
+        }
+
+        internal void InitDbPractice(RequestContext requestContext)
+        {
+            if (this.DbPractice == null && this.DbUser != null)
+            {
+                if (!requestContext.HttpContext.Request.IsAuthenticated)
+                    return;
+
+                var authenticatedPrincipal = requestContext.HttpContext.User as AuthenticatedPrincipal;
+
+                if (authenticatedPrincipal == null)
+                    throw new Exception(
+                        "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
+
+                var practiceName = this.RouteData.Values["practice"] as string;
+
+                var practice = this.db.Users
+                    .Where(u => u.Id == this.DbUser.Id && u.Practice.UrlIdentifier == practiceName)
+                    .Select(u => u.Practice)
+                    .SingleOrDefault();
+
+                this.DbPractice = practice;
+            }
+        }
+
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            // reference:
+            // if someday we have problems with caching restricted-access pages, the following could be useful:
+            // http://farm-fresh-code.blogspot.com.br/2009/11/customizing-authorization-in-aspnet-mvc.html
+
+            base.OnAuthorization(filterContext);
+
+            // if the base has already set a result, then we just exit this method
+            if (filterContext.Result != null)
+                return;
+
+            // commented: Debug.Assert(this.DbUser != null);
+            // reason: the controller methods are always called before all filters
+            // so if the user is null here, it means that it is the first time we
+            // have a chance to handle this.
+
+            if (this.DbPractice == null)
+            {
+                filterContext.Result = new UnauthorizedResult();
+                return;
+            }
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            // if the base has already set a result, then we just exit this method
+            if (filterContext.Result != null)
+                return;
+
+            Debug.Assert(this.DbUser != null, "this.DbUser must not be null");
+            Debug.Assert(this.DbPractice != null, "this.DbPractice must not be null");
+
+            // Redirect to VerifyPracticeAndEmail, if the practice has not been verified yet.
+            if (this.DbPractice.VerificationDate == null)
+            {
+                filterContext.Result = this.RedirectToAction(
+                    "CreateAccountCompleted",
+                    "Authentication",
+                    new { area = "", practice = this.DbPractice.Name, mustValidateEmail = true });
+
+                return;
+            }
+
+            // Loading messages.
+            if (this.DbPractice != null)
+            {
+                // discover the appointments that have already been polled and sent to the client
+                this.ViewBag.AlreadyPolledMedicalAppointments =
+                    NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(
+                        db: this.db,
+                        practiceId: this.DbPractice.Id,
+                        userId: this.DbUser.Id,
+                        utcNowGetter: this.UtcNowGetter,
+                        urlHelper: this.Url,
+                        polled: true);
+
+                this.ViewBag.AlreadyPolledGenericAppointments =
+                    NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(
+                        db: this.db,
+                        practiceId: this.DbPractice.Id,
+                        userId: this.DbUser.Id,
+                        utcNowGetter: this.UtcNowGetter,
+                        urlHelper: this.Url,
+                        polled: true);
+
+                // discover the notifications that have already been polled and sent to to the client
+                this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(
+                    db: this.db,
+                    userId: this.DbUser.Id,
+                    controller: this,
+                    polled: true);
+
+                this.ViewBag.IsTrial = this.DbPractice.AccountContract.SYS_ContractType.IsTrial;
+            }
+        }
 
         /// <summary>
         /// Converts the specified UTC date and time for the location of the current practice.
@@ -46,72 +172,6 @@ namespace CerebelloWebRole.Code
         public DateTime GetPracticeLocalNow()
         {
             return ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
-        }
-
-        protected override void OnAuthorization(AuthorizationContext filterContext)
-        {
-            // reference:
-            // if someday we have problems with caching restricted-access pages, the following could be useful:
-            // http://farm-fresh-code.blogspot.com.br/2009/11/customizing-authorization-in-aspnet-mvc.html
-
-            base.OnAuthorization(filterContext);
-
-            // if the base has already set a result, then we just exit this method
-            if (filterContext.Result != null)
-                return;
-
-            // setting up user
-            Debug.Assert(this.DbUser != null);
-
-            // setting up practice
-            var practiceName = this.RouteData.Values["practice"] as string;
-
-            var practice = this.db.Users
-                .Where(u => u.Id == this.DbUser.Id && u.Practice.UrlIdentifier == practiceName)
-                .Select(u => u.Practice)
-                .SingleOrDefault();
-
-            if (practice == null)
-            {
-                filterContext.Result = new UnauthorizedResult();
-                return;
-            }
-
-            this.DbPractice = practice;
-            this.ViewBag.Practice = practice;
-            this.ViewBag.PracticeName = practice.Name;
-
-            // Redirect to VerifyPracticeAndEmail, if the practice has not been verified yet.
-            if (practice.VerificationDate == null)
-            {
-                filterContext.Result = this.RedirectToAction("CreateAccountCompleted", "Authentication", new { area = "", practice = practiceName, mustValidateEmail = true });
-                return;
-            }
-        }
-
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-
-            // if the base has already set a result, then we just exit this method
-            if (filterContext.Result != null)
-                return;
-
-            // Setting a common ViewBag value.
-            this.ViewBag.LocalNow = this.GetPracticeLocalNow();
-
-            // discover the appointments that have already been polled and sent to the client
-            this.ViewBag.AlreadyPolledMedicalAppointments =
-                NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(this.db, this.DbPractice.Id, this.DbUser.Id,
-                                                                                 this.UtcNowGetter, this.Url, true);
-            this.ViewBag.AlreadyPolledGenericAppointments =
-                NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(this.db, this.DbPractice.Id, this.DbUser.Id,
-                                                                                this.UtcNowGetter, this.Url, true);
-
-            // discover the notifications that have already been polled and sent to to the client
-            this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(this.db, this.DbUser.Id, this, true);
-
-            this.ViewBag.IsTrial = this.DbPractice.AccountContract.SYS_ContractType.IsTrial;
         }
 
         public virtual bool IsSelfUser(User user)
