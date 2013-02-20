@@ -146,7 +146,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                 // Assertion for email.
                 Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
-                var emailViewModel = new EmailViewModel
+                var emailViewModel = new UserEmailViewModel
                 {
                     IsBodyHtml = false,
                     Token = new TokenId(savedToken.Id, savedToken.Value).ToString(),
@@ -1016,7 +1016,7 @@ namespace CerebelloWebRole.Tests.Tests
                     "ConfirmationEmail",
                     vc =>
                     {
-                        token = ((EmailViewModel)vc.ViewData.Model).Token;
+                        token = ((UserEmailViewModel)vc.ViewData.Model).Token;
                         return "Fake e-mail message.";
                     });
 
@@ -1094,7 +1094,7 @@ namespace CerebelloWebRole.Tests.Tests
                         "ResetPasswordEmail",
                         vc =>
                         {
-                            emailToken = ((EmailViewModel)vc.ViewData.Model).Token;
+                            emailToken = ((UserEmailViewModel)vc.ViewData.Model).Token;
                             return vc.ViewData.Model.ConvertObjectToString("<div>{0}={1}</div>");
                         });
 
@@ -1148,7 +1148,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                     // Assertion for email.
                     Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
-                    var emailViewModel = new EmailViewModel
+                    var emailViewModel = new UserEmailViewModel
                                              {
                                                  IsBodyHtml = false,
                                                  Token = emailToken,
@@ -1189,7 +1189,7 @@ namespace CerebelloWebRole.Tests.Tests
                     mve.SetViewContent("ResetPasswordEmail",
                                        vc =>
                                        {
-                                           emailToken = ((EmailViewModel)vc.ViewData.Model).Token;
+                                           emailToken = ((UserEmailViewModel)vc.ViewData.Model).Token;
                                            return "Fake e-mail contents!";
                                        });
 

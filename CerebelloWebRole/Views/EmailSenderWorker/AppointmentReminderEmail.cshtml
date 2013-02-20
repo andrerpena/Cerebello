@@ -1,9 +1,10 @@
 ﻿@using System.Globalization
 @using Cerebello.Model
 @using CerebelloWebRole.Code
-@using CerebelloWebRole.Models
 @model CerebelloWebRole.WorkerRole.Code.Workers.PatientEmailModel
 @{
+    this.ViewBag.Title = string.Format("Confirmação de consulta - {0}", this.Model.PracticeName);
+    
     var dr = this.Model.DoctorGender == TypeGender.Male ? "Dr." : "Dra.";
     var o_dr = this.Model.DoctorGender == TypeGender.Male ? "o Dr." : "a Dra.";
     var contactDoctor = string.Format("{0} {1}", dr, this.Model.DoctorName);
@@ -16,9 +17,9 @@
 {
     <html>
     <head>
-        <title>E-mail de confirmação</title>
+        <title>@this.ViewBag.Title</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        @if (DebugConfig.UseDesktopEmailBox)
+        @if (DebugConfig.UseFileSystemEmailBox)
         {
             <style type="text/css">
                 /* GMAIL style (only when local presentation) */

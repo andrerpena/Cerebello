@@ -1,17 +1,20 @@
 ﻿@using CerebelloWebRole.Models
-@model EmailViewModel
+@model UserEmailViewModel
 @{
+    this.ViewBag.Title = "Dados de prontuário de seus pacientes";
+
     var urlWithData = this.Url.Action("VerifyPracticeAndEmail", "Authentication",
         new { Model.Token, practice = this.Model.PracticeIdentifier }, "https");
     var urlLogin = this.Url.Action("Index", "PracticeHome",
         new { practice = this.Model.PracticeIdentifier, area = "App" }, "https");
 }
-@if (this.Model.IsBodyHtml)
+@if (this.ViewBag.IsBodyHtml == true)
 {
     <html>
     <head>
-        <title>Dados da conta</title>
-        @if (DebugConfig.UseDesktopEmailBox)
+        <title>@this.ViewBag.Title</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        @if (DebugConfig.UseFileSystemEmailBox)
         {
             <style type="text/css">
                 /* GMAIL style (only when local presentation) */
@@ -51,7 +54,7 @@
     </body>
     </html>
 
-    return;
+        return;
 }
 Dados da conta
 ==============

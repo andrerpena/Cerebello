@@ -153,7 +153,7 @@ namespace Cerebello.Firestarter.Helpers
                                     CPF = "87324128910",
                                     CPFOwner = (int)TypeCpfOwner.PatientItself,
                                     Profession = professions[random.Next(professions.Length)],
-                                    CreatedOn = DateTime.UtcNow,
+                                    CreatedOn = Firestarter.UtcNow,
                                     PracticeId = doctor.PracticeId,
                                 },
 

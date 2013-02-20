@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -101,42 +103,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var eachDoctorUser in this.DbPractice.Users.Where(u => u.DoctorId != null))
                 {
                     // Rendering message bodies from partial view.
-                    var partialViewModel = new EmailViewModel
-                        {
-                            PersonName = eachDoctorUser.Person.FullName,
-                            UserName = eachDoctorUser.UserName,
-                            PracticeIdentifier = eachDoctorUser.Practice.UrlIdentifier,
-                        };
-                    var bodyText = WebUtility.HtmlDecode(this.RenderPartialViewToString("AccountDataEmail", partialViewModel));
-
-                    partialViewModel.IsBodyHtml = true;
-                    var bodyHtml = this.RenderPartialViewToString("AccountDataEmail", partialViewModel);
-
+                    var emailViewModel = new UserEmailViewModel(eachDoctorUser);
                     var toAddress = new MailAddress(eachDoctorUser.Person.Email, eachDoctorUser.Person.FullName);
-
-                    var message = EmailHelper.CreateEmailMessage(
-                        toAddress,
-                        "Dados de prontuário de seus pacientes",
-                        bodyText, bodyHtml);
+                    var mailMessage = this.CreateEmailMessage("AccountDataEmail", toAddress, emailViewModel);
 
                     // attaching pdf
                     var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor, this.Request);
 
-                    message.Attachments.Add(
+                    mailMessage.Attachments.Add(
                         new Attachment(
                             new MemoryStream(pdf.DocumentBytes), "Prontuários.pdf", pdf.MimeType));
 
                     // attaching xml
                     var xml = ReportController.ExportDoctorXml(this.db, this.DbPractice, eachDoctorUser.Doctor);
 
-                    message.Attachments.Add(
+                    mailMessage.Attachments.Add(
                         new Attachment(
                             new MemoryStream(Encoding.UTF8.GetBytes(xml)), "Prontuários.xml", "text/xml"));
 
                     // sending message
-                    using (message)
+                    using (mailMessage)
                     {
-                        this.SendEmail(message);
+                        this.TrySendEmail(mailMessage);
                     }
                 }
             }
@@ -148,7 +136,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         string.Format("Conta cancelada pelo usuário: {0}", this.DbPractice.UrlIdentifier),
                         userReason))
             {
-                this.SendEmail(message);
+                this.TrySendEmail(message);
             }
 
             // logging off

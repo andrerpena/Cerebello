@@ -28,9 +28,9 @@ namespace CerebelloWebRole.Code.Helpers
         /// </summary>
         /// <param name="requesterType"> </param>
         /// <param name="viewName"></param>
-        /// <param name="model"></param>
+        /// <param name="viewData"></param>
         /// <returns></returns>
-        public static string RenderEmbeddedRazor(Type requesterType, [JetBrains.Annotations.AspMvcView] string viewName, object model)
+        public static string RenderEmbeddedRazor(Type requesterType, [JetBrains.Annotations.AspMvcView] string viewName, ViewDataDictionary viewData)
         {
             // TODO: support layout page
             // TODO: support _ViewStart pages
@@ -60,7 +60,6 @@ namespace CerebelloWebRole.Code.Helpers
                 var httpContext = new MvcHelper.MockHttpContext { Request2 = new MvcHelper.MockHttpRequest() };
                 var requestContext = new RequestContext(httpContext, new RouteData());
 
-                var viewData = new ViewDataDictionary(model);
                 page.ViewContext = new ViewContext(
                     new ControllerContext(requestContext, new HomeController()),
                     new RazorView(new ControllerContext(), resourcePath, null, true, new[] { "cshtml", "vbhtml" }),
@@ -71,7 +70,7 @@ namespace CerebelloWebRole.Code.Helpers
                 page.ViewData = viewData;
                 page.Url = new UrlHelper(requestContext, RouteTable.Routes);
 
-                page.PushContext(new WebPageContext(httpContext, null, model), stringWriter);
+                page.PushContext(new WebPageContext(httpContext, null, viewData), stringWriter);
                 try
                 {
                     // Executing the renderer, so that it writes to the stringWriter.

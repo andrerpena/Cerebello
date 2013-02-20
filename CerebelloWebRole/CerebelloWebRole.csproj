@@ -348,7 +348,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ResetPasswordViewModel.cs" />
-    <Compile Include="Models\EmailViewModel.cs" />
+    <Compile Include="Models\UserEmailViewModel.cs" />
     <Compile Include="Models\VerifyPracticeAndEmailViewModel.cs" />
     <Compile Include="Models\CreatePracticeViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -729,6 +729,7 @@
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
+    <Content Include="App_Code\EmailHtml.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

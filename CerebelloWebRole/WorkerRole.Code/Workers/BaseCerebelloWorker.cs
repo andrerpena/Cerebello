@@ -1,8 +1,11 @@
 using System;
+using System.Net;
 using System.Net.Mail;
+using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
@@ -12,8 +15,6 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
         {
             return new CerebelloEntities();
         }
-
-
 
         /// <summary>
         /// Mockable version of the DateTime.UtcNow property.
@@ -26,11 +27,30 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 
         /// <summary>
         /// Sends an e-mail message using the default SmtpClient.
+        /// Tries 3 times before failing, and returning false. Returns true if succeded.
         /// </summary>
         /// <param name="message">MailMessage containing the informations about the message to be sent.</param>
-        public virtual void SendEmail(MailMessage message)
+        public virtual bool TrySendEmail(MailMessage message)
         {
-            EmailHelper.SendEmail(message);
+            return EmailHelper.TrySendEmail(message);
+        }
+
+        /// <summary>
+        /// Creates an email message using an MVC view.
+        /// The title, the html and text contents of the e-mail will be given by this view.
+        /// </summary>
+        /// <param name="contentView">View name to use to render the e-mail contents, and to get the text from.</param>
+        /// <param name="toAddress">Address of the recipient.</param>
+        /// <param name="model">Data that should be sent to the view.</param>
+        /// <param name="sourceName">Source name for this e-mail.</param>
+        /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
+        public virtual MailMessage CreateEmailMessage(
+            [AspMvcView] [AspMvcPartialView] string contentView,
+            MailAddress toAddress,
+            object model,
+            string sourceName = EmailHelper.DEFAULT_SOURCE)
+        {
+            return EmailHelper.CreateEmailMessageFromView(this.RenderView, contentView, toAddress, model, sourceName);
         }
 
         /// <summary>
@@ -38,11 +58,11 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
         /// This is useful to render e-mail messages.
         /// </summary>
         /// <param name="viewName"></param>
-        /// <param name="model"></param>
+        /// <param name="viewData"></param>
         /// <returns></returns>
-        public string RenderView([JetBrains.Annotations.AspMvcView]string viewName, object model = null)
+        public string RenderView([AspMvcView]string viewName, ViewDataDictionary viewData = null)
         {
-            return RazorHelper.RenderEmbeddedRazor(this.GetWorkerType(), viewName, model);
+            return RazorHelper.RenderEmbeddedRazor(this.GetWorkerType(), viewName, viewData);
         }
 
         public virtual Type GetWorkerType()

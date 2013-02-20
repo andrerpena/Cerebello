@@ -1,6 +1,7 @@
-﻿@using CerebelloWebRole.Models
-@model EmailViewModel
+﻿@model UserEmailViewModel
 @{
+    this.ViewBag.Title = "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.";
+    
     var urlWithData = this.Url.Action(
         "VerifyPracticeAndEmail",
         "Authentication",
@@ -10,13 +11,13 @@
     var urlLogin = this.Url.Action("Index", "PracticeHome",
         new { area = "App", practice = this.Model.PracticeIdentifier }, "https");
 }
-@if (this.Model.IsBodyHtml)
+@if (this.ViewBag.IsBodyHtml == true)
 {
     <html>
     <head>
-        <title>E-mail de confirmação</title>
+        <title>@this.ViewBag.Title</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        @if (DebugConfig.UseDesktopEmailBox)
+        @if (DebugConfig.UseFileSystemEmailBox)
         {
             <style type="text/css">
                 /* GMAIL style (only when local presentation) */

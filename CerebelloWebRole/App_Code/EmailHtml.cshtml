@@ -1,0 +1,11 @@
+﻿@helper InlineCode(object obj)
+{<code style="white-space: nowrap; background-color: #F8F8F8; border: 1px solid #EAEAEA; border-radius: 3px 3px 3px 3px; margin: 0 2px; padding: 0 5px; font-family: Consolas, 'Liberation Mono', Courier, monospace; font-size: 1.1em; line-height: 1.6; color: #333333;">@obj</code>}
+
+@helper InlineCode(Func<dynamic, object> fnc)
+{<code style="white-space: nowrap; background-color: #F8F8F8; border: 1px solid #EAEAEA; border-radius: 3px 3px 3px 3px; margin: 0 2px; padding: 0 5px; font-family: Consolas, 'Liberation Mono', Courier, monospace; font-size: 1.1em; line-height: 1.6; color: #333333;">@fnc(null)</code>}
+
+@helper Emphasis(object obj)
+{<em style="margin-right: 2em; display: inline-block;">@obj</em>}
+
+@helper Emphasis(Func<dynamic, object> fnc)
+{<em style="margin-right: 2em; display: inline-block;">@fnc(null)</em>}

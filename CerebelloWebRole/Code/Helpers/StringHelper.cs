@@ -152,6 +152,9 @@ namespace CerebelloWebRole.Code
             // supported: properties, indirections
             // unsupported: indexer, dynamic, methods, operators
 
+            if (inputText == null)
+                return null;
+
             var result = Regex.Replace(
                 inputText,
                 @"<%(.*?)%>",
@@ -167,6 +170,7 @@ namespace CerebelloWebRole.Code
                     var result2 = string.Format("{0}", currentObj);
                     return result2;
                 });
+
             return result;
         }
 

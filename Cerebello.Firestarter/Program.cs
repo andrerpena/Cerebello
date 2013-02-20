@@ -61,9 +61,17 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("DateTime (UTC):   {0}", DateTime.UtcNow);
-                Console.WriteLine("DateTime (Local): {0}", DateTime.Now);
-                Console.WriteLine("DateTime (?):     {0}", DateTime.Now.ToUniversalTime());
+                Console.Write("DateTime (UTC):   {0}", Firestarter.UtcNow);
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(Firestarter.UtcNow != DateTime.UtcNow ? " (with debug offset)" : "");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("DateTime (Local): {0}", Firestarter.Now);
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                if (Firestarter.UtcNow != DateTime.UtcNow)
+                    Console.Write(" (offset = {0})", DebugConfig.CurrentTimeOffset);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine();
+                Console.WriteLine("DateTime (?):     {0}", Firestarter.Now.ToUniversalTime());
                 Console.WriteLine("CurrentDir:       {0}", Environment.CurrentDirectory);
 
                 while (isToChooseDb)
@@ -165,8 +173,8 @@ namespace Cerebello.Firestarter
                             if (attachResult == Firestarter.AttachLocalDatabaseResult.NotFound)
                             {
                                 // Create the DB if it does not exist.
-                                Console.Write("Would you like to create the database (y/n): ");
-                                if (Console.ReadKey().KeyChar == 'y')
+                                bool createDb = ConsoleHelper.YesNo("Would you like to create the database?");
+                                if (createDb)
                                 {
                                     Console.WriteLine();
                                     var result = Firestarter.CreateDatabaseIfNeeded(db);
@@ -197,7 +205,7 @@ namespace Cerebello.Firestarter
                     }
                     catch (Exception ex)
                     {
-                        ConsoleWriteException(ex);
+                        ConsoleHelper.ConsoleWriteException(ex);
                         Console.WriteLine();
                         continue;
                     }
@@ -374,7 +382,7 @@ namespace Cerebello.Firestarter
                 }
                 catch (Exception ex)
                 {
-                    ConsoleWriteException(ex);
+                    ConsoleHelper.ConsoleWriteException(ex);
                 }
                 finally
                 {
@@ -387,19 +395,8 @@ namespace Cerebello.Firestarter
                 Console.WriteLine(this.isFuncBackupEnabled ? "enabled" : "disabled");
                 Console.ForegroundColor = ConsoleColor.White;
 
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
-        }
-
-        private static void PressAnyKeyToContinue()
-        {
-            var prevColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Press any key to continue.");
-            Console.ForegroundColor = Console.BackgroundColor;
-            Console.ReadKey(true);
-            Console.WriteLine();
-            Console.ForegroundColor = prevColor;
         }
 
         private static void InfoUndo()
@@ -516,7 +513,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("When you are done with the current DB, it will be left attached.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -532,7 +529,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("When you are done with the current DB, it is going to be detached.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -550,7 +547,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Changes the collation of columns in the script to 'Latin1_General_CI_AI',");
                 Console.WriteLine("and then executes the changed script.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -571,7 +568,7 @@ namespace Cerebello.Firestarter
                 }
                 catch (Exception ex)
                 {
-                    ConsoleWriteException(ex);
+                    ConsoleHelper.ConsoleWriteException(ex);
                 }
             }
         }
@@ -619,18 +616,14 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Methods that will be called:");
                 Console.WriteLine("    DropAllTables");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
         private void OptDrp()
         {
             {
-                Console.Write("This will drop EVERY table in your DB... are you sure? (y/n): ");
-                var userDropAll = Console.ReadLine();
-                if (userDropAll != "y" && userDropAll != "n")
-                    return;
-                bool clearAllData = userDropAll == "y";
+                var clearAllData = ConsoleHelper.YesNo("This will drop EVERY table in your DB... are you sure?");
 
                 // Doing what the user has told.
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
@@ -660,7 +653,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("Clears the output from all previous commands.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -677,18 +670,14 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Methods that will be called:");
                 Console.WriteLine("    ClearAllData");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
         private void OptClr()
         {
             {
-                Console.Write("Clear all data (y/n): ");
-                var userClearAll = Console.ReadLine();
-                if (userClearAll != "y" && userClearAll != "n")
-                    return;
-                bool clearAllData = userClearAll == "y";
+                var clearAllData = ConsoleHelper.YesNo("Clear all data?");
 
                 // Doing what the user has told.
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
@@ -702,7 +691,7 @@ namespace Cerebello.Firestarter
                         }
                         catch (Exception ex)
                         {
-                            ConsoleWriteException(ex);
+                            ConsoleHelper.ConsoleWriteException(ex);
                         }
 
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -735,7 +724,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("    SetupDoctor (for each doctor)");
                 Console.WriteLine("    CreateFakePatients (for each doctor)");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -764,7 +753,7 @@ namespace Cerebello.Firestarter
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex);
+                ConsoleHelper.ConsoleWriteException(ex);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Partially done!");
@@ -781,7 +770,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("A JSON file is going to be saved with all data.");
                 Console.WriteLine("This file is used to populate DB later.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -808,7 +797,7 @@ namespace Cerebello.Firestarter
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex);
+                ConsoleHelper.ConsoleWriteException(ex);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Partially done!");
@@ -823,7 +812,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("Quits the program.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -853,7 +842,7 @@ namespace Cerebello.Firestarter
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("DB NOT detached.");
-                    PressAnyKeyToContinue();
+                    ConsoleHelper.PressAnyKeyToContinue();
                 }
             }
 
@@ -868,7 +857,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine();
                 Console.WriteLine("Changes the current database.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -898,7 +887,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("different sets of result each time it is run, being suitable");
                 Console.WriteLine("for human interaction tests.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -923,25 +912,34 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("that can latter be restored");
                 Console.WriteLine("using the 'bkr' command.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
         private void OptBkc()
         {
             // Dettaching previous DB if it was attached in this session.
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Create Backup");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Backup name: ");
             var ssName = Console.ReadLine();
             string fileName = null;
+
             try
             {
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
-                    if (this.isFuncBackupEnabled) fileName = Firestarter.CreateBackup(db, ssName);
+                {
+                    bool canCreate = !Firestarter.BackupExists(db, ssName)
+                                     || ConsoleHelper.YesNo("Backup already exists. Would you like to replace it?");
+
+                    if (this.isFuncBackupEnabled && canCreate)
+                        fileName = Firestarter.CreateBackup(db, ssName);
+                }
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex);
+                ConsoleHelper.ConsoleWriteException(ex);
                 return;
             }
 
@@ -950,10 +948,10 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("File name: {0}", fileName);
 
             Console.ForegroundColor = fileName != null ? ConsoleColor.Green : ConsoleColor.Red;
-            Console.WriteLine(fileName != null ? "Done!" : "File not found");
+            Console.WriteLine(fileName != null ? "Done!" : "Backup not created.");
 
             Console.ForegroundColor = ConsoleColor.White;
-            PressAnyKeyToContinue();
+            ConsoleHelper.PressAnyKeyToContinue();
         }
 
         private static void InfoBkr()
@@ -965,13 +963,15 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("that was created using the");
                 Console.WriteLine("'bkc' command.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
         private void OptBkr()
         {
             // Dettaching previous DB if it was attached in this session.
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Restore Backup");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Backup name: ");
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -984,12 +984,13 @@ namespace Cerebello.Firestarter
                 {
                     fileExists = Firestarter.BackupExists(db, ssNameRestore);
                     if (fileExists)
-                        fileName = Firestarter.RestoreBackup(db, ssNameRestore);
+                        if (ConsoleHelper.YesNo("Restoring can destroy schema and data changes, are you sure?"))
+                            fileName = Firestarter.RestoreBackup(db, ssNameRestore);
                 }
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex);
+                ConsoleHelper.ConsoleWriteException(ex);
                 return;
             }
 
@@ -1008,7 +1009,7 @@ namespace Cerebello.Firestarter
             }
 
             Console.ForegroundColor = ConsoleColor.White;
-            PressAnyKeyToContinue();
+            ConsoleHelper.PressAnyKeyToContinue();
         }
 
         private static void InfoR()
@@ -1020,7 +1021,7 @@ namespace Cerebello.Firestarter
                 Console.WriteLine("Work database is dropped, recreated, and populated with p1 option.");
                 Console.WriteLine("Test database is dropped, recreated, and populated with all SYS tables.");
                 Console.WriteLine();
-                PressAnyKeyToContinue();
+                ConsoleHelper.PressAnyKeyToContinue();
             }
         }
 
@@ -1034,12 +1035,7 @@ namespace Cerebello.Firestarter
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("DB type: {0}", isTestDb ? "TEST" : "WORK");
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("Reset the database (y/n): ");
-                var userReset = Console.ReadLine();
-                if (userReset != "y" && userReset != "n")
-                    return;
-                bool resetDb = userReset == "y";
+                var resetDb = ConsoleHelper.YesNo("Reset can destroy schema and data changes, are you sure?");
 
                 Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -1076,7 +1072,7 @@ namespace Cerebello.Firestarter
                         }
                         catch (Exception ex)
                         {
-                            ConsoleWriteException(ex);
+                            ConsoleHelper.ConsoleWriteException(ex);
 
                             Console.WriteLine("Use 'undo' command to restore database to what it was before.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -1086,7 +1082,7 @@ namespace Cerebello.Firestarter
                             return;
                         }
 
-                        Console.WriteLine("Use 'zero' command to restore database to a minimal state.");
+                        Console.WriteLine("Use 'zero' command to restore database to a minimal state (only SYS data).");
                         Console.WriteLine("Use 'undo' command to restore database to what it was before.");
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Done!");
@@ -1119,10 +1115,10 @@ namespace Cerebello.Firestarter
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex);
+                ConsoleHelper.ConsoleWriteException(ex);
             }
 
-            PressAnyKeyToContinue();
+            ConsoleHelper.PressAnyKeyToContinue();
         }
 
         private class Exec
@@ -1421,19 +1417,19 @@ namespace Cerebello.Firestarter
             Console.WriteLine("Initialize_SYS_Cid10");
             Firestarter.Initialize_SYS_Cid10(
                 db,
-                progress: ConsoleWriteProgressIntInt);
+                progress: ConsoleHelper.ConsoleWriteProgressIntInt);
 
             Console.WriteLine("Initialize_SYS_MedicalProcedures");
             Firestarter.Initialize_SYS_MedicalProcedures(
                 db,
                 Path.Combine(this.rootCerebelloPath, @"DB\cbhpm_2010.txt"),
-                progress: ConsoleWriteProgressIntInt);
+                progress: ConsoleHelper.ConsoleWriteProgressIntInt);
 
             Console.WriteLine("SaveLeafletsInMedicinesJsonToDb");
             var anvisaHelper = new AnvisaLeafletHelper();
             anvisaHelper.SaveLeafletsInMedicinesJsonToDb(
                 db,
-                progress: ConsoleWriteProgressIntInt);
+                progress: ConsoleHelper.ConsoleWriteProgressIntInt);
 
             // Creating a minimal DB backup called __zero__.
             if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__zero__");
@@ -1454,71 +1450,6 @@ namespace Cerebello.Firestarter
 
             // Creating tables.
             Firestarter.ExecuteScript(db, scriptText3);
-        }
-
-        private static void ConsoleWriteException(Exception ex)
-        {
-            var ex1 = ex;
-
-            while (ex1 != null)
-            {
-                // exception type
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("Exception: {0}", ex1.GetType().Name);
-                Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
-
-                // message
-                Console.BackgroundColor = ConsoleColor.DarkRed;
-                Console.ForegroundColor = ConsoleColor.Red;
-                var lines = Regex.Split(ex1.Message, @"\r\n|\r|\n");
-                foreach (var eachLine in lines)
-                {
-                    Console.Write(eachLine);
-                    if (Console.CursorLeft > 0)
-                        Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
-                }
-
-                // stack-trace
-                Console.BackgroundColor = ConsoleColor.DarkRed;
-                int fncLevel = 0;
-                if (ex1.StackTrace != null)
-                {
-                    var linesStackTrace = Regex.Split(ex1.StackTrace, @"\r\n|\r|\n");
-                    foreach (var eachLine in linesStackTrace)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("{0:0000}:", fncLevel++);
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Write(eachLine);
-                        if (Console.CursorLeft > 0)
-                            Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
-                    }
-                }
-
-                // inner exception
-                ex1 = ex1.InnerException;
-                if (ex1 != null)
-                {
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write("==== inner exception ====");
-                    if (Console.CursorLeft > 0)
-                        Console.Write(new string(' ', Console.BufferWidth - Console.CursorLeft));
-                }
-            }
-
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        private static void ConsoleWriteProgressIntInt(int x, int y)
-        {
-            var oldColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            if (x == 0 || x == y || x * 10 / y != (x - 1) * 10 / y)
-                Console.WriteLine("    {0} of {1} - {2}%", x, y, x * 100 / y);
-            Console.ForegroundColor = oldColor;
         }
     }
 

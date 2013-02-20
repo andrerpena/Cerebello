@@ -39,7 +39,7 @@ namespace CerebelloWebRole.Code
             // HttpContext is only allowed in this case,
             // because it will only ever be called in a local-presentation context,
             // not ever in production.
-            if (DebugConfig.IsLocalPresentation && HttpContext.Current != null)
+            if (DebugConfig.UseLocalResourcesOnly && HttpContext.Current != null)
             {
                 var path = "/Content/Local/GravatarImages/" + gravatarEMailHash + "_" + sizeAsString + ".jpeg";
                 if (File.Exists(HttpContext.Current.Request.MapPath("~" + path)))

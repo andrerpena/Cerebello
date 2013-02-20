@@ -1,9 +1,7 @@
 ﻿using System.Linq;
-using System.Net;
 using System.Net.Mail;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
@@ -81,36 +79,14 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 
                         // Rendering message bodies from partial view.
                         var emailViewModel = eachItem.EmailViewModel;
+                        var toAddress = new MailAddress(emailViewModel.PatientEmail, emailViewModel.PatientName);
+                        var mailMessage = this.CreateEmailMessage("AppointmentReminderEmail", toAddress, emailViewModel);
 
-                        var bodyText = WebUtility.HtmlDecode(this.RenderView("AppointmentReminderEmail", emailViewModel));
-
-                        emailViewModel.IsBodyHtml = true;
-                        var bodyHtml = this.RenderView("AppointmentReminderEmail", emailViewModel);
-
-                        var toAddress = new MailAddress(
-                            eachItem.EmailViewModel.PatientEmail,
-                            eachItem.EmailViewModel.PatientName);
-
-                        var message = EmailHelper.CreateEmailMessage(
-                            toAddress,
-                            string.Format("Confirmação de consulta - {0}", eachItem.EmailViewModel.PracticeName),
-                            bodyText, bodyHtml);
-
-                        try
+                        if (this.TrySendEmail(mailMessage))
                         {
-                            this.SendEmail(message);
-
                             this.EmailsCount++;
-
                             eachItem.Appointment.ReminderEmailSent = true;
-
                             db.SaveChanges();
-                        }
-                        catch
-                        {
-                            // Just ignore any errors... if e-mail was not sent,
-                            // it is not marked with ReminderEmailSent = true,
-                            // and so, it will just be sent later.
                         }
                     }
                 }

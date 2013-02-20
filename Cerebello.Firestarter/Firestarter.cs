@@ -150,6 +150,22 @@ namespace Cerebello.Firestarter
             return db.SYS_MedicalEntity.Single(me => me.Code == "CRFA");
         }
 
+        /// <summary>
+        /// Returns UTC date/time plus the debug time offset.
+        /// </summary>
+        public static DateTime UtcNow
+        {
+            get { return DateTime.UtcNow + DebugConfig.CurrentTimeOffset; }
+        }
+
+        /// <summary>
+        /// Returns current system date/time plus the debug time offset.
+        /// </summary>
+        public static DateTime Now
+        {
+            get { return DateTime.Now + DebugConfig.CurrentTimeOffset; }
+        }
+
         public static Doctor CreateAdministratorDoctor_Miguel(
             CerebelloEntities db,
             SYS_MedicalEntity entity,
@@ -167,7 +183,7 @@ namespace Cerebello.Firestarter
                 {
                     UserName = "masbicudo",
                     UserNameNormalized = "masbicudo",
-                    LastActiveOn = DateTime.UtcNow,
+                    LastActiveOn = Firestarter.UtcNow,
                     Password = pwdHash,
                     PasswordSalt = pwdSalt,
                     Practice = practice,
@@ -183,7 +199,7 @@ namespace Cerebello.Firestarter
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
                     FullName = "Phill Austin",
                     Gender = (int)TypeGender.Male,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Firestarter.UtcNow,
                     Email = "masbicudo@gmail.com",
                     EmailGravatarHash = GravatarHelper.GetGravatarHash("masbicudo@gmail.com"),
                     PracticeId = practice.Id,
@@ -247,7 +263,7 @@ namespace Cerebello.Firestarter
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
                     FullName = "Gregory House",
                     Gender = (int)TypeGender.Male,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Firestarter.UtcNow,
                     Email = "andrerpena@gmail.com",
                     EmailGravatarHash = GravatarHelper.GetGravatarHash("andrerpena@gmail.com"),
                     PracticeId = practice.Id,
@@ -262,7 +278,7 @@ namespace Cerebello.Firestarter
                     UserName = "andrerpena",
                     UserNameNormalized = "andrerpena",
                     Person = person,
-                    LastActiveOn = DateTime.UtcNow,
+                    LastActiveOn = Firestarter.UtcNow,
                     Password = "aThARLVPRzyS7yAb4WGDDsppzrA=",
                     PasswordSalt = "nnKvjK+67w7OflE9Ri4MQw==",
                     Practice = practice,
@@ -321,7 +337,7 @@ namespace Cerebello.Firestarter
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
                     FullName = "Marta Cura",
                     Gender = (int)TypeGender.Female,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Firestarter.UtcNow,
                     Email = "martacura@fakemail.com",
                     EmailGravatarHash = GravatarHelper.GetGravatarHash("martacura@fakemail.com"),
                     PracticeId = practice.Id,
@@ -336,7 +352,7 @@ namespace Cerebello.Firestarter
                     UserName = "martacura",
                     UserNameNormalized = "martacura",
                     Person = person,
-                    LastActiveOn = DateTime.UtcNow,
+                    LastActiveOn = Firestarter.UtcNow,
                     PasswordSalt = "ELc81TnRE+Eb+e5/D69opg==",
                     Password = "lLqJ7FjmEQF7q4rxWIGnX+AXdqQ=",
 
@@ -388,7 +404,7 @@ namespace Cerebello.Firestarter
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
                 FullName = "Thomas Gray",
                 Gender = (int)TypeGender.Male,
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = Firestarter.UtcNow,
                 Email = "thomasgray@fakemail.com",
                 EmailGravatarHash = GravatarHelper.GetGravatarHash("thomasgray@fakemail.com"),
                 PracticeId = practice.Id,
@@ -403,7 +419,7 @@ namespace Cerebello.Firestarter
                 UserName = "thomasgray",
                 UserNameNormalized = "thomasgray",
                 Person = person,
-                LastActiveOn = DateTime.UtcNow,
+                LastActiveOn = Firestarter.UtcNow,
                 PasswordSalt = "DAGjFT7iMXxfJQAFYFRa+w==",
                 Password = "39ltFvGLs/oC71jd1ngWnTzar2A=", // pwd: 'tgray'
                 Practice = practice,
@@ -464,7 +480,7 @@ namespace Cerebello.Firestarter
                 {
                     UserName = "milena",
                     UserNameNormalized = "milena",
-                    LastActiveOn = DateTime.UtcNow,
+                    LastActiveOn = Firestarter.UtcNow,
                     PasswordSalt = pwdSalt,
                     Password = pwdHash,
                     Practice = practice,
@@ -478,7 +494,7 @@ namespace Cerebello.Firestarter
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
                     FullName = "Menininha Santos",
                     Gender = (int)TypeGender.Female,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
                 };
 
@@ -517,7 +533,7 @@ namespace Cerebello.Firestarter
                 {
                     UserName = "maricleusa",
                     UserNameNormalized = "maricleusa",
-                    LastActiveOn = DateTime.UtcNow,
+                    LastActiveOn = Firestarter.UtcNow,
                     PasswordSalt = pwdSalt,
                     Password = pwdHash,
                     Practice = practice,
@@ -531,7 +547,7 @@ namespace Cerebello.Firestarter
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
                     FullName = "Maricleusa Souza",
                     Gender = (int)TypeGender.Female,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
                 };
 
@@ -620,11 +636,12 @@ namespace Cerebello.Firestarter
                     IssuanceDate = new DateTime(2012, 01, 25),
                     StartDate = new DateTime(2012, 02, 10),
                     EndDate = null,
-                    Fee = 0.00M,
                     Practice = practice,
+                    DoctorsLimit = null,
+                    PatientsLimit = 50,
                 };
-            practice.AccountContract.Text = StringHelper.ReflectionReplace(
-                practice.AccountContract.SYS_ContractType.Text,
+            practice.AccountContract.CustomText = StringHelper.ReflectionReplace(
+                practice.AccountContract.SYS_ContractType.CustomTemplateText,
                 practice.AccountContract);
 
             db.AccountContracts.AddObject(accountContract);
@@ -841,42 +858,6 @@ namespace Cerebello.Firestarter
                         IsTrial = true,
                         Name = "Contrato de teste",
                         UrlIdentifier = "TrialContract",
-
-                        #region Text
-                        Text = @"
-Contrato de teste
-=================
-
-- **Data de expedição:** <%IssuanceDate%>
-
-Software de teste
------------------
-
-- **Custo:** não possui nenhum custo.
-- **Validade:** não possui validade.
-
-Limitações
-----------
-
-- **Pacientes:** até 50.
-- **Download de dados:** disponível.
-- **Segurança de dados:** possui toda a segurança de dados relacionada a prontuários eletrônicos:
-    a) protocolo HTTPS;
-    b) download dos dados;
-    c) backup do banco de dados na nuvém;
-
-Upgrade
--------
-
-Consta na migração deste plano para outro melhor.
-
-- **Sem perda de dados:** é possível escolher se o upgrade deve manter os dados que já foram inseridos.
-- **Sem custo:** a operação de upgrade em si não possui custo.
-- **Qualquer plano:** o upgrade pode ser feito para qualquer outro plano.
-
-",
-
-                        #endregion
                     });
 
             db.SYS_ContractType.AddObject(
@@ -887,66 +868,6 @@ Consta na migração deste plano para outro melhor.
                         IsTrial = false,
                         Name = "Contrato de assinatura do plano Básico mensal pré-pago",
                         UrlIdentifier = ContractTypes.MonthlyFeeSubscriptionContract.ToString(),
-
-                        #region Text
-                        Text = @"
-Contrato de assinatura do plano Básico mensal pré-pago
-======================================================
-
-- **Data de expedição:** <%IssuanceDate%>
-
-Preço e frequência de cobranças
--------------------------------
-
-- **Pré-pago:** Cada taxa é cobrada antes de se iniciar o período de uso mensal.
-- **Data de início:** <%StartDate%>.
-- **Frequência de cobrança**: Mensal.
-- **Valor da cobrança**: R$<%Fee%>.
-- **Reajuste da cobrança:**
-    Feita anualmente no dia 01 de janeiro, com variação do 'Valor da cobrança'
-    igual ao da inflação do ano anterior (IPCA).
-
-Cancelamento
-------------
-
-- **Cancelamento:**
-    O software tem suas funcionalidades interrompidas, assim como as cobranças.
-    O usuário ainda poderá logar, para fazer download dos dados,
-    assim como entrar na área de 'Configuração de conta'.
-- **Reativação:**
-    A conta pode ser reativada, num prazo máximo de 6 mêses,
-    após o qual os dados não poderão mais ser recuperados.
-    Em caso de inadimplência, a conta só poderá ser reativada pagando-se o valor da dívida.
-
-- **Cancelamento no tempo de experiência:**
-    O contratante pode cancelar a conta dentro de 7 dias, com reembolso total do valor pago.
-- **Cancelamento por vontade do contratante:**
-    A conta será cancelada ao início do próximo período de uso, sem nenhum custo adicional.
-- **Cancelamento por vontade do contratante com reembolso:**
-    A conta é cancelada imediatamente, com reembolso de 70% do valor proporcional ao restante do período de uso.
-- **Cancelamento por vontade do contratante com faturas atrasadas:**
-    A conta é cancelada imediatamente, devendo pagar o valor proporcional ao tempo de uso,
-    ou então negociar a dívida por um dos canais de negociação.
-
-- **Cancelamento por falta de pagamento:** Na data da cobrança,
-    se a mesma não for paga e já houver 1 fatura atrasada.
-    O contratante deve realizar o pagamento integral das faturas atrasadas.
-
-- **Cancelamento por inobservância do contrato:** A conta pode ser suspensa,
-    quando houver inobservância deste contrato no que diz respeito ao uso do software.
-
-Definições e termos
--------------------
-
-- **Adimplente:** usuário em dia com todos os pagamentos.
-- **Inadimplente:** usuário que possui faturas atrasadas.
-
-- **Logar:** ato de entrar no software, não necessariamente com acesso a todas as funcionalidades.
-- **Login:** conjunto de informações necessárias para um usuário logar.
-
-",
-
-                        #endregion
                     });
 
             db.SYS_ContractType.AddObject(
@@ -957,83 +878,6 @@ Definições e termos
                         IsTrial = false,
                         Name = "Contrato de assinatura do plano Básico com validade de 1 ano",
                         UrlIdentifier = "OneFeeOneYearSubscriptionContract",
-
-                        #region Text
-                        Text = @"
-Contrato de assinatura do plano Básico com validade de 1 ano
-============================================================
-
-- **Data de expedição:** <%IssuanceDate%>
-
-Preço e validade
-----------------
-
-- **Data de início:** <%StartDate%>.
-- **Frequência de cobrança**: uma única cobrança.
-- **Data da cobrança**: primeiro dia após o tempo de experiência ('Data de início' mais 7 dias).
-- **Valor da cobrança**: R$<%Fee%>.
-- **Validade:** 1 ano da 'data de início'.
-- **Renovação:** O plano pode ser renovado, observando-se as regras de renovação e migração.
-
-Renovação e migração
---------------------
-
-- **Termos:**
-    a) Novo contrato: é o contrato que sucede o que está em vias de expirar.
-    b) Antigo contrato: é o contrato atual que está chegando ao fim.
-    c) Renovação: quando o novo contrato e o antigo contrato representam o mesmo plano.
-    d) Imigração: quando o novo contrato representa o plano descrito neste documento,
-        e o antigo contrato representa outro plano.
-    e) Emigração: quando o novo contrato representa outro plano,
-        e o antigo contrato representa o plano descrito neste documento.
-    f) Migração: diz respeito a imigração, emigração ou ambas.
-
-- **Regras gerais:**
-    a) O novo contrato só será realmente firmado na 'Data de início' caso o contratante esteja adimplente.
-    b) Todo o antigo contrato deixa de valer, com exceção das regras aplicadas na seção 'Renovação e migração'.
-        (o que inclui esta regra em sí, portanto ela vale mesmo após o término da validade do contrato)
-
-- **Regras de renovação ou imigração:**
-    a) O intervalo da 'data de expedição' até a 'data de início' do novo contrato pode ser de até 60 dias.
-    b) A 'data de expedição' do novo contrato deve ser menor ou igual à sua 'data de início'.
-
-- **Regras de renovação ou emigração:**
-    a) O uso que está sendo feito do software no momento da mudança de contrato deve ser contemplado
-        pelo novo contrato, caso contrário o novo contrato não será firmado, e a conta cancelada.
-        (e.g. para emigrar para o plano de testes, a conta deve estar dentro do limite da quantidade de pacientes)
-        (e.g. para emigrar para o plano para médicos recém credenciados, o médico deve ser recém credenciado de fato)
-
-Cancelamento
-------------
-
-- **Cancelamento:**
-    O software tem suas funcionalidades interrompidas, assim como as cobranças.
-    O usuário ainda poderá logar, para fazer download dos dados,
-    assim como entrar na área de 'Configuração de conta'.
-- **Reativação:**
-    A conta pode ser reativada, num prazo máximo de 6 mêses,
-    após o qual os dados não poderão mais ser recuperados.
-
-- **Cancelamento antes da data de início:** é como se o contrato nunca tivesse sido feito, não há nenhum custo.
-- **Cancelamento no tempo de experiência:** o contratante pode cancelar a conta dentro de 7 dias.
-- **Cancelamento por vontade do contratante com reembolso:** a conta é cancelada imediatamente,
-    com reembolso de 70% do valor proporcional ao restante do período de uso.
-- **Cancelamento ao fim da validade:** ao final da validade deste contrato,
-    a conta é cancelada se não houver nenhum novo contrato firmado para o período posterior.
-
-- **Cancelamento por inobservância do contrato:** a conta pode ser suspensa, quando houver inobservância deste contrato no que diz respeito ao uso do software.
-
-Definições e termos
--------------------
-
-- **Adimplente:** usuário em dia com todos os pagamentos.
-- **Inadimplente:** usuário que possui faturas atrasadas.
-
-- **Logar:** ato de entrar no software, não necessariamente com acesso a todas as funcionalidades.
-- **Login:** conjunto de informações necessárias para um usuário logar.
-",
-
-                        #endregion
                     });
 
             db.SYS_ContractType.AddObject(
@@ -1044,87 +888,6 @@ Definições e termos
                         IsTrial = false,
                         Name = "Contrato de assinatura do plano Básico mensal pré-pago para novos médicos",
                         UrlIdentifier = "MonthlyFeeSubscriptionForNewcomersContract",
-
-                        #region Text
-                        // nota: poderia ser clínicas recém formadas (verificar pelo CNPJ)
-                        // nota: poderia ser para recém formados (verificar pelo diploma)
-                        Text = @"
-Contrato de assinatura do plano Básico mensal pré-pago para novos médicos
-=========================================================================
-
-- **Data de expedição:** <%IssuanceDate%>.
-- **Público alvo:**
-    Médicos recém credenciados pelo conselho profissional de sua região.
-    a) 'Data de expedição' limitada a até 6 mêses após a primeira credenciação obtida de um conselho profissional.
-    b) A prova é feita verificando-se o número de registro no conselho profissional.
-    O médico recém credenciado deve ser o proprietário da conta.
-
-Preço e frequência de cobranças
--------------------------------
-
-- **Pré-pago:** Cada taxa é cobrada antes de se iniciar o período de uso trimestral.
-- **Data de início:** <%StartDate%>.
-- **Frequência de cobrança:** Trimestral.
-- **Valor da cobrança:** R$<%Fee%>.
-- **Reajuste da cobrança:**
-    Feita anualmente no dia 01 de janeiro, com variação do 'Valor da cobrança'
-    igual ao da inflação do ano anterior (IPCA).
-- **Validade:** 2 anos após a 'Data de início' do contrato (equivalente a 8 ciclos de cobrança).
-- **Migração:**
-    Este contrato não pode ser renovado, entretanto pode ser feita a migração para outro plano,
-    observando-se as regras de migração entre ambos os planos.
-
-Cancelamento
-------------
-
-- **Cancelamento:**
-    O software tem suas funcionalidades interrompidas, assim como as cobranças.
-    O usuário ainda poderá logar, para fazer download dos dados,
-    assim como entrar na área de 'Configuração de conta'.
-- **Reativação:**
-    A conta pode ser reativada, num prazo máximo de 6 mêses,
-    após o qual os dados não poderão mais ser recuperados.
-    Em caso de inadimplência, a conta só poderá ser reativada pagando-se o valor total da dívida.
-
-- **Cancelamento no tempo de experiência:**
-    O contratante pode cancelar a conta dentro de 7 dias, com reembolso total do valor pago.
-- **Cancelamento por vontade do contratante:**
-    A conta será cancelada ao início do próximo período de uso, sem nenhum custo adicional.
-- **Cancelamento por vontade do contratante com reembolso:**
-    A conta é cancelada imediatamente, com reembolso de 85% do valor proporcional ao restante do período de uso.
-- **Cancelamento por vontade do contratante com faturas atrasadas:**
-    A conta é cancelada imediatamente, devendo pagar o valor proporcional ao tempo de uso,
-    ou então negociar a dívida por um dos canais de negociação.
-- **Cancelamento ao fim da validade:** ao final da validade deste contrato,
-    a conta é cancelada se não houver nenhum novo contrato firmado para o período posterior.
-
-- **Cancelamento por falta de pagamento:** Na data da cobrança,
-    se a mesma não for paga e já houver 1 faturas atrasadas (lembrando que as faturas são trimestrais).
-    O contratante deve realizar o pagamento integral das faturas atrasadas.
-
-- **Cancelamento por inobservância do contrato:** A conta pode ser cancelada,
-    quando houver inobservância deste contrato no que diz respeito ao uso do software.
-    (e.g. se o usuário não for realmente recém formado/credenciado)
-
-Upgrade
--------
-
-- **Sem perda de dados:** é possível escolher se o upgrade deve manter os dados que já foram inseridos.
-- **Sem custo:** a operação de upgrade em si não possui custo.
-- **Planos possíveis:** o upgrade pode ser feito para qualquer outro plano pago.
-
-Definições e termos
--------------------
-
-- **Adimplente:** usuário em dia com todos os pagamentos.
-- **Inadimplente:** usuário que possui faturas atrasadas.
-
-- **Logar:** ato de entrar no software, não necessariamente com acesso a todas as funcionalidades.
-- **Login:** conjunto de informações necessárias para um usuário logar.
-
-",
-
-                        #endregion
                     });
 
             db.SaveChanges();
@@ -2098,9 +1861,9 @@ GO
             var practice = new Practice
                 {
                     Name = name,
-                    CreatedOn = DateTime.UtcNow.AddDays(-1),
+                    CreatedOn = Firestarter.UtcNow.AddDays(-1),
                     WindowsTimeZoneId = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time").Id,
-                    VerificationDate = DateTime.UtcNow,
+                    VerificationDate = Firestarter.UtcNow,
                     UrlIdentifier = urlIdentifier,
                 };
 
@@ -2142,7 +1905,7 @@ GO
                 {
                     UserName = username,
                     UserNameNormalized = StringHelper.NormalizeUserName(username),
-                    LastActiveOn = DateTime.UtcNow,
+                    LastActiveOn = Firestarter.UtcNow,
                     PasswordSalt = pwdSalt,
                     Password = pwdHash,
                     Practice = practice,
@@ -2157,7 +1920,7 @@ GO
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
                     FullName = name,
                     Gender = (int)TypeGender.Female,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
                 };
 
@@ -2247,8 +2010,8 @@ GO
         public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 600)
         {
             var practice = db.Practices.First(p => p.Id == doctor.PracticeId);
-            var startingTime = PracticeController.ConvertToLocalDateTime(practice, DateTime.UtcNow.AddDays(-20));
-            var practiceNow = PracticeController.ConvertToLocalDateTime(practice, DateTime.UtcNow);
+            var startingTime = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
+            var practiceNow = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow);
             var user = doctor.Users.First();
             var dbWrapper = new CerebelloEntitiesAccessFilterWrapper(db);
             dbWrapper.SetCurrentUserById(user.Id);
@@ -2289,7 +2052,7 @@ GO
                             new Appointment
                             {
                                 CreatedById = creator.Id,
-                                CreatedOn = DateTime.UtcNow,
+                                CreatedOn = Firestarter.UtcNow,
                                 DoctorId = doctor.Id,
                                 Start = nextFreeTime.Item1.ToUniversalTime(),
                                 End = nextFreeTime.Item2.ToUniversalTime(),
@@ -2306,7 +2069,7 @@ GO
                             new Appointment
                             {
                                 CreatedById = creator.Id,
-                                CreatedOn = DateTime.UtcNow,
+                                CreatedOn = Firestarter.UtcNow,
                                 DoctorId = doctor.Id,
                                 Start = nextFreeTime.Item1.ToUniversalTime(),
                                 End = nextFreeTime.Item2.ToUniversalTime(),

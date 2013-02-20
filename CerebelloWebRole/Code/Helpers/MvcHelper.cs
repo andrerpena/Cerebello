@@ -238,14 +238,13 @@ namespace CerebelloWebRole.Code.Helpers
         /// </summary>
         /// <param name="controllerContext">ControllerContext that is used to locate the view.</param>
         /// <param name="viewName">The name of the partial view to render.</param>
-        /// <param name="model">The model objeto to pass to the partial view.</param>
+        /// <param name="viewData">The viewData, containing the model object to pass to the partial view.</param>
         /// <returns>The string rendered from the partial view.</returns>
         public static string RenderPartialViewToString(
             ControllerContext controllerContext,
-            [JetBrains.Annotations.AspMvcView][JetBrains.Annotations.AspMvcPartialView] string viewName,
-            object model = null)
+            [AspMvcView][AspMvcPartialView] string viewName,
+            ViewDataDictionary viewData = null)
         {
-            var viewData = new ViewDataDictionary(model);
             var tempData = new TempDataDictionary();
             var viewResult = ViewEngines.Engines.FindPartialView(controllerContext, viewName);
             using (var sw = new StringWriter())

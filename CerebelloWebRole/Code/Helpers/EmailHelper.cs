@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
+using System.Web.Mvc;
 
 namespace CerebelloWebRole.Code.Helpers
 {
@@ -32,32 +33,31 @@ namespace CerebelloWebRole.Code.Helpers
             return smtpClient;
         }
 
+        public const string DEFAULT_SOURCE = "www.cerebello.com.br";
+
         /// <summary>
         /// Creates an e-mail message.
-        /// The 'From' address is fixed, and is valid in the Smtp server used by the 'SendEmail' method.
+        /// The 'From' address is fixed, and is valid in the Smtp server used by the 'TrySendEmail' method.
         /// </summary>
         /// <param name="toAddress">Address to send the message to.</param>
         /// <param name="subject">Subject of the message.</param>
         /// <param name="bodyText">Body of the message in plain text format.</param>
         /// <param name="bodyHtml">Body of the message in Html format.</param>
         /// <param name="sourceName"></param>
-        /// <returns>Returns a 'MailMessage' that can be sent using the 'SendEmail' method.</returns>
+        /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
         public static MailMessage CreateEmailMessage(
             MailAddress toAddress,
             [Localizable(true)] string subject,
             [Localizable(true)] string bodyText,
             [Localizable(true)] string bodyHtml = null,
-            string sourceName = null)
+            string sourceName = DEFAULT_SOURCE)
         {
             // note: this method was copied to EmailSenderWorker
             if (string.IsNullOrEmpty(bodyText))
                 throw new ArgumentException("bodyText must be provided.", "bodyText");
 
-            if (DebugConfig.EmailAddressOverride)
-                toAddress = new MailAddress("cerebello@cerebello.com.br", toAddress.DisplayName);
-
             // NOTE: The string "cerebello@cerebello.com.br" is repeated in other place.
-            var fromAddress = new MailAddress("cerebello@cerebello.com.br", sourceName ?? "www.cerebello.com.br");
+            var fromAddress = new MailAddress("cerebello@cerebello.com.br", sourceName ?? DEFAULT_SOURCE);
             var mailMessage = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyText.Trim() };
 
             // Adding Html body.
@@ -75,13 +75,13 @@ namespace CerebelloWebRole.Code.Helpers
         public delegate void SendEmailAction(MailMessage mailMessage);
 
         /// <summary>
-        /// Overrides the default procedure DefaultSendEmail when calling SendEmail.
+        /// Overrides the default procedure DefaultSendEmail when calling TrySendEmail.
         /// </summary>
         public static SendEmailAction DefaultEmailSender { get; set; }
 
         /// <summary>
         /// Represents the default e-mail sending procedure.
-        /// This method may not be used directly, use SendEmail instead.
+        /// This method may not be used directly, use TrySendEmail instead.
         /// </summary>
         /// <param name="mailMessage"></param>
         public static void DefaultSendEmail(MailMessage mailMessage)
@@ -98,42 +98,74 @@ namespace CerebelloWebRole.Code.Helpers
         public static void SendEmail(MailMessage mailMessage)
         {
 #if DEBUG
-            var allowSendEmail = mailMessage.To.All(to => new[]
-                {
-                    // These are the allowed email destinations when debugging.
-                    // If the e-mail address is not in this list, then it will be saved locally.
-                    "masbicudo@gmail.com",
-                    "andrerpena@gmail.com",
-                    "cerebello@cerebello.com.br",
-                }.Contains(to.Address));
-#else
-            var allowSendEmail = true;
-#endif
+            // saving e-mail to the file-system
+            foreach (var saveEmailToPath in DebugConfig.PathListToSaveEmailsTo)
+                SaveEmailLocal(mailMessage, saveEmailToPath);
 
-            if (!allowSendEmail || DebugConfig.UseDesktopEmailBox)
+            foreach (var addressToSendTo in DebugConfig.EmailAddressesToCopyEmailsTo)
+                // ReSharper disable AccessToForEachVariableInClosure
+                foreach (var emailAddress in mailMessage.To.Select(x => new MailAddress(addressToSendTo, x.DisplayName)))
+                    // ReSharper restore AccessToForEachVariableInClosure
+                    mailMessage.Bcc.Add(emailAddress);
+
+            // removing all unallowed email addresses
+            var notAllowed = mailMessage.To.Where(a => !DebugConfig.CanSendEmailToAddress(a.Address)).ToList();
+            foreach (var address in notAllowed)
+                mailMessage.To.Remove(address);
+
+            if (notAllowed.Any() && !mailMessage.To.Any())
             {
-                SaveEmailLocal(mailMessage);
+                if (!mailMessage.Bcc.Any())
+                {
+                    Debug.Print(
+                        "E-mail ignored: cannot send to the address ({0}) while in DEBUG mode.",
+                        notAllowed.First().Address);
+                    return;
+                }
+                mailMessage.To.Add(mailMessage.Bcc[0]);
+                mailMessage.Bcc.RemoveAt(0);
             }
-            else
+#endif
+            if (!mailMessage.To.Any())
             {
-                (DefaultEmailSender ?? DefaultSendEmail)(mailMessage);
+                mailMessage.Subject = string.Format("WARNING: E-MAIL W/O DESTINATION: {0}", mailMessage.Subject);
+                mailMessage.To.Add(new MailAddress("cerebello@cerebello.com.br", "Error report"));
             }
+            (DefaultEmailSender ?? DefaultSendEmail)(mailMessage);
         }
 
-        private static void SaveEmailLocal(MailMessage message)
+        /// <summary>
+        /// Tries to send an e-mail message using the default SmtpClient.
+        /// The e-mail will be sent by either calling the DefaultSendEmailAction delegate or the DefaultSendEmail method.
+        /// </summary>
+        /// <param name="mailMessage">The MailMessage to send.</param>
+        public static bool TrySendEmail(MailMessage mailMessage)
         {
-            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            var emailsPath = Path.Combine(desktopPath, @"Emails");
+            for (int tries = 0; tries < 3; tries++)
+            {
+                try
+                {
+                    SendEmail(mailMessage);
+                    return true;
+                }
+                // ReSharper disable EmptyGeneralCatchClause
+                catch { }
+                // ReSharper restore EmptyGeneralCatchClause
+            }
+            return false;
+        }
 
+        private static void SaveEmailLocal(MailMessage message, string path)
+        {
             foreach (var eachDestinationAddress in message.To)
             {
-                var inboxPath = Path.Combine(emailsPath,
+                var inboxPath = Path.Combine(path,
                     string.Format("{0}@{1}",
                         Regex.Replace(eachDestinationAddress.User, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase),
                         Regex.Replace(eachDestinationAddress.Host, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase)));
 
-                if (!Directory.Exists(emailsPath))
-                    Directory.CreateDirectory(emailsPath);
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
 
                 if (!Directory.Exists(inboxPath))
                     Directory.CreateDirectory(inboxPath);
@@ -149,7 +181,7 @@ namespace CerebelloWebRole.Code.Helpers
 
                 // saving main view
                 string ext = message.IsBodyHtml ? ".html" : ".txt";
-                using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ext)))
+                using (var file = File.Create(Path.Combine(inboxPath, name + ext)))
                 using (var writer = new StreamWriter(file, message.BodyEncoding))
                     writer.Write(message.Body);
 
@@ -158,11 +190,50 @@ namespace CerebelloWebRole.Code.Helpers
                 {
                     string ext2;
                     if (dicMediaTypeExt.TryGetValue(eachAlternateView.ContentType.MediaType, out ext2))
-                        using (var file = System.IO.File.Create(Path.Combine(inboxPath, name + ext2)))
+                        using (var file = File.Create(Path.Combine(inboxPath, name + ext2)))
                             eachAlternateView.ContentStream.CopyTo(file);
                 }
             }
         }
 
+        /// <summary>
+        /// Creates an e-mail message from an MVC view.
+        /// The title, the html and text contents of the e-mail will be given by this view.
+        /// The 'From' address is fixed, and is valid in the Smtp server used by the 'TrySendEmail' method.
+        /// </summary>
+        /// <param name="viewRenderer">Method that is used to render the view.</param>
+        /// <param name="contentView">View name to use to render the e-mail contents, and to get the text from.</param>
+        /// <param name="toAddress">Address of the recipient.</param>
+        /// <param name="model">Data that should be sent to the view.</param>
+        /// <param name="sourceName">Source name for this e-mail.</param>
+        /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
+        public static MailMessage CreateEmailMessageFromView(
+            Func<string, ViewDataDictionary, string> viewRenderer,
+            string contentView,
+            MailAddress toAddress,
+            object model,
+            string sourceName)
+        {
+            var viewData = new ViewDataDictionary(model);
+
+            // generating html content
+            viewData["IsBodyHtml"] = false;
+            var bodyText = WebUtility.HtmlDecode(viewRenderer(contentView, viewData));
+
+            // todo: one day if needed, we could use HtmlAgilityPack to read elements that need embeded resources and attatch them
+
+            // generating text content
+            viewData["IsBodyHtml"] = true;
+            var bodyHtml = viewRenderer(contentView, viewData);
+
+            // title is defined inside the view
+            string undefinedTitle = "Sem título";
+            if (DebugConfig.IsDebug)
+                undefinedTitle = string.Format("DEBUG WARNING: 'ViewBag.Title' was not defined in view '{0}'", contentView);
+            var title = (viewData["Title"] ?? undefinedTitle).ToString();
+
+            var result = CreateEmailMessage(toAddress, title, bodyText, bodyHtml, sourceName);
+            return result;
+        }
     }
 }

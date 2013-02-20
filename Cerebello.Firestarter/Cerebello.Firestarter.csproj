@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleHelper.cs" />
     <Compile Include="Firestarter.cs" />
     <Compile Include="Helpers\AnvisaLeafletHelper.cs" />
     <Compile Include="Helpers\Cbhpm.cs" />

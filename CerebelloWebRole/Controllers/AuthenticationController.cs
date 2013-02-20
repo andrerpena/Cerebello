@@ -314,24 +314,9 @@ namespace CerebelloWebRole.Controllers
                     }
 
                     // Rendering message bodies from partial view.
-                    var partialViewModel = new EmailViewModel
-                                               {
-                                                   PersonName = user.Person.FullName,
-                                                   UserName = user.UserName,
-                                                   Token = tokenId.ToString(),
-                                                   PracticeIdentifier = user.Practice.UrlIdentifier,
-                                               };
-                    var bodyText = WebUtility.HtmlDecode(this.RenderPartialViewToString("ConfirmationEmail", partialViewModel));
-
-                    partialViewModel.IsBodyHtml = true;
-                    var bodyHtml = this.RenderPartialViewToString("ConfirmationEmail", partialViewModel);
-
+                    var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), };
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
-
-                    var message = EmailHelper.CreateEmailMessage(
-                        toAddress,
-                        "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.",
-                        bodyText, bodyHtml);
+                    var message = this.CreateEmailMessage("ConfirmationEmail", toAddress, emailViewModel);
 
                     // If the ModelState is still valid, then save objects to the database,
                     // and send confirmation email message to the user.
@@ -385,7 +370,7 @@ namespace CerebelloWebRole.Controllers
                         this.db.SaveChanges();
 
                         // Sending the confirmation e-mail to the new user.
-                        this.SendEmail(message);
+                        this.TrySendEmail(message);
 
                         // Log the user in.
                         var loginModel = new LoginViewModel
@@ -602,24 +587,9 @@ namespace CerebelloWebRole.Controllers
                     }
 
                     // Rendering message bodies from partial view.
-                    var partialViewModel = new EmailViewModel
-                                               {
-                                                   PersonName = user.Person.FullName,
-                                                   UserName = user.UserName,
-                                                   Token = tokenId.ToString(),
-                                                   PracticeIdentifier = user.Practice.UrlIdentifier,
-                                               };
-                    var bodyText = WebUtility.HtmlDecode(this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel));
-
-                    partialViewModel.IsBodyHtml = true;
-                    var bodyHtml = this.RenderPartialViewToString("ResetPasswordEmail", partialViewModel);
-
+                    var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), };
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
-
-                    message = EmailHelper.CreateEmailMessage(
-                        toAddress,
-                        "Redefinir senha da conta no Cerebello",
-                        bodyText, bodyHtml);
+                    message = this.CreateEmailMessage("ResetPasswordEmail", toAddress, emailViewModel);
 
                     #endregion
                 }
@@ -637,13 +607,13 @@ namespace CerebelloWebRole.Controllers
                         try
                         {
                             // Sending the password reset e-mail to the user.
-                            this.SendEmail(message);
+                            this.TrySendEmail(message);
                         }
                         catch (SmtpException)
                         {
                             // if e-mail was not sent, try to send it again, after 10 seconds
                             Thread.Sleep(10000);
-                            this.SendEmail(message);
+                            this.TrySendEmail(message);
                         }
 
                         return this.RedirectToAction("ResetPasswordEmailSent");
