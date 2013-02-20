@@ -9,6 +9,14 @@ S   P Desc
 
     ?? http://www.amb.org.br/teste/cbhpm2010_adquirindo.htm
 
+    P0 Verificar tela de upgrade quando existem mais de 15 médicos na conta trial.
+    P0 Mensagem de limite de médicos, na tela de criar usuário, junto com os campos do médico. Colocar um link para aumentar a capacidade da conta.
+    P0 Mensagem de limite de pacientes na tela de criar novo paciente.
+    P0 Quando o usuário da POST sem respeitar o limite de médico, tem que mostrar validação, e um link para poder aumentar a capacidade da conta.
+    P0 Verificar o fluxo de upgrade da conta trial para a profissional.
+    P0 Após continuar na 1a tela de upgrade, usuário deve ir para tela de confirmação dos dados... todos os dados devem vir do servidor.
+    P0 Texto da tela de "Upgrade requisitado" está errado. Após confirmar já está valendo a nova conta, e o usuário tem que pagar de qualquer forma.
+
 x   P0 Testes para login com caixa de lembrar de mim marcada.
 x   P0 Testes para login com caixa de lembrar de mim desmarcada.
     P0 Testes: toda a parte de criação, edição e exclusão de convênios.

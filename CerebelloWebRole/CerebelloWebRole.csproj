@@ -182,6 +182,7 @@
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Compile Include="Controllers\MasterAdminController.cs" />
+    <Compile Include="Models\InternalUpgradeEmailViewModel.cs" />
     <Compile Include="Models\IdentityViewModel.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
@@ -729,6 +730,7 @@
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\InternalUpgradeEmail.cshtml" />
     <Content Include="App_Code\EmailHtml.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />

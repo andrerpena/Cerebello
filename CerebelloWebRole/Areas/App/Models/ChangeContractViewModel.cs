@@ -40,7 +40,22 @@ namespace CerebelloWebRole.Areas.App.Models
 
         public string ContractUrlId { get; set; }
 
+        /// <summary>
+        /// Desired size of the practice.
+        /// </summary>
         [Display(Name = "Quantidade de médicos")]
         public int DoctorCount { get; set; }
+
+        /// <summary>
+        /// Currently registered doctors.
+        /// </summary>
+        public int CurrentDoctorsCount { get; set; }
+
+        /// <summary>
+        /// Final value calculated by the javascript code, and sent to the server.
+        /// This is needed because this is the value that the person sees at the client.
+        /// This value must be validated at the server to prevent fraud.
+        /// </summary>
+        public decimal FinalValue { get; set; }
     }
 }

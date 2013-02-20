@@ -859,6 +859,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<PatientFile> _PatientFiles;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Billing> Billings
+        {
+            get
+            {
+                if ((_Billings == null))
+                {
+                    _Billings = base.CreateObjectSet<Billing>("Billings");
+                }
+                return _Billings;
+            }
+        }
+        private ObjectSet<Billing> _Billings;
 
         #endregion
 
@@ -1231,6 +1247,14 @@ namespace Cerebello.Model
         {
             base.AddObject("PatientFiles", patientFile);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Billings EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToBillings(Billing billing)
+        {
+            base.AddObject("Billings", billing);
+        }
 
         #endregion
 
@@ -1258,9 +1282,8 @@ namespace Cerebello.Model
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
         /// <param name="startDate">Initial value of the StartDate property.</param>
-        /// <param name="fee">Initial value of the Fee property.</param>
-        /// <param name="text">Initial value of the Text property.</param>
-        public static AccountContract CreateAccountContract(global::System.Int32 id, global::System.Int32 contractTypeId, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime startDate, global::System.Decimal fee, global::System.String text)
+        /// <param name="isTrial">Initial value of the IsTrial property.</param>
+        public static AccountContract CreateAccountContract(global::System.Int32 id, global::System.Int32 contractTypeId, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime startDate, global::System.Boolean isTrial)
         {
             AccountContract accountContract = new AccountContract();
             accountContract.Id = id;
@@ -1268,8 +1291,7 @@ namespace Cerebello.Model
             accountContract.PracticeId = practiceId;
             accountContract.IssuanceDate = issuanceDate;
             accountContract.StartDate = startDate;
-            accountContract.Fee = fee;
-            accountContract.Text = text;
+            accountContract.IsTrial = isTrial;
             return accountContract;
         }
 
@@ -1403,30 +1425,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal Fee
-        {
-            get
-            {
-                return _Fee;
-            }
-            set
-            {
-                OnFeeChanging(value);
-                ReportPropertyChanging("Fee");
-                _Fee = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("Fee");
-                OnFeeChanged();
-            }
-        }
-        private global::System.Decimal _Fee;
-        partial void OnFeeChanging(global::System.Decimal value);
-        partial void OnFeeChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public Nullable<global::System.DateTime> EndDate
@@ -1451,26 +1449,218 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String Text
+        public Nullable<global::System.Decimal> BillingAmount
         {
             get
             {
-                return _Text;
+                return _BillingAmount;
             }
             set
             {
-                OnTextChanging(value);
-                ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("Text");
-                OnTextChanged();
+                OnBillingAmountChanging(value);
+                ReportPropertyChanging("BillingAmount");
+                _BillingAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingAmount");
+                OnBillingAmountChanged();
             }
         }
-        private global::System.String _Text;
-        partial void OnTextChanging(global::System.String value);
-        partial void OnTextChanged();
+        private Nullable<global::System.Decimal> _BillingAmount;
+        partial void OnBillingAmountChanging(Nullable<global::System.Decimal> value);
+        partial void OnBillingAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String BillingPeriodType
+        {
+            get
+            {
+                return _BillingPeriodType;
+            }
+            set
+            {
+                OnBillingPeriodTypeChanging(value);
+                ReportPropertyChanging("BillingPeriodType");
+                _BillingPeriodType = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("BillingPeriodType");
+                OnBillingPeriodTypeChanged();
+            }
+        }
+        private global::System.String _BillingPeriodType;
+        partial void OnBillingPeriodTypeChanging(global::System.String value);
+        partial void OnBillingPeriodTypeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> BillingPeriodSize
+        {
+            get
+            {
+                return _BillingPeriodSize;
+            }
+            set
+            {
+                OnBillingPeriodSizeChanging(value);
+                ReportPropertyChanging("BillingPeriodSize");
+                _BillingPeriodSize = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingPeriodSize");
+                OnBillingPeriodSizeChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _BillingPeriodSize;
+        partial void OnBillingPeriodSizeChanging(Nullable<global::System.Int32> value);
+        partial void OnBillingPeriodSizeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> BillingPeriodCount
+        {
+            get
+            {
+                return _BillingPeriodCount;
+            }
+            set
+            {
+                OnBillingPeriodCountChanging(value);
+                ReportPropertyChanging("BillingPeriodCount");
+                _BillingPeriodCount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingPeriodCount");
+                OnBillingPeriodCountChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _BillingPeriodCount;
+        partial void OnBillingPeriodCountChanging(Nullable<global::System.Int32> value);
+        partial void OnBillingPeriodCountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> BillingDueDay
+        {
+            get
+            {
+                return _BillingDueDay;
+            }
+            set
+            {
+                OnBillingDueDayChanging(value);
+                ReportPropertyChanging("BillingDueDay");
+                _BillingDueDay = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingDueDay");
+                OnBillingDueDayChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _BillingDueDay;
+        partial void OnBillingDueDayChanging(Nullable<global::System.Int32> value);
+        partial void OnBillingDueDayChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> DoctorsLimit
+        {
+            get
+            {
+                return _DoctorsLimit;
+            }
+            set
+            {
+                OnDoctorsLimitChanging(value);
+                ReportPropertyChanging("DoctorsLimit");
+                _DoctorsLimit = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("DoctorsLimit");
+                OnDoctorsLimitChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _DoctorsLimit;
+        partial void OnDoctorsLimitChanging(Nullable<global::System.Int32> value);
+        partial void OnDoctorsLimitChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> PatientsLimit
+        {
+            get
+            {
+                return _PatientsLimit;
+            }
+            set
+            {
+                OnPatientsLimitChanging(value);
+                ReportPropertyChanging("PatientsLimit");
+                _PatientsLimit = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PatientsLimit");
+                OnPatientsLimitChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _PatientsLimit;
+        partial void OnPatientsLimitChanging(Nullable<global::System.Int32> value);
+        partial void OnPatientsLimitChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsTrial
+        {
+            get
+            {
+                return _IsTrial;
+            }
+            set
+            {
+                OnIsTrialChanging(value);
+                ReportPropertyChanging("IsTrial");
+                _IsTrial = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsTrial");
+                OnIsTrialChanged();
+            }
+        }
+        private global::System.Boolean _IsTrial;
+        partial void OnIsTrialChanging(global::System.Boolean value);
+        partial void OnIsTrialChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String CustomText
+        {
+            get
+            {
+                return _CustomText;
+            }
+            set
+            {
+                OnCustomTextChanging(value);
+                ReportPropertyChanging("CustomText");
+                _CustomText = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("CustomText");
+                OnCustomTextChanged();
+            }
+        }
+        private global::System.String _CustomText;
+        partial void OnCustomTextChanging(global::System.String value);
+        partial void OnCustomTextChanged();
 
         #endregion
 
@@ -2945,6 +3135,297 @@ namespace Cerebello.Model
 
         #endregion
 
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="Billing")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Billing : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Billing object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
+        /// <param name="amount">Initial value of the Amount property.</param>
+        /// <param name="dueDate">Initial value of the DueDate property.</param>
+        /// <param name="afterDueTax">Initial value of the AfterDueTax property.</param>
+        /// <param name="afterDueMonthlyTax">Initial value of the AfterDueMonthlyTax property.</param>
+        /// <param name="isPayd">Initial value of the IsPayd property.</param>
+        /// <param name="paydAmount">Initial value of the PaydAmount property.</param>
+        /// <param name="paymentDate">Initial value of the PaymentDate property.</param>
+        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Decimal amount, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.Decimal paydAmount, global::System.DateTime paymentDate)
+        {
+            Billing billing = new Billing();
+            billing.Id = id;
+            billing.PracticeId = practiceId;
+            billing.IssuanceDate = issuanceDate;
+            billing.Amount = amount;
+            billing.DueDate = dueDate;
+            billing.AfterDueTax = afterDueTax;
+            billing.AfterDueMonthlyTax = afterDueMonthlyTax;
+            billing.IsPayd = isPayd;
+            billing.PaydAmount = paydAmount;
+            billing.PaymentDate = paymentDate;
+            return billing;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime IssuanceDate
+        {
+            get
+            {
+                return _IssuanceDate;
+            }
+            set
+            {
+                OnIssuanceDateChanging(value);
+                ReportPropertyChanging("IssuanceDate");
+                _IssuanceDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IssuanceDate");
+                OnIssuanceDateChanged();
+            }
+        }
+        private global::System.DateTime _IssuanceDate;
+        partial void OnIssuanceDateChanging(global::System.DateTime value);
+        partial void OnIssuanceDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal Amount
+        {
+            get
+            {
+                return _Amount;
+            }
+            set
+            {
+                OnAmountChanging(value);
+                ReportPropertyChanging("Amount");
+                _Amount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Amount");
+                OnAmountChanged();
+            }
+        }
+        private global::System.Decimal _Amount;
+        partial void OnAmountChanging(global::System.Decimal value);
+        partial void OnAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime DueDate
+        {
+            get
+            {
+                return _DueDate;
+            }
+            set
+            {
+                OnDueDateChanging(value);
+                ReportPropertyChanging("DueDate");
+                _DueDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("DueDate");
+                OnDueDateChanged();
+            }
+        }
+        private global::System.DateTime _DueDate;
+        partial void OnDueDateChanging(global::System.DateTime value);
+        partial void OnDueDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal AfterDueTax
+        {
+            get
+            {
+                return _AfterDueTax;
+            }
+            set
+            {
+                OnAfterDueTaxChanging(value);
+                ReportPropertyChanging("AfterDueTax");
+                _AfterDueTax = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AfterDueTax");
+                OnAfterDueTaxChanged();
+            }
+        }
+        private global::System.Decimal _AfterDueTax;
+        partial void OnAfterDueTaxChanging(global::System.Decimal value);
+        partial void OnAfterDueTaxChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal AfterDueMonthlyTax
+        {
+            get
+            {
+                return _AfterDueMonthlyTax;
+            }
+            set
+            {
+                OnAfterDueMonthlyTaxChanging(value);
+                ReportPropertyChanging("AfterDueMonthlyTax");
+                _AfterDueMonthlyTax = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AfterDueMonthlyTax");
+                OnAfterDueMonthlyTaxChanged();
+            }
+        }
+        private global::System.Decimal _AfterDueMonthlyTax;
+        partial void OnAfterDueMonthlyTaxChanging(global::System.Decimal value);
+        partial void OnAfterDueMonthlyTaxChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsPayd
+        {
+            get
+            {
+                return _IsPayd;
+            }
+            set
+            {
+                OnIsPaydChanging(value);
+                ReportPropertyChanging("IsPayd");
+                _IsPayd = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsPayd");
+                OnIsPaydChanged();
+            }
+        }
+        private global::System.Boolean _IsPayd;
+        partial void OnIsPaydChanging(global::System.Boolean value);
+        partial void OnIsPaydChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal PaydAmount
+        {
+            get
+            {
+                return _PaydAmount;
+            }
+            set
+            {
+                OnPaydAmountChanging(value);
+                ReportPropertyChanging("PaydAmount");
+                _PaydAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PaydAmount");
+                OnPaydAmountChanged();
+            }
+        }
+        private global::System.Decimal _PaydAmount;
+        partial void OnPaydAmountChanging(global::System.Decimal value);
+        partial void OnPaydAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime PaymentDate
+        {
+            get
+            {
+                return _PaymentDate;
+            }
+            set
+            {
+                OnPaymentDateChanging(value);
+                ReportPropertyChanging("PaymentDate");
+                _PaymentDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PaymentDate");
+                OnPaymentDateChanged();
+            }
+        }
+        private global::System.DateTime _PaymentDate;
+        partial void OnPaymentDateChanging(global::System.DateTime value);
+        partial void OnPaymentDateChanged();
+
+        #endregion
+
+    
     }
     
     /// <summary>
@@ -12478,24 +12959,24 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String Text
+        public global::System.String CustomTemplateText
         {
             get
             {
-                return _Text;
+                return _CustomTemplateText;
             }
             set
             {
-                OnTextChanging(value);
-                ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("Text");
-                OnTextChanged();
+                OnCustomTemplateTextChanging(value);
+                ReportPropertyChanging("CustomTemplateText");
+                _CustomTemplateText = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("CustomTemplateText");
+                OnCustomTemplateTextChanged();
             }
         }
-        private global::System.String _Text;
-        partial void OnTextChanging(global::System.String value);
-        partial void OnTextChanged();
+        private global::System.String _CustomTemplateText;
+        partial void OnCustomTemplateTextChanging(global::System.String value);
+        partial void OnCustomTemplateTextChanged();
 
         #endregion
 

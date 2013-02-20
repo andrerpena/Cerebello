@@ -2,8 +2,6 @@
 /****** Object:  User [NT AUTHORITY\NETWORK SERVICE] ******/
 CREATE USER [NT AUTHORITY\NETWORK SERVICE] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE] WITH DEFAULT_SCHEMA=[dbo]
 GO
-sys.sp_addrolemember @rolename = N'db_owner', @membername = N'NT AUTHORITY\NETWORK SERVICE'
-GO
 /****** Object:  Table [dbo].[AccountContract] ******/
 SET ANSI_NULLS ON
 GO
@@ -15,15 +13,21 @@ CREATE TABLE [dbo].[AccountContract](
 	[PracticeId] [int] NOT NULL,
 	[IssuanceDate] [date] NOT NULL,
 	[StartDate] [date] NOT NULL,
-	[Fee] [numeric](16, 2) NOT NULL,
 	[EndDate] [date] NULL,
-	[Text] [nvarchar](max) NOT NULL,
+	[BillingAmount] [numeric](16, 2) NULL,
+	[BillingPeriodType] [char](4) NULL,
+	[BillingPeriodSize] [int] NULL,
+	[BillingPeriodCount] [int] NULL,
+	[BillingDueDay] [int] NULL,
+	[DoctorsLimit] [int] NULL,
+	[PatientsLimit] [int] NULL,
+	[IsTrial] [bit] NOT NULL,
+	[CustomText] [nvarchar](max) NULL,
  CONSTRAINT [PK_AccountContract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Address] ******/
 SET ANSI_NULLS ON
@@ -42,9 +46,8 @@ CREATE TABLE [dbo].[Address](
  CONSTRAINT [PK_Address] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Administrator] ******/
 SET ANSI_NULLS ON
@@ -57,9 +60,8 @@ CREATE TABLE [dbo].[Administrator](
  CONSTRAINT [PK_Administrator] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Anamnese] ******/
 SET ANSI_NULLS ON
@@ -84,9 +86,8 @@ CREATE TABLE [dbo].[Anamnese](
  CONSTRAINT [PK_Anamnese] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Appointment] ******/
 SET ANSI_NULLS ON
@@ -111,9 +112,30 @@ CREATE TABLE [dbo].[Appointment](
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
+GO
+/****** Object:  Table [dbo].[Billing] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Billing](
+	[Id] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
+	[IssuanceDate] [date] NOT NULL,
+	[Amount] [numeric](16, 2) NOT NULL,
+	[DueDate] [date] NOT NULL,
+	[AfterDueTax] [numeric](2, 2) NOT NULL,
+	[AfterDueMonthlyTax] [numeric](2, 2) NOT NULL,
+	[IsPayd] [bit] NOT NULL,
+	[PaydAmount] [numeric](16, 2) NOT NULL,
+	[PaymentDate] [date] NOT NULL,
+ CONSTRAINT [PK_Billing] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
 GO
 /****** Object:  Table [dbo].[CFG_DayOff] ******/
 SET ANSI_NULLS ON
@@ -129,9 +151,13 @@ CREATE TABLE [dbo].[CFG_DayOff](
  CONSTRAINT [PK_DayOff] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
+GO
+CREATE NONCLUSTERED INDEX [IX_DayOff_Date] ON [dbo].[CFG_DayOff] 
+(
+	[Date] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 /****** Object:  Table [dbo].[CFG_Documents] ******/
 SET ANSI_NULLS ON
@@ -150,9 +176,8 @@ CREATE TABLE [dbo].[CFG_Documents](
  CONSTRAINT [PK_CFG_Documents] PRIMARY KEY CLUSTERED 
 (
 	[DoctorId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[CFG_Schedule] ******/
 SET ANSI_NULLS ON
@@ -201,9 +226,8 @@ CREATE TABLE [dbo].[CFG_Schedule](
  CONSTRAINT [PK_CFG_Schedule_1] PRIMARY KEY CLUSTERED 
 (
 	[DoctorId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[ChatMessage] ******/
 SET ANSI_NULLS ON
@@ -220,9 +244,8 @@ CREATE TABLE [dbo].[ChatMessage](
  CONSTRAINT [PK_ChatMessage] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Diagnosis] ******/
 SET ANSI_NULLS ON
@@ -240,9 +263,8 @@ CREATE TABLE [dbo].[Diagnosis](
  CONSTRAINT [PK_Diagnosis2] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Doctor] ******/
 SET ANSI_NULLS ON
@@ -262,9 +284,8 @@ CREATE TABLE [dbo].[Doctor](
  CONSTRAINT [PK_Doctor] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[ExaminationRequest] ******/
 SET ANSI_NULLS ON
@@ -282,9 +303,8 @@ CREATE TABLE [dbo].[ExaminationRequest](
  CONSTRAINT [PK_ExaminationRequest] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[ExaminationResult] ******/
 SET ANSI_NULLS ON
@@ -302,9 +322,8 @@ CREATE TABLE [dbo].[ExaminationResult](
  CONSTRAINT [PK_ExaminationResult] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[File] ******/
 SET ANSI_NULLS ON
@@ -321,9 +340,8 @@ CREATE TABLE [dbo].[File](
  CONSTRAINT [PK_File] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[GLB_Token] ******/
 SET ANSI_NULLS ON
@@ -339,9 +357,8 @@ CREATE TABLE [dbo].[GLB_Token](
  CONSTRAINT [PK_Token] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[HealthInsurance] ******/
 SET ANSI_NULLS ON
@@ -361,14 +378,13 @@ CREATE TABLE [dbo].[HealthInsurance](
  CONSTRAINT [PK_HealthEnsurance] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF),
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF),
  CONSTRAINT [IX_HealthInsurance] UNIQUE NONCLUSTERED 
 (
 	[DoctorId] ASC,
 	[Name] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Holiday] ******/
 SET ANSI_NULLS ON
@@ -382,9 +398,8 @@ CREATE TABLE [dbo].[Holiday](
  CONSTRAINT [PK_Holliday] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Laboratory] ******/
 SET ANSI_NULLS ON
@@ -401,9 +416,8 @@ CREATE TABLE [dbo].[Laboratory](
  CONSTRAINT [PK_MedicineLaboratory] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Leaflet] ******/
 SET ANSI_NULLS ON
@@ -418,9 +432,8 @@ CREATE TABLE [dbo].[Leaflet](
  CONSTRAINT [PK_MedicineLeaflet] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[MedicalCertificate] ******/
 SET ANSI_NULLS ON
@@ -437,9 +450,8 @@ CREATE TABLE [dbo].[MedicalCertificate](
  CONSTRAINT [PK_MedicalCertificate] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[MedicalCertificateField] ******/
 SET ANSI_NULLS ON
@@ -455,9 +467,8 @@ CREATE TABLE [dbo].[MedicalCertificateField](
  CONSTRAINT [PK_MedicalCertificateField] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Medicine] ******/
 SET ANSI_NULLS ON
@@ -476,9 +487,8 @@ CREATE TABLE [dbo].[Medicine](
  CONSTRAINT [PK_Medicine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[MedicineActiveIngredient] ******/
 SET ANSI_NULLS ON
@@ -493,9 +503,8 @@ CREATE TABLE [dbo].[MedicineActiveIngredient](
  CONSTRAINT [PK_ActiveIngredient] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[MedicineLeaflet] ******/
 SET ANSI_NULLS ON
@@ -509,9 +518,8 @@ CREATE TABLE [dbo].[MedicineLeaflet](
 (
 	[MedicineId] ASC,
 	[LeaftletId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[ModelMedicalCertificate] ******/
 SET ANSI_NULLS ON
@@ -527,9 +535,8 @@ CREATE TABLE [dbo].[ModelMedicalCertificate](
  CONSTRAINT [PK_ModelMedicalCertificate] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[ModelMedicalCertificateField] ******/
 SET ANSI_NULLS ON
@@ -544,9 +551,8 @@ CREATE TABLE [dbo].[ModelMedicalCertificateField](
  CONSTRAINT [PK_ModelMedicalCertificateField] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Notification] ******/
 SET ANSI_NULLS ON
@@ -565,9 +571,8 @@ CREATE TABLE [dbo].[Notification](
  CONSTRAINT [PK_Notification] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Patient] ******/
 SET ANSI_NULLS ON
@@ -584,9 +589,8 @@ CREATE TABLE [dbo].[Patient](
  CONSTRAINT [PK_Patient] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[PatientFile] ******/
 SET ANSI_NULLS ON
@@ -601,9 +605,8 @@ CREATE TABLE [dbo].[PatientFile](
  CONSTRAINT [PK_PatientFiles] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Person] ******/
 SET ANSI_NULLS ON
@@ -630,9 +633,8 @@ CREATE TABLE [dbo].[Person](
  CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[PersonAddress] ******/
 SET ANSI_NULLS ON
@@ -646,9 +648,8 @@ CREATE TABLE [dbo].[PersonAddress](
 (
 	[PersonId] ASC,
 	[AddressId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[PhysicalExamination] ******/
 SET ANSI_NULLS ON
@@ -664,9 +665,8 @@ CREATE TABLE [dbo].[PhysicalExamination](
  CONSTRAINT [PK_PhysicalExamination] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Practice] ******/
 SET ANSI_NULLS ON
@@ -693,9 +693,8 @@ CREATE TABLE [dbo].[Practice](
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Receipt] ******/
 SET ANSI_NULLS ON
@@ -710,9 +709,8 @@ CREATE TABLE [dbo].[Receipt](
  CONSTRAINT [PK_Receipt] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[ReceiptMedicine] ******/
 SET ANSI_NULLS ON
@@ -730,9 +728,8 @@ CREATE TABLE [dbo].[ReceiptMedicine](
  CONSTRAINT [PK_ReceiptMedicine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Secretary] ******/
 SET ANSI_NULLS ON
@@ -745,9 +742,8 @@ CREATE TABLE [dbo].[Secretary](
  CONSTRAINT [PK_Secretary] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Symptom] ******/
 SET ANSI_NULLS ON
@@ -764,9 +760,8 @@ CREATE TABLE [dbo].[Symptom](
  CONSTRAINT [PK_Diagnosis] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_ActiveIngredient] ******/
 SET ANSI_NULLS ON
@@ -779,9 +774,8 @@ CREATE TABLE [dbo].[SYS_ActiveIngredient](
  CONSTRAINT [PK_SYS_ActiveIngredient] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_Cid10] ******/
 SET ANSI_NULLS ON
@@ -796,9 +790,8 @@ CREATE TABLE [dbo].[SYS_Cid10](
  CONSTRAINT [PK_SYS_Cid10] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_ContractType] ******/
 SET ANSI_NULLS ON
@@ -810,14 +803,13 @@ CREATE TABLE [dbo].[SYS_ContractType](
 	[Name] [varchar](150) NOT NULL,
 	[CreatedOn] [date] NOT NULL,
 	[IsTrial] [bit] NOT NULL,
-	[UrlIdentifier] [nvarchar](50) NOT NULL,
-	[Text] [nvarchar](max) NULL,
+	[UrlIdentifier] [varchar](50) NOT NULL,
+	[CustomTemplateText] [nvarchar](max) NULL,
  CONSTRAINT [PK_SYS_Contract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_Holiday] ******/
 SET ANSI_NULLS ON
@@ -831,9 +823,8 @@ CREATE TABLE [dbo].[SYS_Holiday](
  CONSTRAINT [PK_SYS_Holliday] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_Laboratory] ******/
 SET ANSI_NULLS ON
@@ -846,9 +837,8 @@ CREATE TABLE [dbo].[SYS_Laboratory](
  CONSTRAINT [PK_SYS_Laboratory] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_Leaflet] ******/
 SET ANSI_NULLS ON
@@ -862,9 +852,8 @@ CREATE TABLE [dbo].[SYS_Leaflet](
  CONSTRAINT [PK_Table_1] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_MedicalEntity] ******/
 SET ANSI_NULLS ON
@@ -878,9 +867,18 @@ CREATE TABLE [dbo].[SYS_MedicalEntity](
  CONSTRAINT [PK_MedicalEntity] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Code] ON [dbo].[SYS_MedicalEntity] 
+(
+	[Code] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Name] ON [dbo].[SYS_MedicalEntity] 
+(
+	[Name] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 /****** Object:  Table [dbo].[SYS_MedicalProcedure] ******/
 SET ANSI_NULLS ON
@@ -894,9 +892,18 @@ CREATE TABLE [dbo].[SYS_MedicalProcedure](
  CONSTRAINT [PK_SYS_MedicalProcedures] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
+GO
+CREATE NONCLUSTERED INDEX [IX_SYS_MedicalProcedure_Name] ON [dbo].[SYS_MedicalProcedure] 
+(
+	[Name] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalProcedures_Code] ON [dbo].[SYS_MedicalProcedure] 
+(
+	[Code] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 /****** Object:  Table [dbo].[SYS_MedicalSpecialty] ******/
 SET ANSI_NULLS ON
@@ -910,9 +917,18 @@ CREATE TABLE [dbo].[SYS_MedicalSpecialty](
  CONSTRAINT [PK_MedicalSpecialty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
+GO
+CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Code] ON [dbo].[SYS_MedicalSpecialty] 
+(
+	[Code] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Name] ON [dbo].[SYS_MedicalSpecialty] 
+(
+	[Name] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 /****** Object:  Table [dbo].[SYS_Medicine] ******/
 SET ANSI_NULLS ON
@@ -927,9 +943,8 @@ CREATE TABLE [dbo].[SYS_Medicine](
  CONSTRAINT [PK_SYS_Medicine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_MedicineActiveIngredient] ******/
 SET ANSI_NULLS ON
@@ -943,9 +958,8 @@ CREATE TABLE [dbo].[SYS_MedicineActiveIngredient](
 (
 	[MedicineId] ASC,
 	[ActiveIngredientId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[SYS_MedicineLeaflet] ******/
 SET ANSI_NULLS ON
@@ -959,9 +973,8 @@ CREATE TABLE [dbo].[SYS_MedicineLeaflet](
 (
 	[SYS_MedicineId] ASC,
 	[SYS_LeafletId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[User] ******/
 SET ANSI_NULLS ON
@@ -984,385 +997,376 @@ CREATE TABLE [dbo].[User](
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
-/****** Object:  Index [IX_DayOff_Date] ******/
-CREATE NONCLUSTERED INDEX [IX_DayOff_Date] ON [dbo].[CFG_DayOff]
-(
-	[Date] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-SET ANSI_PADDING ON
-
-GO
-/****** Object:  Index [IX_SYS_MedicalEntity_Code] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Code] ON [dbo].[SYS_MedicalEntity]
-(
-	[Code] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-SET ANSI_PADDING ON
-
-GO
-/****** Object:  Index [IX_SYS_MedicalEntity_Name] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Name] ON [dbo].[SYS_MedicalEntity]
-(
-	[Name] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-SET ANSI_PADDING ON
-
-GO
-/****** Object:  Index [IX_SYS_MedicalProcedure_Name] ******/
-CREATE NONCLUSTERED INDEX [IX_SYS_MedicalProcedure_Name] ON [dbo].[SYS_MedicalProcedure]
-(
-	[Name] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-SET ANSI_PADDING ON
-
-GO
-/****** Object:  Index [IX_SYS_MedicalProcedures_Code] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalProcedures_Code] ON [dbo].[SYS_MedicalProcedure]
-(
-	[Code] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-SET ANSI_PADDING ON
-
-GO
-/****** Object:  Index [IX_SYS_MedicalSpecialty_Code] ******/
-CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Code] ON [dbo].[SYS_MedicalSpecialty]
-(
-	[Code] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-SET ANSI_PADDING ON
-
-GO
-/****** Object:  Index [IX_SYS_MedicalSpecialty_Name] ******/
-CREATE NONCLUSTERED INDEX [IX_SYS_MedicalSpecialty_Name] ON [dbo].[SYS_MedicalSpecialty]
-(
-	[Name] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
-GO
-/****** Object:  Index [IX_User_AdministratorId] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_User_AdministratorId] ON [dbo].[User]
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_AdministratorId] ON [dbo].[User] 
 (
 	[AdministratorId] ASC
 )
 WHERE ([AdministratorId] IS NOT NULL)
-WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_DoctorId] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_User_DoctorId] ON [dbo].[User]
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_DoctorId] ON [dbo].[User] 
 (
 	[DoctorId] ASC
 )
 WHERE ([DoctorId] IS NOT NULL)
-WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_PersonId] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_User_PersonId] ON [dbo].[User]
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_PersonId] ON [dbo].[User] 
 (
 	[PersonId] ASC
 )
 WHERE ([PersonId] IS NOT NULL)
-WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_PracticeId] ******/
-CREATE NONCLUSTERED INDEX [IX_User_PracticeId] ON [dbo].[User]
+CREATE NONCLUSTERED INDEX [IX_User_PracticeId] ON [dbo].[User] 
 (
 	[PracticeId] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_User_SecretaryId] ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_User_SecretaryId] ON [dbo].[User]
+CREATE UNIQUE NONCLUSTERED INDEX [IX_User_SecretaryId] ON [dbo].[User] 
 (
 	[SecretaryId] ASC
 )
 WHERE ([SecretaryId] IS NOT NULL)
-WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-ALTER TABLE [dbo].[Appointment] ADD  CONSTRAINT [DF_Appointment_IsPolled]  DEFAULT ((0)) FOR [Status]
-GO
-ALTER TABLE [dbo].[Appointment] ADD  CONSTRAINT [DF_Appointment_IsPolled_1]  DEFAULT ((0)) FOR [IsPolled]
-GO
-ALTER TABLE [dbo].[Notification] ADD  CONSTRAINT [DF_Notification_IsPolled]  DEFAULT ((0)) FOR [IsPolled]
-GO
+/****** Object:  ForeignKey [FK_AccountContract_Practice] ******/
 ALTER TABLE [dbo].[AccountContract]  WITH NOCHECK ADD  CONSTRAINT [FK_AccountContract_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[AccountContract] CHECK CONSTRAINT [FK_AccountContract_Practice]
 GO
+/****** Object:  ForeignKey [FK_AccountContract_SYS_ContractType] ******/
 ALTER TABLE [dbo].[AccountContract]  WITH NOCHECK ADD  CONSTRAINT [FK_AccountContract_SYS_ContractType] FOREIGN KEY([ContractTypeId])
 REFERENCES [dbo].[SYS_ContractType] ([Id])
 GO
 ALTER TABLE [dbo].[AccountContract] CHECK CONSTRAINT [FK_AccountContract_SYS_ContractType]
 GO
+/****** Object:  ForeignKey [FK_ActiveIngredient_Medicine] ******/
+ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiveIngredient_Medicine] FOREIGN KEY([MedicineId])
+REFERENCES [dbo].[Medicine] ([Id])
+GO
+ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_ActiveIngredient_Medicine]
+GO
+/****** Object:  ForeignKey [FK_Anamnese_Patient] ******/
 ALTER TABLE [dbo].[Anamnese]  WITH NOCHECK ADD  CONSTRAINT [FK_Anamnese_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[Anamnese] CHECK CONSTRAINT [FK_Anamnese_Patient]
 GO
+/****** Object:  ForeignKey [FK_Appointment_Doctor] ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Doctor]
 GO
+/****** Object:  ForeignKey [FK_Appointment_HealthInsurance] ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_HealthInsurance] FOREIGN KEY([HealthInsuranceId])
 REFERENCES [dbo].[HealthInsurance] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_HealthInsurance]
 GO
+/****** Object:  ForeignKey [FK_Appointment_User] ******/
 ALTER TABLE [dbo].[Appointment]  WITH NOCHECK ADD  CONSTRAINT [FK_Appointment_User] FOREIGN KEY([CreatedById])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
 GO
+/****** Object:  ForeignKey [FK_CFG_DayOff_Doctor] ******/
 ALTER TABLE [dbo].[CFG_DayOff]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_DayOff_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_DayOff] CHECK CONSTRAINT [FK_CFG_DayOff_Doctor]
 GO
+/****** Object:  ForeignKey [FK_CFG_Documents_Doctor] ******/
 ALTER TABLE [dbo].[CFG_Documents]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_Documents_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_Documents] CHECK CONSTRAINT [FK_CFG_Documents_Doctor]
 GO
+/****** Object:  ForeignKey [FK_CFG_Schedule_Doctor] ******/
 ALTER TABLE [dbo].[CFG_Schedule]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_Schedule_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[CFG_Schedule] CHECK CONSTRAINT [FK_CFG_Schedule_Doctor]
 GO
+/****** Object:  ForeignKey [FK_ChatMessage_FromUser_User] ******/
 ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_FromUser_User] FOREIGN KEY([UserFromId])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_FromUser_User]
 GO
+/****** Object:  ForeignKey [FK_ChatMessage_ToUser_User] ******/
 ALTER TABLE [dbo].[ChatMessage]  WITH NOCHECK ADD  CONSTRAINT [FK_ChatMessage_ToUser_User] FOREIGN KEY([UserToId])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_ToUser_User]
 GO
+/****** Object:  ForeignKey [FK_Diagnosis_Anamnese] ******/
+ALTER TABLE [dbo].[Symptom]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
+REFERENCES [dbo].[Anamnese] ([Id])
+GO
+ALTER TABLE [dbo].[Symptom] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
+GO
+/****** Object:  ForeignKey [FK_Diagnosis_Patient] ******/
 ALTER TABLE [dbo].[Diagnosis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis_Patient]
 GO
+/****** Object:  ForeignKey [FK_ExaminationRequest_Patient] ******/
 ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationRequest] CHECK CONSTRAINT [FK_ExaminationRequest_Patient]
 GO
+/****** Object:  ForeignKey [FK_ExaminationResult_Patient] ******/
 ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationResult_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
 GO
-ALTER TABLE [dbo].[File]  WITH CHECK ADD  CONSTRAINT [FK_File_Practice] FOREIGN KEY([PracticeId])
+/****** Object:  ForeignKey [FK_File_Practice] ******/
+ALTER TABLE [dbo].[File]  WITH NOCHECK ADD  CONSTRAINT [FK_File_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_Practice]
 GO
+/****** Object:  ForeignKey [FK_HealthInsurance_Doctor] ******/
 ALTER TABLE [dbo].[HealthInsurance]  WITH NOCHECK ADD  CONSTRAINT [FK_HealthInsurance_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[HealthInsurance] CHECK CONSTRAINT [FK_HealthInsurance_Doctor]
 GO
+/****** Object:  ForeignKey [FK_Laboratory_Doctor] ******/
 ALTER TABLE [dbo].[Laboratory]  WITH NOCHECK ADD  CONSTRAINT [FK_Laboratory_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Laboratory] CHECK CONSTRAINT [FK_Laboratory_Doctor]
 GO
+/****** Object:  ForeignKey [FK_MedicalCertificate_ModelMedicalCertificate] ******/
 ALTER TABLE [dbo].[MedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificate_ModelMedicalCertificate] FOREIGN KEY([ModelMedicalCertificateId])
 REFERENCES [dbo].[ModelMedicalCertificate] ([Id])
 ON DELETE SET NULL
 GO
 ALTER TABLE [dbo].[MedicalCertificate] CHECK CONSTRAINT [FK_MedicalCertificate_ModelMedicalCertificate]
 GO
+/****** Object:  ForeignKey [FK_MedicalCertificate_Patient] ******/
 ALTER TABLE [dbo].[MedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificate_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[MedicalCertificate] CHECK CONSTRAINT [FK_MedicalCertificate_Patient]
 GO
+/****** Object:  ForeignKey [FK_MedicalCertificateField_MedicalCertificate] ******/
 ALTER TABLE [dbo].[MedicalCertificateField]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicalCertificateField_MedicalCertificate] FOREIGN KEY([MedicalCertificateId])
 REFERENCES [dbo].[MedicalCertificate] ([Id])
 GO
 ALTER TABLE [dbo].[MedicalCertificateField] CHECK CONSTRAINT [FK_MedicalCertificateField_MedicalCertificate]
 GO
+/****** Object:  ForeignKey [FK_Medicine_Doctor] ******/
 ALTER TABLE [dbo].[Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_Medicine_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Medicine] CHECK CONSTRAINT [FK_Medicine_Doctor]
 GO
+/****** Object:  ForeignKey [FK_Medicine_MedicineLaboratory] ******/
 ALTER TABLE [dbo].[Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_Medicine_MedicineLaboratory] FOREIGN KEY([LaboratoryId])
 REFERENCES [dbo].[Laboratory] ([Id])
 GO
 ALTER TABLE [dbo].[Medicine] CHECK CONSTRAINT [FK_Medicine_MedicineLaboratory]
 GO
-ALTER TABLE [dbo].[MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiveIngredient_Medicine] FOREIGN KEY([MedicineId])
-REFERENCES [dbo].[Medicine] ([Id])
-GO
-ALTER TABLE [dbo].[MedicineActiveIngredient] CHECK CONSTRAINT [FK_ActiveIngredient_Medicine]
-GO
+/****** Object:  ForeignKey [FK_MedicineLeaflet_Leaflet] ******/
 ALTER TABLE [dbo].[MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineLeaflet_Leaflet] FOREIGN KEY([LeaftletId])
 REFERENCES [dbo].[Leaflet] ([Id])
 GO
 ALTER TABLE [dbo].[MedicineLeaflet] CHECK CONSTRAINT [FK_MedicineLeaflet_Leaflet]
 GO
+/****** Object:  ForeignKey [FK_MedicineLeaflet_Medicine] ******/
 ALTER TABLE [dbo].[MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_MedicineLeaflet_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[MedicineLeaflet] CHECK CONSTRAINT [FK_MedicineLeaflet_Medicine]
 GO
+/****** Object:  ForeignKey [FK_ModelMedicalCertificate_Doctor] ******/
 ALTER TABLE [dbo].[ModelMedicalCertificate]  WITH NOCHECK ADD  CONSTRAINT [FK_ModelMedicalCertificate_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[ModelMedicalCertificate] CHECK CONSTRAINT [FK_ModelMedicalCertificate_Doctor]
 GO
+/****** Object:  ForeignKey [FK_ModelMedicalCertificateField_ModelMedicalCertificate] ******/
 ALTER TABLE [dbo].[ModelMedicalCertificateField]  WITH NOCHECK ADD  CONSTRAINT [FK_ModelMedicalCertificateField_ModelMedicalCertificate] FOREIGN KEY([ModelMedicalCertificateId])
 REFERENCES [dbo].[ModelMedicalCertificate] ([Id])
 GO
 ALTER TABLE [dbo].[ModelMedicalCertificateField] CHECK CONSTRAINT [FK_ModelMedicalCertificateField_ModelMedicalCertificate]
 GO
+/****** Object:  ForeignKey [FK_Notification_Practice] ******/
 ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_Practice]
 GO
+/****** Object:  ForeignKey [FK_Notification_User] ******/
 ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_User]
 GO
+/****** Object:  ForeignKey [FK_Patient_Doctor] ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Doctor]
 GO
+/****** Object:  ForeignKey [FK_Patient_HealthInsurance] ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_HealthInsurance] FOREIGN KEY([LastUsedHealthInsuranceId])
 REFERENCES [dbo].[HealthInsurance] ([Id])
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_HealthInsurance]
 GO
+/****** Object:  ForeignKey [FK_Patient_Person] ******/
 ALTER TABLE [dbo].[Patient]  WITH NOCHECK ADD  CONSTRAINT [FK_Patient_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Patient] CHECK CONSTRAINT [FK_Patient_Person]
 GO
-ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_File] FOREIGN KEY([FileId])
+/****** Object:  ForeignKey [FK_PatientFile_File] ******/
+ALTER TABLE [dbo].[PatientFile]  WITH NOCHECK ADD  CONSTRAINT [FK_PatientFile_File] FOREIGN KEY([FileId])
 REFERENCES [dbo].[File] ([Id])
 GO
 ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_File]
 GO
-ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_Patient] FOREIGN KEY([PatientId])
+/****** Object:  ForeignKey [FK_PatientFile_Patient] ******/
+ALTER TABLE [dbo].[PatientFile]  WITH NOCHECK ADD  CONSTRAINT [FK_PatientFile_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Patient]
 GO
-ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_Practice] FOREIGN KEY([PracticeId])
+/****** Object:  ForeignKey [FK_PatientFile_Practice] ******/
+ALTER TABLE [dbo].[PatientFile]  WITH NOCHECK ADD  CONSTRAINT [FK_PatientFile_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Practice]
 GO
+/****** Object:  ForeignKey [FK_PersonAddress_Address] ******/
 ALTER TABLE [dbo].[PersonAddress]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonAddress_Address] FOREIGN KEY([AddressId])
 REFERENCES [dbo].[Address] ([Id])
 GO
 ALTER TABLE [dbo].[PersonAddress] CHECK CONSTRAINT [FK_PersonAddress_Address]
 GO
+/****** Object:  ForeignKey [FK_PersonAddress_Person] ******/
 ALTER TABLE [dbo].[PersonAddress]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonAddress_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 GO
 ALTER TABLE [dbo].[PersonAddress] CHECK CONSTRAINT [FK_PersonAddress_Person]
 GO
-ALTER TABLE [dbo].[PhysicalExamination]  WITH CHECK ADD  CONSTRAINT [FK_PhysicalExamination_Patient] FOREIGN KEY([PatientId])
+/****** Object:  ForeignKey [FK_PhysicalExamination_Patient] ******/
+ALTER TABLE [dbo].[PhysicalExamination]  WITH NOCHECK ADD  CONSTRAINT [FK_PhysicalExamination_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[PhysicalExamination] CHECK CONSTRAINT [FK_PhysicalExamination_Patient]
 GO
-ALTER TABLE [dbo].[PhysicalExamination]  WITH CHECK ADD  CONSTRAINT [FK_PhysicalExamination_Practice] FOREIGN KEY([PracticeId])
+/****** Object:  ForeignKey [FK_PhysicalExamination_Practice] ******/
+ALTER TABLE [dbo].[PhysicalExamination]  WITH NOCHECK ADD  CONSTRAINT [FK_PhysicalExamination_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[PhysicalExamination] CHECK CONSTRAINT [FK_PhysicalExamination_Practice]
 GO
+/****** Object:  ForeignKey [FK_Practice_AccountContract] ******/
 ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_AccountContract] FOREIGN KEY([ActiveAccountContractId])
 REFERENCES [dbo].[AccountContract] ([Id])
 GO
 ALTER TABLE [dbo].[Practice] CHECK CONSTRAINT [FK_Practice_AccountContract]
 GO
+/****** Object:  ForeignKey [FK_Practice_Owner_User] ******/
 ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_Owner_User] FOREIGN KEY([OwnerId])
 REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Practice] CHECK CONSTRAINT [FK_Practice_Owner_User]
 GO
+/****** Object:  ForeignKey [FK_ReceiptMedicine_Medicine] ******/
 ALTER TABLE [dbo].[ReceiptMedicine]  WITH NOCHECK ADD  CONSTRAINT [FK_ReceiptMedicine_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[ReceiptMedicine] CHECK CONSTRAINT [FK_ReceiptMedicine_Medicine]
 GO
+/****** Object:  ForeignKey [FK_ReceiptMedicine_Receipt] ******/
 ALTER TABLE [dbo].[ReceiptMedicine]  WITH NOCHECK ADD  CONSTRAINT [FK_ReceiptMedicine_Receipt] FOREIGN KEY([ReceiptId])
 REFERENCES [dbo].[Receipt] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[ReceiptMedicine] CHECK CONSTRAINT [FK_ReceiptMedicine_Receipt]
 GO
-ALTER TABLE [dbo].[Symptom]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
-REFERENCES [dbo].[Anamnese] ([Id])
-GO
-ALTER TABLE [dbo].[Symptom] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
-GO
+/****** Object:  ForeignKey [FK_SYS_Medicine_SYS_Laboratory] ******/
 ALTER TABLE [dbo].[SYS_Medicine]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_Medicine_SYS_Laboratory] FOREIGN KEY([LaboratoryId])
 REFERENCES [dbo].[SYS_Laboratory] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_Medicine] CHECK CONSTRAINT [FK_SYS_Medicine_SYS_Laboratory]
 GO
+/****** Object:  ForeignKey [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient] ******/
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient] FOREIGN KEY([ActiveIngredientId])
 REFERENCES [dbo].[SYS_ActiveIngredient] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient] CHECK CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_ActiveIngredient]
 GO
+/****** Object:  ForeignKey [FK_SYS_MedicineActiveIngredient_SYS_Medicine] ******/
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_Medicine] FOREIGN KEY([MedicineId])
 REFERENCES [dbo].[SYS_Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineActiveIngredient] CHECK CONSTRAINT [FK_SYS_MedicineActiveIngredient_SYS_Medicine]
 GO
+/****** Object:  ForeignKey [FK_SYS_MedicineLeaflet_SYS_Leaflet] ******/
 ALTER TABLE [dbo].[SYS_MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Leaflet] FOREIGN KEY([SYS_LeafletId])
 REFERENCES [dbo].[SYS_Leaflet] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineLeaflet] CHECK CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Leaflet]
 GO
+/****** Object:  ForeignKey [FK_SYS_MedicineLeaflet_SYS_Medicine] ******/
 ALTER TABLE [dbo].[SYS_MedicineLeaflet]  WITH NOCHECK ADD  CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Medicine] FOREIGN KEY([SYS_MedicineId])
 REFERENCES [dbo].[SYS_Medicine] ([Id])
 GO
 ALTER TABLE [dbo].[SYS_MedicineLeaflet] CHECK CONSTRAINT [FK_SYS_MedicineLeaflet_SYS_Medicine]
 GO
+/****** Object:  ForeignKey [FK_User_Administrator] ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Administrator] FOREIGN KEY([AdministratorId])
 REFERENCES [dbo].[Administrator] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Administrator]
 GO
+/****** Object:  ForeignKey [FK_User_Doctor] ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Doctor]
 GO
+/****** Object:  ForeignKey [FK_User_Person] ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Person]
 GO
+/****** Object:  ForeignKey [FK_User_Practice] ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Practice] FOREIGN KEY([PracticeId])
 REFERENCES [dbo].[Practice] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Practice]
 GO
+/****** Object:  ForeignKey [FK_User_Secretary] ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Secretary] FOREIGN KEY([SecretaryId])
 REFERENCES [dbo].[Secretary] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Secretary]
+GO
+/****** Object:  Default [DF_Appointment_IsPolled] ******/
+ALTER TABLE [dbo].[Appointment] ADD  CONSTRAINT [DF_Appointment_IsPolled]  DEFAULT ((0)) FOR [Status]
+GO
+/****** Object:  Default [DF_Appointment_IsPolled_1] ******/
+ALTER TABLE [dbo].[Appointment] ADD  CONSTRAINT [DF_Appointment_IsPolled_1]  DEFAULT ((0)) FOR [IsPolled]
+GO
+/****** Object:  Default [DF_Notification_IsPolled] ******/
+ALTER TABLE [dbo].[Notification] ADD  CONSTRAINT [DF_Notification_IsPolled]  DEFAULT ((0)) FOR [IsPolled]
 GO

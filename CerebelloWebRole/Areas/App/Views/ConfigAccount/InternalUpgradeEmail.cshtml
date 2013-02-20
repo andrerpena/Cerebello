@@ -1,0 +1,73 @@
+﻿@using CerebelloWebRole.Models
+@model InternalUpgradeEmailViewModel
+@{
+    this.ViewBag.Title = string.Format("Upgrade request: value={0:0}; due-day={1}", this.Model.Upgrade.FinalValue, this.Model.Upgrade.InvoceDueDayOfMonth);
+}
+@if (this.ViewBag.IsBodyHtml == true)
+{
+    <html>
+    <head>
+        <title>@this.ViewBag.Title</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        @if (DebugConfig.UseFileSystemEmailBox)
+        {
+            <style type="text/css">
+                /* GMAIL style (only when local presentation) */
+                /* Style tags have no effect in e-mails */
+                body {
+                    font-size: 13px;
+                    font-family: arial, sans-serif;
+                    color: #222;
+                    background: white;
+                }
+            </style>
+        }
+    </head>
+    <body style="font-family: arial, sans-serif; color: #222; background: white;">
+        <p>
+            O usuário <strong>@Model.PersonName</strong> deseja fazer upgrade do software.
+        </p>
+        <p>
+            Favor emitir uma fatura em no mínimo 10 dias antes do dia de vencimento.
+                Respeite a data de vencimento.
+        </p>
+        <table>
+            @foreach (var eachPi in this.Model.GetType().GetProperties()
+                                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+            {
+                <tr>
+                    <td>@eachPi.Name</td>
+                    <td>@EmailHtml.InlineCode(eachPi.GetValue(this.Model, null))</td>
+                </tr>
+            }
+            @foreach (var eachPi in this.Model.Upgrade.GetType().GetProperties()
+                                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+            {
+                <tr>
+                    <td>@eachPi.Name</td>
+                    <td>@EmailHtml.InlineCode(eachPi.GetValue(this.Model.Upgrade, null))</td>
+                </tr>
+            }
+        </table>
+        <p>
+            @EmailHtml.Emphasis(@<text>CareSys Tecnologias de Informação</text>)
+        </p>
+    </body>
+    </html>
+
+            return;
+}
+O usuário **@Model.PersonName** deseja fazer upgrade do software.
+Favor emitir uma fatura em no mínimo 10 dias antes do dia de vencimento.
+Respeite a data de vencimento.
+@foreach (var eachPi in this.Model.GetType().GetProperties()
+                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+{
+    @:    @eachPi.Name = "@eachPi.GetValue(this.Model, null)"
+}
+@foreach (var eachPi in this.Model.Upgrade.GetType().GetProperties()
+                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+{
+    @:    @eachPi.Name = "@eachPi.GetValue(this.Model.Upgrade, null)"
+}
+*CareSys Tecnologias de Informação*

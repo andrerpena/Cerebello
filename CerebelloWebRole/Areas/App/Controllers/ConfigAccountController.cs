@@ -1,4 +1,3 @@
-﻿using System.Collections.Generic;
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,6 @@ using System.Net.Mail;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Security;
-using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
@@ -164,7 +162,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var viewModel = new ChangeContractViewModel
                     {
                         ContractUrlId = id,
-                        DoctorCount = this.DbPractice.Users.Count(x => x.DoctorId != null),
+                        CurrentDoctorsCount = this.DbPractice.Users.Count(x => x.DoctorId != null),
                     };
 
                 return View(viewModel);
@@ -192,16 +190,66 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 if (id == "ProfessionalPlan")
                 {
+                    // calculating values to see if the submited values are correct
+                    var unitPrice = Buz.Pro.DOCTOR_PRICE;
+                    Func<double, double, double> integ = (x, n) => Math.Pow(n, x) / Math.Log(n);
+                    Func<double, double, double> integ0to = (x, n) => (integ(x, n) - integ(0, n));
+                    Func<double, double> priceFactor = x => x * (1.0 - 0.1 * integ0to((x - 1) / 3.0, 0.75));
+                    Func<double, double> price = (extraDoctors) => Math.Round(priceFactor(extraDoctors) * unitPrice * 100) / 100;
+
+                    var dicValues = new Dictionary<string, decimal>(StringComparer.InvariantCultureIgnoreCase)
+                        {
+                            { "MONTH", Buz.Pro.PRICE_MONTH },
+                            { "3-MONTHS", Buz.Pro.PRICE_QUARTER },
+                            { "6-MONTHS", Buz.Pro.PRICE_SEMESTER },
+                            { "12-MONTHS", Buz.Pro.PRICE_YEAR },
+                        };
+
+                    var dicDiscount = new Dictionary<string, decimal>(StringComparer.InvariantCultureIgnoreCase)
+                        {
+                            { "MONTH", 0 },
+                            { "3-MONTHS", Buz.Pro. DISCOUNT_QUARTER },
+                            { "6-MONTHS", Buz.Pro. DISCOUNT_SEMESTER },
+                            { "12-MONTHS", Buz.Pro.DISCOUNT_YEAR },
+                        };
+
+                    var mult = new Dictionary<string, decimal>(StringComparer.InvariantCultureIgnoreCase)
+                        {
+                            { "MONTH", 1 },
+                            { "3-MONTHS", 3 },
+                            { "6-MONTHS", 6 },
+                            { "12-MONTHS", 12 },
+                        };
+
+                    var dicount = 1m - dicDiscount[viewModel.PaymentModelName] / 100m;
+                    var accountValue = dicValues[viewModel.PaymentModelName];
+                    var doctorsValue = (decimal)Math.Round(price(viewModel.DoctorCount - 1))
+                        * mult[viewModel.PaymentModelName] * dicount;
+
+                    var finalValue = accountValue + doctorsValue;
+
+                    if (finalValue != viewModel.FinalValue)
+                    {
+                        this.ModelState.AddModelError(
+                            () => viewModel.FinalValue,
+                            "Seu browser apresentou um defeito no cálculo do valor final. Não foi possível processar sua requisição de upgrade.");
+                    }
+
+                    viewModel.ContractUrlId = id;
+                    viewModel.CurrentDoctorsCount = this.DbPractice.Users.Count(x => x.DoctorId != null);
+
                     if (this.ModelState.IsValid)
                     {
                         // sending e-mail to cerebello@cerebello.com.br
                         // to remember us to send the payment request
-                        // todo: send email
+                        var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
+                        var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
+                        var mailMessage = this.CreateEmailMessage("InternalUpgradeEmail", toAddress, emailViewModel);
+                        this.TrySendEmail(mailMessage);
 
                         return this.RedirectToAction("UpgradeRequested");
                     }
 
-                    viewModel.ContractUrlId = id;
                     return this.View(viewModel);
                 }
             }

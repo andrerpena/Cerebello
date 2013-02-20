@@ -331,10 +331,10 @@ namespace CerebelloWebRole.Controllers
                             ContractTypeId = (int)ContractTypes.TrialContract,
                             StartDate = utcNow,
                             IssuanceDate = utcNow,
-                            Text = "Texto do contrato exibido para o cliente.",
                             EndDate = null,
-                            Fee = 0.00m,
+                            BillingAmount = 0.00m,
                             Practice = user.Practice,
+                            PatientsLimit = 50, // todo: fixed limit for trial account
                         };
 
                         user.Practice.AccountContract = trialContract;
