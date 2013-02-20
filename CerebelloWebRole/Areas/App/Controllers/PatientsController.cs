@@ -255,7 +255,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                          anamnesesByDate.ContainsKey(eventDate)
                                              ? anamnesesByDate[eventDate].Select(a => a.Id).ToList()
                                              : new List<int>(),
-                                     PhysicalExaminationIds = 
+                                     PhysicalExaminationIds =
                                         physicalExaminationsByDate.ContainsKey(eventDate)
                                             ? physicalExaminationsByDate[eventDate].Select(a => a.Id).ToList()
                                     : new List<int>(),
@@ -312,7 +312,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id)
                     };
 
-            return View(model);
+            // The view must know about the patients limit.
+            this.ViewBag.PatientsLimit = this.DbPractice.AccountContract.PatientsLimit;
+            this.ViewBag.PatientsCount = this.db.Patients.Count(p => p.PracticeId == this.DbPractice.Id);
+
+            return this.View(model);
         }
 
         public ActionResult Details(int id)
@@ -326,7 +330,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Creating the view-model object.
             var model = GetViewModel(this, patient, canAccessMedicalRecords, true);
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpGet]
@@ -348,13 +352,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
+                // editing an existing patient
                 var patient = this.db.Patients.First(p => p.Id == id);
                 viewModel = GetViewModel(this, patient, false, false);
 
                 ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
             }
             else
-                ViewBag.Title = "Novo paciente";
+            {
+                // if this account has a patient limit, then we should tell the user
+                var patientLimit = this.DbPractice.AccountContract.PatientsLimit;
+
+                if (patientLimit != null)
+                {
+                    var patientCount = this.db.Patients.Count(p => p.PracticeId == this.DbPractice.Id);
+                    if (patientCount + 1 > patientLimit)
+                    {
+                        this.ModelState.Clear();
+                        this.ModelState.AddModelError(
+                            "PatientsLimit",
+                            "Não é possível adicionar mais pacientes, pois já foi atingido o limite de {0} pacientes de sua conta.",
+                            patientLimit);
+                    }
+                }
+
+                // adding new patient
+                this.ViewBag.Title = "Novo paciente";
+            }
 
             return View("Edit", viewModel);
         }
@@ -362,11 +386,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(PatientViewModel formModel)
         {
+            // if this account has a patient limit, then we should tell the user if he/she blows up the limit
+            var patientLimit = this.DbPractice.AccountContract.PatientsLimit;
+
+            if (patientLimit != null)
+            {
+                var patientCount = this.db.Patients.Count(p => p.PracticeId == this.DbPractice.Id);
+                if (patientCount + 1 > patientLimit)
+                {
+                    this.ModelState.Clear();
+                    this.ModelState.AddModelError(
+                        "PatientsLimit",
+                        "Não é possível adicionar mais pacientes, pois já foi atingido o limite de {0} pacientes de sua conta.",
+                        patientLimit);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 var isEditing = formModel.Id != null;
 
-                Patient patient = null;
+                Patient patient;
                 if (isEditing)
                     patient = this.db.Patients.First(p => p.Id == formModel.Id);
                 else
@@ -395,8 +435,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
                 patient.Person.PhoneLand = formModel.PhoneLand;
                 patient.Person.PhoneCell = formModel.PhoneCell;
+
                 // handle patient address
                 if (!patient.Person.Addresses.Any())
+                {
                     patient.Person.Addresses.Add(
                         new Address
                             {
@@ -408,12 +450,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 StateProvince = formModel.Address.StateProvince,
                                 Street = formModel.Address.Street,
                             });
+                }
 
                 db.SaveChanges();
-                return RedirectToAction("Details", new { id = patient.Id });
+                return this.RedirectToAction("Details", new { id = patient.Id });
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <summary>

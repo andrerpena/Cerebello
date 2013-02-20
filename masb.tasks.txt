@@ -16,6 +16,7 @@ S   P Desc
     P0 Verificar o fluxo de upgrade da conta trial para a profissional.
     P0 Após continuar na 1a tela de upgrade, usuário deve ir para tela de confirmação dos dados... todos os dados devem vir do servidor.
     P0 Texto da tela de "Upgrade requisitado" está errado. Após confirmar já está valendo a nova conta, e o usuário tem que pagar de qualquer forma.
+    P0 Firestarter está cadastrando em uma conta trial, 160 pacientes, mas deveriam ser no máximo 50.
 
 x   P0 Testes para login com caixa de lembrar de mim marcada.
 x   P0 Testes para login com caixa de lembrar de mim desmarcada.

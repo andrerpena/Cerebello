@@ -5,12 +5,28 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code
 {
     public static class ModelStateExtensions
     {
-        public static void AddModelError<TModel>(this ModelStateDictionary modelState, Expression<Func<TModel, object>> expression, string errorMessage)
+        [StringFormatMethod("errorMessage")]
+        public static void AddModelError(
+            this ModelStateDictionary modelState,
+            string key,
+            [Localizable(true)] string errorMessage,
+            params object[] formatValues)
+        {
+            // todo: this method should accept a resource name, instead of an error message.
+            errorMessage = string.Format(errorMessage, formatValues);
+            modelState.AddModelError(key, errorMessage);
+        }
+
+        public static void AddModelError<TModel>(
+            this ModelStateDictionary modelState,
+            Expression<Func<TModel, object>> expression,
+            string errorMessage)
         {
             // todo: this method should accept a resource name, instead of an error message.
 
@@ -21,7 +37,6 @@ namespace CerebelloWebRole.Code
 
             modelState.AddModelError(propertyInfo.Name, errorMessage);
         }
-
 
         /// <summary>
         /// Add a new validation message to the collection of messages and exceptions associated with the given model property.

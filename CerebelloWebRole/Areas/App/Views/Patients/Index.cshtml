@@ -11,6 +11,10 @@
     grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
     grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
     grid.AddEditField("Edit", "Patients", model => new { model.Id });
+
+    var patientsLimit = (int?)this.ViewBag.PatientsLimit;
+    var patientsRemaining = patientsLimit - this.ViewBag.PatientsCount;
+    var canCreateMorePatients = patientsRemaining == null || patientsRemaining > patientsLimit;
 }
 @section Title {
 Prontuário
@@ -21,8 +25,9 @@ Prontuário
 @section SideBar {
     @{var itemCount = 0;}
     <ul>
-        <li><a href="@Url.Action("Create", "Patients")" class="icon-link icon-link-plus">Novo
-                paciente</a></li>
+        <li>
+            <a href="@Url.Action("Create", "Patients")" class="icon-link icon-link-plus">Novo paciente</a>
+        </li>
         @if (this.CanAccessAction("ExportDoctorXml", "Report"))
         {
             itemCount++;
@@ -39,6 +44,21 @@ Prontuário
             <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Exportar os arquivos de todos os pacientes em Zip</a> </li>
         }
     </ul>
+}
+@if (!canCreateMorePatients)
+{
+    @:@this.Html.Message(
+    @<text>
+    Sua conta permite cadastrar até @patientsLimit pacientes.
+             @if (patientsRemaining > 0)
+             {
+                 @:Faltam @patientsRemaining para atingir o limite.
+             }
+             else
+             {
+                 @:Não é possível cadastrar mais pacientes.
+             }
+    </text>)
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {

@@ -79,7 +79,7 @@ namespace CerebelloWebRole.Code.Chat
             lock (usersInRoomLock)
             {
                 if (user == null) throw new ArgumentNullException("user");
-                
+
                 this.Users.Remove(user.Id);
                 this.NotifyUsersChanged();
             }
@@ -164,7 +164,8 @@ namespace CerebelloWebRole.Code.Chat
         {
             lock (messageLock)
             {
-                return this.Messages.Where(m => m.Timestamp > timestamp && m.UserTo.Id == myUserId).ToList();
+                var nowTimeStamp = GetUtcNow().Ticks;
+                return this.Messages.Where(m => m.Timestamp > timestamp && m.Timestamp <= nowTimeStamp && m.UserTo.Id == myUserId).ToList();
             }
         }
 

@@ -1,16 +1,16 @@
-﻿@model CerebelloWebRole.Areas.App.Models.PatientViewModel
+﻿@model PatientViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
     
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        ViewBag.Title = "Editando paciente: " + this.Model.FullName + " · Cerebello";
+        this.ViewBag.Title = "Editando paciente: " + this.Model.FullName + " · Cerebello";
     }
     else
     {
-        ViewBag.Title = "Novo paciente · Cerebello";
+        this.ViewBag.Title = "Novo paciente · Cerebello";
     }
-    
+
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
@@ -39,7 +39,7 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
+        <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
     </ul>
     <hr />
     <ul>
