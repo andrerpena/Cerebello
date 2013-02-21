@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -10,7 +11,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public AnamneseViewModel()
         {
-            this.Symptoms = new List<SymptomViewModel>();
+            this.DiagnosticHypotheses = new List<DiagnosticHypothesisViewModel>();
         }
 
         public int? Id { get; set; }
@@ -19,12 +20,13 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? PatientId { get; set; }
 
         [Display(Name = "Queixa principal (QP)")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string ChiefComplaint { get; set; }
 
         [Display(Name = "História da doença atual (HDA)")]
         public string HistoryOfThePresentIllness { get; set; }
 
-        [Display(Name = "História médica pregressa ou História patológica pregressa (HMP ou HPP)")]
+        [Display(Name = "História médica/patológica pregressa (HMP ou HPP)")]
         public string PastMedicalHistory { get; set; }
 
         [Display(Name = "Revisão de sistemas")]
@@ -49,6 +51,6 @@ namespace CerebelloWebRole.Areas.App.Models
         public string Conclusion { get; set; }
 
         [Display(Name = "Sintomas")]
-        public List<SymptomViewModel> Symptoms { get; set; }
+        public List<DiagnosticHypothesisViewModel> DiagnosticHypotheses { get; set; }
     }
 }

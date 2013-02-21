@@ -30,12 +30,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 ReviewOfSystems = anamnese.ReviewOfSystems,
                 SexualHistory = anamnese.SexualHistory,
                 SocialDeseases = anamnese.SocialDiseases,
-                Symptoms = (from s in anamnese.Symptoms
-                            select new SymptomViewModel
+                DiagnosticHypotheses = (from s in anamnese.DiagnosticHypotheses
+                            select new DiagnosticHypothesisViewModel
                             {
-                                Text = s.Cid10Name,
-                                Cid10Code = s.Cid10Code
-
+                                Text = s.Observations,
+                                Cid10Code = s.Cid10Code,
+                                Cid10Name = s.Cid10Name,
+                                Id = s.Id
                             }).ToList()
             };
         }
@@ -115,26 +116,42 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 #region Update Symptomsymptoms
                 // step 1: add new
-                foreach (var symptom in formModel.Symptoms.Where(symptom => anamnese.Symptoms.All(ans => ans.Cid10Code != symptom.Cid10Code)))
+                foreach (var diagnosticHypothesis in formModel.DiagnosticHypotheses.Where(diagnosticHyphothesis => !diagnosticHyphothesis.Id.HasValue ))
                 {
-                    anamnese.Symptoms.Add(new Symptom()
+                    anamnese.DiagnosticHypotheses.Add(new DiagnosticHypothesis()
                         {
-                            Cid10Code = symptom.Cid10Code,
-                            Cid10Name = symptom.Text,
+                            Cid10Code = diagnosticHypothesis.Cid10Code,
+                            Cid10Name = diagnosticHypothesis.Cid10Name,
+                            Observations = diagnosticHypothesis.Text,
                             PracticeId = this.DbUser.PracticeId,
                         });
                 }
 
-                var harakiriQueue = new Queue<Symptom>();
+                var harakiriQueue = new Queue<DiagnosticHypothesis>();
 
                 // step 2: remove deleted
-                foreach (var symptom in anamnese.Symptoms.Where(symptom => formModel.Symptoms.All(ans => ans.Cid10Code != symptom.Cid10Code)))
+                foreach (var diagnosticHypothesis in anamnese.DiagnosticHypotheses
+                    .Where(diagnosticHypothesisFormModel => diagnosticHypothesisFormModel.Id != default(int) && !formModel.DiagnosticHypotheses.Any(ans => ans.Id.HasValue && ans.Id == diagnosticHypothesisFormModel.Id)))
                 {
-                    harakiriQueue.Enqueue(symptom);
+                    harakiriQueue.Enqueue(diagnosticHypothesis);
                 }
 
                 while (harakiriQueue.Count > 0)
-                    this.db.Symptoms.DeleteObject(harakiriQueue.Dequeue());
+                    this.db.DiagnosticHypotheses.DeleteObject(harakiriQueue.Dequeue());
+
+                // step 3: update existing
+                foreach (var diagnosticHypothesis in anamnese.DiagnosticHypotheses)
+                {
+                    var existingDiagnosticHypothesisViewModel =
+                        formModel.DiagnosticHypotheses.FirstOrDefault(dh => dh.Id == diagnosticHypothesis.Id);
+                    if (existingDiagnosticHypothesisViewModel != null)
+                    {
+                        diagnosticHypothesis.Cid10Name = existingDiagnosticHypothesisViewModel.Cid10Name;
+                        diagnosticHypothesis.Cid10Code = existingDiagnosticHypothesisViewModel.Cid10Code;
+                        diagnosticHypothesis.Observations = existingDiagnosticHypothesisViewModel.Text;
+                    }
+                }
+
                 #endregion
 
                 db.SaveChanges();
@@ -152,7 +169,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="formModel"></param>
         /// <returns></returns>
-        public ActionResult SymptomEditor(SymptomViewModel formModel)
+        public ActionResult DiagnosticHypothesisEditor(DiagnosticHypothesisViewModel formModel)
         {
             return View(formModel);
         }
@@ -209,8 +226,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var anamnese = this.db.Anamnese.First(m => m.Id == id);
 
                 // get rid of associations
-                while (anamnese.Symptoms.Count > 0)
-                    this.db.Symptoms.DeleteObject(anamnese.Symptoms.ElementAt(0));
+                while (anamnese.DiagnosticHypotheses.Count > 0)
+                    this.db.DiagnosticHypotheses.DeleteObject(anamnese.DiagnosticHypotheses.ElementAt(0));
 
                 this.db.Anamnese.DeleteObject(anamnese);
                 this.db.SaveChanges();

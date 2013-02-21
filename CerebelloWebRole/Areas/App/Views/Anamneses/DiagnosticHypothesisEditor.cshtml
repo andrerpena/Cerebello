@@ -1,0 +1,28 @@
+﻿@model DiagnosticHypothesisViewModel
+@using System.Linq.Expressions
+@using CerebelloWebRole.Code.Extensions
+@{
+    Layout = null;
+    var editPanel = this.Html.CreateEditPanel();
+}
+
+@using (Html.BeginCollectionItem("DiagnosticHypotheses"))
+{
+    @Html.HiddenFor(model => model.Id)
+    editPanel.AddField(
+                m => m.Cid10Name, @<text>@(Html.AutocompleteGridFor<DiagnosticHypothesisViewModel, CidAutocompleteGridModel, string>(
+                    m => m.Cid10Code,
+                    m => m.Cid10Name,
+                    Url.Action("AutocompleteDiagnoses"),
+                    gm => gm.Cid10Code,
+                    gm => gm.Cid10Name,
+                    new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
+
+    editPanel.AddField(
+        m => m.Text,
+        CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+    
+    @editPanel.GetHtml()
+}
+
+

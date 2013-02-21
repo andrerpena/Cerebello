@@ -30,9 +30,12 @@
         editPanel.AddField(model => model.RegularAndAcuteMedications, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.RegularAndAcuteMedications)</text>);
         editPanel.AddField(model => model.SexualHistory, EditPanelFieldSize.Large);
         editPanel.AddField(model => model.Conclusion, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Conclusion)</text>);
-        editPanel.AddField(m => m.Symptoms, @<text>@Html.CollectionEditorInlineFor(m => m.Symptoms, "SymptomEditor", "Adicionar sintoma")</text>);
         
         @editPanel.GetHtml()
+
+        <h2>Hipóteses de diagnóstico</h2>
+
+        @Html.CollectionEditorFor(m => m.DiagnosticHypotheses, "DiagnosticHypothesisEditor", "Adicionar hipótese de diagnóstico")
 
         <div class="submit-bar">
             <input type="submit" value="salvar anamnese" />
