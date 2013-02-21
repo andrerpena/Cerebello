@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[AccountContract](
 	[StartDate] [date] NOT NULL,
 	[EndDate] [date] NULL,
 	[BillingAmount] [numeric](16, 2) NULL,
-	[BillingPeriodType] [char](4) NULL,
+	[BillingPeriodType] [varchar](10) NULL,
 	[BillingPeriodSize] [int] NULL,
 	[BillingPeriodCount] [int] NULL,
 	[BillingDueDay] [int] NULL,

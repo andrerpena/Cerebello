@@ -260,6 +260,10 @@ input, textarea {
     width: 16px;
 }
 
+.icon-link.disabled, .disabled .icon-link {
+    opacity: 0.5;
+}
+
 .icon-link-list {
     background-image: url("/content/images/app/icons16/list.png");
 }

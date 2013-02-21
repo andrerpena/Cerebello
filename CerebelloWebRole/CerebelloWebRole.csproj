@@ -14,7 +14,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -732,6 +732,7 @@
     <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\InternalUpgradeEmail.cshtml" />
     <Content Include="App_Code\EmailHtml.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalPlan.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

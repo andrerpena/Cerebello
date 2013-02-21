@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Security;
+using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
@@ -213,7 +214,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             { "12-MONTHS", Buz.Pro.DISCOUNT_YEAR },
                         };
 
-                    var mult = new Dictionary<string, decimal>(StringComparer.InvariantCultureIgnoreCase)
+                    var periodSizesDic = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase)
                         {
                             { "MONTH", 1 },
                             { "3-MONTHS", 3 },
@@ -224,11 +225,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var dicount = 1m - dicDiscount[viewModel.PaymentModelName] / 100m;
                     var accountValue = dicValues[viewModel.PaymentModelName];
                     var doctorsValue = (decimal)Math.Round(price(viewModel.DoctorCount - 1))
-                        * mult[viewModel.PaymentModelName] * dicount;
+                        * periodSizesDic[viewModel.PaymentModelName] * dicount;
 
                     var finalValue = accountValue + doctorsValue;
 
-                    if (finalValue != viewModel.FinalValue)
+                    // tolerance of R$ 0.10 in the final value... maybe the browser could not make the calculations correctly,
+                    // but we must use that value, since it is the value that the user saw
+                    if (Math.Abs(finalValue - viewModel.FinalValue) >= 0.10m)
                     {
                         this.ModelState.AddModelError(
                             () => viewModel.FinalValue,
@@ -245,7 +248,34 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
                         var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
                         var mailMessage = this.CreateEmailMessage("InternalUpgradeEmail", toAddress, emailViewModel);
-                        this.TrySendEmail(mailMessage);
+                        this.SendEmailAsync(mailMessage).ContinueWith(t =>
+                            {
+                                // todo: should do something when e-mail is not sent
+                                // 1) use a schedule table to save a serialized e-mail, and then send it later
+                                // 2) log a warning message somewhere stating that this e-mail was not sent
+                                // send e-mail again is not an option, SendEmailAsync already tries a lot of times
+                            });
+
+                        // setting up the professional contract
+                        this.DbPractice.AccountContract = new AccountContract
+                            {
+                                PracticeId = this.DbPractice.Id,
+                                BillingAmount = viewModel.FinalValue,
+                                IssuanceDate = this.GetUtcNow(),
+                                BillingDueDay = viewModel.InvoceDueDayOfMonth,
+                                BillingPeriodCount = null, // no limit... this contract is valid forever
+                                BillingPeriodSize = periodSizesDic[viewModel.PaymentModelName],
+                                BillingPeriodType = "month",
+                                ContractTypeId = (int)ContractTypes.ProfessionalContract,
+                                CustomText = viewModel.WholeUserAgreement,
+                                DoctorsLimit = viewModel.DoctorCount,
+                                EndDate = null, // this is an unlimited contract
+                                IsTrial = false,
+                                PatientsLimit = null, // there is no patients limit anymore
+                                StartDate = this.GetUtcNow(), // contract starts NOW... without delays
+                            };
+
+                        db.SaveChanges();
 
                         return this.RedirectToAction("UpgradeRequested");
                     }

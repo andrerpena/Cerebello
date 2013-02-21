@@ -1,15 +1,16 @@
-Contrato de Software como Serviço (SAAS) denominado Cerebello
-=============================================================
+Contrato de Software como Serviço (SAAS) na nuvem denominado Cerebello
+======================================================================
 
 Pelo presente instrumento particular, de um lado
 
-  NOME-DA-EMPRESA
+  CareSys Tecnologias de Informação
   C.N.P.J.: xxxxx
-  Sede: xxxxxxxxx
+  Sede: Rua João Teixeira Lopes, 311, Santa Luzia, Juiz de Fora, Minas Gerais, Brasil
+  CEP: 36030-060
 
 doravante denominada simplesmente CONTRATADA, e de outro lado
 
-  a pessoa física ou jurídica, contratante do Software como Serviço na núvem (SAAS)
+  a pessoa física ou jurídica, contratante do Software como Serviço (SAAS) na nuvem
   denominado CEREBELLO, doravante denominada simplesmente ASSINANTE, sendo este
   qualificado no FORMULÁRIO DE ADESÃO,
 
@@ -30,7 +31,7 @@ ACORDO DE NÍVEL DE SERVIÇO (SLA - SERVICE LEVEL AGREEMENT): é a parte do contrat
   essas métricas serão respeitadas e mantidas pela CONTRATADA.
 
 ASSINANTE: pessoa física ou jurídica que possui vínculo contratual com a XPTO, para
-  fruição do Software como Serviço na núvem denominado CEREBELLO.
+  fruição do Software como Serviço na nuvem denominado CEREBELLO.
 
 BROWSER: é um programa de computador de terceiro, que permite navegar na WEB. O SISTEMA
   pode ser acessado através de qualquer BROWSER suportado, indicados na lista de browsers
@@ -43,7 +44,7 @@ CONTA: é o cadastro do ASSINANTE junto à CONTRATADA, com a qual é associado um ú
   das CREDENCIAIS do USUÁRIO.
 
 CONTRATADA: é a pessoa jurídica que projeta, desenvolve e disponibiliza primariamente o
-  Software como Serviço na núvem denominado CEREBELLO, assim como filiais; excluindo-se
+  Software como Serviço na nuvem denominado CEREBELLO, assim como filiais; excluindo-se
   representantes comerciais.
 
 CREDENCIAIS: São as informações usadas pelo USUÁRIO para ter acesso ao SISTEMA. São elas:
@@ -65,20 +66,23 @@ FORMULÁRIO DE ALTERAÇÃO DE SERVIÇO: é um documento usado para alterar o serviço 
   assim como alterar informações do FORMULÁRIO DE ADESÃO ou deste contrato, por vontade do
   próprio ASSINANTE.
 
-SISTEMA: é o Software como Serviço na núvem denominado CEREBELLO, para consultórios e
+NUVEM: é a INTERNET. Toma-se este termo por representar um conjunto de inúmeras particulas
+  dispersas, que unidas tomam forma. A INTERNET é uma NÚVEM de computadores conectados.
+
+SISTEMA: é o Software como Serviço na nuvem denominado CEREBELLO, para consultórios e
   clínicas da área de saúde, cujas normas de fruição são definidas neste contrato. Pode
   ainda referir-se ao site público do CEREBELLO.
 
-SOFTWARE COMO SERVIÇO (SaaS): é o modelo de software em que o prestador do serviço mantémo
-  software acessível e funcionando pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO (SLA)
-  que define métricas de desempenho e segurança. Neste modelo o cliente possui direitos
-  sobre seus dados e uso de software, sem precisar adquirir uma licença, ou comprar o
-  software como produto.
+SOFTWARE COMO SERVIÇO (SAAS): é o modelo de software em que o prestador do serviço mantém
+  o software acessível e funcionando pela INTERNET, visto o ACORDO DE NÍVEL DE SERVIÇO
+  (SLA) que define métricas de desempenho e segurança. Neste modelo o cliente possui
+  direitos sobre seus dados e uso de software, sem precisar adquirir uma licença, ou
+  comprar o software como produto.
 
 SENHA: é uma sequência de letras, símbolos e números, criada por cada usuário, e que deve
   ser mantida em segredo. É de responsabilidade de cada USUÁRIO, usar a sua senha em
-  computadores ou dispositivos seguros, de conhecimento da CONTRATADA, de forma a evitar o
-  roubo da SENHA.
+  computadores ou dispositivos seguros, de conhecimento do ASSINANTE, de forma a evitar o
+  furto da SENHA.
 
 USUÁRIO: Uma CONTA permite o acesso de vários usuários cadastrados pelo ASSINANTE. Cada
   usuário cadastrado recebe um "Identificador de Usuário" e deve criar uma SENHA secreta
@@ -94,10 +98,10 @@ USUÁRIO: Uma CONTA permite o acesso de vários usuários cadastrados pelo ASSINANT
 OBJETO
 ------
 
-  Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA, assim como
-outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET em plataforma WEB através
-de um BROWSER suportado, mediante a digitação das CREDENCIAIS de acesso individuais de
-cada USUÁRIO, e respeitando-se todos os termos deste contrato.
+  Disponibilizar ao ASSINANTE, uma CONTA que o permita acessar o SISTEMA, permitindo
+também o acesso de outros USUÁRIOS cadastrados, sendo esta acessada pela INTERNET em
+plataforma WEB através de um BROWSER suportado, mediante a digitação das CREDENCIAIS de
+acesso individuais de cada USUÁRIO, e respeitando-se todos os termos deste contrato.
 
   O SISTEMA é disponibilizado na modalidade SaaS (Software as a Service), não particular,
 atualizado de forma compulsória e involuntaria, características estas presentes em todos
@@ -124,7 +128,7 @@ OBRIGAÇÕES DA CONTRATADA
   Manter o SISTEMA em condições de uso, de acordo com o definido no ACORDO DE NÍVEL DE
 SERVIÇO presente neste contrato. Atualizar o SISTEMA constantemente com correçõs de vícios
 e defeitos, e com melhorias de qualidades funcionais e não funcionais, visando melhorar a
-experiência geral dos usuários, vista a modalidade de Software como Serviço na Núvem.
+experiência geral dos usuários, vista a modalidade de Software como Serviço na nuvem.
 
   Fornecer documentação dos recursos do SISTEMA, que é acessível em site público e de
 fácil acesso. Atualizar a documentação constantemente, de forma a torná-la mais eficiente,
@@ -663,7 +667,7 @@ interpelação judicial ou extrajudicial, na ocorrência de uma das seguintes hipót
     estabelecidas neste contrato, a não ser que a contra-parte se manisfeste contrária;
 
  C) Por inadimplência do ASSINANTE nos pagamentos superior a 30 (trinta) dias, a não ser
-    que a CONTRATADA se manisfeste contrária;
+    que a CONTRATADA se manisfeste contrária, permitindo a continuidade do contrato;
 
  D) A ocorrência de caso fortuito ou força maior, que impeça a continuidade da prestação
     dos serviços contratados.

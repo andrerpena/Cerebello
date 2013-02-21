@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Helpers;
@@ -54,6 +55,17 @@ namespace CerebelloWebRole.Code.Controllers
         public virtual bool TrySendEmail(MailMessage message)
         {
             return EmailHelper.TrySendEmail(message);
+        }
+
+        /// <summary>
+        /// Sends an e-mail message using the default SmtpClient.
+        /// Tries 6 times before failing, and returning an exception in the task.
+        /// </summary>
+        /// <param name="message">MailMessage containing the informations about the message to be sent.</param>
+        /// <returns>The <see cref="Task"/> object containing information about the task. </returns>
+        public virtual Task SendEmailAsync(MailMessage message)
+        {
+            return EmailHelper.SendEmailAsync(message);
         }
 
         public virtual CerebelloEntities CreateNewCerebelloEntities()

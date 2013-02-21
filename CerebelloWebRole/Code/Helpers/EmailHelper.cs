@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace CerebelloWebRole.Code.Helpers
@@ -143,6 +145,10 @@ namespace CerebelloWebRole.Code.Helpers
         {
             for (int tries = 0; tries < 3; tries++)
             {
+                // sleeping for 10 seconds if not first try
+                if (tries > 0)
+                    Thread.Sleep(10000);
+
                 try
                 {
                     SendEmail(mailMessage);
@@ -153,6 +159,42 @@ namespace CerebelloWebRole.Code.Helpers
                 // ReSharper restore EmptyGeneralCatchClause
             }
             return false;
+        }
+
+        /// <summary>
+        /// Tries to send an e-mail message using the default SmtpClient asynchronously.
+        /// </summary>
+        /// <param name="mailMessage">The MailMessage to send.</param>
+        /// <returns>Returns a Task object containing informations about the task.</returns>
+        public static Task SendEmailAsync(MailMessage mailMessage)
+        {
+            var task = new Task(() =>
+                {
+                    Exception exceptions = null;
+                    for (int tries = 0; tries < 6; tries++)
+                    {
+                        // sleeping for 10 seconds if not first try
+                        if (tries > 0)
+                            Thread.Sleep(10000);
+
+                        try
+                        {
+                            SendEmail(mailMessage);
+                            return;
+                        }
+                        // ReSharper disable EmptyGeneralCatchClause
+                        catch (Exception ex)
+                        {
+                            exceptions = ex;
+                        }
+                        // ReSharper restore EmptyGeneralCatchClause
+                    }
+
+                    // rethrows the last exception
+                    throw exceptions;
+                });
+            task.Start();
+            return task;
         }
 
         private static void SaveEmailLocal(MailMessage message, string path)

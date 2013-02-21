@@ -25,21 +25,43 @@
 {
     <link href="@Url.Content("~/Content/Styles/App/PlanPage.css")" rel="Stylesheet" type="text/css" />
 }
-@using (Html.BeginForm(null, null, FormMethod.Post))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "contractForm" }))
 {
     @Html.ValidationSummary(false)
 
     @Html.HiddenFor(vm => vm.ContractUrlId)
 
-    switch (correctPlanCase[this.Model.ContractUrlId])
-    {
-        case "ProfessionalPlan":
-    @:@Html.Partial("Upgrade_ProfessionalPlan", this.Model)
-            break;
-    }
+    <div id="userAgreement">
+        @switch (correctPlanCase[this.Model.ContractUrlId])
+        {
+            case "ProfessionalPlan":
+                @:@Html.Partial("Upgrade_ProfessionalPlan", this.Model)
+                break;
+        }
+    </div>
+    
+    <script type="text/javascript">
+        $(function () {
+            $('#submitButton').click(function () {
+
+                // maybe disable the submit button once clicked?
+                $(this).attr('disabled', true);
+
+                @*note: this is a copy of the html seen by the user*@
+                $("#@Html.FieldName(vm => vm.WholeUserAgreement)").val($("#userAgreement").html());
+
+                // now submit the form
+                $('#contractForm').submit();
+
+                return false;
+            });
+        });
+    </script>
+    
+    <input type="hidden" id="@Html.FieldName(vm => vm.WholeUserAgreement)" name="@Html.FieldName(vm => vm.WholeUserAgreement)" value=""/>
 
     <div class="submit-bar">
-        <input type="submit" value="concluir" />
+        <input id="submitButton" type="submit" value="concluir" />
         <span class="separator">ou</span>
         @Html.ActionLink("cancelar", "Index")
     </div>

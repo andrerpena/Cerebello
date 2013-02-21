@@ -9,15 +9,20 @@ namespace Cerebello.Model
     /// </summary>
     public enum ContractTypes
     {
+        /// <summary>
+        /// The trial contract.
+        /// </summary>
         TrialContract = 1,
-        MonthlyFeeSubscriptionContract = 2,
-        OneFeeOneYearSubscriptionContract = 3,
-        MonthlyFeeSubscriptionForNewcomersContract = 4,
+
+        /// <summary>
+        /// The professional contract.
+        /// </summary>
+        ProfessionalContract = 2,
     }
 
     public enum TypeAppointmentStatus : int
     {
-        [Display(Name="Agendada")]
+        [Display(Name = "Agendada")]
         Undefined = 0,
 
         [Display(Name = "Não realizada")]

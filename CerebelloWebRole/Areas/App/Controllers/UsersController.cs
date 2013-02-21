@@ -248,6 +248,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 var loggedUser = this.DbUser;
 
+                // Checking doctors limit of this account.
+                if (formModel.IsDoctor)
+                {
+                    var doctorsCount = this.DbPractice.Users.Count(u => u.DoctorId != null);
+                    if (doctorsCount >= this.DbPractice.AccountContract.DoctorsLimit)
+                        this.ModelState.AddModelError(
+                            "DoctorsLimit",
+                            "Essa conta está configurada para suportar até {0} médicos.",
+                            this.DbPractice.AccountContract.DoctorsLimit);
+                }
+
                 // Looking for another user with the same UserName or Email.
                 var conflictingData = this.db.Users
                     .Where(u => u.PracticeId == loggedUser.PracticeId)

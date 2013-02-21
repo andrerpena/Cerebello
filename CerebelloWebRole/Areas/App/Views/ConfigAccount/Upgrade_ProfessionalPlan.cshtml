@@ -19,10 +19,10 @@
 
         <strong>Cobrança por e-mail:</strong>
         Será enviada uma cobraça por e-mail com o título <strong style="white-space: nowrap">Fatura Cerebello</strong>.
-        Essa fatura pode ser paga com cartão de crédito, ou então usando saldo disponível em uma conta do PayPal.
-        Sua conta será atualizada para o plano profissional, assim que confirmarmos o seu pagamento.
-        Por conta do tempo de processamento do pagamento, pedimos um prazo de 2 dias úteis após o pagamento para a ativação
-        do novo plano.
+            Essa fatura pode ser paga com cartão de crédito, ou então usando saldo disponível em uma conta do PayPal.
+            Sua conta será atualizada para o plano profissional, assim que confirmarmos o seu pagamento.
+            Por conta do tempo de processamento do pagamento, pedimos um prazo de 2 dias úteis após o pagamento para a ativação
+            do novo plano.
     </div>
 </div>
 
@@ -37,7 +37,7 @@
     <div class="text-description">
         <p>
             A assinatura será cobrada com a frequência selecionada abaixo,
-            sempre de forma adiantada. Existem descontos para pagamento trimestral, semestral ou anual, como indicado na tabela abaixo.
+                sempre de forma adiantada. Existem descontos para pagamento trimestral, semestral ou anual, como indicado na tabela abaixo.
         </p>
         <script type="text/javascript">
             $(function () {
@@ -121,20 +121,20 @@
     <div class="text-description">
         <p>
             O preço do plano profissional varia de acordo com o tamanho de seu consultório ou clínica.
-            Por esta razão, você deve indicar quantos médicos serão cadastrados.
-            O desconto dado no item anterior se aplica aos valores mostrados na tabela abaixo.
-            @if (this.Model.CurrentDoctorsCount == 0)
-            {
-                @:Atualmente <strong class="info">não existem médicos</strong> cadastrado em sua conta.
-            }
-            else if (this.Model.CurrentDoctorsCount == 1)
-            {
-                @:Atualmente existe <strong class="info">1 médico</strong> cadastrado em sua conta.
-            }
-            else
-            {
-                @:Atualmente existem <strong class="info">@Model.CurrentDoctorsCount médicos</strong> cadastrados em sua conta.
-            }
+                Por esta razão, você deve indicar quantos médicos serão cadastrados.
+                O desconto dado no item anterior se aplica aos valores mostrados na tabela abaixo.
+                @if (this.Model.CurrentDoctorsCount == 0)
+                {
+                    @:Atualmente <strong class="info">não existem médicos</strong> cadastrado em sua conta.
+                }
+                else if (this.Model.CurrentDoctorsCount == 1)
+                {
+                    @:Atualmente existe <strong class="info">1 médico</strong> cadastrado em sua conta.
+                }
+                else
+                {
+                    @:Atualmente existem <strong class="info">@Model.CurrentDoctorsCount médicos</strong> cadastrados em sua conta.
+                }
         </p>
         <script type="text/javascript">
             $(function () {
@@ -198,7 +198,7 @@
         </table>
         <p>
             Se você deseja cadastrar mais de @sizes.Max() médicos em seu consultório ou clínica,
-            por favor entre em contato conosco.
+                por favor entre em contato conosco.
         </p>
     </div>
 </div>
@@ -211,19 +211,19 @@
                 $(function () {
                     var $invoideDueDay = $("#@Html.FieldName(m => m.InvoceDueDayOfMonth)");
 
-                    $(".days-of-month td.enabled").click(function () {
-                        $(".days-of-month td.selected").toggleClass("selected");
-                        $(this).toggleClass("selected");
-                        $invoideDueDay.val($(this).attr("val"));
+                        $(".days-of-month td.enabled").click(function () {
+                            $(".days-of-month td.selected").toggleClass("selected");
+                            $(this).toggleClass("selected");
+                            $invoideDueDay.val($(this).attr("val"));
 
-                        UpdateSummary();
+                            UpdateSummary();
+                        });
+
+                        // loading value, if any already present (e.g. when back/forward browser button is used)
+                        if ($invoideDueDay.val() != "") {
+                            $(".days-of-month td[val='" + $invoideDueDay.val() + "']").trigger("click");
+                        }
                     });
-
-                    // loading value, if any already present (e.g. when back/forward browser button is used)
-                    if ($invoideDueDay.val() != "") {
-                        $(".days-of-month td[val='" + $invoideDueDay.val() + "']").trigger("click");
-                    }
-                });
             </script>
             <input type="hidden" id="@Html.FieldName(m => m.InvoceDueDayOfMonth)" name="@Html.FieldName(m => m.InvoceDueDayOfMonth)" value="@this.Model.InvoceDueDayOfMonth"/>
             <table class="days-of-month ui-datepicker-calendar">
@@ -237,7 +237,7 @@
                                 @if (day < 31)
                                 {
                                     @:@(day + 1)
-                                }
+                                    }
                             </td>
                         }
                     </tr>
@@ -247,9 +247,9 @@
         <div class="billing-calendar-description">
             <p>
                 A assinatura será cobrada com vencimento no dia indicado do mês.
-                Assim você pode escolher o melhor dia para pagar sua fatura.
-                A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
-                dando o tempo necessário para o pagamento ser efetuado.
+                    Assim você pode escolher o melhor dia para pagar sua fatura.
+                    A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
+                    dando o tempo necessário para o pagamento ser efetuado.
             </p>
             <p>
                 Nota: se o mês não possuir o dia selecionado, então será usado o último dia deste mês.
@@ -310,7 +310,7 @@
                     $("#summary-doctors-saved").text("R$ " + doctorsSaved.toFixed(2).replace('.', ','));
 
                     $(".summary-total-price").text("R$ " + totalPrice.toFixed(2).replace('.', ','));
-                    // note: this valu must have comma as decimal separator because web.config culture is set as 'pt-BR'
+                                            @*note: this value must have comma as decimal separator because web.config culture is set as 'pt-BR'*@
                     $("#@Html.FieldName(vm => vm.FinalValue)").val(totalPrice.toFixed(2).replace('.', ','));
                     $("#summary-total-price-month").text("R$ " + totalPriceMonthDisc.toFixed(2).replace('.', ','));
                     $("#summary-total-saved").text("R$ " + totalSaved.toFixed(2).replace('.', ','));
@@ -363,14 +363,12 @@
                     <td colspan="4">
                         <div style="text-align: right">
                             Valor final:
-                            <span style="font-size: 2em; font-weight: bold; line-height: 1em;" class="summary-total-price">
-                                R$ -
+                            <span style="font-size: 2em; font-weight: bold; line-height: 1em;" class="summary-total-price">R$ -
                             </span>
                             <input type="hidden" id="@Html.FieldName(vm => vm.FinalValue)" name="@Html.FieldName(vm => vm.FinalValue)" value=""/>
                         </div>
                         <div style="text-align: right">
-                            <span style="font-size: 1.3em; font-weight: bold" class="summary-frequency">
-                                -
+                            <span style="font-size: 1.3em; font-weight: bold" class="summary-frequency">-
                             </span>
                         </div>
                     </td>

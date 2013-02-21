@@ -863,31 +863,11 @@ namespace Cerebello.Firestarter
             db.SYS_ContractType.AddObject(
                 new SYS_ContractType
                     {
-                        Id = (int)ContractTypes.MonthlyFeeSubscriptionContract,
+                        Id = (int)ContractTypes.ProfessionalContract,
                         CreatedOn = new DateTime(2012, 09, 18),
                         IsTrial = false,
-                        Name = "Contrato de assinatura do plano Básico mensal pré-pago",
-                        UrlIdentifier = ContractTypes.MonthlyFeeSubscriptionContract.ToString(),
-                    });
-
-            db.SYS_ContractType.AddObject(
-                new SYS_ContractType
-                    {
-                        Id = (int)ContractTypes.OneFeeOneYearSubscriptionContract,
-                        CreatedOn = new DateTime(2012, 09, 18),
-                        IsTrial = false,
-                        Name = "Contrato de assinatura do plano Básico com validade de 1 ano",
-                        UrlIdentifier = "OneFeeOneYearSubscriptionContract",
-                    });
-
-            db.SYS_ContractType.AddObject(
-                new SYS_ContractType
-                    {
-                        Id = (int)ContractTypes.MonthlyFeeSubscriptionForNewcomersContract,
-                        CreatedOn = new DateTime(2012, 09, 19),
-                        IsTrial = false,
-                        Name = "Contrato de assinatura do plano Básico mensal pré-pago para novos médicos",
-                        UrlIdentifier = "MonthlyFeeSubscriptionForNewcomersContract",
+                        Name = "Contrato de assinatura do plano Profissional Básico",
+                        UrlIdentifier = ContractTypes.ProfessionalContract.ToString(),
                     });
 
             db.SaveChanges();
@@ -898,17 +878,17 @@ namespace Cerebello.Firestarter
             // Conselhos profissionais, segundo o TISS - Tabelas de domínio (Versão 2.02.03)
             var tissConselhoProfissional = new ListOfTuples<string, string>
                 {
-                    {"CRAS", "Conselho Regional de Assistência Social"},
-                    {"COREN", "Conselho Federal de Enfermagem"},
-                    {"CRF", "Conselho Regional de Farmácia"},
-                    {"CRFA", "Conselho Regional de Fonoaudiologia"},
-                    {"CREFITO", "Conselho Regional de Fisioterapia e Terapia Ocupacional"},
-                    {"CRM", "Conselho Regional de Medicina"},
-                    {"CRV", "Conselho Regional de Medicina Veterinária"},
-                    {"CRN", "Conselho Regional de Nutrição"},
-                    {"CRO", "Conselho Regional de Odontologia"},
-                    {"CRP", "Conselho Regional de Psicologia"},
-                    {"OUT", "Outros Conselhos"},
+                    { "CRAS", "Conselho Regional de Assistência Social" },
+                    { "COREN", "Conselho Federal de Enfermagem" },
+                    { "CRF", "Conselho Regional de Farmácia" },
+                    { "CRFA", "Conselho Regional de Fonoaudiologia" },
+                    { "CREFITO", "Conselho Regional de Fisioterapia e Terapia Ocupacional" },
+                    { "CRM", "Conselho Regional de Medicina" },
+                    { "CRV", "Conselho Regional de Medicina Veterinária" },
+                    { "CRN", "Conselho Regional de Nutrição" },
+                    { "CRO", "Conselho Regional de Odontologia" },
+                    { "CRP", "Conselho Regional de Psicologia" },
+                    { "OUT", "Outros Conselhos" },
                 };
 
             foreach (var eachTuple in tissConselhoProfissional)

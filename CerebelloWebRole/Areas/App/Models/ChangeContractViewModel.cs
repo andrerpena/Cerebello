@@ -57,5 +57,10 @@ namespace CerebelloWebRole.Areas.App.Models
         /// This value must be validated at the server to prevent fraud.
         /// </summary>
         public decimal FinalValue { get; set; }
+
+        /// <summary>
+        /// Whole HTML of the user agreement, that was seen by the user.
+        /// </summary>
+        public string WholeUserAgreement { get; set; }
     }
 }
