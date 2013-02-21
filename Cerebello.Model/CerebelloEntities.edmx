@@ -285,7 +285,7 @@
           <Property Name="StartDate" Type="date" Nullable="false" />
           <Property Name="EndDate" Type="date" />
           <Property Name="BillingAmount" Type="numeric" Precision="16" Scale="2" />
-          <Property Name="BillingPeriodType" Type="char" MaxLength="4" />
+          <Property Name="BillingPeriodType" Type="varchar" MaxLength="10" />
           <Property Name="BillingPeriodSize" Type="int" />
           <Property Name="BillingPeriodCount" Type="int" />
           <Property Name="BillingDueDay" Type="int" />
@@ -461,10 +461,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AnamneseId" Type="int" Nullable="false" />
           <Property Name="Observations" Type="text" />
           <Property Name="Cid10Code" Type="varchar" MaxLength="10" />
           <Property Name="Cid10Name" Type="varchar" Nullable="false" MaxLength="500" />
-          <Property Name="AnamneseId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Doctor">
@@ -2677,7 +2677,7 @@
           <NavigationProperty Name="SYS_ContractType" Relationship="Cerebello.Model.FK_AccountContract_SYS_ContractType" FromRole="AccountContract" ToRole="SYS_ContractType" />
           <NavigationProperty Name="Practices" Relationship="Cerebello.Model.FK_Practice_AccountContract" FromRole="AccountContract" ToRole="Practice" />
           <Property Type="Decimal" Name="BillingAmount" Precision="16" Scale="2" />
-          <Property Type="String" Name="BillingPeriodType" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Type="String" Name="BillingPeriodType" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="BillingPeriodSize" />
           <Property Type="Int32" Name="BillingPeriodCount" />
           <Property Type="Int32" Name="BillingDueDay" />
@@ -3706,7 +3706,7 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
-          </EntityContainerMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="DiagnosticHypotheses">
             <EntityTypeMapping TypeName="Cerebello.Model.DiagnosticHypothesis">
               <MappingFragment StoreEntitySet="DiagnosticHypothesis">
@@ -3719,6 +3719,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

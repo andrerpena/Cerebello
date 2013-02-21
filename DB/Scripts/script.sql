@@ -1106,12 +1106,6 @@ REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_ToUser_User]
 GO
-/****** Object:  ForeignKey [FK_Diagnosis_Anamnese] ******/
-ALTER TABLE [dbo].[Symptom]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
-REFERENCES [dbo].[Anamnese] ([Id])
-GO
-ALTER TABLE [dbo].[Symptom] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
-GO
 /****** Object:  ForeignKey [FK_Diagnosis_Patient] ******/
 ALTER TABLE [dbo].[Diagnosis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
