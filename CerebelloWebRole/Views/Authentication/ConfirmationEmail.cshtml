@@ -1,11 +1,20 @@
 ﻿@model UserEmailViewModel
 @{
-    this.ViewBag.Title = "Bem vindo ao Cerebello! Por favor, confirme a criação de sua conta.";
-    
+    this.Layout = "../Shared/_EmailLayout.cshtml";
+
+    this.ViewBag.Title = "Cerebello: Confirme a criação de sua conta";
+    this.ViewBag.ShortTitle = "Confirmação de e-mail";
+
     var urlWithData = this.Url.Action(
         "VerifyPracticeAndEmail",
         "Authentication",
         new VerifyPracticeAndEmailViewModel { Token = Model.Token, PracticeIdentifier = this.Model.PracticeIdentifier },
+        "https");
+
+    var urlWithoutData = this.Url.Action(
+        "VerifyPracticeAndEmail",
+        "Authentication",
+        new VerifyPracticeAndEmailViewModel { },
         "https");
 
     var urlLogin = this.Url.Action("Index", "PracticeHome",
@@ -13,84 +22,121 @@
 }
 @if (this.ViewBag.IsBodyHtml == true)
 {
-    <html>
-    <head>
-        <title>@this.ViewBag.Title</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        @if (DebugConfig.UseFileSystemEmailBox)
-        {
-            <style type="text/css">
-                /* GMAIL style (only when local presentation) */
-                /* Style tags have no effect in e-mails */
-                body {
-                    font-size: 13px;
-                    font-family: arial, sans-serif;
-                    color: #222;
-                    background: white;
-                }
-            </style>
-        }
-    </head>
-    <body style="font-family: arial, sans-serif; color: #222; background: white;">
-        Olá <strong>@Model.PersonName</strong>,<br />
-        <p>
-            Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
-            nova conta no <a href="@this.Url.Action("Index", "Home", new { }, "https")">Cerebello</a>,
-            o seu software de gerenciamento de consultório.
-        </p>
-        <p>
-            Por favor, visite o link seguinte para confirmar o seu e-mail e a criação de sua conta:
-        </p>
-        <p>
-            <a href="@urlWithData">Confirmar meu e-mail e ativar a minha conta</a>
-        </p>
-        <p>
-            O identificador do seu consultório é <code style="white-space: nowrap; background-color: #F8F8F8; border: 1px solid #EAEAEA; border-radius: 3px 3px 3px 3px; margin: 0 2px; padding: 0 5px; font-family: Consolas,'Liberation Mono',Courier,monospace; font-size: 1.1em; line-height: 1.6; color: #333333;">@this.Model.PracticeIdentifier</code>.
-            Você pode fazer login informando este identificador ou acessando diretamente a url
-            <a href="@urlLogin">@urlLogin</a>
-        </p>
-        <p>
-            <span style="color: DarkRed">ATENÇÃO: </span>Se a verificação não ocorrer em até 30
-            dias, o processo de cadastro será cancelado.
-        </p>
-        <p>
-            Atenciosamente<br />
-            <em style="margin-right: 2em; display: inline-block;">equipe CareSys Tecnologias de Informação</em>
-        </p>
-    </body>
-    </html>
+    <p>
+        Olá <strong>@Model.PersonName</strong>,
+    </p>
+    <p>
+        Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
+        nova conta no @EmailHtml.Link(this.Url.Action("Index", "Home", new { }, "https"), "Cerebello"),
+        o seu software de gerenciamento de consultório.
+    </p>
+    
+    @EmailHtml.SectionHeader("Concluindo a criação da conta")
+    <p>
+        Para completar a criação de sua conta você deve confirmar o recebimento desta mensagem.
+        Isso pode ser feito visitando o seguinte link:
+    </p>
+    <p>
+        @EmailHtml.Link(urlWithData, "Confirmar meu e-mail e ativar a minha conta")
+    </p>
+    
+    @EmailHtml.SectionHeader("Suas credenciais")
+    <p>
+        O identificador do seu consultório é
+    </p>
+    <center>@(EmailHtml.BigCode(this.Model.PracticeIdentifier))</center>
+    <p>
+        Esse identificador, assim como o seu nome de usuário e senha são necessários para entrar no sistema.
+    </p>
+    <p>
+        Você pode entrar informando suas credenciais na página de
+        @EmailHtml.Link(this.Url.Action("Login", "Authentication", new { }, "https"), "Login"),
+        ou acessando diretamente a url
+        @EmailHtml.Link(urlLogin, urlLogin)
+    </p>
 
-        return;
+    @EmailHtml.SectionHeader("Esqueci o nome de usuário ou a senha")
+    <p>
+        Se você esquecer essas informações, entre em contato conosco.
+        Só assim será possível recomeçar o cadastro de sua conta.
+    </p>
+    
+    @EmailHtml.SectionHeader("Observações")
+    <p>
+        Caso o link de confirmação não funcione, tente
+        @(EmailHtml.Link(urlWithoutData, "entrar com o token de confirmação manualmente")).
+        O seu token é: @EmailHtml.InlineCode(this.Model.Token)
+    </p>
+    @EmailHtml.BootstrapAlert(@<text>
+    <p>
+        <span style="color: DarkRed">ATENÇÃO: </span>Se a verificação não ocorrer em até 30
+        dias, o processo de cadastro será cancelado. Você pode fazer o cadastro novamente
+        caso isso aconteça.
+    </p>
+    </text>)
+    <p>
+        Se você não requisitou a criação de uma
+        conta, ignore este e-mail e nos desculpe pela
+        inconveniência.
+    </p>
+    <p>
+        Atenciosamente<br />
+        @EmailHtml.Emphasis("equipe CareSys Tecnologias de Informação")
+    </p>
+    return;
 }
 E-mail de confirmação
 =====================
 
 Olá @Html.Raw(Model.PersonName),
 
-    Este e-mail está sendo enviado para
+Este e-mail está sendo enviado para
 confirmar sua solicitação de criação
 de uma nova conta no cerebello.com.br,
 o seu software de gerenciamento de
 consultório.
 
-    Por favor, visite o link seguinte
-para confirmar o seu e-mail e a
-criação de sua conta:
+Concluindo a criação da conta
+-----------------------------
+
+Para completar a criação de sua conta você deve
+confirmar o recebimento desta mensagem.
+Isso pode ser feito visitando o seguinte link:
+
 @Html.Raw(urlWithData)
+
+Suas credenciais
+----------------
 
 O identificador do seu consultório é
 "@this.Model.PracticeIdentifier"
 (sem as aspas duplas).
 
-    Você pode fazer login informando este
-identificador ou acessando diretamente a url
+Esse identificador, assim como o seu nome de
+usuário e senha são necessários para entrar no
+sistema.
+
+Você pode entrar informando suas credenciais
+na página de Login
+@(this.Url.Action("Login", "Authentication", new { }, "https")),
+ou acessando diretamente a url
 @Html.Raw(urlLogin)
 
-ATENÇÃO: Se a verificação não ocorrer em até 30
+Observações
+-----------
+
+Caso a URL de confirmação não funcione, tente
+entrar com o token de confirmação manualmente em:
+@Html.Raw(urlWithoutData)
+com o token: "@this.Model.Token"
+(sem as aspas duplas).
+
+**ATENÇÃO:** Se a verificação não ocorrer em até 30
 dias, o processo de cadastro será cancelado.
 
-    Se você não requisitou a criação de uma
-conta, ignore este e-mail que nada será feito.
+Se você não requisitou a criação de uma
+conta, ignore este e-mail e nos desculpe pela
+inconveniência.
 
 Atenciosamente
     equipe CareSys Tecnologias de Informação

@@ -233,7 +233,10 @@ namespace CerebelloWebRole.Code.Helpers
                     string ext2;
                     if (dicMediaTypeExt.TryGetValue(eachAlternateView.ContentType.MediaType, out ext2))
                         using (var file = File.Create(Path.Combine(inboxPath, name + ext2)))
+                        {
                             eachAlternateView.ContentStream.CopyTo(file);
+                            eachAlternateView.ContentStream.Position = 0;
+                        }
                 }
             }
         }

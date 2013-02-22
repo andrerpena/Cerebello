@@ -164,9 +164,11 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Buz.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
+    <Compile Include="Code\ViewPage\CerebelloViewPage.cs" />
     <Compile Include="Code\Filters\CanonicalUrlHttpsFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
     <Compile Include="Code\Filters\SelfOrUserRolePermissionAttribute.cs" />
+    <Compile Include="Code\Helpers\MvcActionHelper.cs" />
     <Compile Include="Code\Helpers\EmailHelper.cs" />
     <Compile Include="Code\Helpers\MimeTypesHelper.cs" />
     <Compile Include="Code\Json\JsonError.cs" />
@@ -770,6 +772,7 @@
     <Content Include="Views\Home\AccountCanceled.cshtml" />
     <Content Include="Views\Shared\_EmptyLayout.cshtml" />
     <Content Include="Views\Shared\_AuthenticationLayout.cshtml" />
+    <Content Include="Views\Shared\_EmailLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

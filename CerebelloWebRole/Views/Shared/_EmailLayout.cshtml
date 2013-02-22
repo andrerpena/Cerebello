@@ -1,0 +1,69 @@
+﻿@if (this.ViewBag.IsBodyHtml != true) { goto TEXT_VIEW; }
+<html>
+<head>
+    <title>@this.ViewBag.Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    @if (DebugConfig.UseFileSystemEmailBox)
+    {
+        <style type="text/css">
+            /* GMAIL style (only when local presentation) */
+            /* Style tags have no effect in e-mails */
+            body {
+                font-size: 13px;
+                font-family: arial, sans-serif;
+                color: #222;
+                background: white;
+            }
+        </style>
+    }
+</head>
+<body>
+    <div style="
+            color: #222222;
+            background: white;
+            width: 100%;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 20px;">
+
+        <div style="height: 20px"></div>
+        <center>
+            <table style="font-size: 1em; border-collapse: collapse; border: 1px solid #D6D6D6; background-color: white; width: 450px;" bgcolor="white" width="450" cellpadding="0" border="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <table style="font-size: 1em;  border-collapse: collapse; background-color: #EEEEEE; width: 450px;" bgcolor="#EEEEEE" width="450" cellpadding="0" border="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 18px"></td><td style="padding-top: 6px; padding-bottom: 6px;">
+                                    <h1 style="color: #555555; font-size: 1.3em; margin: 0; text-shadow: 1px 1px 0 #FFFFFF; line-height: 2em; font-weight: bold; text-rendering: optimizelegibility;">
+                                        @this.ViewBag.ShortTitle
+                                    </h1>
+                                </td><td align="right">
+                                    @EmailHtml.Link(this.Url.Action("Index", "Home", new { area = "" }, "https"), "Cerebello")
+                                </td><td style="width: 18px"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="font-size: 1em; border-collapse: collapse; background-color: white; color: #333333;" cellpadding="0" border="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 30px; line-height: 1.5em; overflow: hidden;"></td><td style="width: 390px; padding-top: 20px; padding-bottom: 20px;">
+                                    <font color="#333333">
+                                        @this.RenderBody()
+                                    </font>
+                                </td><td style="width: 30px"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+        </center>
+
+    </div>
+</body>
+</html>
+@{return;}
+@{ TEXT_VIEW: }
+@this.RenderBody()

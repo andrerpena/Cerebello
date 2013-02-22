@@ -438,6 +438,7 @@ namespace CerebelloWebRole.Controllers
                 this.ModelState.Remove(() => viewModel.PracticeIdentifier);
                 this.ModelState.Remove(() => viewModel.UserNameOrEmail);
                 this.ModelState.Remove(() => viewModel.Password);
+                this.ModelState.Remove(() => viewModel.Token);
             }
 
             if (user == null)
@@ -488,7 +489,7 @@ namespace CerebelloWebRole.Controllers
             if (token == null)
                 isTokenValid = false;
 
-            if (practice == null)
+            if (practice == null && this.Request.HttpMethod != "GET" && !this.ModelState.HasPropertyErrors(() => viewModel.PracticeIdentifier))
                 this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório não foi achado.");
 
             if (token != null && practice != null)

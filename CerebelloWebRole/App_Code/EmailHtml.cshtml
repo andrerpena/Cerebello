@@ -1,11 +1,100 @@
-﻿@helper InlineCode(object obj)
-{<code style="white-space: nowrap; background-color: #F8F8F8; border: 1px solid #EAEAEA; border-radius: 3px 3px 3px 3px; margin: 0 2px; padding: 0 5px; font-family: Consolas, 'Liberation Mono', Courier, monospace; font-size: 1.1em; line-height: 1.6; color: #333333;">@obj</code>}
+﻿@helper InlineCode(object text)
+{@(InlineCode(x => text))}
+@helper InlineCode(Func<dynamic, object> text)
+{<code style="
+    white-space: nowrap;
+    background-color: #F8F8F8;
+    border: 1px solid #EAEAEA;
+    border-radius: 3px 3px 3px 3px;
+    margin: 0 2px;
+    padding: 0 5px;
+    font-family: Consolas, 'Liberation Mono', Courier, monospace;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #333333;">
+     @text(null)
+ </code>}
 
-@helper InlineCode(Func<dynamic, object> fnc)
-{<code style="white-space: nowrap; background-color: #F8F8F8; border: 1px solid #EAEAEA; border-radius: 3px 3px 3px 3px; margin: 0 2px; padding: 0 5px; font-family: Consolas, 'Liberation Mono', Courier, monospace; font-size: 1.1em; line-height: 1.6; color: #333333;">@fnc(null)</code>}
+@helper BigCode(object text)
+{@(BigCode(x => text))}
+@helper BigCode(Func<dynamic, object> text)
+{<code style="
+    white-space: nowrap;
+    background-color: #F8F8F8;
+    border: 1px solid #EAEAEA;
+    border-radius: 3px 3px 3px 3px;
+    margin: 0 2px;
+    padding: 0 5px;
+    font-family: Consolas, 'Liberation Mono', Courier, monospace;
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1.6;
+    color: #333333;">
+     @text(null)
+ </code>}
 
-@helper Emphasis(object obj)
-{<em style="margin-right: 2em; display: inline-block;">@obj</em>}
+@helper Emphasis(object text)
+{@(Emphasis(x => text))}
+@helper Emphasis(Func<dynamic, object> text)
+{<em style="margin-right: 2em; display: inline-block;">@text(null)</em>}
 
-@helper Emphasis(Func<dynamic, object> fnc)
-{<em style="margin-right: 2em; display: inline-block;">@fnc(null)</em>}
+@helper Link(string url, object text)
+{@(Link(url, x => text))}
+@helper Link(string url, Func<dynamic, object> text)
+{<a style="white-space: nowrap; text-decoration: none;" href="@url">@text(null)</a>}
+
+@helper BootstrapInfo(object text)
+{@(BootstrapInfo(x => text))}
+@helper BootstrapInfo(Func<dynamic, object> text)
+{
+    <div style="color: #3a87ad;
+        background-color: #d9edf7;
+        padding: 8px 35px 8px 14px;
+        margin-bottom: 20px;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        border: 1px solid #bce8f1;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 1.0em;
+        line-height: 1.5em;">
+        @text(null)
+    </div>
+}
+
+@helper BootstrapAlert(object text)
+{@(BootstrapAlert(x => text))}
+@helper BootstrapAlert(Func<dynamic, object> text)
+{
+    <div style="
+        color: #b94a48;
+        background-color: #f2dede;
+        padding: 8px 35px 8px 14px;
+        margin-bottom: 20px;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        border: 1px solid #eed3d7;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 1.0em;
+        line-height: 1.5em;">
+            @text(null)
+    </div>
+}
+
+@helper SectionHeader(object text)
+{@(SectionHeader(x => text))}
+@helper SectionHeader(Func<dynamic, object> text)
+{
+    <h2 style="
+        font-size: 1.1em;
+        border-bottom: 1px solid #D7D7D7;
+        font-weight: bold;
+        margin-bottom: 8px;
+        padding: 2px 0;
+        vertical-align: baseline;">
+        @text(null)
+    </h2>
+}

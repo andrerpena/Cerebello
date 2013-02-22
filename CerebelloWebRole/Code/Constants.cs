@@ -34,7 +34,7 @@
 #if DEBUG
         public const string DOMAIN = "localhost";
 #else
-        public const string DOMAIN = "cerebello.com.br";
+        public const string DOMAIN = "www.cerebello.com.br";
 #endif
 
         public const string EMAIL_POWEREDBY = "www.cerebello.com.br";

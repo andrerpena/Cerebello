@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
@@ -9,17 +8,22 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Extensions
 {
+    /// <summary>
+    /// Extension methods to the view page that allows changin the view
+    /// accordin to access control rules, and other route informations.
+    /// </summary>
     public static class AccessExtensions
     {
         /// <summary>
         /// Checks whether the current user can access the specified action.
         /// At this moment it looks only at PermissionAttribute attributes.
         /// </summary>
-        /// <param name="this"></param>
-        /// <param name="action"></param>
-        /// <param name="controller"></param>
-        /// <param name="method"></param>
-        /// <returns></returns>
+        /// <param name="this">The current view page.</param>
+        /// <param name="action">Action name to test.</param>
+        /// <param name="controller">Controller name to test.</param>
+        /// <param name="method">Http method to differentiate GET, HEAD, POST, PUT and DELETE actions.</param>
+        /// <param name="routeValues">An object containing the route values for the action. </param>
+        /// <returns>Returns true if the current user has access to the given action; otherwise false. </returns>
         public static bool CanAccessAction(
             this WebViewPage @this,
             [AspMvcAction]string action = null,
@@ -32,7 +36,8 @@ namespace CerebelloWebRole.Code.Extensions
             if (@this == null)
                 throw new ArgumentNullException("this");
 
-            var mvcHelper = new MvcHelper(@this.ViewContext.Controller.ControllerContext, action, controller, method, routeValues);
+            var mvcHelper = new MvcActionHelper(
+                @this.ViewContext.Controller.ControllerContext, action, controller, method, routeValues);
 
             // Getting the current DB User... (the logged user).
             var cerebelloController = @this.ViewContext.Controller as CerebelloController;
@@ -71,10 +76,10 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Checks whether the current view is the result of the specified action call.
         /// </summary>
-        /// <param name="this"></param>
-        /// <param name="action"></param>
-        /// <param name="controller"></param>
-        /// <returns></returns>
+        /// <param name="this">The current view page.</param>
+        /// <param name="action">Action name to test.</param>
+        /// <param name="controller">Controller name to test.</param>
+        /// <returns>Returns true if the current view represents the result of the given action; otherwise false.</returns>
         public static bool IsAction(
             this WebViewPage @this,
             [AspMvcAction]string action,
@@ -88,18 +93,18 @@ namespace CerebelloWebRole.Code.Extensions
             var currentController = routeData.GetRequiredString("controller");
 
             if (controller != null)
-                return string.Compare(currentController, controller, true) == 0
-                       && string.Compare(currentAction, action, true) == 0;
+                return string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
+                       && string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
 
-            return string.Compare(currentAction, action, true) == 0;
+            return string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
         /// Checks whether the current view is the result of the specified controller call.
         /// </summary>
-        /// <param name="this"></param>
-        /// <param name="controllerNames"></param>
-        /// <returns></returns>
+        /// <param name="this">The current view page.</param>
+        /// <param name="controllerNames">Names of the controllers to test.</param>
+        /// <returns>Returns true if the current view represents the result of any of the given controller; otherwise false.</returns>
         public static bool IsController(
             this WebViewPage @this,
             [AspMvcController]params string[] controllerNames)
@@ -110,7 +115,7 @@ namespace CerebelloWebRole.Code.Extensions
             var routeData = @this.ViewContext.RouteData;
             var currentController = routeData.GetRequiredString("controller");
 
-            return controllerNames.Any(cn => String.Compare(currentController, cn, StringComparison.OrdinalIgnoreCase) == 0);
+            return controllerNames.Any(cn => string.Equals(currentController, cn, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

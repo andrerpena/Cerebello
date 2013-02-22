@@ -39,10 +39,38 @@ namespace CerebelloWebRole.Code.Controllers
         /// <param name="viewData">The viewData object containing the model object to pass to the partial view.</param>
         /// <returns>The string rendered from the partial view.</returns>
         protected string RenderPartialViewToString(
-            [AspMvcView][AspMvcPartialView] string viewName,
+            [AspMvcPartialView] string viewName,
             ViewDataDictionary viewData = null)
         {
             return MvcHelper.RenderPartialViewToString(this.ControllerContext, viewName, viewData);
+        }
+
+        /// <summary>
+        /// Renders a partial view to a string.
+        /// </summary>
+        /// <param name="viewName">The name of the partial view to render.</param>
+        /// <param name="viewData">The viewData object containing the model object to pass to the partial view.</param>
+        /// <returns>The string rendered from the partial view.</returns>
+        protected string RenderViewToString(
+            [AspMvcView] string viewName,
+            ViewDataDictionary viewData = null)
+        {
+            return MvcHelper.RenderViewToString(this.ControllerContext, viewName, viewData);
+        }
+
+        /// <summary>
+        /// Renders a partial view to a string.
+        /// </summary>
+        /// <param name="viewName">The name of the partial view to render.</param>
+        /// <param name="viewData">The viewData object containing the model object to pass to the partial view.</param>
+        /// <param name="masterName">Name of the layout page.</param>
+        /// <returns>The string rendered from the partial view.</returns>
+        protected string RenderViewToString(
+            [AspMvcView] string viewName,
+            ViewDataDictionary viewData,
+            [AspMvcMaster]string masterName)
+        {
+            return MvcHelper.RenderViewToString(this.ControllerContext, viewName, viewData, masterName);
         }
 
         public EmailHelper.SendEmailAction EmailSender { get; set; }
@@ -89,7 +117,7 @@ namespace CerebelloWebRole.Code.Controllers
             string sourceName = EmailHelper.DEFAULT_SOURCE)
         {
             return EmailHelper.CreateEmailMessageFromView(
-                this.RenderPartialViewToString, contentView, toAddress, model, sourceName);
+                this.RenderViewToString, contentView, toAddress, model, sourceName);
         }
     }
 }

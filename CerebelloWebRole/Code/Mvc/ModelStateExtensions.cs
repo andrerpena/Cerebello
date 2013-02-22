@@ -80,6 +80,11 @@ namespace CerebelloWebRole.Code
             return result.Errors;
         }
 
+        public static bool HasPropertyErrors(this ModelStateDictionary modelState, Expression<Func<object>> expression)
+        {
+            return GetPropertyErrors(modelState, expression).Any();
+        }
+
         /// <summary>
         /// Returns the ModelState object associated with a model property.
         /// </summary>
