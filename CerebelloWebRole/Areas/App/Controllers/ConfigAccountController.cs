@@ -104,7 +104,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(eachDoctorUser);
                     var toAddress = new MailAddress(eachDoctorUser.Person.Email, eachDoctorUser.Person.FullName);
-                    var mailMessage = this.CreateEmailMessage("AccountDataEmail", toAddress, emailViewModel);
+                    var mailMessage = this.CreateEmailMessagePartial("AccountDataEmail", toAddress, emailViewModel);
 
                     // attaching pdf
                     var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor, this.Request);
@@ -247,7 +247,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         // to remember us to send the payment request
                         var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
                         var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
-                        var mailMessage = this.CreateEmailMessage("InternalUpgradeEmail", toAddress, emailViewModel);
+                        var mailMessage = this.CreateEmailMessagePartial("InternalUpgradeEmail", toAddress, emailViewModel);
                         this.SendEmailAsync(mailMessage).ContinueWith(t =>
                             {
                                 // todo: should do something when e-mail is not sent

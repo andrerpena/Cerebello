@@ -114,6 +114,16 @@
 </div>
 
 <div class="widget">
-    <h2>Próximos compromissos (Exibindo 5)</h2>
+    @{
+        var nextGenericAppointmentsNotes = "";
+        if (this.Model.NextGenericAppointmentsCount > this.Model.NextGenericAppointments.Count)
+        {
+            nextGenericAppointmentsNotes = string.Format(
+                "(exibindo {0} de {1})",
+                this.Model.NextGenericAppointments.Count,
+                this.Model.NextGenericAppointmentsCount);
+        }
+    }
+    <h2>Próximos compromissos @nextGenericAppointmentsNotes</h2>
     @nextGenericAppointments.GetHtml()
 </div>

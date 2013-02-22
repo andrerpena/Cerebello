@@ -623,6 +623,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             string lunchStartTimeAsString = null;
             string lunchEndTimeAsString = null;
 
+            if (doctor.CFG_Schedule == null)
+                throw new Exception("You should have checked to see if 'doctor.CFG_Schedule' is null before calling this method.");
+
             switch (localDateTime.DayOfWeek)
             {
                 case DayOfWeek.Sunday:

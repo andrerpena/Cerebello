@@ -54,6 +54,6 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Estado do conselho")]
         public int MedicalEntityJurisdiction { get; set; }
 
-        
+        public int NextGenericAppointmentsCount { get; set; }
     }
 }

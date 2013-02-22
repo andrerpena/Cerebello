@@ -590,7 +590,7 @@ namespace CerebelloWebRole.Controllers
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), };
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
-                    message = this.CreateEmailMessage("ResetPasswordEmail", toAddress, emailViewModel);
+                    message = this.CreateEmailMessagePartial("ResetPasswordEmail", toAddress, emailViewModel);
 
                     #endregion
                 }

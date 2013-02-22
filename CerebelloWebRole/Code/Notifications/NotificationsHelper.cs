@@ -32,7 +32,8 @@ namespace CerebelloWebRole.Code.Notifications
                     else
                     {
                         var jsonData = System.Web.Helpers.Json.Decode(notification.ViewData);
-                        text = MvcHelper.RenderPartialViewToString(controller.ControllerContext, notification.ViewName, jsonData);
+                        var viewDataDic = new ViewDataDictionary(jsonData);
+                        text = MvcHelper.RenderPartialViewToString(controller.ControllerContext, notification.ViewName, viewDataDic);
                     }
 
                     result.Add(new NotificationData()

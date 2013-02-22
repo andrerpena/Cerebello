@@ -65,17 +65,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             }).ToList();
 
             var nextGenericAppointments =
-                this.db.Appointments.Where(a => a.DoctorId == this.Doctor.Id && a.Type == (int)TypeAppointment.GenericAppointment && ((a.Start < utcNow && a.End > utcNow) || a.Start > utcNow)).OrderBy(a => a.Start).Take(5)
-                    .AsEnumerable()
-                    .Select(
-                        a => new AppointmentViewModel()
-                            {
-                                Id = a.Id,
-                                Description = a.Description,
-                                LocalDateTime = ConvertToLocalDateTime(this.DbPractice, a.Start),
-                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.End)),
-                                IsNow = getIsNow(a)
-                            }).ToList();
+                this.db.Appointments
+                    .Where(a => a.DoctorId == this.Doctor.Id && a.Type == (int)TypeAppointment.GenericAppointment)
+                    .Where(a => ((a.Start < utcNow && a.End > utcNow) || a.Start > utcNow))
+                    .OrderBy(a => a.Start);
+
+            var nextGenericAppointmentsLimited =
+                nextGenericAppointments
+                .Take(5)
+                .AsEnumerable()
+                .Select(
+                    a => new AppointmentViewModel()
+                        {
+                            Id = a.Id,
+                            Description = a.Description,
+                            LocalDateTime = ConvertToLocalDateTime(this.DbPractice, a.Start),
+                            LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.End)),
+                            IsNow = getIsNow(a)
+                        }).ToList();
+
+            var nextGenericAppointmentsCount =
+                nextGenericAppointments.Count();
 
             var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, this.Doctor);
             var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, this.Doctor);
@@ -84,9 +94,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     DoctorName = this.Doctor.Users.First().Person.FullName,
                     Gender = (TypeGender)this.Doctor.Users.First().Person.Gender,
-                    NextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(this.db, this.Doctor, localNow),
+                    // commented-code: NextFreeTime is not being used... it is a heavy thing to do, and to discard
+                    //NextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(this.db, this.Doctor, localNow),
                     TodaysAppointments = todaysAppointments,
-                    NextGenericAppointments = nextGenericAppointments,
+                    NextGenericAppointments = nextGenericAppointmentsLimited,
+                    NextGenericAppointmentsCount = nextGenericAppointmentsCount,
                     MedicCrm = this.Doctor.CRM,
                     MedicalSpecialtyId = medicalSpecialty != null ? medicalSpecialty.Id : (int?)null,
                     MedicalSpecialtyName = medicalSpecialty != null ? medicalSpecialty.Name : null,
@@ -99,7 +111,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.PracticeLocalDate = localNow.ToShortDateString();
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
     }
 }

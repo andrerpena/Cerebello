@@ -110,8 +110,27 @@ namespace CerebelloWebRole.Code.Controllers
         /// <param name="model">Data that should be sent to the view.</param>
         /// <param name="sourceName">Source name for this e-mail.</param>
         /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
+        public virtual MailMessage CreateEmailMessagePartial(
+            [AspMvcPartialView] string contentView,
+            MailAddress toAddress,
+            object model,
+            string sourceName = EmailHelper.DEFAULT_SOURCE)
+        {
+            return EmailHelper.CreateEmailMessageFromView(
+                this.RenderPartialViewToString, contentView, toAddress, model, sourceName);
+        }
+
+        /// <summary>
+        /// Creates an email message using an MVC view.
+        /// The title, the html and text contents of the e-mail will be given by this view.
+        /// </summary>
+        /// <param name="contentView">View name to use to render the e-mail contents, and to get the text from.</param>
+        /// <param name="toAddress">Address of the recipient.</param>
+        /// <param name="model">Data that should be sent to the view.</param>
+        /// <param name="sourceName">Source name for this e-mail.</param>
+        /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
         public virtual MailMessage CreateEmailMessage(
-            [AspMvcView] [AspMvcPartialView] string contentView,
+            [AspMvcView] string contentView,
             MailAddress toAddress,
             object model,
             string sourceName = EmailHelper.DEFAULT_SOURCE)

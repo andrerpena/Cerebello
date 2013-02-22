@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Helpers
 {
@@ -254,7 +255,7 @@ namespace CerebelloWebRole.Code.Helpers
         /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
         public static MailMessage CreateEmailMessageFromView(
             Func<string, ViewDataDictionary, string> viewRenderer,
-            string contentView,
+            [AspMvcView][AspMvcPartialView] string contentView,
             MailAddress toAddress,
             object model,
             string sourceName)

@@ -1,10 +1,16 @@
-﻿@model CerebelloWebRole.Areas.App.Models.AppointmentViewModel
+﻿@model AppointmentViewModel
 @using CerebelloWebRole.Code.Extensions
 @{
-    ViewBag.Title = "Configura a agenda";
+    this.ViewBag.Title = "Configure a agenda";
 }
 @section Title {
-Configure a agenda
+@this.ViewBag.Title
+}
+@section SideBar
+{
+@*    <ul>
+        <li><a class="icon-link icon-link-help" href="@Url.Action("ConsultingTheSchedule", "HomeDocs", new { area = "Docs" })" target="_blank">Ajuda</a></li>
+    </ul>*@
 }
 <div class="appointment-edit">
     @using (Html.BeginForm("Edit", "ConfigSchedule", FormMethod.Get))
