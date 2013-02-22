@@ -2068,31 +2068,32 @@ GO
         }
 
         /// <summary>
-        /// Recreates the [NT AUTHORITY\NETWORK SERVICE] so that we can debug using IIS.
+        /// Recreates the specified so that we can debug using IIS.
         /// </summary>
         /// <param name="db"></param>
-        internal static void RecreateNetworkServiceUser(CerebelloEntities db)
+        /// <param name="userName"></param>
+        internal static void RecreateUser(CerebelloEntities db, string userName)
         {
-            ExecuteScript(db, @"
+            ExecuteScript(db, string.Format(@"
                     USE [cerebello]
                     GO
 
-                    IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'NT AUTHORITY\NETWORK SERVICE')
-                    DROP USER [NT AUTHORITY\NETWORK SERVICE]
-                    GO
-
-                    USE [cerebello]
-                    GO
-
-                    CREATE USER [NT AUTHORITY\NETWORK SERVICE] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE]
+                    IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'{0}')
+                    DROP USER [{0}]
                     GO
 
                     USE [cerebello]
                     GO
 
-                    EXEC sp_addrolemember N'db_owner', N'NT AUTHORITY\NETWORK SERVICE'
+                    CREATE USER [{0}] FOR LOGIN [{0}]
                     GO
-                    ");
+
+                    USE [cerebello]
+                    GO
+
+                    EXEC sp_addrolemember N'db_owner', N'{0}'
+                    GO
+                    ", userName));
         }
     }
 }

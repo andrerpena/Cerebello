@@ -1059,7 +1059,9 @@ namespace Cerebello.Firestarter
                                 // so that we can debug using IIS, but only for the local databases,
                                 // never for production (i.e. Azure)
                                 Console.WriteLine(@"Creating user: [NT AUTHORITY\NETWORK SERVICE]");
-                                Firestarter.RecreateNetworkServiceUser(db);
+                                Firestarter.RecreateUser(db, @"NT AUTHORITY\NETWORK SERVICE");
+                                Console.WriteLine(@"Creating user: [IIS APPPOOL\ASP.NET V4.0 Integrated]");
+                                Firestarter.RecreateUser(db, @"IIS APPPOOL\ASP.NET V4.0 Integrated");
                             }
 
                             this.InitSysTables(db);
