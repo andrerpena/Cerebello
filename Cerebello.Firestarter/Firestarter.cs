@@ -2074,7 +2074,9 @@ GO
         /// <param name="userName"></param>
         internal static void RecreateUser(CerebelloEntities db, string userName)
         {
-            ExecuteScript(db, string.Format(@"
+            try
+            {
+                ExecuteScript(db, string.Format(@"
                     USE [cerebello]
                     GO
 
@@ -2094,6 +2096,11 @@ GO
                     EXEC sp_addrolemember N'db_owner', N'{0}'
                     GO
                     ", userName));
+            }
+            catch
+            {
+                
+            }
         }
     }
 }
