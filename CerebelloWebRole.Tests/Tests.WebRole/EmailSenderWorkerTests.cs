@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
                 });
                 workerMock.Setup(w => w.GetUtcNow()).Returns(utcNow);
                 workerMock.Setup(w => w.GetWorkerType()).Returns(typeof(EmailSenderWorker));
-                workerMock.Setup(w => w.SendEmail(It.IsAny<MailMessage>())).Callback((MailMessage mm) => { mailMessage = mm; });
+                workerMock.Setup(w => w.TrySendEmail(It.IsAny<MailMessage>())).Callback((MailMessage mm) => { mailMessage = mm; });
                 worker = workerMock.Object;
             }
             catch (Exception ex)

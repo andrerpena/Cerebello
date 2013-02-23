@@ -1,4 +1,5 @@
-﻿using CerebelloWebRole.Code.Helpers;
+﻿using System.Web.Mvc;
+using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,7 +17,8 @@ namespace CerebelloWebRole.Tests.Tests.Helpers
                     PatientName = "Miguel Angelo",
                     PracticeUrlId = "practiceurlid",
                 };
-            var result = RazorHelper.RenderEmbeddedRazor(typeof(EmailSenderWorker), "AppointmentReminderEmail", emailViewModel);
+            var viewDataDic = new ViewDataDictionary(emailViewModel);
+            var result = RazorHelper.RenderEmbeddedRazor(typeof(EmailSenderWorker), "AppointmentReminderEmail", viewDataDic);
             Assert.IsFalse(string.IsNullOrWhiteSpace(result), "'result' must not be null or empty.");
         }
     }

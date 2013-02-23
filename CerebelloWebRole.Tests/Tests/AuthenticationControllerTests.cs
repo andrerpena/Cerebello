@@ -146,13 +146,9 @@ namespace CerebelloWebRole.Tests.Tests
 
                 // Assertion for email.
                 Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
-                var emailViewModel = new UserEmailViewModel
+                var emailViewModel = new UserEmailViewModel(savedUser)
                 {
-                    IsBodyHtml = false,
                     Token = new TokenId(savedToken.Id, savedToken.Value).ToString(),
-                    UserName = savedUser.UserName,
-                    PersonName = savedUser.Person.FullName,
-                    PracticeIdentifier = savedUser.Practice.UrlIdentifier,
                 };
                 var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                 Assert.AreEqual(emailExpected, emailBody);
@@ -1148,14 +1144,7 @@ namespace CerebelloWebRole.Tests.Tests
 
                     // Assertion for email.
                     Assert.IsTrue(wasEmailSent, "E-mail was not sent, but it should.");
-                    var emailViewModel = new UserEmailViewModel
-                                             {
-                                                 IsBodyHtml = false,
-                                                 Token = emailToken,
-                                                 UserName = user.UserName,
-                                                 PersonName = user.Person.FullName,
-                                                 PracticeIdentifier = user.Practice.UrlIdentifier,
-                                             };
+                    var emailViewModel = new UserEmailViewModel(user) { Token = emailToken, };
                     var emailExpected = emailViewModel.ConvertObjectToString("<div>{0}={1}</div>");
                     Assert.AreEqual(emailExpected, emailBody);
                     Assert.AreEqual("Redefinir senha da conta no Cerebello", emailSubject);
