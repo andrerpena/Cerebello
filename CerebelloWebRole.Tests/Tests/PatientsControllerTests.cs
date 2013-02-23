@@ -161,7 +161,7 @@ namespace CerebelloWebRole.Tests.Tests
                     PracticeId = doctor.PracticeId,
                 };
 
-                anamnese.Symptoms.Add(new Symptom()
+                anamnese.DiagnosticHypotheses.Add(new DiagnosticHypothesis()
                 {
                     Cid10Name = "Text",
                     Cid10Code = "Q878",
