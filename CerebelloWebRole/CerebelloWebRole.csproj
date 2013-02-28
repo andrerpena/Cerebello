@@ -185,6 +185,7 @@
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Compile Include="Controllers\MasterAdminController.cs" />
+    <Compile Include="Models\GenerateInvoiceViewModel.cs" />
     <Compile Include="Models\InternalUpgradeEmailViewModel.cs" />
     <Compile Include="Models\IdentityViewModel.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
@@ -736,7 +737,9 @@
     <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisDetails.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\InternalUpgradeEmail.cshtml" />
     <Content Include="App_Code\EmailHtml.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalPlan.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalContract.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -774,6 +777,9 @@
     <Content Include="Views\Shared\_EmptyLayout.cshtml" />
     <Content Include="Views\Shared\_AuthenticationLayout.cshtml" />
     <Content Include="Views\Shared\_EmailLayout.cshtml" />
+    <Content Include="Views\MasterAdmin\GenerateInvoice.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\MasterAdmin\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">

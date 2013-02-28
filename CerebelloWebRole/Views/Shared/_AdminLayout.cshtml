@@ -1,0 +1,48 @@
+﻿@{
+    this.Layout = "_EmptyLayout.cshtml";
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("a[resultType='json']").click(function (event) {
+                event.preventDefault();
+                $.getJSON($(this).attr("href"), function (data) {
+                    alert(data.message);
+                });
+            });
+        });
+    </script>
+    @this.RenderSection("Scripts", required: false)
+}
+@section Header
+{
+    <style type="text/css">
+        .hero {
+            padding: 0px;
+        }
+
+        h1 {
+            line-height: 1em;
+        }
+
+        h2 {
+            margin-top: 1em;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-actions {
+            /*border: none;*/
+            background: none;
+        }
+    </style>
+}
+<div class="hero ac" style="background: #222">
+    <div class="container">
+        <h1 style="text-shadow: 0px 0px 6px rgba(255,255,255,0.7);">@this.ViewBag.Title</h1>
+    </div>
+</div>
+<div class="container">
+
+    @this.RenderBody()
+
+</div>
