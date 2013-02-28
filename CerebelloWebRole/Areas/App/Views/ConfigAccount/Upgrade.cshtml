@@ -48,7 +48,13 @@
                 $(this).attr('disabled', true);
 
                 @*note: this is a copy of the html seen by the user*@
-                $("#@Html.FieldName(vm => vm.WholeUserAgreement)").val($("#userAgreement").html());
+                @* http://stackoverflow.com/questions/5550633/append-html-to-jquery-element-without-running-scripts-inside-the-html *@
+                @* innerHTML supported browsers: http://www.quirksmode.org/dom/w3c_html.html *@
+                var wrapper = document.createElement('div');
+                wrapper.innerHTML = $("#userAgreement").html(); // setting innerHTML won't run script tags
+                $(wrapper).find('script').remove();
+
+                $("#@Html.FieldName(vm => vm.WholeUserAgreement)").val($(wrapper).html());
 
                 // now submit the form
                 $('#contractForm').submit();

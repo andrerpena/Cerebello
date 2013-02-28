@@ -14,6 +14,9 @@
     <div></div>
 
     <p class="title">Opções do plano</p>
+    @if (false)
+    {
+    // these options are not supported at this moment
     <div class="option option-upgrade">
         <div>
             <span class="option-title">Suporte por Chat:</span>
@@ -23,7 +26,7 @@
             que permite que qualquer usuário do seu consultório/clínica tenha ajuda
             imediate na solução de seus problemas, e para sanar possíveis dúvidas.
         </div>
-        <a class="button" href="@Url.Action("Upgrade", new { id = "ProfessionalPlan" })">Adicionar suporte por Chat</a>
+        <a class="button" href="@Url.Action("Upgrade", new {id = "ProfessionalPlan"})">Adicionar suporte por Chat</a>
     </div>
     <div class="option option-upgrade">
         <div>
@@ -33,8 +36,9 @@
             com quanta antecedência se deseja enviar a mensagem, além de se poder
             escolher por mandar até dois lembretes em dias diferentes.
         </div>
-        <a class="button" href="@Url.Action("Upgrade", new { id = "ProfessionalPlan" })">Adicionar aviso por SMS</a>
+        <a class="button" href="@Url.Action("Upgrade", new {id = "ProfessionalPlan"})">Adicionar aviso por SMS</a>
     </div>
+    }
     <div class="option option-cancel">
         <div>
             <span class="option-title">Cancelamento:</span>

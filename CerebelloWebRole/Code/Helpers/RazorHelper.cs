@@ -75,6 +75,12 @@ namespace CerebelloWebRole.Code.Helpers
                 {
                     // Executing the renderer, so that it writes to the stringWriter.
                     page.Execute();
+
+                    // after executing the page, we need to copy value from the cloned ViewData
+                    // to the original ViewData... so that the caller can see elements inserted
+                    // or changed by the view
+                    foreach (var eachViewDataItem in page.ViewData)
+                        viewData[eachViewDataItem.Key] = eachViewDataItem.Value;
                 }
                 finally
                 {
@@ -124,8 +130,18 @@ namespace CerebelloWebRole.Code.Helpers
             var className = resourceName.Replace('.', '_');
 
             // Creating compile unit, using Mvc Razor syntax.
+            // These settings must match those of 'web.config' file, section 'system.web.webPages.razor'
             var factory = new MvcWebRazorHostFactory();
             var host = factory.CreateHost(virtualPath, data.ResourcePath);
+            host.DefaultPageBaseClass = typeof(CerebelloViewPage).FullName;
+            host.NamespaceImports.Add("System.Web.Mvc");
+            host.NamespaceImports.Add("System.Web.Mvc.Ajax");
+            host.NamespaceImports.Add("System.Web.Mvc.Html");
+            host.NamespaceImports.Add("System.Web.Routing");
+            host.NamespaceImports.Add("CerebelloWebRole.Code");
+            host.NamespaceImports.Add("CerebelloWebRole.Code.Extensions");
+            host.NamespaceImports.Add("CerebelloWebRole.Code.Access");
+            host.NamespaceImports.Add("CerebelloWebRole.Models");
             var engine = new RazorTemplateEngine(host);
 
             GeneratorResults results;
@@ -145,6 +161,11 @@ namespace CerebelloWebRole.Code.Helpers
                     IncludeDebugInformation = true,
 #endif
                 };
+
+            // loading a required assembly, before creating the list of 'ReferencedAssemblies'
+            // reference: http://razorengine.codeplex.com/discussions/242605
+            if (typeof(Microsoft.CSharp.RuntimeBinder.Binder).Assembly == null)
+                throw new Exception("Could not load required assembly.");
 
             compilerParams.ReferencedAssemblies.AddRange(
                 AppDomain.CurrentDomain

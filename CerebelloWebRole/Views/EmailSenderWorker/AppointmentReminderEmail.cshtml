@@ -13,7 +13,7 @@
     var hasDoctorContact = new[] { this.Model.DoctorPhone, this.Model.DoctorEmail }.AnyFilled();
     var hasPracticeContact = !string.IsNullOrWhiteSpace(string.Format("{0}{1}", this.Model.PracticePhoneMain, this.Model.PracticeEmail));
 }
-@if (this.Model.IsBodyHtml)
+@if (this.ViewBag.IsBodyHtml == true)
 {
     <html>
     <head>
