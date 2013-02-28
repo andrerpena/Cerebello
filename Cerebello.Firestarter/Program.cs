@@ -982,10 +982,19 @@ namespace Cerebello.Firestarter
             {
                 using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
                 {
-                    fileExists = Firestarter.BackupExists(db, ssNameRestore);
-                    if (fileExists)
-                        if (ConsoleHelper.YesNo("Restoring can destroy schema and data changes, are you sure?"))
-                            fileName = Firestarter.RestoreBackup(db, ssNameRestore);
+                    if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
+                    try
+                    {
+                        fileExists = Firestarter.BackupExists(db, ssNameRestore);
+                        if (fileExists)
+                            if (ConsoleHelper.YesNo("Restoring can destroy schema and data changes, are you sure?"))
+                                fileName = Firestarter.RestoreBackup(db, ssNameRestore);
+                    }
+                    finally
+                    {
+                        if (this.isFuncBackupEnabled)
+                            Console.WriteLine("Use 'undo' command to restore database to what it was before.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -1076,7 +1085,8 @@ namespace Cerebello.Firestarter
                         {
                             ConsoleHelper.ConsoleWriteException(ex);
 
-                            Console.WriteLine("Use 'undo' command to restore database to what it was before.");
+                            if (this.isFuncBackupEnabled)
+                                Console.WriteLine("Use 'undo' command to restore database to what it was before.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Partially done!");
                             Console.ForegroundColor = ConsoleColor.White;
