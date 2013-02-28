@@ -1661,6 +1661,30 @@ namespace Cerebello.Model
         private global::System.String _CustomText;
         partial void OnCustomTextChanging(global::System.String value);
         partial void OnCustomTextChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String BillingPaymentMethod
+        {
+            get
+            {
+                return _BillingPaymentMethod;
+            }
+            set
+            {
+                OnBillingPaymentMethodChanging(value);
+                ReportPropertyChanging("BillingPaymentMethod");
+                _BillingPaymentMethod = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("BillingPaymentMethod");
+                OnBillingPaymentMethodChanged();
+            }
+        }
+        private global::System.String _BillingPaymentMethod;
+        partial void OnBillingPaymentMethodChanging(global::System.String value);
+        partial void OnBillingPaymentMethodChanged();
 
         #endregion
 

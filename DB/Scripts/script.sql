@@ -23,6 +23,7 @@ CREATE TABLE [dbo].[AccountContract](
 	[PatientsLimit] [int] NULL,
 	[IsTrial] [bit] NOT NULL,
 	[CustomText] [nvarchar](max) NULL,
+	[BillingPaymentMethod] [varchar](20) NULL,
  CONSTRAINT [PK_AccountContract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -124,13 +125,13 @@ CREATE TABLE [dbo].[Billing](
 	[Id] [int] NOT NULL,
 	[PracticeId] [int] NOT NULL,
 	[IssuanceDate] [date] NOT NULL,
-	[Amount] [numeric](16, 2) NOT NULL,
+	[Amount] [numeric](18, 2) NOT NULL,
 	[DueDate] [date] NOT NULL,
-	[AfterDueTax] [numeric](2, 2) NOT NULL,
-	[AfterDueMonthlyTax] [numeric](2, 2) NOT NULL,
+	[AfterDueTax] [numeric](4, 2) NOT NULL,
+	[AfterDueMonthlyTax] [numeric](4, 2) NOT NULL,
 	[IsPayd] [bit] NOT NULL,
-	[PaydAmount] [numeric](16, 2) NOT NULL,
-	[PaymentDate] [date] NOT NULL,
+	[PaydAmount] [numeric](18, 2) NULL,
+	[PaymentDate] [date] NULL,
  CONSTRAINT [PK_Billing] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -281,9 +282,8 @@ CREATE TABLE [dbo].[DiagnosticHypothesis](
  CONSTRAINT [PK_Diagnosis] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 /****** Object:  Table [dbo].[Doctor] ******/
 SET ANSI_NULLS ON
@@ -1106,16 +1106,17 @@ REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[ChatMessage] CHECK CONSTRAINT [FK_ChatMessage_ToUser_User]
 GO
+/****** Object:  ForeignKey [FK_Diagnosis_Anamnese] ******/
+ALTER TABLE [dbo].[DiagnosticHypothesis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
+REFERENCES [dbo].[Anamnese] ([Id])
+GO
+ALTER TABLE [dbo].[DiagnosticHypothesis] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
+GO
 /****** Object:  ForeignKey [FK_Diagnosis_Patient] ******/
 ALTER TABLE [dbo].[Diagnosis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Patient] FOREIGN KEY([PatientId])
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[Diagnosis] CHECK CONSTRAINT [FK_Diagnosis_Patient]
-GO
-ALTER TABLE [dbo].[DiagnosticHypothesis]  WITH NOCHECK ADD  CONSTRAINT [FK_Diagnosis_Anamnese] FOREIGN KEY([AnamneseId])
-REFERENCES [dbo].[Anamnese] ([Id])
-GO
-ALTER TABLE [dbo].[DiagnosticHypothesis] CHECK CONSTRAINT [FK_Diagnosis_Anamnese]
 GO
 /****** Object:  ForeignKey [FK_ExaminationRequest_Patient] ******/
 ALTER TABLE [dbo].[ExaminationRequest]  WITH NOCHECK ADD  CONSTRAINT [FK_ExaminationRequest_Patient] FOREIGN KEY([PatientId])

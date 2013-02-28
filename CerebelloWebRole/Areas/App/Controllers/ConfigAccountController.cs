@@ -273,6 +273,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 IsTrial = false,
                                 PatientsLimit = null, // there is no patients limit anymore
                                 StartDate = this.GetUtcNow(), // contract starts NOW... without delays
+                                BillingPaymentMethod = "PayPal Invoice",
                             };
 
                         db.SaveChanges();

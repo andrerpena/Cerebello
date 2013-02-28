@@ -293,6 +293,7 @@
           <Property Name="PatientsLimit" Type="int" />
           <Property Name="IsTrial" Type="bit" Nullable="false" />
           <Property Name="CustomText" Type="nvarchar(max)" />
+          <Property Name="BillingPaymentMethod" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -2685,6 +2686,7 @@
           <Property Type="Int32" Name="PatientsLimit" />
           <Property Type="Boolean" Name="IsTrial" Nullable="false" />
           <Property Type="String" Name="CustomText" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BillingPaymentMethod" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SYS_ContractType">
           <Key>
@@ -3078,8 +3080,8 @@
           <Property Type="Decimal" Name="AfterDueTax" Nullable="false" Precision="2" Scale="2" />
           <Property Type="Decimal" Name="AfterDueMonthlyTax" Nullable="false" Precision="2" Scale="2" />
           <Property Type="Boolean" Name="IsPayd" Nullable="false" />
-          <Property Type="Decimal" Name="PaydAmount" Nullable="false" Precision="16" Scale="2" />
-          <Property Type="DateTime" Name="PaymentDate" Nullable="false" Precision="0" />
+          <Property Type="Decimal" Name="PaydAmount" Precision="16" Scale="2" Nullable="false" />
+          <Property Type="DateTime" Name="PaymentDate" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="DiagnosticHypothesis">
           <Key>
@@ -3542,6 +3544,7 @@
           <EntitySetMapping Name="AccountContracts">
             <EntityTypeMapping TypeName="Cerebello.Model.AccountContract">
               <MappingFragment StoreEntitySet="AccountContract">
+                <ScalarProperty Name="BillingPaymentMethod" ColumnName="BillingPaymentMethod" />
                 <ScalarProperty Name="CustomText" ColumnName="CustomText" />
                 <ScalarProperty Name="IsTrial" ColumnName="IsTrial" />
                 <ScalarProperty Name="PatientsLimit" ColumnName="PatientsLimit" />
