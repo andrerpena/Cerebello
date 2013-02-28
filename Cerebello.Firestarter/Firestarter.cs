@@ -600,7 +600,7 @@ namespace Cerebello.Firestarter
         /// Creates a new practice and returns it.
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="contract"></param>
+        /// <param name="useTrialContract"></param>
         /// <returns></returns>
         public static Practice CreatePractice_DraMarta(CerebelloEntities db, bool useTrialContract = true)
         {
@@ -626,20 +626,36 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Sets up a practice's contract with a default trial contract.
         /// </summary>
-        /// <param name="db"></param>
-        /// <param name="practice"></param>
+        /// <param name="db"> Data context to create the account contract with. </param>
+        /// <param name="practice"> Practice that owns the account contract. </param>
+        /// <returns> The created AccountContract. </returns>
         private static AccountContract SetupPracticeWithTrialContract(CerebelloEntities db, Practice practice)
         {
             var accountContract = practice.AccountContract = new AccountContract
                 {
+                    Practice = practice,
+
                     ContractTypeId = (int)ContractTypes.TrialContract,
+                    IsTrial = true,
                     IssuanceDate = new DateTime(2012, 01, 25),
                     StartDate = new DateTime(2012, 02, 10),
                     EndDate = null,
-                    Practice = practice,
+
                     DoctorsLimit = null,
                     PatientsLimit = 50,
+
+                    // no billings
+                    BillingAmount = null,
+                    BillingDueDay = null,
+                    BillingPaymentMethod = null,
+                    BillingPeriodCount = null,
+                    BillingPeriodSize = null,
+                    BillingPeriodType = null,
+                    BillingDiscountAmount = null,
+                    BillingExtraDiscount = null,
+                    BillingExtraDiscountReason = null,
                 };
+
             practice.AccountContract.CustomText = StringHelper.ReflectionReplace(
                 practice.AccountContract.SYS_ContractType.CustomTemplateText,
                 practice.AccountContract);

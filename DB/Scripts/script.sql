@@ -14,7 +14,7 @@ CREATE TABLE [dbo].[AccountContract](
 	[IssuanceDate] [date] NOT NULL,
 	[StartDate] [date] NOT NULL,
 	[EndDate] [date] NULL,
-	[BillingAmount] [numeric](16, 2) NULL,
+	[BillingAmount] [numeric](18, 2) NULL,
 	[BillingPeriodType] [varchar](10) NULL,
 	[BillingPeriodSize] [int] NULL,
 	[BillingPeriodCount] [int] NULL,
@@ -24,6 +24,9 @@ CREATE TABLE [dbo].[AccountContract](
 	[IsTrial] [bit] NOT NULL,
 	[CustomText] [nvarchar](max) NULL,
 	[BillingPaymentMethod] [varchar](20) NULL,
+	[BillingDiscountAmount] [numeric](18, 2) NULL,
+	[BillingExtraDiscount] [numeric](4, 2) NULL,
+	[BillingExtraDiscountReason] [varchar](20) NULL,
  CONSTRAINT [PK_AccountContract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -126,6 +129,9 @@ CREATE TABLE [dbo].[Billing](
 	[PracticeId] [int] NOT NULL,
 	[IssuanceDate] [date] NOT NULL,
 	[Amount] [numeric](18, 2) NOT NULL,
+	[Discount] [numeric](18, 2) NOT NULL,
+	[ExtraDicount] [numeric](18, 2) NOT NULL,
+	[ExtraDiscountReason] [varchar](20) NULL,
 	[DueDate] [date] NOT NULL,
 	[AfterDueTax] [numeric](4, 2) NOT NULL,
 	[AfterDueMonthlyTax] [numeric](4, 2) NOT NULL,

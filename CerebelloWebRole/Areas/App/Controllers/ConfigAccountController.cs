@@ -224,10 +224,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     var dicount = 1m - dicDiscount[viewModel.PaymentModelName] / 100m;
                     var accountValue = dicValues[viewModel.PaymentModelName];
-                    var doctorsValue = (decimal)Math.Round(price(viewModel.DoctorCount - 1))
-                        * periodSizesDic[viewModel.PaymentModelName] * dicount;
+                    var doctorsValueWithoutDiscount = (decimal)Math.Round(price(viewModel.DoctorCount - 1))
+                        * periodSizesDic[viewModel.PaymentModelName];
 
-                    var finalValue = accountValue + doctorsValue;
+                    var finalValue = accountValue + doctorsValueWithoutDiscount * dicount;
+
+                    var finalValueWithoutDiscount =
+                        Buz.Pro.PRICE_MONTH * periodSizesDic[viewModel.PaymentModelName]
+                        + doctorsValueWithoutDiscount;
 
                     // tolerance of R$ 0.10 in the final value... maybe the browser could not make the calculations correctly,
                     // but we must use that value, since it is the value that the user saw
@@ -256,24 +260,37 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 // send e-mail again is not an option, SendEmailAsync already tries a lot of times
                             });
 
+                        var utcNow = this.GetUtcNow();
+
+                        // terminating the previous contract
+                        var currentContract = this.DbPractice.AccountContract;
+                        currentContract.EndDate = utcNow;
+
                         // setting up the professional contract
                         this.DbPractice.AccountContract = new AccountContract
                             {
                                 PracticeId = this.DbPractice.Id,
-                                BillingAmount = viewModel.FinalValue,
                                 IssuanceDate = this.GetUtcNow(),
+
+                                ContractTypeId = (int)ContractTypes.ProfessionalContract,
+                                IsTrial = false,
+                                StartDate = utcNow, // contract starts NOW... without delays
+                                EndDate = null, // this is an unlimited contract
+                                CustomText = viewModel.WholeUserAgreement,
+
+                                DoctorsLimit = viewModel.DoctorCount,
+                                PatientsLimit = null, // there is no patients limit anymore
+
+                                // billing informations
+                                BillingAmount = viewModel.FinalValue,
+                                BillingDiscountAmount = finalValueWithoutDiscount - viewModel.FinalValue,
                                 BillingDueDay = viewModel.InvoceDueDayOfMonth,
                                 BillingPeriodCount = null, // no limit... this contract is valid forever
                                 BillingPeriodSize = periodSizesDic[viewModel.PaymentModelName],
                                 BillingPeriodType = "month",
-                                ContractTypeId = (int)ContractTypes.ProfessionalContract,
-                                CustomText = viewModel.WholeUserAgreement,
-                                DoctorsLimit = viewModel.DoctorCount,
-                                EndDate = null, // this is an unlimited contract
-                                IsTrial = false,
-                                PatientsLimit = null, // there is no patients limit anymore
-                                StartDate = this.GetUtcNow(), // contract starts NOW... without delays
                                 BillingPaymentMethod = "PayPal Invoice",
+                                BillingExtraDiscount = null, //
+                                BillingExtraDiscountReason = null,
                             };
 
                         db.SaveChanges();
@@ -457,7 +474,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             };
         }
 
-        public ActionResult UpgradeRequested(string id)
+        public ActionResult UpgradeDone(string id)
         {
             return this.View(new ChangeContractViewModel { ContractUrlId = id });
         }

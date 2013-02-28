@@ -288,6 +288,7 @@ namespace CerebelloWebRole.Controllers
                             // Todo: this message is also used in the UserController.
                             "Quantidade máxima de homônimos excedida.");
                     }
+
                     user.Doctor.UrlIdentifier = urlId;
                 }
 
@@ -304,8 +305,7 @@ namespace CerebelloWebRole.Controllers
                         var token = db2.GLB_Token.CreateObject();
                         token.Value = Guid.NewGuid().ToString("N");
                         token.Type = "VerifyPracticeAndEmail";
-                        token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier,
-                                                   user.UserName);
+                        token.Name = string.Format("Practice={0}&UserName={1}", user.Practice.UrlIdentifier, user.UserName);
                         token.ExpirationDate = utcNow.AddDays(30);
                         db2.GLB_Token.AddObject(token);
                         db2.SaveChanges();
@@ -328,13 +328,28 @@ namespace CerebelloWebRole.Controllers
                         // Creating a new medical practice.
                         var trialContract = new AccountContract
                         {
-                            ContractTypeId = (int)ContractTypes.TrialContract,
-                            StartDate = utcNow,
-                            IssuanceDate = utcNow,
-                            EndDate = null,
-                            BillingAmount = 0.00m,
                             Practice = user.Practice,
-                            PatientsLimit = 50, // todo: fixed limit for trial account
+
+                            ContractTypeId = (int)ContractTypes.TrialContract,
+                            IsTrial = true,
+                            IssuanceDate = utcNow,
+                            StartDate = utcNow,
+                            EndDate = null, // indeterminated
+                            CustomText = null,
+
+                            DoctorsLimit = null,
+                            PatientsLimit = 50, // fixed limit for trial account
+
+                            // no billings
+                            BillingAmount = null,
+                            BillingDueDay = null,
+                            BillingPaymentMethod = null,
+                            BillingPeriodCount = null,
+                            BillingPeriodSize = null,
+                            BillingPeriodType = null,
+                            BillingDiscountAmount = null,
+                            BillingExtraDiscount = null,
+                            BillingExtraDiscountReason = null,
                         };
 
                         user.Practice.AccountContract = trialContract;

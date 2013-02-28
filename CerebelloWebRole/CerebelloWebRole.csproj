@@ -728,7 +728,7 @@
     <Content Include="Areas\App\Views\ConfigAccount\CancelTrialContractPartial.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\AccountDataEmail.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index_TrialContract.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\UpgradeRequested.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\UpgradeDone.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade_ProfessionalPlan.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Details.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />

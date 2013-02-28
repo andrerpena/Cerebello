@@ -284,7 +284,7 @@
           <Property Name="IssuanceDate" Type="date" Nullable="false" />
           <Property Name="StartDate" Type="date" Nullable="false" />
           <Property Name="EndDate" Type="date" />
-          <Property Name="BillingAmount" Type="numeric" Precision="16" Scale="2" />
+          <Property Name="BillingAmount" Type="numeric" Scale="2" />
           <Property Name="BillingPeriodType" Type="varchar" MaxLength="10" />
           <Property Name="BillingPeriodSize" Type="int" />
           <Property Name="BillingPeriodCount" Type="int" />
@@ -294,6 +294,9 @@
           <Property Name="IsTrial" Type="bit" Nullable="false" />
           <Property Name="CustomText" Type="nvarchar(max)" />
           <Property Name="BillingPaymentMethod" Type="varchar" MaxLength="20" />
+          <Property Name="BillingDiscountAmount" Type="numeric" Scale="2" />
+          <Property Name="BillingExtraDiscount" Type="numeric" Precision="4" Scale="2" />
+          <Property Name="BillingExtraDiscountReason" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -360,13 +363,16 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="IssuanceDate" Type="date" Nullable="false" />
-          <Property Name="Amount" Type="numeric" Nullable="false" Precision="16" Scale="2" />
+          <Property Name="Amount" Type="numeric" Nullable="false" Scale="2" />
+          <Property Name="Discount" Type="numeric" Nullable="false" Scale="2" />
+          <Property Name="ExtraDicount" Type="numeric" Nullable="false" Scale="2" />
+          <Property Name="ExtraDiscountReason" Type="varchar" MaxLength="20" />
           <Property Name="DueDate" Type="date" Nullable="false" />
-          <Property Name="AfterDueTax" Type="numeric" Nullable="false" Precision="2" Scale="2" />
-          <Property Name="AfterDueMonthlyTax" Type="numeric" Nullable="false" Precision="2" Scale="2" />
+          <Property Name="AfterDueTax" Type="numeric" Nullable="false" Precision="4" Scale="2" />
+          <Property Name="AfterDueMonthlyTax" Type="numeric" Nullable="false" Precision="4" Scale="2" />
           <Property Name="IsPayd" Type="bit" Nullable="false" />
-          <Property Name="PaydAmount" Type="numeric" Nullable="false" Precision="16" Scale="2" />
-          <Property Name="PaymentDate" Type="date" Nullable="false" />
+          <Property Name="PaydAmount" Type="numeric" Scale="2" />
+          <Property Name="PaymentDate" Type="date" />
         </EntityType>
         <EntityType Name="CFG_DayOff">
           <Key>
@@ -2677,7 +2683,7 @@
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="AccountContract" ToRole="Practice" />
           <NavigationProperty Name="SYS_ContractType" Relationship="Cerebello.Model.FK_AccountContract_SYS_ContractType" FromRole="AccountContract" ToRole="SYS_ContractType" />
           <NavigationProperty Name="Practices" Relationship="Cerebello.Model.FK_Practice_AccountContract" FromRole="AccountContract" ToRole="Practice" />
-          <Property Type="Decimal" Name="BillingAmount" Precision="16" Scale="2" />
+          <Property Type="Decimal" Name="BillingAmount" Precision="18" Scale="2" />
           <Property Type="String" Name="BillingPeriodType" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="BillingPeriodSize" />
           <Property Type="Int32" Name="BillingPeriodCount" />
@@ -2687,6 +2693,9 @@
           <Property Type="Boolean" Name="IsTrial" Nullable="false" />
           <Property Type="String" Name="CustomText" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BillingPaymentMethod" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="BillingDiscountAmount" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="BillingExtraDiscount" Precision="4" Scale="2" />
+          <Property Type="String" Name="BillingExtraDiscountReason" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SYS_ContractType">
           <Key>
@@ -3075,13 +3084,16 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="DateTime" Name="IssuanceDate" Nullable="false" Precision="0" />
-          <Property Type="Decimal" Name="Amount" Nullable="false" Precision="16" Scale="2" />
+          <Property Type="Decimal" Name="Amount" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="DueDate" Nullable="false" Precision="0" />
-          <Property Type="Decimal" Name="AfterDueTax" Nullable="false" Precision="2" Scale="2" />
-          <Property Type="Decimal" Name="AfterDueMonthlyTax" Nullable="false" Precision="2" Scale="2" />
+          <Property Type="Decimal" Name="AfterDueTax" Nullable="false" Precision="4" Scale="2" />
+          <Property Type="Decimal" Name="AfterDueMonthlyTax" Nullable="false" Precision="4" Scale="2" />
           <Property Type="Boolean" Name="IsPayd" Nullable="false" />
-          <Property Type="Decimal" Name="PaydAmount" Precision="16" Scale="2" Nullable="false" />
-          <Property Type="DateTime" Name="PaymentDate" Precision="0" Nullable="false" />
+          <Property Type="Decimal" Name="PaydAmount" Precision="18" Scale="2" />
+          <Property Type="DateTime" Name="PaymentDate" Precision="0" />
+          <Property Type="Decimal" Name="Discount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ExtraDicount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="ExtraDiscountReason" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DiagnosticHypothesis">
           <Key>
@@ -3544,6 +3556,9 @@
           <EntitySetMapping Name="AccountContracts">
             <EntityTypeMapping TypeName="Cerebello.Model.AccountContract">
               <MappingFragment StoreEntitySet="AccountContract">
+                <ScalarProperty Name="BillingExtraDiscountReason" ColumnName="BillingExtraDiscountReason" />
+                <ScalarProperty Name="BillingExtraDiscount" ColumnName="BillingExtraDiscount" />
+                <ScalarProperty Name="BillingDiscountAmount" ColumnName="BillingDiscountAmount" />
                 <ScalarProperty Name="BillingPaymentMethod" ColumnName="BillingPaymentMethod" />
                 <ScalarProperty Name="CustomText" ColumnName="CustomText" />
                 <ScalarProperty Name="IsTrial" ColumnName="IsTrial" />
@@ -3697,6 +3712,9 @@
           <EntitySetMapping Name="Billings">
             <EntityTypeMapping TypeName="Cerebello.Model.Billing">
               <MappingFragment StoreEntitySet="Billing">
+                <ScalarProperty Name="ExtraDiscountReason" ColumnName="ExtraDiscountReason" />
+                <ScalarProperty Name="ExtraDicount" ColumnName="ExtraDicount" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
                 <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
                 <ScalarProperty Name="PaydAmount" ColumnName="PaydAmount" />
                 <ScalarProperty Name="IsPayd" ColumnName="IsPayd" />

@@ -1685,6 +1685,78 @@ namespace Cerebello.Model
         private global::System.String _BillingPaymentMethod;
         partial void OnBillingPaymentMethodChanging(global::System.String value);
         partial void OnBillingPaymentMethodChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> BillingDiscountAmount
+        {
+            get
+            {
+                return _BillingDiscountAmount;
+            }
+            set
+            {
+                OnBillingDiscountAmountChanging(value);
+                ReportPropertyChanging("BillingDiscountAmount");
+                _BillingDiscountAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingDiscountAmount");
+                OnBillingDiscountAmountChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _BillingDiscountAmount;
+        partial void OnBillingDiscountAmountChanging(Nullable<global::System.Decimal> value);
+        partial void OnBillingDiscountAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> BillingExtraDiscount
+        {
+            get
+            {
+                return _BillingExtraDiscount;
+            }
+            set
+            {
+                OnBillingExtraDiscountChanging(value);
+                ReportPropertyChanging("BillingExtraDiscount");
+                _BillingExtraDiscount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingExtraDiscount");
+                OnBillingExtraDiscountChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _BillingExtraDiscount;
+        partial void OnBillingExtraDiscountChanging(Nullable<global::System.Decimal> value);
+        partial void OnBillingExtraDiscountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String BillingExtraDiscountReason
+        {
+            get
+            {
+                return _BillingExtraDiscountReason;
+            }
+            set
+            {
+                OnBillingExtraDiscountReasonChanging(value);
+                ReportPropertyChanging("BillingExtraDiscountReason");
+                _BillingExtraDiscountReason = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("BillingExtraDiscountReason");
+                OnBillingExtraDiscountReasonChanged();
+            }
+        }
+        private global::System.String _BillingExtraDiscountReason;
+        partial void OnBillingExtraDiscountReasonChanging(global::System.String value);
+        partial void OnBillingExtraDiscountReasonChanged();
 
         #endregion
 
@@ -3184,9 +3256,9 @@ namespace Cerebello.Model
         /// <param name="afterDueTax">Initial value of the AfterDueTax property.</param>
         /// <param name="afterDueMonthlyTax">Initial value of the AfterDueMonthlyTax property.</param>
         /// <param name="isPayd">Initial value of the IsPayd property.</param>
-        /// <param name="paydAmount">Initial value of the PaydAmount property.</param>
-        /// <param name="paymentDate">Initial value of the PaymentDate property.</param>
-        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Decimal amount, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.Decimal paydAmount, global::System.DateTime paymentDate)
+        /// <param name="discount">Initial value of the Discount property.</param>
+        /// <param name="extraDicount">Initial value of the ExtraDicount property.</param>
+        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Decimal amount, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.Decimal discount, global::System.Decimal extraDicount)
         {
             Billing billing = new Billing();
             billing.Id = id;
@@ -3197,8 +3269,8 @@ namespace Cerebello.Model
             billing.AfterDueTax = afterDueTax;
             billing.AfterDueMonthlyTax = afterDueMonthlyTax;
             billing.IsPayd = isPayd;
-            billing.PaydAmount = paydAmount;
-            billing.PaymentDate = paymentDate;
+            billing.Discount = discount;
+            billing.ExtraDicount = extraDicount;
             return billing;
         }
 
@@ -3404,9 +3476,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Decimal PaydAmount
+        public Nullable<global::System.Decimal> PaydAmount
         {
             get
             {
@@ -3421,16 +3493,16 @@ namespace Cerebello.Model
                 OnPaydAmountChanged();
             }
         }
-        private global::System.Decimal _PaydAmount;
-        partial void OnPaydAmountChanging(global::System.Decimal value);
+        private Nullable<global::System.Decimal> _PaydAmount;
+        partial void OnPaydAmountChanging(Nullable<global::System.Decimal> value);
         partial void OnPaydAmountChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.DateTime PaymentDate
+        public Nullable<global::System.DateTime> PaymentDate
         {
             get
             {
@@ -3445,9 +3517,81 @@ namespace Cerebello.Model
                 OnPaymentDateChanged();
             }
         }
-        private global::System.DateTime _PaymentDate;
-        partial void OnPaymentDateChanging(global::System.DateTime value);
+        private Nullable<global::System.DateTime> _PaymentDate;
+        partial void OnPaymentDateChanging(Nullable<global::System.DateTime> value);
         partial void OnPaymentDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal Discount
+        {
+            get
+            {
+                return _Discount;
+            }
+            set
+            {
+                OnDiscountChanging(value);
+                ReportPropertyChanging("Discount");
+                _Discount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Discount");
+                OnDiscountChanged();
+            }
+        }
+        private global::System.Decimal _Discount;
+        partial void OnDiscountChanging(global::System.Decimal value);
+        partial void OnDiscountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal ExtraDicount
+        {
+            get
+            {
+                return _ExtraDicount;
+            }
+            set
+            {
+                OnExtraDicountChanging(value);
+                ReportPropertyChanging("ExtraDicount");
+                _ExtraDicount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ExtraDicount");
+                OnExtraDicountChanged();
+            }
+        }
+        private global::System.Decimal _ExtraDicount;
+        partial void OnExtraDicountChanging(global::System.Decimal value);
+        partial void OnExtraDicountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ExtraDiscountReason
+        {
+            get
+            {
+                return _ExtraDiscountReason;
+            }
+            set
+            {
+                OnExtraDiscountReasonChanging(value);
+                ReportPropertyChanging("ExtraDiscountReason");
+                _ExtraDiscountReason = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ExtraDiscountReason");
+                OnExtraDiscountReasonChanged();
+            }
+        }
+        private global::System.String _ExtraDiscountReason;
+        partial void OnExtraDiscountReasonChanging(global::System.String value);
+        partial void OnExtraDiscountReasonChanged();
 
         #endregion
 

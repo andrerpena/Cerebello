@@ -54,7 +54,10 @@ namespace CerebelloWebRole.Controllers
                         .SingleOrDefault(p => p.UrlIdentifier == viewModel.PracticeIdentifier);
 
                     if (practice == null)
-                        this.ModelState.AddModelError(viewModel.PracticeIdentifier, "Consultório inexistente.");
+                        this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório inexistente.");
+
+                    if (practice != null && practice.AccountContract.IsTrial)
+                        this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório possui conta trial.");
                 }
 
                 if (this.ModelState.HasPropertyErrors(() => viewModel.PracticeIdentifier))
