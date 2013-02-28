@@ -38,11 +38,5 @@
 #endif
 
         public const string EMAIL_POWEREDBY = "www.cerebello.com.br";
-
-#if DEBUG
-        public static readonly int? PORT = 12621;
-#else
-        public static readonly int? PORT = null;
-#endif
     }
 }

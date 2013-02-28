@@ -164,6 +164,7 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Buz.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
+    <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\ViewPage\CerebelloViewPage.cs" />
     <Compile Include="Code\Filters\CanonicalUrlHttpsFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
