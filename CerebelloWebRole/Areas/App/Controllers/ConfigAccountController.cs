@@ -297,7 +297,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                         db.SaveChanges();
 
-                        return this.RedirectToAction("UpgradeRequested");
+                        return this.RedirectToAction("UpgradeDone");
                     }
 
                     return this.View(viewModel);

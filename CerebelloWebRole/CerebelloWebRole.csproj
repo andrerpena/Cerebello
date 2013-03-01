@@ -743,7 +743,6 @@
     <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalContract.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalContract.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

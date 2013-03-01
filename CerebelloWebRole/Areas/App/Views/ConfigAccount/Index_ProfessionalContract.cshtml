@@ -1,53 +1,58 @@
 ﻿@model ConfigAccountViewModel
-<div class="widget">
-    <p class="title">Plano profissional do Cerebello</p>
+<div class="text-section">
+    <h2>Plano profissional do Cerebello</h2>
     <div class="text-description">
+        <p>Sua conta atualmente está no plano de profissional.</p>
         <p>
-            Você é assinante do plano profissional do Cerebello.
+            O plano profissional não possui limite de pacientes e o suporte é prioritário.
         </p>
         <p>
             <a href="@Url.Action("Contract")">Contrato do plano profissional</a>
         </p>
     </div>
+</div>
 
-    <p class="title">Faturas</p>
+<div class="text-section">
+    <h2>Faturas</h2>
     <div></div>
-
-    <p class="title">Opções do plano</p>
+</div>
+<div class="text-section">
+    <h2>Opções do plano</h2>
     @if (false)
     {
     // these options are not supported at this moment
-    <div class="option option-upgrade">
-        <div>
-            <span class="option-title">Suporte por Chat:</span>
-            permite que você entre em contato conosco usando a ferramenta de Chat.
+        <div class="option option-upgrade">
+            <div>
+                <span class="option-title">Suporte por Chat:</span>
+                permite que você entre em contato conosco usando a ferramenta de Chat.
             Nesta opção aparece um novo membro no Chat com o nome do atendente de suporte
             disponível no momento,
             que permite que qualquer usuário do seu consultório/clínica tenha ajuda
             imediate na solução de seus problemas, e para sanar possíveis dúvidas.
+            </div>
+            <a class="button" href="@Url.Action("Upgrade", new {id = "ProfessionalPlan"})">Adicionar suporte por Chat</a>
         </div>
-        <a class="button" href="@Url.Action("Upgrade", new {id = "ProfessionalPlan"})">Adicionar suporte por Chat</a>
-    </div>
-    <div class="option option-upgrade">
-        <div>
-            <span class="option-title">Envio de lembrete via SMS:</span>
-            avisa automaticamente os seus pacientes de suas consultas com antecedência,
+        <div class="option option-upgrade">
+            <div>
+                <span class="option-title">Envio de lembrete via SMS:</span>
+                avisa automaticamente os seus pacientes de suas consultas com antecedência,
             de forma a evitar esquecimentos e faltas desnecessárias. É possível configurar
             com quanta antecedência se deseja enviar a mensagem, além de se poder
             escolher por mandar até dois lembretes em dias diferentes.
+            </div>
+            <a class="button" href="@Url.Action("Upgrade", new {id = "ProfessionalPlan"})">Adicionar aviso por SMS</a>
         </div>
-        <a class="button" href="@Url.Action("Upgrade", new {id = "ProfessionalPlan"})">Adicionar aviso por SMS</a>
-    </div>
     }
     <div class="option option-cancel">
-        <div>
+        <div class="cancel-icon"></div>
+        <div class="option-text">
             <span class="option-title">Cancelamento:</span>
-            O cancelamento da conta profissional pode ser feito a qualquer momento,
-            vistas as claúsulas contratuais sobre cancelamento. Todos os seus dados
-            serão enviados via e-mail se possível, ou então enviados de outra forma.
-            Uma conta profissional cancelada, pode ser reativada em até 6 meses da
-            data do cancelamento.
+            Todos os dados serão apagados do sistema. Não é possível reativar a conta nem fazer download dos dados e arquivos dos pacientes após o 
+            cancelamento. É altamente recomendável seja efetuado backup dos dados e arquivos dos pacientes antes de continuar
+            com o cancelamento.
         </div>
-        <a class="button" href="@Url.Action("Cancel")">Cancelar</a>
+        <div class="button-wrapper">
+            <a class="link-button" href="@Url.Action("Cancel")">Cancelar a conta profissional</a>
+        </div>
     </div>
 </div>
