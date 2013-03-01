@@ -1,0 +1,64 @@
+﻿.box-page-container {
+    margin: 120px auto;
+    max-width: 470px;
+    width: 100%;
+}
+
+    .box-page-container .box-page-container-wrapper {
+        margin: 0 10px;
+        border: 1px solid #D6D6D6;
+    }
+
+    .box-page-container .header {
+        background-color: #EEEEEE;
+        overflow: hidden;
+        padding: 6px 18px;
+    }
+
+        .box-page-container .header .buttons-wrapper {
+            float: right;
+            margin: 6px 0 0;
+        }
+
+        .box-page-container .header h2 {
+            color: #555555;
+            float: left;
+            font-size: 18px;
+            margin: 0;
+            text-shadow: 1px 1px 0 #FFFFFF;
+        }
+
+        .box-page-container .header .link {
+            float: right;
+            margin-top: 10px;
+        }
+
+    .box-page-container .body {
+        padding: 20px 30px;
+    }
+
+@media screen and (max-width: 500px) {
+    .box-page-container {
+        margin: 20px auto;
+    }
+
+    .optional {
+        display: none;
+    }
+}
+
+body {
+    min-width: 350px;
+}
+
+input {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box; /* Firefox */
+    -webkit-box-sizing: border-box; /* Safari */
+}
+
+    .input-large, .input-xlarge, .input-xxlarge, input[class*="span"], select[class*="span"], textarea[class*="span"], .uneditable-input {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        min-height: 30px;
+    }

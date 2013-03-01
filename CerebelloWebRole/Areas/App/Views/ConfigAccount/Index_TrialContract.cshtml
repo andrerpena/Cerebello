@@ -12,29 +12,31 @@
             Este plano possui um limite total de <strong>50 pacientes</strong>,
             somando os pacientes de todos os médicos cadastrados.
             Para usar o software profissionalmente e sem este limite,
-            faça upgrade para uma conta profissional.
         </p>
         <p>
-            <a href="@Url.Action("Contract")">Contrato do plano de testes</a>
+            <a href="@Url.Action("Contract")">Contrato do plano de testes</a>.
         </p>
     </div>
-
-    <p class="title">Opções do plano</p>
+</div>
+<div class="text-section">
+    <h2>Opções do plano</h2>
     <div class="option option-upgrade">
-        <div>
+        <div class="upgrade-icon"></div>
+        <div class="option-text">
             <span class="option-title">Upgrade para plano profissional:</span>
             Plano do Cerebello que pode ser usado profissionalmente, e sem os limites da conta de teste.
             Além disso a conta profissional possui suporte prioritário, e maior segurança dos dados.
         </div>
-        <a class="button" href="@Url.Action("Upgrade", new { id = "ProfessionalPlan" })">Fazer upgrade</a>
     </div>
     <div class="option option-cancel">
-        <div>
+        <div class="cancel-icon"></div>
+        <div class="option-text">
             <span class="option-title">Cancelamento:</span>
-            O cancelamento da conta de teste pode ser feito a qualquer momento.
+            Todos os dados serão apagados do sistema. Não é possível reativar a conta nem fazer download dos dados e arquivos dos pacientes após o 
             Como essa é uma conta de teste, todos os dados serão apagados do sistema,
             não sendo possível reativar a mesma, e nem fazer download dos dados após o cancelamento.
+        <div class="button-wrapper">
+            <a class="link-button" href="@Url.Action("Cancel")">Cancelar a conta trial</a>
         </div>
-        <a class="button" href="@Url.Action("Cancel")">Cancelar</a>
     </div>
 </div>

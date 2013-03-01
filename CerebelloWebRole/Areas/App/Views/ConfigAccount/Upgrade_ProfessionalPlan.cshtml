@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @model ChangeContractViewModel
-<div class="upgrade-block">
+<div class="text-section">
     <h2>Contrato</h2>
     @Html.Partial("Contract_ProfessionalPlan")
 
@@ -12,7 +12,7 @@
     </table>
 </div>
 
-<div class="upgrade-block">
+<div class="text-section">
     <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.PaymentMethod)</h2>
     <div class="text-description">
         <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
@@ -32,7 +32,7 @@
     Func<string, string, bool> csii = (a, b) => StringComparer.InvariantCultureIgnoreCase.Compare(a, b) == 0;
 }
 
-<div class="upgrade-block">
+<div class="text-section">
     <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.PaymentModelName)</h2>
     <div class="text-description">
         <p>
@@ -116,7 +116,7 @@
     </div>
 </div>
 
-<div class="upgrade-block">
+<div class="text-section">
     <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.DoctorCount)</h2>
     <div class="text-description">
         <p>
@@ -203,7 +203,7 @@
     </div>
 </div>
 
-<div class="upgrade-block billing-calendar-wrapper">
+<div class="text-section billing-calendar-wrapper">
     <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.InvoceDueDayOfMonth)</h2>
     <div class="text-description">
         <div class="billing-calendar">
@@ -259,7 +259,7 @@
     </div>
 </div>
 
-<div class="upgrade-block">
+<div class="text-section">
     <h2 style="margin-bottom: 1em;">Resumo</h2>
     <div class="text-description">
         <script type="text/javascript">
