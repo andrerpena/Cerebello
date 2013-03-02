@@ -792,12 +792,13 @@ td.value {
     }
 
         .doctor-card .doctor-info .name {
+            margin: 0;
         }
 
         .doctor-card .doctor-info .crm {
             color: #555555;
             font-size: 10px;
-            margin-top: 4px;
+            margin-top: 0;
         }
 
 a.gotoPractice {

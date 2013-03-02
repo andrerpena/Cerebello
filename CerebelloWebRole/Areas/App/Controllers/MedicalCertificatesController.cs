@@ -162,10 +162,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (formModel.PatientId.HasValue && !this.db.Patients.Any(m => m.Id == formModel.PatientId))
                 this.ModelState.AddModelError<MedicalCertificateViewModel>(m => m.ModelId, "O paciente informado não é válido");
 
-            MedicalCertificate certificate = null;
-
             if (this.ModelState.IsValid)
             {
+                MedicalCertificate certificate = null;
                 if (formModel.Id == null)
                 {
                     certificate = new MedicalCertificate()
@@ -178,7 +177,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    certificate = db.MedicalCertificates.Where(r => r.Id == formModel.Id).FirstOrDefault();
+                    certificate = this.db.MedicalCertificates.FirstOrDefault(r => r.Id == formModel.Id);
                     if (certificate == null)
                         return this.ObjectNotFound();
                 }
@@ -198,9 +197,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         {
                             m.Name = vm.Name;
                             m.Value = vm.Value;
+                            m.PracticeId = this.DbUser.PracticeId;
                         },
-                        (m) => { this.db.MedicalCertificateFields.DeleteObject(m); }
-                    );
+                        (m) => this.db.MedicalCertificateFields.DeleteObject(m));
 
                 this.db.SaveChanges();
 

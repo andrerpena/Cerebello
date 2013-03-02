@@ -178,7 +178,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     if (field.ToLower() != "paciente")
                     {
                         fieldsFoundInTheText.Add(match.Groups[1].Value);
-                        if (!formModel.Fields.Any(f => f.Name.ToLower() == match.Groups[1].Value.ToLower()))
+                        if (formModel.Fields.All(f => f.Name.ToLower() != match.Groups[1].Value.ToLower()))
                             this.ModelState.AddModelError<ModelMedicalCertificateViewModel>(m => m.Text, string.Format("Uma referência foi feita para o campo '{0}' mas este não foi definido", match.Groups[1].Value));
                     }
                 }
@@ -189,7 +189,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var field = formModel.Fields[i];
                     if (!string.IsNullOrEmpty(field.Name))
                     {
-                        if (!fieldsFoundInTheText.Any(f => f.ToLower() == field.Name.ToLower()))
+                        if (fieldsFoundInTheText.All(f => f.ToLower() != field.Name.ToLower()))
                             this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), string.Format("O campo '{0}' não foi referenciado no texto", field.Name));
                     }
                 }
@@ -201,7 +201,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 ModelMedicalCertificate certificateModel = null;
 
                 if (formModel.Id != null)
-                    certificateModel = db.ModelMedicalCertificates.Where(m => m.Id == formModel.Id).First();
+                    certificateModel = this.db.ModelMedicalCertificates.First(m => m.Id == formModel.Id);
                 else
                 {
                     certificateModel = new ModelMedicalCertificate { PracticeId = this.DbUser.PracticeId, };
@@ -211,6 +211,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 certificateModel.Name = formModel.Name;
                 certificateModel.Text = formModel.Text;
                 certificateModel.Doctor = this.Doctor;
+                certificateModel.PracticeId = this.DbPractice.Id;
 
                 certificateModel.Fields.Update(
                     formModel.Fields,
@@ -218,11 +219,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     (vm, m) =>
                     {
                         m.Name = vm.Name;
+                        m.PracticeId = this.DbUser.PracticeId;
                     },
-                    (m) =>
-                    {
-                        this.db.ModelMedicalCertificateFields.DeleteObject(m);
-                    });
+                    (m) => this.db.ModelMedicalCertificateFields.DeleteObject(m));
 
                 db.SaveChanges();
 

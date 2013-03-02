@@ -4,8 +4,8 @@ using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
-    [XmlRoot("Symptom", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
-    [XmlType("Symptom")]
+    [XmlRoot("DiagnosticHypothesis", Namespace = "http://www.cerebello.com.br", IsNullable = false)]
+    [XmlType("DiagnosticHypothesis")]
     public class DiagnosticHypothesisViewModel
     {
         public int? Id { get; set; }

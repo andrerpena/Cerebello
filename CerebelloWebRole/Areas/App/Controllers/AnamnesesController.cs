@@ -114,7 +114,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.SexualHistory = formModel.SexualHistory;
                 anamnese.SocialDiseases = formModel.SocialDeseases;
 
-                #region Update Symptomsymptoms
+                #region Update DiagnosticHypotheses
                 // step 1: add new
                 foreach (var diagnosticHypothesis in formModel.DiagnosticHypotheses.Where(diagnosticHyphothesis => !diagnosticHyphothesis.Id.HasValue ))
                 {
