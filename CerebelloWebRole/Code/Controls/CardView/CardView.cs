@@ -41,7 +41,7 @@ namespace CerebelloWebRole.Code.Controls
 
         public void AddLinkField<TValue>(Expression<Func<TModel, TValue>> exp, [JetBrains.Annotations.AspMvcAction] string actionName, Func<TModel, object> routeValuesFunc, bool wholeRow = false)
         {
-            this.AddLinkField(exp, actionName, null, routeValuesFunc);
+            this.AddLinkField(exp, actionName, null, routeValuesFunc, wholeRow: wholeRow);
         }
 
         public void AddLinkField<TValue>(Expression<Func<TModel, TValue>> exp, [JetBrains.Annotations.AspMvcAction] string actionName, [JetBrains.Annotations.AspMvcController] string controllerName, Func<TModel, object> routeValuesFunc, bool wholeRow = false)
@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Code.Controls
 
                     return this.HtmlHelper.ActionLink(
                         string.Format("{0}", text), actionName, controllerName, routeValuesFunc(item), null);
-                });
+                }, wholeRow: wholeRow);
         }
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
@@ -75,7 +75,7 @@ namespace CerebelloWebRole.Code.Controls
                     {
                         // neste caso o campo ocupa a linha inteira e, se já existe um TR
                         // aberto, eu preciso fechar
-                        currentRow = new List<CardViewFieldBase> {field};
+                        currentRow = new List<CardViewFieldBase> { field };
                         rows.Add(currentRow);
 
                         // setando currentRow para null eu forço outro field
@@ -85,7 +85,7 @@ namespace CerebelloWebRole.Code.Controls
 
                     else if (currentRow == null || currentRow.Count == this.FieldsPerRow)
                     {
-                        currentRow = new List<CardViewFieldBase> {field};
+                        currentRow = new List<CardViewFieldBase> { field };
                         rows.Add(currentRow);
                     }
                     else
@@ -112,7 +112,7 @@ namespace CerebelloWebRole.Code.Controls
 
                     // if this component is configured to supress empty cells, if this cell is empty,
                     // it must be suppressed. Oh really?
-                    if(string.IsNullOrEmpty(cellValueInnerHtml) && this.suppressEmptyCells)
+                    if (string.IsNullOrEmpty(cellValueInnerHtml) && this.suppressEmptyCells)
                         continue;
                     var cellHeaderInnerHtml = field.Label(this.HtmlHelper).ToString();
 

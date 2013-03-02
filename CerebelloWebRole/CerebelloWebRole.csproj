@@ -218,7 +218,6 @@
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
-    <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
     <Compile Include="Code\Chat\ChatLongPollingProvider.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
