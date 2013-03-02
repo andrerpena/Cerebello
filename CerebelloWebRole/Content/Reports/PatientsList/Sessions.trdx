@@ -9,46 +9,80 @@
         <Font Size="9pt" />
       </Style>
       <Items>
-        <TextBox Value="Data" CanShrink="True" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.10000005364418cm, 0.100199788808823cm" Name="labelData" />
-        <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, Date)" CanShrink="True" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.79989957809448cm, 0.100199788808823cm" Name="textBoxData">
-          <Style>
-            <Font Size="11pt" Bold="True" />
-          </Style>
-        </TextBox>
-        <Panel Size="15.9998998769152cm, 1.00009961843214cm" Location="0.0000999212206807cm, 1.00019979476929cm" Name="panel1">
+        <Panel Size="15.9998998769152cm, 1.00009961843214cm" Location="0.0000999212206807cm, 1.99979975383044cm" Name="panel1">
           <Items>
-            <TextBox Value="Anamneses" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAnamneses">
+            <TextBox Value="Exames físicos" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAnamneses">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
                   <Filters>
-                    <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                    <Filter Expression="=PhysicalExaminations.Count" Operator="Equal" Value="0" />
                   </Filters>
                 </FormattingRule>
               </ConditionalFormatting>
             </TextBox>
-            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645822662033cm, 0.0999999495347355cm" Name="Anamneses">
-              <Style Visible="True" />
+            <Table KeepTogether="False" Size="11.9999979813894cm, 0.800099870758458cm" Location="3.83645822662033cm, 0.0999999495347355cm" Name="tableExamesFisicos">
+              <Body>
+                <Cells>
+                  <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                    <ReportItem>
+                      <TextBox Value="=Notes" CanShrink="True" Size="11.9999979813894cm, 0.400049935379229cm" Name="textBox4">
+                        <Style>
+                          <Padding Top="4pt" Bottom="4pt" />
+                        </Style>
+                      </TextBox>
+                    </ReportItem>
+                  </TableCell>
+                </Cells>
+                <Columns>
+                  <Column Width="11.9999979813894cm" />
+                </Columns>
+                <Rows>
+                  <Row Height="0.400049935379229cm" />
+                </Rows>
+              </Body>
+              <Corner />
+              <RowGroups>
+                <TableGroup Name="DetailGroup">
+                  <Groupings>
+                    <Grouping Expression="null" />
+                  </Groupings>
+                </TableGroup>
+              </RowGroups>
+              <ColumnGroups>
+                <TableGroup>
+                  <ReportItem>
+                    <TextBox Value="Exame físico" CanShrink="True" Size="11.9999979813894cm, 0.400049935379229cm" Name="textBox7">
+                      <Style Color="DimGray" LineWidth="0.5pt">
+                        <BorderStyle Bottom="Dotted" />
+                      </Style>
+                    </TextBox>
+                  </ReportItem>
+                </TableGroup>
+              </ColumnGroups>
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
                   <Filters>
-                    <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                    <Filter Expression="=ExaminationRequests.Count" Operator="Equal" Value="0" />
                   </Filters>
                 </FormattingRule>
               </ConditionalFormatting>
-            </SubReport>
+              <Bindings>
+                <Binding Path="DataSource" Expression="=PhysicalExaminations" />
+              </Bindings>
+            </Table>
           </Items>
           <ConditionalFormatting>
             <FormattingRule>
               <Style Visible="False" />
               <Filters>
-                <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                <Filter Expression="=PhysicalExaminations.Count" Operator="Equal" Value="0" />
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 0.999699933537247cm" Location="0cm, 2.00049948692322cm" Name="panel2">
+        <Panel Size="16cm, 0.999699933537247cm" Location="0cm, 3.0000988109879cm" Name="panel2">
           <Items>
             <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645822662033cm, 0.0997003877246272cm" Name="Receipts">
               <Style Visible="True" />
@@ -81,7 +115,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="15.9998013687189cm, 0.999800056622027cm" Location="0.0000999212206807cm, 3.00039958953857cm" Name="panel3">
+        <Panel Size="15.9998013687189cm, 0.999800056622027cm" Location="0.0000999212206807cm, 3.99999878883365cm" Name="panel3">
           <Items>
             <Table KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0998001070872913cm" Name="tablePedidosDeExame">
               <Body>
@@ -135,7 +169,7 @@
                 <TableGroup>
                   <ReportItem>
                     <TextBox Value="Procedimento" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox11">
-                      <Style Color="DimGray">
+                      <Style Color="DimGray" LineWidth="0.5pt">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
                     </TextBox>
@@ -144,7 +178,7 @@
                 <TableGroup>
                   <ReportItem>
                     <TextBox Value="Código do procedimento" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox12">
-                      <Style Color="DimGray">
+                      <Style Color="DimGray" LineWidth="0.5pt">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
                     </TextBox>
@@ -153,7 +187,7 @@
                 <TableGroup>
                   <ReportItem>
                     <TextBox Value="Notas" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox13">
-                      <Style Color="DimGray">
+                      <Style Color="DimGray" LineWidth="0.5pt">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
                     </TextBox>
@@ -192,7 +226,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 1cm" Location="0.00010012308484875cm, 4.00040006637573cm" Name="panel4">
+        <Panel Size="16cm, 1cm" Location="0.00010012308484875cm, 4.99999909162524cm" Name="panel4">
           <Items>
             <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.84cm, 0.1cm" Name="tableResultadosDeExames">
               <Body>
@@ -303,7 +337,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 1cm" Location="0cm, 5.00060081481934cm" Name="panel5">
+        <Panel Size="16cm, 1cm" Location="0cm, 6.00019964058639cm" Name="panel5">
           <Items>
             <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0995990534734989cm" Name="tableDiagnosticos">
               <Body>
@@ -414,7 +448,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="15.9998998769152cm, 1.00039837279801cm" Location="0cm, 6.00080108642578cm" Name="panel6">
+        <Panel Size="15.9998998769152cm, 1.00039837279801cm" Location="0cm, 7.00040018954753cm" Name="panel6">
           <Items>
             <TextBox Value="Atestados" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAtestados">
               <ConditionalFormatting>
@@ -443,6 +477,62 @@
               <Style Visible="False" />
               <Filters>
                 <Filter Expression="=MedicalCertificates.Count" Operator="Equal" Value="0" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </Panel>
+        <Panel Size="15.9998998641968cm, 0.700199892912709cm" Location="0.0000999212206807cm, 0cm" Name="panel7">
+          <Style BackgroundColor="224, 224, 224" />
+          <Items>
+            <TextBox Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, Date)" CanShrink="True" Size="12.0001001358032cm, 0.520824491398448cm" Location="3.83645822662033cm, 0.0793749977921447cm" Name="textBoxData">
+              <Style BackgroundColor="">
+                <Font Size="12pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Value="Consulta" CanShrink="True" Size="3.4998996257782cm, 0.520824491398448cm" Location="0.132291662986908cm, 0.0793749977921447cm" Name="labelData">
+              <Style BackgroundColor="">
+                <Font Size="12pt" />
+              </Style>
+            </TextBox>
+          </Items>
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </Panel>
+        <Panel Size="15.9998998641968cm, 1.00009965896606cm" Location="0.0000999212206807cm, 0.999499889228744cm" Name="panel8">
+          <Items>
+            <TextBox Value="Anamneses" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.100000001490116cm, 0.100000001490116cm" Name="textBox1">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0999999493360519cm" Name="Anamneses">
+              <Style Visible="True" />
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Visible="False" />
+                  <Filters>
+                    <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </SubReport>
+          </Items>
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Visible="False" />
+              <Filters>
+                <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
               </Filters>
             </FormattingRule>
           </ConditionalFormatting>

@@ -748,11 +748,11 @@
     <Content Include="Views\Authentication\CreateAccountCompleted.cshtml" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.link.js" />
     <Content Include="Views\Shared\ObjectNotFound_Ajax.cshtml" />
-    <Content Include="Content\Reports\PatientsList\Doctor.trdx" />
-    <Content Include="Content\Reports\PatientsList\Sessions.trdx" />
-    <Content Include="Content\Reports\PatientsList\Anamneses.trdx" />
-    <Content Include="Content\Reports\PatientsList\Receipts.trdx" />
-    <Content Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Doctor.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Sessions.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Anamneses.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Receipts.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
     <Content Include="App.config">
       <SubType>Designer</SubType>
     </Content>
@@ -770,7 +770,7 @@
     <EmbeddedResource Include="Views\EmailSenderWorker\AppointmentReminderEmail.cshtml" />
     <Content Include="Views\MasterAdmin\Index.cshtml" />
     <Content Include="Views\Shared\ObjectNotFound.cshtml" />
-    <Content Include="Content\Reports\PatientsList\Patients.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Patients.trdx" />
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Home\PricesAndPlans.cshtml" />
     <Content Include="Views\Home\AccountCanceled.cshtml" />

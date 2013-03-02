@@ -167,7 +167,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </TextBox>
-        <SubReport KeepTogether="False" Size="16.5cm, 0.47cm" Location="1.2cm, 6cm" Name="Sessions">
+        <SubReport KeepTogether="False" Size="16.5cm, 0.47cm" Location="1.20000004768372cm, 6cm" Name="Sessions">
           <Style Visible="True" />
           <ConditionalFormatting>
             <FormattingRule>
@@ -178,6 +178,12 @@
             </FormattingRule>
           </ConditionalFormatting>
         </SubReport>
+        <Shape Size="16.1616761734814cm, 0.132291662986908cm" Location="1.8382247127391cm, 5.69999994953474cm" Name="shape1">
+          <Style Color="Gray" />
+          <ShapeType>
+            <LineShape Direction="EW" />
+          </ShapeType>
+        </Shape>
       </Items>
     </DetailSection>
     <PageFooterSection Height="0.252047220865885in" Name="pageFooterSection1">
