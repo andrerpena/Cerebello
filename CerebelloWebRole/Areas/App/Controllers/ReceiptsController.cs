@@ -125,6 +125,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         (vm, m) => vm.Id == m.Id,
                         (vm, m) =>
                         {
+                            m.PracticeId = this.DbPractice.Id;
                             m.MedicineId = vm.MedicineId.Value;
                             m.Quantity = vm.Quantity;
                             m.Observations = vm.Observations;
