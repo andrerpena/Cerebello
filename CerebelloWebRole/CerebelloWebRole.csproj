@@ -184,6 +184,7 @@
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Styles\Site\Cancel.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
     <Compile Include="Models\GenerateInvoiceViewModel.cs" />
     <Compile Include="Models\InternalUpgradeEmailViewModel.cs" />
@@ -475,6 +476,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\CancelAccountPage.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.notify.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
@@ -496,6 +498,7 @@
     <Content Include="Content\Styles\App\Controls\cardview.css" />
     <Content Include="Content\Styles\Docs\Docs.css" />
     <Content Include="Content\Styles\Docs\Media.css" />
+    <Content Include="Content\Styles\Site\Login.css" />
     <Content Include="Content\Styles\Site\Media.css" />
     <Content Include="Content\Styles\Site\Site.css" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
@@ -818,7 +821,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:12621/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

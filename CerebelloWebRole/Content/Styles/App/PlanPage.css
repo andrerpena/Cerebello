@@ -12,41 +12,34 @@ strong.price {
     white-space: nowrap;
 }
 
-a.button {
-    margin-top: 1em;
-    float: right;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.option-cancel .button {
-    color: darkred;
-}
-
-.option-upgrade .button {
-    color: darkgreen;
-    font-size: 1.5em;
+.button-wrapper {
+    padding: 10px 0;
+    text-align: right;
 }
 
 div.option {
     vertical-align: middle;
-    padding: 3em 3em 1em;
     margin: 15px auto;
     overflow: hidden;
-    max-width: 400px;
     line-height: 1.5em;
     word-spacing: 0.2em;
     text-align: justify;
     color: black;
 }
 
-div.option-cancel {
-    background: #FDD;
+    div.option .option-text {
+        margin-left: 25px;
+    }
+
+.option-upgrade a.link-button {
+    color: #145B14;
 }
 
-div.option-upgrade {
-    background: #CFC;
+.option-cancel a.link-button {
+    color: #8C1414;
 }
+
+
 
 .option-title {
     font-weight: bold;
@@ -54,11 +47,6 @@ div.option-upgrade {
 }
 
 /* Upgrade page */
-
-.upgrade-block {
-    padding: 1em;
-    overflow: hidden;
-}
 
 table.prices {
     color: black;
@@ -207,3 +195,20 @@ table.days-of-month {
     .billing-calendar-wrapper .billing-calendar-description {
         margin-right: 270px;
     }
+
+
+.upgrade-icon {
+    background-color: green;
+    float: left;
+    height: 15px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.cancel-icon {
+    background-color: red;
+    float: left;
+    height: 15px;
+    margin-top: 3px;
+    width: 15px;
+}

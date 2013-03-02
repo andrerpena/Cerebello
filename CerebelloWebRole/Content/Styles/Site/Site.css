@@ -91,47 +91,6 @@ input, textarea {
     font-size: 1.1em;
 }
 
-.authentication-container {
-    margin: 120px auto;
-    max-width: 470px;
-    width: 100%;
-}
-
-    .authentication-container .authentication-container-wrapper {
-        margin: 0 10px;
-        border: 1px solid #D6D6D6;
-    }
-
-        .authentication-container .authentication-container-wrapper .input-validation-error {
-        }
-
-    .authentication-container .header {
-        background-color: #EEEEEE;
-        overflow: hidden;
-        padding: 6px 18px;
-    }
-
-        .authentication-container .header .buttons-wrapper {
-            float: right;
-            margin: 6px 0 0;
-        }
-
-        .authentication-container .header h2 {
-            color: #555555;
-            float: left;
-            font-size: 18px;
-            margin: 0;
-            text-shadow: 1px 1px 0 #FFFFFF;
-        }
-
-        .authentication-container .header .link {
-            float: right;
-            margin-top: 10px;
-        }
-
-    .authentication-container .controls-wrapper {
-        padding: 20px 30px;
-    }
 
 .validation-summary-errors {
     background-color: #FFFFE6;

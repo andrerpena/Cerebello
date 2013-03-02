@@ -5,7 +5,8 @@
   <Operation type="Path" path="diagnostics\x64" />
   <PermissionLevels>
     <StoredCert name="Stored0CerebelloSelfSigned" permissionLevel="limitedOrElevated" />
-    <StoredCert name="Stored1Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" permissionLevel="elevated" />
+    <StoredCert name="Stored1GoDaddy" permissionLevel="limitedOrElevated" />
+    <StoredCert name="Stored2Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" permissionLevel="elevated" />
   </PermissionLevels>
   <AdditionalRoleIdentities>
     <Identity username="NetworkService" domain="NT AUTHORITY" />

@@ -49,15 +49,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Cancel()
         {
             var mainContract = this.DbPractice.AccountContract;
-            var viewModel = new CancelAccountViewModel();
+            var viewModel = new CancelAccountViewModel
+                {
+                    CurrentContract = new ConfigAccountViewModel.Contract
+                        {
+                            PlanTitle = mainContract.SYS_ContractType.Name,
+                            UrlIdentifier = mainContract.SYS_ContractType.UrlIdentifier.Trim(),
+                        }
+                };
 
             // Get plan informations of this practice.
             // Contract text, title, description, and other things to display.
-            viewModel.CurrentContract = new ConfigAccountViewModel.Contract
-            {
-                PlanTitle = mainContract.SYS_ContractType.Name,
-                UrlIdentifier = mainContract.SYS_ContractType.UrlIdentifier.Trim(),
-            };
 
             this.ViewBag.IsTrial = mainContract.SYS_ContractType.IsTrial;
 
@@ -295,7 +297,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                         db.SaveChanges();
 
-                        return this.RedirectToAction("UpgradeRequested");
+                        return this.RedirectToAction("UpgradeDone");
                     }
 
                     return this.View(viewModel);

@@ -51,42 +51,28 @@
     }
     else
     {
-        
-    <p>
-        É com grande pesar que recebemos a notícia do cancelamento de sua conta.
-    </p>
-    <p>
-        Entretanto, vemos com bons olhos a experiência, e gostariamos de aprender
-                    com os nossos erros, e nos tornarmos cada dia melhores, desde o atendimento ao cliente,
-                    até a qualidade do produto em si.
-    </p>
-    <p>
-        Por favor, nos permita saber os motivos de sua desistência, para assim,
-                    podermos construir uma experiência cada vez melhor para nossos usuários.
-                    Sua franqueza é nossa maior recompensa nesse momento.
-    </p>
-    <p>
-        Muito obrigado!
-    </p>
-        
-        
-    <table class="form-table">
-        @if (this.ViewBag.IsTrial)
-        {
-            <tr>
-                <th>@Html.LabelFor(model => model.SendDataByEmail)</th>
-                <td>@Html.CheckBoxFor(model => model.SendDataByEmail)</td>
-            </tr>
-        }
-        <tr>
-            <th>@Html.LabelFor(model => model.Reason)</th>
-            <td>@Html.TextAreaFor(model => model.Reason, new { rows = 10 })</td>
-        </tr>
-        <tr>
-            <th>@Html.LabelFor(model => model.Confirm)</th>
-            <td>@Html.CheckBoxFor(model => model.Confirm)</td>
-        </tr>
-    </table>
+    <div class="cancel-text">
+        <p>
+            É com grande pesar que recebemos a notícia do cancelamento de sua conta.
+        </p>
+        <p>
+            Por favor, nos permita saber os motivos de sua desistência, para que possamos aprender com os erros e tornar o Cerebello um software melhor. Nós agradecemos
+        o pelo seu feedback e pelo tempo que esteve conosco. Esperamos fazer parte do seu consultório novamente no futuro.
+        </p>
+    </div>
+            
+
+    <h2>Razões do cancelamento</h2>
+    
+    @Html.TextAreaFor(model => model.Reason, new { rows = 10, style = "width:500px" })
+
+    <div class="confirmation-checkbox-wrapper">
+        @Html.LabelFor(model => model.Confirm)
+        @Html.CheckBoxFor(model => model.Confirm)
+    </div>
+    
+    
+    
 
     <div class="submit-bar">
         <input type="submit" value="cancelar a conta" />

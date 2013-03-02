@@ -19,7 +19,7 @@
     <div class="showcase">
         <div class="container">
             <h1>Seja bem vindo ao Cerebello!</h1>
-            <h2>Sua conta foi criada e está pronta para ser usada.</h2>
+            <h2>Sua conta foi criada e está pronta para ser utilizada.</h2>
         </div>
     </div>
 </header>
@@ -29,16 +29,14 @@
         @if (this.User.Identity.IsAuthenticated)
         {
             <p>
-                Para começar a usar o software, basta clicar no botão <span class="xpto">Entrar</span>
-                que se encontra no topo da página.
+                Obrigado por fazer parte da família Cerebello. Esperamos que você tenha uma ótima experiência com o software. Para começar a utilizar o Cerebello, basta clicar no botão <span class="xpto">Entrar</span> no topo da página.
             </p>
         }
         else
         {
             <p>
-                Para começar a usar o software, você deve informar suas credênciais,
-                clicando no botão <span class="xpto">Login</span>
-                que se encontra no topo da página.
+                Obrigado por fazer parte da família Cerebello. Esperamos que você tenha uma ótima experiência com o software. Para começar a usar o Cerebello, você deve informar suas credenciais 
+                clicando no botão <span class="xpto">Login</span> no topo da página.
             </p>
         }
 
@@ -47,30 +45,30 @@
             O Cerebello possui uma extensa documentação sobre todos os recursos presentes no software.
             Para acessar a área de documentação clique no botão <span class="xpto">Documentação</span> no topo da página.
         </p>
+        
+        <h3>Sua opinião é muito importante para nós</h3>
         <p>
-            Recomendamos que comece com tópicos, que apresentam uma visão mais geral do software, e depois vá aprofundando nos tópicos mais específicos.
-            <ul>
-                <li><a>Overview</a> - visão geral do software</li>
-                <li><a>Médico</a> - visão do médico para o software</li>
-                <li><a>Secretária</a> - visão da secretária para o software</li>
-                <li><a>Gerenciamento da conta</a> - visão administrativa da conta</li>
-            </ul>
+            Caso haja algum recurso que seja importante para você mas que não esteja presente no software, por favor acesse a 
+            <a href="https://cerebello.uservoice.com">Central de idéias do Cerebello</a> e faça sugestões. Todas as sugestões enviadas são cuidadosamente 
+            analizadas. Nosso trabalho é tornar o Cerebello um software melhor para todos, facilitando o cotidiano do seu consultório. Alternativamente, 
+            é possível enviar sugestões ou críticas para o nosso e-mail <a href="mailto:cerebello@cerebello.com.br">cerebello@cerebello.com.br</a> ou
+            através do chat disponível logo abaixo nesta página.
         </p>
 
         <h3>Plano Profissional</h3>
         <p>
-            Neste momento a sua conta está configurada para o <span class="xpto">Plano de Avaliação</span>.
-            Você pode usar este plano idefinidamente se quiser, entretanto este possui um limite de 50 pacientes,
-            e uma barra no topo que fica sempre visível com um link para fazer o upgrade.
+            Neste momento a sua conta está configurada para o <span class="xpto">Plano de avaliação</span>.
+            Você pode usar este plano o tempo que desejar, entretanto, com o limite de 50 pacientes.
         </p>
         <p>
-            Para atender você melhor, recomendamos que faça upgrade para o <span class="xpto">Plano de Profissional</span>.
-            Neste plano não existe nenhuma limitação, e não possui a barra no topo da tela, além de possuir suporte prioritário.
+            Para atendê-lo melhor, recomendamos que faça upgrade para o <span class="xpto">Plano profissional</span>.
+            Neste plano não existe limitação de pacientes, além de suporte prioritário. Para fazer upgrade a qualquer momento, após efetuar login, acesse o link na barra do topo
+            da página ou acesse as configurações da sua conta.
         </p>
         @if (this.User.Identity.IsAuthenticated)
         {
             <p>
-                Se você deseja fazer o upgrade agora, basta seguir o link: <a href="@Url.Action("Upgrade", "ConfigAccount", new { area = "App", id = "ProfessionalPlan", practice = this.Request["practice"] })">Fazer upgrade para o plano profissional</a>
+                Ou, <a href="@Url.Action("Upgrade", "ConfigAccount", new { area = "App", id = "ProfessionalPlan", practice = this.Request["practice"] })">faça o upgrade para a conta profissional</a> agora mesmo.
             </p>
         }
     </div>
