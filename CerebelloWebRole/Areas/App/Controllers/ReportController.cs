@@ -11,6 +11,7 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Helpers;
 using Telerik.Reporting.Processing;
 using Telerik.Reporting.XmlSerialization;
 using Report = Telerik.Reporting.Report;

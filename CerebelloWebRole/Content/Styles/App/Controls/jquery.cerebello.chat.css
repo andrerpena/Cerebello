@@ -82,6 +82,10 @@ input.chat-window-text-box {
         margin-left: 40px;
     }
 
+    .chat-message p {
+        margin: 0;
+    }
+
 .chat-window-content {
 }
 

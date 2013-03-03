@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code
+namespace CerebelloWebRole.Code.Helpers
 {
     public static class EnumHelper
     {
@@ -19,7 +19,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Retorna o texto para um objeto enum
         /// </summary>
-        ///<exception cref="System.ArgumentNullException">If @enum is null</exception>
+        ///<exception cref="System.ArgumentNullException">If @enum is not null</exception>
         public static String GetText(Object @enum)
         {
             if (@enum == null) throw new ArgumentNullException("enum");
@@ -33,7 +33,7 @@ namespace CerebelloWebRole.Code
             var customAttributes = enumField.GetCustomAttributes(typeof(DisplayAttribute), true);
             if (customAttributes.Length == 0)
                 return enumValueString;
-            return (customAttributes[0] as DisplayAttribute).Name;
+            return ((DisplayAttribute)customAttributes[0]).Name;
         }
 
         ///<exception cref="System.ArgumentNullException">If enumType is null</exception>
@@ -55,12 +55,7 @@ namespace CerebelloWebRole.Code
             if (!aEnumType.IsEnum)
                 throw new Exception("Type must be an Enum");
 
-            Dictionary<int, String> vResult = new Dictionary<int, string>();
-
-            foreach (var vEnumValue in Enum.GetValues(aEnumType))
-                vResult.Add((int)vEnumValue, EnumHelper.GetText(vEnumValue));
-
-            return vResult;
+            return Enum.GetValues(aEnumType).Cast<object>().ToDictionary(vEnumValue => (int)vEnumValue, GetText);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.iText;
 using CerebelloWebRole.Code.Mvc;
 using iTextSharp.text;

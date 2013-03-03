@@ -485,13 +485,11 @@
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.dropdown.menu.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.paginator.css" />
-    <Content Include="Content\Styles\App\Controls\media.css" />
     <Content Include="Content\Styles\App\PlanPage.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
     <Content Include="Content\Styles\App\jquery-ui-overrides.css" />
     <Content Include="Content\Styles\App\jquery.arp.modal.css" />
     <Content Include="Content\Styles\App\jquery.jqplot.min.css" />
-    <Content Include="Content\Styles\App\Media.css" />
     <Content Include="Content\Styles\App\Patients_Edit.css" />
     <Content Include="Content\Styles\App\Schedule.css" />
     <Content Include="Content\Styles\App\Controls\cardview.css" />

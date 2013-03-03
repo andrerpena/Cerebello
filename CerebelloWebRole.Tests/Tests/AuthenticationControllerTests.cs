@@ -560,7 +560,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var token = SecurityTokenHelper.FromString(ticket.UserData);
             Assert.AreEqual(user.Id, token.UserData.Id);
-            Assert.AreEqual("Gregory House", token.UserData.FullName);
+            Assert.AreEqual("André Pena", token.UserData.FullName);
             Assert.AreEqual("andrerpena@gmail.com", token.UserData.Email);
             Assert.AreEqual("consultoriodrhouse", token.UserData.PracticeIdentifier);
             Assert.AreEqual(false, token.UserData.IsUsingDefaultPassword);

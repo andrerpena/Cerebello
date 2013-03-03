@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code;
@@ -13,11 +10,6 @@ namespace CerebelloWebRole.Areas.App.Models
     /// </summary>
     public class ModelMedicalCertificateViewModel
     {
-        public ModelMedicalCertificateViewModel()
-        {
-            this.Fields = new List<ModelMedicalCertificateFieldViewModel>();
-        }
-
         public int? Id { get; set; }
 
         /// <summary>
@@ -34,8 +26,5 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Texto")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Text { get; set; }
-
-        [Display(Name = "Campos")]
-        public List<ModelMedicalCertificateFieldViewModel> Fields { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.UserViewModel
 @using Cerebello.Model
 @using CerebelloWebRole.Code.Extensions
+@using CerebelloWebRole.Code.Helpers
 @{
     var title = "Usuário: " + this.Model.FullName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -13,9 +14,9 @@
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.UserName);
     cardView.AddField(m => m.FullName, wholeRow: true);
-    cardView.AddField(m => m.Gender, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
+    cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text>  @(@item.DateOfBirth.ToShortDateString()) (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
-    cardView.AddField(m => m.MaritalStatus, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
+    cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.BirthPlace);
     cardView.AddField(m => m.Cpf);
     cardView.AddField(m => m.Profissao);
@@ -29,7 +30,7 @@
     cardViewDoctor.AddField(m => m.MedicCRM);
     cardViewDoctor.AddField(m => m.MedicalSpecialtyName);
     cardViewDoctor.AddField(m => m.MedicalEntityName);
-    cardViewDoctor.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
+    cardViewDoctor.AddField(m => m.MedicalEntityJurisdiction, @<text>@EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
 
     // creating details CardView
     var cardViewAddress = Html.CreateCardView();

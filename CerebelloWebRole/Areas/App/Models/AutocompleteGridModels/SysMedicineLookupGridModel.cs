@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -19,11 +20,13 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Medicine name
         /// </summary>
+        [Display(Name = "Nome")]
         public string Name { get; set; }
 
         /// <summary>
         /// Laboratory name
         /// </summary>
+        [Display(Name = "Laboratório")]
         public string LaboratoryName { get; set; }
     }
 }

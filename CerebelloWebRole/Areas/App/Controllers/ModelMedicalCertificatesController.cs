@@ -46,8 +46,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                              {
                                  Id = certificateModel.Id,
                                  Name = certificateModel.Name,
-                                 Text = certificateModel.Text,
-                                 Fields = certificateModel.Fields.Select(f => new ModelMedicalCertificateFieldViewModel() { Id = f.Id, Name = f.Name }).ToList()
+                                 Text = certificateModel.Text
                              };
 
             return View(model);
@@ -72,13 +71,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
             {
-                var medicine = db.ModelMedicalCertificates.Include("Fields").Where(m => m.Id == id).First();
+                var medicine = this.db.ModelMedicalCertificates.First(m => m.Id == id);
                 viewModel = new ModelMedicalCertificateViewModel()
                              {
                                  Id = medicine.Id,
                                  Name = medicine.Name,
-                                 Text = medicine.Text,
-                                 Fields = medicine.Fields.Select(f => new ModelMedicalCertificateFieldViewModel() { Id = f.Id, Name = f.Name }).ToList()
+                                 Text = medicine.Text
                              };
                 // todo: page title should be set in the view, not in the controller
                 ViewBag.Title = "Alterando modelo de atestado médico: " + viewModel.Name;
@@ -115,87 +113,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(ModelMedicalCertificateViewModel formModel)
         {
-            // validate that fields all have only valid characters
-            for (var i = 0; i < formModel.Fields.Count; i++)
-            {
-                var field = formModel.Fields[i];
-
-                // it the field name is empty, it will be validated by the mvc framework.
-                // if it's not, then we validate manually
-                if (!string.IsNullOrEmpty(field.Name))
-                {
-                    // cannot create a field with any of the pre-defined names.
-                    // 'paciente' is the only one so far
-                    if (new string[] { "paciente" }.Contains(field.Name.ToLower()))
-                        this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "Não é permitido definir um campo chamado 'paciente'. Este campo é definido automaticamente");
-                    else
-                    {
-                        // this will generate a decomposed form of the given string, with accents placed in different characters
-                        var stStr = field.Name.Normalize(System.Text.NormalizationForm.FormD);
-
-                        foreach (var c in stStr)
-                        {
-                            UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
-                            if (uc == UnicodeCategory.NonSpacingMark)
-                            {
-                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alfa-numéricos, hífens e 'underline's são permitidos");
-                                break;
-                            }
-
-                            if (!char.IsLetterOrDigit(c) && !new char[] { '_', '-' }.Contains(c))
-                            {
-                                this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), "O formato de um ou mais campos é inválido. Somente caracteres alfa-numéricos, hífens e 'underline's são permitidos");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // should only check for further errors if there aren't errors already
-            if (this.ModelState.IsValid && !string.IsNullOrEmpty(formModel.Text))
-            {
-                // validate that fields are correctly formed
-                var matchingProblems = Regex.Matches(formModel.Text, @"<%\s+([0-9a-z_-]+)%>", RegexOptions.IgnoreCase);
-                foreach (var problem in matchingProblems)
-                    this.ModelState.AddModelError<ModelMedicalCertificateViewModel>(m => m.Text, "Referências para campos não podem começar com espaços");
-
-                matchingProblems = Regex.Matches(formModel.Text, @"<%([0-9a-z_-]+)\s+%>", RegexOptions.IgnoreCase);
-                foreach (var problem in matchingProblems)
-                    this.ModelState.AddModelError<ModelMedicalCertificateViewModel>(m => m.Text, "Referências para campos não podem terminar com espaços");
-
-                matchingProblems = Regex.Matches(formModel.Text, @"<%\s*%>", RegexOptions.IgnoreCase);
-                foreach (var problem in matchingProblems)
-                    this.ModelState.AddModelError<ModelMedicalCertificateViewModel>(m => m.Text, "Referências para campos não podem ser vazias");
-
-                // this will be used to see if every declared field is referenced in the text
-                var fieldsFoundInTheText = new List<string>();
-
-                // validate that all fields in the text are referenced
-                foreach (Match match in Regex.Matches(formModel.Text, "<%([0-9a-z_-]+)%>", RegexOptions.IgnoreCase))
-                {
-                    var field = match.Groups[1].Value;
-                    if (field.ToLower() != "paciente")
-                    {
-                        fieldsFoundInTheText.Add(match.Groups[1].Value);
-                        if (formModel.Fields.All(f => f.Name.ToLower() != match.Groups[1].Value.ToLower()))
-                            this.ModelState.AddModelError<ModelMedicalCertificateViewModel>(m => m.Text, string.Format("Uma referência foi feita para o campo '{0}' mas este não foi definido", match.Groups[1].Value));
-                    }
-                }
-
-                // validate that all fields declared are in the text are declared
-                for (int i = 0; i < formModel.Fields.Count; i++)
-                {
-                    var field = formModel.Fields[i];
-                    if (!string.IsNullOrEmpty(field.Name))
-                    {
-                        if (fieldsFoundInTheText.All(f => f.ToLower() != field.Name.ToLower()))
-                            this.ModelState.AddModelError(string.Format("Fields[{0}].Name", i), string.Format("O campo '{0}' não foi referenciado no texto", field.Name));
-                    }
-                }
-            }
-
-
             if (this.ModelState.IsValid)
             {
                 ModelMedicalCertificate certificateModel = null;
@@ -213,15 +130,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 certificateModel.Doctor = this.Doctor;
                 certificateModel.PracticeId = this.DbPractice.Id;
 
-                certificateModel.Fields.Update(
-                    formModel.Fields,
-                    (vm, m) => vm.Id == m.Id,
-                    (vm, m) =>
-                    {
-                        m.Name = vm.Name;
-                        m.PracticeId = this.DbUser.PracticeId;
-                    },
-                    (m) => this.db.ModelMedicalCertificateFields.DeleteObject(m));
+                var fieldsFoundInText =
+                    Regex.Matches(formModel.Text, @"<%(.+?)%>", RegexOptions.IgnoreCase).Cast<Match>().Select(m => m.Groups[1].Value.Trim()).ToList();
+
+                var harakiriQueue = new Queue<ModelMedicalCertificateField>();
+
+                // delete fields found in the DB that don't have a matching field in text
+                foreach (var dbField in certificateModel.Fields.Where(dbField => fieldsFoundInText.All(f => f != dbField.Name)))
+                    harakiriQueue.Enqueue(dbField);
+                while (harakiriQueue.Any())
+                    this.db.ModelMedicalCertificateFields.DeleteObject(harakiriQueue.First());
+
+                // add new fields to the DB
+                foreach (var field in fieldsFoundInText.Where(field => certificateModel.Fields.All(f => f.Name != field)).Where(field => StringHelper.RemoveDiacritics(field).ToLower() != "paciente"))
+                    certificateModel.Fields.Add(
+                        new ModelMedicalCertificateField()
+                            {
+                                PracticeId = this.DbUser.PracticeId,
+                                Name = field
+                            });
 
                 db.SaveChanges();
 

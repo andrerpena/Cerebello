@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -135,14 +136,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                 {
                     // for each field in the model, all must exist in the formModel
-                    foreach (var field in certificateModel.Fields)
-                    {
-                        if (!formModel.Fields.Any(f => f.Name.ToLower() == field.Name.ToLower()))
-                        {
-                            this.ModelState.AddModelError<MedicalCertificateViewModel>(m => m.Fields, "Dados inválidos. As informações recebidas não condizem com o modelo de atestado especificado");
-                            break;
-                        }
-                    }
+                    if (certificateModel.Fields.Any(field => formModel.Fields.All(f => f.Name.ToLower() != field.Name.ToLower())))
+                        this.ModelState.AddModelError<MedicalCertificateViewModel>(m => m.Fields, "Dados inválidos. As informações recebidas não condizem com o modelo de atestado especificado");
 
                     // #KNOWN ISSUE# The next statements shouldn't exist. The REQUIRED attribute should work :(
                     // for all fields existing in the formModel, all must have a value
@@ -311,23 +306,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <returns></returns>
         public string GetCertificateText(int id)
         {
-            var certificate = this.db.MedicalCertificates.Where(mmc => mmc.Id == id).FirstOrDefault();
+            var certificate = this.db.MedicalCertificates.FirstOrDefault(mmc => mmc.Id == id);
             if (certificate == null)
                 throw new Exception("Couldn't find certificate. Certificate id: " + id);
 
-            var certificateText = certificate.Text;
-            foreach (var field in certificate.Fields)
-                certificateText = StringHelper.ReplaceString(certificateText, "<%" + field.Name + "%>", field.Value, StringComparison.OrdinalIgnoreCase);
-
-            // the special case of patient
-            certificateText = StringHelper.ReplaceString(certificateText, "<%paciente%>", certificate.Patient.Person.FullName, StringComparison.OrdinalIgnoreCase);
-
-            return certificateText;
+            return Regex.Replace(
+                certificate.Text,
+                "<%(.+?)%>",
+                match =>
+                {
+                    if (StringHelper.RemoveDiacritics(match.Groups[1].Value).ToLower() == "paciente")
+                        return certificate.Patient.Person.FullName;
+                    var matchingField = certificate.Fields.FirstOrDefault(f => f.Name.Trim() == match.Groups[1].Value.Trim());
+                    if (matchingField != null)
+                        return matchingField.Value;
+                    throw new Exception("Não foi possível encontrar o valor de um campo. Campo: " + match.Groups[1].Value);
+                });
         }
 
-        public ActionResult ViewPDF(int id)
+        public ActionResult ViewPdf(int id)
         {
-            var documentSize = PageSize.A4;
             var document = new Document(PageSize.A4, 36, 36, 80, 80);
             var art = new Rectangle(50, 50, 545, 792);
             var documentStream = new MemoryStream();

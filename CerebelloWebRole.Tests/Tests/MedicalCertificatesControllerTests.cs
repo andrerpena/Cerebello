@@ -62,18 +62,11 @@ namespace CerebelloWebRole.Tests.Tests
         [TestMethod]
         public void Edit_2_CannotSaveWithInvalidPatient()
         {
-            // obtains a valid certificate model
-            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
-            {
-                Name = "My Model",
-                Text = "This has no references"
-            };
             var mr = new MockRepository(true);
-            var certificateModelController = mr.CreateController<ModelMedicalCertificatesController>();
             int modelId = this.db.ModelMedicalCertificates.First().Id;
 
             // tries to save
-            MedicalCertificateViewModel formModel = new MedicalCertificateViewModel()
+            var formModel = new MedicalCertificateViewModel()
             {
                 ModelId = modelId,
                 // this probably doesn't exist
@@ -112,7 +105,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var mr = new MockRepository(true);
             var controller = mr.CreateController<MedicalCertificatesController>();
-            var controllerResult = controller.Edit(new [] { formModel });
+            var controllerResult = controller.Edit(new[] { formModel });
 
             Assert.IsInstanceOfType(controllerResult, typeof(ViewResult));
             Assert.AreEqual(false, controller.ModelState.IsValid);
@@ -131,12 +124,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%FIELD_1%>",
-                Fields = new List<ModelMedicalCertificateFieldViewModel>()                {
-                     new ModelMedicalCertificateFieldViewModel() {
-                           Name = "FIELD_1"
-                     }
-                }
+                Text = "This is a reference: <%FIELD_1%>"
             };
             var mr = new MockRepository(true);
             var certificateModelTarget = mr.CreateController<ModelMedicalCertificatesController>();
@@ -171,11 +159,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%FIELD_1%>",
-                Fields = new List<ModelMedicalCertificateFieldViewModel>()
-                {
-                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
-                }
+                Text = "This is a reference: <%FIELD_1%>"
             };
             var mr = new MockRepository(true);
             var certificateModelTarget = mr.CreateController<ModelMedicalCertificatesController>();
@@ -235,11 +219,7 @@ namespace CerebelloWebRole.Tests.Tests
             var certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%FIELD_1%>",
-                Fields = new List<ModelMedicalCertificateFieldViewModel>()
-                {
-                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
-                }
+                Text = "This is a reference: <%FIELD_1%>"
             };
             var mr = new MockRepository(true);
             var certificateModelTarget = mr.CreateController<ModelMedicalCertificatesController>();
@@ -281,11 +261,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%FIELD_1%>",
-                Fields = new List<ModelMedicalCertificateFieldViewModel>()
-                {
-                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
-                }
+                Text = "This is a reference: <%FIELD_1%>"
             };
 
             var mr = new MockRepository(true);
@@ -335,11 +311,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%FIELD_1%>. This is the patient name: <%paCIENTE%>",
-                Fields = new List<ModelMedicalCertificateFieldViewModel>()
-                {
-                     new ModelMedicalCertificateFieldViewModel() { Name = "FIeLd_1" }
-                }
+                Text = "This is a reference: <%FIELD_1%>. This is the patient name: <%paCIENTE%>"
             };
             var mr = new MockRepository(true);
             var certificateModelController = mr.CreateController<ModelMedicalCertificatesController>();
@@ -383,13 +355,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel formModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%PROP_1%>, <%pRoP_2%>, <%PrOP_3%>, <%ProP_4%>",
-                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
-                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_2" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_3" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PrOP_4" },
-                 }
+                Text = "This is a reference: <%PROP_1%>, <%pRoP_2%>, <%PrOP_3%>, <%ProP_4%>"
             };
 
             var mr = new MockRepository(true);
@@ -421,13 +387,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel formModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%PROP_1%>, <%pRoP_2%>, <%PrOP_3%>, <%ProP_4%>",
-                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
-                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_2" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PROP_3" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PrOP_4" },
-                 }
+                Text = "This is a reference: <%PROP_1%>, <%pRoP_2%>, <%PrOP_3%>, <%ProP_4%>"
             };
 
             var mr = new MockRepository(true);
@@ -455,13 +415,10 @@ namespace CerebelloWebRole.Tests.Tests
         public void MedicalCertificateFieldsEditor_3_BothParametersAreSuppliedButTheyDontMatch()
         {
             // create a model
-            ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
+            var certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%PROP_1%>",
-                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
-                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" }
-                 }
+                Text = "This is a reference: <%PROP_1%>"
             };
 
             var mr = new MockRepository(true);
@@ -473,11 +430,7 @@ namespace CerebelloWebRole.Tests.Tests
             certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%PROP_1%>, <%ProP_4%>",
-                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
-                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" },
-                    new ModelMedicalCertificateFieldViewModel() { Name = "PrOP_4" },
-                 }
+                Text = "This is a reference: <%PROP_1%>, <%ProP_4%>"
             };
 
             certificateModelcontroller = mr.CreateController<ModelMedicalCertificatesController>();
@@ -528,10 +481,7 @@ namespace CerebelloWebRole.Tests.Tests
             ModelMedicalCertificateViewModel certificateModelFormModel = new ModelMedicalCertificateViewModel()
             {
                 Name = "My Model",
-                Text = "This is a reference: <%PROP_1%>",
-                Fields = new System.Collections.Generic.List<ModelMedicalCertificateFieldViewModel>() {
-                    new ModelMedicalCertificateFieldViewModel() { Name = "prop_1" }
-                 }
+                Text = "This is a reference: <%PROP_1%>"
             };
 
             var mr = new MockRepository(true);

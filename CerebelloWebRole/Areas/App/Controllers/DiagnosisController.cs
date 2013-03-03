@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
@@ -63,7 +64,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         ///    - If both the notes and the Cid10Code are null or empty, an error must be added to ModelState
         ///    - Must properly create a diagnosis for the given patient with the given information
         /// </summary>
-        /// <param name="formModel"></param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult Edit(DiagnosisViewModel[] diagnosis)
@@ -78,6 +78,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Diagnosis dbObject;
                 if (formModel.Id == null)
                 {
+                    Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
                     dbObject = new Diagnosis()
                     {
                         CreatedOn = this.GetUtcNow(),

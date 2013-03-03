@@ -173,13 +173,13 @@ namespace Cerebello.Firestarter
             Practice practice,
             bool useDefaultPassword = false)
         {
-            var pwdSalt = "oHdC62UZE6Hwts91+Xy88Q==";
+            const string pwdSalt = "oHdC62UZE6Hwts91+Xy88Q==";
             var pwdHash = CipherHelper.Hash("masban", pwdSalt);
             if (useDefaultPassword)
                 pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
 
             // Creating user.
-            User user = new User()
+            var user = new User()
                 {
                     UserName = "masbicudo",
                     UserNameNormalized = "masbicudo",
@@ -194,10 +194,10 @@ namespace Cerebello.Firestarter
             //db.SaveChanges(); // cannot save changes here, because user.Person is not nullable.
 
             // Creating person.
-            Person person = new Person()
+            var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FullName = "Phill Austin",
+                    FullName = "Júlio Cezar Almeida",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "masbicudo@gmail.com",
@@ -210,7 +210,7 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             // Creating doctor.
-            Doctor doctor = new Doctor()
+            var doctor = new Doctor()
                 {
                     Id = 2,
                     CRM = "98765",
@@ -261,7 +261,7 @@ namespace Cerebello.Firestarter
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
-                    FullName = "Gregory House",
+                    FullName = "André Pena",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "andrerpena@gmail.com",
@@ -402,7 +402,7 @@ namespace Cerebello.Firestarter
             var person = new Person
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
-                FullName = "Thomas Gray",
+                FullName = "Miguel Angelo Santos",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = Firestarter.UtcNow,
                 Email = "thomasgray@fakemail.com",
@@ -492,7 +492,7 @@ namespace Cerebello.Firestarter
             Person person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FullName = "Menininha Santos",
+                    FullName = "Milena Santos",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
