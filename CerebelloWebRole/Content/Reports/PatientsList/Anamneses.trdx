@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report Width="12cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+<Report Width="12.0000001009305cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
   <Items>
     <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
       <Style Visible="False" />
     </PageHeaderSection>
-    <DetailSection KeepTogether="False" Height="2.48039325078328in" Name="detailSection1">
+    <DetailSection KeepTogether="False" Height="2.32291301091512in" Name="detailSection1">
       <Style>
         <Font Size="8pt" />
       </Style>
@@ -12,21 +12,30 @@
         <TextBox Value="Queixa principal (QP)" Size="3.60000020186106cm, 0.400099517501606cm" Location="0.00010002215276472cm, 0.0000999212206807cm" Name="labelDoctorName" />
         <TextBox Value="=ChiefComplaint" Size="8.19989977598469cm, 0.400099416571077cm" Location="3.80000019073486cm, 0.00010012308478013cm" Name="textBox5" />
         <TextBox Value="Hipóteses de diagnóstico" Size="3.60000014305115cm, 0.400000201861058cm" Location="0.00010002215276472cm, 4.76238623236933cm" Name="textBox1" />
-        <Table KeepTogether="False" Size="11.699900028311cm, 0.529166651947631cm" Location="0.299999952316284cm, 5.30019959012112cm" Name="table1">
+        <Table KeepTogether="False" Size="11.6999002806373cm, 0.529166651947631cm" Location="0.299999952316284cm, 5.30019959012112cm" Name="table1">
           <Body>
             <Cells>
-              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
                 <ReportItem>
-                  <TextBox Value="=Cid10Code" CanShrink="True" Size="5.84995001415551cm, 0.264583325973816cm" Name="textBox8">
+                  <TextBox Value="=Cid10Code" CanShrink="True" Size="1.25860735040563cm, 0.264583325973816cm" Name="textBox8">
                     <Style>
                       <Padding Top="4pt" Bottom="4pt" />
                     </Style>
                   </TextBox>
                 </ReportItem>
               </TableCell>
-              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
                 <ReportItem>
-                  <TextBox Value="=Text" CanShrink="True" Size="5.84995001415551cm, 0.264583325973816cm" Name="textBox9">
+                  <TextBox Value="=Text" CanShrink="True" Size="5.8366551604543cm, 0.264583325973816cm" Name="textBox9">
+                    <Style>
+                      <Padding Top="4pt" Bottom="4pt" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Value="=Cid10Name" Size="4.60463811846161cm, 0.264583325973816cm" Name="textBox25" StyleName="">
                     <Style>
                       <Padding Top="4pt" Bottom="4pt" />
                     </Style>
@@ -35,8 +44,9 @@
               </TableCell>
             </Cells>
             <Columns>
-              <Column Width="5.84995001415551cm" />
-              <Column Width="5.84995001415551cm" />
+              <Column Width="4.60463782936106cm" />
+              <Column Width="1.25860727952086cm" />
+              <Column Width="5.83665488729595cm" />
             </Columns>
             <Rows>
               <Row Height="0.264583325973816cm" />
@@ -51,9 +61,9 @@
             </TableGroup>
           </RowGroups>
           <ColumnGroups>
-            <TableGroup>
+            <TableGroup Name="Group1">
               <ReportItem>
-                <TextBox Value="Cid10" CanShrink="True" Size="5.84995001415551cm, 0.264583325973816cm" Name="textBox11">
+                <TextBox Value="Descrição" Size="4.60463811846161cm, 0.264583325973816cm" Name="textBox22" StyleName="">
                   <Style Color="DimGray">
                     <BorderStyle Bottom="Dotted" />
                   </Style>
@@ -62,7 +72,16 @@
             </TableGroup>
             <TableGroup>
               <ReportItem>
-                <TextBox Value="Hipótese" CanShrink="True" Size="5.84995001415551cm, 0.264583325973816cm" Name="textBox12">
+                <TextBox Value="Cid10" CanShrink="True" Size="1.25860735040563cm, 0.264583325973816cm" Name="textBox11">
+                  <Style Color="DimGray">
+                    <BorderStyle Bottom="Dotted" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Value="Hipótese" CanShrink="True" Size="5.8366551604543cm, 0.264583325973816cm" Name="textBox12">
                   <Style Color="DimGray">
                     <BorderStyle Bottom="Dotted" />
                   </Style>

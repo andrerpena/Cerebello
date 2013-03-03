@@ -4,7 +4,7 @@
     <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
       <Style Visible="False" />
     </PageHeaderSection>
-    <DetailSection PageBreak="None" KeepTogether="False" Height="10.9001999938432cm" Name="detailSection1">
+    <DetailSection PageBreak="None" KeepTogether="False" Height="1cm" Name="detailSection1">
       <Style>
         <Font Size="9pt" />
       </Style>
@@ -339,12 +339,12 @@
         </Panel>
         <Panel Size="16cm, 1cm" Location="0cm, 6.66669977608562cm" Name="panel5">
           <Items>
-            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0995990534734989cm" Name="tableDiagnosticos">
+            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000981044742cm, 0.800099870758458cm" Location="3.83645820617676cm, 0.0995990534734989cm" Name="tableDiagnosticos">
               <Body>
                 <Cells>
                   <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Cid10Code" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox20">
+                      <TextBox Value="=Cid10Name" CanShrink="True" Size="5.25023461081219cm, 0.400049935379229cm" Name="textBox20">
                         <Style>
                           <Padding Top="4pt" Bottom="4pt" />
                         </Style>
@@ -353,7 +353,7 @@
                   </TableCell>
                   <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Cid10Name" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox21">
+                      <TextBox Value="=Cid10Code" CanShrink="True" Size="1.49962897225753cm, 0.400049935379229cm" Name="textBox21">
                         <Style>
                           <Padding Top="4pt" Bottom="4pt" />
                         </Style>
@@ -362,7 +362,7 @@
                   </TableCell>
                   <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Text" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox22">
+                      <TextBox Value="=Text" CanShrink="True" Size="5.25023461081219cm, 0.400049935379229cm" Name="textBox22">
                         <Style>
                           <Padding Top="4pt" Bottom="4pt" />
                         </Style>
@@ -371,9 +371,9 @@
                   </TableCell>
                 </Cells>
                 <Columns>
-                  <Column Width="4.00003282070166cm" />
-                  <Column Width="4.00003282070166cm" />
-                  <Column Width="4.00003282070166cm" />
+                  <Column Width="5.25023461081219cm" />
+                  <Column Width="1.49962897225753cm" />
+                  <Column Width="5.25023461081219cm" />
                 </Columns>
                 <Rows>
                   <Row Height="0.400049935379229cm" />
@@ -390,7 +390,7 @@
               <ColumnGroups>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Cid10" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox23">
+                    <TextBox Value="Descrição" CanShrink="True" Size="5.25023461081219cm, 0.400049935379229cm" Name="textBox23">
                       <Style Color="DimGray">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -399,7 +399,7 @@
                 </TableGroup>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Nome" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox24">
+                    <TextBox Value="Cid10" CanShrink="True" Size="1.49962897225753cm, 0.400049935379229cm" Name="textBox24">
                       <Style Color="DimGray">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -408,7 +408,7 @@
                 </TableGroup>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Texto" CanShrink="True" Size="4.00003290176392cm, 0.400049924850464cm" Name="textBox25">
+                    <TextBox Value="Texto" CanShrink="True" Size="5.25023461081219cm, 0.400049935379229cm" Name="textBox25">
                       <Style Color="DimGray">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -460,7 +460,7 @@
                 </FormattingRule>
               </ConditionalFormatting>
             </TextBox>
-            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.8cm, 0.1cm" Name="MedicalCertificates">
+            <SubReport KeepTogether="False" Size="12.0401982073729cm, 0.800099849700928cm" Location="3.8cm, 0.1cm" Name="MedicalCertificates">
               <Style Visible="True" />
               <ConditionalFormatting>
                 <FormattingRule>
@@ -516,7 +516,7 @@
                 </FormattingRule>
               </ConditionalFormatting>
             </TextBox>
-            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0999999493360519cm" Name="Anamneses">
+            <SubReport KeepTogether="False" Size="12.0036403623204cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0999999493360519cm" Name="Anamneses">
               <Style Visible="True" />
               <ConditionalFormatting>
                 <FormattingRule>

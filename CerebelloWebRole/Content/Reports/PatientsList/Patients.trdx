@@ -4,7 +4,7 @@
     <PageHeaderSection Height="0.354330698649089in" Name="pageHeaderSection1">
       <Style Visible="True" />
     </PageHeaderSection>
-    <DetailSection KeepTogether="True" Height="8.89999994953473cm" Name="detailSection1">
+    <DetailSection KeepTogether="True" Height="7.69999974767368cm" Name="detailSection1">
       <Style>
         <BorderStyle Bottom="Solid" />
       </Style>
