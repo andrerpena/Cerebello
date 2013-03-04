@@ -12,6 +12,7 @@
           <EntitySet Name="Anamnese" EntityType="cerebelloModel.Store.Anamnese" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Appointment" EntityType="cerebelloModel.Store.Appointment" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Billing" EntityType="cerebelloModel.Store.Billing" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BillingItem" EntityType="cerebelloModel.Store.BillingItem" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CFG_DayOff" EntityType="cerebelloModel.Store.CFG_DayOff" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CFG_Documents" EntityType="cerebelloModel.Store.CFG_Documents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CFG_Schedule" EntityType="cerebelloModel.Store.CFG_Schedule" store:Type="Tables" Schema="dbo" />
@@ -85,6 +86,18 @@
             <End Role="User" EntitySet="User" />
             <End Role="Appointment" EntitySet="Appointment" />
           </AssociationSet>
+          <AssociationSet Name="FK_Billing_AccountContract" Association="cerebelloModel.Store.FK_Billing_AccountContract">
+            <End Role="AccountContract" EntitySet="AccountContract" />
+            <End Role="Billing" EntitySet="Billing" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillingItem_AccountContract" Association="cerebelloModel.Store.FK_BillingItem_AccountContract">
+            <End Role="AccountContract" EntitySet="AccountContract" />
+            <End Role="BillingItem" EntitySet="BillingItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillingItem_Billing" Association="cerebelloModel.Store.FK_BillingItem_Billing">
+            <End Role="Billing" EntitySet="Billing" />
+            <End Role="BillingItem" EntitySet="BillingItem" />
+          </AssociationSet>
           <AssociationSet Name="FK_CFG_DayOff_Doctor" Association="cerebelloModel.Store.FK_CFG_DayOff_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
             <End Role="CFG_DayOff" EntitySet="CFG_DayOff" />
@@ -120,10 +133,6 @@
           <AssociationSet Name="FK_ExaminationResult_Patient" Association="cerebelloModel.Store.FK_ExaminationResult_Patient">
             <End Role="Patient" EntitySet="Patient" />
             <End Role="ExaminationResult" EntitySet="ExaminationResult" />
-          </AssociationSet>
-          <AssociationSet Name="FK_File_Practice" Association="cerebelloModel.Store.FK_File_Practice">
-            <End Role="Practice" EntitySet="Practice" />
-            <End Role="File" EntitySet="File" />
           </AssociationSet>
           <AssociationSet Name="FK_HealthInsurance_Doctor" Association="cerebelloModel.Store.FK_HealthInsurance_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
@@ -169,10 +178,6 @@
             <End Role="ModelMedicalCertificate" EntitySet="ModelMedicalCertificate" />
             <End Role="ModelMedicalCertificateField" EntitySet="ModelMedicalCertificateField" />
           </AssociationSet>
-          <AssociationSet Name="FK_Notification_Practice" Association="cerebelloModel.Store.FK_Notification_Practice">
-            <End Role="Practice" EntitySet="Practice" />
-            <End Role="Notification" EntitySet="Notification" />
-          </AssociationSet>
           <AssociationSet Name="FK_Notification_User" Association="cerebelloModel.Store.FK_Notification_User">
             <End Role="User" EntitySet="User" />
             <End Role="Notification" EntitySet="Notification" />
@@ -197,10 +202,6 @@
             <End Role="Patient" EntitySet="Patient" />
             <End Role="PatientFile" EntitySet="PatientFile" />
           </AssociationSet>
-          <AssociationSet Name="FK_PatientFile_Practice" Association="cerebelloModel.Store.FK_PatientFile_Practice">
-            <End Role="Practice" EntitySet="Practice" />
-            <End Role="PatientFile" EntitySet="PatientFile" />
-          </AssociationSet>
           <AssociationSet Name="FK_PersonAddress_Address" Association="cerebelloModel.Store.FK_PersonAddress_Address">
             <End Role="Address" EntitySet="Address" />
             <End Role="PersonAddress" EntitySet="PersonAddress" />
@@ -211,10 +212,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_PhysicalExamination_Patient" Association="cerebelloModel.Store.FK_PhysicalExamination_Patient">
             <End Role="Patient" EntitySet="Patient" />
-            <End Role="PhysicalExamination" EntitySet="PhysicalExamination" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PhysicalExamination_Practice" Association="cerebelloModel.Store.FK_PhysicalExamination_Practice">
-            <End Role="Practice" EntitySet="Practice" />
             <End Role="PhysicalExamination" EntitySet="PhysicalExamination" />
           </AssociationSet>
           <AssociationSet Name="FK_Practice_AccountContract" Association="cerebelloModel.Store.FK_Practice_AccountContract">
@@ -295,8 +292,10 @@
           <Property Name="CustomText" Type="nvarchar(max)" />
           <Property Name="BillingPaymentMethod" Type="varchar" MaxLength="20" />
           <Property Name="BillingDiscountAmount" Type="numeric" Scale="2" />
-          <Property Name="BillingExtraDiscount" Type="numeric" Precision="4" Scale="2" />
-          <Property Name="BillingExtraDiscountReason" Type="varchar" MaxLength="20" />
+          <Property Name="EndReason" Type="varchar" MaxLength="10" />
+          <Property Name="EndReturnAmount" Type="numeric" Scale="2" />
+          <Property Name="EndReturnTax" Type="numeric" Precision="4" Scale="2" />
+          <Property Name="BillingPeriodIndex" Type="int" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -360,19 +359,34 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="IssuanceDate" Type="date" Nullable="false" />
-          <Property Name="Amount" Type="numeric" Nullable="false" Scale="2" />
-          <Property Name="Discount" Type="numeric" Nullable="false" Scale="2" />
-          <Property Name="ExtraDicount" Type="numeric" Nullable="false" Scale="2" />
-          <Property Name="ExtraDiscountReason" Type="varchar" MaxLength="20" />
+          <Property Name="MainAmount" Type="numeric" Nullable="false" Scale="2" />
+          <Property Name="MainDiscount" Type="numeric" Nullable="false" Scale="2" />
+          <Property Name="MainAccountContractId" Type="int" Nullable="false" />
           <Property Name="DueDate" Type="date" Nullable="false" />
           <Property Name="AfterDueTax" Type="numeric" Nullable="false" Precision="4" Scale="2" />
           <Property Name="AfterDueMonthlyTax" Type="numeric" Nullable="false" Precision="4" Scale="2" />
+          <Property Name="IdentitySetName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="IdentitySetNumber" Type="int" Nullable="false" />
+          <Property Name="ReferenceDate" Type="date" Nullable="false" />
+          <Property Name="ReferenceDateEnd" Type="date" />
           <Property Name="IsPayd" Type="bit" Nullable="false" />
           <Property Name="PaydAmount" Type="numeric" Scale="2" />
           <Property Name="PaymentDate" Type="date" />
+        </EntityType>
+        <EntityType Name="BillingItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="BillingId" Type="int" Nullable="false" />
+          <Property Name="ItemAccountContractId" Type="int" Nullable="false" />
+          <Property Name="ItemName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="ItemAmount" Type="numeric" Nullable="false" Scale="2" />
+          <Property Name="ItemDiscount" Type="numeric" Nullable="false" Scale="2" />
         </EntityType>
         <EntityType Name="CFG_DayOff">
           <Key>
@@ -656,7 +670,7 @@
           <Property Name="Text" Type="varchar(max)" />
           <Property Name="IsPolled" Type="bit" Nullable="false" />
           <Property Name="ViewData" Type="nvarchar" MaxLength="50" />
-          <Property Name="ViewName" Type="nvarchar" MaxLength="250" />
+          <Property Name="ViewName" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -966,6 +980,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Billing_AccountContract">
+          <End Role="AccountContract" Type="cerebelloModel.Store.AccountContract" Multiplicity="1" />
+          <End Role="Billing" Type="cerebelloModel.Store.Billing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountContract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Billing">
+              <PropertyRef Name="MainAccountContractId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillingItem_AccountContract">
+          <End Role="AccountContract" Type="cerebelloModel.Store.AccountContract" Multiplicity="1" />
+          <End Role="BillingItem" Type="cerebelloModel.Store.BillingItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountContract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BillingItem">
+              <PropertyRef Name="ItemAccountContractId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillingItem_Billing">
+          <End Role="Billing" Type="cerebelloModel.Store.Billing" Multiplicity="1" />
+          <End Role="BillingItem" Type="cerebelloModel.Store.BillingItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Billing">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BillingItem">
+              <PropertyRef Name="BillingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CFG_DayOff_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
           <End Role="CFG_DayOff" Type="cerebelloModel.Store.CFG_DayOff" Multiplicity="*" />
@@ -1071,18 +1121,6 @@
             </Principal>
             <Dependent Role="ExaminationResult">
               <PropertyRef Name="PatientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_File_Practice">
-          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
-          <End Role="File" Type="cerebelloModel.Store.File" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="File">
-              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1218,18 +1256,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Notification_Practice">
-          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
-          <End Role="Notification" Type="cerebelloModel.Store.Notification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Notification">
-              <PropertyRef Name="PracticeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Notification_User">
           <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
           <End Role="Notification" Type="cerebelloModel.Store.Notification" Multiplicity="*" />
@@ -1304,18 +1330,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PatientFile_Practice">
-          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
-          <End Role="PatientFile" Type="cerebelloModel.Store.PatientFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PatientFile">
-              <PropertyRef Name="PracticeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PersonAddress_Address">
           <End Role="Address" Type="cerebelloModel.Store.Address" Multiplicity="1" />
           <End Role="PersonAddress" Type="cerebelloModel.Store.PersonAddress" Multiplicity="*" />
@@ -1349,18 +1363,6 @@
             </Principal>
             <Dependent Role="PhysicalExamination">
               <PropertyRef Name="PatientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PhysicalExamination_Practice">
-          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
-          <End Role="PhysicalExamination" Type="cerebelloModel.Store.PhysicalExamination" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PhysicalExamination">
-              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1738,10 +1740,6 @@
           <EntitySet Name="SYS_Cid10" EntityType="Cerebello.Model.SYS_Cid10" />
           <EntitySet Name="HealthInsurances" EntityType="Cerebello.Model.HealthInsurance" />
           <EntitySet Name="Notifications" EntityType="Cerebello.Model.Notification" />
-          <AssociationSet Name="FK_Notification_Practice" Association="Cerebello.Model.FK_Notification_Practice">
-            <End Role="Practice" EntitySet="Practices" />
-            <End Role="Notification" EntitySet="Notifications" />
-          </AssociationSet>
           <AssociationSet Name="FK_Notification_User" Association="Cerebello.Model.FK_Notification_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Notification" EntitySet="Notifications" />
@@ -1790,19 +1788,24 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="PatientFile" EntitySet="PatientFiles" />
           </AssociationSet>
-          <AssociationSet Name="FK_File_Practice" Association="Cerebello.Model.FK_File_Practice">
-            <End Role="Practice" EntitySet="Practices" />
-            <End Role="File" EntitySet="Files" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PatientFile_Practice" Association="Cerebello.Model.FK_PatientFile_Practice">
-            <End Role="Practice" EntitySet="Practices" />
-            <End Role="PatientFile" EntitySet="PatientFiles" />
-          </AssociationSet>
           <EntitySet Name="Billings" EntityType="Cerebello.Model.Billing" />
           <EntitySet Name="DiagnosticHypotheses" EntityType="Cerebello.Model.DiagnosticHypothesis" />
           <AssociationSet Name="FK_Diagnosis_Anamnese" Association="Cerebello.Model.FK_Diagnosis_Anamnese">
             <End Role="Anamnese" EntitySet="Anamnese" />
             <End Role="DiagnosticHypothesi" EntitySet="DiagnosticHypotheses" />
+          </AssociationSet>
+          <EntitySet Name="BillingItems" EntityType="Cerebello.Model.BillingItem" />
+          <AssociationSet Name="FK_BillingItem_Billing" Association="Cerebello.Model.FK_BillingItem_Billing">
+            <End Role="Billing" EntitySet="Billings" />
+            <End Role="BillingItem" EntitySet="BillingItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Billing_AccountContract" Association="Cerebello.Model.FK_Billing_AccountContract">
+            <End Role="AccountContract" EntitySet="AccountContracts" />
+            <End Role="Billing" EntitySet="Billings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillingItem_AccountContract" Association="Cerebello.Model.FK_BillingItem_AccountContract">
+            <End Role="AccountContract" EntitySet="AccountContracts" />
+            <End Role="BillingItem" EntitySet="BillingItems" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
@@ -1944,7 +1947,6 @@
           <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="Practice" ToRole="ChatMessage" />
           <NavigationProperty Name="AccountContracts" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="Practice" ToRole="AccountContract" />
           <NavigationProperty Name="AccountContract" Relationship="Cerebello.Model.FK_Practice_AccountContract" FromRole="Practice" ToRole="AccountContract" />
-          <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Practice" ToRole="Notification" />
           <Property Type="String" Name="PhoneMain" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="PhoneAlt" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="PABX" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -1955,8 +1957,6 @@
           <Property Type="Boolean" Name="AccountDisabled" Nullable="false" />
           <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
           <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Practice" FromRole="Practice" ToRole="PhysicalExamination" />
-          <NavigationProperty Name="Files" Relationship="Cerebello.Model.FK_File_Practice" FromRole="Practice" ToRole="File" />
-          <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_Practice" FromRole="Practice" ToRole="PatientFile" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2694,8 +2694,12 @@
           <Property Type="String" Name="CustomText" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BillingPaymentMethod" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="Decimal" Name="BillingDiscountAmount" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="BillingExtraDiscount" Precision="4" Scale="2" />
-          <Property Type="String" Name="BillingExtraDiscountReason" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Billings" Relationship="Cerebello.Model.FK_Billing_AccountContract" FromRole="AccountContract" ToRole="Billing" />
+          <NavigationProperty Name="BillingItems" Relationship="Cerebello.Model.FK_BillingItem_AccountContract" FromRole="AccountContract" ToRole="BillingItem" />
+          <Property Type="String" Name="EndReason" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="EndReturnAmount" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="EndReturnTax" Precision="4" Scale="2" />
+          <Property Type="Int32" Name="BillingPeriodIndex" />
         </EntityType>
         <EntityType Name="SYS_ContractType">
           <Key>
@@ -2864,24 +2868,11 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="Int32" Name="UserId" Nullable="false" />
           <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Notification" ToRole="Practice" />
           <NavigationProperty Name="User" Relationship="Cerebello.Model.FK_Notification_User" FromRole="Notification" ToRole="User" />
           <Property Type="Boolean" Name="IsPolled" Nullable="false" />
-          <Property Type="String" Name="ViewName" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ViewName" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ViewData" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <Association Name="FK_Notification_Practice">
-          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
-          <End Type="Cerebello.Model.Notification" Role="Notification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Notification">
-              <PropertyRef Name="PracticeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Notification_User">
           <End Type="Cerebello.Model.User" Role="User" Multiplicity="1" />
           <End Type="Cerebello.Model.Notification" Role="Notification" Multiplicity="*" />
@@ -3015,7 +3006,6 @@
           <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="File" ToRole="PatientFile" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_File_Practice" FromRole="File" ToRole="Practice" />
         </EntityType>
         <EntityType Name="PatientFile">
           <Key>
@@ -3027,7 +3017,6 @@
           <NavigationProperty Name="File" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="PatientFile" ToRole="File" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="PatientFile" ToRole="Patient" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_PatientFile_Practice" FromRole="PatientFile" ToRole="Practice" />
         </EntityType>
         <Association Name="FK_PatientFile_File">
           <End Type="Cerebello.Model.File" Role="File" Multiplicity="1" />
@@ -3053,30 +3042,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_File_Practice">
-          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
-          <End Type="Cerebello.Model.File" Role="File" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="File">
-              <PropertyRef Name="PracticeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PatientFile_Practice">
-          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
-          <End Type="Cerebello.Model.PatientFile" Role="PatientFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PatientFile">
-              <PropertyRef Name="PracticeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Billing">
           <Key>
             <PropertyRef Name="Id" />
@@ -3084,16 +3049,21 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="DateTime" Name="IssuanceDate" Nullable="false" Precision="0" />
-          <Property Type="Decimal" Name="Amount" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="DueDate" Nullable="false" Precision="0" />
           <Property Type="Decimal" Name="AfterDueTax" Nullable="false" Precision="4" Scale="2" />
           <Property Type="Decimal" Name="AfterDueMonthlyTax" Nullable="false" Precision="4" Scale="2" />
           <Property Type="Boolean" Name="IsPayd" Nullable="false" />
           <Property Type="Decimal" Name="PaydAmount" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="PaymentDate" Precision="0" />
-          <Property Type="Decimal" Name="Discount" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="ExtraDicount" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="String" Name="ExtraDiscountReason" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="IdentitySetName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="IdentitySetNumber" Nullable="false" />
+          <Property Type="DateTime" Name="ReferenceDate" Nullable="false" Precision="0" />
+          <Property Type="DateTime" Name="ReferenceDateEnd" Precision="0" />
+          <Property Type="Decimal" Name="MainAmount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="MainDiscount" Nullable="false" Precision="18" Scale="2" />
+          <NavigationProperty Name="BillingItems" Relationship="Cerebello.Model.FK_BillingItem_Billing" FromRole="Billing" ToRole="BillingItem" />
+          <Property Type="Int32" Name="MainAccountContractId" Nullable="false" />
+          <NavigationProperty Name="AccountContract" Relationship="Cerebello.Model.FK_Billing_AccountContract" FromRole="Billing" ToRole="AccountContract" />
         </EntityType>
         <EntityType Name="DiagnosticHypothesis">
           <Key>
@@ -3116,6 +3086,56 @@
             </Principal>
             <Dependent Role="DiagnosticHypothesi">
               <PropertyRef Name="AnamneseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BillingItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="Int32" Name="BillingId" Nullable="false" />
+          <Property Type="String" Name="ItemName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="ItemAmount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemDiscount" Nullable="false" Precision="18" Scale="2" />
+          <NavigationProperty Name="Billing" Relationship="Cerebello.Model.FK_BillingItem_Billing" FromRole="BillingItem" ToRole="Billing" />
+          <Property Type="Int32" Name="ItemAccountContractId" Nullable="false" />
+          <NavigationProperty Name="AccountContract" Relationship="Cerebello.Model.FK_BillingItem_AccountContract" FromRole="BillingItem" ToRole="AccountContract" />
+        </EntityType>
+        <Association Name="FK_BillingItem_Billing">
+          <End Type="Cerebello.Model.Billing" Role="Billing" Multiplicity="1" />
+          <End Type="Cerebello.Model.BillingItem" Role="BillingItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Billing">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BillingItem">
+              <PropertyRef Name="BillingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Billing_AccountContract">
+          <End Type="Cerebello.Model.AccountContract" Role="AccountContract" Multiplicity="1" />
+          <End Type="Cerebello.Model.Billing" Role="Billing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountContract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Billing">
+              <PropertyRef Name="MainAccountContractId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillingItem_AccountContract">
+          <End Type="Cerebello.Model.AccountContract" Role="AccountContract" Multiplicity="1" />
+          <End Type="Cerebello.Model.BillingItem" Role="BillingItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountContract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BillingItem">
+              <PropertyRef Name="ItemAccountContractId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3556,8 +3576,10 @@
           <EntitySetMapping Name="AccountContracts">
             <EntityTypeMapping TypeName="Cerebello.Model.AccountContract">
               <MappingFragment StoreEntitySet="AccountContract">
-                <ScalarProperty Name="BillingExtraDiscountReason" ColumnName="BillingExtraDiscountReason" />
-                <ScalarProperty Name="BillingExtraDiscount" ColumnName="BillingExtraDiscount" />
+                <ScalarProperty Name="BillingPeriodIndex" ColumnName="BillingPeriodIndex" />
+                <ScalarProperty Name="EndReturnTax" ColumnName="EndReturnTax" />
+                <ScalarProperty Name="EndReturnAmount" ColumnName="EndReturnAmount" />
+                <ScalarProperty Name="EndReason" ColumnName="EndReason" />
                 <ScalarProperty Name="BillingDiscountAmount" ColumnName="BillingDiscountAmount" />
                 <ScalarProperty Name="BillingPaymentMethod" ColumnName="BillingPaymentMethod" />
                 <ScalarProperty Name="CustomText" ColumnName="CustomText" />
@@ -3712,16 +3734,19 @@
           <EntitySetMapping Name="Billings">
             <EntityTypeMapping TypeName="Cerebello.Model.Billing">
               <MappingFragment StoreEntitySet="Billing">
-                <ScalarProperty Name="ExtraDiscountReason" ColumnName="ExtraDiscountReason" />
-                <ScalarProperty Name="ExtraDicount" ColumnName="ExtraDicount" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="MainAccountContractId" ColumnName="MainAccountContractId" />
+                <ScalarProperty Name="MainDiscount" ColumnName="MainDiscount" />
+                <ScalarProperty Name="MainAmount" ColumnName="MainAmount" />
+                <ScalarProperty Name="ReferenceDateEnd" ColumnName="ReferenceDateEnd" />
+                <ScalarProperty Name="ReferenceDate" ColumnName="ReferenceDate" />
+                <ScalarProperty Name="IdentitySetNumber" ColumnName="IdentitySetNumber" />
+                <ScalarProperty Name="IdentitySetName" ColumnName="IdentitySetName" />
                 <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
                 <ScalarProperty Name="PaydAmount" ColumnName="PaydAmount" />
                 <ScalarProperty Name="IsPayd" ColumnName="IsPayd" />
                 <ScalarProperty Name="AfterDueMonthlyTax" ColumnName="AfterDueMonthlyTax" />
                 <ScalarProperty Name="AfterDueTax" ColumnName="AfterDueTax" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="IssuanceDate" ColumnName="IssuanceDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3736,6 +3761,19 @@
                 <ScalarProperty Name="Cid10Name" ColumnName="Cid10Name" />
                 <ScalarProperty Name="Cid10Code" ColumnName="Cid10Code" />
                 <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BillingItems">
+            <EntityTypeMapping TypeName="Cerebello.Model.BillingItem">
+              <MappingFragment StoreEntitySet="BillingItem">
+                <ScalarProperty Name="ItemAccountContractId" ColumnName="ItemAccountContractId" />
+                <ScalarProperty Name="ItemDiscount" ColumnName="ItemDiscount" />
+                <ScalarProperty Name="ItemAmount" ColumnName="ItemAmount" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="BillingId" ColumnName="BillingId" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3760,13 +3798,13 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="100">
-        <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="36.625" PointY="1" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
+      <Diagram Name="CerebelloEntities" ZoomLevel="116">
+        <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
         <EntityTypeShape EntityType="Cerebello.Model.Laboratory" Width="1.5" PointX="20.125" PointY="27" Height="1.9802864583333317" IsExpanded="true" FillColor="RoyalBlue" />
         <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="3.25" PointX="34.5" PointY="19.375" Height="3.7109993489583335" IsExpanded="true" FillColor="LightGreen" />
-        <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="33.875" PointY="0.5" Height="4.6725065104166674" IsExpanded="true" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="33.875" PointY="1.125" Height="4.6725065104166674" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Practice" Width="5.25" PointX="21.75" PointY="5.875" Height="2.3648893229166674" IsExpanded="true" FillColor="Black" />
         <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="32.125" PointY="27" Height="2.1725878906249996" IsExpanded="true" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="2.125" PointX="29.125" PointY="26.625" Height="2.1725878906250031" IsExpanded="true" FillColor="ForestGreen" />
@@ -3930,7 +3968,7 @@
           <ConnectorPoint PointX="17" PointY="25.67435088176271" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificate" Width="2" PointX="31.625" PointY="20" Height="2.3648893229166674" FillColor="ForestGreen" />
-        <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificateField" Width="1.875" PointX="29.125" PointY="19.625" Height="1.9802864583333246" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicalCertificateField" Width="1.875" PointX="29.25" PointY="19.875" Height="1.9802864583333246" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_MedicalCertificate_ModelMedicalCertificate">
           <ConnectorPoint PointX="19.125" PointY="27.482687174479167" />
           <ConnectorPoint PointX="19.78125" PointY="27.482687174479167" />
@@ -3957,7 +3995,7 @@
           <ConnectorPoint PointX="21.375" PointY="22.990143229166662" />
           <ConnectorPoint PointX="22.125" PointY="22.990143229166662" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.Diagnosis" Width="1.5" PointX="39.125" PointY="14.875" Height="2.1725878906249996" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Diagnosis" Width="1.5" PointX="38.625" PointY="14.875" Height="2.1725878906249996" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_User_Doctor" ManuallyRouted="false">
         </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_User_Practice">
@@ -3981,7 +4019,7 @@
         <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalSpecialty" Width="2.125" PointX="42.875" PointY="25.875" Height="1.7879850260416674" FillColor="Firebrick" />
         <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="2" PointX="8.625" PointY="0.5" Height="1.5956835937500102" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="0.5" PointY="11.25" Height="1.5956835937499996" FillColor="Firebrick" />
-        <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="37.75" PointY="25.625" Height="2.3648893229166674" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="37.125" PointY="25.625" Height="2.3648893229166674" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_Patient">
           <ConnectorPoint PointX="6.15625" PointY="15.960999348958334" />
           <ConnectorPoint PointX="6.15625" PointY="25.307444661458334" />
@@ -4009,8 +4047,8 @@
           <ConnectorPoint PointX="13.958335833333335" PointY="16.510315755208328" />
           <ConnectorPoint PointX="14.25" PointY="16.510315755208328" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.AccountContract" Width="1.75" PointX="27.875" PointY="6" Height="3.1340950520833246" FillColor="DimGray" />
-        <EntityTypeShape EntityType="Cerebello.Model.SYS_ContractType" Width="2" PointX="30.5" PointY="6.5" Height="2.3648893229166674" FillColor="Firebrick" />
+        <EntityTypeShape EntityType="Cerebello.Model.AccountContract" Width="2.125" PointX="28" PointY="4.625" Height="3.1340950520833246" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.SYS_ContractType" Width="2" PointX="30.625" PointY="5.125" Height="2.3648893229166674" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_AccountContract_Practice">
           <ConnectorPoint PointX="11.3359375" PointY="25.095602213541667" />
           <ConnectorPoint PointX="11.3359375" PointY="29.148438749999997" />
@@ -4101,27 +4139,28 @@
         <EntityTypeShape EntityType="Cerebello.Model.SYS_Cid10" Width="1.5" PointX="0.5" PointY="8.125" FillColor="Firebrick" />
         <EntityTypeShape EntityType="Cerebello.Model.HealthInsurance" Width="2" PointX="26.375" PointY="17.375" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Notification" Width="1.5" PointX="19.375" PointY="3.75" FillColor="DimGray" />
-        <AssociationConnector Association="Cerebello.Model.FK_Notification_Practice" />
         <AssociationConnector Association="Cerebello.Model.FK_Notification_User" />
         <AssociationConnector Association="Cerebello.Model.FK_HealthInsurance_Doctor" />
         <AssociationConnector Association="Cerebello.Model.FK_Patient_HealthInsurance" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_HealthInsurance" />
-        <EntityTypeShape EntityType="Cerebello.Model.MedicineActiveIngredient" Width="1.5" PointX="22.625" PointY="30.625" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicineActiveIngredient" Width="1.5" PointX="22.625" PointY="30.625" FillColor="RoyalBlue" />
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
         <AssociationConnector Association="Cerebello.Model.PersonAddress" />
-        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="1.5" PointX="33.375" PointY="24.5" FillColor="Green" />
+        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="1.5" PointX="34" PointY="24.25" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Practice" />
-        <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="42.125" PointY="32.5" FillColor="Fuchsia" />
-        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="38.625" PointY="32.5" FillColor="Fuchsia" />
+        <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="39.125" PointY="29.25" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="37.125" PointY="29.5" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_File" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Patient" />
-        <AssociationConnector Association="Cerebello.Model.FK_File_Practice" />
-        <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Practice" />
-        <EntityTypeShape EntityType="Cerebello.Model.Billing" Width="1.5" PointX="3.25" PointY="19.125" />
+        <EntityTypeShape EntityType="Cerebello.Model.Billing" Width="2" PointX="42.375" PointY="8.25" FillColor="Orange" />
         <EntityTypeShape EntityType="Cerebello.Model.DiagnosticHypothesis" Width="2.5" PointX="43" PointY="17.625" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_Diagnosis_Anamnese" />
+        <EntityTypeShape EntityType="Cerebello.Model.BillingItem" Width="1.875" PointX="39.75" PointY="9.625" FillColor="Orange" />
+        <AssociationConnector Association="Cerebello.Model.FK_BillingItem_Billing" />
+        <AssociationConnector Association="Cerebello.Model.FK_Billing_AccountContract" />
+        <AssociationConnector Association="Cerebello.Model.FK_BillingItem_AccountContract" />
         </Diagram>
     </Diagrams>
   </Designer>

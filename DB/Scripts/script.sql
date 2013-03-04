@@ -25,8 +25,6 @@ CREATE TABLE [dbo].[AccountContract](
 	[CustomText] [nvarchar](max) NULL,
 	[BillingPaymentMethod] [varchar](20) NULL,
 	[BillingDiscountAmount] [numeric](18, 2) NULL,
-	[BillingExtraDiscount] [numeric](4, 2) NULL,
-	[BillingExtraDiscountReason] [varchar](20) NULL,
  CONSTRAINT [PK_AccountContract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -125,20 +123,42 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Billing](
-	[Id] [int] NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PracticeId] [int] NOT NULL,
 	[IssuanceDate] [date] NOT NULL,
-	[Amount] [numeric](18, 2) NOT NULL,
-	[Discount] [numeric](18, 2) NOT NULL,
-	[ExtraDicount] [numeric](18, 2) NOT NULL,
-	[ExtraDiscountReason] [varchar](20) NULL,
+	[MainAmount] [numeric](18, 2) NOT NULL,
+	[MainDiscount] [numeric](18, 2) NOT NULL,
+	[MainAccountContractId] [int] NOT NULL,
 	[DueDate] [date] NOT NULL,
 	[AfterDueTax] [numeric](4, 2) NOT NULL,
 	[AfterDueMonthlyTax] [numeric](4, 2) NOT NULL,
+	[IdentitySetName] [varchar](50) NOT NULL,
+	[IdentitySetNumber] [int] NOT NULL,
+	[ReferenceDate] [date] NOT NULL,
+	[ReferenceDateEnd] [date] NULL,
 	[IsPayd] [bit] NOT NULL,
 	[PaydAmount] [numeric](18, 2) NULL,
 	[PaymentDate] [date] NULL,
  CONSTRAINT [PK_Billing] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+/****** Object:  Table [dbo].[BillingItem] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BillingItem](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PracticeId] [int] NOT NULL,
+	[BillingId] [int] NOT NULL,
+	[ItemAccountContractId] [int] NOT NULL,
+	[ItemName] [varchar](50) NOT NULL,
+	[ItemAmount] [numeric](18, 2) NOT NULL,
+	[ItemDiscount] [numeric](18, 2) NOT NULL,
+ CONSTRAINT [PK_BillingItem] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
@@ -1082,6 +1102,24 @@ REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
 GO
+/****** Object:  ForeignKey [FK_Billing_AccountContract] ******/
+ALTER TABLE [dbo].[Billing]  WITH CHECK ADD  CONSTRAINT [FK_Billing_AccountContract] FOREIGN KEY([MainAccountContractId])
+REFERENCES [dbo].[AccountContract] ([Id])
+GO
+ALTER TABLE [dbo].[Billing] CHECK CONSTRAINT [FK_Billing_AccountContract]
+GO
+/****** Object:  ForeignKey [FK_BillingItem_AccountContract] ******/
+ALTER TABLE [dbo].[BillingItem]  WITH CHECK ADD  CONSTRAINT [FK_BillingItem_AccountContract] FOREIGN KEY([ItemAccountContractId])
+REFERENCES [dbo].[AccountContract] ([Id])
+GO
+ALTER TABLE [dbo].[BillingItem] CHECK CONSTRAINT [FK_BillingItem_AccountContract]
+GO
+/****** Object:  ForeignKey [FK_BillingItem_Billing] ******/
+ALTER TABLE [dbo].[BillingItem]  WITH CHECK ADD  CONSTRAINT [FK_BillingItem_Billing] FOREIGN KEY([BillingId])
+REFERENCES [dbo].[Billing] ([Id])
+GO
+ALTER TABLE [dbo].[BillingItem] CHECK CONSTRAINT [FK_BillingItem_Billing]
+GO
 /****** Object:  ForeignKey [FK_CFG_DayOff_Doctor] ******/
 ALTER TABLE [dbo].[CFG_DayOff]  WITH NOCHECK ADD  CONSTRAINT [FK_CFG_DayOff_Doctor] FOREIGN KEY([DoctorId])
 REFERENCES [dbo].[Doctor] ([Id])
@@ -1135,12 +1173,6 @@ ALTER TABLE [dbo].[ExaminationResult]  WITH NOCHECK ADD  CONSTRAINT [FK_Examinat
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[ExaminationResult] CHECK CONSTRAINT [FK_ExaminationResult_Patient]
-GO
-/****** Object:  ForeignKey [FK_File_Practice] ******/
-ALTER TABLE [dbo].[File]  WITH NOCHECK ADD  CONSTRAINT [FK_File_Practice] FOREIGN KEY([PracticeId])
-REFERENCES [dbo].[Practice] ([Id])
-GO
-ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_Practice]
 GO
 /****** Object:  ForeignKey [FK_HealthInsurance_Doctor] ******/
 ALTER TABLE [dbo].[HealthInsurance]  WITH NOCHECK ADD  CONSTRAINT [FK_HealthInsurance_Doctor] FOREIGN KEY([DoctorId])
@@ -1209,12 +1241,6 @@ REFERENCES [dbo].[ModelMedicalCertificate] ([Id])
 GO
 ALTER TABLE [dbo].[ModelMedicalCertificateField] CHECK CONSTRAINT [FK_ModelMedicalCertificateField_ModelMedicalCertificate]
 GO
-/****** Object:  ForeignKey [FK_Notification_Practice] ******/
-ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_Practice] FOREIGN KEY([PracticeId])
-REFERENCES [dbo].[Practice] ([Id])
-GO
-ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_Practice]
-GO
 /****** Object:  ForeignKey [FK_Notification_User] ******/
 ALTER TABLE [dbo].[Notification]  WITH NOCHECK ADD  CONSTRAINT [FK_Notification_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([Id])
@@ -1252,12 +1278,6 @@ REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Patient]
 GO
-/****** Object:  ForeignKey [FK_PatientFile_Practice] ******/
-ALTER TABLE [dbo].[PatientFile]  WITH NOCHECK ADD  CONSTRAINT [FK_PatientFile_Practice] FOREIGN KEY([PracticeId])
-REFERENCES [dbo].[Practice] ([Id])
-GO
-ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Practice]
-GO
 /****** Object:  ForeignKey [FK_PersonAddress_Address] ******/
 ALTER TABLE [dbo].[PersonAddress]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonAddress_Address] FOREIGN KEY([AddressId])
 REFERENCES [dbo].[Address] ([Id])
@@ -1275,12 +1295,6 @@ ALTER TABLE [dbo].[PhysicalExamination]  WITH NOCHECK ADD  CONSTRAINT [FK_Physic
 REFERENCES [dbo].[Patient] ([Id])
 GO
 ALTER TABLE [dbo].[PhysicalExamination] CHECK CONSTRAINT [FK_PhysicalExamination_Patient]
-GO
-/****** Object:  ForeignKey [FK_PhysicalExamination_Practice] ******/
-ALTER TABLE [dbo].[PhysicalExamination]  WITH NOCHECK ADD  CONSTRAINT [FK_PhysicalExamination_Practice] FOREIGN KEY([PracticeId])
-REFERENCES [dbo].[Practice] ([Id])
-GO
-ALTER TABLE [dbo].[PhysicalExamination] CHECK CONSTRAINT [FK_PhysicalExamination_Practice]
 GO
 /****** Object:  ForeignKey [FK_Practice_AccountContract] ******/
 ALTER TABLE [dbo].[Practice]  WITH NOCHECK ADD  CONSTRAINT [FK_Practice_AccountContract] FOREIGN KEY([ActiveAccountContractId])

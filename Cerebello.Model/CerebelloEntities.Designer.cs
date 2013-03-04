@@ -58,7 +58,6 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_ToUser_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Diagnosis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
@@ -70,9 +69,10 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PhysicalExamination_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "PhysicalExamination", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PhysicalExamination), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_File", "File", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.File), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_File_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "File", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.File), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "DiagnosticHypothesi", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.DiagnosticHypothesis), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_BillingItem_Billing", "Billing", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Billing), "BillingItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.BillingItem), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Billing_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.AccountContract), "Billing", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Billing), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_BillingItem_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.AccountContract), "BillingItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.BillingItem), true)]
 
 #endregion
 
@@ -875,6 +875,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<DiagnosticHypothesis> _DiagnosticHypotheses;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<BillingItem> BillingItems
+        {
+            get
+            {
+                if ((_BillingItems == null))
+                {
+                    _BillingItems = base.CreateObjectSet<BillingItem>("BillingItems");
+                }
+                return _BillingItems;
+            }
+        }
+        private ObjectSet<BillingItem> _BillingItems;
 
         #endregion
 
@@ -1254,6 +1270,14 @@ namespace Cerebello.Model
         public void AddToDiagnosticHypotheses(DiagnosticHypothesis diagnosticHypothesis)
         {
             base.AddObject("DiagnosticHypotheses", diagnosticHypothesis);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the BillingItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToBillingItems(BillingItem billingItem)
+        {
+            base.AddObject("BillingItems", billingItem);
         }
 
         #endregion
@@ -1715,48 +1739,96 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> BillingExtraDiscount
+        public global::System.String EndReason
         {
             get
             {
-                return _BillingExtraDiscount;
+                return _EndReason;
             }
             set
             {
-                OnBillingExtraDiscountChanging(value);
-                ReportPropertyChanging("BillingExtraDiscount");
-                _BillingExtraDiscount = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("BillingExtraDiscount");
-                OnBillingExtraDiscountChanged();
+                OnEndReasonChanging(value);
+                ReportPropertyChanging("EndReason");
+                _EndReason = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("EndReason");
+                OnEndReasonChanged();
             }
         }
-        private Nullable<global::System.Decimal> _BillingExtraDiscount;
-        partial void OnBillingExtraDiscountChanging(Nullable<global::System.Decimal> value);
-        partial void OnBillingExtraDiscountChanged();
+        private global::System.String _EndReason;
+        partial void OnEndReasonChanging(global::System.String value);
+        partial void OnEndReasonChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String BillingExtraDiscountReason
+        public Nullable<global::System.Decimal> EndReturnAmount
         {
             get
             {
-                return _BillingExtraDiscountReason;
+                return _EndReturnAmount;
             }
             set
             {
-                OnBillingExtraDiscountReasonChanging(value);
-                ReportPropertyChanging("BillingExtraDiscountReason");
-                _BillingExtraDiscountReason = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("BillingExtraDiscountReason");
-                OnBillingExtraDiscountReasonChanged();
+                OnEndReturnAmountChanging(value);
+                ReportPropertyChanging("EndReturnAmount");
+                _EndReturnAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EndReturnAmount");
+                OnEndReturnAmountChanged();
             }
         }
-        private global::System.String _BillingExtraDiscountReason;
-        partial void OnBillingExtraDiscountReasonChanging(global::System.String value);
-        partial void OnBillingExtraDiscountReasonChanged();
+        private Nullable<global::System.Decimal> _EndReturnAmount;
+        partial void OnEndReturnAmountChanging(Nullable<global::System.Decimal> value);
+        partial void OnEndReturnAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> EndReturnTax
+        {
+            get
+            {
+                return _EndReturnTax;
+            }
+            set
+            {
+                OnEndReturnTaxChanging(value);
+                ReportPropertyChanging("EndReturnTax");
+                _EndReturnTax = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EndReturnTax");
+                OnEndReturnTaxChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _EndReturnTax;
+        partial void OnEndReturnTaxChanging(Nullable<global::System.Decimal> value);
+        partial void OnEndReturnTaxChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> BillingPeriodIndex
+        {
+            get
+            {
+                return _BillingPeriodIndex;
+            }
+            set
+            {
+                OnBillingPeriodIndexChanging(value);
+                ReportPropertyChanging("BillingPeriodIndex");
+                _BillingPeriodIndex = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingPeriodIndex");
+                OnBillingPeriodIndexChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _BillingPeriodIndex;
+        partial void OnBillingPeriodIndexChanging(Nullable<global::System.Int32> value);
+        partial void OnBillingPeriodIndexChanged();
 
         #endregion
 
@@ -1857,6 +1929,50 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Practice>("Cerebello.Model.FK_Practice_AccountContract", "Practice", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Billing_AccountContract", "Billing")]
+        public EntityCollection<Billing> Billings
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Billing>("Cerebello.Model.FK_Billing_AccountContract", "Billing");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Billing>("Cerebello.Model.FK_Billing_AccountContract", "Billing", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_BillingItem_AccountContract", "BillingItem")]
+        public EntityCollection<BillingItem> BillingItems
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BillingItem>("Cerebello.Model.FK_BillingItem_AccountContract", "BillingItem");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BillingItem>("Cerebello.Model.FK_BillingItem_AccountContract", "BillingItem", value);
                 }
             }
         }
@@ -3251,26 +3367,32 @@ namespace Cerebello.Model
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
-        /// <param name="amount">Initial value of the Amount property.</param>
         /// <param name="dueDate">Initial value of the DueDate property.</param>
         /// <param name="afterDueTax">Initial value of the AfterDueTax property.</param>
         /// <param name="afterDueMonthlyTax">Initial value of the AfterDueMonthlyTax property.</param>
         /// <param name="isPayd">Initial value of the IsPayd property.</param>
-        /// <param name="discount">Initial value of the Discount property.</param>
-        /// <param name="extraDicount">Initial value of the ExtraDicount property.</param>
-        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Decimal amount, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.Decimal discount, global::System.Decimal extraDicount)
+        /// <param name="identitySetName">Initial value of the IdentitySetName property.</param>
+        /// <param name="identitySetNumber">Initial value of the IdentitySetNumber property.</param>
+        /// <param name="referenceDate">Initial value of the ReferenceDate property.</param>
+        /// <param name="mainAmount">Initial value of the MainAmount property.</param>
+        /// <param name="mainDiscount">Initial value of the MainDiscount property.</param>
+        /// <param name="mainAccountContractId">Initial value of the MainAccountContractId property.</param>
+        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.String identitySetName, global::System.Int32 identitySetNumber, global::System.DateTime referenceDate, global::System.Decimal mainAmount, global::System.Decimal mainDiscount, global::System.Int32 mainAccountContractId)
         {
             Billing billing = new Billing();
             billing.Id = id;
             billing.PracticeId = practiceId;
             billing.IssuanceDate = issuanceDate;
-            billing.Amount = amount;
             billing.DueDate = dueDate;
             billing.AfterDueTax = afterDueTax;
             billing.AfterDueMonthlyTax = afterDueMonthlyTax;
             billing.IsPayd = isPayd;
-            billing.Discount = discount;
-            billing.ExtraDicount = extraDicount;
+            billing.IdentitySetName = identitySetName;
+            billing.IdentitySetNumber = identitySetNumber;
+            billing.ReferenceDate = referenceDate;
+            billing.MainAmount = mainAmount;
+            billing.MainDiscount = mainDiscount;
+            billing.MainAccountContractId = mainAccountContractId;
             return billing;
         }
 
@@ -3352,30 +3474,6 @@ namespace Cerebello.Model
         private global::System.DateTime _IssuanceDate;
         partial void OnIssuanceDateChanging(global::System.DateTime value);
         partial void OnIssuanceDateChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Decimal Amount
-        {
-            get
-            {
-                return _Amount;
-            }
-            set
-            {
-                OnAmountChanging(value);
-                ReportPropertyChanging("Amount");
-                _Amount = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("Amount");
-                OnAmountChanged();
-            }
-        }
-        private global::System.Decimal _Amount;
-        partial void OnAmountChanging(global::System.Decimal value);
-        partial void OnAmountChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -3526,76 +3624,529 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Decimal Discount
+        public global::System.String IdentitySetName
         {
             get
             {
-                return _Discount;
+                return _IdentitySetName;
             }
             set
             {
-                OnDiscountChanging(value);
-                ReportPropertyChanging("Discount");
-                _Discount = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("Discount");
-                OnDiscountChanged();
+                OnIdentitySetNameChanging(value);
+                ReportPropertyChanging("IdentitySetName");
+                _IdentitySetName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("IdentitySetName");
+                OnIdentitySetNameChanged();
             }
         }
-        private global::System.Decimal _Discount;
-        partial void OnDiscountChanging(global::System.Decimal value);
-        partial void OnDiscountChanged();
+        private global::System.String _IdentitySetName;
+        partial void OnIdentitySetNameChanging(global::System.String value);
+        partial void OnIdentitySetNameChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Decimal ExtraDicount
+        public global::System.Int32 IdentitySetNumber
         {
             get
             {
-                return _ExtraDicount;
+                return _IdentitySetNumber;
             }
             set
             {
-                OnExtraDicountChanging(value);
-                ReportPropertyChanging("ExtraDicount");
-                _ExtraDicount = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("ExtraDicount");
-                OnExtraDicountChanged();
+                OnIdentitySetNumberChanging(value);
+                ReportPropertyChanging("IdentitySetNumber");
+                _IdentitySetNumber = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IdentitySetNumber");
+                OnIdentitySetNumberChanged();
             }
         }
-        private global::System.Decimal _ExtraDicount;
-        partial void OnExtraDicountChanging(global::System.Decimal value);
-        partial void OnExtraDicountChanged();
+        private global::System.Int32 _IdentitySetNumber;
+        partial void OnIdentitySetNumberChanging(global::System.Int32 value);
+        partial void OnIdentitySetNumberChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime ReferenceDate
+        {
+            get
+            {
+                return _ReferenceDate;
+            }
+            set
+            {
+                OnReferenceDateChanging(value);
+                ReportPropertyChanging("ReferenceDate");
+                _ReferenceDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ReferenceDate");
+                OnReferenceDateChanged();
+            }
+        }
+        private global::System.DateTime _ReferenceDate;
+        partial void OnReferenceDateChanging(global::System.DateTime value);
+        partial void OnReferenceDateChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String ExtraDiscountReason
+        public Nullable<global::System.DateTime> ReferenceDateEnd
         {
             get
             {
-                return _ExtraDiscountReason;
+                return _ReferenceDateEnd;
             }
             set
             {
-                OnExtraDiscountReasonChanging(value);
-                ReportPropertyChanging("ExtraDiscountReason");
-                _ExtraDiscountReason = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("ExtraDiscountReason");
-                OnExtraDiscountReasonChanged();
+                OnReferenceDateEndChanging(value);
+                ReportPropertyChanging("ReferenceDateEnd");
+                _ReferenceDateEnd = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ReferenceDateEnd");
+                OnReferenceDateEndChanged();
             }
         }
-        private global::System.String _ExtraDiscountReason;
-        partial void OnExtraDiscountReasonChanging(global::System.String value);
-        partial void OnExtraDiscountReasonChanged();
+        private Nullable<global::System.DateTime> _ReferenceDateEnd;
+        partial void OnReferenceDateEndChanging(Nullable<global::System.DateTime> value);
+        partial void OnReferenceDateEndChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal MainAmount
+        {
+            get
+            {
+                return _MainAmount;
+            }
+            set
+            {
+                OnMainAmountChanging(value);
+                ReportPropertyChanging("MainAmount");
+                _MainAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MainAmount");
+                OnMainAmountChanged();
+            }
+        }
+        private global::System.Decimal _MainAmount;
+        partial void OnMainAmountChanging(global::System.Decimal value);
+        partial void OnMainAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal MainDiscount
+        {
+            get
+            {
+                return _MainDiscount;
+            }
+            set
+            {
+                OnMainDiscountChanging(value);
+                ReportPropertyChanging("MainDiscount");
+                _MainDiscount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MainDiscount");
+                OnMainDiscountChanged();
+            }
+        }
+        private global::System.Decimal _MainDiscount;
+        partial void OnMainDiscountChanging(global::System.Decimal value);
+        partial void OnMainDiscountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 MainAccountContractId
+        {
+            get
+            {
+                return _MainAccountContractId;
+            }
+            set
+            {
+                OnMainAccountContractIdChanging(value);
+                ReportPropertyChanging("MainAccountContractId");
+                _MainAccountContractId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MainAccountContractId");
+                OnMainAccountContractIdChanged();
+            }
+        }
+        private global::System.Int32 _MainAccountContractId;
+        partial void OnMainAccountContractIdChanging(global::System.Int32 value);
+        partial void OnMainAccountContractIdChanged();
 
         #endregion
 
     
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_BillingItem_Billing", "BillingItem")]
+        public EntityCollection<BillingItem> BillingItems
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BillingItem>("Cerebello.Model.FK_BillingItem_Billing", "BillingItem");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BillingItem>("Cerebello.Model.FK_BillingItem_Billing", "BillingItem", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Billing_AccountContract", "AccountContract")]
+        public AccountContract AccountContract
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_Billing_AccountContract", "AccountContract").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_Billing_AccountContract", "AccountContract").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AccountContract> AccountContractReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_Billing_AccountContract", "AccountContract");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountContract>("Cerebello.Model.FK_Billing_AccountContract", "AccountContract", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="BillingItem")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class BillingItem : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new BillingItem object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="billingId">Initial value of the BillingId property.</param>
+        /// <param name="itemName">Initial value of the ItemName property.</param>
+        /// <param name="itemAmount">Initial value of the ItemAmount property.</param>
+        /// <param name="itemDiscount">Initial value of the ItemDiscount property.</param>
+        /// <param name="itemAccountContractId">Initial value of the ItemAccountContractId property.</param>
+        public static BillingItem CreateBillingItem(global::System.Int32 id, global::System.Int32 practiceId, global::System.Int32 billingId, global::System.String itemName, global::System.Decimal itemAmount, global::System.Decimal itemDiscount, global::System.Int32 itemAccountContractId)
+        {
+            BillingItem billingItem = new BillingItem();
+            billingItem.Id = id;
+            billingItem.PracticeId = practiceId;
+            billingItem.BillingId = billingId;
+            billingItem.ItemName = itemName;
+            billingItem.ItemAmount = itemAmount;
+            billingItem.ItemDiscount = itemDiscount;
+            billingItem.ItemAccountContractId = itemAccountContractId;
+            return billingItem;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 BillingId
+        {
+            get
+            {
+                return _BillingId;
+            }
+            set
+            {
+                OnBillingIdChanging(value);
+                ReportPropertyChanging("BillingId");
+                _BillingId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingId");
+                OnBillingIdChanged();
+            }
+        }
+        private global::System.Int32 _BillingId;
+        partial void OnBillingIdChanging(global::System.Int32 value);
+        partial void OnBillingIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String ItemName
+        {
+            get
+            {
+                return _ItemName;
+            }
+            set
+            {
+                OnItemNameChanging(value);
+                ReportPropertyChanging("ItemName");
+                _ItemName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("ItemName");
+                OnItemNameChanged();
+            }
+        }
+        private global::System.String _ItemName;
+        partial void OnItemNameChanging(global::System.String value);
+        partial void OnItemNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal ItemAmount
+        {
+            get
+            {
+                return _ItemAmount;
+            }
+            set
+            {
+                OnItemAmountChanging(value);
+                ReportPropertyChanging("ItemAmount");
+                _ItemAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ItemAmount");
+                OnItemAmountChanged();
+            }
+        }
+        private global::System.Decimal _ItemAmount;
+        partial void OnItemAmountChanging(global::System.Decimal value);
+        partial void OnItemAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal ItemDiscount
+        {
+            get
+            {
+                return _ItemDiscount;
+            }
+            set
+            {
+                OnItemDiscountChanging(value);
+                ReportPropertyChanging("ItemDiscount");
+                _ItemDiscount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ItemDiscount");
+                OnItemDiscountChanged();
+            }
+        }
+        private global::System.Decimal _ItemDiscount;
+        partial void OnItemDiscountChanging(global::System.Decimal value);
+        partial void OnItemDiscountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 ItemAccountContractId
+        {
+            get
+            {
+                return _ItemAccountContractId;
+            }
+            set
+            {
+                OnItemAccountContractIdChanging(value);
+                ReportPropertyChanging("ItemAccountContractId");
+                _ItemAccountContractId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ItemAccountContractId");
+                OnItemAccountContractIdChanged();
+            }
+        }
+        private global::System.Int32 _ItemAccountContractId;
+        partial void OnItemAccountContractIdChanging(global::System.Int32 value);
+        partial void OnItemAccountContractIdChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_BillingItem_Billing", "Billing")]
+        public Billing Billing
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Billing>("Cerebello.Model.FK_BillingItem_Billing", "Billing").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Billing>("Cerebello.Model.FK_BillingItem_Billing", "Billing").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Billing> BillingReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Billing>("Cerebello.Model.FK_BillingItem_Billing", "Billing");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Billing>("Cerebello.Model.FK_BillingItem_Billing", "Billing", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_BillingItem_AccountContract", "AccountContract")]
+        public AccountContract AccountContract
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_BillingItem_AccountContract", "AccountContract").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_BillingItem_AccountContract", "AccountContract").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AccountContract> AccountContractReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountContract>("Cerebello.Model.FK_BillingItem_AccountContract", "AccountContract");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountContract>("Cerebello.Model.FK_BillingItem_AccountContract", "AccountContract", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -7091,44 +7642,6 @@ namespace Cerebello.Model
                 }
             }
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_File_Practice", "Practice")]
-        public Practice Practice
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_File_Practice", "Practice").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_File_Practice", "Practice").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Practice> PracticeReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_File_Practice", "Practice");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_File_Practice", "Practice", value);
-                }
-            }
-        }
 
         #endregion
 
@@ -9866,44 +10379,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice")]
-        public Practice Practice
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Practice> PracticeReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_User", "User")]
         public User User
         {
@@ -10646,44 +11121,6 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_PatientFile_Patient", "Patient", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_Practice", "Practice")]
-        public Practice Practice
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_PatientFile_Practice", "Practice").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_PatientFile_Practice", "Practice").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Practice> PracticeReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_PatientFile_Practice", "Practice");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_PatientFile_Practice", "Practice", value);
                 }
             }
         }
@@ -12007,28 +12444,6 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_Practice", "Notification")]
-        public EntityCollection<Notification> Notifications
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Notification>("Cerebello.Model.FK_Notification_Practice", "Notification");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Notification>("Cerebello.Model.FK_Notification_Practice", "Notification", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Practice_Address", "Address")]
         public Address Address
         {
@@ -12079,50 +12494,6 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PhysicalExamination>("Cerebello.Model.FK_PhysicalExamination_Practice", "PhysicalExamination", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_File_Practice", "File")]
-        public EntityCollection<File> Files
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<File>("Cerebello.Model.FK_File_Practice", "File");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<File>("Cerebello.Model.FK_File_Practice", "File", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_Practice", "PatientFile")]
-        public EntityCollection<PatientFile> PatientFiles
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_Practice", "PatientFile");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_Practice", "PatientFile", value);
                 }
             }
         }

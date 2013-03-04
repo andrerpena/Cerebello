@@ -348,8 +348,6 @@ namespace CerebelloWebRole.Controllers
                             BillingPeriodSize = null,
                             BillingPeriodType = null,
                             BillingDiscountAmount = null,
-                            BillingExtraDiscount = null,
-                            BillingExtraDiscountReason = null,
                         };
 
                         user.Practice.AccountContract = trialContract;

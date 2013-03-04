@@ -289,10 +289,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 BillingDueDay = viewModel.InvoceDueDayOfMonth,
                                 BillingPeriodCount = null, // no limit... this contract is valid forever
                                 BillingPeriodSize = periodSizesDic[viewModel.PaymentModelName],
-                                BillingPeriodType = "month",
+                                BillingPeriodType = "M", // same as date-time formatter 'd' for days, 'M' for months, 'y' for years
                                 BillingPaymentMethod = "PayPal Invoice",
-                                BillingExtraDiscount = null, //
-                                BillingExtraDiscountReason = null,
                             };
 
                         db.SaveChanges();
@@ -407,6 +405,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private static ConfigAccountViewModel.ContractChangeData CancelTrialPlanInfo()
         {
+            // todo: this is not in use anymore
             return new ConfigAccountViewModel.ContractChangeData
             {
                 Type = ConfigAccountViewModel.ContractChangeType.Cancel,
@@ -423,6 +422,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private static ConfigAccountViewModel.ContractChangeData CancelProfessionalPlanInfo()
         {
+            // todo: this is not in use anymore
             return new ConfigAccountViewModel.ContractChangeData
             {
                 Type = ConfigAccountViewModel.ContractChangeType.Cancel,
@@ -442,6 +442,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private static ConfigAccountViewModel.ContractChangeData RenewPlanInfo()
         {
+            // todo: this is not in use anymore
             return new ConfigAccountViewModel.ContractChangeData
             {
                 Type = ConfigAccountViewModel.ContractChangeType.Renovation,
@@ -462,6 +463,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private static ConfigAccountViewModel.ContractChangeData ProfessionalPlanInfo()
         {
+            // todo: this is not in use anymore
             return new ConfigAccountViewModel.ContractChangeData
             {
                 Type = ConfigAccountViewModel.ContractChangeType.Upgrade,

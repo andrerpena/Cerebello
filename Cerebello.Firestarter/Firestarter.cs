@@ -652,8 +652,6 @@ namespace Cerebello.Firestarter
                     BillingPeriodSize = null,
                     BillingPeriodType = null,
                     BillingDiscountAmount = null,
-                    BillingExtraDiscount = null,
-                    BillingExtraDiscountReason = null,
                 };
 
             practice.AccountContract.CustomText = StringHelper.ReflectionReplace(
