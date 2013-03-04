@@ -668,7 +668,7 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Creates fake patients
         /// </summary>
-        public static List<Patient> CreateFakePatients(Doctor doctor, CerebelloEntities db, int count = 70)
+        public static List<Patient> CreateFakePatients(Doctor doctor, CerebelloEntities db, int count = 40)
         {
             return FakePatientsFactory.CreateFakePatients(doctor, db, count);
         }
@@ -2001,7 +2001,7 @@ GO
             db.SaveChanges();
         }
 
-        public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 600)
+        public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 300)
         {
             var practice = db.Practices.First(p => p.Id == doctor.PracticeId);
             var startingTime = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
@@ -2031,48 +2031,29 @@ GO
                 // there's a 10% chance I will not schedule this appointment, so this will be a free slot
                 if (random.Next(1, 11) != 1)
                 {
-                    // there's as a 10% chance this is a generic appointment and not a medical appointment
-                    if (random.Next(1, 11) != 1)
-                    {
-                        TypeAppointmentStatus status;
-                        if (nextFreeTime.Item1 < practiceNow)
-                            // if the appointment is in the past, there's a 20% chance it didn't accomplish
-                            status = random.Next(1, 11) < 9 ? TypeAppointmentStatus.Accomplished : TypeAppointmentStatus.NotAccomplished;
-                        else
-                            status = TypeAppointmentStatus.Undefined;
-
-
-                        db.Appointments.AddObject(
-                            new Appointment
-                            {
-                                CreatedById = creator.Id,
-                                CreatedOn = Firestarter.UtcNow,
-                                DoctorId = doctor.Id,
-                                Start = nextFreeTime.Item1.ToUniversalTime(),
-                                End = nextFreeTime.Item2.ToUniversalTime(),
-                                Patient = patients[random.Next(0, patients.Count - 1)],
-                                Type = (int)TypeAppointment.MedicalAppointment,
-                                HealthInsurance = helthInsurances[random.Next(0, helthInsurances.Count - 1)],
-                                PracticeId = doctor.PracticeId,
-                                Status = (int)status
-                            });
-                    }
+                    TypeAppointmentStatus status;
+                    if (nextFreeTime.Item1 < practiceNow)
+                        // if the appointment is in the past, there's a 20% chance it didn't accomplish
+                        status = random.Next(1, 11) < 9 ? TypeAppointmentStatus.Accomplished : TypeAppointmentStatus.NotAccomplished;
                     else
-                    {
-                        db.Appointments.AddObject(
-                            new Appointment
-                            {
-                                CreatedById = creator.Id,
-                                CreatedOn = Firestarter.UtcNow,
-                                DoctorId = doctor.Id,
-                                Start = nextFreeTime.Item1.ToUniversalTime(),
-                                End = nextFreeTime.Item2.ToUniversalTime(),
-                                Type = (int)TypeAppointment.GenericAppointment,
-                                // I should not be forced to put a healthinsurance because it's a generic appointment
-                                Description = "Levar o cachorro ao veterinário",
-                                PracticeId = doctor.PracticeId
-                            });
-                    }
+                        status = TypeAppointmentStatus.Undefined;
+
+
+                    db.Appointments.AddObject(
+                        new Appointment
+                        {
+                            CreatedById = creator.Id,
+                            CreatedOn = Firestarter.UtcNow,
+                            DoctorId = doctor.Id,
+                            Start = nextFreeTime.Item1.ToUniversalTime(),
+                            End = nextFreeTime.Item2.ToUniversalTime(),
+                            Patient = patients[random.Next(0, patients.Count - 1)],
+                            Type = (int)TypeAppointment.MedicalAppointment,
+                            HealthInsurance = helthInsurances[random.Next(0, helthInsurances.Count - 1)],
+                            PracticeId = doctor.PracticeId,
+                            Status = (int)status
+                        });
+
                 }
 
                 startingTime = nextFreeTime.Item2;

@@ -77,12 +77,6 @@ namespace CerebelloWebRole.Tests.Tests
 
             Assert.AreEqual(1, anamneses.Count);
             Assert.AreEqual(2, diagnosticHypotheses.Count);
-
-            Assert.AreEqual(formModel.DiagnosticHypotheses[0].Text, anamneses[0].DiagnosticHypotheses.ElementAt(0).Cid10Name);
-            Assert.AreEqual(formModel.DiagnosticHypotheses[0].Cid10Code, anamneses[0].DiagnosticHypotheses.ElementAt(0).Cid10Code);
-
-            Assert.AreEqual(formModel.DiagnosticHypotheses[1].Text, anamneses[0].DiagnosticHypotheses.ElementAt(1).Cid10Name);
-            Assert.AreEqual(formModel.DiagnosticHypotheses[1].Cid10Code, anamneses[0].DiagnosticHypotheses.ElementAt(1).Cid10Code);
         }
 
         #endregion

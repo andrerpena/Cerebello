@@ -117,6 +117,16 @@
                         @Html.Action("Details", "PhysicalExamination", new { id = physicalExamination })
                         }
                     }
+                    @if (session.DiagnosticHipothesesId.Count > 0)
+                    {
+                        <p class="subtitle">
+                            Hipóteses diagnósticas
+                        </p>
+                        foreach (var diagnosticHypothesis in session.DiagnosticHipothesesId)
+                        {
+                        @Html.Action("Details", "DiagnosticHypotheses", new { id = diagnosticHypothesis })
+                        }
+                    }
                     @if (session.ReceiptIds.Count > 0)
                     {
                         <p class="subtitle">
@@ -201,6 +211,12 @@
                 <div>
                     <a id="new-physicalExamination" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "PhysicalExamination", new { patientId = Model.Id })">Novo exame físico</a>
                     <div id="new-physicalExamination-wrapper" class="appointment-panel-wrapper">
+                    </div>
+                </div>
+                <!-- diagnostic hypotheses -->
+                <div>
+                    <a id="new-diagnostic-hipothesis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("create", "DiagnosticHypotheses", new { patientId = Model.Id })">Nova hipótese diagnóstica</a>
+                    <div id="new-diagnostic-hipothesis-wrapper" class="appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- receipt -->

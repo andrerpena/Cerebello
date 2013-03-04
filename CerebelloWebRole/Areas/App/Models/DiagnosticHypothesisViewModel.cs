@@ -19,11 +19,14 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "Hipótese de diagnóstico")]
+        [Display(Name = "Hipótese diagnóstica")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Cid10Name { get; set; }
 
         [Display(Name = "Notas")]
         public string Text { get; set; }
+
+        [Required]
+        public int? PatientId { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public string FamilyDeseases { get; set; }
 
         [Display(Name = "História pessoal (fisiológica) e história social")]
-        public string SocialDeseases { get; set; }
+        public string SocialHistory { get; set; }
 
         [Display(Name = "Medicações de uso regular")]
         public string RegularAndAcuteMedications { get; set; }

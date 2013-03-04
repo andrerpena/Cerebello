@@ -1,0 +1,71 @@
+﻿@model DiagnosticHypothesisViewModel
+@using System.Linq.Expressions
+@using CerebelloWebRole.Code.Controls
+@using CerebelloWebRole.Code.Extensions
+@{
+    Layout = null;
+    string diagnosticHypothesisId;
+    if (this.Model != null && this.Model.Id == null)
+    {
+        diagnosticHypothesisId = "new-" + Guid.NewGuid().ToString();
+    }
+    else
+    {
+        diagnosticHypothesisId = this.Model.Id.ToString();
+    }
+}
+
+<div class="diagnostic-hypothesis-edit appointment-panel" data-val-id="diagnostic-hypothesis-@diagnosticHypothesisId">
+
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
+        {
+        @Html.ValidationSummary(false)
+        @Html.HiddenFor(model => model.PatientId)
+        @Html.HiddenFor(model => model.Id)
+
+            var editPanel = this.Html.CreateEditPanel();
+            editPanel.AddField(
+                        m => m.Cid10Name,
+                        EditPanelFieldSize.Large,
+        @<text>@(Html.AutocompleteGridFor<DiagnosticHypothesisViewModel, CidAutocompleteGridModel, string>(
+                            m => m.Cid10Code,
+                            m => m.Cid10Name,
+                            Url.Action("AutocompleteDiagnoses"),
+                            gm => gm.Cid10Code,
+                            gm => gm.Cid10Name,
+                            new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
+
+            editPanel.AddField(
+                m => m.Text,
+                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+    
+        @editPanel.GetHtml()
+
+        <div class="submit-bar">
+            <input type="submit" value="salvar hipótese diagnóstica" />
+            <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
+        </div>
+}
+    <script type="text/javascript">
+        (function () {
+            var $container = $("div[data-val-id='diagnostic-hypothesis-@diagnosticHypothesisId']");
+            $('form', $container).ajaxForm({
+                success: function (result) {
+                    $container.replaceWith(result);
+                }
+            });
+            $('a.cancel', $container).click(function (e) {
+                e.preventDefault();
+                @if (Model.Id != null)
+                {
+                    @:$.ajax({ url: "@Url.Action("details", new { id = Model.Id })", success: function (result) { $container.replaceWith(result); } });   
+                }
+                else
+                {
+                    @:$container.remove();
+                                                }
+            });
+        })();
+    </script>
+
+</div>

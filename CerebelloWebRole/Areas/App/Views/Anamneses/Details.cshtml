@@ -10,7 +10,7 @@
         cardView.AddField(model => model.HistoryOfThePresentIllness, wholeRow: true);
         cardView.AddField(model => model.PastMedicalHistory, wholeRow: true);
         cardView.AddField(model => model.FamilyDeseases, wholeRow: true);
-        cardView.AddField(model => model.SocialDeseases, wholeRow: true);
+        cardView.AddField(model => model.SocialHistory, wholeRow: true);
         cardView.AddField(model => model.ReviewOfSystems, wholeRow: true);
         cardView.AddField(model => model.Allergies, wholeRow: true);
         cardView.AddField(model => model.RegularAndAcuteMedications, wholeRow: true);
@@ -18,15 +18,6 @@
         cardView.AddField(model => model.Conclusion, wholeRow: true);
         
         @cardView.GetHtml()
-
-        if (this.Model.DiagnosticHypotheses.Any())
-        {
-            <h3>Hipóteses de diagnóstico</h3>
-            foreach (var diagnosticHypothesisViewModel in this.Model.DiagnosticHypotheses)
-            {
-                @this.Html.Partial("DiagnosticHypothesisDetails", diagnosticHypothesisViewModel)
-            }
-        }
     }
     <div class="inline-link-bar">
         <a href="#" class="edit-anamnese inline-link" >Editar anamnese</a>

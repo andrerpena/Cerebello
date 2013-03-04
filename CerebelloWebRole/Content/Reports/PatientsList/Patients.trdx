@@ -4,7 +4,7 @@
     <PageHeaderSection Height="0.354330698649089in" Name="pageHeaderSection1">
       <Style Visible="True" />
     </PageHeaderSection>
-    <DetailSection KeepTogether="True" Height="7.69999974767368cm" Name="detailSection1">
+    <DetailSection KeepTogether="True" Height="8.89999994953473cm" Name="detailSection1">
       <Style>
         <BorderStyle Bottom="Solid" />
       </Style>
@@ -167,7 +167,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </TextBox>
-        <SubReport KeepTogether="False" Size="16.5cm, 0.795207868947764cm" Location="1.20000004768372cm, 6.80479117221221cm" Name="Sessions">
+        <SubReport KeepTogether="False" Size="16.5cm, 0.795207868947764cm" Location="1.20000004768372cm, 6.90000015139579cm" Name="Sessions">
           <Style Visible="True" />
           <ConditionalFormatting>
             <FormattingRule>

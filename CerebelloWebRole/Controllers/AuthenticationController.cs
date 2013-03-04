@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Security;
@@ -144,7 +143,7 @@ namespace CerebelloWebRole.Controllers
         /// <returns></returns>
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
+            FormsAuthentication.SignOut();   
             return this.Redirect("/");
         }
 
