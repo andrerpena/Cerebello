@@ -282,37 +282,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private SessionData GetSessionData(SessionViewModel arg)
         {
-            var result = new SessionData();
-
-            result.Date = arg.Date;
-
-            result.Anamneses =
-                this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
-                .Select(AnamnesesController.GetViewModel).ToList();
-
-            result.Receipts =
-                this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
-                .Select(ReceiptsController.GetViewModel).ToList();
-
-            result.PhysicalExaminations =
-                this.db.PhysicalExaminations.Where(x => arg.PhysicalExaminationIds.Contains(x.Id))
-                .Select(PhysicalExaminationController.GetViewModel).ToList();
-
-            result.ExaminationRequests =
-                this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
-                .Select(ExamsController.GetViewModel).ToList();
-
-            result.ExaminationResults =
-                this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
-                .Select(ExamResultsController.GetViewModel).ToList();
-
-            result.Diagnosis =
-                this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
-                .Select(DiagnosisController.GetViewModel).ToList();
-
-            result.MedicalCertificates =
-                this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
-                .Select(MedicalCertificatesController.GetViewModel).ToList();
+            var result = new SessionData
+                {
+                    Date = arg.Date,
+                    Anamneses = this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
+                                    .Select(AnamnesesController.GetViewModel).ToList(),
+                    Receipts = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
+                                   .Select(ReceiptsController.GetViewModel).ToList(),
+                    PhysicalExaminations = this.db.PhysicalExaminations.Where(x => arg.PhysicalExaminationIds.Contains(x.Id))
+                                               .Select(PhysicalExaminationController.GetViewModel).ToList(),
+                    DiagnosticHipotheses = this.db.DiagnosticHypotheses.Where(x => arg.DiagnosticHipothesesId.Contains(x.Id))
+                                                .Select(DiagnosticHypothesesController.GetViewModel).ToList(),
+                    ExaminationRequests = this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
+                                              .Select(ExamsController.GetViewModel).ToList(),
+                    ExaminationResults = this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
+                                             .Select(ExamResultsController.GetViewModel).ToList(),
+                    Diagnosis = this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
+                                    .Select(DiagnosisController.GetViewModel).ToList(),
+                    MedicalCertificates = this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
+                                              .Select(MedicalCertificatesController.GetViewModel).ToList()
+                };
 
             return result;
         }
@@ -463,6 +452,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public List<ExaminationResultViewModel> ExaminationResults { get; set; }
             public List<DiagnosisViewModel> Diagnosis { get; set; }
             public List<MedicalCertificateViewModel> MedicalCertificates { get; set; }
+            public List<DiagnosticHypothesisViewModel> DiagnosticHipotheses { get; set; }
         }
     }
 }

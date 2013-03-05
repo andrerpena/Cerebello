@@ -23,9 +23,9 @@
     <OldToolsVersion>4.0</OldToolsVersion>
     <TargetFrameworkProfile />
     <IISExpressSSLPort>44300</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -138,6 +138,7 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
+    <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PhysicalExaminationController.cs" />
@@ -654,7 +655,6 @@
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisEditor.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -734,12 +734,13 @@
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisDetails.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\InternalUpgradeEmail.cshtml" />
     <Content Include="App_Code\EmailHtml.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalContract.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Areas\App\Views\DiagnosticHypotheses\Details.cshtml" />
+    <Content Include="Areas\App\Views\DiagnosticHypotheses\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

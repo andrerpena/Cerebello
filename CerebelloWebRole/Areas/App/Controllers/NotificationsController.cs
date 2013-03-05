@@ -162,7 +162,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             catch
             {
-                this.Response.StatusCode = (int)(HttpStatusCode.InternalServerError);
                 return this.Json(new { success = false }, JsonRequestBehavior.AllowGet);
             }
         }

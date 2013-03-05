@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Cerebello.Model;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Chat
 {
-    public class ChatServerHelper
+    public static class ChatServerHelper
     {
         /// <summary>
         /// Lock target for creating rooms (to prevent concurrent threads to create the same room more than once)
@@ -64,7 +62,6 @@ namespace CerebelloWebRole.Code.Chat
         /// <summary>
         /// Removes the user from the chat room if it exists
         /// </summary>
-        /// <param name="db"></param>
         /// <param name="roomId"></param>
         /// <param name="userId"></param>
         public static void RemoveUserIfExisting(int roomId, int userId)
