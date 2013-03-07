@@ -1,14 +1,8 @@
-﻿@using CerebelloWebRole.Areas.App.Models
-@model ChangeContractViewModel
+﻿@model ChangeContractViewModel
 @{
     var planTitles = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
             { "ProfessionalPlan", "Upgrade para plano profissional" }
-        };
-
-    var correctPlanCase = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            { "ProfessionalPlan", "ProfessionalPlan" }
         };
 
     var title = planTitles[this.Model.ContractUrlId];
@@ -32,7 +26,7 @@
     @Html.HiddenFor(vm => vm.ContractUrlId)
 
     <div id="userAgreement">
-        @switch (correctPlanCase[this.Model.ContractUrlId])
+        @switch (Buz.CorrectPlanCase[this.Model.ContractUrlId])
         {
             case "ProfessionalPlan":
                 @:@Html.Partial("Upgrade_ProfessionalPlan", this.Model)

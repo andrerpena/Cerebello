@@ -14,4 +14,10 @@
 {
     <link href="@Url.Content("~/Content/Styles/App/PlanPage.css")" rel="Stylesheet" type="text/css" />
 }
-@Html.Partial((string)string.Format("Index_{0}", this.ViewBag.CurrentContractName), this.Model)
+@switch (Buz.CorrectContractCase[(string)this.ViewBag.CurrentContractName])
+{
+    case "TrialContract": @:@Html.Partial("Index_TrialContract", this.Model)
+        break;
+    case "ProfessionalContract": @:@Html.Partial("Index_ProfessionalContract", this.Model)
+        break;
+}

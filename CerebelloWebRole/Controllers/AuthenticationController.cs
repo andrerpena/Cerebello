@@ -20,14 +20,14 @@ namespace CerebelloWebRole.Controllers
         private CerebelloEntities db = null;
 
         /// <summary>
-        /// 
+        /// Login page, that allows an user to log into the software.
         /// </summary>
         /// <remarks>
         /// Requiriments:
         ///     - Should populate the practice identifier if it's present in the passed returnUrl
         /// </remarks>
-        /// <param name="returnUrl"></param>
-        /// <returns></returns>
+        /// <param name="returnUrl">The url that the login button should direct user, after heshe logs in.</param>
+        /// <returns>Returns a ViewResult to show tha page.</returns>
         [HttpGet]
         public ActionResult Login(string returnUrl)
         {
@@ -142,7 +142,7 @@ namespace CerebelloWebRole.Controllers
         /// <returns></returns>
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();   
+            FormsAuthentication.SignOut();
             return this.Redirect("/");
         }
 

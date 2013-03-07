@@ -1,10 +1,26 @@
-﻿namespace CerebelloWebRole.Code
+﻿using System;
+using System.Collections.Generic;
+
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Buziness rules constants.
     /// </summary>
     public static class Buz
     {
+
+        public static readonly Dictionary<string, string> CorrectPlanCase = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "TrialPlan", "TrialPlan" },
+            { "ProfessionalPlan", "ProfessionalPlan" },
+        };
+
+        public static readonly Dictionary<string, string> CorrectContractCase = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "TrialContract", "TrialContract" },
+            { "ProfessionalContract", "ProfessionalContract" },
+        };
+
         public static class Trial
         {
             /// <summary> 50 </summary>
