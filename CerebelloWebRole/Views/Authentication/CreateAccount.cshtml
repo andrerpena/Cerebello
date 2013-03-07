@@ -41,57 +41,46 @@
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.paginator.css")" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
-        .authentication-container
-        {
+        .authentication-container {
             margin: 50px auto;
         }
 
-        @@media screen and (min-width: 768px)
-        {
-            .controls-wrapper
-            {
+        @@media screen and (min-width: 768px) {
+            .controls-wrapper {
                 overflow: hidden;
             }
 
-                .controls-wrapper hr
-                {
+                .controls-wrapper hr {
                     display: none;
                 }
 
-            .practice-properties
-            {
+            .practice-properties {
                 float: left;
                 overflow: hidden;
                 margin-right: 20px;
             }
 
-            .person-properties
-            {
+            .person-properties {
                 float: right;
                 overflow: hidden;
             }
 
-            .user-properties
-            {
+            .user-properties {
                 float: left;
                 overflow: hidden;
             }
 
-                .user-properties hr
-                {
+                .user-properties hr {
                     display: block !important;
                 }
 
-            .authentication-container
-            {
+            .authentication-container {
                 max-width: 720px;
             }
         }
 
-        @@media screen and (max-width: 500px)
-        {
-            .authentication-container
-            {
+        @@media screen and (max-width: 500px) {
+            .authentication-container {
                 margin: 20px auto;
             }
 
@@ -100,8 +89,7 @@
             }
         }
 
-        body
-        {
+        body {
             min-width: 300px;
         }
     </style>
@@ -165,6 +153,9 @@
                             <div class="controls">
                                 @Html.TextBoxFor(model => model.DateOfBirth)
                             </div>
+                            <script type="text/javascript">
+                                $("#DateOfBirth").mask("99/99/9999");
+                            </script>
                         </div>
                         <div class="control-group">
                             @Html.LabelFor(model => model.IsDoctor)
@@ -243,8 +234,5 @@
                 </div>
             </fieldset>
         }
-        <script type="text/javascript">
-            $("#DateOfBirth").mask("99/99/9999");
-        </script>
     </div>
 </div>

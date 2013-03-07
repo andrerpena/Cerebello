@@ -1,7 +1,4 @@
 <StyleCopSettings Version="105">
-  <GlobalSettings>
-    <StringProperty Name="Culture">pt-BR</StringProperty>
-  </GlobalSettings>
   <Analyzers>
     <Analyzer AnalyzerId="StyleCop.CSharp.ReadabilityRules">
       <Rules>

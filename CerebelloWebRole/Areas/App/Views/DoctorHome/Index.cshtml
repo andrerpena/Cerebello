@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.DoctorHomeViewModel
 @using Cerebello.Model
 @using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code.Helpers
 @{
     var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -11,7 +12,7 @@
     cardView.AddField(m => m.MedicCrm);
     cardView.AddField(m => m.MedicalSpecialtyName);
     cardView.AddField(m => m.MedicalEntityName);
-    cardView.AddField(m => m.MedicalEntityJurisdiction, @<text>@CerebelloWebRole.Code.EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
+    cardView.AddField(m => m.MedicalEntityJurisdiction, @<text>@EnumHelper.GetText(@item.MedicalEntityJurisdiction, typeof(TypeEstadoBrasileiro))</text>);
 
     Func<AppointmentViewModel, string> getCssClass = (vm) =>
         {
@@ -52,12 +53,12 @@
         @if (this.CanAccessAction("ExportDoctorXml", "Report"))
         {
             itemCount++;
-            <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Exportar Xml</a> </li>
+            <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Exportar XML</a> </li>
         }
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
             itemCount++;
-            <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Exportar prontuários em Pdf</a> </li>
+            <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Exportar prontuários em PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadAllPatientsZipFile", "PatientFiles"))
         {

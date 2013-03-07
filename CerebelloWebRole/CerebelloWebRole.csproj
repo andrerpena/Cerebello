@@ -23,9 +23,9 @@
     <OldToolsVersion>4.0</OldToolsVersion>
     <TargetFrameworkProfile />
     <IISExpressSSLPort>44300</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -138,6 +138,7 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\ChatController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
+    <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PhysicalExaminationController.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Code\Buz.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Disposer.cs" />
+    <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\ViewPage\CerebelloViewPage.cs" />
     <Compile Include="Code\Filters\CanonicalUrlHttpsFilter.cs" />
     <Compile Include="Code\Filters\SelfPermissionAttribute.cs" />
@@ -184,7 +186,9 @@
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Styles\Site\Cancel.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
+    <Compile Include="Models\GenerateInvoiceViewModel.cs" />
     <Compile Include="Models\InternalUpgradeEmailViewModel.cs" />
     <Compile Include="Models\IdentityViewModel.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
@@ -216,7 +220,6 @@
     <Compile Include="Areas\App\Models\GlobalSearchViewModel.cs" />
     <Compile Include="Areas\App\Models\AutocompleteGridModels\MedicineLookupGridModel.cs" />
     <Compile Include="Areas\App\Models\SearchViewModel.cs" />
-    <Compile Include="Areas\App\Models\SymptomsIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\UserViewModel.cs" />
     <Compile Include="Code\Chat\ChatLongPollingProvider.cs" />
     <Compile Include="Code\Chat\ChatMessage.cs" />
@@ -474,6 +477,7 @@
     <Content Include="Content\Images\top-logo.png" />
     <Content Include="Content\Images\ui-icons_222222_256x240.png" />
     <Content Include="Content\Styles\App\App.css" />
+    <Content Include="Content\Styles\App\CancelAccountPage.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.notify.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
@@ -483,18 +487,17 @@
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.dropdown.menu.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.autocomplete.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.paginator.css" />
-    <Content Include="Content\Styles\App\Controls\media.css" />
     <Content Include="Content\Styles\App\PlanPage.css" />
     <Content Include="Content\Styles\App\fullcalendar.css" />
     <Content Include="Content\Styles\App\jquery-ui-overrides.css" />
     <Content Include="Content\Styles\App\jquery.arp.modal.css" />
     <Content Include="Content\Styles\App\jquery.jqplot.min.css" />
-    <Content Include="Content\Styles\App\Media.css" />
     <Content Include="Content\Styles\App\Patients_Edit.css" />
     <Content Include="Content\Styles\App\Schedule.css" />
     <Content Include="Content\Styles\App\Controls\cardview.css" />
     <Content Include="Content\Styles\Docs\Docs.css" />
     <Content Include="Content\Styles\Docs\Media.css" />
+    <Content Include="Content\Styles\Site\Login.css" />
     <Content Include="Content\Styles\Site\Media.css" />
     <Content Include="Content\Styles\Site\Site.css" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
@@ -653,7 +656,6 @@
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
     <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisEditor.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -727,16 +729,19 @@
     <Content Include="Areas\App\Views\ConfigAccount\CancelTrialContractPartial.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\AccountDataEmail.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index_TrialContract.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\UpgradeRequested.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\UpgradeDone.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade_ProfessionalPlan.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Details.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Edit.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\DiagnosticHypothesisDetails.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\InternalUpgradeEmail.cshtml" />
     <Content Include="App_Code\EmailHtml.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalPlan.cshtml" />
+    <Content Include="Areas\App\Views\ConfigAccount\Index_ProfessionalContract.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Areas\App\Views\DiagnosticHypotheses\Details.cshtml" />
+    <Content Include="Areas\App\Views\DiagnosticHypotheses\Edit.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -745,11 +750,11 @@
     <Content Include="Views\Authentication\CreateAccountCompleted.cshtml" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.link.js" />
     <Content Include="Views\Shared\ObjectNotFound_Ajax.cshtml" />
-    <Content Include="Content\Reports\PatientsList\Doctor.trdx" />
-    <Content Include="Content\Reports\PatientsList\Sessions.trdx" />
-    <Content Include="Content\Reports\PatientsList\Anamneses.trdx" />
-    <Content Include="Content\Reports\PatientsList\Receipts.trdx" />
-    <Content Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Doctor.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Sessions.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Anamneses.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Receipts.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
     <Content Include="App.config">
       <SubType>Designer</SubType>
     </Content>
@@ -767,13 +772,16 @@
     <EmbeddedResource Include="Views\EmailSenderWorker\AppointmentReminderEmail.cshtml" />
     <Content Include="Views\MasterAdmin\Index.cshtml" />
     <Content Include="Views\Shared\ObjectNotFound.cshtml" />
-    <Content Include="Content\Reports\PatientsList\Patients.trdx" />
+    <EmbeddedResource Include="Content\Reports\PatientsList\Patients.trdx" />
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Home\PricesAndPlans.cshtml" />
     <Content Include="Views\Home\AccountCanceled.cshtml" />
     <Content Include="Views\Shared\_EmptyLayout.cshtml" />
     <Content Include="Views\Shared\_AuthenticationLayout.cshtml" />
     <Content Include="Views\Shared\_EmailLayout.cshtml" />
+    <Content Include="Views\MasterAdmin\GenerateInvoice.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\MasterAdmin\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_GlobalResources\ModelStrings.resx">
@@ -812,7 +820,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:12621/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

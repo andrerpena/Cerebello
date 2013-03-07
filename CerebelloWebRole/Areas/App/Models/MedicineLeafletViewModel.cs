@@ -10,8 +10,11 @@ namespace CerebelloWebRole.Areas.App.Models
     public class MedicineLeafletViewModel
     {
         public int? Id { get; set; }
+
+        [Display(Name = "Descrição")]
         public String Description { get; set; }
 
+        [Display(Name = "URL")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Url { get; set; }
 

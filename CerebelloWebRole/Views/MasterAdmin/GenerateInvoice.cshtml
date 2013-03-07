@@ -1,0 +1,63 @@
+﻿@model GenerateInvoiceViewModel
+@{
+    this.ViewBag.Title = "Gerar fatura";
+}
+@this.Html.ValidationSummary(false)
+@using (this.Html.BeginForm())
+{
+    <fieldset>
+        @if (this.ViewBag.BillingOk == true)
+        {
+            @:Cobrança configurada com sucesso.
+            if (this.ViewBag.IsPayPalInvoice == true)
+            {
+            @:Agora basta mandar a fatura do PayPal.
+            }
+        }
+        else if (this.ViewBag.OnlyPractice == true)
+        {
+            <div class="control-group">
+                @Html.LabelFor(model => model.PracticeIdentifier)
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.PracticeIdentifier, new { @class = "input-xlarge" })
+                </div>
+            </div>
+            <input type="hidden" name="FillFields" value="true" />
+            <div class="form-actions" style="margin: 0">
+                <button class="btn btn-primary btn-large" type="submit">
+                    Continuar</button>
+            </div>
+        }
+        else
+        {
+            <div class="control-group">
+                @Html.LabelFor(model => model.PracticeIdentifier)
+                <div class="controls">
+                    @this.Model.PracticeIdentifier
+                    @this.Html.HiddenFor(model => model.PracticeIdentifier)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.DueDate)
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.DueDate, new { @class = "input-xlarge" })
+                </div>
+                <script type="text/javascript">
+                    $("#DueDate").mask("99/99/9999");
+                </script>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.Amount)
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.Amount, new { @class = "input-xlarge" })
+                </div>
+            </div>
+            <div class="form-actions" style="margin: 0">
+                <button class="btn btn-primary btn-large" type="submit">
+                    Gerar fatura</button>
+            </div>
+        }
+    </fieldset>
+}

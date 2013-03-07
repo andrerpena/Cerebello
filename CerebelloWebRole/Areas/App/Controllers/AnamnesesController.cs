@@ -29,15 +29,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 RegularAndAcuteMedications = anamnese.RegularAndAcuteMedications,
                 ReviewOfSystems = anamnese.ReviewOfSystems,
                 SexualHistory = anamnese.SexualHistory,
-                SocialDeseases = anamnese.SocialDiseases,
-                DiagnosticHypotheses = (from s in anamnese.DiagnosticHypotheses
-                            select new DiagnosticHypothesisViewModel
-                            {
-                                Text = s.Observations,
-                                Cid10Code = s.Cid10Code,
-                                Cid10Name = s.Cid10Name,
-                                Id = s.Id
-                            }).ToList()
+                SocialHistory = anamnese.SocialDiseases
             };
         }
 
@@ -112,48 +104,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.RegularAndAcuteMedications = formModel.RegularAndAcuteMedications;
                 anamnese.ReviewOfSystems = formModel.ReviewOfSystems;
                 anamnese.SexualHistory = formModel.SexualHistory;
-                anamnese.SocialDiseases = formModel.SocialDeseases;
-
-                #region Update Symptomsymptoms
-                // step 1: add new
-                foreach (var diagnosticHypothesis in formModel.DiagnosticHypotheses.Where(diagnosticHyphothesis => !diagnosticHyphothesis.Id.HasValue ))
-                {
-                    anamnese.DiagnosticHypotheses.Add(new DiagnosticHypothesis()
-                        {
-                            Cid10Code = diagnosticHypothesis.Cid10Code,
-                            Cid10Name = diagnosticHypothesis.Cid10Name,
-                            Observations = diagnosticHypothesis.Text,
-                            PracticeId = this.DbUser.PracticeId,
-                        });
-                }
-
-                var harakiriQueue = new Queue<DiagnosticHypothesis>();
-
-                // step 2: remove deleted
-                foreach (var diagnosticHypothesis in anamnese.DiagnosticHypotheses
-                    .Where(diagnosticHypothesisFormModel => diagnosticHypothesisFormModel.Id != default(int) && !formModel.DiagnosticHypotheses.Any(ans => ans.Id.HasValue && ans.Id == diagnosticHypothesisFormModel.Id)))
-                {
-                    harakiriQueue.Enqueue(diagnosticHypothesis);
-                }
-
-                while (harakiriQueue.Count > 0)
-                    this.db.DiagnosticHypotheses.DeleteObject(harakiriQueue.Dequeue());
-
-                // step 3: update existing
-                foreach (var diagnosticHypothesis in anamnese.DiagnosticHypotheses)
-                {
-                    var existingDiagnosticHypothesisViewModel =
-                        formModel.DiagnosticHypotheses.FirstOrDefault(dh => dh.Id == diagnosticHypothesis.Id);
-                    if (existingDiagnosticHypothesisViewModel != null)
-                    {
-                        diagnosticHypothesis.Cid10Name = existingDiagnosticHypothesisViewModel.Cid10Name;
-                        diagnosticHypothesis.Cid10Code = existingDiagnosticHypothesisViewModel.Cid10Code;
-                        diagnosticHypothesis.Observations = existingDiagnosticHypothesisViewModel.Text;
-                    }
-                }
-
-                #endregion
-
+                anamnese.SocialDiseases = formModel.SocialHistory;
+                
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
@@ -224,10 +176,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             try
             {
                 var anamnese = this.db.Anamnese.First(m => m.Id == id);
-
-                // get rid of associations
-                while (anamnese.DiagnosticHypotheses.Count > 0)
-                    this.db.DiagnosticHypotheses.DeleteObject(anamnese.DiagnosticHypotheses.ElementAt(0));
 
                 this.db.Anamnese.DeleteObject(anamnese);
                 this.db.SaveChanges();

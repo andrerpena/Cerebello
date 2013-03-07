@@ -2,5 +2,14 @@
     background-color: #FFEDED;
     border: 1px solid red;
     line-height: 1.2em;
+    margin-bottom: 15px;
     padding: 4px;
+}
+
+.cancel-text {
+    margin: 15px 0;
+}
+
+.confirmation-checkbox-wrapper {
+    margin-top: 5px;
 }

@@ -72,7 +72,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_File_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "File", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.File), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Anamnese), "DiagnosticHypothesi", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.DiagnosticHypothesis), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_DiagnosticHypothesis_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "DiagnosticHypothesis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.DiagnosticHypothesis), true)]
 
 #endregion
 
@@ -1661,6 +1661,102 @@ namespace Cerebello.Model
         private global::System.String _CustomText;
         partial void OnCustomTextChanging(global::System.String value);
         partial void OnCustomTextChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String BillingPaymentMethod
+        {
+            get
+            {
+                return _BillingPaymentMethod;
+            }
+            set
+            {
+                OnBillingPaymentMethodChanging(value);
+                ReportPropertyChanging("BillingPaymentMethod");
+                _BillingPaymentMethod = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("BillingPaymentMethod");
+                OnBillingPaymentMethodChanged();
+            }
+        }
+        private global::System.String _BillingPaymentMethod;
+        partial void OnBillingPaymentMethodChanging(global::System.String value);
+        partial void OnBillingPaymentMethodChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> BillingDiscountAmount
+        {
+            get
+            {
+                return _BillingDiscountAmount;
+            }
+            set
+            {
+                OnBillingDiscountAmountChanging(value);
+                ReportPropertyChanging("BillingDiscountAmount");
+                _BillingDiscountAmount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingDiscountAmount");
+                OnBillingDiscountAmountChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _BillingDiscountAmount;
+        partial void OnBillingDiscountAmountChanging(Nullable<global::System.Decimal> value);
+        partial void OnBillingDiscountAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> BillingExtraDiscount
+        {
+            get
+            {
+                return _BillingExtraDiscount;
+            }
+            set
+            {
+                OnBillingExtraDiscountChanging(value);
+                ReportPropertyChanging("BillingExtraDiscount");
+                _BillingExtraDiscount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("BillingExtraDiscount");
+                OnBillingExtraDiscountChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _BillingExtraDiscount;
+        partial void OnBillingExtraDiscountChanging(Nullable<global::System.Decimal> value);
+        partial void OnBillingExtraDiscountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String BillingExtraDiscountReason
+        {
+            get
+            {
+                return _BillingExtraDiscountReason;
+            }
+            set
+            {
+                OnBillingExtraDiscountReasonChanging(value);
+                ReportPropertyChanging("BillingExtraDiscountReason");
+                _BillingExtraDiscountReason = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("BillingExtraDiscountReason");
+                OnBillingExtraDiscountReasonChanged();
+            }
+        }
+        private global::System.String _BillingExtraDiscountReason;
+        partial void OnBillingExtraDiscountReasonChanging(global::System.String value);
+        partial void OnBillingExtraDiscountReasonChanged();
 
         #endregion
 
@@ -2567,28 +2663,6 @@ namespace Cerebello.Model
                 }
             }
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "DiagnosticHypothesi")]
-        public EntityCollection<DiagnosticHypothesis> DiagnosticHypotheses
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<DiagnosticHypothesis>("Cerebello.Model.FK_Diagnosis_Anamnese", "DiagnosticHypothesi");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<DiagnosticHypothesis>("Cerebello.Model.FK_Diagnosis_Anamnese", "DiagnosticHypothesi", value);
-                }
-            }
-        }
 
         #endregion
 
@@ -3160,9 +3234,9 @@ namespace Cerebello.Model
         /// <param name="afterDueTax">Initial value of the AfterDueTax property.</param>
         /// <param name="afterDueMonthlyTax">Initial value of the AfterDueMonthlyTax property.</param>
         /// <param name="isPayd">Initial value of the IsPayd property.</param>
-        /// <param name="paydAmount">Initial value of the PaydAmount property.</param>
-        /// <param name="paymentDate">Initial value of the PaymentDate property.</param>
-        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Decimal amount, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.Decimal paydAmount, global::System.DateTime paymentDate)
+        /// <param name="discount">Initial value of the Discount property.</param>
+        /// <param name="extraDicount">Initial value of the ExtraDicount property.</param>
+        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Decimal amount, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.Decimal discount, global::System.Decimal extraDicount)
         {
             Billing billing = new Billing();
             billing.Id = id;
@@ -3173,8 +3247,8 @@ namespace Cerebello.Model
             billing.AfterDueTax = afterDueTax;
             billing.AfterDueMonthlyTax = afterDueMonthlyTax;
             billing.IsPayd = isPayd;
-            billing.PaydAmount = paydAmount;
-            billing.PaymentDate = paymentDate;
+            billing.Discount = discount;
+            billing.ExtraDicount = extraDicount;
             return billing;
         }
 
@@ -3380,9 +3454,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Decimal PaydAmount
+        public Nullable<global::System.Decimal> PaydAmount
         {
             get
             {
@@ -3397,16 +3471,16 @@ namespace Cerebello.Model
                 OnPaydAmountChanged();
             }
         }
-        private global::System.Decimal _PaydAmount;
-        partial void OnPaydAmountChanging(global::System.Decimal value);
+        private Nullable<global::System.Decimal> _PaydAmount;
+        partial void OnPaydAmountChanging(Nullable<global::System.Decimal> value);
         partial void OnPaydAmountChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.DateTime PaymentDate
+        public Nullable<global::System.DateTime> PaymentDate
         {
             get
             {
@@ -3421,9 +3495,81 @@ namespace Cerebello.Model
                 OnPaymentDateChanged();
             }
         }
-        private global::System.DateTime _PaymentDate;
-        partial void OnPaymentDateChanging(global::System.DateTime value);
+        private Nullable<global::System.DateTime> _PaymentDate;
+        partial void OnPaymentDateChanging(Nullable<global::System.DateTime> value);
         partial void OnPaymentDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal Discount
+        {
+            get
+            {
+                return _Discount;
+            }
+            set
+            {
+                OnDiscountChanging(value);
+                ReportPropertyChanging("Discount");
+                _Discount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Discount");
+                OnDiscountChanged();
+            }
+        }
+        private global::System.Decimal _Discount;
+        partial void OnDiscountChanging(global::System.Decimal value);
+        partial void OnDiscountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal ExtraDicount
+        {
+            get
+            {
+                return _ExtraDicount;
+            }
+            set
+            {
+                OnExtraDicountChanging(value);
+                ReportPropertyChanging("ExtraDicount");
+                _ExtraDicount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ExtraDicount");
+                OnExtraDicountChanged();
+            }
+        }
+        private global::System.Decimal _ExtraDicount;
+        partial void OnExtraDicountChanging(global::System.Decimal value);
+        partial void OnExtraDicountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ExtraDiscountReason
+        {
+            get
+            {
+                return _ExtraDiscountReason;
+            }
+            set
+            {
+                OnExtraDiscountReasonChanging(value);
+                ReportPropertyChanging("ExtraDiscountReason");
+                _ExtraDiscountReason = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ExtraDiscountReason");
+                OnExtraDiscountReasonChanged();
+            }
+        }
+        private global::System.String _ExtraDiscountReason;
+        partial void OnExtraDiscountReasonChanging(global::System.String value);
+        partial void OnExtraDiscountReasonChanged();
 
         #endregion
 
@@ -5484,15 +5630,17 @@ namespace Cerebello.Model
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="cid10Name">Initial value of the Cid10Name property.</param>
-        /// <param name="anamneseId">Initial value of the AnamneseId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static DiagnosticHypothesis CreateDiagnosticHypothesis(global::System.Int32 id, global::System.String cid10Name, global::System.Int32 anamneseId, global::System.Int32 practiceId)
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        /// <param name="patientId">Initial value of the PatientId property.</param>
+        public static DiagnosticHypothesis CreateDiagnosticHypothesis(global::System.Int32 id, global::System.String cid10Name, global::System.Int32 practiceId, global::System.DateTime createdOn, global::System.Int32 patientId)
         {
             DiagnosticHypothesis diagnosticHypothesis = new DiagnosticHypothesis();
             diagnosticHypothesis.Id = id;
             diagnosticHypothesis.Cid10Name = cid10Name;
-            diagnosticHypothesis.AnamneseId = anamneseId;
             diagnosticHypothesis.PracticeId = practiceId;
+            diagnosticHypothesis.CreatedOn = createdOn;
+            diagnosticHypothesis.PatientId = patientId;
             return diagnosticHypothesis;
         }
 
@@ -5604,30 +5752,6 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 AnamneseId
-        {
-            get
-            {
-                return _AnamneseId;
-            }
-            set
-            {
-                OnAnamneseIdChanging(value);
-                ReportPropertyChanging("AnamneseId");
-                _AnamneseId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("AnamneseId");
-                OnAnamneseIdChanged();
-            }
-        }
-        private global::System.Int32 _AnamneseId;
-        partial void OnAnamneseIdChanging(global::System.Int32 value);
-        partial void OnAnamneseIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
         public global::System.Int32 PracticeId
         {
             get
@@ -5646,6 +5770,54 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PatientId
+        {
+            get
+            {
+                return _PatientId;
+            }
+            set
+            {
+                OnPatientIdChanging(value);
+                ReportPropertyChanging("PatientId");
+                _PatientId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PatientId");
+                OnPatientIdChanged();
+            }
+        }
+        private global::System.Int32 _PatientId;
+        partial void OnPatientIdChanging(global::System.Int32 value);
+        partial void OnPatientIdChanged();
 
         #endregion
 
@@ -5658,16 +5830,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Diagnosis_Anamnese", "Anamnese")]
-        public Anamnese Anamnese
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_DiagnosticHypothesis_Patient", "Patient")]
+        public Patient Patient
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_DiagnosticHypothesis_Patient", "Patient").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_DiagnosticHypothesis_Patient", "Patient").Value = value;
             }
         }
         /// <summary>
@@ -5675,17 +5847,17 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Anamnese> AnamneseReference
+        public EntityReference<Patient> PatientReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_DiagnosticHypothesis_Patient", "Patient");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Anamnese>("Cerebello.Model.FK_Diagnosis_Anamnese", "Anamnese", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_DiagnosticHypothesis_Patient", "Patient", value);
                 }
             }
         }
@@ -10263,6 +10435,28 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_Patient", "PatientFile", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_DiagnosticHypothesis_Patient", "DiagnosticHypothesis")]
+        public EntityCollection<DiagnosticHypothesis> DiagnosticHypotheses
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<DiagnosticHypothesis>("Cerebello.Model.FK_DiagnosticHypothesis_Patient", "DiagnosticHypothesis");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<DiagnosticHypothesis>("Cerebello.Model.FK_DiagnosticHypothesis_Patient", "DiagnosticHypothesis", value);
                 }
             }
         }

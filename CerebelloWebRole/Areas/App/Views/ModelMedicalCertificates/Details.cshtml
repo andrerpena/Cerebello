@@ -1,8 +1,11 @@
-﻿@using CerebelloWebRole.Areas.App.Models
-@model CerebelloWebRole.Areas.App.Models.ModelMedicalCertificateViewModel
+﻿@model ModelMedicalCertificateViewModel
 @{
     var title = "Modelo de atestado: " + this.Model.Name;
     ViewBag.Title = title + " · Cerebello";
+
+    var cardView = this.Html.CreateCardView();
+    cardView.AddField(model => model.Name, wholeRow: true);
+    cardView.AddField(model => model.Text, wholeRow: true);
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
@@ -31,26 +34,4 @@
     </script>
 }
 
-<table class="view-table">
-    <tr>
-        <th>@Html.LabelFor(model => model.Name)</th>
-        <td>@Html.DisplayFor(model => model.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.LabelFor(model => model.Text)</th>
-        <td>@Html.DisplayFor(model => model.Text)</td>
-    </tr>
-    <tr>
-        <th>@Html.LabelFor(model => model.Fields)</th>
-        <td>
-            <ul class="string-list">
-                @foreach (var field in this.Model.Fields)
-                {
-                    <li>
-                        @field.Name
-                    </li>
-                }
-            </ul>
-        </td>
-    </tr>
-</table>
+@cardView.GetHtml()

@@ -173,13 +173,13 @@ namespace Cerebello.Firestarter
             Practice practice,
             bool useDefaultPassword = false)
         {
-            var pwdSalt = "oHdC62UZE6Hwts91+Xy88Q==";
+            const string pwdSalt = "oHdC62UZE6Hwts91+Xy88Q==";
             var pwdHash = CipherHelper.Hash("masban", pwdSalt);
             if (useDefaultPassword)
                 pwdHash = CipherHelper.Hash(CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD, pwdSalt);
 
             // Creating user.
-            User user = new User()
+            var user = new User()
                 {
                     UserName = "masbicudo",
                     UserNameNormalized = "masbicudo",
@@ -194,10 +194,10 @@ namespace Cerebello.Firestarter
             //db.SaveChanges(); // cannot save changes here, because user.Person is not nullable.
 
             // Creating person.
-            Person person = new Person()
+            var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FullName = "Phill Austin",
+                    FullName = "Júlio Cezar Almeida",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "masbicudo@gmail.com",
@@ -210,7 +210,7 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             // Creating doctor.
-            Doctor doctor = new Doctor()
+            var doctor = new Doctor()
                 {
                     Id = 2,
                     CRM = "98765",
@@ -261,7 +261,7 @@ namespace Cerebello.Firestarter
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
-                    FullName = "Gregory House",
+                    FullName = "André Pena",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "andrerpena@gmail.com",
@@ -402,7 +402,7 @@ namespace Cerebello.Firestarter
             var person = new Person
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
-                FullName = "Thomas Gray",
+                FullName = "Miguel Angelo Santos",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = Firestarter.UtcNow,
                 Email = "thomasgray@fakemail.com",
@@ -492,7 +492,7 @@ namespace Cerebello.Firestarter
             Person person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FullName = "Menininha Santos",
+                    FullName = "Milena Santos",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -600,7 +600,7 @@ namespace Cerebello.Firestarter
         /// Creates a new practice and returns it.
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="contract"></param>
+        /// <param name="useTrialContract"></param>
         /// <returns></returns>
         public static Practice CreatePractice_DraMarta(CerebelloEntities db, bool useTrialContract = true)
         {
@@ -626,20 +626,36 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Sets up a practice's contract with a default trial contract.
         /// </summary>
-        /// <param name="db"></param>
-        /// <param name="practice"></param>
+        /// <param name="db"> Data context to create the account contract with. </param>
+        /// <param name="practice"> Practice that owns the account contract. </param>
+        /// <returns> The created AccountContract. </returns>
         private static AccountContract SetupPracticeWithTrialContract(CerebelloEntities db, Practice practice)
         {
             var accountContract = practice.AccountContract = new AccountContract
                 {
+                    Practice = practice,
+
                     ContractTypeId = (int)ContractTypes.TrialContract,
+                    IsTrial = true,
                     IssuanceDate = new DateTime(2012, 01, 25),
                     StartDate = new DateTime(2012, 02, 10),
                     EndDate = null,
-                    Practice = practice,
+
                     DoctorsLimit = null,
                     PatientsLimit = 50,
+
+                    // no billings
+                    BillingAmount = null,
+                    BillingDueDay = null,
+                    BillingPaymentMethod = null,
+                    BillingPeriodCount = null,
+                    BillingPeriodSize = null,
+                    BillingPeriodType = null,
+                    BillingDiscountAmount = null,
+                    BillingExtraDiscount = null,
+                    BillingExtraDiscountReason = null,
                 };
+
             practice.AccountContract.CustomText = StringHelper.ReflectionReplace(
                 practice.AccountContract.SYS_ContractType.CustomTemplateText,
                 practice.AccountContract);
@@ -654,7 +670,7 @@ namespace Cerebello.Firestarter
         /// <summary>
         /// Creates fake patients
         /// </summary>
-        public static List<Patient> CreateFakePatients(Doctor doctor, CerebelloEntities db, int count = 70)
+        public static List<Patient> CreateFakePatients(Doctor doctor, CerebelloEntities db, int count = 40)
         {
             return FakePatientsFactory.CreateFakePatients(doctor, db, count);
         }
@@ -1987,7 +2003,7 @@ GO
             db.SaveChanges();
         }
 
-        public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 600)
+        public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 300)
         {
             var practice = db.Practices.First(p => p.Id == doctor.PracticeId);
             var startingTime = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
@@ -2017,48 +2033,29 @@ GO
                 // there's a 10% chance I will not schedule this appointment, so this will be a free slot
                 if (random.Next(1, 11) != 1)
                 {
-                    // there's as a 10% chance this is a generic appointment and not a medical appointment
-                    if (random.Next(1, 11) != 1)
-                    {
-                        TypeAppointmentStatus status;
-                        if (nextFreeTime.Item1 < practiceNow)
-                            // if the appointment is in the past, there's a 20% chance it didn't accomplish
-                            status = random.Next(1, 11) < 9 ? TypeAppointmentStatus.Accomplished : TypeAppointmentStatus.NotAccomplished;
-                        else
-                            status = TypeAppointmentStatus.Undefined;
-
-
-                        db.Appointments.AddObject(
-                            new Appointment
-                            {
-                                CreatedById = creator.Id,
-                                CreatedOn = Firestarter.UtcNow,
-                                DoctorId = doctor.Id,
-                                Start = nextFreeTime.Item1.ToUniversalTime(),
-                                End = nextFreeTime.Item2.ToUniversalTime(),
-                                Patient = patients[random.Next(0, patients.Count - 1)],
-                                Type = (int)TypeAppointment.MedicalAppointment,
-                                HealthInsurance = helthInsurances[random.Next(0, helthInsurances.Count - 1)],
-                                PracticeId = doctor.PracticeId,
-                                Status = (int)status
-                            });
-                    }
+                    TypeAppointmentStatus status;
+                    if (nextFreeTime.Item1 < practiceNow)
+                        // if the appointment is in the past, there's a 20% chance it didn't accomplish
+                        status = random.Next(1, 11) < 9 ? TypeAppointmentStatus.Accomplished : TypeAppointmentStatus.NotAccomplished;
                     else
-                    {
-                        db.Appointments.AddObject(
-                            new Appointment
-                            {
-                                CreatedById = creator.Id,
-                                CreatedOn = Firestarter.UtcNow,
-                                DoctorId = doctor.Id,
-                                Start = nextFreeTime.Item1.ToUniversalTime(),
-                                End = nextFreeTime.Item2.ToUniversalTime(),
-                                Type = (int)TypeAppointment.GenericAppointment,
-                                // I should not be forced to put a healthinsurance because it's a generic appointment
-                                Description = "Levar o cachorro ao veterinário",
-                                PracticeId = doctor.PracticeId
-                            });
-                    }
+                        status = TypeAppointmentStatus.Undefined;
+
+
+                    db.Appointments.AddObject(
+                        new Appointment
+                        {
+                            CreatedById = creator.Id,
+                            CreatedOn = Firestarter.UtcNow,
+                            DoctorId = doctor.Id,
+                            Start = nextFreeTime.Item1.ToUniversalTime(),
+                            End = nextFreeTime.Item2.ToUniversalTime(),
+                            Patient = patients[random.Next(0, patients.Count - 1)],
+                            Type = (int)TypeAppointment.MedicalAppointment,
+                            HealthInsurance = helthInsurances[random.Next(0, helthInsurances.Count - 1)],
+                            PracticeId = doctor.PracticeId,
+                            Status = (int)status
+                        });
+
                 }
 
                 startingTime = nextFreeTime.Item2;

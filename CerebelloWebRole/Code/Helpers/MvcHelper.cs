@@ -80,12 +80,32 @@ namespace CerebelloWebRole.Code.Helpers
 
         public class MockHttpRequest : HttpRequestBase
         {
-            private readonly Uri url = new Uri(
-                String.Format(
-                    "https://{0}{1}/",
-                    Constants.DOMAIN,
-                    Constants.PORT.HasValue ? ":" + Constants.PORT : ""),
-                UriKind.Absolute);
+            private readonly Uri url = GetUrl();
+
+            private static Uri GetUrl()
+            {
+#if DEBUG
+                if (DebugConfig.IsDebug)
+                {
+                    var uriBuilder = new UriBuilder("https://localhost");
+                    if (DebugConfig.HostEnvironment == HostEnv.IisExpress)
+                    {
+                        uriBuilder.Port = 44300;
+                    }
+                    else if (DebugConfig.HostEnvironment == HostEnv.WebDevServer)
+                    {
+                        uriBuilder.Scheme = "http";
+                        uriBuilder.Port = 12621;
+                    }
+                    else
+                    {
+                    }
+
+                    return uriBuilder.Uri;
+                }
+#endif
+                return new Uri(string.Format("https://{0}", Constants.DOMAIN), UriKind.Absolute);
+            }
 
             private readonly HttpCookieCollection cookies = new HttpCookieCollection();
             private readonly NameValueCollection serverVars = new NameValueCollection();

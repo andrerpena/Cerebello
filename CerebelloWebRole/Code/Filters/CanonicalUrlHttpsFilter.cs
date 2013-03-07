@@ -27,18 +27,19 @@ namespace CerebelloWebRole.Code.Filters
             if (isNotHttps)
             {
 #if DEBUG
-                if (Environment.CommandLine.Contains("iisexpress.exe"))
+                if (DebugConfig.HostEnvironment == HostEnv.IisExpress)
                 {
                     isRedirectNeeded = true;
                     uriBuilder.Scheme = "https";
                     uriBuilder.Port = 44300;
                 }
-                else if (Environment.CommandLine.Contains("w3wp.exe"))
+                else if (DebugConfig.HostEnvironment == HostEnv.Iis)
                 {
                     isRedirectNeeded = true;
                     uriBuilder.Scheme = "https";
                     uriBuilder.Port = 443;
                 }
+
                 // WebDev server does not support HTTPS... no redirects to HTTPS will happen.
 #else
                 isRedirectNeeded = true;

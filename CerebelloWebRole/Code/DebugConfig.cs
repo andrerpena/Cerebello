@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
@@ -235,6 +236,7 @@ namespace CerebelloWebRole.Code
                     watcher.Renamed += WatcherEvent;
                     watcher.Error += WatcherError;
                     watcher.Disposed += WatcherDisposed;
+                    watcher.IncludeSubdirectories = true;
                     watcher.EnableRaisingEvents = true;
                 }
 
@@ -461,12 +463,12 @@ namespace CerebelloWebRole.Code
                     && inst.config != null
                     && inst.setting != null
                     && inst.setting.SendEmailsTo != null
-                    && inst.setting.SendEmailsTo.Enabled
-                    && inst.setting.SendEmailsTo.Allowed != null)
+                    && inst.setting.SendEmailsTo.Enabled)
                 {
+                    var allowed = inst.setting.SendEmailsTo.Allowed ?? "";
                     if (inst.allAllowedEmails == null)
                     {
-                        var itemNames = inst.setting.SendEmailsTo.Allowed.Split(';');
+                        var itemNames = allowed.Split(';');
 
                         var emails1 = inst.config.Debug.Emails.Items
                                           .Where(x => itemNames.Contains(x.Name, iic) && scii(x.Type, "smtp"))
@@ -592,6 +594,34 @@ namespace CerebelloWebRole.Code
                 return false;
                 // ReSharper restore HeuristicUnreachableCode
 #pragma warning restore 162
+            }
+        }
+
+        /// <summary>
+        /// Gets the current running host environment.
+        /// </summary>
+        public static HostEnv HostEnvironment
+        {
+            get
+            {
+                var exeName = Regex.Match(Environment.CommandLine, @"^(?:""(?<FN>[^""]*)""|(?<FN>[^\s]*))").Groups["FN"].Value;
+
+                if (!string.IsNullOrWhiteSpace(exeName))
+                {
+                    if (exeName.EndsWith("iisexpress.exe", StringComparison.InvariantCultureIgnoreCase))
+                        return HostEnv.IisExpress;
+
+                    if (exeName.EndsWith("w3wp.exe", StringComparison.InvariantCultureIgnoreCase))
+                        return HostEnv.Iis;
+
+                    if (Regex.IsMatch(exeName, @"WebDev.WebServer\d*\.EXE$", RegexOptions.IgnoreCase))
+                        return HostEnv.WebDevServer;
+
+                    if (exeName.EndsWith("WaIISHost.exe", StringComparison.InvariantCultureIgnoreCase))
+                        return HostEnv.WindowsAzureIisHost;
+                }
+
+                return HostEnv.Unknown;
             }
         }
     }

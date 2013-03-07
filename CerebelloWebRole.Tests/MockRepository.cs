@@ -87,7 +87,7 @@ namespace CerebelloWebRole.Tests
         {
             // Setting user details.
             this.IsAuthenticated = true;
-            this.FullName = "Phill Austin";
+            this.FullName = "Júlio Cezar Almeida";
             this.UserNameOrEmail = "masbicudo@gmail.com";
             this.Password = "masban";
             this.UserPracticeIdentifier = practice;

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Data;
 using System.Data.Common;
 using System.Data.Objects;
 using System.Linq;
@@ -25,8 +27,30 @@ namespace CerebelloWebRole.Code
             this.db = db;
         }
 
+        private static ConcurrentDictionary<Type, bool> hasPracticeId = new ConcurrentDictionary<Type, bool>();
+
         public int SaveChanges()
         {
+            // checking changed elements to see if there is something wrong
+            foreach (var objectStateEntry in this.db.ObjectStateManager.GetObjectStateEntries(EntityState.Added | EntityState.Modified))
+            {
+                var obj = objectStateEntry.Entity;
+                bool isPracticeIdInvalid = false;
+                if (obj != null)
+                {
+                    var type = obj.GetType();
+                    if (hasPracticeId.GetOrAdd(type, t => t.GetProperty("PracticeId") != null && t.GetProperty("PracticeId").PropertyType == typeof(int)))
+                    {
+                        dynamic dyn = obj;
+                        if ((int)dyn.PracticeId != this.practice.Id)
+                            isPracticeIdInvalid = true;
+                    }
+                }
+
+                if (isPracticeIdInvalid)
+                    throw new Exception("Invalid value for 'PracticeId' property.");
+            }
+
             return this.db.SaveChanges();
         }
 

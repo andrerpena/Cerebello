@@ -152,6 +152,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             eventDates.AddRange(physicalExaminationsByDate.Keys);
 
+            // diagnostic hipotheses
+            var diagnosticHypothesesByDate =
+                (from pe in
+                     (from r in patient.DiagnosticHypotheses
+                      select new SessionEvent
+                      {
+                          LocalDate = ConvertToLocalDateTime(practice, r.CreatedOn),
+                          Id = r.Id
+                      })
+                 group pe by pe.LocalDate.Date
+                     into g
+                     select g).ToDictionary(g => g.Key, g => g.ToList());
+
+            eventDates.AddRange(diagnosticHypothesesByDate.Keys);
+
             // receipts
             var receiptsByDate =
                 (from rvm in
@@ -258,6 +273,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      PhysicalExaminationIds =
                                         physicalExaminationsByDate.ContainsKey(eventDate)
                                             ? physicalExaminationsByDate[eventDate].Select(a => a.Id).ToList()
+                                    : new List<int>(),
+                                    DiagnosticHipothesesId = 
+                                    diagnosticHypothesesByDate.ContainsKey(eventDate)
+                                    ? diagnosticHypothesesByDate[eventDate].Select(a => a.Id).ToList()
                                     : new List<int>(),
                                      ReceiptIds =
                                          receiptsByDate.ContainsKey(eventDate)
@@ -479,16 +498,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 while (anamneses.Any())
                 {
                     var anamnese = anamneses.First();
-
-                    // deletes diagnoses within the anamnese manually
-                    while (anamnese.DiagnosticHypotheses.Any())
-                    {
-                        var symptom = anamnese.DiagnosticHypotheses.First();
-                        this.db.DiagnosticHypotheses.DeleteObject(symptom);
-                    }
-
                     this.db.Anamnese.DeleteObject(anamnese);
                     anamneses.Remove(anamnese);
+                }
+
+                // delete diagnostic hipotheses manually
+                var diagnosticHypotheses = patient.DiagnosticHypotheses.ToList();
+                while (diagnosticHypotheses.Any())
+                {
+                    var diagnosticHypothesis = diagnosticHypotheses.First();
+                    this.db.DiagnosticHypotheses.DeleteObject(diagnosticHypothesis);
+                    diagnosticHypotheses.Remove(diagnosticHypothesis);
                 }
 
                 // delete receipts manually

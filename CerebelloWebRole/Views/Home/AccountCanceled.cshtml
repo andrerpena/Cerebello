@@ -1,31 +1,35 @@
 ﻿@{
-    ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos";
+    this.Layout = "/Views/Shared/_EmptyLayout.cshtml";
+    ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
 }
-<div class="container">
 
-    <style type="text/css">
-        .sad-img
-        {
-            border: transparent;
-            border-radius: 25px;
-            -moz-border-radius: 25px; /* Old Firefox */
-            background: url('/Content/Images/Site/sad_cancel_account.jpg');
-            width: 450px;
-            height: 300px;
-            float: left;
-            margin: 1em;
-        }
-    </style>
+@section Header {
+    <link rel="stylesheet" type="text/css" href="/Content/Styles/Site/Cancel.css" />
+}
 
-    <div class="container features">
-        <div class="row">
-            <div class="sad-img"></div>
-            <div class="span6">
-                <h3>Conta cancelada</h3>
 
-                <p>Sua conta foi cancelada.</p>
-                <p>Ficamos tristes com sua decisão.</p>
+<div class="box-page-container">
+    <div class="box-page-container-wrapper">
+        <div class="header">
+            <h2>Sua conta foi cancelada</h2>
+            <div class="buttons-wrapper">
+                <a class="btn btn-small" href="@Url.Action("Index", "Home")">Voltar ao Cerebello</a>
             </div>
+        </div>
+        <div class="body">
+            <p class="text-error">
+                Como foi solicitado, sua conta foi cancelada.
+            </p>
+            <p>
+                Caso haja alguma coisa que possamos fazer tê-lo de volta, por favor, envie um e-mail para <a href="mailto:cerebello@cerebello.com.br">cerebello@Cerebello.com.br</a>.
+        Caso você tenha alguma sugestão sobre como tornar o Cerebello melhor, por favor, acesse a nossa <a href="https://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello">central de idéias</a>.
+            </p>
+            <p>
+                Nós sentimos muito a sua partida e esperamos que um dia possamos fazer parte do seu consultório novamente.
+            </p>
+            <p>
+                - Equipe do Cerebello.
+            </p>
         </div>
     </div>
 </div>

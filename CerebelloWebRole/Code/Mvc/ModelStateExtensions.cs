@@ -23,6 +23,18 @@ namespace CerebelloWebRole.Code
             modelState.AddModelError(key, errorMessage);
         }
 
+        [StringFormatMethod("errorMessage")]
+        public static void AddModelError(
+            this ModelStateDictionary modelState,
+            Expression<Func<object>> expression,
+            [Localizable(true)] string errorMessage,
+            params object[] formatValues)
+        {
+            // todo: this method should accept a resource name, instead of an error message.
+            errorMessage = string.Format(errorMessage, formatValues);
+            modelState.AddModelError(expression, errorMessage);
+        }
+
         public static void AddModelError<TModel>(
             this ModelStateDictionary modelState,
             Expression<Func<TModel, object>> expression,

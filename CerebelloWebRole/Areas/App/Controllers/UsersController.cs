@@ -185,7 +185,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
-            if (this.DbUser.AdministratorId != null)
+            if (this.DbUser.AdministratorId != null || this.DbUser.IsOwner)
                 this.ViewBag.CanEditRole = true;
 
             return View("Edit", model);

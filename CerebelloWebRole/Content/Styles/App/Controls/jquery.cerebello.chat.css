@@ -5,11 +5,11 @@
     border-style: solid;
     border-width: 1px 1px 0;
     bottom: 0;
-    box-shadow: 0 0 1px #CCCCCC;
+    box-shadow: 0 0 10px #D5D5D5;
+    display: none;
     position: fixed;
     width: 230px;
     z-index: 10000;
-    display: none;
 }
 
 .chat-window-title {
@@ -80,6 +80,10 @@ input.chat-window-text-box {
     .chat-message .chat-text-wrapper {
         line-height: 1.2em;
         margin-left: 40px;
+    }
+
+    .chat-message p {
+        margin: 0;
     }
 
 .chat-window-content {

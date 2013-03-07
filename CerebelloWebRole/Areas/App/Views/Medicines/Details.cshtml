@@ -1,4 +1,5 @@
-﻿@using CerebelloWebRole.Areas.App.Models
+﻿@using Cerebello.Model
+@using CerebelloWebRole.Code.Helpers
 @model MedicineViewModel
 @{
     var title = "Medicamento: " + this.Model.Name;
@@ -7,6 +8,7 @@
     var cardView = this.Html.CreateCardView();
     cardView.AddField(model => model.Name, wholeRow: true);
     cardView.AddLinkField(model => model.LaboratoryName, "Details", "Laboratories", model => new { id = Model.LaboratoryId}, true);
+    cardView.AddField(model => model.Usage, @<text>@EnumHelper.GetText(Model.Usage, typeof(TypeUsage))</text>);
     cardView.AddField(model => model.ActiveIngredients,
     @<text>
     <ul class="string-list">

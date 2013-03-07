@@ -10,7 +10,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PhysicalExaminationController : DoctorController
     {
-        private static PhysicalExaminationViewModel GetViewModel(PhysicalExamination physicalExamination)
+        public static PhysicalExaminationViewModel GetViewModel(PhysicalExamination physicalExamination)
         {
             if (physicalExamination == null)
                 return new PhysicalExaminationViewModel();

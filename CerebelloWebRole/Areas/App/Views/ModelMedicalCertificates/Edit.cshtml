@@ -16,7 +16,6 @@
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(model => model.Name);
     editPanel.AddField(model => model.Text, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new { rows = 10 })</text>);
-    editPanel.AddField(model => model.Fields, EditPanelFieldSize.Large, @<text>@Html.CollectionEditorInlineFor(m => m.Fields, "FieldEditor", "Adicionar campo")</text>);
 }
 @section Title {
     @title <span class="lock-title icon-lock" />
@@ -27,18 +26,12 @@
 @section SideBar {
     <ul>
         <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de modelos de atestados</a></li>
-    </ul>
-    <hr />
-    @Html.MessageHelp("Ao criar um modelo de atestado, "
-            + "é possível declarar campos que deverão ser definidos ao criar um novo atestado. "
-            + "Para definir um campo, basta clicar em 'adicionar campo' e digitar seu nome. "
-            + "Para referenciar um campo no texto, use o padrão <%nome_do_campo%>. "
-            + "O campo <%paciente%> é definido automaticamente.")
-    <hr/>
-    <ul>
-        <li><a href="@Url.Action("RegisteringMedicalCertificates", "HomeDocs", new { area = "Docs"})" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
+        <li><a href="@Url.Action("RegisteringMedicalCertificates", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
     </ul>
 }
+
+@Html.Message(@<text>Ao escrever o texto do modelo de atestado, é possível definir campos coringa. Para isto, coloque qualquer texto entre <% e %>. Exemplo: <%Horário%>. Campos coringa vão permitir que você insira os valores para este campo durante a emissão de um novo atestado médico. Além disso, <%Paciente%> é automaticamente substituído pelo nome do paciente atual.   </text>)
+
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(false)

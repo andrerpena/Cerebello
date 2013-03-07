@@ -128,12 +128,16 @@ namespace CerebelloWebRole.Code.Helpers
                 mailMessage.To.Add(mailMessage.Bcc[0]);
                 mailMessage.Bcc.RemoveAt(0);
             }
+
+            // prepending "[TEST]" when in debug (this will help differentiate real messages from test messages)
+            mailMessage.Subject = "[TEST] " + mailMessage.Subject;
 #endif
             if (!mailMessage.To.Any())
             {
                 mailMessage.Subject = string.Format("WARNING: E-MAIL W/O DESTINATION: {0}", mailMessage.Subject);
                 mailMessage.To.Add(new MailAddress("cerebello@cerebello.com.br", "Error report"));
             }
+
             (DefaultEmailSender ?? DefaultSendEmail)(mailMessage);
         }
 

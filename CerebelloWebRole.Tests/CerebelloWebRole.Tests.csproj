@@ -155,7 +155,6 @@
     <Compile Include="Tests\AppControllerTests.cs" />
     <Compile Include="Tests\MedicalCertificatesControllerTests.cs" />
     <Compile Include="MockRepository.cs" />
-    <Compile Include="Tests\ModelMedicalCertificateControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

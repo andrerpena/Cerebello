@@ -6,8 +6,6 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
     public class PatientEmailModel
     {
-        public bool IsBodyHtml { get; set; }
-
         public DateTime AppointmentDate;
 
         public string PatientName { get; set; }

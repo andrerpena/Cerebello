@@ -11,6 +11,7 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Helpers;
 using Telerik.Reporting.Processing;
 using Telerik.Reporting.XmlSerialization;
 using Report = Telerik.Reporting.Report;
@@ -78,12 +79,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var rg = new ReportData(db, practice);
             var doctorData = rg.GetPdf(doctor, patientId);
 
-            // Getting URL of the report model.
-            var domain = request.Url.GetLeftPart(UriPartial.Authority);
-            var urlMain = new Uri(String.Format("{0}/Content/Reports/PatientsList/Doctor.trdx", domain));
+            Report reportMain;
+
+            if (DebugConfig.IsDebug && DebugConfig.UseLocalResourcesOnly)
+            {
+                // Getting file name of the report model.
+                var resourcePath = String.Format("C:\\Cerebello\\CerebelloWebRole\\Content\\Reports\\PatientsList\\Doctor.trdx");
+
+                // Creating the report and exporting PDF.
+                reportMain = CreateReportFromFile(resourcePath);
+            }
+            else if (false)
+            {
+                // Getting URL of the report model.
+                var domain = request.Url.GetLeftPart(UriPartial.Authority);
+                var urlMain = new Uri(String.Format("{0}/Content/Reports/PatientsList/Doctor.trdx", domain));
+
+                // Creating the report and exporting PDF.
+                reportMain = CreateReportFromUrl(urlMain);
+            }
+            else
+            {
+                // Getting resource name of the report model.
+                var resourcePath = String.Format("Content\\Reports\\PatientsList\\Doctor.trdx");
+
+                // Creating the report and exporting PDF.
+                reportMain = CreateReportFromResource(resourcePath);
+            }
 
             // Creating the report and exporting PDF.
-            using (var reportMain = CreateReportFromUrl(urlMain))
+            using (reportMain)
             {
                 reportMain.DataSource = new[] { doctorData };
 
@@ -97,23 +122,77 @@ namespace CerebelloWebRole.Areas.App.Controllers
         private static Report CreateReportFromUrl(Uri uri)
         {
             var settings = new XmlReaderSettings { IgnoreWhitespace = true };
+            Report report;
             using (var xmlReader = XmlReader.Create(uri.ToString(), settings))
             {
                 var xmlSerializer = new ReportXmlSerializer();
-                var report = (Report)xmlSerializer.Deserialize(xmlReader);
-
-
-                var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
-                foreach (var eachSubReport in subReports)
-                {
-                    var uriSub = new Uri(uri, String.Format("{0}.trdx", eachSubReport.Name));
-                    var reportSub = CreateReportFromUrl(uriSub);
-                    report.Disposed += (s, e) => reportSub.Dispose();
-                    eachSubReport.ReportSource = reportSub;
-                }
-
-                return report;
+                report = (Report)xmlSerializer.Deserialize(xmlReader);
             }
+
+            var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
+            foreach (var eachSubReport in subReports)
+            {
+                var uriSub = new Uri(uri, String.Format("{0}.trdx", eachSubReport.Name));
+                var reportSub = CreateReportFromUrl(uriSub);
+                report.Disposed += (s, e) => reportSub.Dispose();
+                eachSubReport.ReportSource = reportSub;
+            }
+
+            return report;
+        }
+
+        private static Report CreateReportFromResource(string resourceName)
+        {
+            var asm = typeof(ReportController).Assembly;
+            var asmName = asm.GetName().Name;
+
+            var resName = Path.Combine(asmName, resourceName)
+                .Replace("\\", ".");
+
+            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
+            Report report;
+            using (var xmlReader = XmlReader.Create(asm.GetManifestResourceStream(resName), settings))
+            {
+                var xmlSerializer = new ReportXmlSerializer();
+                report = (Report)xmlSerializer.Deserialize(xmlReader);
+            }
+
+            var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
+            foreach (var eachSubReport in subReports)
+            {
+                var resourceNameSub = Path.Combine(Path.GetDirectoryName(resourceName), String.Format("{0}.trdx", eachSubReport.Name));
+                var reportSub = CreateReportFromResource(resourceNameSub);
+                report.Disposed += (s, e) => reportSub.Dispose();
+                eachSubReport.ReportSource = reportSub;
+            }
+
+            return report;
+        }
+
+        private static Report CreateReportFromFile(string fileName)
+        {
+            var asm = typeof(ReportController).Assembly;
+            var asmName = asm.GetName().Name;
+
+            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
+            Report report;
+            using (var fileStream = System.IO.File.Open(fileName, FileMode.Open))
+            using (var xmlReader = XmlReader.Create(fileStream, settings))
+            {
+                var xmlSerializer = new ReportXmlSerializer();
+                report = (Report)xmlSerializer.Deserialize(xmlReader);
+            }
+
+            var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
+            foreach (var eachSubReport in subReports)
+            {
+                var resourceNameSub = Path.Combine(Path.GetDirectoryName(fileName), String.Format("{0}.trdx", eachSubReport.Name));
+                var reportSub = CreateReportFromFile(resourceNameSub);
+                report.Disposed += (s, e) => reportSub.Dispose();
+                eachSubReport.ReportSource = reportSub;
+            }
+
+            return report;
         }
     }
 
@@ -203,33 +282,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private SessionData GetSessionData(SessionViewModel arg)
         {
-            var result = new SessionData();
-
-            result.Date = arg.Date;
-
-            result.Anamneses =
-                this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
-                .Select(AnamnesesController.GetViewModel).ToList();
-
-            result.Receipts =
-                this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
-                .Select(ReceiptsController.GetViewModel).ToList();
-
-            result.ExaminationRequests =
-                this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
-                .Select(ExamsController.GetViewModel).ToList();
-
-            result.ExaminationResults =
-                this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
-                .Select(ExamResultsController.GetViewModel).ToList();
-
-            result.Diagnosis =
-                this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
-                .Select(DiagnosisController.GetViewModel).ToList();
-
-            result.MedicalCertificates =
-                this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
-                .Select(MedicalCertificatesController.GetViewModel).ToList();
+            var result = new SessionData
+                {
+                    Date = arg.Date,
+                    Anamneses = this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
+                                    .Select(AnamnesesController.GetViewModel).ToList(),
+                    Receipts = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
+                                   .Select(ReceiptsController.GetViewModel).ToList(),
+                    PhysicalExaminations = this.db.PhysicalExaminations.Where(x => arg.PhysicalExaminationIds.Contains(x.Id))
+                                               .Select(PhysicalExaminationController.GetViewModel).ToList(),
+                    DiagnosticHipotheses = this.db.DiagnosticHypotheses.Where(x => arg.DiagnosticHipothesesId.Contains(x.Id))
+                                                .Select(DiagnosticHypothesesController.GetViewModel).ToList(),
+                    ExaminationRequests = this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
+                                              .Select(ExamsController.GetViewModel).ToList(),
+                    ExaminationResults = this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
+                                             .Select(ExamResultsController.GetViewModel).ToList(),
+                    Diagnosis = this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
+                                    .Select(DiagnosisController.GetViewModel).ToList(),
+                    MedicalCertificates = this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
+                                              .Select(MedicalCertificatesController.GetViewModel).ToList()
+                };
 
             return result;
         }
@@ -374,11 +446,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public DateTime Date { get; set; }
 
             public List<AnamneseViewModel> Anamneses { get; set; }
+            public List<PhysicalExaminationViewModel> PhysicalExaminations { get; set; }
             public List<ReceiptViewModel> Receipts { get; set; }
             public List<ExaminationRequestViewModel> ExaminationRequests { get; set; }
             public List<ExaminationResultViewModel> ExaminationResults { get; set; }
             public List<DiagnosisViewModel> Diagnosis { get; set; }
             public List<MedicalCertificateViewModel> MedicalCertificates { get; set; }
+            public List<DiagnosticHypothesisViewModel> DiagnosticHipotheses { get; set; }
         }
     }
 }

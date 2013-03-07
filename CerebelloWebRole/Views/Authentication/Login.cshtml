@@ -1,5 +1,5 @@
 ﻿@using CerebelloWebRole.Code
-@model CerebelloWebRole.Models.LoginViewModel
+@model LoginViewModel
 @{
     this.Layout = "../Shared/_AuthenticationLayout.cshtml";
     this.ViewBag.Title = "Login · Cerebello";
@@ -9,8 +9,8 @@
         <div class="header">
             <h2>Login <span class="optional">no Cerebello</span></h2>
             <div class="buttons-wrapper">
-                <a class="btn btn-small" href="@Url.Action("Index", "Home")" class="link">Voltar</a>
-                <a class="btn btn-small" href="@Url.Action("CreateAccount")" class="link">Criar uma conta</a>
+                <a class="btn btn-small" href="@Url.Action("Index", "Home")">Voltar</a>
+                <a class="btn btn-small" href="@Url.Action("CreateAccount")">Criar uma conta</a>
             </div>
         </div>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
