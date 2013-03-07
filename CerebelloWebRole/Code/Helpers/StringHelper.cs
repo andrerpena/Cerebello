@@ -193,5 +193,22 @@ namespace CerebelloWebRole.Code
         {
             return !AllEmpty(strs);
         }
+
+        public static string Join(string separator, string lastSeparator, params string[] userRoles)
+        {
+            if (userRoles == null)
+                throw new ArgumentNullException("userRoles");
+
+            if (userRoles.Length == 0)
+                return "";
+
+            if (userRoles.Length == 1)
+                return userRoles[0];
+
+            if (userRoles.Length == 2)
+                return userRoles[0] + lastSeparator + userRoles[1];
+
+            return string.Join(separator, userRoles.Take(userRoles.Length - 1)) + lastSeparator + userRoles[userRoles.Length - 1];
+        }
     }
 }

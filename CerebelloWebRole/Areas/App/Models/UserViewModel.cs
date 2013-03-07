@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Validation;
 
 namespace CerebelloWebRole.Areas.App.Models
@@ -24,6 +26,8 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Médico(a)")]
         public bool IsDoctor { get; set; }
+
+        public bool IsOwner { get; set; }
 
         // Information of this user when he/she is a medic.
         // If IsDoctor is false, these properties have no meaning.
@@ -54,6 +58,18 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Conselho profissional")]
         public string MedicalEntityName { get; set; }
 
+        [Localizable(true)]
+        private const string Secretary = "secretária";
+
+        [Localizable(true)]
+        private const string Medic = "médico";
+
+        [Localizable(true)]
+        private const string Administrator = "administrador";
+
+        [Localizable(true)]
+        private const string Owner = "proprietário da conta";
+
         [Display(Name = "Funções")]
         public string UserRoles
         {
@@ -61,16 +77,14 @@ namespace CerebelloWebRole.Areas.App.Models
             {
                 var userRoles = new[]
                     {
-                        (this.IsSecretary ? "secretária" : ""),
-                        (this.IsDoctor ? "médico" : ""),
-                        (this.IsAdministrador ? "administrador" : ""),
+                        (this.IsSecretary ? Secretary : ""),
+                        (this.IsDoctor ? Medic : ""),
+                        (this.IsAdministrador ? Administrator : ""),
+                        (this.IsOwner ? Owner : ""),
                     }.Where(ur => ur != "").ToArray();
-                var andParts = new[]
-                    {
-                        string.Join(", ", userRoles.Skip(1)),
-                        userRoles.Take(1).SingleOrDefault() ?? ""
-                    }.Where(ur => ur != "");
-                var result = string.Join(" e ", andParts);
+
+                var result = StringHelper.Join(", ", " e ", userRoles);
+
                 return result;
             }
         }

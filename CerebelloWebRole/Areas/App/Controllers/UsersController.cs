@@ -128,6 +128,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.IsAdministrador = user.AdministratorId != null;
             viewModel.IsDoctor = user.DoctorId != null;
             viewModel.IsSecretary = user.SecretaryId != null;
+            viewModel.IsOwner = user.IsOwner;
         }
 
         internal static void FillDoctorViewModel(User user, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty, UserViewModel viewModel, Doctor doctor)
