@@ -1717,10 +1717,6 @@
             <End Role="Practice" EntitySet="Practices" />
           </AssociationSet>
           <EntitySet Name="ChatMessages" EntityType="Cerebello.Model.ChatMessage" />
-          <AssociationSet Name="FK_ChatMessage_Practice" Association="Cerebello.Model.FK_ChatMessage_Practice">
-            <End Role="Practice" EntitySet="Practices" />
-            <End Role="ChatMessage" EntitySet="ChatMessages" />
-          </AssociationSet>
           <AssociationSet Name="FK_ChatMessage_FromUser_User" Association="Cerebello.Model.FK_ChatMessage_FromUser_User">
             <End Role="User" EntitySet="Users" />
             <End Role="ChatMessage" EntitySet="ChatMessages" />
@@ -1773,10 +1769,6 @@
           <EntitySet Name="PhysicalExaminations" EntityType="Cerebello.Model.PhysicalExamination" />
           <AssociationSet Name="FK_PhysicalExamination_Patient" Association="Cerebello.Model.FK_PhysicalExamination_Patient">
             <End Role="Patient" EntitySet="Patients" />
-            <End Role="PhysicalExamination" EntitySet="PhysicalExaminations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PhysicalExamination_Practice" Association="Cerebello.Model.FK_PhysicalExamination_Practice">
-            <End Role="Practice" EntitySet="Practices" />
             <End Role="PhysicalExamination" EntitySet="PhysicalExaminations" />
           </AssociationSet>
           <EntitySet Name="Files" EntityType="Cerebello.Model.File" />
@@ -1946,7 +1938,6 @@
           <Property Type="String" Name="WindowsTimeZoneId" Nullable="false" MaxLength="31" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="VerificationDate" Precision="3" />
           <Property Type="Int32" Name="ActiveAccountContractId" />
-          <NavigationProperty Name="ChatMessages" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="Practice" ToRole="ChatMessage" />
           <NavigationProperty Name="AccountContracts" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="Practice" ToRole="AccountContract" />
           <NavigationProperty Name="AccountContract" Relationship="Cerebello.Model.FK_Practice_AccountContract" FromRole="Practice" ToRole="AccountContract" />
           <Property Type="String" Name="PhoneMain" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -1958,7 +1949,6 @@
           <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Practice" ToRole="Address" />
           <Property Type="Boolean" Name="AccountDisabled" Nullable="false" />
           <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
-          <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Practice" FromRole="Practice" ToRole="PhysicalExamination" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2760,22 +2750,9 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
           <Property Type="String" Name="Message" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_ChatMessage_Practice" FromRole="ChatMessage" ToRole="Practice" />
           <NavigationProperty Name="UserFrom" Relationship="Cerebello.Model.FK_ChatMessage_FromUser_User" FromRole="ChatMessage" ToRole="User" />
           <NavigationProperty Name="UserTo" Relationship="Cerebello.Model.FK_ChatMessage_ToUser_User" FromRole="ChatMessage" ToRole="User" />
         </EntityType>
-        <Association Name="FK_ChatMessage_Practice">
-          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
-          <End Type="Cerebello.Model.ChatMessage" Role="ChatMessage" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ChatMessage">
-              <PropertyRef Name="PracticeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ChatMessage_FromUser_User">
           <End Type="Cerebello.Model.User" Role="User" Multiplicity="1" />
           <End Type="Cerebello.Model.ChatMessage" Role="ChatMessage" Multiplicity="*" />
@@ -2970,7 +2947,6 @@
           <Property Type="String" Name="Notes" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="PhysicalExamination" ToRole="Patient" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_PhysicalExamination_Practice" FromRole="PhysicalExamination" ToRole="Practice" />
         </EntityType>
         <Association Name="FK_PhysicalExamination_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -2981,18 +2957,6 @@
             </Principal>
             <Dependent Role="PhysicalExamination">
               <PropertyRef Name="PatientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PhysicalExamination_Practice">
-          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
-          <End Type="Cerebello.Model.PhysicalExamination" Role="PhysicalExamination" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Practice">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PhysicalExamination">
-              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3801,7 +3765,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="100">
+      <Diagram Name="CerebelloEntities" ZoomLevel="34">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -4050,7 +4014,7 @@
           <ConnectorPoint PointX="13.958335833333335" PointY="16.510315755208328" />
           <ConnectorPoint PointX="14.25" PointY="16.510315755208328" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="Cerebello.Model.AccountContract" Width="2.125" PointX="28" PointY="4.625" Height="3.1340950520833246" FillColor="DimGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.AccountContract" Width="2.125" PointX="28" PointY="3.75" Height="3.1340950520833246" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.SYS_ContractType" Width="2" PointX="30.625" PointY="5.125" Height="2.3648893229166674" FillColor="Firebrick" />
         <AssociationConnector Association="Cerebello.Model.FK_AccountContract_Practice">
           <ConnectorPoint PointX="11.3359375" PointY="25.095602213541667" />
@@ -4071,19 +4035,6 @@
           <ConnectorPoint PointX="11.35546875" PointY="25.095602213541667" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Cerebello.Model.ChatMessage" Width="1.5" PointX="19.375" PointY="8.125" Height="2.7494921875000102" FillColor="DimGray" />
-        <AssociationConnector Association="Cerebello.Model.FK_ChatMessage_Practice">
-          <ConnectorPoint PointX="10.750000499999999" PointY="24.518697916666667" />
-          <ConnectorPoint PointX="10.750000499999999" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="12.270840754877726" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="12.437507421544394" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="12.687519843088785" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="12.854186509755452" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="13.083345754877724" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="13.250012421544392" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="16.75" PointY="24.980205078125003" />
-          <ConnectorPoint PointX="16.75" PointY="23.124746093750005" />
-          <ConnectorPoint PointX="17.125" PointY="23.124746093750005" />
-        </AssociationConnector>
         <AssociationConnector Association="Cerebello.Model.FK_ChatMessage_FromUser_User">
           <ConnectorPoint PointX="5" PointY="21.57699296259301" />
           <ConnectorPoint PointX="6.072916666666667" PointY="21.57699296259301" />
@@ -4150,17 +4101,16 @@
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
         <AssociationConnector Association="Cerebello.Model.PersonAddress" />
-        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="1.5" PointX="34" PointY="24.25" FillColor="Green" />
+        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="34" PointY="24.625" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
-        <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Practice" />
         <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="39.125" PointY="29.25" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="37.125" PointY="29.5" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_File" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Patient" />
-        <EntityTypeShape EntityType="Cerebello.Model.Billing" Width="2" PointX="42.375" PointY="8.25" FillColor="Orange" />
+        <EntityTypeShape EntityType="Cerebello.Model.Billing" Width="2" PointX="42.375" PointY="7.875" FillColor="Orange" />
         <EntityTypeShape EntityType="Cerebello.Model.DiagnosticHypothesis" Width="2.5" PointX="43" PointY="17.625" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_DiagnosticHypothesis_Patient" />
-        <EntityTypeShape EntityType="Cerebello.Model.BillingItem" Width="1.875" PointX="39.75" PointY="9.625" FillColor="Orange" />
+        <EntityTypeShape EntityType="Cerebello.Model.BillingItem" Width="1.875" PointX="39.75" PointY="8.875" FillColor="Orange" />
         <AssociationConnector Association="Cerebello.Model.FK_BillingItem_Billing" />
         <AssociationConnector Association="Cerebello.Model.FK_Billing_AccountContract" />
         <AssociationConnector Association="Cerebello.Model.FK_BillingItem_AccountContract" />
