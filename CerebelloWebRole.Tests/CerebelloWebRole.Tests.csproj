@@ -130,7 +130,6 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="DbTestBase.cs" />
-    <Compile Include="Disposer.cs" />
     <Compile Include="ExceptionHelper.cs" />
     <Compile Include="Tests.Helpers\StringHelperTests.cs" />
     <Compile Include="MockExtensions.cs" />

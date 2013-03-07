@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Code.Chat
         /// Time after which the user is considered inactive and elegible for 
         /// removal (in seconds)
         /// </summary>
-        private const int INACTIVITY_TOLERANCE = 40;
+        private static readonly TimeSpan inactivityTolerance = TimeSpan.FromSeconds(40);
 
         readonly object usersInRoomLock = new object();
         readonly object messageLock = new object();
@@ -29,14 +29,14 @@ namespace CerebelloWebRole.Code.Chat
         public ChatRoom(int id)
         {
             this.Id = id;
-            this.Users = new Dictionary<int, ChatUser>();
+            this.UsersById = new Dictionary<int, ChatUser>();
             this.Messages = new List<ChatMessage>();
         }
 
         /// <summary>
         /// Total list of users. Include offline
         /// </summary>
-        public Dictionary<int, ChatUser> Users { get; private set; }
+        public Dictionary<int, ChatUser> UsersById { get; private set; }
 
         /// <summary>
         /// All the messages in the room, from all users.
@@ -62,10 +62,10 @@ namespace CerebelloWebRole.Code.Chat
             {
                 if (user == null) throw new ArgumentNullException("user");
 
-                if (this.Users.ContainsKey(user.Id))
+                if (this.UsersById.ContainsKey(user.Id))
                     throw new Exception("User already existis in the room. User id:" + user.Id);
 
-                this.Users.Add(user.Id, user);
+                this.UsersById.Add(user.Id, user);
                 // I'm infering he/she is online now by the usage of this method. I'm not sure this will work
                 this.NotifyUsersChanged();
             }
@@ -80,7 +80,7 @@ namespace CerebelloWebRole.Code.Chat
             {
                 if (user == null) throw new ArgumentNullException("user");
 
-                this.Users.Remove(user.Id);
+                this.UsersById.Remove(user.Id);
                 this.NotifyUsersChanged();
             }
         }
@@ -93,7 +93,7 @@ namespace CerebelloWebRole.Code.Chat
         {
             lock (usersInRoomLock)
             {
-                return this.Users.ContainsKey(userId);
+                return this.UsersById.ContainsKey(userId);
             }
         }
 
@@ -105,16 +105,17 @@ namespace CerebelloWebRole.Code.Chat
         {
             lock (usersInRoomLock)
             {
-                if (!this.Users.ContainsKey(userId))
+                if (!this.UsersById.ContainsKey(userId))
                     throw new Exception("User not found in the room. User id:" + userId);
 
-                this.Users[userId].LastActiveOn = GetUtcNow();
+                this.UsersById[userId].LastActiveOn = GetUtcNow();
 
                 // if this user wasn't online previously, make it online and tell everyone
-                if (this.Users[userId].Status == ChatUser.StatusType.Online)
-                    return;
-                this.Users[userId].Status = ChatUser.StatusType.Online;
-                this.NotifyUsersChanged();
+                if (this.UsersById[userId].Status != ChatUser.StatusType.Online)
+                {
+                    this.UsersById[userId].Status = ChatUser.StatusType.Online;
+                    this.NotifyUsersChanged();
+                }
             }
         }
 
@@ -125,10 +126,10 @@ namespace CerebelloWebRole.Code.Chat
         {
             lock (usersInRoomLock)
             {
-                if (!this.Users.ContainsKey(userId))
+                if (!this.UsersById.ContainsKey(userId))
                     throw new Exception("User not found in the room. User id:" + userId);
 
-                var user = this.Users[userId];
+                var user = this.UsersById[userId];
 
                 if (user.Status == ChatUser.StatusType.Offline)
                     return;
@@ -139,18 +140,19 @@ namespace CerebelloWebRole.Code.Chat
 
         /// <summary>
         /// Returns all users in the room sorted by name.
+        /// This will also update the status of the unseen users to offline.
         /// </summary>
-        public List<ChatUser> GetUsers()
+        public List<ChatUser> GetUsersAndUpdateStatus()
         {
             lock (usersInRoomLock)
             {
-                var referenceTime = GetUtcNow();
-                var inactiveUserIds = from u in this.Users where referenceTime - u.Value.LastActiveOn > TimeSpan.FromSeconds(INACTIVITY_TOLERANCE) select u.Key;
+                var lastSeenLimit = GetUtcNow() - inactivityTolerance;
+                var inactiveUsers = this.UsersById.Values.Where(u => u.LastActiveOn < lastSeenLimit);
 
-                foreach (var userId in inactiveUserIds)
-                    this.Users[userId].Status = ChatUser.StatusType.Offline;
+                foreach (var user in inactiveUsers)
+                    user.Status = ChatUser.StatusType.Offline;
 
-                return (from u in this.Users orderby u.Value.Name select u.Value).ToList();
+                return this.UsersById.Values.OrderBy(u => u.Name).ToList();
             }
         }
 
@@ -195,14 +197,14 @@ namespace CerebelloWebRole.Code.Chat
                 {
                     Message = message,
                     Timestamp = GetUtcNow().Ticks,
-                    UserFrom = this.Users[userFromId],
-                    UserTo = this.Users[userToId]
+                    UserFrom = this.UsersById[userFromId],
+                    UserTo = this.UsersById[userToId]
                 };
 
                 this.Messages.Add(newMessage);
 
-                var userFrom = this.Users[userFromId];
-                var userTo = this.Users[userToId];
+                var userFrom = this.UsersById[userFromId];
+                var userTo = this.UsersById[userToId];
 
                 this.NotifyNewMessage(userFrom, userTo, newMessage);
             }
@@ -227,12 +229,10 @@ namespace CerebelloWebRole.Code.Chat
         /// <summary>
         /// Notifies subscribers
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="status"></param>
         private void NotifyUsersChanged()
         {
             this.lastTimeRoomChanged = GetUtcNow().Ticks;
-            var usersList = this.GetUsers();
+            var usersList = this.GetUsersAndUpdateStatus();
             if (this.UserStatusChanged != null)
                 this.UserStatusChanged(this.Id, usersList);
         }
@@ -272,6 +272,16 @@ namespace CerebelloWebRole.Code.Chat
         public bool HasChangedSince(long timestamp)
         {
             return this.lastTimeRoomChanged > timestamp;
+        }
+
+        internal void CheckForUnseenUsers()
+        {
+            // checking for long unseen users, that still have online status
+            var lastSeenLimit = GetUtcNow() - inactivityTolerance;
+            bool hasUnseenUsers = this.UsersById.Values.Any(u => u.LastActiveOn < lastSeenLimit && u.Status != ChatUser.StatusType.Offline);
+
+            if (hasUnseenUsers)
+                this.NotifyUsersChanged();
         }
     }
 }
