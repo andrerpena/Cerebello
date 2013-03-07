@@ -1,15 +1,14 @@
-﻿@using CerebelloWebRole.Areas.App.Models
-@{
+﻿@{
     var title = "Configurações do médico";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.LargeSideBar = false;
 }
 @section Title {
-    @title <span class="lock-title icon-lock" />
+    @title @LockIcon.Icon()
 }
 @section Scripts
 {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
+    @LockIcon.Script(LockAccessType.SelfOrAdminOrOwner, "médico")
 }
 
 

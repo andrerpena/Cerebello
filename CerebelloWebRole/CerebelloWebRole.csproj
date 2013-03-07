@@ -145,7 +145,8 @@
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
-    <Compile Include="Areas\App\Models\LockScriptViewModel.cs" />
+    <Compile Include="Code\Access\LockAccessType.cs" />
+    <Compile Include="Code\Access\LockElementActionType.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceViewModel.cs" />
     <Compile Include="Areas\App\Controllers\NotificationsController.cs" />
@@ -710,7 +711,6 @@
     <Content Include="Areas\App\Views\Shared\NotificationFillUserProfile.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Medicines.cshtml" />
     <Content Include="Areas\App\Views\Laboratories\Search.cshtml" />
-    <Content Include="Areas\App\Views\Shared\LockScript.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\CreatingAnAccount.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\ManagingUsers.cshtml" />
     <Content Include="Areas\Docs\Views\HomeDocs\MigratingToAProfessionalAccount.cshtml" />
@@ -742,6 +742,7 @@
     </Content>
     <Content Include="Areas\App\Views\DiagnosticHypotheses\Details.cshtml" />
     <Content Include="Areas\App\Views\DiagnosticHypotheses\Edit.cshtml" />
+    <Content Include="App_Code\LockIcon.cshtml" />
     <None Include="Content\Fonts\Grandesign.ttf" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

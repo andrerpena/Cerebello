@@ -41,10 +41,10 @@
     cardView.AddField(model => model.Observations);
 }
 @section Title {
-    @title <span class="lock-title icon-lock" />
+    @title @LockIcon.Icon()
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
+    @LockIcon.Script(LockAccessType.SelfOrAdminOrOwner, "médico")
 }
 @section SideBar {
     <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-edit" id="edit-medication-link">Editar medicamento</a>

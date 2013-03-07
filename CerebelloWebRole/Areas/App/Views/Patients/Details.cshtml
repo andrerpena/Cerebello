@@ -64,7 +64,7 @@
 }
 @section Scripts
 {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist"))
+    @LockIcon.Script(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist")
 }
 
 @cardView.GetHtml()
@@ -78,7 +78,7 @@
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
-    <h2>Histórico do paciente <span class="lock-hist icon-lock" /></h2>
+    <h2>Histórico do paciente @LockIcon.Icon("lock-hist")</h2>
 
     <div class="medical-appointments-panel">
         @if (this.Model.Sessions.Any())
@@ -198,7 +198,7 @@
         {
             @Html.Message("O paciente não possui histórico")
         }
-        <h2>Nova consulta <span class="lock-hist icon-lock" /></h2>
+        <h2>Nova consulta @LockIcon.Icon("lock-hist")</h2>
         <div class="new-medical-appointment-panel-wrapper">
             <div class="new-medical-appointment-panel">
                 <!-- anamnese -->

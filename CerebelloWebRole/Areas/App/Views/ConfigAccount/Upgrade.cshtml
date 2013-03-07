@@ -16,10 +16,10 @@
     Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 }
 @section Title {
-    @title <span class="lock-title icon-lock" />
+    @title @LockIcon.Icon()
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.Owner))
+    @LockIcon.Script(LockAccessType.Owner)
 }
 @section Styles
 {

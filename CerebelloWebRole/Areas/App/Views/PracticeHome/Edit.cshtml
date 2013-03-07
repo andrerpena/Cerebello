@@ -20,10 +20,10 @@
     editPanel.AddField(m => m.SiteUrl, EditPanelFieldSize.XLarge);
 }
 @section Title {
-    @title <span class="lock-title icon-lock" />
+    @title @LockIcon.Icon()
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner))
+    @LockIcon.Script(LockAccessType.AdminOrOwner)
 }
 @section SideBar {
     <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>

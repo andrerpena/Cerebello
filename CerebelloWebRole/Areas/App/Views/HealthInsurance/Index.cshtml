@@ -38,10 +38,10 @@
     gridParticular.AddEditField("Edit", "HealthInsurance", model => new { model.Id });
 }
 @section Title {
-    @title <span class="lock-title icon-lock" />
+    @title @LockIcon.Icon()
 }
 @section Scripts {
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "médico"))
+    @LockIcon.Script(LockAccessType.SelfOrAdminOrOwner, "médico")
 }
 @section SideBar {
     <ul>

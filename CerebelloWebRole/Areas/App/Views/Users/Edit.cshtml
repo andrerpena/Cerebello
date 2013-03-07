@@ -1,6 +1,5 @@
 ﻿@model UserViewModel
 @using System.Linq.Expressions
-@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
@@ -94,7 +93,7 @@
 }
 
 @section Title {
-    @title <span class="lock-title icon-lock" />
+    @title @LockIcon.Icon()
 }
 @section Scripts {
     <script type="text/javascript">
@@ -114,14 +113,14 @@
     }
     @(isCreating
         ? hasSubRestrictions
-            ? Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner, notes: "Esta tela possui restrições especificas em alguns campos"))
-            : Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner))
+            ? LockIcon.Script(LockAccessType.AdminOrOwner, notes: "Esta tela possui restrições especificas em alguns campos")
+            : LockIcon.Script(LockAccessType.AdminOrOwner)
         : hasSubRestrictions
-            ? Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "usuário", notes: "Esta tela possui restrições especificas em alguns campos"))
-            : Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.SelfOrAdminOrOwner, "usuário"))
+            ? LockIcon.Script(LockAccessType.SelfOrAdminOrOwner, "usuário", notes: "Esta tela possui restrições especificas em alguns campos")
+            : LockIcon.Script(LockAccessType.SelfOrAdminOrOwner, "usuário")
     )
 
-    @Html.Partial("LockScript", new LockScriptViewModel(LockAccessType.AdminOrOwner, elementAction: LockElementActionType.SectionEdit, cssClass: "lock-role"))
+    @LockIcon.Script(LockAccessType.AdminOrOwner, elementAction: LockElementActionType.SectionEdit, cssClass: "lock-role")
 }
 
 @section SideBar {
@@ -144,7 +143,7 @@
 
     if (this.ViewBag.CanEditRole == true)
     {
-        <h2>Funções deste usuário <span class="lock-role icon-lock" /></h2>
+        <h2>Funções deste usuário @LockIcon.Icon("lock-role")</h2>
         @:@editPanelRoles.GetHtml()
     }
     else
