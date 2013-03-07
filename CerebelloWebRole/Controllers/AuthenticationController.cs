@@ -8,7 +8,6 @@ using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Security;

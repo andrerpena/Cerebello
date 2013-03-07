@@ -7,7 +7,7 @@ using System.Linq;
 using Cerebello.Model;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code
+namespace CerebelloWebRole.Code.Access
 {
     /// <summary>
     /// ObjectContext wrapper with global rules of access to objects stored in the database.

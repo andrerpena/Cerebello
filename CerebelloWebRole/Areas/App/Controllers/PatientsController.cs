@@ -319,7 +319,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                  (from Patient patient in this.db.Patients
                                   where patient.DoctorId == this.Doctor.Id
                                   orderby patient.Person.CreatedOn descending
-                                  select patient).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
+                                  select patient).Take(Constants.RECENTLY_REGISTERED_LIST_MAXSIZE).ToList()
                              select
                                  new PatientViewModel
                                      {

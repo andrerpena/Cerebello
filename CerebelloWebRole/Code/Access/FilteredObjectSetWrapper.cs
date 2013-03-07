@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.Objects;
 using System.Linq;
-using CerebelloWebRole.Code.Access;
 
-namespace CerebelloWebRole.Code
+namespace CerebelloWebRole.Code.Access
 {
     public class FilteredObjectSetWrapper<TEntity> : FilteredObjectQueryWrapper<TEntity>, IObjectSet<TEntity>, IQueryable<TEntity>, IEnumerable<TEntity>, IQueryable, IEnumerable where TEntity : class
     {

@@ -27,7 +27,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Objects = (from m in this.db.ModelMedicalCertificates
                                              .Where(m => m.Doctor.Id == this.Doctor.Id)
-                                             .OrderBy(m => m.Name).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
+                                             .OrderBy(m => m.Name).Take(Constants.RECENTLY_REGISTERED_LIST_MAXSIZE).ToList()
                                select new ModelMedicalCertificateViewModel()
                                    {
                                        Id = m.Id,

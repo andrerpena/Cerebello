@@ -3,7 +3,7 @@
     /// <summary>
     /// Constants
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         /// <summary>
         /// The max size for "names" in the database
@@ -15,7 +15,10 @@
         /// </summary>
         public const int GRID_PAGE_SIZE = 20;
 
-        public const int LAST_REGISTERED_OBJECTS_COUNT = 10;
+        /// <summary>
+        /// Number of items to show when displaying only the most recent records.
+        /// </summary>
+        public const int RECENTLY_REGISTERED_LIST_MAXSIZE = 10;
 
         /// <summary>
         /// The default password given to every new user.

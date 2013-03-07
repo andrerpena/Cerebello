@@ -104,7 +104,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var viewModel = new MedicinesIndexViewModel
                 {
                     LastRegisteredMedicines =
-                        (from medicine in this.db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderByDescending(m => m.CreatedOn).Take(Constants.LAST_REGISTERED_OBJECTS_COUNT).ToList()
+                        (from medicine in this.db.Medicines.Where(m => m.Doctor.Id == this.Doctor.Id).OrderByDescending(m => m.CreatedOn).Take(Constants.RECENTLY_REGISTERED_LIST_MAXSIZE).ToList()
                          select this.GetViewModelFromModel(medicine)).ToList(),
                     TotalMedicinesCount = this.db.Medicines.Count()
                 };

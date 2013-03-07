@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Cerebello.Model;
+using CerebelloWebRole.Code.Access;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Chat
