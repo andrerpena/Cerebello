@@ -23,9 +23,18 @@
     <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">
       <AnalyzerSettings>
         <BooleanProperty Name="IncludeFields">False</BooleanProperty>
+        <StringProperty Name="CompanyName">CareSys Tecnologias de Informação</StringProperty>
+        <StringProperty Name="Copyright">© 2012 by CareSys Tecnologias de Informação</StringProperty>
       </AnalyzerSettings>
     </Analyzer>
     <Analyzer AnalyzerId="StyleCop.CSharp.NamingRules">
+      <Rules>
+        <Rule Name="StaticReadonlyFieldsMustBeginWithUpperCaseLetter">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
       <AnalyzerSettings>
         <CollectionProperty Name="Hungarian">
           <Value>db</Value>
