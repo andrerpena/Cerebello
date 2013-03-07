@@ -842,6 +842,8 @@ rmdir /s /q "$(ProjectDir)obj\Release\ProfileTransformWebConfig"
 rmdir /s /q "$(ProjectDir)obj\Debug\ProfileTransformWebConfig"
 rmdir /s /q "$(ProjectDir)obj\Release\CSAutoParameterize"
 rmdir /s /q "$(ProjectDir)obj\Debug\CSAutoParameterize"
+
+del /s /q "%25userprofile%25\AppData\Local\Temp\Temporary ASP.NET Files\*.cs"
 </PreBuildEvent>
   </PropertyGroup>
 </Project>

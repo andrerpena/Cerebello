@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -340,7 +341,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult Details(int id)
         {
-            var patient = this.db.Patients.Single(p => p.Id == id);
+            var patient = this.db.Patients.SingleOrDefault(p => p.Id == id && p.DoctorId == this.Doctor.Id);
+
+            if (patient == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound, "Patient not found.");
 
             // Only the doctor and the patient can see the medical records.
             var canAccessMedicalRecords = this.DbUser.Id == patient.Doctor.Users.Single().Id;

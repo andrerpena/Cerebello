@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel;
+using System.Net;
 
 namespace CerebelloWebRole.Code
 {
@@ -9,7 +10,7 @@ namespace CerebelloWebRole.Code
         {
         }
 
-        public UnauthorizedResult(string statusDescription)
+        public UnauthorizedResult([Localizable(true)] string statusDescription)
             : base(HttpStatusCode.Unauthorized, statusDescription)
         {
         }

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel;
+using System.Net;
 using System.Web.Mvc;
 
 namespace CerebelloWebRole.Code
@@ -10,7 +11,7 @@ namespace CerebelloWebRole.Code
         {
         }
 
-        public JsonForbiddenResult(string statusDescription)
+        public JsonForbiddenResult([Localizable(true)] string statusDescription)
         {
             this.Data = this.Data ?? new JsonError
             {
@@ -34,6 +35,7 @@ namespace CerebelloWebRole.Code
                 context.HttpContext.Response.StatusDescription = StatusDescription;
         }
 
+        [Localizable(true)]
         public string StatusDescription { get; private set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Net;
 using System.Text;
 using System.Web;
@@ -14,7 +15,7 @@ namespace CerebelloWebRole.Code
         {
         }
 
-        public StatusCodeResult(HttpStatusCode statusCode, string statusDescription)
+        public StatusCodeResult(HttpStatusCode statusCode, [Localizable(true)] string statusDescription)
         {
             this.StatusCode = statusCode;
             this.StatusDescription = statusDescription;
@@ -33,6 +34,8 @@ namespace CerebelloWebRole.Code
         }
 
         public HttpStatusCode StatusCode { get; private set; }
+
+        [Localizable(true)]
         public string StatusDescription { get; private set; }
 
         public object Data { get; set; }
