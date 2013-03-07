@@ -65,6 +65,7 @@ namespace CerebelloWebRole.Code.Chat
                 ChatServerHelper.SetupUserIfNonexisting(db, practiceId, userId);
                 chatRoom.SetUserOnline(userId);
 
+                chatRoom.CheckForUnseenUsers();
 
                 var events = new List<LongPollingEvent>();
 
@@ -79,7 +80,7 @@ namespace CerebelloWebRole.Code.Chat
 
                 // now, see if the users list changed since last time
                 if (ChatServer.Rooms[practiceId].HasChangedSince(timestamp))
-                    events.Add(GetLongPollingEventForRoomUsersChanged(ChatServer.Rooms[practiceId].GetUsers(), userId));
+                    events.Add(GetLongPollingEventForRoomUsersChanged(ChatServer.Rooms[practiceId].GetUsersAndUpdateStatus(), userId));
 
                 if (!events.Any())
                 {
@@ -88,32 +89,30 @@ namespace CerebelloWebRole.Code.Chat
 
                     var wait = new AutoResetEvent(false);
 
-                    var roomChangeSubscription =
-                        ChatServer.Rooms[practiceId].SubscribeForUsersChange((r, users) =>
+                    using (ChatServer.Rooms[practiceId].SubscribeForUsersChange(
+                            (r, users) =>
                             {
                                 events.Add(GetLongPollingEventForRoomUsersChanged(users, userId));
                                 wait.Set();
-                            });
+                            }))
 
-                    var messagesChangeSubscription =
-                        ChatServer.Rooms[practiceId].SubscribeForMessagesChange((r, userFrom, userTo, message) =>
+                    using (ChatServer.Rooms[practiceId].SubscribeForMessagesChange(
+                            (r, userFrom, userTo, message) =>
                             {
                                 // all messages destinated to the given user must be considered
                                 if (userTo.Id != userId)
                                     return;
-                                events.Add(GetLongPollingEventForMessages(new List<ChatMessage>() {message}));
+                                events.Add(GetLongPollingEventForMessages(new List<ChatMessage>() { message }));
                                 wait.Set();
-                            });
-
-                    // will STOP the thread here
-                    wait.WaitOne(LongPollingProvider.WAIT_TIMEOUT);
-
-                    roomChangeSubscription.Dispose();
-                    messagesChangeSubscription.Dispose();
+                            }))
+                    {
+                        // will STOP the thread here
+                        wait.WaitOne(LongPollingProvider.WAIT_TIMEOUT);
+                    }
                 }
 
                 return events;
-            }
+            } // end using
         }
     }
 }

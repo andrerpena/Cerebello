@@ -39,7 +39,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Json(
                 new
                     {
-                        User = ChatServer.Rooms[roomId].Users[userId]
+                        User = ChatServer.Rooms[roomId].UsersById[userId]
                     },
                 JsonRequestBehavior.AllowGet);
         }

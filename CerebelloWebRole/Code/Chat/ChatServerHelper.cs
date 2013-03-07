@@ -48,7 +48,7 @@ namespace CerebelloWebRole.Code.Chat
                     SetupRoomIfNonexisting(db, roomId);
 
                 if (ChatServer.Rooms[roomId].UserExists(userId))
-                    return ChatServer.Rooms[roomId].Users[userId];
+                    return ChatServer.Rooms[roomId].UsersById[userId];
 
                 var user = db.Users.Include("Person").FirstOrDefault(u => u.Id == userId);
                 var newUser = GetChatUserFromUser(user);
@@ -73,10 +73,10 @@ namespace CerebelloWebRole.Code.Chat
                     return;
 
                 if (ChatServer.Rooms[roomId].UserExists(userId))
-                    ChatServer.Rooms[roomId].RemoveUser(ChatServer.Rooms[roomId].Users[userId]);
+                    ChatServer.Rooms[roomId].RemoveUser(ChatServer.Rooms[roomId].UsersById[userId]);
             }
         }
-        
+
         /// <summary>
         /// Sets up a room if it does not exist
         /// </summary>
@@ -94,13 +94,12 @@ namespace CerebelloWebRole.Code.Chat
                 var newChatRoom = new ChatRoom(roomId);
                 ChatServer.Rooms.Add(roomId, newChatRoom);
 
-                // var practiceUsers = practice.Users.OrderBy(u => u.Person.FullName);
                 var practiceUsers = db.Users.Where(u => u.PracticeId == roomId).OrderBy(u => u.Person.FullName);
 
                 // adds users to the room
                 foreach (var u in practiceUsers)
                 {
-                    newChatRoom.Users.Add(u.Id, GetChatUserFromUser(u));
+                    newChatRoom.UsersById.Add(u.Id, GetChatUserFromUser(u));
                 }
 
                 // now adds conversations to the history

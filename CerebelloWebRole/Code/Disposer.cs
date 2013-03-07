@@ -1,10 +1,19 @@
 ﻿using System;
 using System.Linq;
 
-namespace CerebelloWebRole.Tests
+namespace CerebelloWebRole.Code
 {
     public class Disposer : IDisposable
     {
+        public Disposer()
+        {
+        }
+
+        public Disposer(Action onDisposing)
+        {
+            this.Disposing += onDisposing;
+        }
+
         void IDisposable.Dispose()
         {
             if (this.Disposing != null)
@@ -19,7 +28,7 @@ namespace CerebelloWebRole.Tests
 
         public void Add(IDisposable disposable)
         {
-            this.Disposing += new Action(disposable.Dispose);
+            this.Disposing += disposable.Dispose;
         }
 
         public event Action Disposing;
