@@ -36,7 +36,7 @@
 
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("index", "medicines")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
+        <li><a href="@Url.Action("Index", "Medicines")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
     </ul>
 }
 
@@ -44,7 +44,7 @@
 @using (Html.BeginForm())
 {
     @Html.Message(@<text>
-                    Você está importando um medicamento da Anvisa. Caso não encontre o que está procurando, é possível 
+                    Você está importando um medicamento da <a href="http://www.anvisa.gov.br">Anvisa</a>. Caso não encontre o que está procurando, é possível 
                     <a href="@Url.Action("Create")">cadastrar um medicamento manualmente</a>.
                 </text>)
     
