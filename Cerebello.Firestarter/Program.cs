@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Cerebello.Firestarter.Helpers;
+using Cerebello.Firestarter.SqlParser;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
-using SqlScriptProcessorForVersioning;
 using File = System.IO.File;
 
 namespace Cerebello.Firestarter

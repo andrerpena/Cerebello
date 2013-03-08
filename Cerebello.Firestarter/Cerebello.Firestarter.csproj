@@ -60,9 +60,6 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="SqlScriptProcessorForVersioning">
-      <HintPath>..\DB\Scripts\SqlScriptProcessorForVersioning.exe</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -86,6 +83,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomContext.cs" />
     <Compile Include="SqlHelper.cs" />
+    <Compile Include="SqlParser\SqlItem.cs" />
+    <Compile Include="SqlParser\SqlKinds.cs" />
+    <Compile Include="SqlParser\SqlScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
