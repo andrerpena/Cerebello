@@ -162,6 +162,14 @@
     <Compile Include="Code\ActionResults\JsonForbiddenResult.cs" />
     <Compile Include="Code\ActionResults\JsonUnauthorizedResult.cs" />
     <Compile Include="Areas\App\Controllers\HealthInsuranceController.cs" />
+    <Compile Include="Code\BillingInfo.cs" />
+    <Compile Include="Code\Collections\ContinuousSetEqualityComparer.cs" />
+    <Compile Include="Code\Collections\Interval.cs" />
+    <Compile Include="Code\Collections\ISetOperator.cs" />
+    <Compile Include="Code\Collections\PointState.cs" />
+    <Compile Include="Code\Collections\RedundancyType.cs" />
+    <Compile Include="Code\DateTimeInterval.cs" />
+    <Compile Include="Code\Collections\ContinuousSet.cs" />
     <Compile Include="Code\DebugConfig.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
     <Compile Include="Code\Buz.cs" />

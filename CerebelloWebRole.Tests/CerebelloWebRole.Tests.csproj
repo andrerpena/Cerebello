@@ -65,6 +65,10 @@
     <Reference Include="itextsharp.xtra">
       <HintPath>..\ThirdParty\itextsharp.xtra.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=7.0.1098.2760, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -129,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Tests.Other\ContinuousSetTests.cs" />
     <Compile Include="DbTestBase.cs" />
     <Compile Include="ExceptionHelper.cs" />
     <Compile Include="Tests.Helpers\StringHelperTests.cs" />

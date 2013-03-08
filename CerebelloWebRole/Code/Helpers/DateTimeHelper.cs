@@ -19,6 +19,17 @@ namespace CerebelloWebRole.Code
 
         // Methods
 
+        public static IEnumerable<DateTimeInterval> IntervalRange(DateTime start, int count, Func<DateTime, DateTime> nextGetter)
+        {
+            var start2 = start;
+            for (int i = 0; i < count; i++)
+            {
+                var end = nextGetter(start2);
+                yield return new DateTimeInterval(start2, end);
+                start2 = end;
+            }
+        }
+
         public static IEnumerable<DateTime> Range(DateTime start, int count, Func<DateTime, DateTime> nextGetter)
         {
             DateTime d = start;
@@ -26,10 +37,33 @@ namespace CerebelloWebRole.Code
                 yield return d;
         }
 
-        ///<summary>Gets the first week day following a date.</summary>
-        ///<param name="date">The date.</param>
-        ///<param name="dayOfWeek">The day of week to return.</param>
-        ///<returns>The first dayOfWeek day following date, or date if it is on dayOfWeek.</returns>
+        public static IEnumerable<DateTime> Range(DateTime start, DateTime end, Func<DateTime, DateTime> nextGetter)
+        {
+            DateTime d = start;
+            for (int i = 0; d < end; i++, d = nextGetter(d))
+                yield return d;
+        }
+
+        public static DateTime AddMonths(this DateTime @this, int months, int keepAtDay)
+        {
+            var result = @this.AddMonths(months);
+
+            var currentDay = result.Day;
+
+            if (currentDay != keepAtDay)
+            {
+                var lastDay = DateTime.DaysInMonth(result.Year, result.Month);
+                if (currentDay < lastDay)
+                    result = result.AddDays(keepAtDay - currentDay);
+            }
+
+            return result;
+        }
+
+        /// <summary>Gets the first week day following a date.</summary>
+        /// <param name="date">The date.</param>
+        /// <param name="dayOfWeek">The day of week to return.</param>
+        /// <returns>The first dayOfWeek day following date, or date if it is on dayOfWeek.</returns>
         public static DateTime DayOfWeekFromNow(this DateTime date, DayOfWeek dayOfWeek, int count)
         {
             return date.AddDays((dayOfWeek < date.DayOfWeek ? 7 : 0) + dayOfWeek - date.DayOfWeek + (7 * count));
