@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Objects;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -623,7 +625,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             bool isDefaultPwd = defaultPasswordHash == loggedUser.Password;
             this.ViewBag.IsDefaultPassword = isDefaultPwd;
 
-            return View();
+            return this.View();
         }
 
         [HttpPost]
@@ -635,6 +637,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     string.Format("A senha não pode ser '{0}'.", Constants.DEFAULT_PASSWORD));
 
             // todo: checking password strength would be nice.
+            Debug.Assert(dbUser.Person != null, "'this.DbUser' must not be null.");
 
             if (vm.Password != vm.RepeatPassword)
                 this.ModelState.AddModelError(() => vm.RepeatPassword, "A senha desejada deve ser repetida.");
@@ -647,6 +650,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // - this is not needed if the current password is the default password.
             var defaultPasswordHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, loggedUser.PasswordSalt);
             bool isDefaultPwd = defaultPasswordHash == loggedUser.Password;
+            this.ViewBag.IsDefaultPassword = isDefaultPwd;
             if (isDefaultPwd)
             {
                 this.ModelState.Remove("OldPassword");
