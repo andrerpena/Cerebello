@@ -14,7 +14,7 @@
 
         //Extending options:
         this.opts = $.extend({}, this.defaults, options);
-        
+
         // Validation
         if (!this.opts.newMessageUrl)
             throw "newMessageUrl option is required";
@@ -71,24 +71,36 @@
             /// <param name="data" type="Array">List of users</param>
             var _this = this;
             _this.chatContainer.getContent().html('');
-            for (var i = 0; i < data.length; i++) {
-                var $user = $("<div/>").addClass("user-list-item").attr("data-val-id", data[i].Id).text(data[i].Name).appendTo(_this.chatContainer.getContent());
-                if (data[i].Status == 0)
-                    $user.addClass("offline");
-                else
-                    $user.addClass("online");
+            if (data.length == 0) {
+                var $noUsers = $("<div/>")
+                    .addClass("user-list-empty")
+                    .text("Não existem outros usuários")
+                    .appendTo(_this.chatContainer.getContent());
+            }
+            else {
+                for (var i = 0; i < data.length; i++) {
+                    var $user = $("<div/>")
+                        .addClass("user-list-item")
+                        .attr("data-val-id", data[i].Id)
+                        .text(data[i].Name)
+                        .appendTo(_this.chatContainer.getContent());
 
-                // I must clusure the 'i'
-                (function (otherUserId) {
-                    // handles clicking in a user. Starts up a new chat session
-                    $user.click(function () {
-                        if (_this.chatWindows[data[otherUserId].Id]) {
-                            // focus chat-window
-                        }
-                        else
-                            _this.createNewChatWindow(data[otherUserId]);
-                    });
-                })(i);
+                    if (data[i].Status == 0)
+                        $user.addClass("offline");
+                    else
+                        $user.addClass("online");
+
+                    // I must clusure the 'i'
+                    (function(otherUserId) {
+                        // handles clicking in a user. Starts up a new chat session
+                        $user.click(function() {
+                            if (_this.chatWindows[data[otherUserId].Id]) {
+                                // focus chat-window
+                            } else
+                                _this.createNewChatWindow(data[otherUserId]);
+                        });
+                    })(i);
+                }
             }
 
             _this.chatContainer.setVisible(true);
