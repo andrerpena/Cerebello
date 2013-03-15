@@ -56,17 +56,18 @@ blockquote, q {
 
 .validation-summary-errors {
     background-color: #FFFFE6;
+    border: 1px solid #F4F4DA;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: #DD390D;
     font-size: 12px;
     font-weight: normal;
     margin-bottom: 10px;
-    padding: 6px 10px;
+    padding: 4px 10px;
 }
 
     .validation-summary-errors ul li {
         line-height: 1.2em;
-        margin: 3px 0;
+        margin: 6px 0;
     }
 
 .input-validation-error {
@@ -211,7 +212,7 @@ input, textarea {
         opacity: 0.5;
     }
 
-    select, input[type=text], textarea {
+    select, input[type=text], input[type=password], textarea {
         -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
         -webkit-box-sizing: border-box;
@@ -222,7 +223,7 @@ input, textarea {
         font-size: 13px;
         padding: 4px;
     }
-    
+
 .menu-column hr {
     -moz-border-bottom-colors: none;
     -moz-border-image: none;
@@ -604,7 +605,7 @@ fieldset {
         width: 100%;
     }
 
-    .form-table input[type=text], .form-table select, .form-table textarea, .form-table .autocomplete {
+    .form-table input[type=text], .form-table input[type=password], .form-table select, .form-table textarea, .form-table .autocomplete {
         box-sizing: border-box;
         -ms-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -613,11 +614,11 @@ fieldset {
         max-width: 240px;
     }
 
-    .form-table .large input[type=text], .form-table .large select, .form-table .large textarea, .form-table .large .autocomplete {
+    .form-table .large input[type=text], .form-table .large input[type=password], .form-table .large select, .form-table .large textarea, .form-table .large .autocomplete {
         max-width: 350px;
     }
 
-    .form-table .small input[type=text], .form-table .small select, .form-table .small textarea {
+    .form-table .small input[type=text], .form-table .small input[type=password], .form-table .small select, .form-table .small textarea {
         max-width: 80px;
     }
 
