@@ -58,6 +58,12 @@ input.chat-window-text-box {
         background-image: url("/content/images/app/chat/chat-online.png");
     }
 
+.user-list-empty {
+    background-position: 2px center;
+    background-repeat: no-repeat;
+    padding: 3px 0 3px 15px;
+}
+
 .chat-window-text-box-wrapper {
     padding: 2px;
 }
