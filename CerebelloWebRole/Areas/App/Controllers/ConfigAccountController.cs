@@ -194,7 +194,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (id == "ProfessionalPlan")
                 {
                     // calculating values to see if the submited values are correct
-                    var unitPrice = Buz.Pro.DOCTOR_PRICE;
+                    var unitPrice = Bus.Pro.DOCTOR_PRICE;
                     Func<double, double, double> integ = (x, n) => Math.Pow(n, x) / Math.Log(n);
                     Func<double, double, double> integ0to = (x, n) => (integ(x, n) - integ(0, n));
                     Func<double, double> priceFactor = x => x * (1.0 - 0.1 * integ0to((x - 1) / 3.0, 0.75));
@@ -202,18 +202,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                     var dicValues = new Dictionary<string, decimal>(StringComparer.InvariantCultureIgnoreCase)
                         {
-                            { "MONTH", Buz.Pro.PRICE_MONTH },
-                            { "3-MONTHS", Buz.Pro.PRICE_QUARTER },
-                            { "6-MONTHS", Buz.Pro.PRICE_SEMESTER },
-                            { "12-MONTHS", Buz.Pro.PRICE_YEAR },
+                            { "MONTH", Bus.Pro.PRICE_MONTH },
+                            { "3-MONTHS", Bus.Pro.PRICE_QUARTER },
+                            { "6-MONTHS", Bus.Pro.PRICE_SEMESTER },
+                            { "12-MONTHS", Bus.Pro.PRICE_YEAR },
                         };
 
                     var dicDiscount = new Dictionary<string, decimal>(StringComparer.InvariantCultureIgnoreCase)
                         {
                             { "MONTH", 0 },
-                            { "3-MONTHS", Buz.Pro. DISCOUNT_QUARTER },
-                            { "6-MONTHS", Buz.Pro. DISCOUNT_SEMESTER },
-                            { "12-MONTHS", Buz.Pro.DISCOUNT_YEAR },
+                            { "3-MONTHS", Bus.Pro. DISCOUNT_QUARTER },
+                            { "6-MONTHS", Bus.Pro. DISCOUNT_SEMESTER },
+                            { "12-MONTHS", Bus.Pro.DISCOUNT_YEAR },
                         };
 
                     var periodSizesDic = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase)
@@ -232,7 +232,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var finalValue = accountValue + doctorsValueWithoutDiscount * dicount;
 
                     var finalValueWithoutDiscount =
-                        Buz.Pro.PRICE_MONTH * periodSizesDic[viewModel.PaymentModelName]
+                        Bus.Pro.PRICE_MONTH * periodSizesDic[viewModel.PaymentModelName]
                         + doctorsValueWithoutDiscount;
 
                     // tolerance of R$ 0.10 in the final value... maybe the browser could not make the calculations correctly,

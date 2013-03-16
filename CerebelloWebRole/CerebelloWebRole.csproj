@@ -172,7 +172,7 @@
     <Compile Include="Code\Collections\ContinuousSet.cs" />
     <Compile Include="Code\DebugConfig.cs" />
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteNewJsonResult.cs" />
-    <Compile Include="Code\Buz.cs" />
+    <Compile Include="Code\Bus.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Disposer.cs" />
     <Compile Include="Code\HostEnv.cs" />
