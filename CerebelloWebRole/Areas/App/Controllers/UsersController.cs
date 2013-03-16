@@ -637,7 +637,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     string.Format("A senha não pode ser '{0}'.", Constants.DEFAULT_PASSWORD));
 
             // todo: checking password strength would be nice.
-            Debug.Assert(dbUser.Person != null, "'this.DbUser' must not be null.");
+            Debug.Assert(this.DbUser.Person != null, "'this.DbUser' must not be null.");
 
             if (vm.Password != vm.RepeatPassword)
                 this.ModelState.AddModelError(() => vm.RepeatPassword, "A senha desejada deve ser repetida.");
