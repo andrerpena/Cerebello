@@ -524,6 +524,8 @@
     <Content Include="Content\themes\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
     <Content Include="Content\themes\ui-lightness\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\themes\ui-lightness\jquery-ui-1.8.23.custom.css" />
+    <Content Include="Contracts\contract.css" />
+    <Content Include="Contracts\ProfissionalPlanContract.html" />
     <Content Include="Docs\DataPatterns.txt" />
     <Content Include="Docs\ScreenPatterns.txt" />
     <Content Include="Docs\Tasks.txt" />
@@ -767,6 +769,10 @@
     <Content Include="App.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Contracts\Contrato plano profissional.docx" />
+    <Content Include="Contracts\Contrato plano profissional.odt" />
+    <Content Include="Contracts\Contrato plano profissional.pdf" />
+    <Content Include="Contracts\Contrato plano profissional.rtf" />
     <None Include="Data\medicines.json" />
     <Content Include="Views\Authentication\ConfirmationEmail.cshtml" />
     <Content Include="Views\Authentication\VerifyPracticeAndEmail.cshtml" />
