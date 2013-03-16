@@ -15,8 +15,11 @@
 <div class="container">
     <div class="well">
         <p>
-            O Cerbello é um <a href="http://pt.wikipedia.org/wiki/Software_como_servi%C3%A7o" target="blank">SaaS</a>, isto é, ele é oferecido como um serviço pago mensalmente e nós nos responsabilizamos por toda a infraestrutura de rede, segurança, hospedagem e backup dos dados. Há somente um plano, no qual todos os recursos estão disponíveis e tudo é ilimitado.
-            No entanto, nós oferecemos descontos caso o cliente opte por uma periodicidade maior que a mensal. Confira as opções:
+            O Cerebello é um <a href="http://pt.wikipedia.org/wiki/Software_como_servi%C3%A7o" target="blank">SaaS</a>, isto é,
+            ele é oferecido como um serviço prestado em que nós nos responsabilizamos por toda a infraestrutura, segurança,
+            hospedagem, backup dos dados e atualizações de software, além de oferecermos documentação, suporte e interação com o cliente.
+            O Plano Profissional possui todos os esses recursos disponíveis e todos ilimitados.
+            Confira as opções e condições de pagamento, e os descontos para pagamentos com periodicidade maior que a mensal:
         </p>
         <table class="table table-outer-bordered prices">
             <thead>
@@ -30,7 +33,8 @@
             <tbody>
                 <tr>
                     <td>
-                        <h2>@Buz.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr)</h2>
+                        <h6>&nbsp;</h6>
+                        <h2>@Bus.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr)</h2>
                         <h6>mensais
                             <br />
                             <br />
@@ -40,7 +44,7 @@
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
-                            <small>Usuários ilimitados</small>
+                            <small>1 médico + outros usuários ilimitados</small>
                         </p>
                         <p>
                             <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
@@ -48,16 +52,16 @@
                         </p>
                     </td>
                     <td>
-                        <h2>@((Buz.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</h2>
-                        <h6>mensais.
-                            <br />
-                            @Buz.Pro.PRICE_QUARTER.ToString("R$ 0.00", ptBr) a cada 3 meses.</h6>
+                        <h6>equivalente a</h6>
+                        <h2>@((Bus.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</h2>
+                        <h6>mensais</h6>
+                        <h6>@Bus.Pro.PRICE_QUARTER.ToString("R$ 0.00", ptBr) a cada 3 meses</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>@Buz.Pro.DISCOUNT_QUARTER%</strong></span>
+                            <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_QUARTER%</strong></span>
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
-                            <small>Usuários ilimitados</small>
+                            <small>1 médico + outros usuários ilimitados</small>
                         </p>
                         <p>
                             <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
@@ -65,15 +69,16 @@
                         </p>
                     </td>
                     <td>
-                        <h2>@((Buz.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</h2>
-                        <h6>mensais.<br />
-                            @Buz.Pro.PRICE_SEMESTER.ToString("R$ 0.00", ptBr) a cada 6 meses.</h6>
+                        <h6>equivalente a</h6>
+                        <h2>@((Bus.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</h2>
+                        <h6>mensais</h6>
+                        <h6>@Bus.Pro.PRICE_SEMESTER.ToString("R$ 0.00", ptBr) a cada 6 meses</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>@Buz.Pro.DISCOUNT_SEMESTER%</strong></span>
+                            <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_SEMESTER%</strong></span>
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
-                            <small>Usuários ilimitados</small>
+                            <small>1 médico + outros usuários ilimitados</small>
                         </p>
                         <p>
                             <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
@@ -81,15 +86,16 @@
                         </p>
                     </td>
                     <td>
-                        <h2>@((Buz.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</h2>
-                        <h6>mensais.<br />
-                            @Buz.Pro.PRICE_YEAR.ToString("R$ 0.00", ptBr) a cada 12 meses.</h6>
+                        <h6>equivalente a</h6>
+                        <h2>@((Bus.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</h2>
+                        <h6>mensais</h6>
+                        <h6>@Bus.Pro.PRICE_YEAR.ToString("R$ 0.00", ptBr) a cada 12 meses</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>@Buz.Pro.DISCOUNT_YEAR%</strong></span>
+                            <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_YEAR%</strong></span>
                             <br />
                             <small>Pacientes ilimitados</small>
                             <br />
-                            <small>Usuários ilimitados</small>
+                            <small>1 médico + outros usuários ilimitados</small>
                         </p>
                         <p>
                             <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication")" class="btn btn-success">Começar
@@ -104,8 +110,9 @@
             <div class="span6">
                 <h4>Todas as opções incluem:</h4>
                 <ul>
-                    <li>Criptografia SSL (a mesma utilizada em bancos).</li>
-                    <li>Número ilimitado de registros (pacientes, medicamentos, consultas, tudo).</li>
+                    <li>Criptografia e certificação SSL (a mesma utilizada em bancos).</li>
+                    <li>Número ilimitado de pacientes, medicamentos e consultas.</li>
+                    <li>100GB em arquivos enviados.</li>
                     <li>Suporte ao cliente por e-mail.</li>
                     <li>Exportação dos dados para XML ou PDF.</li>
                 </ul>
@@ -120,23 +127,31 @@
 
             <h4>Experimente pelo tempo que desejar</h4>
             <p>
-                Nós queremos que você teste o Cerebello pelo tempo que julgar necessário. Todos os recursos estão incluídos gratuitamente, inclusive o suporte a múltiplos usuários.
+                Nós queremos que você teste o Cerebello pelo tempo que julgar necessário.
+                Todos os recursos estão incluídos gratuitamente, inclusive o suporte a múltiplos usuários (secretárias, médicos e administradores).
                 A única limitação é que só é permitido cadastrar 50 pacientes.
             </p>
             <p>
-                A qualquer momento é possível cancelar o período de experiência e nada será cobrado. Também é possível migrar para o plano pago onde tudo é ilimitado. Caso você tenha qualquer dúvida, não exite em nos contactar.
-                Caso o Cerebello não tenha alguma funcionalidade que você julgue importante, nos comunique para que possamos estudar o caso e possivelmente implementá-la. Seu feedback é fundamental.
+                A qualquer momento é possível cancelar o período de experiência e nada será cobrado.
+                Também é possível migrar para o plano profissional com pacientes ilimitados.
+                Caso você tenha qualquer dúvida, não hesite em nos contatar.
+                Caso o Cerebello não tenha alguma funcionalidade que você julgue importante,
+                nos comunique para que possamos estudar o caso e possivelmente incorporá-la ao software.
+                Sua opinião é fundamental, e é sempre bem vinda!
             </p>
             <h4>Quais browsers são suportados? De onde eu posso acessar o Cerebello?</h4>
             <p>
-                O Cerebello suporta o IE 9 ou superior, FireFox 4 ou superior, Chrome 10 ou superior e Safari 5 ou superior.
+                O Cerebello suporta o IE 9 ou superior, Firefox 4 ou superior, Chrome 10 ou superior e Safari 5 ou superior.
                 Atualmente não existe uma versão específica do Cerebello para dispositivos móveis, porém, é perfeitamente possível
                 acessá-lo de smartphones e tablets modernos. Nós estamos trabalhando em uma versão adaptada para dispositivos móveis.
             </p>
             <h4>Existe alguma taxa de adesão?</h4>
             <p>
-                Não. Para começar a utilizar o Cerebello não é necessário pagar nada. O pagamento somente é necessário quando houver intenção de eliminar o limite de 50
-                usuários. Neste caso, uma das opções de periodicidade de pagamento deve ser escolhida e o pagamento deve ser feito antecipadamente para cada período.
+                Não. Para começar a utilizar o Cerebello não é necessário pagar nada.
+                O pagamento somente é necessário quando houver intenção de usar o Cerebello profissionalmente,
+                eliminando então o limite de 50 pacientes.
+                Neste caso, uma das opções de periodicidade de pagamento deve ser escolhida
+                e o pagamento deve ser feito antecipadamente para cada período.
             </p>
 
         </div>
@@ -147,18 +162,22 @@
             </p>
             <h4>Eu tenho que assinar algum contrato de fidelidade?</h4>
             <p>
-                Não. Você pode cancelar a qualquer momento e o Cerebello ficará indisponível a partir do fim da vigência do período já pago. Exemplo: Se você optou pelo 
-                pagamento trimestral, caso deseje cancelar, não será emitida outra fatura e o sistema somente ficará disponível até o vencimento desse trimestre. O mesmo
-                vale para todas as periodicidades.
+                Somente as assinaturas com desconto por periodicidade maior que a mensal são opções de fidelidade.
+                Você pode cancelar a qualquer momento, mantendo o Cerebello disponível até o fim da vigência do período já pago.
+                Por exemplo: se você optou pelo pagamento trimestral e cancelar a conta, não será emitida outra fatura e o sistema somente
+                ficará disponível até o vencimento desse trimestre. O mesmo vale para todas as periodicidades.
+                Você pode também optar por ter o valor proporcional ao tempo não usado de volta,
+                sendo que neste caso aplica-se multa de 10% sobre este valor, da acordo com o permitido por lei.
             </p>
             <h4>Se, no futuro, eu quiser sair do Cerebello e ir para outro software, o que acontece com meus dados?</h4>
             <p>
-                O Cerbello exporta todas as informações dos seus pacientes para XML. Esses dados podem ser importados por outro software caso ele seja programado para isto.
-                É provável que a outra empresa vá cobrar uma taxa de desenvolvimento e importação desses dados, mas não é nada que impossibilite que você leve os seus
-                dados do Cerebello para outro software.
+                O Cerebello exporta todas as informações dos seus pacientes para XML.
+                Esses dados podem ser importados por outro software caso ele seja programado para isto.
+                É provável que a outra empresa vá cobrar uma taxa de desenvolvimento e importação desses dados,
+                mas tecnicamente não há nada que o impossibilite de levar os seus dados do Cerebello para outro software.
             </p>
             <h4>Se eu não pagar a mensalidade ou houver algum outro problema com a minha conta, o que acontece com os dados dos meus pacientes?</h4>
-            <p>Nós nunca apagamos dados de pacientes. Em caso de problemas com a sua conta, nos contacte e você terá acesso a esses dados novamente.</p>
+            <p>Nós nunca apagamos dados de pacientes. Em caso de problemas com a sua conta, nos contate para ter acesso a esses dados novamente.</p>
         </div>
     </div>
 </div>
