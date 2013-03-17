@@ -492,7 +492,12 @@ namespace CerebelloWebRole.Code
                     // to anyone except these well-known e-mail addresses
                     if (!new[]
                         {
-                            "cerebello@cerebello.com.br", "masbicudo@gmail.com", "andrerpena@gmail.com"
+                            "cerebello@cerebello.com.br",
+                            "masbicudo@gmail.com",
+                            "masbicudo@hotmail.com",
+                            "masbicudo@mail.com",
+                            "masbicudo@yahoo.com.br",
+                            "andrerpena@gmail.com",
                         }
                         .Contains(address))
                     {

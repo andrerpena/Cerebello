@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Repita a senha.")]
+        [Required(ErrorMessage = "A senha desejada deve ser repetida.")]
         [Display(Name = "Repita a senha desejada")]
         public string RepeatPassword { get; set; }
     }

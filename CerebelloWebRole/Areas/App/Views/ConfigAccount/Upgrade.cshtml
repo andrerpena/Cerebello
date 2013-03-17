@@ -26,7 +26,7 @@
     @Html.HiddenFor(vm => vm.ContractUrlId)
 
     <div id="userAgreement">
-        @switch (Buz.CorrectPlanCase[this.Model.ContractUrlId])
+        @switch (Bus.CorrectPlanCase[this.Model.ContractUrlId])
         {
             case "ProfessionalPlan":
                 @:@Html.Partial("Upgrade_ProfessionalPlan", this.Model)

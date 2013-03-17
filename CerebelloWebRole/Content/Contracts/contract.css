@@ -1,0 +1,268 @@
+﻿/* document defaults */
+
+body
+{
+font-family:Courier New;font-size:11pt;
+}
+
+p
+{
+margin-top:0px;line-height:1.15;margin-bottom:10pt;
+}
+
+td
+{
+vertical-align:top;
+}
+
+a.tooltip
+{
+position:relative; 
+color:#000000;
+background-color:#cccccc;
+text-decoration:none
+}
+
+a.tooltip:hover
+{
+background-color:#ffffdd;
+}
+
+a.tooltip span
+{
+display: none
+}
+
+a.tooltip:hover span
+{ 
+position:absolute;
+display:block;
+padding:5px;
+top:2.5em; 
+left: 0em;
+width:15em;
+border:1px solid #cccccc;
+background-color:#ffffdd; 
+color:#000000;
+text-align: center
+}
+
+    /* default styles */
+
+p
+{
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+}
+
+table
+{
+border-collapse:collapse; margin-left:0px;
+}
+
+table td
+{
+padding-top:0px;padding-left:5px;padding-bottom:0px;padding-right:5px;
+}
+
+/* all styles */
+
+p.Normal
+{
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+}
+
+p.Ttulo1
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Ttulo1: */
+margin-top:60pt;margin-bottom:0pt;border-top:solid 5px #F19E90;background-color:#F8CEC7;font-family:Segoe UI;font-size:14pt;color:#852010;
+}
+
+p.Ttulo2
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Ttulo2: */
+margin-bottom:0pt;font-family:Segoe UI;font-size:13pt;color:#B32C16;
+}
+
+p.Ttulo3
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Ttulo3: */
+margin-bottom:0pt;font-family:Segoe UI;color:#B32C16;
+}
+
+table.Tabelanormal
+{
+border-collapse:collapse; margin-left:0px;
+}
+
+table.Tabelanormal td
+{
+padding-top:0px;padding-left:5px;padding-bottom:0px;padding-right:5px;
+}
+
+p.TextosemFormatao
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl TextosemFormatao: */
+line-height:1;margin-bottom:0pt;font-family:Consolas;font-size:10.5pt;
+}
+
+span.TextosemFormataoChar
+{
+/* Styl: TextosemFormataoChar: */
+font-family:Consolas;font-size:10.5pt;
+}
+
+p.Ttulo
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Ttulo: */
+line-height:1;margin-bottom:0pt;text-indent:0px;border-bottom:solid 6px #B32C16;text-align:center;margin-top:0px;margin-bottom:0px;font-family:Segoe UI;font-size:24pt;color:#414751;letter-spacing:px;
+}
+
+span.TtuloChar
+{
+/* Styl: TtuloChar: */
+font-family:Segoe UI;font-size:24pt;color:#414751;letter-spacing:px;
+}
+
+span.Ttulo1Char
+{
+/* Styl: Ttulo1Char: */
+font-family:Segoe UI;font-size:14pt;background-color:#F8CEC7;color:#852010;
+}
+
+span.TextoemIngls
+{
+/* Styl: TextoemIngls: */
+font-family:Courier New;
+}
+
+span.Textosemlngua
+{
+/* Styl: Textosemlngua: */
+font-family:Courier New;
+}
+
+span.Ttulo2Char
+{
+/* Styl: Ttulo2Char: */
+font-family:Segoe UI;font-size:13pt;color:#B32C16;
+}
+
+span.Forte
+{
+/* Styl: Forte: */
+font-weight:bold;
+}
+
+p.PargrafodaLista
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl PargrafodaLista: */
+margin-top:6pt;margin-bottom:12pt;margin-left:54px;text-indent:-18px;
+}
+
+p.Ficha
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Ficha: */
+margin-left:28px;text-indent:0px;margin-top:0px;margin-bottom:0px;font-style:italic;
+}
+
+span.nfase
+{
+/* Styl: nfase: */
+font-style:italic;
+}
+
+p.Listacomletras
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Zdědeno ze stylu odstavce PargrafodaLista: */
+margin-top:6pt;margin-bottom:12pt;margin-left:54px;text-indent:-18px;
+/* Styl Listacomletras: */
+margin-left:0px;text-indent:0px;
+}
+
+span.Erronodocumento
+{
+/* Styl: Erronodocumento: */
+font-weight:bold;font-style:italic;background-color:#C00000;color:#FFFFFF;
+}
+
+span.Palavrachave
+{
+/* Styl: Palavrachave: */
+background-color:#EEF1F6;
+border-bottom: 1px solid #DDE0E5;
+}
+
+p.Pequenosubtitlo1
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Pequenosubtitlo1: */
+margin-top:0pt;margin-bottom:54pt;background-color:#EEF1F6;text-align:center;font-family:Segoe UI;font-weight:bold;font-style:italic;color:#2B2F36;
+}
+
+span.Ttulo3Char
+{
+/* Styl: Ttulo3Char: */
+font-family:Segoe UI;font-size:12pt;color:#B32C16;
+}
+
+p.Listacomnmerosordinais
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Zdědeno ze stylu odstavce PargrafodaLista: */
+margin-top:6pt;margin-bottom:12pt;margin-left:54px;text-indent:-18px;
+/* Zdědeno ze stylu odstavce Listacomletras: */
+margin-left:0px;text-indent:0px;
+/* Styl Listacomnmerosordinais: */
+margin-left:46px;text-indent:-28px;
+}
+
+span.Hyperlink
+{
+/* Styl: Hyperlink: */
+text-decoration:underline;color:#FE8637;
+}
+
+span.nfaseIntensa
+{
+/* Styl: nfaseIntensa: */
+font-weight:bold;font-style:italic;color:#B32C16;
+}
+
+span.nfaseIntensasemlngua
+{
+/* Styl: nfaseIntensasemlngua: */
+font-weight:bold;font-style:italic;color:#B32C16;
+}
+
+p.Textodebalo
+{
+/* Zdědeno ze stylu odstavce Normal: */
+margin-top:10pt;margin-bottom:20pt;text-indent:18px;font-size:12pt;
+/* Styl Textodebalo: */
+line-height:1;margin-top:0pt;margin-bottom:0pt;font-family:Tahoma;font-size:8pt;
+}
+
+span.TextodebaloChar
+{
+/* Styl: TextodebaloChar: */
+font-family:Tahoma;font-size:8pt;
+}
+

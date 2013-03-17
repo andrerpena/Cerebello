@@ -182,7 +182,8 @@
                                 @Html.DropDownListFor(
                                     m => m.MedicalEntityId,
                                     (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
-                                    "")
+                                    "",
+                                    new { @class = "input-xlarge" })
                             </div>
                         </div>
                         <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
