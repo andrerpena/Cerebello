@@ -1432,9 +1432,18 @@ namespace Cerebello.Firestarter
                 progress: ConsoleHelper.ConsoleWriteProgressIntInt);
 
             Console.WriteLine("Initialize_SYS_MedicalProcedures");
+
+            var cbhpmFilePath = Path.Combine(this.rootCerebelloPath, @"DB\cbhpm_2010.txt");
+            if (!File.Exists(cbhpmFilePath))
+            {
+                cbhpmFilePath = "cbhpm_2010.txt";
+                if (!File.Exists(cbhpmFilePath))
+                    throw new Exception("Could not find file cbhpm_2010.txt");
+            }
+
             Firestarter.Initialize_SYS_MedicalProcedures(
                 db,
-                Path.Combine(this.rootCerebelloPath, @"DB\cbhpm_2010.txt"),
+                cbhpmFilePath,
                 progress: ConsoleHelper.ConsoleWriteProgressIntInt);
 
             Console.WriteLine("SaveLeafletsInMedicinesJsonToDb");
