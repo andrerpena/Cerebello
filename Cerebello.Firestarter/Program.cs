@@ -1450,8 +1450,18 @@ namespace Cerebello.Firestarter
         private void CreateDatabaseUsingScript(CerebelloEntities db)
         {
             // ToDo: figure out a way to remove this.. we should have a common path or something
-            var path = Path.Combine(this.rootCerebelloPath, @"DB\Scripts");
-            string scriptText = File.ReadAllText(Path.Combine(path, "script.sql"));
+
+            string scriptText;
+            try
+            {
+                var path = Path.Combine(this.rootCerebelloPath, @"DB\Scripts");
+                scriptText = File.ReadAllText(Path.Combine(path, "script.sql"));
+            }
+            catch
+            {
+                scriptText = File.ReadAllText("script.sql");
+            }
+
             var scriptText2 = SqlHelper.SetScriptColumnsCollation(scriptText, "Latin1_General_CI_AI");
 
             // We don't want to create users in this script, so we remove them.

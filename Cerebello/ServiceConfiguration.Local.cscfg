@@ -6,14 +6,13 @@
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="cerebello" />
-      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBjwYJKoZIhvcNAQcDoIIBgDCCAXwCAQAxggFAMIIBPAIBADAkMBAxDjAMBgNVBAMTBWFuZHJlAhBajG7sPdxem0+pAMucfloGMA0GCSqGSIb3DQEBAQUABIIBAI14pMu/bhgSmL3L05slozznKXmz3LYvHHHOL9twDb79zBBt4sQuUxdse3inADz6EsxwZrWi7LGe9r+f7gwMsxoodcKGeXzt/q63MyW7l97ZgX32W+h/f2tA/eV4DDeU8KzDekVSpiys0JQy2twGEBaLm5p4w1DrCza9lQ+rK1cw6XDr2DLT4ISZ85z/ZOKh+F7QHC2ugJuYQgii6/9sMGOqV3zpeaLlyXpSRxti4tcSlCaVGqgqncfrxr2RqgDEjNe9hzY6pWZOvv0xlki3jnQ0DWBKQKIDSms8lBE3Dnza/s1Ia0rCFQCzEYJ0cihQWqPdLNSCjH9zEt03/USEICwwMwYJKoZIhvcNAQcBMBQGCCqGSIb3DQMHBAjp3NOY49EdE4AQQLxg79Kb1hyyZFvGFLHYQQ==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEG6Yjn2OirSWQ4LGJr0kkREwDQYJKoZIhvcNAQEBBQAEggEAhWAalMBOolIwKByjLHZgM2SylfCeSdrGQR5JNbm4yBXlawLkxXjDPxrFz/msZ5ZOgG8fXmNhMq6i/V9dT3n17UcrcHTYj3E4/lvhJn+c1z/fHsZv31x7hpbiGyAecDofJ+1M21O03hBgfehxVbiomlrxQzWLXQvL2SuRj5ISsdN6ik71/ewdrSp9CgdHctkDReA1QTFn5Z2S0jP6LMzA0yhmWTrTZ+F09ezvVWTzK+q/9LYuQQvfQprCrdey3xemJV7Hat7KJF4orqgf8hbhWqmRpXCOtVYXE53YviG0PlV8qiVxFsMuwUvTENEd2m3PZFsXRb0b5Jvll/8qj1we3TAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECCc3PYSX+N6ggBDrzoNDLwvbDGXY2o5oz91L" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-12-28T23:59:59.0000000-02:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
       <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=portalvhds5kcsmx774n1cq;AccountKey=nYm0gxCHYfPEdGLqn2hDjJPHwbCqJ4Xb2xvYfH0lHxRVQOG+oAwToO5/EOn0tvfaaWeROIJPm1chua5kr0hvDg==" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="6CD721517AF8626467976AE019DD11F6C0D695DC" thumbprintAlgorithm="sha1" />
-      <Certificate name="CerebelloSelfSigned" thumbprint="98EC0886CAC024C891A745347E8B49A5E2AC8FD3" thumbprintAlgorithm="sha1" />
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="1582FED67A9AAB3135D23ADCBD049F245E7D3C41" thumbprintAlgorithm="sha1" />
       <Certificate name="GoDaddy" thumbprint="4BD9730EB7A792B26F01DF5D05376031B1A76286" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>

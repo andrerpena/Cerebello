@@ -19,7 +19,6 @@
       <Import moduleName="RemoteForwarder" />
     </Imports>
     <Certificates>
-      <Certificate name="CerebelloSelfSigned" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="GoDaddy" storeLocation="LocalMachine" storeName="My" />
     </Certificates>
     <ConfigurationSettings>
