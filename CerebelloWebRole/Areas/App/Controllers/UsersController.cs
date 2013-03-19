@@ -505,7 +505,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
                 .ToList();
 
-            return View("Edit", formModel);
+            if (this.DbUser.AdministratorId != null || this.DbUser.IsOwner)
+                this.ViewBag.CanEditRole = true;
+
+            return this.View("Edit", formModel);
         }
 
         public static string GetUniqueDoctorUrlId(IObjectSet<Doctor> dbDoctorsSet, string fullName, int? practiceId)
