@@ -13,7 +13,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
     {
         public virtual CerebelloEntities CreateNewCerebelloEntities()
         {
-            return new CerebelloEntities();
+            return new CerebelloEntities(DebugConfig.DataBaseConnectionString);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -62,8 +63,8 @@ namespace CerebelloWebRole.Code
                     [XmlElement("customDateTime")]
                     public CustomDateTimeItem CustomDateTime { get; set; }
 
-                    [XmlElement("restoreDataBase")]
-                    public RestoreDataBaseItem RestoreDataBase { get; set; }
+                    [XmlElement("dataBase")]
+                    public DataBaseItem DataBase { get; set; }
 
                     public override string ToString()
                     {
@@ -121,24 +122,28 @@ namespace CerebelloWebRole.Code
                         }
                     }
 
-                    public class RestoreDataBaseItem
+                    public class DataBaseItem
                     {
-                        [XmlAttribute("enabled")]
-                        public bool Enabled { get; set; }
+                        [XmlAttribute("connectionString")]
+                        public string ConnectionString { get; set; }
 
-                        [XmlAttribute("name")]
-                        public string Name { get; set; }
+                        [XmlAttribute("restore")]
+                        public bool Restore { get; set; }
 
-                        [XmlAttribute("hashed")]
-                        public bool Hashed { get; set; }
+                        [XmlAttribute("backupName")]
+                        public string BackupName { get; set; }
+
+                        [XmlAttribute("isBackupHashed")]
+                        public bool IsBackupHashed { get; set; }
 
                         public override string ToString()
                         {
                             return string.Format(
-                                @"<restoreDataBase enabled=""{0}"" name=""{1}"" hashed=""{2}"">",
-                                this.Enabled ? "true" : "false",
-                                this.Name,
-                                this.Hashed ? "true" : "false");
+                                @"<dataBase connection=""{3}"" restore=""{0}"" backupName=""{1}"" isBackupHashed=""{2}"">",
+                                this.Restore ? "true" : "false",
+                                this.BackupName,
+                                this.IsBackupHashed ? "true" : "false",
+                                this.ConnectionString);
                         }
                     }
                 }
@@ -394,8 +399,68 @@ namespace CerebelloWebRole.Code
         private readonly ConfigurationItem.DebugItem.SettingItem setting;
 
         /// <summary>
+        /// Gets the database connection to use when debugging.
+        /// </summary>
+        public static string DataBaseConnectionString
+        {
+            get
+            {
+#if DEBUG
+                lock (locker)
+                    if (inst != null)
+                        if (inst.setting != null && inst.setting.DataBase != null && !string.IsNullOrWhiteSpace(inst.setting.DataBase.ConnectionString))
+                            return inst.setting.DataBase.ConnectionString;
+#endif
+                return "name=CerebelloEntities";
+            }
+        }
+
+        public static bool ResetDatabase()
+        {
+#if DEBUG
+            lock (locker)
+                if (inst != null)
+                    if (inst.setting != null && inst.setting.DataBase != null)
+                    {
+                        // We only reset database when it is local for sure.
+                        if (IsLocalDataBaseForSure(DataBaseConnectionString))
+                        {
+                            // TODO: restore backup of the database
+                            return true;
+                        }
+                    }
+#endif
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether a connection string indicates a local database for sure.
+        /// </summary>
+        /// <param name="connectionString"> The connection string to test. </param>
+        /// <returns> Returns true if the connection string indicates a local database for sure. </returns>
+        public static bool IsLocalDataBaseForSure(string connectionString)
+        {
+            var match = Regex.Match(connectionString, @"^\s*name\s*=\s*(?<NAME>.*)\s*$");
+            if (match.Success)
+            {
+                var connStr = ConfigurationManager.ConnectionStrings[match.Groups["NAME"].Value];
+                var matchDbServers = Regex.Matches(
+                    connStr.ConnectionString,
+                    @"(?:&quot;|;|^)\s*Data\s*Source\s*=\s*(?<SERVER>.*?)\s*(?:&quot;|;|$)",
+                    RegexOptions.IgnoreCase);
+
+                if (matchDbServers.Count == 1)
+                    if (matchDbServers[0].Success && matchDbServers[0].Groups["SERVER"].Value.StartsWith(@".\"))
+                        return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// UseLocalResourcesOnly indicates whether to use only local resources,
         /// not using the internet to get anything. This does not affect e-mails.
+        /// This does not affect DB access.
         /// </summary>
         public static bool UseLocalResourcesOnly
         {

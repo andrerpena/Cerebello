@@ -553,7 +553,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the DB.
             Assert.IsTrue(isDbChanged, "Create actions must change DB.");
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 int appointmentsCountAtSameTime = db2.Appointments
                     .Count(a => a.Start == utcStart && a.End == utcEnd);
@@ -680,7 +680,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the DB.
             Assert.IsTrue(isDbChanged, "Create actions must change DB.");
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 int appointmentsCountAtSameTime = db2.Appointments
                     .Where(a => a.Start == utcStart)
@@ -784,7 +784,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the DB.
             Assert.IsTrue(isDbChanged, "Create actions must change DB.");
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 int appointmentsCountAtSameTime = db2.Appointments
                     .Count(a => a.Start == utcStart && a.End == utcEnd);
@@ -894,7 +894,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the DB.
             Assert.IsTrue(isDbChanged, "Create actions must change DB.");
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 int appointmentsCountAtSameTime = db2.Appointments
                     .Count(a => a.Start == utcStart && a.End == utcEnd);
@@ -996,7 +996,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             // Verifying the DB.
             Assert.IsTrue(isDbChanged, "Create actions must change DB.");
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 var appointmentsCountAtSameTime = db2.Appointments
                     .Where(a => a.Start == utcStart).Count(a => a.End == utcEnd);

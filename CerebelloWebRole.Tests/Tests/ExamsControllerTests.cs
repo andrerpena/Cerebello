@@ -80,7 +80,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsTrue(this.db.ExaminationRequests.Any(x => x.PatientId == patient.Id), "Database record was not saved.");
 
             // Verifying the database.
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 var obj = db2.ExaminationRequests.FirstOrDefault(x => x.PatientId == patient.Id);
                 Assert.IsNotNull(obj, "Database record was not saved.");
@@ -218,7 +218,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsTrue(controller.ModelState.IsValid, "ModelState is not valid.");
 
             // Verifying the database.
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 var obj = db2.ExaminationRequests.FirstOrDefault(x => x.PatientId == patient.Id);
                 Assert.IsNotNull(obj, "Database record was not saved.");
@@ -474,7 +474,7 @@ namespace CerebelloWebRole.Tests.Tests
             var localNow = new DateTime(2012, 08, 16);
             try
             {
-                using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+                using (var db2 = DbTestBase.CreateNewCerebelloEntities())
                 {
                     var drandre = Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(db2);
                     patient = Firestarter.CreateFakePatients(drandre, db2).First();
@@ -527,7 +527,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsTrue(isDbChangesSaved, "Database changes were not saved, but they should.");
 
             // Verifying the database.
-            using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 var obj = db2.ExaminationRequests.FirstOrDefault(x => x.PatientId == patient.Id);
                 Assert.IsNull(obj, "Database record was not deleted.");
@@ -545,7 +545,7 @@ namespace CerebelloWebRole.Tests.Tests
             bool isDbChangesSaved = false;
             try
             {
-                using (var db2 = new CerebelloEntities(this.db.Connection.ConnectionString))
+                using (var db2 = DbTestBase.CreateNewCerebelloEntities())
                 {
                     Firestarter.Create_CrmMg_Psiquiatria_DrHouse_Andre(db2);
 
