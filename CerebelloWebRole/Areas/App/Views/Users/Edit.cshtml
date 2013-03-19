@@ -69,7 +69,7 @@
         format: @<text>@(Html.AutocompleteGridFor<UserViewModel, MedicalSpecialtiesLookupGridModel, int?>(
                                 m => m.MedicalSpecialtyId,
                                 m => m.MedicalSpecialtyName,
-                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
+                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties", new { area = "" }),
                                 pm => pm.Id,
                                 pm => pm.Name,
                                 new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }))</text>);
