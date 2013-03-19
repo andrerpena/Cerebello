@@ -1,7 +1,6 @@
 ﻿@using System.Globalization
 @{
     ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
-    var ptBr = CultureInfo.GetCultureInfo("pt-BR");
 }
 
 <header id="header">
@@ -34,7 +33,7 @@
                 <tr>
                     <td>
                         <h6>&nbsp;</h6>
-                        <h2>@Bus.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr)</h2>
+                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_MONTH)</h2>
                         <h6>mensais
                             <br />
                             <br />
@@ -53,9 +52,9 @@
                     </td>
                     <td>
                         <h6>equivalente a</h6>
-                        <h2>@((Bus.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</h2>
+                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_QUARTER / 3)</h2>
                         <h6>mensais</h6>
-                        <h6>@Bus.Pro.PRICE_QUARTER.ToString("R$ 0.00", ptBr) a cada 3 meses</h6>
+                        <h6>@StringHelper.FormatMoney(Bus.Pro.PRICE_QUARTER) a cada 3 meses</h6>
                         <p>
                             <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_QUARTER%</strong></span>
                             <br />
@@ -70,9 +69,9 @@
                     </td>
                     <td>
                         <h6>equivalente a</h6>
-                        <h2>@((Bus.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</h2>
+                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_SEMESTER / 6)</h2>
                         <h6>mensais</h6>
-                        <h6>@Bus.Pro.PRICE_SEMESTER.ToString("R$ 0.00", ptBr) a cada 6 meses</h6>
+                        <h6>@StringHelper.FormatMoney(Bus.Pro.PRICE_SEMESTER) a cada 6 meses</h6>
                         <p>
                             <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_SEMESTER%</strong></span>
                             <br />
@@ -87,9 +86,9 @@
                     </td>
                     <td>
                         <h6>equivalente a</h6>
-                        <h2>@((Bus.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</h2>
+                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR / 12)</h2>
                         <h6>mensais</h6>
-                        <h6>@Bus.Pro.PRICE_YEAR.ToString("R$ 0.00", ptBr) a cada 12 meses</h6>
+                        <h6>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR) a cada 12 meses</h6>
                         <p>
                             <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_YEAR%</strong></span>
                             <br />
