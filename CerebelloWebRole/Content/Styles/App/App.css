@@ -176,6 +176,7 @@ input, textarea {
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px rgba(82, 168, 236, 1);
         outline: 0;
         outline: thin dotted \9; /* IE6-8 */
+        outline-color: transparent \9;
     }
 
     select:focus,
@@ -186,6 +187,7 @@ input, textarea {
         outline: thin dotted rgba(82, 168, 236, 0.6);
         outline: 5px auto rgba(82, 168, 236, 0.6);
         outline-offset: -2px;
+        outline-color: transparent \9;
     }
 
     input[type=submit], a.link-button {
@@ -239,6 +241,8 @@ input, textarea {
             -ms-transition: background-position 0.1s linear;
             -o-transition: background-position 0.1s linear;
             transition: background-position 0.1s linear;
+            box-shadow: inset 0 1px 1px #CCC, 0 0 4px rgb(82, 168, 236) \9;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px rgba(82, 168, 236, 1) \9;
         }
 
     input[disabled="disabled"], input.disabled {
