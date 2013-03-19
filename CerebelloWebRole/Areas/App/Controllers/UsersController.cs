@@ -374,7 +374,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     }
 
                     // Changing the doctor's informations.
-                    user.Doctor.CRM = formModel.MedicCRM;
+                    if (!string.IsNullOrWhiteSpace(formModel.MedicCRM))
+                        user.Doctor.CRM = formModel.MedicCRM;
 
                     if (formModel.MedicalEntityId != null)
                     {
