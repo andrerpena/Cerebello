@@ -191,7 +191,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (this.DbUser.AdministratorId != null || this.DbUser.IsOwner)
                 this.ViewBag.CanEditRole = true;
 
-            return View("Edit", model);
+            return this.View("Edit", model);
         }
 
         public static SYS_MedicalEntity GetDoctorEntity(IObjectSet<SYS_MedicalEntity> dbSet, Doctor doctor)
@@ -235,7 +235,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.UserName);
 
                 user = db.Users.First(p => p.Id == formModel.Id);
-                user.Person.FullName = formModel.FullName;
+
+                // TODO: suggest that r# use the attribute EdmScalarPropertyAttribute(IsNullable=false)
+                // as a way to determine if a property can ever receive a null value or not
+                // there was a bug in the line inside the following if, that could be detected by r# if it did consider that attribute.
+                if (!string.IsNullOrWhiteSpace(formModel.FullName))
+                    user.Person.FullName = formModel.FullName;
+
                 user.Person.Gender = (short)formModel.Gender;
 
                 // If there are model errors, we must return original user name to the view.
@@ -391,14 +397,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // Creating an unique UrlIdentifier for this doctor.
                     // This does not consider UrlIdentifier's used by other kinds of objects.
                     string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, this.DbPractice.Id);
-                    if (urlId == null)
+                    if (urlId == null && !string.IsNullOrWhiteSpace(formModel.FullName))
                     {
                         this.ModelState.AddModelError(
                             () => formModel.FullName,
                             // Todo: this message is also used in the AuthenticationController.
-                            "Quantidade máxima de homônimos excedida.");
+                            string.Format("Quantidade máxima de homônimos excedida para esta conta: {0}.", this.DbPractice.UrlIdentifier));
                     }
-                    user.Doctor.UrlIdentifier = urlId;
+
+                    if (!string.IsNullOrWhiteSpace(urlId))
+                        user.Doctor.UrlIdentifier = urlId;
                 }
                 else
                 {
@@ -490,16 +498,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Making user available in the Chat
                 ChatServerHelper.SetupUserIfNonexisting(this.db, this.DbPractice.Id, user.Id);
 
-                return RedirectToAction("Details", new { id = user.Id });
+                return this.RedirectToAction("Details", new { id = user.Id });
             }
 
-            ViewBag.MedicalSpecialtyOptions =
+            this.ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
                 .ToList()
                 .Select(ms => new SelectListItem { Value = ms.Id.ToString(), Text = ms.Name })
                 .ToList();
 
-            ViewBag.MedicalEntityOptions =
+            this.ViewBag.MedicalEntityOptions =
                 this.db.SYS_MedicalEntity
                 .ToList()
                 .Select(me => new SelectListItem { Value = me.Id.ToString(), Text = me.Name })
