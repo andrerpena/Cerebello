@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code.Mvc;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -23,6 +24,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Nome completo")]
+        [CanBeNull]
         public String FullName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

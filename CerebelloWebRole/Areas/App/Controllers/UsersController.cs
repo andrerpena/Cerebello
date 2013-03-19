@@ -516,6 +516,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (this.DbUser.AdministratorId != null || this.DbUser.IsOwner)
                 this.ViewBag.CanEditRole = true;
 
+            // Removes all duplicated messages.
+            this.ModelState.RemoveDuplicates();
+
             return this.View("Edit", formModel);
         }
 
