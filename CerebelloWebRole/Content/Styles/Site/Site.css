@@ -66,9 +66,8 @@ input, textarea {
 
 
 .hero {
-    background-image: url("/Content/Images/Site/hero_bg.jpg");
+    background-image: url("/Content/Images/Site/tile.jpg");
     background-position: 50% center;
-    background-repeat: no-repeat;
     margin-bottom: 20px;
     overflow: hidden;
     padding: 15px 0 0;
