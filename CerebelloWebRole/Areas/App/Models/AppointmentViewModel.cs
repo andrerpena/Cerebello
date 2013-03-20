@@ -108,7 +108,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [UIHint("Phone")]
         public String PatientPhoneLand { get; set; }
 
-        [Display(Name = "Convênio/Forma de atendimento")]
+        [Display(Name = "Convênio")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? HealthInsuranceId { get; set; }
 

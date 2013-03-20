@@ -195,6 +195,7 @@
     <Compile Include="Code\Notifications\NotificationsHelper.cs" />
     <Compile Include="Code\Notifications\NotificationsLongPollingProvider.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Styles\Site\Cancel.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
     <Compile Include="Models\GenerateInvoiceViewModel.cs" />
