@@ -1,35 +1,74 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
+    /// <summary>
+    /// Schedules workers to run in specific time intervals.
+    /// </summary>
     public class IntervalWorkerScheduler : BaseWorkerScheduler
     {
         private readonly TimeSpan timeSpan;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IntervalWorkerScheduler"/> class,
+        /// that schedules workers to run every specific time interval.
+        /// </summary>
+        /// <param name="timeSpan">
+        /// The interval of time between scheduling the workers to run.
+        /// </param>
         public IntervalWorkerScheduler(TimeSpan timeSpan)
         {
             this.timeSpan = timeSpan;
         }
 
-        public override void Start(TaskScheduler taskScheduler = null)
+        /// <summary>
+        /// Starts a new thread that will schedule all workers for running.
+        /// Then it sleeps for some time.
+        /// </summary>
+        /// <param name="taskScheduler">The TaskScheduler to use to schedule tasks to be run.</param>
+        protected override void StartInternal(TaskScheduler taskScheduler)
         {
-            var task = new Task(() => this.Run(taskScheduler));
-            task.Start(taskScheduler ?? TaskScheduler.Default);
+            var thread = new Thread(() => this.Run(taskScheduler));
+            thread.Start();
         }
 
-        private void Run(TaskScheduler taskScheduler)
+        /// <summary>
+        /// Runs this scheduler forever... scheduling workers for running,
+        /// and sleeping for the amount of time indicated in the constructor.
+        /// </summary>
+        /// <param name="taskScheduler">The TaskScheduler to use to schedule tasks to be run.</param>
+        private void Run([NotNull]TaskScheduler taskScheduler)
         {
+            Action<Exception> doNothingWithException = ex => { };
+
             while (true)
             {
-                foreach (var eachWorker in this)
+                try
                 {
-                    var task = new Task(eachWorker.RunOnce);
-                    task.Start(taskScheduler ?? TaskScheduler.Default);
+                    // This foreach is instantaneous... it just schedules each worker to run using a taskScheduler.
+                    foreach (var eachWorker in this)
+                    {
+                        var task = new Task(eachWorker.RunOnce);
+                        task.Start(taskScheduler);
+
+                        // Observing Exception so that Task finalization does not rethrows it.
+                        // If Task finalization is allowed to rethrow exceptions, then process will die,
+                        // regardless of the try/catch block surrouding this method.
+                        task.ContinueWith(t => doNothingWithException(t.Exception));
+                    }
+
+                    Thread.Sleep(this.timeSpan);
                 }
-                Thread.Sleep(this.timeSpan);
+                catch
+                {
+                    // Never going to crash... so this is safe!
+                }
             }
+            // ReSharper disable FunctionNeverReturns
         }
+        // ReSharper restore FunctionNeverReturns
     }
 }

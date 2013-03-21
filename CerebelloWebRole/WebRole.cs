@@ -30,7 +30,7 @@ namespace CerebelloWebRole
 
             intervalScheduler30Min.Start();
 
-            // Calling base to stop this method forever.
+            // Calling base to stop execution of this method forever.
             base.Run();
         }
     }
