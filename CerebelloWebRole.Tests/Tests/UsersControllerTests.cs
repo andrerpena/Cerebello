@@ -698,7 +698,7 @@ namespace CerebelloWebRole.Tests.Tests
             Assert.IsTrue(isDbSaved, "DB changes must be saved.");
 
             // Doctor UrlIdentifier must be the same as before.
-            using (var db2 = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+            using (var db2 = DbTestBase.CreateNewCerebelloEntities())
             {
                 var doc2 = db2.Doctors.Where(d => d.Id == doc.Id).First();
                 Assert.AreEqual(doc.UrlIdentifier, doc2.UrlIdentifier);

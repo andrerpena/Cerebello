@@ -75,7 +75,7 @@ namespace CerebelloWebRole.Tests
             }
             else
             {
-                using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+                using (var db = DbTestBase.CreateNewCerebelloEntities())
                     this.UserDbId = db.Users.Single(u => u.UserName == "andrerpena").Id;
             }
         }
@@ -99,7 +99,7 @@ namespace CerebelloWebRole.Tests
             }
             else
             {
-                using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+                using (var db = DbTestBase.CreateNewCerebelloEntities())
                     this.UserDbId = db.Users.Single(u => u.UserName == "masbicudo").Id;
             }
         }
@@ -347,7 +347,7 @@ namespace CerebelloWebRole.Tests
         {
             var mock = new Mock<HttpContextBase>();
 
-            using (var db = new CerebelloEntities(string.Format("name={0}", Constants.CONNECTION_STRING_EF)))
+            using (var db = DbTestBase.CreateNewCerebelloEntities())
             {
                 Principal principal;
 

@@ -129,21 +129,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.DbPractice.SiteUrl = formModel.SiteUrl;
                 this.DbPractice.Email = formModel.Email;
 
-                if (this.DbPractice.Address == null)
-                    this.DbPractice.Address = new Address();
-                this.DbPractice.Address.CEP = formModel.Address.CEP;
-                this.DbPractice.Address.City = formModel.Address.City;
-                this.DbPractice.Address.Complement = formModel.Address.Complement;
-                this.DbPractice.Address.Neighborhood = formModel.Address.Neighborhood;
-                this.DbPractice.Address.StateProvince = formModel.Address.StateProvince;
-                this.DbPractice.Address.Street = formModel.Address.Street;
+                var address = this.DbPractice.Address;
+                if (address == null)
+                    this.DbPractice.Address = address = new Address();
+                address.PracticeId = this.DbPractice.Id;
+                address.CEP = formModel.Address.CEP;
+                address.City = formModel.Address.City;
+                address.Complement = formModel.Address.Complement;
+                address.Neighborhood = formModel.Address.Neighborhood;
+                address.StateProvince = formModel.Address.StateProvince;
+                address.Street = formModel.Address.Street;
 
                 this.db.SaveChanges();
 
                 return this.RedirectToAction("Index");
             }
 
-            return View(formModel);
+            return this.View(formModel);
         }
     }
 }

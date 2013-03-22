@@ -82,7 +82,7 @@ namespace Cerebello.Firestarter
                         Console.Write("Detaching DB... ");
 
                         bool ok = false;
-                        using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                        using (var db = this.CreateCerebelloEntities())
                             try
                             {
                                 Firestarter.DetachLocalDatabase(db);
@@ -167,7 +167,7 @@ namespace Cerebello.Firestarter
 
                     try
                     {
-                        using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                        using (var db = this.CreateCerebelloEntities())
                         {
                             var attachResult = Firestarter.AttachLocalDatabase(db);
                             if (attachResult == Firestarter.AttachLocalDatabaseResult.NotFound)
@@ -245,7 +245,7 @@ namespace Cerebello.Firestarter
                     Console.WriteLine(@")");
 
                     Console.WriteLine();
-                    using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                    using (var db = this.CreateCerebelloEntities())
                     {
                         if (Firestarter.BackupExists(db, "__zero__"))
                             Console.WriteLine(@"zero   - Restores DB to last zeroed state.");
@@ -356,6 +356,11 @@ namespace Cerebello.Firestarter
             }
         }
 
+        private CerebelloEntities CreateCerebelloEntities()
+        {
+            return new CerebelloEntities(string.Format("name={0}", this.connName));
+        }
+
         private static void InfoAbk()
         {
         }
@@ -405,7 +410,7 @@ namespace Cerebello.Firestarter
 
         private void OptUndo()
         {
-            using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+            using (var db = this.CreateCerebelloEntities())
             {
                 if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__redo__");
                 var fileName = Firestarter.RestoreBackup(db, "__undo__");
@@ -432,7 +437,7 @@ namespace Cerebello.Firestarter
 
         private void OptZero()
         {
-            using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+            using (var db = this.CreateCerebelloEntities())
             {
                 if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                 var fileName = Firestarter.RestoreBackup(db, "__zero__");
@@ -459,7 +464,7 @@ namespace Cerebello.Firestarter
 
         private void OptRedo()
         {
-            using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+            using (var db = this.CreateCerebelloEntities())
             {
                 var fileName = Firestarter.RestoreBackup(db, "__redo__");
                 if (fileName != null)
@@ -485,7 +490,7 @@ namespace Cerebello.Firestarter
 
         private void OptReset()
         {
-            using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+            using (var db = this.CreateCerebelloEntities())
             {
                 if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                 var fileName = Firestarter.RestoreBackup(db, "__reset__");
@@ -556,7 +561,7 @@ namespace Cerebello.Firestarter
             {
                 try
                 {
-                    using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                    using (var db = this.CreateCerebelloEntities())
                     {
                         if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                         this.CreateDatabaseUsingScript(db);
@@ -579,7 +584,7 @@ namespace Cerebello.Firestarter
 
         private void OptSize()
         {
-            using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+            using (var db = this.CreateCerebelloEntities())
             {
                 Console.WriteLine(
                     "SYS_MedicalEntity: Code.Length: min={0}; max={1}",
@@ -626,7 +631,7 @@ namespace Cerebello.Firestarter
                 var clearAllData = ConsoleHelper.YesNo("This will drop EVERY table in your DB... are you sure?");
 
                 // Doing what the user has told.
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     if (clearAllData)
                     {
@@ -680,7 +685,7 @@ namespace Cerebello.Firestarter
                 var clearAllData = ConsoleHelper.YesNo("Clear all data?");
 
                 // Doing what the user has told.
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     if (clearAllData)
                     {
@@ -732,7 +737,7 @@ namespace Cerebello.Firestarter
         {
             try
             {
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
 
@@ -778,7 +783,7 @@ namespace Cerebello.Firestarter
         {
             try
             {
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine("Saving to: {0}", new FileInfo("medicines.json").FullName);
@@ -822,7 +827,7 @@ namespace Cerebello.Firestarter
             if (this.detachDbWhenDone)
             {
                 bool ok = false;
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                     try
                     {
                         Firestarter.DetachLocalDatabase(db);
@@ -928,7 +933,7 @@ namespace Cerebello.Firestarter
 
             try
             {
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     bool canCreate = !Firestarter.BackupExists(db, ssName)
                                      || ConsoleHelper.YesNo("Backup already exists. Would you like to replace it?");
@@ -980,7 +985,7 @@ namespace Cerebello.Firestarter
             bool fileExists;
             try
             {
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                     try
@@ -1049,7 +1054,7 @@ namespace Cerebello.Firestarter
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 // Doing what the user has told.
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     if (resetDb)
                     {
@@ -1115,7 +1120,7 @@ namespace Cerebello.Firestarter
             try
             {
                 Console.Write("Command: ");
-                using (var db = new CerebelloEntities(string.Format("name={0}", this.connName)))
+                using (var db = this.CreateCerebelloEntities())
                 {
                     if (this.isFuncBackupEnabled) Firestarter.CreateBackup(db, "__undo__");
                     new Exec(db).ExecCommand(0, "", null, new Queue<string>());

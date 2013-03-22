@@ -164,6 +164,37 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
+        /// Removes duplicated messages from the modelState.
+        /// Same messages in different properties are considered duplicates.
+        /// This should be last thing to do on a ModelState object.
+        /// </summary>
+        /// <param name="modelState">The model state object to remove duplicates from.</param>
+        /// <param name="ignoreCase">Whether case is considered when looking for duplicates.</param>
+        /// <returns>Returns the number of removed items.</returns>
+        public static int RemoveDuplicates(this ModelStateDictionary modelState, bool ignoreCase = false)
+        {
+            var foundMessages = new HashSet<string>(ignoreCase ? StringComparer.InvariantCultureIgnoreCase : StringComparer.InvariantCulture);
+
+            int countRemoved = 0;
+            foreach (var modelStateItem in modelState.ToArray())
+            {
+                foreach (var eachModelError in modelStateItem.Value.Errors.ToArray())
+                {
+                    if (foundMessages.Contains(eachModelError.ErrorMessage))
+                    {
+                        modelStateItem.Value.Errors.Remove(eachModelError);
+                        countRemoved++;
+                    }
+
+                    foundMessages.Add(eachModelError.ErrorMessage);
+                }
+            }
+
+            return countRemoved;
+        }
+
+
+        /// <summary>
         /// Flatten all model errors in a single list of tuples containing the property name and the ModelError object.
         /// </summary>
         /// <param name="modelState">ModelStateDictionary to flatten.</param>

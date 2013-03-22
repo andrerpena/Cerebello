@@ -119,17 +119,17 @@
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
                     <th>@Html.LabelFor(model => model.PatientPhoneLand)</th>
-                    <td>@Html.TextBoxFor(model => model.PatientPhoneLand)</td>
+                    <td>@Html.EditorFor(model => model.PatientPhoneLand)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
                     <th>@Html.LabelFor(model => model.PatientPhoneCell)</th>
-                    <td>@Html.TextBoxFor(model => model.PatientPhoneCell)</td>
+                    <td>@Html.EditorFor(model => model.PatientPhoneCell)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
                     <th>@Html.LabelFor(model => model.PatientEmail)</th>
-                    <td>@Html.TextBoxFor(model => model.PatientEmail)</td>
+                    <td>@Html.EditorFor(model => model.PatientEmail)</td>
                 </tr>
             }
         </table>

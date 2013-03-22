@@ -1,15 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
+    /// <summary>
+    /// Base class for worker schedulers.
+    /// </summary>
+    /// <remarks>
+    /// A worker scheduler is a class that can be used to schedule workers to run by using the TaskScheduler class.
+    /// The default TaskScheduler is the TaskScheduler.Default, defined by the .Net infrastructure.
+    /// </remarks>
     public abstract class BaseWorkerScheduler : IEnumerable<BaseWorker>
     {
         private readonly List<BaseWorker> workers = new List<BaseWorker>();
 
-        public abstract void Start(TaskScheduler taskScheduler = null);
+        /// <summary>
+        /// Starts the scheduling of workers, using the passed TaskScheduler.
+        /// </summary>
+        /// <param name="taskScheduler">The TaskScheduler used to schedule workers to run.</param>
+        protected abstract void StartInternal([NotNull]TaskScheduler taskScheduler);
 
+        /// <summary>
+        /// Starts the scheduling of workers, using the passed TaskScheduler or the default scheduler.
+        /// </summary>
+        /// <param name="taskScheduler">The TaskScheduler used to schedule workers to run.</param>
+        public void Start(TaskScheduler taskScheduler = null)
+        {
+            this.StartInternal(taskScheduler ?? TaskScheduler.Default);
+        }
+
+        /// <summary>
+        /// Adds a worker to be scheduled to run by this class.
+        /// </summary>
+        /// <param name="worker">The worker to be added.</param>
         public void Add(BaseWorker worker)
         {
             this.workers.Add(worker);

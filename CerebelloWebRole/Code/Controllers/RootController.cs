@@ -16,7 +16,7 @@ namespace CerebelloWebRole.Code.Controllers
         {
             this.UtcNowGetter = () => DateTime.UtcNow + DebugConfig.CurrentTimeOffset;
 
-            this.CerebelloEntitiesCreator = () => new CerebelloEntities();
+            this.CerebelloEntitiesCreator = () => new CerebelloEntities(DebugConfig.DataBaseConnectionString);
         }
 
         public Func<DateTime> UtcNowGetter { get; set; }
