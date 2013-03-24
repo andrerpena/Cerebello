@@ -105,6 +105,24 @@ namespace Cerebello.Model
     /// <summary>
     /// Gender type
     /// </summary>
+    public enum TypeNotification
+    {
+        [Display(Name = "Genérica")]
+        Generic = 0,
+
+        [Display(Name = "Consulta")]
+        PatientAppointment = 1,
+
+        [Display(Name = "Compromisso")]
+        GenericAppointment = 1,
+
+        [Display(Name = "Paciente chegou")]
+        PatientArrived = 2
+    }
+
+    /// <summary>
+    /// Gender type
+    /// </summary>
     public enum TypeGender
     {
         [Display(Name = "Masculino")]

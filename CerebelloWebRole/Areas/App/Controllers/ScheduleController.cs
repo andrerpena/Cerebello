@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
@@ -10,7 +9,6 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Access;
 using CerebelloWebRole.Code.Mvc;
-using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -499,10 +497,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         return View("NotFound", formModel);
                 }
 
-                appointment.Start = ConvertToUtcDateTime(this.DbPractice,
+                var appointmentStart = ConvertToUtcDateTime(this.DbPractice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start));
-                appointment.End = ConvertToUtcDateTime(this.DbPractice,
+
+                var appointmentEnd = ConvertToUtcDateTime(this.DbPractice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.End));
+
+                if (appointment.Start != appointmentStart)
+                    appointment.Notified = false;
+
+                appointment.Start = appointmentStart;
+                appointment.End = appointmentEnd;
+
                 appointment.Status = (int)formModel.Status;
 
                 // Setting the appointment type and associated properties.

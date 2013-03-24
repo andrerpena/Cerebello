@@ -82,6 +82,10 @@
             <End Role="HealthInsurance" EntitySet="HealthInsurance" />
             <End Role="Appointment" EntitySet="Appointment" />
           </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Practice" Association="cerebelloModel.Store.FK_Appointment_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
           <AssociationSet Name="FK_Appointment_User" Association="cerebelloModel.Store.FK_Appointment_User">
             <End Role="User" EntitySet="User" />
             <End Role="Appointment" EntitySet="Appointment" />
@@ -177,6 +181,10 @@
           <AssociationSet Name="FK_ModelMedicalCertificateField_ModelMedicalCertificate" Association="cerebelloModel.Store.FK_ModelMedicalCertificateField_ModelMedicalCertificate">
             <End Role="ModelMedicalCertificate" EntitySet="ModelMedicalCertificate" />
             <End Role="ModelMedicalCertificateField" EntitySet="ModelMedicalCertificateField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notification_Practice" Association="cerebelloModel.Store.FK_Notification_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="Notification" EntitySet="Notification" />
           </AssociationSet>
           <AssociationSet Name="FK_Notification_User" Association="cerebelloModel.Store.FK_Notification_User">
             <End Role="User" EntitySet="User" />
@@ -351,7 +359,7 @@
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
-          <Property Name="IsPolled" Type="bit" Nullable="false" />
+          <Property Name="Notified" Type="bit" Nullable="false" />
           <Property Name="HealthInsuranceId" Type="int" />
           <Property Name="ReminderEmailSent" Type="bit" Nullable="false" />
         </EntityType>
@@ -667,11 +675,10 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Text" Type="varchar(max)" />
-          <Property Name="IsPolled" Type="bit" Nullable="false" />
-          <Property Name="ViewData" Type="nvarchar" MaxLength="50" />
-          <Property Name="ViewName" Type="varchar" MaxLength="250" />
+          <Property Name="IsClosed" Type="bit" Nullable="false" />
+          <Property Name="Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Data" Type="varchar(max)" />
+          <Property Name="UserToId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -969,6 +976,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Appointment_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Appointment_User">
           <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
           <End Role="Appointment" Type="cerebelloModel.Store.Appointment" Multiplicity="*" />
@@ -1257,6 +1276,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Notification_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="Notification" Type="cerebelloModel.Store.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Notification_User">
           <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="1" />
           <End Role="Notification" Type="cerebelloModel.Store.Notification" Multiplicity="*" />
@@ -1265,7 +1296,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Notification">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="UserToId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1737,10 +1768,6 @@
           <EntitySet Name="SYS_Cid10" EntityType="Cerebello.Model.SYS_Cid10" />
           <EntitySet Name="HealthInsurances" EntityType="Cerebello.Model.HealthInsurance" />
           <EntitySet Name="Notifications" EntityType="Cerebello.Model.Notification" />
-          <AssociationSet Name="FK_Notification_User" Association="Cerebello.Model.FK_Notification_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Notification" EntitySet="Notifications" />
-          </AssociationSet>
           <AssociationSet Name="FK_HealthInsurance_Doctor" Association="Cerebello.Model.FK_HealthInsurance_Doctor">
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="HealthInsurance" EntitySet="HealthInsurances" />
@@ -1800,6 +1827,18 @@
             <End Role="AccountContract" EntitySet="AccountContracts" />
             <End Role="BillingItem" EntitySet="BillingItems" />
           </AssociationSet>
+          <AssociationSet Name="FK_Notification_User1" Association="Cerebello.Model.FK_Notification_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Practice" Association="Cerebello.Model.FK_Appointment_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notification_Practice" Association="Cerebello.Model.FK_Notification_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1834,10 +1873,11 @@
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="Int32" Name="Status" Nullable="false" />
-          <Property Type="Boolean" Name="IsPolled" Nullable="false" />
           <Property Type="Int32" Name="HealthInsuranceId" />
           <NavigationProperty Name="HealthInsurance" Relationship="Cerebello.Model.FK_Appointment_HealthInsurance" FromRole="Appointment" ToRole="HealthInsurance" />
           <Property Type="Boolean" Name="ReminderEmailSent" Nullable="false" />
+          <Property Type="Boolean" Name="Notified" Nullable="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Appointment_Practice" FromRole="Appointment" ToRole="Practice" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -1949,6 +1989,8 @@
           <NavigationProperty Name="Address" Relationship="Cerebello.Model.FK_Practice_Address" FromRole="Practice" ToRole="Address" />
           <Property Type="Boolean" Name="AccountDisabled" Nullable="false" />
           <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
+          <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_Practice" FromRole="Practice" ToRole="Appointment" />
+          <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Practice" ToRole="Notification" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2008,7 +2050,7 @@
           <NavigationProperty Name="ChatMessagesReceived" Relationship="Cerebello.Model.FK_ChatMessage_ToUser_User" FromRole="User" ToRole="ChatMessage" />
           <Property Type="Int32" Name="SecretaryId" />
           <NavigationProperty Name="Secretary" Relationship="Cerebello.Model.FK_User_Secretary" FromRole="User" ToRole="Secretary" />
-          <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_User" FromRole="User" ToRole="Notification" />
+          <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_User1" FromRole="User" ToRole="Notification" />
         </EntityType>
         <Association Name="FK_Appointment_Doctor">
           <End Role="Doctor" Type="Cerebello.Model.Doctor" Multiplicity="1">
@@ -2844,25 +2886,13 @@
           <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <Property Type="Int32" Name="UserId" Nullable="false" />
-          <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="User" Relationship="Cerebello.Model.FK_Notification_User" FromRole="Notification" ToRole="User" />
-          <Property Type="Boolean" Name="IsPolled" Nullable="false" />
-          <Property Type="String" Name="ViewName" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="ViewData" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsClosed" Nullable="false" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Type="String" Name="Data" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="UserToId" Nullable="false" />
+          <NavigationProperty Name="UserTo" Relationship="Cerebello.Model.FK_Notification_User1" FromRole="Notification" ToRole="User" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Notification" ToRole="Practice" />
         </EntityType>
-        <Association Name="FK_Notification_User">
-          <End Type="Cerebello.Model.User" Role="User" Multiplicity="1" />
-          <End Type="Cerebello.Model.Notification" Role="Notification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Notification">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_HealthInsurance_Doctor">
           <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
           <End Type="Cerebello.Model.HealthInsurance" Role="HealthInsurance" Multiplicity="*" />
@@ -3105,6 +3135,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Notification_User1">
+          <End Type="Cerebello.Model.User" Role="User" Multiplicity="1" />
+          <End Type="Cerebello.Model.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="UserToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.Appointment" Role="Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notification_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3122,9 +3188,9 @@
             <ScalarProperty Name="Id" ColumnName="Id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Appointments"><EntityTypeMapping TypeName="Cerebello.Model.Appointment"><MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="Notified" ColumnName="Notified" />
                 <ScalarProperty Name="ReminderEmailSent" ColumnName="ReminderEmailSent" />
                 <ScalarProperty Name="HealthInsuranceId" ColumnName="HealthInsuranceId" />
-                <ScalarProperty Name="IsPolled" ColumnName="IsPolled" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -3635,11 +3701,10 @@
           <EntitySetMapping Name="Notifications">
             <EntityTypeMapping TypeName="Cerebello.Model.Notification">
               <MappingFragment StoreEntitySet="Notification">
-                <ScalarProperty Name="ViewData" ColumnName="ViewData" />
-                <ScalarProperty Name="ViewName" ColumnName="ViewName" />
-                <ScalarProperty Name="IsPolled" ColumnName="IsPolled" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserToId" ColumnName="UserToId" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3765,7 +3830,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="34">
+      <Diagram Name="CerebelloEntities" ZoomLevel="56">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -4093,7 +4158,6 @@
         <EntityTypeShape EntityType="Cerebello.Model.SYS_Cid10" Width="1.5" PointX="0.5" PointY="8.125" FillColor="Firebrick" />
         <EntityTypeShape EntityType="Cerebello.Model.HealthInsurance" Width="2" PointX="26.375" PointY="17.375" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Notification" Width="1.5" PointX="19.375" PointY="3.75" FillColor="DimGray" />
-        <AssociationConnector Association="Cerebello.Model.FK_Notification_User" />
         <AssociationConnector Association="Cerebello.Model.FK_HealthInsurance_Doctor" />
         <AssociationConnector Association="Cerebello.Model.FK_Patient_HealthInsurance" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_HealthInsurance" />
@@ -4114,6 +4178,9 @@
         <AssociationConnector Association="Cerebello.Model.FK_BillingItem_Billing" />
         <AssociationConnector Association="Cerebello.Model.FK_Billing_AccountContract" />
         <AssociationConnector Association="Cerebello.Model.FK_BillingItem_AccountContract" />
+        <AssociationConnector Association="Cerebello.Model.FK_Notification_User1" />
+        <AssociationConnector Association="Cerebello.Model.FK_Appointment_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_Notification_Practice" />
         </Diagram>
     </Diagrams>
   </Designer>

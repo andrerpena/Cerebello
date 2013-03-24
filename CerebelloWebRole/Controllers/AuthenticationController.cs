@@ -4,12 +4,16 @@ using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code.Hubs;
+using CerebelloWebRole.Code.Notifications;
+using CerebelloWebRole.Code.Notifications.Data;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
 
@@ -355,23 +359,19 @@ namespace CerebelloWebRole.Controllers
                         this.db.SaveChanges();
 
                         // adding message to the user so that he/she completes his/her profile informations
-                        this.db.Notifications.AddObject(new Notification()
-                        {
-                            CreatedOn = this.GetUtcNow(),
-                            PracticeId = user.PracticeId,
-                            UserId = user.Id,
-                            ViewName = "NotificationFillUserProfile",
-                            ViewData = System.Web.Helpers.Json.Encode(new { id = user.Id, practice = user.Practice.UrlIdentifier }),
-                        });
-
-                        this.db.Notifications.AddObject(new Notification()
-                        {
-                            CreatedOn = this.GetUtcNow(),
-                            PracticeId = user.PracticeId,
-                            UserId = user.Id,
-                            ViewName = "NotificationFillPracticeProfile",
-                            ViewData = System.Web.Helpers.Json.Encode(new { id = user.Id, practice = user.Practice.UrlIdentifier }),
-                        });
+                        // todo: add complete profile notification
+                        var notificationData = new CompletePracticeInfoNotificationData();
+                        var notificationDataString = new JavaScriptSerializer().Serialize(notificationData);
+                        var dbNotification = new Notification()
+                            {
+                                CreatedOn = this.GetUtcNow(),
+                                PracticeId = user.PracticeId,
+                                Data = notificationDataString,
+                                UserToId = user.Id,
+                                Type = NotificationConstants.COMPLETE_INFO_NOTIFICATION_TYPE
+                            };
+                        this.db.Notifications.AddObject(dbNotification);
+                        NotificationsHub.BroadcastDbNotification(dbNotification, notificationData);
 
                         user.Practice.Owner = user;
                         user.Person.PracticeId = user.PracticeId;

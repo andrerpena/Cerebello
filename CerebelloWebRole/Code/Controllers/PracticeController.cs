@@ -107,35 +107,15 @@ namespace CerebelloWebRole.Code
                 return;
             }
 
-            // Loading messages.
+            // Loading past notifications.
             if (this.DbPractice != null)
             {
-                // discover the appointments that have already been polled and sent to the client
-                this.ViewBag.AlreadyPolledMedicalAppointments =
-                    NewAppointmentNotificationsHelper.GetNewMedicalAppointmentNotifications(
-                        db: this.db,
-                        practiceId: this.DbPractice.Id,
-                        userId: this.DbUser.Id,
-                        utcNowGetter: this.UtcNowGetter,
-                        urlHelper: this.Url,
-                        polled: true);
+                var existingNotifications =
+                    this.db.Notifications.Where(n => n.UserToId == this.DbUser.Id && !n.IsClosed)
+                        .OrderBy(n => n.CreatedOn)
+                        .Select(n => new UntypedNotificationData { Id = n.Id, Type = n.Type, Data = n.Data }).ToList();
 
-                this.ViewBag.AlreadyPolledGenericAppointments =
-                    NewAppointmentNotificationsHelper.GetNewGenericAppointmentNotifications(
-                        db: this.db,
-                        practiceId: this.DbPractice.Id,
-                        userId: this.DbUser.Id,
-                        utcNowGetter: this.UtcNowGetter,
-                        urlHelper: this.Url,
-                        polled: true);
-
-                // discover the notifications that have already been polled and sent to to the client
-                this.ViewBag.AlreadyPolledNotifications = NotificationsHelper.GetNotifications(
-                    db: this.db,
-                    userId: this.DbUser.Id,
-                    controller: this,
-                    polled: true);
-
+                this.ViewBag.PastNotifications = existingNotifications;
                 this.ViewBag.IsTrial = this.DbPractice.AccountContract.SYS_ContractType.IsTrial;
             }
         }

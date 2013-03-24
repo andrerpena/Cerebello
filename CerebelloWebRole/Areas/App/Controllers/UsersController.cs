@@ -7,12 +7,16 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Hubs;
 using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code.Notifications;
+using CerebelloWebRole.Code.Notifications.Data;
 using CerebelloWebRole.Code.Security;
 using CerebelloWebRole.Models;
 using HtmlAgilityPack;
@@ -475,29 +479,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 if (formModel.Id == null)
                 {
-                    // this notification will automatically be added whithin the
-                    // same TRANSACTION that will save the user. That is, it's not going
-                    // to be placed if an error occur
-                    this.db.Notifications.AddObject(new Notification()
+                    var notificationData = new NewUserCreatedNotificationData() { UserName = user.UserName };
+                    var dbNotification = new Notification()
                         {
                             CreatedOn = this.GetUtcNow(),
                             PracticeId = this.DbPractice.Id,
-                            UserId = this.DbUser.Id,
-                            Text =
-                                string.Format(
-                                    "O usuário {0} foi criado com "
-                                    + "successo. A senha padrão é: 123abc. "
-                                    + "O usuário terá a oportunidade de "
-                                    + "modificar esta senha no primeiro acesso.",
-                                    user.UserName)
-                        });
+                            UserToId = this.DbUser.Id,
+                            Type = NotificationConstants.NEW_USER_NOTIFICATION_TYPE,
+                            Data = new JavaScriptSerializer().Serialize(notificationData)
+                        };
+                    this.db.Notifications.AddObject(dbNotification);
+                    this.db.SaveChanges();
+                    NotificationsHub.BroadcastDbNotification(dbNotification, notificationData);
                 }
 
                 // Saving all the changes.
                 db.SaveChanges();
-
-                // Making user available in the Chat
-                ChatServerHelper.SetupUserIfNonexisting(this.db, this.DbPractice.Id, user.Id);
 
                 return this.RedirectToAction("Details", new { id = user.Id });
             }
@@ -615,9 +612,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // I need to store the user I as it's going to be deleted
                     var userIdBackup = user.Id;
                     this.db.SaveChanges();
-
-                    // Makes user unavailable in the Chat
-                    ChatServerHelper.RemoveUserIfExisting(this.DbPractice.Id, userIdBackup);
 
                     return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
                 }

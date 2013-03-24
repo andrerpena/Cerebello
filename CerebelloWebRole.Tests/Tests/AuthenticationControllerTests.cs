@@ -239,28 +239,7 @@ namespace CerebelloWebRole.Tests.Tests
                 Assert.IsTrue(controller.ModelState.IsValid, "ModelState should be valid.");
                 Assert.IsTrue(hasBeenSaved, "The database should be changed, but it was not.");
                 Assert.AreEqual(savedUser.UserNameNormalized, "andre01");
-
-                // Assert database.
-                using (var dba = CreateNewCerebelloEntities())
-                {
-                    var user = dba.Users.Single(u => u.UserName == "andré-01");
-                    Assert.IsNotNull(user.Doctor);
-                    Assert.AreEqual("98237", user.Doctor.CRM);
-                    Assert.AreEqual("CRP", user.Doctor.MedicalEntityCode);
-                    Assert.AreEqual("Conselho Regional de Psicologia", user.Doctor.MedicalEntityName);
-                    Assert.AreEqual("RJ", user.Doctor.MedicalEntityJurisdiction);
-                    Assert.AreEqual("2231.53", user.Doctor.MedicalSpecialtyCode);
-                    Assert.AreEqual("Psiquiatra", user.Doctor.MedicalSpecialtyName);
-                    Assert.IsNotNull(user.Administrator, "Practice owner must be administrator.");
-
-                    var notifications = dba.Notifications.ToArray();
-                    Assert.AreEqual(2, notifications.Length);
-                    Assert.AreEqual("NotificationFillUserProfile", notifications[0].ViewName);
-                    Assert.AreEqual(string.Format(@"{{""id"":{0},""practice"":""consultoriodrhouse08sd986""}}", user.Id), notifications[0].ViewData);
-                    Assert.AreEqual("NotificationFillPracticeProfile", notifications[1].ViewName);
-                    Assert.AreEqual(string.Format(@"{{""id"":{0},""practice"":""consultoriodrhouse08sd986""}}", user.Id), notifications[1].ViewData);
-                }
-
+                
                 // Assert user is logged-in: this is already done in CreateAccount_HappyPath.
 
                 // Assertion for email: this is already done in CreateAccount_HappyPath.

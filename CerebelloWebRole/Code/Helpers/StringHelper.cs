@@ -209,6 +209,7 @@ namespace CerebelloWebRole.Code
                 return userRoles[0] + lastSeparator + userRoles[1];
 
             return string.Join(separator, userRoles.Take(userRoles.Length - 1)) + lastSeparator + userRoles[userRoles.Length - 1];
+        }
 
         /// <summary>
         /// Gets a decimal value in money format.

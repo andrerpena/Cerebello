@@ -57,7 +57,6 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_ChatMessage_ToUser_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "ChatMessage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.ChatMessage), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Diagnosis2_Diagnosis2", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "Diagnosis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Diagnosis), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_User_Secretary", "Secretary", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Secretary), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.User), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_HealthInsurance_Doctor", "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Doctor), "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.HealthInsurance), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_HealthInsurance", "HealthInsurance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.HealthInsurance), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
@@ -71,6 +70,9 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_BillingItem_Billing", "Billing", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Billing), "BillingItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.BillingItem), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Billing_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.AccountContract), "Billing", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Billing), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_BillingItem_AccountContract", "AccountContract", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.AccountContract), "BillingItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.BillingItem), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User1", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 
 #endregion
 
@@ -2804,9 +2806,9 @@ namespace Cerebello.Model
         /// <param name="type">Initial value of the Type property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="status">Initial value of the Status property.</param>
-        /// <param name="isPolled">Initial value of the IsPolled property.</param>
         /// <param name="reminderEmailSent">Initial value of the ReminderEmailSent property.</param>
-        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean isPolled, global::System.Boolean reminderEmailSent)
+        /// <param name="notified">Initial value of the Notified property.</param>
+        public static Appointment CreateAppointment(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 createdById, global::System.Int32 doctorId, global::System.DateTime start, global::System.DateTime end, global::System.Int32 type, global::System.Int32 practiceId, global::System.Int32 status, global::System.Boolean reminderEmailSent, global::System.Boolean notified)
         {
             Appointment appointment = new Appointment();
             appointment.Id = id;
@@ -2818,8 +2820,8 @@ namespace Cerebello.Model
             appointment.Type = type;
             appointment.PracticeId = practiceId;
             appointment.Status = status;
-            appointment.IsPolled = isPolled;
             appointment.ReminderEmailSent = reminderEmailSent;
+            appointment.Notified = notified;
             return appointment;
         }
 
@@ -3097,30 +3099,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Boolean IsPolled
-        {
-            get
-            {
-                return _IsPolled;
-            }
-            set
-            {
-                OnIsPolledChanging(value);
-                ReportPropertyChanging("IsPolled");
-                _IsPolled = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("IsPolled");
-                OnIsPolledChanged();
-            }
-        }
-        private global::System.Boolean _IsPolled;
-        partial void OnIsPolledChanging(global::System.Boolean value);
-        partial void OnIsPolledChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public Nullable<global::System.Int32> HealthInsuranceId
@@ -3165,6 +3143,30 @@ namespace Cerebello.Model
         private global::System.Boolean _ReminderEmailSent;
         partial void OnReminderEmailSentChanging(global::System.Boolean value);
         partial void OnReminderEmailSentChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean Notified
+        {
+            get
+            {
+                return _Notified;
+            }
+            set
+            {
+                OnNotifiedChanging(value);
+                ReportPropertyChanging("Notified");
+                _Notified = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Notified");
+                OnNotifiedChanged();
+            }
+        }
+        private global::System.Boolean _Notified;
+        partial void OnNotifiedChanging(global::System.Boolean value);
+        partial void OnNotifiedChanged();
 
         #endregion
 
@@ -3319,6 +3321,44 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<HealthInsurance>("Cerebello.Model.FK_Appointment_HealthInsurance", "HealthInsurance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Appointment_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Appointment_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Appointment_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Appointment_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_Appointment_Practice", "Practice", value);
                 }
             }
         }
@@ -10120,16 +10160,18 @@ namespace Cerebello.Model
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        /// <param name="userId">Initial value of the UserId property.</param>
-        /// <param name="isPolled">Initial value of the IsPolled property.</param>
-        public static Notification CreateNotification(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.Int32 userId, global::System.Boolean isPolled)
+        /// <param name="isClosed">Initial value of the IsClosed property.</param>
+        /// <param name="type">Initial value of the Type property.</param>
+        /// <param name="userToId">Initial value of the UserToId property.</param>
+        public static Notification CreateNotification(global::System.Int32 id, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.Boolean isClosed, global::System.String type, global::System.Int32 userToId)
         {
             Notification notification = new Notification();
             notification.Id = id;
             notification.CreatedOn = createdOn;
             notification.PracticeId = practiceId;
-            notification.UserId = userId;
-            notification.IsPolled = isPolled;
+            notification.IsClosed = isClosed;
+            notification.Type = type;
+            notification.UserToId = userToId;
             return notification;
         }
 
@@ -10217,120 +10259,96 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 UserId
+        public global::System.Boolean IsClosed
         {
             get
             {
-                return _UserId;
+                return _IsClosed;
             }
             set
             {
-                OnUserIdChanging(value);
-                ReportPropertyChanging("UserId");
-                _UserId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("UserId");
-                OnUserIdChanged();
+                OnIsClosedChanging(value);
+                ReportPropertyChanging("IsClosed");
+                _IsClosed = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsClosed");
+                OnIsClosedChanged();
             }
         }
-        private global::System.Int32 _UserId;
-        partial void OnUserIdChanging(global::System.Int32 value);
-        partial void OnUserIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String Text
-        {
-            get
-            {
-                return _Text;
-            }
-            set
-            {
-                OnTextChanging(value);
-                ReportPropertyChanging("Text");
-                _Text = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("Text");
-                OnTextChanged();
-            }
-        }
-        private global::System.String _Text;
-        partial void OnTextChanging(global::System.String value);
-        partial void OnTextChanged();
+        private global::System.Boolean _IsClosed;
+        partial void OnIsClosedChanging(global::System.Boolean value);
+        partial void OnIsClosedChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Boolean IsPolled
+        public global::System.String Type
         {
             get
             {
-                return _IsPolled;
+                return _Type;
             }
             set
             {
-                OnIsPolledChanging(value);
-                ReportPropertyChanging("IsPolled");
-                _IsPolled = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("IsPolled");
-                OnIsPolledChanged();
+                OnTypeChanging(value);
+                ReportPropertyChanging("Type");
+                _Type = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Type");
+                OnTypeChanged();
             }
         }
-        private global::System.Boolean _IsPolled;
-        partial void OnIsPolledChanging(global::System.Boolean value);
-        partial void OnIsPolledChanged();
+        private global::System.String _Type;
+        partial void OnTypeChanging(global::System.String value);
+        partial void OnTypeChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String ViewName
+        public global::System.String Data
         {
             get
             {
-                return _ViewName;
+                return _Data;
             }
             set
             {
-                OnViewNameChanging(value);
-                ReportPropertyChanging("ViewName");
-                _ViewName = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("ViewName");
-                OnViewNameChanged();
+                OnDataChanging(value);
+                ReportPropertyChanging("Data");
+                _Data = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Data");
+                OnDataChanged();
             }
         }
-        private global::System.String _ViewName;
-        partial void OnViewNameChanging(global::System.String value);
-        partial void OnViewNameChanged();
+        private global::System.String _Data;
+        partial void OnDataChanging(global::System.String value);
+        partial void OnDataChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.String ViewData
+        public global::System.Int32 UserToId
         {
             get
             {
-                return _ViewData;
+                return _UserToId;
             }
             set
             {
-                OnViewDataChanging(value);
-                ReportPropertyChanging("ViewData");
-                _ViewData = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("ViewData");
-                OnViewDataChanged();
+                OnUserToIdChanging(value);
+                ReportPropertyChanging("UserToId");
+                _UserToId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("UserToId");
+                OnUserToIdChanged();
             }
         }
-        private global::System.String _ViewData;
-        partial void OnViewDataChanging(global::System.String value);
-        partial void OnViewDataChanged();
+        private global::System.Int32 _UserToId;
+        partial void OnUserToIdChanging(global::System.Int32 value);
+        partial void OnUserToIdChanged();
 
         #endregion
 
@@ -10343,16 +10361,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_User", "User")]
-        public User User
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_User1", "User")]
+        public User UserTo
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_Notification_User", "User").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_Notification_User1", "User").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_Notification_User", "User").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_Notification_User1", "User").Value = value;
             }
         }
         /// <summary>
@@ -10360,17 +10378,55 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<User> UserReference
+        public EntityReference<User> UserToReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_Notification_User", "User");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_Notification_User1", "User");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_Notification_User", "User", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_Notification_User1", "User", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_Notification_Practice", "Practice", value);
                 }
             }
         }
@@ -12398,6 +12454,50 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Address>("Cerebello.Model.FK_Practice_Address", "Address", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Appointment_Practice", "Appointment")]
+        public EntityCollection<Appointment> Appointments
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Appointment>("Cerebello.Model.FK_Appointment_Practice", "Appointment");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Appointment>("Cerebello.Model.FK_Appointment_Practice", "Appointment", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_Practice", "Notification")]
+        public EntityCollection<Notification> Notifications
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Notification>("Cerebello.Model.FK_Notification_Practice", "Notification");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Notification>("Cerebello.Model.FK_Notification_Practice", "Notification", value);
                 }
             }
         }
@@ -14964,18 +15064,18 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_User", "Notification")]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Notification_User1", "Notification")]
         public EntityCollection<Notification> Notifications
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Notification>("Cerebello.Model.FK_Notification_User", "Notification");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Notification>("Cerebello.Model.FK_Notification_User1", "Notification");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Notification>("Cerebello.Model.FK_Notification_User", "Notification", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Notification>("Cerebello.Model.FK_Notification_User1", "Notification", value);
                 }
             }
         }

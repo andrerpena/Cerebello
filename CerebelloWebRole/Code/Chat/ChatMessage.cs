@@ -11,5 +11,6 @@ namespace CerebelloWebRole.Code.Chat
         public ChatUser UserTo { get; set; }
         public long Timestamp { get; set; }
         public string Message { get; set; }
+        public string ClientGuid { get; set; }
     }
 }

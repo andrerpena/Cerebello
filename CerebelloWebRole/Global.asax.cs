@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
+using CerebelloWebRole.Code.Notifications;
 
 namespace Cerebello
 {
@@ -22,6 +23,8 @@ namespace Cerebello
 
         public static void RegisterRoutes(RouteCollection routes)
         {
+            RouteTable.Routes.MapHubs();
+
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
@@ -39,6 +42,9 @@ namespace Cerebello
             RegisterRoutes(RouteTable.Routes);
 
             DefaultModelBinder.ResourceClassKey = "ModelStrings";
+
+            // Will create a thread to send notifications
+            NotificationsHelper.CreateNotificationsJob();
         }
 
         protected void Application_AuthenticateRequest()

@@ -12,6 +12,10 @@
     z-index: 10000;
 }
 
+.chat-window .temp-message {
+    color: rgb(176, 176, 176);
+}
+
 .chat-window-title {
     background: none repeat scroll 0 0 #EEEEEE;
     border-bottom: 1px solid #D7D7D7;
