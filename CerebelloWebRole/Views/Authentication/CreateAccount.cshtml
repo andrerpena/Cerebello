@@ -4,7 +4,7 @@
 @using CerebelloWebRole.Models
 @model CreateAccountViewModel
 @{
-    this.Layout = "../Shared/_EmptyLayout.cshtml";
+    this.Layout = "../Shared/_AuthenticationLayout.cshtml";
 
     ViewBag.Title = "Login";
 
@@ -39,60 +39,6 @@
 {
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.autocomplete.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.paginator.css")" rel="stylesheet" type="text/css" />
-
-    <style type="text/css">
-        .authentication-container {
-            margin: 50px auto;
-        }
-
-        @@media screen and (min-width: 768px) {
-            .controls-wrapper {
-                overflow: hidden;
-            }
-
-                .controls-wrapper hr {
-                    display: none;
-                }
-
-            .practice-properties {
-                float: left;
-                overflow: hidden;
-                margin-right: 20px;
-            }
-
-            .person-properties {
-                float: right;
-                overflow: hidden;
-            }
-
-            .user-properties {
-                float: left;
-                overflow: hidden;
-            }
-
-                .user-properties hr {
-                    display: block !important;
-                }
-
-            .authentication-container {
-                max-width: 720px;
-            }
-        }
-
-        @@media screen and (max-width: 500px) {
-            .authentication-container {
-                margin: 20px auto;
-            }
-
-            .optional {
-                display: none;
-            }
-        }
-
-        body {
-            min-width: 300px;
-        }
-    </style>
 }
 <div class="authentication-container">
     <div class="authentication-container-wrapper">
