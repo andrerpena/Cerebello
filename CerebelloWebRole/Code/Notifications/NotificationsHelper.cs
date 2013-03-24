@@ -16,7 +16,7 @@ namespace CerebelloWebRole.Code.Notifications
     {
         public static void CreateNotificationsJob()
         {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(state =>
+            ThreadPool.QueueUserWorkItem(state =>
                 {
                     try
                     {
@@ -61,7 +61,7 @@ namespace CerebelloWebRole.Code.Notifications
                     {
                         // exceptions cannot be unhandled or the service will stop
                     }
-                }), null);
+                }, null);
         }
 
         /// <summary>
