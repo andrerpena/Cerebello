@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Code.Notifications
                                 NotificationsHub.BroadcastDbNotifications(notificationsToBeDispatched);
                             }
 
-                            Thread.Sleep(5000);
+                            Thread.Sleep(5 * 60 * 1000);
                         }
                     }
                     catch
