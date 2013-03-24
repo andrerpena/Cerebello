@@ -2,12 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AzureCredentials>Avaliação gratuita por três meses</AzureCredentials>
-    <AzureDeleteDeploymentOnFailure>False</AzureDeleteDeploymentOnFailure>
+    <AzureDeleteDeploymentOnFailure>True</AzureDeleteDeploymentOnFailure>
     <AzureDeploymentLabel>Cerebello</AzureDeploymentLabel>
     <AzureDeploymentReplacementMethod>AutomaticUpgrade</AzureDeploymentReplacementMethod>
     <AzureSlot>Production</AzureSlot>
     <AzureEnableRemoteDesktop>True</AzureEnableRemoteDesktop>
-    <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
+    <AzureEnableWebDeploy>True</AzureEnableWebDeploy>
     <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
     <AzureHostedServiceLabel>cerebellohq</AzureHostedServiceLabel>
     <AzureHostedServiceName>cerebellohq</AzureHostedServiceName>

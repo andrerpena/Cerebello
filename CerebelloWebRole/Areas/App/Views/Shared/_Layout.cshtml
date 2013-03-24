@@ -86,6 +86,8 @@
 
     <script type="text/javascript">
         $(function () {
+            $(".required").attr("title", "Campo requerido");
+
             $.chatUserList({
                 user: {
                     Id: @this.ViewBag.UserInfo.Id,

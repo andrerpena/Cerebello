@@ -78,6 +78,7 @@ table.edit-panel > tbody > tr > th
 {
     margin-left: 3px;
     color: Red;
+    cursor: default;
 }
 
 .edit-panel td .description

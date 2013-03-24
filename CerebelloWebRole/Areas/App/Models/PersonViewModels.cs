@@ -36,6 +36,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Data de Nascimento")]
         [DateOfBirth]
+        // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
         public DateTime DateOfBirth { get; set; }
 
         [EnumDataType(typeof(TypeMaritalStatus))]
@@ -58,7 +59,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String Profissao { get; set; }
 
         [Display(Name = "E-mail")]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress)] // TODO: This will make MVC 4 use HTML 5 <input type="email" />
         [Code.Mvc.EmailAddress]
         public String Email { get; set; }
 
