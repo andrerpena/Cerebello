@@ -11,6 +11,8 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Incredibly simple real-time web for .NET.
         This package pulls in the server components and JavaScript client required to use SignalR in an ASP.NET application.</description>
+    <releaseNotes />
+    <copyright />
     <language>en-US</language>
     <tags>Microsoft AspNet SignalR AspNetSignalR websockets real-time realtime comet HTTP streaming</tags>
     <dependencies>
