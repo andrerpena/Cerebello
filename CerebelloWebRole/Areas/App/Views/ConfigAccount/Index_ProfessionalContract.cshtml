@@ -2,19 +2,37 @@
 <div class="text-section">
     <h2>Plano profissional do Cerebello</h2>
     <div class="text-description">
-        <p>Sua conta atualmente está no plano de profissional.</p>
+        <p>Sua conta atualmente está no plano profissional.</p>
         <p>
             O plano profissional não possui limite de pacientes e o suporte é prioritário.
         </p>
         <p>
-            <a href="@Url.Action("Contract")">Contrato do plano profissional</a>
+            Esta conta está configurada para aceitar até @this.Model.CurrentContract.DoctorsLimit médicos.
         </p>
     </div>
 </div>
 
 <div class="text-section">
+    <h2>Contrato do plano profissional</h2>
+    <div class="text-description">
+    <table>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/ProfissionalPlanContract.html")" target="_blank">Visualizar em outra janela do browser</a></td></tr>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/Contrato-plano-profissional.pdf")" target="_blank">Download PDF</a></td></tr>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/Contrato-plano-profissional.docx")" target="_blank">Download DOCX</a></td></tr>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/Contrato-plano-profissional.rtf")" target="_blank">Download RTF</a></td></tr>
+    </table>
+    </div>
+</div>
+
+<div class="text-section">
     <h2>Faturas</h2>
-    <div></div>
+    <div>
+        A visualização de faturas não está disponível neste momento.
+        <br />
+        Em breve será possível visualizar todas as suas faturas aqui.
+        <br />
+        Desculpe-nos pelo inconveniente.
+    </div>
 </div>
 <div class="text-section">
     <h2>Opções do plano</h2>

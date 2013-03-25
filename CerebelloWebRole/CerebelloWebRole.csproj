@@ -778,7 +778,6 @@
     <Content Include="Areas\App\Views\Diagnosis\Details.cshtml" />
     <Content Include="Areas\App\Views\Diagnosis\Edit.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Upgrade.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\Contract_ProfessionalPlan.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Index.cshtml" />
     <Content Include="Areas\App\Views\PracticeHome\Edit.cshtml" />
     <Content Include="Areas\App\Views\HealthInsurance\Index.cshtml" />

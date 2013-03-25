@@ -2,7 +2,12 @@
 @model ChangeContractViewModel
 <div class="text-section">
     <h2>Contrato</h2>
-    @Html.Partial("Contract_ProfessionalPlan")
+    <table>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/ProfissionalPlanContract.html")" target="_blank">Visualizar em outra janela do browser</a></td></tr>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/Contrato-plano-profissional.pdf")" target="_blank">Download PDF</a></td></tr>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/Contrato-plano-profissional.docx")" target="_blank">Download DOCX</a></td></tr>
+        <tr><td><a href="@Url.Content("~/Content/Contracts/Contrato-plano-profissional.rtf")" target="_blank">Download RTF</a></td></tr>
+    </table>
 
     <table>
         <tr>

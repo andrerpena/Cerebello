@@ -33,16 +33,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (mainContract.SYS_ContractType.IsTrial)
             {
-                return View();
+                return this.View();
             }
             else
             {
                 // todo: fill in the billings
                 var viewModel = new ConfigAccountViewModel
                     {
+                        CurrentContract = new ConfigAccountViewModel.Contract
+                            {
+                                DoctorsLimit = this.DbPractice.AccountContract.DoctorsLimit,
+                            }
                     };
 
-                return View();
+                return this.View(viewModel);
             }
         }
 

@@ -125,6 +125,12 @@ namespace CerebelloWebRole.Areas.App.Models
             public List<Contract> Additions { get; set; }
 
             public string UrlIdentifier { get; set; }
+
+            /// <summary>
+            /// Gets or sets the limit of doctors in this account.
+            /// </summary>
+            public int? DoctorsLimit { get; set; }
+
         }
 
         public enum ContractChangeType
