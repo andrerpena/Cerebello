@@ -9,7 +9,7 @@
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEG/1FohdujuXSCvU/k9OlCUwDQYJKoZIhvcNAQEBBQAEggEAkgZapvAhgp/hyAJm0cPUvfxtYekeHud4cMUw8qj+DPUZ4T2xkXq8/5z10fbjaX3Kjev3nIJk7Umz4RMiF3bWpE481PFL4MPEK+PVyUsFTXrgIn0eFzvEYEsX/cPkSfyxrq05el4zHFTIsyiX5oV+WF3JEEnCfnAowAzk8/LmHM1wT4W5pXTp7lyc+6C3hW9L1Rv0078Ia4t144ZXEGjkF1+WWAC7tPNaGZgX+Ek48xv4GKnkeYqEs2BaWdGsE2yH9xIDtvjh6zv4eXt4Kz2Kbl7wts0vdYO0fSFIY60l5spXH+pVPj2qO4nYHMuLk+jPTKTgW//8OcgyxVAX706+pjAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECC59rAoG8AtOgBCQC5ZH850Stx8dJeKCY5nX" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-12-28T23:59:59.0000000-02:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
-      <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=portalvhds5kcsmx774n1cq;AccountKey=nYm0gxCHYfPEdGLqn2hDjJPHwbCqJ4Xb2xvYfH0lHxRVQOG+oAwToO5/EOn0tvfaaWeROIJPm1chua5kr0hvDg==" />
+      <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebellohq;AccountKey=166josSwlpbPYh05OdB1o8jWDvqTq94nlHXwm593OBOCUIZOvgbwXJqQO7DB/MO2+WHYfrCexrLza/06l7x23w==" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="DA423BC304ED20BA2DF503BE3607965EF66B2561" thumbprintAlgorithm="sha1" />
