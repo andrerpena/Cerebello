@@ -65,9 +65,9 @@ namespace CerebelloWebRole.Models
         public string PracticeName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [EnumDataType(typeof(TypeTimeZone))]
-        [Display(Name = "Fuso-horário do consultório")]
-        public short? PracticeTimeZone { get; set; }
+        [EnumDataType(typeof(TypeEstadoBrasileiro))]
+        [Display(Name = "Estado do consultório")]
+        public int? PracticeProvince { get; set; }
 
         [Display(Name = "Sou médico neste consultório")]
         public bool IsDoctor { get; set; }
