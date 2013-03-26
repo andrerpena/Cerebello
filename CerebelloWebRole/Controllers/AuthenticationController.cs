@@ -235,7 +235,9 @@ namespace CerebelloWebRole.Controllers
 
             if (user != null)
             {
-                var timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeTimeZone)registrationData.PracticeTimeZone).Id;
+                string timeZoneId = null;
+                if (registrationData.PracticeProvince != null)
+                    timeZoneId = TimeZoneDataAttribute.GetAttributeFromEnumValue((TypeEstadoBrasileiro)registrationData.PracticeProvince.Value).Id;
 
                 user.Practice = new Practice
                 {
@@ -243,6 +245,7 @@ namespace CerebelloWebRole.Controllers
                     UrlIdentifier = urlPracticeId,
                     CreatedOn = utcNow,
                     WindowsTimeZoneId = timeZoneId,
+                    Province = registrationData.PracticeProvince,
                 };
 
                 // Setting the BirthDate of the user as a person.

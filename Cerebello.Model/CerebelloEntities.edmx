@@ -759,6 +759,7 @@
           <Property Name="AddressId" Type="int" />
           <Property Name="AccountDisabled" Type="bit" Nullable="false" />
           <Property Name="AccountCancelRequest" Type="bit" Nullable="false" />
+          <Property Name="Province" Type="int" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -1991,6 +1992,7 @@
           <Property Type="Boolean" Name="AccountCancelRequest" Nullable="false" />
           <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_Practice" FromRole="Practice" ToRole="Appointment" />
           <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Practice" ToRole="Notification" />
+          <Property Type="Int32" Name="Province" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -3249,6 +3251,7 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
+                <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="AccountCancelRequest" ColumnName="AccountCancelRequest" />
                 <ScalarProperty Name="AccountDisabled" ColumnName="AccountDisabled" />
                 <ScalarProperty Name="AddressId" ColumnName="AddressId" />

@@ -132,115 +132,128 @@ namespace Cerebello.Model
         Female = 1
     }
 
+    public static class TimeZoneName
+    {
+        public const string GmtL4_GmtL3 = "Central Brazilian Standard Time";
+        public const string GmtL4 = "SA Western Standard Time";
+        public const string GmtL3_GmtL2 = "E. South America Standard Time";
+        public const string GmtL3 = "SA Eastern Standard Time";
+        public const string GmtL2 = "Mid-Atlantic Standard Time";
+    }
+
     public enum TypeEstadoBrasileiro
     {
-        [TimeZoneData(Id = "SA Western Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
         [Display(Name = "Acre")]
         AC,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Alagoas")]
         AL,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Amapá")]
         AP,
 
-        [TimeZoneData(Id = "SA Western Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
         [Display(Name = "Amazonas")]
         AM,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Bahia")]
         BA,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Ceará")]
         CE,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Distrito Federal")]
         DF,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Espírito Santo")]
         ES,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Goiás")]
         GO,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Maranhão")]
         MA,
 
-        [TimeZoneData(Id = "Central Brazilian Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4_GmtL3)]
         [Display(Name = "Mato Grosso")]
         MT,
 
-        [TimeZoneData(Id = "Central Brazilian Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4_GmtL3)]
         [Display(Name = "Mato Grosso do Sul")]
         MS,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Minas Gerais")]
         MG,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Pará")]
         PA,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Paraíba")]
         PB,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Paraná")]
         PR,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Pernambuco")]
         PE,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Piauí")]
         PI,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Rio de Janeiro")]
         RJ,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Rio Grande do Norte")]
         RN,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Rio Grande do Sul")]
         RS,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
         [Display(Name = "Rondônia")]
         RO,
 
-        [TimeZoneData(Id = "SA Western Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
         [Display(Name = "Roraima")]
         RR,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Santa Catarina")]
         SC,
 
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "São Paulo")]
         SP,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Sergipe")]
         SE,
 
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Tocantins")]
         TO,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL2)]
+        [Display(Name = "Arquipélagos Atlânticos")]
+        Arquipelagos,
     }
 
     public enum TypeTimeZone
@@ -254,22 +267,22 @@ namespace Cerebello.Model
         // http://en.wikipedia.org/wiki/Tz_database
 
         //  Bahia, Brasilia, Espírito Santo, Goiás, Minas Gerais, Paraná, Rio de Janeiro, Rio Grande do Sul, Santa Catarina, São Paulo
-        [TimeZoneData(Id = "E. South America Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
         [Display(Name = "Brasília (GMT-3 com ajuste de +1h no horário de verão)")]
         Brasilia = 0,
 
         // Mato Grosso,  Mato Grosso do Sul
-        [TimeZoneData(Id = "Central Brazilian Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4_GmtL3)]
         [Display(Name = "Cuiabá (GMT-4 com ajuste de +1h no horário de verão)")]
         Cuiaba = 1,
 
         // Acre State, Amazonas, Roraima,  Roraima
-        [TimeZoneData(Id = "SA Western Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
         [Display(Name = "Manaus (GMT-4 sem ajuste de horário de verão)")]
         Manaus = 2,
 
         //  Alagoas, Amapá, Ceará, Maranhão, Pará, Paraíba, Pernambuco, Piauí, Rio Grande do Norte,  Rondônia, Sergipe, Tocantins
-        [TimeZoneData(Id = "SA Eastern Standard Time")]
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
         [Display(Name = "Fortaleza (GMT-3 sem ajuste de horário de verão)")]
         Fortaleza = 3,
 
@@ -288,10 +301,13 @@ namespace Cerebello.Model
     {
         [Display(Name = "15 minutos")]
         Dur15 = 15,
+
         [Display(Name = "20 minutos")]
         Dur20 = 20,
+
         [Display(Name = "30 minutos")]
         Dur30 = 30,
+
         [Display(Name = "60 minutos")]
         Dur60 = 60
     }

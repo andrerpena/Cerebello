@@ -12294,6 +12294,30 @@ namespace Cerebello.Model
         private global::System.Boolean _AccountCancelRequest;
         partial void OnAccountCancelRequestChanging(global::System.Boolean value);
         partial void OnAccountCancelRequestChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Province
+        {
+            get
+            {
+                return _Province;
+            }
+            set
+            {
+                OnProvinceChanging(value);
+                ReportPropertyChanging("Province");
+                _Province = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Province");
+                OnProvinceChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Province;
+        partial void OnProvinceChanging(Nullable<global::System.Int32> value);
+        partial void OnProvinceChanged();
 
         #endregion
 
