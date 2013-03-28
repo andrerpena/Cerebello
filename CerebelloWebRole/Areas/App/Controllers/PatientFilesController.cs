@@ -30,7 +30,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             if (fileName == null) throw new ArgumentNullException("fileName");
 
-            var storageManager = new WindowsAzureStorageManager();
+            var storageManager = new WindowsAzureBlobStorageManager();
             var fileStream = storageManager.DownloadFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, fileName);
             fileStream.Seek(0, SeekOrigin.Begin);
             var fileExtension = Path.GetExtension(fileName);
@@ -54,7 +54,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             using (var zip = new ZipFile())
             {
                 var patientFiles = this.db.PatientFiles.Where(pf => pf.PatientId == patientId).ToList();
-                var storageManager = new WindowsAzureStorageManager();
+                var storageManager = new WindowsAzureBlobStorageManager();
 
                 foreach (var patientFile in patientFiles)
                 {
@@ -93,7 +93,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var innerZipMemoryStream = new MemoryStream();
                     using (var innerZip = new ZipFile())
                     {
-                        var storageManager = new WindowsAzureStorageManager();
+                        var storageManager = new WindowsAzureBlobStorageManager();
 
                         foreach (var patientFile in patient.PatientFiles)
                         {
@@ -217,7 +217,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     //Creating a FileStream to save file's content
                     fileContent.Seek(0, SeekOrigin.Begin);
 
-                    var storageManager = new WindowsAzureStorageManager();
+                    var storageManager = new WindowsAzureBlobStorageManager();
                     storageManager.UploadFileToStorage(fileContent, Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, fileName);
                     fileContent.Dispose();
 
@@ -245,7 +245,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var file = patientFile.File;
             try
             {
-                var storageManager = new WindowsAzureStorageManager();
+                var storageManager = new WindowsAzureBlobStorageManager();
                 storageManager.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.File.FileName);
 
                 this.db.PatientFiles.DeleteObject(patientFile);

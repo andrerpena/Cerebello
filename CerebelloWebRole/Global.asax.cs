@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Diagnostics;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
@@ -23,8 +24,6 @@ namespace Cerebello
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-            RouteTable.Routes.MapHubs();
-
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
@@ -39,6 +38,8 @@ namespace Cerebello
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
+
+            RouteTable.Routes.MapHubs();
             RegisterRoutes(RouteTable.Routes);
 
             DefaultModelBinder.ResourceClassKey = "ModelStrings";

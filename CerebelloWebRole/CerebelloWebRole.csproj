@@ -92,7 +92,7 @@
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -264,8 +264,8 @@
     <Compile Include="Code\Helpers\EmailHelper.cs" />
     <Compile Include="Code\Helpers\MimeTypesHelper.cs" />
     <Compile Include="Code\Json\JsonError.cs" />
-    <Compile Include="Code\WindowsAzure\IWindowsAzureStorageManager.cs" />
-    <Compile Include="Code\WindowsAzure\WindowsAzureStorageManager.cs" />
+    <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
+    <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Styles\Site\Cancel.css" />

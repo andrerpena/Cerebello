@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.WindowsAzure
 {
-    public interface IWindowsAzureStorageManager
+    public interface IWindowsAzureBlobStorageManager
     {
         /// <summary>
         /// Uploads a file to the Windows Azure Storage

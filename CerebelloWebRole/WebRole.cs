@@ -1,6 +1,7 @@
 using System;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
+using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace CerebelloWebRole
@@ -12,9 +13,6 @@ namespace CerebelloWebRole
 
         public override bool OnStart()
         {
-            // For information on handling configuration changes
-            // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
-
             return base.OnStart();
         }
 

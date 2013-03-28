@@ -2,7 +2,8 @@
 using System.IO;
 using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace CerebelloWebRole.Code.WindowsAzure
 {
@@ -11,7 +12,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
     /// The usage of the class REQUIRES the existence of a storage connection string in
     /// the Windows Azure Cloud project called 'StorageConnectionString'
     /// </summary>
-    public class WindowsAzureStorageManager : IWindowsAzureStorageManager
+    public class WindowsAzureBlobStorageManager : IWindowsAzureBlobStorageManager
     {
         /// <summary>
         /// Gets an existing container or creates a new one
@@ -29,7 +30,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
             var container = blobClient.GetContainerReference(containerName);
 
             // Create the container if it doesn't already exist.
-            container.CreateIfNotExist();
+            container.CreateIfNotExists();
 
             container.SetPermissions(
                 new BlobContainerPermissions

@@ -593,7 +593,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var patientFile = patientFiles.First();
                     var file = patientFile.File;
 
-                    var storage = new WindowsAzureStorageManager();
+                    var storage = new WindowsAzureBlobStorageManager();
                     storage.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, file.FileName);
 
                     this.db.PatientFiles.DeleteObject(patientFile);
