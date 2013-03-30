@@ -8,12 +8,12 @@
 }
 @section MainMenu {
     <ul class="tabNav">
-        <li class="@((this.IsController("PracticeHome", "Users")) ? "youarehere" : "")">
+        <li class="@((this.IsController("PracticeHome", "Users")) ? "youarehere" : "")" data-intro="No consultório é possível gerenciar os usuários e, principalmente, acessar o perfil do médico ao qual se deseja adicionar informações" data-step="2">
             <a href="@Url.Action("Index", "PracticeHome")" class="home-icon">Consultório</a>
         </li>
         @if (user.IsOwner)
         {
-            <li class="@(this.IsController("ConfigAccount") ? "youarehere" : "")">
+            <li class="@(this.IsController("ConfigAccount") ? "youarehere" : "")" data-intro="As configurações da conta permitem fazer upgrade, cancelar, visualizar o contrato e suas faturas" data-step="3">
                 <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
                     @*@LockIcon.Icon("lock-account-config")*@
                 </a>

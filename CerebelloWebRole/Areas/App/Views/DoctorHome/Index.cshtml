@@ -1,6 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.DoctorHomeViewModel
+﻿@model DoctorHomeViewModel
 @using Cerebello.Model
-@using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Helpers
 @{
     var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
@@ -71,6 +70,7 @@
         <hr />
     }
     <ul>
+        <li><a href="#" class="icon-link icon-link-help" onclick="introJs().start(); return false;">Introdução interativa</a></li>
         <li><a href="@Url.Action("TheAppointmentLine", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
     </ul>
 }

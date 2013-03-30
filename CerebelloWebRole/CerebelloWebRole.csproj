@@ -269,6 +269,10 @@
     <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
+    <Content Include="Content\Sounds\chat.mp3" />
+    <Content Include="Content\Sounds\chat.wav" />
+    <Content Include="Content\Styles\App\introjs-ie.min.css" />
+    <Content Include="Content\Styles\App\introjs.min.css" />
     <Content Include="Content\Styles\Site\Cancel.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
     <Compile Include="Models\GenerateInvoiceViewModel.cs" />
@@ -652,6 +656,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Reset.css" />
     <Content Include="README.jQuery.vsdoc.txt" />
+    <Content Include="Scripts\App\Pages\practice.js" />
     <Content Include="Scripts\App\schedule.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.container2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list2.js" />
@@ -668,7 +673,9 @@
     <Content Include="Scripts\cerebello.pt-BR.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
+    <Content Include="Content\Sounds\chat.ogg" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
+    <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery-1.8.1.min.js" />
@@ -719,7 +726,6 @@
     <Folder Include="Areas\Docs\Models\" />
     <Folder Include="Code\Setup\" />
     <Folder Include="Content\Images\App\Site\" />
-    <Folder Include="Content\Sounds\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>

@@ -29,18 +29,24 @@
     usersGrid.AddField(model => model.UserRoles);
 }
 @section Title {
-    Meu consultório médico
+Meu consultório médico
 }
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/App/Pages/practice.js")" type="text/javascript"></script>
+}
+
 @section SideBar {
     @if (this.CanAccessAction("Edit"))
     {
-        <a href="@Url.Action("Edit")" class="icon-link icon-link-home">Editar consultório</a>
+        <a href="@Url.Action("Edit")" class="icon-link icon-link-home" data-intro="Antes de começar é muito importante completar as informações do consultório. Aqui é possível alterar o nome, fuso horário, telefone e outras informações" data-step="4">Editar consultório</a>
     }
     @if (this.CanAccessAction("Create", "Users"))
     {
-        <a href="@Url.Action("Create", "Users")" class="icon-link icon-link-plus">Novo usuário</a>
+        <a href="@Url.Action("Create", "Users")" class="icon-link icon-link-plus" data-intro="Aqui é possível adicionar outros usuários como secretárias" data-step="5">Novo usuário</a>
     }
-    <hr/>
+    <hr />
+    <a href="#" class="icon-link icon-link-help" onclick="introJs().start(); return false;">Introdução interativa</a>
     <a href="@Url.Action("ManagingUsers", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a>
 }
 
@@ -50,9 +56,11 @@
 </h2>
 @Html.DisplayFor(model => model.Address)
 
-<h2>Médicos do consultório
-</h2>
-@doctorsGrid.GetHtml()
+<div data-intro="Para começar a utilizar o software, é necessário escolher um médico. Dentro do perfil do médico estão informações importantes como a agenda e os prontuários" data-step="6">
+    <h2>Médicos do consultório
+    </h2>
+    @doctorsGrid.GetHtml()
+</div>
 
 <h2 style="margin-top: 30px;">Usuários do consultório
 </h2>
