@@ -113,11 +113,10 @@
                 var openedChatWindows = JSON.parse(cookie);
                 for (var i = 0; i < openedChatWindows.length; i++) {
                     var otherUserId = openedChatWindows[i].userId;
-                    var initialToggleState = openedChatWindows[i].toggleState;
                     _this.hub.server.getUserInfo(otherUserId).done(function (user) {
                         if (user) {
                             if (!_this.chatWindows[otherUserId])
-                                _this.createNewChatWindow(user, initialToggleState, "blured");
+                                _this.createNewChatWindow(user, null, "blured");
                         } else {
                             // when an error occur, the state of this cookie invalid
                             // it must be destroyed
@@ -126,6 +125,15 @@
                     });
                 }
             }
+        };
+
+        this.playSound = function (filename) {
+            /// <summary>Plays a notification sound</summary>
+            /// <param name="filename" type="String">The file path without extension</param>
+            var $soundContainer = $("#soundContainer");
+            if (!$soundContainer.length)
+                $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("body"));
+            $soundContainer.html('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>');
         };
     }
 
@@ -159,6 +167,10 @@
                         _this.createNewChatWindow(message.UserFrom);
                     else
                         _this.chatWindows[message.UserFrom.Id].addMessage(message);
+
+                    _this.playSound("/content/sounds/chat");
+
+                    // play sound here
                 } else {
                     if (_this.chatWindows[message.UserTo.Id]) {
                         _this.chatWindows[message.UserTo.Id].addMessage(message);

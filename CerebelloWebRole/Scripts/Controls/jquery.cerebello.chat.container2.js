@@ -114,6 +114,14 @@
         getToggleState: function() {
             var _this = this;
             return _this.$windowContent.is(":visible") ? "maximized" : "minimized";
+        },
+        
+        setToggleState: function(state) {
+            var _this = this;
+            if (state == "minimized")
+                _this.$windowContent.hide();
+            else if (state == "maximized")
+                _this.$windowContent.show();
         }
     };
 

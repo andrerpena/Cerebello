@@ -66,11 +66,14 @@ input, textarea {
 
 
 .hero {
-    background-image: url("/Content/Images/Site/tile.jpg");
+    background-color: #F0F0F0;
+    border-top: 3px solid #EBEBEB;
+    border-bottom: 1px solid #E1E1E1;
     background-position: 50% center;
     margin-bottom: 20px;
     overflow: hidden;
     padding: 15px 0 0;
+    background-image: url("/Content/Images/Site/bright_squares.png");
 }
 
     .hero .big-media {
@@ -116,14 +119,12 @@ ul.link-list li {
 }
 
 .hero h1 {
-    color: white;
     letter-spacing: -1px;
-    text-shadow: 0 1px 2px #000000;
 }
 
 .hero .create-account-wrapper {
     float: left;
-    margin-top: 35px;
+    margin-top: 30px;
     text-align: left;
     width: 500px;
 }

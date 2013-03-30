@@ -267,6 +267,7 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Styles\Site\Cancel.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
@@ -718,6 +719,7 @@
     <Folder Include="Areas\Docs\Models\" />
     <Folder Include="Code\Setup\" />
     <Folder Include="Content\Images\App\Site\" />
+    <Folder Include="Content\Sounds\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>

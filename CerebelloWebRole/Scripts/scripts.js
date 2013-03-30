@@ -35,7 +35,3 @@ function generateGuid(separator) {
     };
     return (hunk() + hunk() + separator + hunk() + separator + hunk() + separator + hunk() + separator + hunk() + hunk() + hunk());
 }
-
-window.onerror = function(error) {
-    $.notify("Ocorreu um erro: " + error, null, 8000);
-}

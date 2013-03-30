@@ -26,6 +26,7 @@
 
         this.addMessage = function (message, clientGuid) {
             var _this = this;
+            _this.chatContainer.setToggleState("maximized");
 
             // takes a jQuery element and replace it's content that seems like an URL with an
             // actual link or e-mail
