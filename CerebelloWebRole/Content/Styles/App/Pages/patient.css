@@ -1,0 +1,22 @@
+﻿.patient-info-wrapper {
+    overflow: hidden;
+}
+
+    .patient-info-wrapper .patient-info-picture {
+        float: left;
+        width: 190px;
+    }
+
+        .patient-info-wrapper .patient-info-picture a {
+            display: block;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .patient-info-wrapper .patient-info-picture img {
+            width: 100%;
+        }
+
+    .patient-info-wrapper .patient-info-content {
+        margin-left: 200px;
+    }

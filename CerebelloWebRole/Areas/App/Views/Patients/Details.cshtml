@@ -13,10 +13,10 @@
 
     // creating details CardView
     var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.FullName);
+    cardView.AddField(m => m.FullName, wholeRow: true);
     cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.ToShortDateString())
-    (@CerebelloWebRole.Code.DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
+    (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
     cardView.AddField(m => m.Profissao);
     cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.Cpf);
@@ -33,17 +33,16 @@
     @title
 }
 @section SideBar {
-    @{var itemCount = 0;}
     <ul>
-        <li><a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
+        <li>
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>
+        </li>
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
-            itemCount++;
             <li><a href="@Url.Action("ExportPatientsPdf", "Report", new { patientId = this.Model.Id })" target="_blank" class="icon-link icon-link-import">Exportar PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadZipFile", "PatientFiles"))
         {
-            itemCount++;
             <li><a href="@Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
         }
     </ul>
@@ -65,9 +64,23 @@
 @section Scripts
 {
     @LockIcon.Script(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist")
+    <script type="text/javascript" src="/Scripts/jquery.webcam.js"></script>
+    <script type="text/javascript" src="/Scripts/Controls/jquery.camera.wrapper.js"></script>
 }
 
-@cardView.GetHtml()
+@section Styles
+{
+    <link rel="stylesheet" type="text/css" href="/content/Styles/App/Pages/patient.css" />
+}
+<div class="patient-info-wrapper">
+    <div class="patient-info-picture">
+        <img src="/Content/Images/App/Male-Default-Profile.jpg" />
+        <a href="#" id="alter-picture">Alterar foto</a>
+    </div>
+    <div class="patient-info-content">
+        @cardView.GetHtml()
+    </div>
+</div>
 <h2>@Html.LabelFor(model => model.Address)</h2>
 @Html.DisplayFor(model => model.Address)
 

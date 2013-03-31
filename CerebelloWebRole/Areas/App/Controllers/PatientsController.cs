@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -679,6 +682,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
 
             return View(model);
+        }
+
+        public ActionResult TakePicture()
+        {
+            return this.View();
+        }
+
+        public ActionResult PostPicture()
+        {
+            var postedData = this.Request["image"];
+            if(string.IsNullOrEmpty(postedData))
+                throw new Exception("Could not find the uploaded image");
+
+            var data = postedData.Substring(22);
+            var bytes = Convert.FromBase64String(data);
+
+            var bmp = new Bitmap(new MemoryStream(bytes));
+            bmp.Save("c:\\file.png");
+
+            return null;
         }
     }
 }

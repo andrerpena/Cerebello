@@ -267,6 +267,8 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Camera\jscam.swf" />
+    <Content Include="Content\Camera\jscam_canvas_only.swf" />
     <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Sounds\chat.mp3" />
@@ -674,6 +676,7 @@
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Content\Sounds\chat.ogg" />
+    <Content Include="Areas\App\Views\Patients\TakePicture.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -696,6 +699,7 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.webcam.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
