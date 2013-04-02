@@ -40,17 +40,17 @@ namespace CerebelloWebRole.Code
         /// </summary>
         public static class Pro
         {
-            /// <summary> Equals 89.00m </summary>
-            public const decimal PRICE_MONTH = 89.00m;
+            /// <summary> Equals 58.70m </summary>
+            public const decimal PRICE_MONTH = 58.70m;
 
             /// <summary> Equals 253.65m </summary>
-            public const decimal PRICE_QUARTER = PRICE_MONTH * (1 - DISCOUNT_QUARTER / 100m) * 3;
+            public const decimal PRICE_QUARTER = (int)(PRICE_MONTH * (100 - DISCOUNT_QUARTER) / 10) / 10m * 3;
 
             /// <summary> Equals 496.80m </summary>
-            public const decimal PRICE_SEMESTER = PRICE_MONTH * (1 - DISCOUNT_SEMESTER / 100m) * 6;
+            public const decimal PRICE_SEMESTER = (int)(PRICE_MONTH * (100 - DISCOUNT_SEMESTER) / 10) / 10m * 6;
 
             /// <summary> Equals 938.40m </summary>
-            public const decimal PRICE_YEAR = PRICE_MONTH * (1 - DISCOUNT_YEAR / 100m) * 12;
+            public const decimal PRICE_YEAR = (int)(PRICE_MONTH * (100 - DISCOUNT_YEAR) / 10) / 10m * 12;
 
             /// <summary> Equals 5 </summary>
             public const int DISCOUNT_QUARTER = 5;
