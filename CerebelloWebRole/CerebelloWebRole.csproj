@@ -193,9 +193,6 @@
     <Reference Include="System.Web.Services">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.EnterpriseServices">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml.Linq">
       <Private>True</Private>
     </Reference>
