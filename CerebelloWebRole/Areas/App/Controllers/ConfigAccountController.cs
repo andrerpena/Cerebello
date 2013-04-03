@@ -260,6 +260,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         var mailMessage = this.CreateEmailMessagePartial("InternalUpgradeEmail", toAddress, emailViewModel);
                         this.SendEmailAsync(mailMessage).ContinueWith(t =>
                             {
+                                // observing exception so that it is not raised
+                                var ex = t.Exception;
+
                                 // todo: should do something when e-mail is not sent
                                 // 1) use a schedule table to save a serialized e-mail, and then send it later
                                 // 2) log a warning message somewhere stating that this e-mail was not sent
