@@ -94,5 +94,10 @@ namespace CerebelloWebRole.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeEstadoBrasileiro))]
         public int? MedicalEntityJurisdiction { get; set; }
+
+        public CreateAccountViewModel Clone()
+        {
+            return (CreateAccountViewModel)this.MemberwiseClone();
+        }
     }
 }

@@ -1,0 +1,60 @@
+﻿@model InternalCreateAccountEmailViewModel
+@{
+    this.ViewBag.Title = string.Format("Account created: url-id={0}; user-name={1}", this.Model.UrlIdentifier, this.Model.UserName);
+}
+@if (this.ViewBag.IsBodyHtml == true)
+{
+    <html>
+    <head>
+        <title>@this.ViewBag.Title</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        @if (DebugConfig.UseFileSystemEmailBox)
+        {
+            <style type="text/css">
+                /* GMAIL style (only when local presentation) */
+                /* Style tags have no effect in e-mails */
+                body {
+                    font-size: 13px;
+                    font-family: arial, sans-serif;
+                    color: #222;
+                    background: white;
+                }
+            </style>
+        }
+    </head>
+    <body style="font-family: arial, sans-serif; color: #222; background: white;">
+        <p>
+            Uma conta foi criada.
+        </p>
+        <table>
+            @foreach (var eachPi in this.Model.GetType().GetProperties()
+                                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+            {
+                @EmailHtml.PrintProperty(this.Model, eachPi, false)
+            }
+            @foreach (var eachPi in this.Model.RegistrationData.GetType().GetProperties()
+                                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+            {
+                @EmailHtml.PrintProperty(this.Model.RegistrationData, eachPi, false)
+            }
+        </table>
+        <p>
+            @EmailHtml.Emphasis(@<text>CareSys Tecnologias de Informação</text>)
+        </p>
+    </body>
+    </html>
+
+            return;
+}
+Uma conta foi criada.
+@foreach (var eachPi in this.Model.GetType().GetProperties()
+                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+{
+    @EmailHtml.PrintProperty(this.Model, eachPi, true)
+}
+@foreach (var eachPi in this.Model.RegistrationData.GetType().GetProperties()
+                            .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+{
+    @EmailHtml.PrintProperty(this.Model.RegistrationData, eachPi, true)
+}
+*CareSys Tecnologias de Informação*

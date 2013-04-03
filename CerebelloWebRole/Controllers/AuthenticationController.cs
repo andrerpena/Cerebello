@@ -321,11 +321,24 @@ namespace CerebelloWebRole.Controllers
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), };
                     var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
-                    var message = this.CreateEmailMessage("ConfirmationEmail", toAddress, emailViewModel);
+                    var emailMessageToUser = this.CreateEmailMessage("ConfirmationEmail", toAddress, emailViewModel);
+
+                    // sending e-mail to cerebello@cerebello.com.br
+                    // to tell us the good news
+                    var emailViewModel2 = new InternalCreateAccountEmailViewModel(user, registrationData);
+                    var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FullName);
+                    var mailMessage2 = this.CreateEmailMessagePartial("InternalCreateAccountEmail", toAddress2, emailViewModel2);
+                    this.SendEmailAsync(mailMessage2).ContinueWith(t =>
+                    {
+                        // todo: should do something when e-mail is not sent
+                        // 1) use a schedule table to save a serialized e-mail, and then send it later
+                        // 2) log a warning message somewhere stating that this e-mail was not sent
+                        // send e-mail again is not an option, SendEmailAsync already tries a lot of times
+                    });
 
                     // If the ModelState is still valid, then save objects to the database,
                     // and send confirmation email message to the user.
-                    using (message)
+                    using (emailMessageToUser)
                     {
                         // Saving changes to the DB.
                         this.db.SaveChanges();
@@ -384,7 +397,8 @@ namespace CerebelloWebRole.Controllers
                         this.db.SaveChanges();
 
                         // Sending the confirmation e-mail to the new user.
-                        this.TrySendEmail(message);
+                        // This must be synchronous.
+                        this.TrySendEmail(emailMessageToUser);
 
                         // Log the user in.
                         var loginModel = new LoginViewModel

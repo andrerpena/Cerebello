@@ -1,4 +1,6 @@
-﻿@helper InlineCode(object text)
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@helper InlineCode(object text)
 {@(InlineCode(x => text))}
 @helper InlineCode(Func<dynamic, object> text)
 {<code style="
@@ -97,4 +99,75 @@
         vertical-align: baseline;">
         @text(null)
     </h2>
+}
+@helper PrintProperty(object obj, PropertyInfo pi, bool isText)
+{
+    var attrEnum = pi.GetCustomAttributes(typeof(EnumDataTypeAttribute), true).Cast<EnumDataTypeAttribute>().SingleOrDefault();
+    
+    if (!isText)
+    {
+        if (pi.PropertyType.IsEnum || attrEnum != null)
+        {
+            <tr>
+                <td>@pi.Name</td>
+                @if (attrEnum != null)
+                {
+                    var value = Enum.ToObject(attrEnum.EnumType, pi.GetValue(obj, null));
+                    <td>@EmailHtml.InlineCode(value.ToString())</td>
+                }
+                else
+                {
+                    <td>@EmailHtml.InlineCode(pi.GetValue(obj, null).ToString())</td>
+                }
+            </tr>
+        }
+        else if (pi.PropertyType == typeof(string) && pi.GetValue(obj, null) != null)
+        {
+            <tr>
+                <td>@pi.Name</td>
+                <td>@EmailHtml.InlineCode('"' + (string)pi.GetValue(obj, null) + '"')</td>
+            </tr>
+        }
+        else if (pi.GetValue(obj, null) == null)
+        {
+            <tr>
+                <td>@pi.Name</td>
+                <td>@EmailHtml.InlineCode("null")</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td>@pi.Name</td>
+                <td>@EmailHtml.InlineCode(pi.GetValue(obj, null))</td>
+            </tr>
+        }
+    }
+    else
+    {
+        if (pi.PropertyType.IsEnum || attrEnum != null)
+        {
+            if (attrEnum != null)
+            {
+                var value = Enum.ToObject(attrEnum.EnumType, pi.GetValue(obj, null));
+                <text>    @pi.Name = @value.ToString()</text>
+            }
+            else
+            {
+                <text>    @pi.Name = @pi.GetValue(obj, null).ToString()</text>
+            }
+        }
+        else if (pi.PropertyType == typeof(string) && pi.GetValue(obj, null) != null)
+        {
+            <text>    @pi.Name = "@pi.GetValue(obj, null)"</text>
+        }
+        else if (pi.GetValue(obj, null) == null)
+        {
+            <text>    @pi.Name = null</text>
+        }
+        else
+        {
+            <text>    @pi.Name = @pi.GetValue(obj, null)</text>
+        }
+    }
 }
