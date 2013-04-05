@@ -11,8 +11,15 @@ using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    /// <summary>
+    /// Controller for all health insurance related operations.
+    /// </summary>
     public class HealthInsuranceController : DoctorController
     {
+        /// <summary>
+        /// Gets all health insurances of the current doctor.
+        /// </summary>
+        /// <returns>ActionResult containing all health insurances.</returns>
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Index()
         {
@@ -33,9 +40,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                             }).ToList(),
                     Count = this.db.Medicines.Count()
                 };
-            return View(model);
+            return this.View(model);
         }
 
+        /// <summary>
+        /// Begins the creation of a new health insurance for the current doctor.
+        /// </summary>
+        /// <param name="isParticular"> Whether the new insurance is particular or a real health insurance. </param>
+        /// <returns> ActionResult containing initial information to create a new insurance. </returns>
         [HttpGet]
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Create(bool isParticular)
@@ -43,13 +55,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Edit((int?)null, isParticular);
         }
 
+        /// <summary>
+        /// Creates a new health insurance using the data passed in the viewModel parameter.
+        /// </summary>
+        /// <param name="viewModel">Data that is used to create the new health insurance.</param>
+        /// <returns> ActionResult containing feedback about the creation. </returns>
+        /// <remarks>
+        /// Creates a new health insurance using the information passed in the viewModel parameter;
+        /// Otherwise, the process is restarted, with already inserted data so that it can be corrected.
+        /// </remarks>
         [HttpPost]
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Create(HealthInsuranceViewModel viewModel)
         {
             return this.Edit(viewModel);
         }
-
 
         [HttpGet]
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
@@ -79,7 +99,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     };
             }
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -108,10 +128,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 db.SaveChanges();
 
-                return Redirect(Url.Action("Details", new { id = healthInsurance.Id }));
+                return this.Redirect(this.Url.Action("Details", new { id = healthInsurance.Id }));
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]

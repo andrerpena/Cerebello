@@ -102,7 +102,7 @@ function notifyNewUserCreated(id, newUserName) {
 }
 
 function notifyCompleteInfo(id) {
-    /// <summary>notify the user a new user has been created</summary>
+    /// <summary>notify the user about completing information after creating account</summary>
 
     var $text = $("<div/>");
 

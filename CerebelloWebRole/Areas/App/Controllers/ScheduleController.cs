@@ -373,7 +373,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditingOrCreating = 'E';
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -555,7 +555,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             this.ViewBag.IsEditingOrCreating = this.RouteData.Values["action"].ToString()
                 .ToLowerInvariant() == "edit" ? 'E' : 'C';
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <summary>

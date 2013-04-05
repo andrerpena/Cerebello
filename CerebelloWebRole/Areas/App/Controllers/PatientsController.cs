@@ -696,7 +696,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult PostPicture()
         {
             var postedData = this.Request["image"];
-            if(string.IsNullOrEmpty(postedData))
+            if (string.IsNullOrEmpty(postedData))
                 throw new Exception("Could not find the uploaded image");
 
             var data = postedData.Substring(22);
