@@ -630,6 +630,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             Id = p.Id,
                             Value = p.Person.FullName,
                             InsuranceId = p.LastUsedHealthInsuranceId,
+                            InsuranceName = this.db.HealthInsurances.Where(hi => hi.Id == p.LastUsedHealthInsuranceId).Select(hi => hi.Name),
                         }).ToList();
 
             var result = new AutocompleteJsonResult()

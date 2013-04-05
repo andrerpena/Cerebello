@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
     public class HealthInsuranceController : DoctorController
     {
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Index()
         {
             var model = new HealthInsuranceIndexViewModel
@@ -35,12 +37,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Create(bool isParticular)
         {
             return this.Edit((int?)null, isParticular);
         }
 
         [HttpPost]
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Create(HealthInsuranceViewModel viewModel)
         {
             return this.Edit(viewModel);
@@ -48,6 +52,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
 
         [HttpGet]
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Edit(int? id, bool isParticular = false)
         {
             var viewModel = new HealthInsuranceViewModel
@@ -78,6 +83,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Edit(HealthInsuranceViewModel formModel)
         {
             if (this.ModelState.IsValid)
@@ -108,6 +114,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return View("Edit", formModel);
         }
 
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public ActionResult Details(int id)
         {
             var hi = this.db.HealthInsurances.Single(h => h.Id == id);
@@ -126,6 +133,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.View(viewModel);
         }
 
+        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
         public JsonResult Delete(int id)
         {
             try
@@ -146,6 +154,52 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 return this.Json(new JsonDeleteMessage { success = false, text = ex.Message }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public JsonResult LookupHealthInsurances(string term, int pageSize, int? pageIndex)
+        {
+            var listInsurances = this.Doctor.HealthInsurances
+                .Where(hi => hi.IsActive)
+                .OrderByDescending(h => h.IsParticular)
+                .ThenBy(h => h.Name)
+                .ToList();
+
+            IEnumerable<HealthInsurance> baseQuery = listInsurances;
+
+            if (!string.IsNullOrEmpty(term))
+            {
+                if (pageIndex == null)
+                {
+                    // if pageIndex is null, locate the first page where the terms can be found
+                    var val = listInsurances.Select((hi, idx) => new { hi, idx }).FirstOrDefault(d => d.hi.Name.Contains(term));
+                    pageIndex = val != null ? val.idx / pageSize + 1 : 1;
+                }
+                else
+                {
+                    baseQuery = baseQuery.Where(l => l.Name.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                }
+            }
+            else if (pageIndex == null)
+            {
+                // if pageIndex is null and there is no term to look for, just go to the first page
+                pageIndex = 1;
+            }
+
+            var rows = (from p in baseQuery.OrderBy(p => p.Name).Skip((pageIndex.Value - 1) * pageSize).Take(pageSize).ToList()
+                        select new
+                        {
+                            Id = p.Id,
+                            Value = p.Name,
+                        }).ToList();
+
+            var result = new AutocompleteJsonResult()
+            {
+                Rows = new System.Collections.ArrayList(rows),
+                Page = pageIndex.Value,
+                Count = baseQuery.Count(),
+            };
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

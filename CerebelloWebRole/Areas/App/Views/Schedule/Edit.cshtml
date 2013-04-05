@@ -67,8 +67,10 @@
                         <script type="text/javascript">
                             $("#PatientNameLookup").autocomplete({
                                 change: function (data) {
-                                    if (data)
+                                    if (data) {
                                         $("#HealthInsuranceId").val(data.InsuranceId);
+                                        $("#HealthInsuranceName").val(data.InsuranceName);
+                                    }
                                 }
                             });
                         </script>
@@ -95,9 +97,20 @@
             {
                 <tr class="first-appointment-only subsequent-appointments-only" style="display: @funcDisplay(isFirstAppointment || isSubsequentAppointment)">
                     <th>@Html.LabelFor(model => model.HealthInsuranceId)</th>
-                    <td>@Html.DropDownListFor(model => model.HealthInsuranceId, (IEnumerable<SelectListItem>)this.ViewBag.HealthInsuranceSelectItems)</td>
+                    <td>
+                        @Html.AutocompleteFor(
+                            model => model.HealthInsuranceId,
+                            model => model.HealthInsuranceName,
+                            Url.Action("LookupHealthInsurances", "HealthInsurance"), true)
+                        
+                        @if (this.CanAccessAction("Index", "HealthInsurance"))
+                        {
+                            <a href="@Url.Action("Index", "HealthInsurance")" class="block-little-link" target="_blank">
+                                Gerenciar convênios
+                            </a>
+                        }
+                    </td>
                 </tr>
-                
                 <tr class="first-appointment-only subsequent-appointments-only" style="display: @funcDisplay(isFirstAppointment || isSubsequentAppointment)">
                     <th>@Html.LabelFor(model => model.Status)
                     </th>

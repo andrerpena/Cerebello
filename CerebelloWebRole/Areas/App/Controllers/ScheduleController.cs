@@ -277,16 +277,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditingOrCreating = 'C';
 
-            // populating health insurance list, to show in the combo-box
-            var listInsurances = this.Doctor.HealthInsurances
-                .Where(hi => hi.IsActive)
-                .OrderByDescending(h => h.IsParticular)
-                .ThenBy(h => h.Name)
-                .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
-                .ToList();
-            listInsurances.Insert(0, new SelectListItem());
-            this.ViewBag.HealthInsuranceSelectItems = listInsurances;
-
             return this.View("Edit", viewModel);
         }
 
@@ -382,16 +372,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             this.ViewBag.IsEditingOrCreating = 'E';
-
-            // populating health insurance list, to show in the combo-box
-            var listInsurances = this.Doctor.HealthInsurances
-                .Where(hi => hi.IsActive)
-                .OrderByDescending(h => h.IsParticular)
-                .ThenBy(h => h.Name)
-                .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
-                .ToList();
-            listInsurances.Insert(0, new SelectListItem());
-            this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", viewModel);
         }
@@ -574,16 +554,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             this.ViewBag.IsEditingOrCreating = this.RouteData.Values["action"].ToString()
                 .ToLowerInvariant() == "edit" ? 'E' : 'C';
-
-            // populating health insurance list, to show in the combo-box
-            var listInsurances = this.Doctor.HealthInsurances
-                .Where(hi => hi.IsActive)
-                .OrderByDescending(h => h.IsParticular)
-                .ThenBy(h => h.Name)
-                .Select(h => new SelectListItem { Text = h.Name, Value = h.Id.ToString() })
-                .ToList();
-            listInsurances.Insert(0, new SelectListItem());
-            this.ViewBag.HealthInsuranceSelectItems = listInsurances;
 
             return View("Edit", formModel);
         }
