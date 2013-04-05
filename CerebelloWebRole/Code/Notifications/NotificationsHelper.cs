@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Web.Script.Serialization;
 using Cerebello.Model;
-using System.Linq;
 using CerebelloWebRole.Code.Hubs;
 using CerebelloWebRole.Code.Notifications.Data;
 using JetBrains.Annotations;
-using Microsoft.AspNet.SignalR;
 
 namespace CerebelloWebRole.Code.Notifications
 {

@@ -1575,7 +1575,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Cerebello.Model" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
-        <EntityContainer Name="CerebelloEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="CerebelloEntitiesBase" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
           <EntitySet Name="Addresses" EntityType="Cerebello.Model.Address" />
           <EntitySet Name="Appointments" EntityType="Cerebello.Model.Appointment" />
           <EntitySet Name="Doctors" EntityType="Cerebello.Model.Doctor" />
@@ -3178,7 +3178,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="cerebelloModelStoreContainer" CdmEntityContainer="CerebelloEntities">
+        <EntityContainerMapping StorageEntityContainer="cerebelloModelStoreContainer" CdmEntityContainer="CerebelloEntitiesBase">
           <EntitySetMapping Name="Addresses"><EntityTypeMapping TypeName="Cerebello.Model.Address"><MappingFragment StoreEntitySet="Address">
             <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="CEP" ColumnName="CEP" />

@@ -1,8 +1,6 @@
 using System;
-using System.Net;
 using System.Net.Mail;
 using System.Web.Mvc;
-using Cerebello.Model;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
@@ -13,7 +11,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
     {
         public virtual CerebelloEntities CreateNewCerebelloEntities()
         {
-            return new CerebelloEntities(DebugConfig.DataBaseConnectionString);
+            return new CerebelloEntities();
         }
 
         /// <summary>

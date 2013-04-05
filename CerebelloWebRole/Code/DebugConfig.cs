@@ -411,7 +411,7 @@ namespace CerebelloWebRole.Code
                         if (inst.setting != null && inst.setting.DataBase != null && !string.IsNullOrWhiteSpace(inst.setting.DataBase.ConnectionString))
                             return inst.setting.DataBase.ConnectionString;
 #endif
-                return "name=CerebelloEntities";
+                return "name=CerebelloEntities_Azure";
             }
         }
 

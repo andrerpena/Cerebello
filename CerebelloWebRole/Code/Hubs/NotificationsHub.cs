@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Notifications;
@@ -13,15 +14,8 @@ using Microsoft.AspNet.SignalR.Hubs;
 
 namespace CerebelloWebRole.Code.Hubs
 {
-    public class NotificationsHub : Hub
+    public class NotificationsHub : CerebelloHub
     {
-        private readonly CerebelloEntities db;
-
-        public NotificationsHub()
-        {
-            this.db = new CerebelloEntities();
-        }
-
         /// <summary>
         /// Current connections
         /// 1 room has many users that have many connections (2 open browsers from the same user represents 2 connections)
@@ -108,7 +102,7 @@ namespace CerebelloWebRole.Code.Hubs
             return userData.PracticeIdentifier;
         }
 
-        public override System.Threading.Tasks.Task OnConnected()
+        public override Task OnConnected()
         {
             var myRoomId = this.GetMyRoomId();
             var myUserId = this.GetMyUserId();
@@ -127,7 +121,7 @@ namespace CerebelloWebRole.Code.Hubs
             return base.OnConnected();
         }
 
-        public override System.Threading.Tasks.Task OnDisconnected()
+        public override Task OnDisconnected()
         {
             var myRoomId = this.GetMyRoomId();
             var myUserId = this.GetMyUserId();

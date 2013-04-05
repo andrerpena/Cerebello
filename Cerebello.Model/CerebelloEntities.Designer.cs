@@ -83,32 +83,32 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    public partial class CerebelloEntities : ObjectContext
+    public partial class CerebelloEntitiesBase : ObjectContext
     {
         #region Constructors
     
         /// <summary>
-        /// Initializes a new CerebelloEntities object using the connection string found in the 'CerebelloEntities' section of the application configuration file.
+        /// Initializes a new CerebelloEntitiesBase object using the connection string found in the 'CerebelloEntitiesBase' section of the application configuration file.
         /// </summary>
-        public CerebelloEntities() : base("name=CerebelloEntities", "CerebelloEntities")
+        public CerebelloEntitiesBase() : base("name=CerebelloEntitiesBase", "CerebelloEntitiesBase")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
         /// <summary>
-        /// Initialize a new CerebelloEntities object.
+        /// Initialize a new CerebelloEntitiesBase object.
         /// </summary>
-        public CerebelloEntities(string connectionString) : base(connectionString, "CerebelloEntities")
+        public CerebelloEntitiesBase(string connectionString) : base(connectionString, "CerebelloEntitiesBase")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
         /// <summary>
-        /// Initialize a new CerebelloEntities object.
+        /// Initialize a new CerebelloEntitiesBase object.
         /// </summary>
-        public CerebelloEntities(EntityConnection connection) : base(connection, "CerebelloEntities")
+        public CerebelloEntitiesBase(EntityConnection connection) : base(connection, "CerebelloEntitiesBase")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();

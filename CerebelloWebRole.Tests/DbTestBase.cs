@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Transactions;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests

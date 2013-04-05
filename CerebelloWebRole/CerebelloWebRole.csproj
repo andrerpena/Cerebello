@@ -212,6 +212,7 @@
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
+    <Compile Include="Code\CerebelloEntities.cs" />
     <Compile Include="Code\Access\LockAccessType.cs" />
     <Compile Include="Code\Access\LockElementActionType.cs" />
     <Compile Include="Areas\App\Models\HealthInsuranceIndexViewModel.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Code\Disposer.cs" />
     <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\Hubs\ChatHub.cs" />
+    <Compile Include="Code\Hubs\CerebelloHub.cs" />
     <Compile Include="Code\Hubs\NotificationsHub.cs" />
     <Compile Include="Code\Notifications\Data\CompletePracticeInfoNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\NewUserCreatedNotificationData.cs" />

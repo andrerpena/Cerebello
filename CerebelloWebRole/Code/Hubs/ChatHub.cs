@@ -5,26 +5,18 @@ using Cerebello.Model;
 using CerebelloWebRole.Code.Chat;
 using CerebelloWebRole.Code.Security;
 using JetBrains.Annotations;
-using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using ChatMessage = CerebelloWebRole.Code.Chat.ChatMessage;
 
 namespace CerebelloWebRole.Code.Hubs
 {
-    public class ChatHub : Hub
+    public class ChatHub : CerebelloHub
     {
-        private readonly CerebelloEntities db;
-
         /// <summary>
         /// Current connections
         /// 1 room has many users that have many connections (2 open browsers from the same user represents 2 connections)
         /// </summary>
         private static readonly Dictionary<string, Dictionary<int, List<string>>> connections = new Dictionary<string, Dictionary<int, List<string>>>();
-
-        public ChatHub()
-        {
-            this.db = new CerebelloEntities();
-        }
 
         /// <summary>
         /// If the specified user is connected, return information about the user
