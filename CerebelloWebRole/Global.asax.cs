@@ -29,12 +29,13 @@ namespace Cerebello
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "home", action = "index", id = UrlParameter.Optional }
-            );
+                new { controller = "home", action = "index", id = UrlParameter.Optional });
         }
 
         protected void Application_Start()
         {
+            RegisterTraceListeners();
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -46,6 +47,22 @@ namespace Cerebello
 
             // Will create a thread to send notifications
             NotificationsHelper.CreateNotificationsJob();
+        }
+
+        private static void RegisterTraceListeners()
+        {
+            // This replaces web.config setting: configuration\system.diagnostics\trace\listeners\add type="Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener, Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" name="AzureDiagnostics"
+            // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
+            try
+            {
+                var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
+                Trace.Listeners.Add(azureTraceListener);
+            }
+            // ReSharper disable EmptyGeneralCatchClause
+            catch
+            // ReSharper restore EmptyGeneralCatchClause
+            {
+            }
         }
 
         protected void Application_AuthenticateRequest()

@@ -120,11 +120,21 @@ namespace CerebelloWebRole.Code.Helpers
             {
                 if (!mailMessage.Bcc.Any())
                 {
-                    Debug.Print(
-                        "E-mail ignored: cannot send to the address ({0}) while in DEBUG mode.",
-                        notAllowed.First().Address);
+                    // ReSharper disable EmptyGeneralCatchClause
+                    try
+                    {
+                        Debug.Print(
+                            "E-mail ignored: cannot send to the address ({0}) while in DEBUG mode.",
+                            notAllowed.First().Address);
+                    }
+                    catch
+                    {
+                    }
+                    // ReSharper restore EmptyGeneralCatchClause
+
                     return;
                 }
+
                 mailMessage.To.Add(mailMessage.Bcc[0]);
                 mailMessage.Bcc.RemoveAt(0);
             }
@@ -160,7 +170,9 @@ namespace CerebelloWebRole.Code.Helpers
                     return true;
                 }
                 // ReSharper disable EmptyGeneralCatchClause
-                catch { }
+                catch
+                {
+                }
                 // ReSharper restore EmptyGeneralCatchClause
             }
             return false;
@@ -170,7 +182,7 @@ namespace CerebelloWebRole.Code.Helpers
         /// Tries to send an e-mail message using the default SmtpClient asynchronously.
         /// </summary>
         /// <param name="mailMessage">The MailMessage to send.</param>
-        /// <returns>Returns a Task object containing informations about the task.</returns>
+        /// <returns>Returns a Task object containing information about the task.</returns>
         public static Task SendEmailAsync(MailMessage mailMessage)
         {
             var task = new Task(() =>
@@ -196,8 +208,10 @@ namespace CerebelloWebRole.Code.Helpers
                     }
 
                     // rethrows the last exception
-                    throw exceptions;
+                    if (exceptions != null)
+                        throw exceptions;
                 });
+
             task.Start();
             return task;
         }
