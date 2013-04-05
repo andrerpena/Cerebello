@@ -24,6 +24,8 @@
             newWindowWidth: null,
             newWindowTitle: null,
 
+            noFilterOnDropDown: false,
+
             inputHiddenName: null,
             columnId: "Id",
             columnText: "Value",
@@ -100,8 +102,10 @@
 
                     if (_this.isDropdownVisible())
                         _this.$dropdown.hide();
-                    else
-                        _this.fetchData(null, null, _this.$el.val());
+                    else {
+                        _this.$el.focus();
+                        _this.fetchData(null, null, _this.$el.val(), _this.opts.noFilterOnDropDown);
+                    }
                 }));
             }
 
@@ -132,7 +136,7 @@
                     case 40:
                         e.preventDefault();
                         if (!_this.isDropdownVisible())
-                            _this.fetchData(null, function () { _this.focusNextRow(); }, _this.$el.val());
+                            _this.fetchData(null, function () { _this.focusNextRow(); }, _this.$el.val(), _this.opts.noFilterOnDropDown);
                         else {
                             _this.showAndFixDropdownPosition();
                             _this.focusNextRow();
@@ -163,7 +167,7 @@
                             _this.selectCurrentlyFocusedRow();
                             // filter
                         else
-                            _this.fetchData(null, null, _this.$el.val());
+                            _this.fetchData(null, null, _this.$el.val(), _this.opts.noFilterOnDropDown);
                         break;
                     default:
                         $("tr", _this.$wrapper).removeClass("selected");
@@ -180,7 +184,7 @@
                         clearTimeout(_this.intervalHandler);
                     _this.intervalHandler = setTimeout(function () {
                         if (_this.$el.is(":focus"))
-                            _this.fetchData(null, null, _this.$el.val());
+                            _this.fetchData(null, null, _this.$el.val(), false);
                     }, _this.opts.autoFilterDelay);
                 }
             });
@@ -238,7 +242,7 @@
         },
 
         // gets data from the server and shows the $dropdown 
-        fetchData: function (pageIndex, onDataReceived, searchTerm) {
+        fetchData: function (pageIndex, onDataReceived, searchTerm, noFilter) {
             var _this = this;
             _this.ensureDropdownIsCreated();
             _this.$wrapper.html($("<div/>").addClass("autocomplete-loading"));
@@ -252,8 +256,19 @@
             $.extend(params, _this.opts.ajaxParams);
 
             params[_this.opts.searchParamName] = searchTerm;
-            params[_this.opts.pageIndexParamName] = pageIndex ? pageIndex : 1;
             params[_this.opts.pageSizeParamName] = _this.opts.pageSize;
+            if (noFilter) {
+                if (!pageIndex || pageIndex <= 0) {
+                    // go to the correct page automatically, keep search-terms so that the page can be located
+                    params[_this.opts.pageIndexParamName] = null;
+                } else {
+                    // go to the page and discard the search terms (they are useless in this case)
+                    params[_this.opts.pageIndexParamName] = pageIndex;
+                    params[_this.opts.searchParamName] = null;
+                }
+            } else {
+                params[_this.opts.pageIndexParamName] = pageIndex ? pageIndex : 1;
+            }
 
             $.ajax({
                 url: _this.opts.contentUrl,
@@ -295,6 +310,10 @@
                     else
                         _this.$wrapper.html($("<div/>").addClass("no-results-box").text("A pesquisa não retornou registros"));
 
+                    // focusing the current selected item, if it is in the current page
+                    // the if of the current item is store in the hidden field
+                    $("tbody > tr[data-val-id='" + _this.$inputHidden.val() + "']", _this.$wrapper).addClass("selected");
+
                     $("tbody > tr", _this.$wrapper).bind("click", function () {
                         $(this).addClass("selected").siblings().removeClass("selected");
                         _this.selectCurrentlyFocusedRow();
@@ -303,11 +322,11 @@
                     _this.pager = _this.$pagerWrapper.pager({
                         count: data.Count,
                         rowsPerPage: _this.opts.pageSize,
-                        currentPageIndex: pageIndex,
+                        currentPageIndex: data.Page ? data.Page : pageIndex,
                         onPageChanged: function (i, onDataReceived2) {
                             // ativar o activity indicator
                             _this.$el.focus();
-                            _this.fetchData(i, onDataReceived2, searchTerm);
+                            _this.fetchData(i, onDataReceived2, null, noFilter);
                         }
                     }).data('pager');
 

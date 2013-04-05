@@ -15,6 +15,7 @@ namespace CerebelloWebRole.Code.Controls
 
         // ReSharper disable InconsistentNaming
         // ReSharper disable UnusedAutoPropertyAccessor.Global
+        public bool noFilterOnDropDown { get; set; }
         public string contentUrl { get; set; }
         public string inputHiddenId { get; set; }
         public string inputHiddenName { get; set; }

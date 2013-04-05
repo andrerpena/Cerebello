@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
+﻿using System.Collections;
 
 namespace CerebelloWebRole.Code.Controls
 {
@@ -17,6 +13,14 @@ namespace CerebelloWebRole.Code.Controls
         }
 
         public int Count { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page index. 
+        /// When the page parameter is missing from original request, 
+        /// the first page for the search-term in the full dataset is returned.
+        /// </summary>
+        public int Page { get; set; }
+
         public ArrayList Rows { get; set; }
     }
 }

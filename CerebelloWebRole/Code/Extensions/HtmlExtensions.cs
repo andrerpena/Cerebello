@@ -230,9 +230,17 @@ namespace CerebelloWebRole.Code.Extensions
         }
 
         /// <summary>
+        /// Lookup
+        /// </summary>
+        public static MvcHtmlString AutocompleteFor<TModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, bool noFilterOnDropDown)
+        {
+            return AutocompleteGridFor<TModel, AutocompleteRow, TId>(htmlHelper, expressionId, expressionText, actionUrl, lr => lr.Id, lr => lr.Value, noFilterOnDropDown: noFilterOnDropDown);
+        }
+
+        /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, Expression<Func<TGridModel, object>>[] otherColumns = null, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0)
+        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, Expression<Func<TGridModel, object>>[] otherColumns = null, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0, bool noFilterOnDropDown = false)
         {
             if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
             if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");
@@ -269,7 +277,8 @@ namespace CerebelloWebRole.Code.Extensions
                 newWindowUrl = newWindowUrl,
                 newWindowWidth = newWindowWidth,
                 newWindowMinHeight = newWindowMinHeight,
-                newWindowTitle = newWindowTitle
+                newWindowTitle = newWindowTitle,
+                noFilterOnDropDown = noFilterOnDropDown,
             };
 
             var columnIdPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionLookupId);
