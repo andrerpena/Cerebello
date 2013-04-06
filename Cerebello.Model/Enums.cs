@@ -141,7 +141,7 @@ namespace Cerebello.Model
         public const string GmtL2 = "Mid-Atlantic Standard Time";
     }
 
-    public enum TypeEstadoBrasileiro
+    public enum TypeEstadoBrasileiroTimeZone
     {
         [TimeZoneData(Id = TimeZoneName.GmtL4)]
         [Display(Name = "Acre")]
@@ -253,7 +253,118 @@ namespace Cerebello.Model
 
         [TimeZoneData(Id = TimeZoneName.GmtL2)]
         [Display(Name = "Arquipélagos Atlânticos")]
-        Arquipelagos,
+        Arquipelagos = 1000,
+    }
+
+    public enum TypeEstadoBrasileiro
+    {
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
+        [Display(Name = "Acre")]
+        AC,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Alagoas")]
+        AL,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Amapá")]
+        AP,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
+        [Display(Name = "Amazonas")]
+        AM,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Bahia")]
+        BA,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Ceará")]
+        CE,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Distrito Federal")]
+        DF,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Espírito Santo")]
+        ES,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Goiás")]
+        GO,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Maranhão")]
+        MA,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL4_GmtL3)]
+        [Display(Name = "Mato Grosso")]
+        MT,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL4_GmtL3)]
+        [Display(Name = "Mato Grosso do Sul")]
+        MS,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Minas Gerais")]
+        MG,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Pará")]
+        PA,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Paraíba")]
+        PB,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Paraná")]
+        PR,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Pernambuco")]
+        PE,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Piauí")]
+        PI,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Rio de Janeiro")]
+        RJ,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Rio Grande do Norte")]
+        RN,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Rio Grande do Sul")]
+        RS,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
+        [Display(Name = "Rondônia")]
+        RO,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL4)]
+        [Display(Name = "Roraima")]
+        RR,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "Santa Catarina")]
+        SC,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3_GmtL2)]
+        [Display(Name = "São Paulo")]
+        SP,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Sergipe")]
+        SE,
+
+        [TimeZoneData(Id = TimeZoneName.GmtL3)]
+        [Display(Name = "Tocantins")]
+        TO,
     }
 
     public enum TypeTimeZone

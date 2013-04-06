@@ -1,4 +1,4 @@
-﻿@model CerebelloWebRole.Areas.App.Models.AddressViewModel
+﻿@model AddressViewModel
 @{
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.CEP, format: @<text> @Html.EditorFor(model => model.CEP)
@@ -29,6 +29,7 @@
                             new SelectListItem() { Text = "Minas Gerais", Value="MG"},
                             new SelectListItem() { Text = "Pará", Value="PA"},
                             new SelectListItem() { Text = "Paraiba", Value="PB"},
+                            new SelectListItem() { Text = "Paraná", Value="PR"},
                             new SelectListItem() { Text = "Pernambuco", Value="PE"},
                             new SelectListItem() { Text = "Piauí", Value="PI"},
                             new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
