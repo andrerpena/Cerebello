@@ -38,6 +38,10 @@ namespace Cerebello.Firestarter
             if (string.IsNullOrEmpty(this.rootCerebelloPath))
                 throw new Exception("Cannot start FireStarter. Cannot find Cerebello root path configuration");
 
+            bool isTestDb = false;
+
+            bool isAzureDb = false;
+
             bool isToChooseDb = true;
 
             bool showHidden = false;
@@ -76,7 +80,7 @@ namespace Cerebello.Firestarter
 
                 while (isToChooseDb)
                 {
-                    if (this.detachDbWhenDone)
+                    if (this.detachDbWhenDone && !isAzureDb)
                     {
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("Detaching DB... ");
@@ -167,39 +171,45 @@ namespace Cerebello.Firestarter
 
                     try
                     {
-                        using (var db = this.CreateCerebelloEntities())
-                        {
-                            var attachResult = Firestarter.AttachLocalDatabase(db);
-                            if (attachResult == Firestarter.AttachLocalDatabaseResult.NotFound)
-                            {
-                                // Create the DB if it does not exist.
-                                bool createDb = ConsoleHelper.YesNo("Would you like to create the database?");
-                                if (createDb)
-                                {
-                                    Console.WriteLine();
-                                    var result = Firestarter.CreateDatabaseIfNeeded(db);
-                                    if (!result)
-                                    {
-                                        Console.WriteLine("Could not create database.");
-                                        continue;
-                                    }
+                        isTestDb = this.connName.ToUpper().Contains("TEST");
 
-                                    bool isTestDb = this.connName.ToUpper().Contains("TEST");
-                                    this.detachDbWhenDone = isTestDb;
+                        isAzureDb = this.connName.ToUpper().Contains("AZURE");
+
+                        if (!isAzureDb)
+                        {
+                            using (var db = this.CreateCerebelloEntities())
+                            {
+                                var attachResult = Firestarter.AttachLocalDatabase(db);
+                                if (attachResult == Firestarter.AttachLocalDatabaseResult.NotFound)
+                                {
+                                    // Create the DB if it does not exist.
+                                    bool createDb = ConsoleHelper.YesNo("Would you like to create the database?");
+                                    if (createDb)
+                                    {
+                                        Console.WriteLine();
+                                        var result = Firestarter.CreateDatabaseIfNeeded(db);
+                                        if (!result)
+                                        {
+                                            Console.WriteLine("Could not create database.");
+                                            continue;
+                                        }
+
+                                        this.detachDbWhenDone = isTestDb;
+                                    }
+                                    else
+                                        continue;
                                 }
                                 else
-                                    continue;
-                            }
-                            else
-                            {
-                                this.detachDbWhenDone = attachResult == Firestarter.AttachLocalDatabaseResult.Ok;
-                            }
+                                {
+                                    this.detachDbWhenDone = attachResult == Firestarter.AttachLocalDatabaseResult.Ok;
+                                }
 
-                            if (this.detachDbWhenDone)
-                            {
-                                Console.WriteLine();
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine("DB attached!");
+                                if (this.detachDbWhenDone)
+                                {
+                                    Console.WriteLine();
+                                    Console.ForegroundColor = ConsoleColor.Blue;
+                                    Console.WriteLine("DB attached!");
+                                }
                             }
                         }
                     }
@@ -228,39 +238,49 @@ namespace Cerebello.Firestarter
                 if (showHidden)
                 {
                     Console.WriteLine();
-                    Console.WriteLine(@"clr    - Clear all data.");
-                    Console.WriteLine(@"p1     - Populate database with items (type p1? to know more).");
-                    Console.WriteLine(@"drp    - Drop all tables and FKs.");
-                    Console.WriteLine(@"crt    - Create all tables and FKs using script.");
-                    Console.WriteLine();
+                    if (!isAzureDb)
+                    {
+                        Console.WriteLine(@"clr    - Clear all data.");
+                        Console.WriteLine(@"p1     - Populate database with items (type p1? to know more).");
+                        Console.WriteLine(@"drp    - Drop all tables and FKs.");
+                        Console.WriteLine(@"crt    - Create all tables and FKs using script.");
+                        Console.WriteLine();
+                    }
                     Console.WriteLine(@"anvll  - Downloads all leaflets from Anvisa site.");
                     Console.WriteLine(@"rnd    - Set the seed to the random generator.");
-                    Console.WriteLine();
-                    Console.WriteLine(@"bkc    - Create database backup.");
-                    Console.WriteLine(@"bkr    - Restore database backup.");
-                    Console.Write(@"abk    - Enables or disables functional backups. (");
-                    Console.ForegroundColor = isFuncBackupEnabled ? ConsoleColor.DarkGreen : ConsoleColor.Gray;
-                    Console.Write(isFuncBackupEnabled ? "enabled" : "disabled");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(@")");
+                    if (!isAzureDb)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine(@"bkc    - Create database backup.");
+                        Console.WriteLine(@"bkr    - Restore database backup.");
+
+                        Console.Write(@"abk    - Enables or disables functional backups. (");
+                        Console.ForegroundColor = isFuncBackupEnabled ? ConsoleColor.DarkGreen : ConsoleColor.Gray;
+                        Console.Write(isFuncBackupEnabled ? "enabled" : "disabled");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(@")");
+                    }
 
                     Console.WriteLine();
-                    using (var db = this.CreateCerebelloEntities())
+                    if (!isAzureDb)
                     {
-                        if (Firestarter.BackupExists(db, "__zero__"))
-                            Console.WriteLine(@"zero   - Restores DB to last zeroed state.");
-                        if (Firestarter.BackupExists(db, "__undo__"))
-                            Console.WriteLine(@"undo   - Undoes the last operation (if possible).");
-                        if (Firestarter.BackupExists(db, "__redo__"))
-                            Console.WriteLine(@"redo   - Redoes something that was undone.");
-                        if (Firestarter.BackupExists(db, "__reset__"))
-                            Console.WriteLine(@"reset  - Reset DB to initial set (differentiates WORK and TEST).");
+                        using (var db = this.CreateCerebelloEntities())
+                        {
+                            if (Firestarter.BackupExists(db, "__zero__"))
+                                Console.WriteLine(@"zero   - Restores DB to last zeroed state.");
+                            if (Firestarter.BackupExists(db, "__undo__"))
+                                Console.WriteLine(@"undo   - Undoes the last operation (if possible).");
+                            if (Firestarter.BackupExists(db, "__redo__"))
+                                Console.WriteLine(@"redo   - Redoes something that was undone.");
+                            if (Firestarter.BackupExists(db, "__reset__"))
+                                Console.WriteLine(@"reset  - Reset DB to initial set (differentiates WORK and TEST).");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine(
+                            this.detachDbWhenDone
+                                ? @"atc    - Leaves DB attached when done."
+                                : @"dtc    - Detach DB when done.");
                     }
-                    Console.WriteLine();
-                    Console.WriteLine(
-                        this.detachDbWhenDone
-                            ? @"atc    - Leaves DB attached when done."
-                            : @"dtc    - Detach DB when done.");
                     Console.WriteLine();
                     Console.WriteLine(@"cls    - Clear screen.");
                 }
@@ -285,44 +305,44 @@ namespace Cerebello.Firestarter
 
                         break;
 
-                    case "abk?": InfoAbk(); break;
-                    case "abk": this.OptAbk(); break;
+                    case "abk?": if (!isAzureDb) InfoAbk(); break;
+                    case "abk": if (!isAzureDb) this.OptAbk(); break;
 
-                    case "undo?": InfoUndo(); break;
-                    case "undo": this.OptUndo(); break;
+                    case "undo?": if (!isAzureDb) InfoUndo(); break;
+                    case "undo": if (!isAzureDb) this.OptUndo(); break;
 
-                    case "zero?": InfoZero(); break;
-                    case "zero": this.OptZero(); break;
+                    case "zero?": if (!isAzureDb) InfoZero(); break;
+                    case "zero": if (!isAzureDb) this.OptZero(); break;
 
-                    case "redo?": InfoRedo(); break;
-                    case "redo": this.OptRedo(); break;
+                    case "redo?": if (!isAzureDb) InfoRedo(); break;
+                    case "redo": if (!isAzureDb) this.OptRedo(); break;
 
-                    case "reset?": InfoReset(); break;
-                    case "reset": this.OptReset(); break;
+                    case "reset?": if (!isAzureDb) InfoReset(); break;
+                    case "reset": if (!isAzureDb) this.OptReset(); break;
 
-                    case "atc?": InfoAtc(); break;
-                    case "atc": this.OptAtc(); break;
+                    case "atc?": if (!isAzureDb) InfoAtc(); break;
+                    case "atc": if (!isAzureDb) this.OptAtc(); break;
 
-                    case "dtc?": InfoDtc(); break;
-                    case "dtc": this.OptDtc(); break;
+                    case "dtc?": if (!isAzureDb) InfoDtc(); break;
+                    case "dtc": if (!isAzureDb) this.OptDtc(); break;
 
-                    case "crt?": InfoCrt(); break;
-                    case "crt": this.OptCrt(); break;
+                    case "crt?": if (!isAzureDb) InfoCrt(); break;
+                    case "crt": if (!isAzureDb) this.OptCrt(); break;
 
                     case "size?": InfoSize(); break;
                     case "size": this.OptSize(); break;
 
-                    case "drp?": InfoDrp(); break;
-                    case "drp": this.OptDrp(); continue;
+                    case "drp?": if (!isAzureDb) InfoDrp(); break;
+                    case "drp": if (!isAzureDb) this.OptDrp(); continue;
 
                     case "cls?": InfoCls(); break;
                     case "cls": OptCls(); break;
 
-                    case "clr?": InfoClr(); break;
-                    case "clr": this.OptClr(); continue;
+                    case "clr?": if (!isAzureDb) InfoClr(); break;
+                    case "clr": if (!isAzureDb) this.OptClr(); continue;
 
-                    case "p1?": InfoP1(); break;
-                    case "p1": this.OptP1(); break;
+                    case "p1?": if (!isAzureDb) InfoP1(); break;
+                    case "p1": if (!isAzureDb) this.OptP1(); break;
 
                     case "anvll?": InfoAnvll(); break;
                     case "anvll": this.OptAnvll(); break;
@@ -336,14 +356,14 @@ namespace Cerebello.Firestarter
                     case "rnd?": InfoRnd(); break;
                     case "rnd": this.OptRnd(); break;
 
-                    case "bkc?": InfoBkc(); break;
-                    case "bkc": this.OptBkc(); break;
+                    case "bkc?": if (!isAzureDb) InfoBkc(); break;
+                    case "bkc": if (!isAzureDb) this.OptBkc(); break;
 
-                    case "bkr?": InfoBkr(); break;
-                    case "bkr": this.OptBkr(); break;
+                    case "bkr?": if (!isAzureDb) InfoBkr(); break;
+                    case "bkr": if (!isAzureDb) this.OptBkr(); break;
 
-                    case "r?": InfoR(); break;
-                    case "r": this.OptR(); continue;
+                    case "r?": if (!isAzureDb) InfoR(); break;
+                    case "r": if (!isAzureDb) this.OptR(); continue;
 
                     case "exec": this.OptExec(); break;
 
@@ -1044,7 +1064,7 @@ namespace Cerebello.Firestarter
             {
                 bool isTestDb = this.connName.ToUpper().Contains("TEST");
 
-                bool isAzureDb = this.connName.ToUpper().Contains("Azure");
+                bool isAzureDb = this.connName.ToUpper().Contains("AZURE");
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("DB type: {0}", isTestDb ? "TEST" : "WORK");
