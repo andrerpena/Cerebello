@@ -720,6 +720,7 @@
           <Property Name="Email" Type="varchar" MaxLength="200" />
           <Property Name="EmailGravatarHash" Type="varchar" MaxLength="200" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="PictureBlobName" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="PersonAddress">
           <Key>
@@ -1964,6 +1965,7 @@
           <Property Type="String" Name="PhoneLand" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <NavigationProperty Name="Addresses" Relationship="Cerebello.Model.PersonAddress" FromRole="Person" ToRole="Address" />
+          <Property Type="String" Name="PictureBlobName" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -3233,7 +3235,8 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="People"><EntityTypeMapping TypeName="Cerebello.Model.Person"><MappingFragment StoreEntitySet="Person">
-            <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+            <ScalarProperty Name="PictureBlobName" ColumnName="PictureBlobName" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="PhoneLand" ColumnName="PhoneLand" />
                 <ScalarProperty Name="EmailGravatarHash" ColumnName="EmailGravatarHash" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -3833,7 +3836,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="56">
+      <Diagram Name="CerebelloEntities" ZoomLevel="80">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />

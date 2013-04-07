@@ -26,5 +26,8 @@ namespace CerebelloWebRole.Areas.App.Models
         public List<SessionViewModel> Sessions { get; set; }
 
         public List<AppointmentViewModel> FutureAppointments { get; set; }
+
+        [XmlIgnore]
+        public int PersonId { get; set; }
     }
 }

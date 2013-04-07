@@ -55,7 +55,7 @@ namespace Cerebello
             // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
             try
             {
-                var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
+               var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
                 Trace.Listeners.Add(azureTraceListener);
             }
             // ReSharper disable EmptyGeneralCatchClause

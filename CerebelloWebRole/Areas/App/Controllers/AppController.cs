@@ -14,7 +14,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// This class exists for the sole reason of allowing
         /// a lot of unios to be made consistently
         /// </summary>
-        public class GlobalSearchIntermediateResult
+        private class GlobalSearchIntermediateResult
         {
             /// <summary>
             /// Maybe "patient", "medication" and so forth

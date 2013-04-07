@@ -11592,6 +11592,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String PictureBlobName
+        {
+            get
+            {
+                return _PictureBlobName;
+            }
+            set
+            {
+                OnPictureBlobNameChanging(value);
+                ReportPropertyChanging("PictureBlobName");
+                _PictureBlobName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("PictureBlobName");
+                OnPictureBlobNameChanged();
+            }
+        }
+        private global::System.String _PictureBlobName;
+        partial void OnPictureBlobNameChanging(global::System.String value);
+        partial void OnPictureBlobNameChanged();
 
         #endregion
 

@@ -20,23 +20,23 @@
             e.preventDefault();
             $.ajax({
                 url: "@Url.Action("Edit", "PatientFiles", new { id = Model.Id })",
-                    success: function (result) {
-                        $("div[data-val-id='patientFile-@Model.Id']").replaceWith(result);
+                success: function (result) {
+                    $("div[data-val-id='patientFile-@Model.Id']").replaceWith(result);
                 }
-                });
             });
+        });
 
-        $(".delete-patientFile", $("div[data-val-id='patientFile-@Model.Id']")).click(function (e) {
+            $(".delete-patientFile", $("div[data-val-id='patientFile-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.deleteConfirmation({
                 objectType: "arquivo",
                 url: "@Url.Action("Delete", "PatientFiles", new { id = this.Model.Id })",
-                    success: function (data) {
-                        alert("Este arquivo foi excluído");
-                        window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
+                success: function (data) {
+                    alert("Este arquivo foi excluído");
+                    window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
                 }
-                });
             });
+                });
 
     </script>
 </div>

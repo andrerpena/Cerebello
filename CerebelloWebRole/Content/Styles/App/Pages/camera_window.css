@@ -1,0 +1,42 @@
+﻿.camera-warning {
+    font-size: 80%;
+}
+
+#camera-wrapper {
+    background-color: #b0b0b0;
+    width: 320px;
+    height: 240px;
+}
+
+#take-picture {
+    background-color: #336699;
+    color: white;
+    display: block;
+    font-weight: bold;
+    margin: 5px 0;
+    padding: 8px;
+    text-align: center;
+}
+
+#unavailable-camera {
+    background-color: #808080;
+    color: white;
+    display: block;
+    font-weight: bold;
+    margin: 5px 0;
+    padding: 8px;
+    text-align: center;
+}
+
+#processing-camera {
+    background-color: #F0F3F5;
+    background-image: url("/Content/Images/progress.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    color: black;
+    display: block;
+    font-weight: bold;
+    margin: 5px 0;
+    padding: 8px;
+    text-align: center;
+}

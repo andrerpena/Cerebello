@@ -4,11 +4,11 @@
 
     .patient-info-wrapper .patient-info-picture {
         float: left;
+        text-align: center;
         width: 190px;
     }
 
         .patient-info-wrapper .patient-info-picture a {
-            display: block;
             margin-top: 5px;
             text-align: center;
         }

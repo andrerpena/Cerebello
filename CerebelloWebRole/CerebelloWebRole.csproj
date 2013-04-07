@@ -112,6 +112,9 @@
     <Reference Include="System.Data.Services.Client">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization">
       <Private>True</Private>
     </Reference>
@@ -204,12 +207,15 @@
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
+    <Compile Include="Areas\App\Controllers\CameraWindowController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
+    <Compile Include="Areas\App\Controllers\PersonFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PhysicalExaminationController.cs" />
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
+    <Compile Include="Areas\App\Models\CameraWindowViewModel.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
     <Compile Include="Code\CerebelloEntities.cs" />
@@ -274,12 +280,18 @@
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
     <Content Include="Content\Styles\App\introjs.min.css" />
+    <Content Include="Content\Styles\App\Pages\patients.css" />
     <Content Include="Content\Styles\Site\Cancel.css" />
+    <Content Include="Content\Styles\App\Pages\camera_window.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
     <Compile Include="Models\InternalCreateAccountEmailViewModel.cs" />
     <Compile Include="Models\GenerateInvoiceViewModel.cs" />
     <Compile Include="Models\InternalUpgradeEmailViewModel.cs" />
     <Compile Include="Models\IdentityViewModel.cs" />
+    <EmbeddedResource Include="Resources\Female-Default-Profile.jpg" />
+    <EmbeddedResource Include="Resources\Male-Default-Profile.jpg" />
+    <Content Include="Scripts\App\Pages\camera-window.js" />
+    <Content Include="Scripts\App\Pages\patient-details.js" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
@@ -660,6 +672,7 @@
     <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="Scripts\App\Pages\practice.js" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\Controls\jquery.camera.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.container2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.window2.js" />
@@ -676,7 +689,8 @@
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Content\Sounds\chat.ogg" />
-    <Content Include="Areas\App\Views\Patients\TakePicture.cshtml" />
+    <Content Include="Areas\App\Views\Shared\CameraWindow.cshtml" />
+    <Content Include="Areas\App\Views\Shared\JavaScriptConstants.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -731,7 +745,6 @@
     <Folder Include="Areas\Docs\Models\" />
     <Folder Include="Code\Setup\" />
     <Folder Include="Content\Images\App\Site\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

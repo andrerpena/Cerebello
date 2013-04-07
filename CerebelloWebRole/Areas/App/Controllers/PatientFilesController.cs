@@ -70,6 +70,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.File(zipMemoryStream, "application/zip", patient.Person.FullName + " - Arquivos - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
         }
         
+
         /// <summary>
         /// Downloads a zip file with all files from all patients
         /// </summary>

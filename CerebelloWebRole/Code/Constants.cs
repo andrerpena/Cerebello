@@ -34,6 +34,20 @@
         /// </summary>
         public const string AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME = "patientfiles";
 
+        /// <summary>
+        /// The name of the file container for the temp files.
+        /// A file container is a subset for the files storaged.
+        /// *MUST BE LOWER CASE* (really, I lost 1 hour trying to figure out way. Ask Azure team)
+        /// </summary>
+        public const string AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME = "temp";
+
+        /// <summary>
+        /// The name of the file container for person profile pictures.
+        /// A file container is a subset for the files storaged.
+        /// *MUST BE LOWER CASE* (really, I lost 1 hour trying to figure out way. Ask Azure team)
+        /// </summary>
+        public const string PERSON_PROFILE_PICTURE_CONTAINER_NAME = "personprofilepictures";
+
 #if DEBUG
         public const string DOMAIN = "localhost";
 #else

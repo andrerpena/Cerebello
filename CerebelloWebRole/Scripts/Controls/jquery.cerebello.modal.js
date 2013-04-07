@@ -66,7 +66,7 @@
 
             // if width has been specified, sets it
             if (_this.opts.width)
-                _this.$el.css("max-width", _this.opts.width);
+                _this.$el.css("width", _this.opts.width);
 
             // if height has been specified, sets it
             if (_this.opts.height)

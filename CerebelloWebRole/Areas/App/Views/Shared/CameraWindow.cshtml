@@ -1,0 +1,22 @@
+﻿@{
+    this.Layout = null;
+}
+<div id="camera-wrapper">
+    <div id="camera"></div>
+</div>
+<p id="unavailable-camera">A câmera está indisponível. Verifique que existe uma câmera instalada e que ela foi autorizada clicando no botão "Allow" ou "Permitir".</p>
+<a href="#" id="take-picture" style="display: none">Capturar foto</a>
+<p id="processing-camera" style="display: none">Por favor, espere enquanto processamos a foto...</p>
+<p class="camera-warning">
+    Para utilizar o recurso de câmera, é necessário que haja uma web-cam e o Adobe Flash Player instalado no computador. Não é possível 
+    utilizar a câmera em dispositivos móveis. Não é possível utilizar a câmera em mais de uma janela do browser ao mesmo tempo. Certifique-se de que você está utilizando um browser moderno.
+    
+</p>
+
+<script type="text/javascript">
+    $(function () {
+        setupCamera(function(data) {
+            $("#camera-wrapper").trigger("modal-ok", data);
+        });
+    });
+</script>

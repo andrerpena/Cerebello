@@ -39,6 +39,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             viewModel.Id = patient.Id;
             viewModel.Observations = patient.Person.Observations;
+            viewModel.PersonId = patient.Person.Id;
 
             var address = patient.Person.Addresses.SingleOrDefault();
             viewModel.Address = address != null ? GetAddressViewModel(address) : new AddressViewModel();
@@ -686,26 +687,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
 
             return View(model);
-        }
-
-        public ActionResult TakePicture()
-        {
-            return this.View();
-        }
-
-        public ActionResult PostPicture()
-        {
-            var postedData = this.Request["image"];
-            if (string.IsNullOrEmpty(postedData))
-                throw new Exception("Could not find the uploaded image");
-
-            var data = postedData.Substring(22);
-            var bytes = Convert.FromBase64String(data);
-
-            var bmp = new Bitmap(new MemoryStream(bytes));
-            bmp.Save("c:\\file.png");
-
-            return null;
         }
     }
 }

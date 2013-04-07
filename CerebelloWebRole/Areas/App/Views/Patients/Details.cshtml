@@ -65,17 +65,66 @@
 {
     @LockIcon.Script(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist")
     <script type="text/javascript" src="/Scripts/jquery.webcam.js"></script>
-    <script type="text/javascript" src="/Scripts/Controls/jquery.camera.wrapper.js"></script>
+    <script type="text/javascript" src="/Scripts/Controls/jquery.camera.window.js"></script>
+    <script type="text/javascript" src="/Scripts/App/Pages/camera-window.js"></script>
+    <script type="text/javascript">
+        var personId = @this.Model.PersonId;
+
+        $(function() {
+            $("#alter-picture").click(function(e) {
+                e.preventDefault();
+                $.cameraWindow({
+                    success: function(data) {
+                        $.ajax("@Url.Action("TransferPersonPictureFromTempContainer", "PersonFiles")",
+                            {
+                                data: {
+                                    personId: personId,
+                                    tempFileName: data.fileName
+                                },
+                                success: function() {
+                                    var originalSrc = $("#patient-picture").attr("data-val-original-src");
+                                    $("#patient-picture").attr("src", originalSrc + "&foo=" + new Date().getTime());
+                                },
+                                error: function() {
+
+                                }
+                            });
+                    }
+                });
+            });
+
+            $("#remove-picture").click(function(e) {
+                e.preventDefault();
+                if (confirm("Deseja realmente excluir a foto do paciente? esta operação não pode ser desfeita")) {
+                    $.ajax("@Url.Action("DeleteProfilePicture", "PersonFiles")",
+                        {
+                            data: {
+                                personId: personId
+                            },
+                            success: function() {
+                                var originalSrc = $("#patient-picture").attr("data-val-original-src");
+                                $("#patient-picture").attr("src", originalSrc + "&foo=" + new Date().getTime());
+                            },
+                            error: function() {
+
+                            }
+                        });
+                };
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/Scripts/App/Pages/patient-details.js"></script>
 }
 
 @section Styles
 {
-    <link rel="stylesheet" type="text/css" href="/content/Styles/App/Pages/patient.css" />
+    <link rel="stylesheet" type="text/css" href="/content/Styles/App/Pages/patients.css" />
+    <link rel="stylesheet" type="text/css" href="/content/Styles/App/Pages/camera_window.css" />
 }
 <div class="patient-info-wrapper">
     <div class="patient-info-picture">
-        <img src="/Content/Images/App/Male-Default-Profile.jpg" />
-        <a href="#" id="alter-picture">Alterar foto</a>
+        <img id="patient-picture" src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" data-val-original-src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" />
+        <a href="#" id="alter-picture">Capturar foto</a> | <a href="#" id="remove-picture">Remover foto</a>
     </div>
     <div class="patient-info-content">
         @cardView.GetHtml()
