@@ -224,14 +224,7 @@ namespace Cerebello.Firestarter
                     PracticeId = practice.Id,
                 };
 
-            doctor.HealthInsurances.Add(
-                new HealthInsurance
-                    {
-                        PracticeId = practice.Id,
-                        Name = "Particular",
-                        IsActive = true,
-                        IsParticular = true,
-                    });
+            BusHelper.FillNewDoctorUtilityBelt(doctor);
 
             user.Doctor = doctor;
 
@@ -301,14 +294,7 @@ namespace Cerebello.Firestarter
                     PracticeId = practice.Id,
                 };
 
-            doctor.HealthInsurances.Add(
-                new HealthInsurance
-                    {
-                        PracticeId = practice.Id,
-                        Name = "Particular",
-                        IsActive = true,
-                        IsParticular = true,
-                    });
+            BusHelper.FillNewDoctorUtilityBelt(doctor);
 
             db.Doctors.AddObject(doctor);
 
@@ -377,14 +363,7 @@ namespace Cerebello.Firestarter
                     PracticeId = practice.Id,
                 };
 
-            doctor.HealthInsurances.Add(
-                new HealthInsurance
-                    {
-                        PracticeId = practice.Id,
-                        Name = "Particular",
-                        IsActive = true,
-                        IsParticular = true,
-                    });
+            BusHelper.FillNewDoctorUtilityBelt(doctor);
 
             db.Doctors.AddObject(doctor);
 
@@ -443,14 +422,7 @@ namespace Cerebello.Firestarter
                 PracticeId = practice.Id,
             };
 
-            doctor.HealthInsurances.Add(
-                new HealthInsurance
-                {
-                    PracticeId = practice.Id,
-                    Name = "Particular",
-                    IsActive = true,
-                    IsParticular = true,
-                });
+            BusHelper.FillNewDoctorUtilityBelt(doctor);
 
             db.Doctors.AddObject(doctor);
 

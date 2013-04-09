@@ -366,14 +366,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         if (user.Doctor == null)
                         {
                             user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
-                            user.Doctor.HealthInsurances.Add(
-                                new HealthInsurance
-                                    {
-                                        PracticeId = this.DbUser.PracticeId,
-                                        Name = "Particular",
-                                        IsActive = true,
-                                        IsParticular = true,
-                                    });
+                            BusHelper.FillNewDoctorUtilityBelt(user.Doctor);
                         }
                     }
 

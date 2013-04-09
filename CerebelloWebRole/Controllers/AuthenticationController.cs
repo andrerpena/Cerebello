@@ -259,13 +259,17 @@ namespace CerebelloWebRole.Controllers
 
                 user.Administrator = new Administrator { };
 
+                bool isNewDoctor = false;
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (registrationData.IsDoctor)
                 {
                     // if user is already a doctor, we just edit the properties
                     // otherwise we create a new doctor instance
                     if (user.Doctor == null)
+                    {
                         user.Doctor = new Doctor();
+                        isNewDoctor = true;
+                    }
 
                     user.Doctor.CRM = registrationData.MedicCRM;
 
@@ -380,6 +384,11 @@ namespace CerebelloWebRole.Controllers
                         this.db.AccountContracts.AddObject(trialContract);
 
                         this.db.SaveChanges();
+
+                        // if the new user is a doctor, create some other useful things
+                        // like some medical-certificates and a default health-insurance
+                        if (isNewDoctor)
+                            BusHelper.FillNewDoctorUtilityBelt(user.Doctor);
 
                         // adding message to the user so that he/she completes his/her profile informations
                         // todo: add complete profile notification
