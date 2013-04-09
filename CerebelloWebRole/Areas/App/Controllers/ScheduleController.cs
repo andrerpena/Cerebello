@@ -254,6 +254,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 viewModel.PatientNameLookup = patient.FullName;
                 viewModel.HealthInsuranceId = patient.LastUsedHealthInsuranceId;
+                viewModel.HealthInsuranceName = this.db.HealthInsurances
+                    .Where(hi => hi.Id == patient.LastUsedHealthInsuranceId)
+                    .Select(hi => hi.Name)
+                    .SingleOrDefault();
                 viewModel.PatientId = patientId;
             }
 
@@ -336,23 +340,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var appointmentLocalEnd = ConvertToLocalDateTime(this.DbPractice, appointment.End);
 
             var viewModel = new AppointmentViewModel()
-            {
-                Id = appointment.Id,
-                LocalDateTime = appointmentLocalStart.Date,
-                Start = appointmentLocalStart.ToString("HH:mm"),
-                End = appointmentLocalEnd.ToString("HH:mm"),
-                DoctorId = appointment.DoctorId,
-                LocalDateTimeSpelled = DateTimeHelper.GetDayOfWeekAsString(appointmentLocalStart.Date) + ", "
-                    + DateTimeHelper.ConvertToRelative(
-                        appointmentLocalStart.Date,
-                        localNow,
-                        DateTimeHelper.RelativeDateOptions.IncludePrefixes
-                            | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
-                            | DateTimeHelper.RelativeDateOptions.ReplaceToday
-                            | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
-                HealthInsuranceId = appointment.HealthInsuranceId,
-                Status = appointment.Status
-            };
+                {
+                    Id = appointment.Id,
+                    LocalDateTime = appointmentLocalStart.Date,
+                    Start = appointmentLocalStart.ToString("HH:mm"),
+                    End = appointmentLocalEnd.ToString("HH:mm"),
+                    DoctorId = appointment.DoctorId,
+                    LocalDateTimeSpelled = DateTimeHelper.GetDayOfWeekAsString(appointmentLocalStart.Date) + ", "
+                        + DateTimeHelper.ConvertToRelative(
+                            appointmentLocalStart.Date,
+                            localNow,
+                            DateTimeHelper.RelativeDateOptions.IncludePrefixes
+                                | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+                                | DateTimeHelper.RelativeDateOptions.ReplaceToday
+                                | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow),
+                    HealthInsuranceId = appointment.HealthInsuranceId,
+                    HealthInsuranceName = this.db.HealthInsurances
+                        .Where(hi => hi.Id == appointment.HealthInsuranceId)
+                        .Select(hi => hi.Name)
+                        .SingleOrDefault(),
+                    Status = appointment.Status,
+                };
 
             DoDateAndTimeValidation(viewModel, localNow, id);
 
@@ -391,6 +399,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientEmail);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientDateOfBirth);
                 this.ModelState.ClearPropertyErrors(() => formModel.HealthInsuranceId);
+                this.ModelState.ClearPropertyErrors(() => formModel.HealthInsuranceName);
             }
             else if (formModel.PatientFirstAppointment)
             {
@@ -666,8 +675,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             DateTime todayBeginning = localDateTime.Date;
             var workdayStartTime = todayBeginning + DateTimeHelper.GetTimeSpan(workdayStartTimeAsString);
             var workdayEndTime = todayBeginning + DateTimeHelper.GetTimeSpan(workdayEndTimeAsString);
-            var lunchStartTime = !string.IsNullOrEmpty(lunchStartTimeAsString) ? todayBeginning +  DateTimeHelper.GetTimeSpan(lunchStartTimeAsString) : (DateTime?)null;
-            var lunchEndTime = !string.IsNullOrEmpty(lunchEndTimeAsString) ? todayBeginning + DateTimeHelper.GetTimeSpan(lunchEndTimeAsString) : (DateTime?) null;
+            var lunchStartTime = !string.IsNullOrEmpty(lunchStartTimeAsString) ? todayBeginning + DateTimeHelper.GetTimeSpan(lunchStartTimeAsString) : (DateTime?)null;
+            var lunchEndTime = !string.IsNullOrEmpty(lunchEndTimeAsString) ? todayBeginning + DateTimeHelper.GetTimeSpan(lunchEndTimeAsString) : (DateTime?)null;
 
             // ok. Now with all the info we need, let' start building these slots
 
@@ -717,7 +726,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     else
                         break;
                 }
-               
+
             }
 
             return result;
