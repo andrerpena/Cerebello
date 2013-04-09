@@ -136,6 +136,10 @@ namespace CerebelloWebRole.Controllers
             }
             else
             {
+                // if the user is a doctor, redirect to the specific doctor profile
+                if (user.DoctorId != null)
+                    return this.RedirectToAction("Index", "DoctorHome", new { area = "App", practice = loginModel.PracticeIdentifier, doctor = user.Doctor.UrlIdentifier });
+
                 return this.RedirectToAction("Index", "PracticeHome", new { area = "App", practice = loginModel.PracticeIdentifier });
             }
         }
