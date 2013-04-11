@@ -1493,3 +1493,10 @@ div.message-help {
 .widget > .text-description p {
     margin: 1em 5em 1em 5em;
 }
+
+span.required 
+{
+    margin-left: 3px;
+    color: Red;
+    cursor: default;
+}

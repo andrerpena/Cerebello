@@ -17,7 +17,7 @@
         else if (this.ViewBag.OnlyPractice == true)
         {
             <div class="control-group">
-                @Html.LabelFor(model => model.PracticeIdentifier)
+                @Html.LabelForRequired(model => model.PracticeIdentifier)
                 <div class="controls">
                     @Html.TextBoxFor(model => model.PracticeIdentifier, new { @class = "input-xlarge" })
                 </div>
@@ -31,7 +31,7 @@
         else
         {
             <div class="control-group">
-                @Html.LabelFor(model => model.PracticeIdentifier)
+                @Html.LabelForRequired(model => model.PracticeIdentifier)
                 <div class="controls">
                     @this.Model.PracticeIdentifier
                     @this.Html.HiddenFor(model => model.PracticeIdentifier)
@@ -39,7 +39,7 @@
             </div>
 
             <div class="control-group">
-                @Html.LabelFor(model => model.DueDate)
+                @Html.LabelForRequired(model => model.DueDate)
                 <div class="controls">
                     @Html.TextBoxFor(model => model.DueDate, new { @class = "input-xlarge" })
                 </div>
@@ -49,7 +49,7 @@
             </div>
 
             <div class="control-group">
-                @Html.LabelFor(model => model.Amount)
+                @Html.LabelForRequired(model => model.Amount)
                 <div class="controls">
                     @Html.TextBoxFor(model => model.Amount, new { @class = "input-xlarge" })
                 </div>

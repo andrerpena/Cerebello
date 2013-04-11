@@ -64,12 +64,12 @@
     </div>
             
 
-    <h2>Razões do cancelamento</h2>
+    <h2>@Html.LabelFor(model => model.Reason)</h2>
     
     @Html.TextAreaFor(model => model.Reason, new { rows = 10, style = "width:500px" })
 
     <div class="confirmation-checkbox-wrapper">
-        @Html.LabelFor(model => model.Confirm)
+        @Html.LabelForRequired(model => model.Confirm)
         @Html.CheckBoxFor(model => model.Confirm)
     </div>
     

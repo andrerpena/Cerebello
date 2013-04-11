@@ -8,7 +8,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Description of the reason for canceling the account.
         /// </summary>
-        [Display(Name = "Razão do cancelamento")]
+        [Display(Name = "Razões do cancelamento")]
         public string Reason { get; set; }
 
         /// <summary>

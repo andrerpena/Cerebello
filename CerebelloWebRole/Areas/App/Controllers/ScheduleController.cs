@@ -406,38 +406,34 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // This is a medical appointment, so we must clear validation for generic appointment.
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
-                if (string.IsNullOrEmpty(formModel.PatientName))
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientName,
-                        ModelStrings.RequiredValidationMessage);
-
-                if (formModel.PatientGender == null)
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientGender,
-                        ModelStrings.RequiredValidationMessage);
-
-                if (formModel.PatientDateOfBirth == null)
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientDateOfBirth,
-                        ModelStrings.RequiredValidationMessage);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
             }
             else
             {
                 // This is a medical appointment, so we must clear validation for generic appointment.
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
-                if (formModel.PatientId == null)
-                    ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
-                        ModelStrings.RequiredValidationMessage);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientGender);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientDateOfBirth);
 
-                else
+                if (formModel.PatientId != null)
                 {
                     var patient = this.db.Patients.FirstOrDefault(p => p.Id == formModel.PatientId);
 
                     if (patient == null)
-                        ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
+                    {
+                        this.ModelState.AddModelError<AppointmentViewModel>(
+                            model => model.PatientNameLookup,
                             "O paciente informado não foi encontrado no banco de dados");
-
+                    }
                     else if (patient.Person.FullName != formModel.PatientNameLookup)
-                        ModelState.AddModelError<AppointmentViewModel>(model => model.PatientNameLookup,
+                    {
+                        this.ModelState.AddModelError<AppointmentViewModel>(
+                            model => model.PatientNameLookup,
                             "O paciente informado foi encontrado mas o nome não coincide");
+                    }
                 }
             }
 

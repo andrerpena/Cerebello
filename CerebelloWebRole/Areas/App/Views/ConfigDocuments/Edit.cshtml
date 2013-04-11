@@ -37,13 +37,13 @@ if (ViewBag.ReturnUrl != null)
     </h2>    
     <table class="form-table">
         <tr>
-            <th>@Html.LabelFor(model => model.Header1)
+            <th>@Html.LabelForRequired(model => model.Header1)
             </th>
             <td>@Html.EditorFor(model => model.Header1)
             </td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.Header2)
+            <th>@Html.LabelForRequired(model => model.Header2)
             </th>
             <td>@Html.EditorFor(model => model.Header2)
             </td>
@@ -55,13 +55,13 @@ if (ViewBag.ReturnUrl != null)
     </h2>    
     <table class="form-table">
         <tr>
-            <th>@Html.LabelFor(model => model.FooterLeft1)
+            <th>@Html.LabelForRequired(model => model.FooterLeft1)
             </th>
             <td>@Html.EditorFor(model => model.FooterLeft1)
             </td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.FooterLeft2)
+            <th>@Html.LabelForRequired(model => model.FooterLeft2)
             </th>
             <td>@Html.EditorFor(model => model.FooterLeft2)
             </td>
@@ -73,13 +73,13 @@ if (ViewBag.ReturnUrl != null)
     </h2>    
     <table class="form-table">
         <tr>
-            <th>@Html.LabelFor(model => model.FooterRight1)
+            <th>@Html.LabelForRequired(model => model.FooterRight1)
             </th>
             <td>@Html.EditorFor(model => model.FooterRight1)
             </td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.FooterRight2)
+            <th>@Html.LabelForRequired(model => model.FooterRight2)
             </th>
             <td>@Html.EditorFor(model => model.FooterRight2)
             </td>
