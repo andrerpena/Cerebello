@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -14,7 +15,6 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
-using System.Linq;
 
 namespace CerebelloWebRole.Code.Extensions
 {
@@ -54,6 +54,7 @@ namespace CerebelloWebRole.Code.Extensions
         /// <param name="expression">Expression that goes to the model property that will be used to create the element.</param>
         /// <param name="displayText">Text to be displayed in the element. If left null, the text comes from the model itself.</param>
         /// <returns>Returns an MvcHtmlString containing the tag with the display name, if it exists; otherwise returns MvcHtmlString.Empty.</returns>
+        [Obsolete("This method is not in use since 2013-04")]
         public static MvcHtmlString DisplayNameFor<TModel, TValue>(this HtmlHelper<TModel> html, string tagName, Expression<Func<TModel, TValue>> expression, string displayText = null)
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
@@ -92,6 +93,7 @@ namespace CerebelloWebRole.Code.Extensions
             return displayAttr != null ? displayAttr.Name : propInfo.Name;
         }
 
+        [Obsolete("This method is not in use since 2013-04")]
         public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
         {
             var tagBuilder = new TagBuilder("div");

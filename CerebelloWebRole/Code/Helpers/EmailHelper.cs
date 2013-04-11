@@ -15,12 +15,15 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Helpers
 {
+    /// <summary>
+    /// Helps with creating and sending e-mails.
+    /// </summary>
     public class EmailHelper
     {
         /// <summary>
         /// Creates an SmtpClient that will be used to send e-mails.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the default Smtp client to be used in Cerebello.</returns>
         public static SmtpClient CreateSmtpClient()
         {
             var smtpClient = new SmtpClient
@@ -46,7 +49,7 @@ namespace CerebelloWebRole.Code.Helpers
         /// <param name="subject">Subject of the message.</param>
         /// <param name="bodyText">Body of the message in plain text format.</param>
         /// <param name="bodyHtml">Body of the message in Html format.</param>
-        /// <param name="sourceName"></param>
+        /// <param name="sourceName">Source name of the e-mail.</param>
         /// <returns>Returns a 'MailMessage' that can be sent using the 'TrySendEmail' method.</returns>
         public static MailMessage CreateEmailMessage(
             MailAddress toAddress,
@@ -57,7 +60,7 @@ namespace CerebelloWebRole.Code.Helpers
         {
             // note: this method was copied to EmailSenderWorker
             if (string.IsNullOrEmpty(bodyText))
-                throw new ArgumentException("bodyText must be provided.", "bodyText");
+                throw new ArgumentException("bodyText must not be null nor empty.", "bodyText");
 
             // NOTE: The string "cerebello@cerebello.com.br" is repeated in other place.
             var fromAddress = new MailAddress("cerebello@cerebello.com.br", sourceName ?? DEFAULT_SOURCE);
@@ -142,6 +145,7 @@ namespace CerebelloWebRole.Code.Helpers
             // prepending "[TEST]" when in debug (this will help differentiate real messages from test messages)
             mailMessage.Subject = "[TEST] " + mailMessage.Subject;
 #endif
+
             if (!mailMessage.To.Any())
             {
                 mailMessage.Subject = string.Format("WARNING: E-MAIL W/O DESTINATION: {0}", mailMessage.Subject);
@@ -216,12 +220,20 @@ namespace CerebelloWebRole.Code.Helpers
             return task;
         }
 
+        /// <summary>
+        /// Saves an e-mail locally.
+        /// </summary>
+        /// <param name="message">E-mail message to be saved.</param>
+        /// <param name="path">Path where e-mails should be saved.</param>
+        /// <remarks>E-mails are organized automatically by email address using subdirectories.</remarks>
         private static void SaveEmailLocal(MailMessage message, string path)
         {
             foreach (var eachDestinationAddress in message.To)
             {
-                var inboxPath = Path.Combine(path,
-                    string.Format("{0}@{1}",
+                var inboxPath = Path.Combine(
+                    path,
+                    string.Format(
+                        "{0}@{1}",
                         Regex.Replace(eachDestinationAddress.User, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase),
                         Regex.Replace(eachDestinationAddress.Host, @"(?:[^\w\d]|[\s\.])+", ".", RegexOptions.IgnoreCase)));
 

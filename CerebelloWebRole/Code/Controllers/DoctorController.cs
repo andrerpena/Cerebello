@@ -26,7 +26,7 @@ namespace CerebelloWebRole.Code
             // if the base has already set a result, then we just exit this method
             if (filterContext.Result != null)
                 return;
-            
+
             this.InitDoctor();
         }
 
