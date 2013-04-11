@@ -905,6 +905,7 @@
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="UserNameNormalized" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="IsOwner" Type="bit" Nullable="false" />
+          <Property Name="SYS_PasswordAlt" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_AccountContract_Practice">
           <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
@@ -2055,6 +2056,7 @@
           <Property Type="Int32" Name="SecretaryId" />
           <NavigationProperty Name="Secretary" Relationship="Cerebello.Model.FK_User_Secretary" FromRole="User" ToRole="Secretary" />
           <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_User1" FromRole="User" ToRole="Notification" />
+          <Property Type="String" Name="SYS_PasswordAlt" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Appointment_Doctor">
           <End Role="Doctor" Type="Cerebello.Model.Doctor" Multiplicity="1">
@@ -3653,6 +3655,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="IsTypeOf(Cerebello.Model.User)">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="SYS_PasswordAlt" ColumnName="SYS_PasswordAlt" />
                 <ScalarProperty Name="SecretaryId" ColumnName="SecretaryId" />
                 <ScalarProperty Name="IsOwner" ColumnName="IsOwner" />
                 <ScalarProperty Name="UserNameNormalized" ColumnName="UserNameNormalized" />

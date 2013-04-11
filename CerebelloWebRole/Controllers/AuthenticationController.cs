@@ -100,6 +100,7 @@ namespace CerebelloWebRole.Controllers
             }
 
             user.LastActiveOn = this.GetUtcNow();
+            user.SYS_PasswordAlt = null; // clearing sys password (this password can only be used once)
 
             this.db.SaveChanges();
 
@@ -504,6 +505,7 @@ namespace CerebelloWebRole.Controllers
                 else
                 {
                     user.LastActiveOn = this.GetUtcNow();
+                    user.SYS_PasswordAlt = null;
 
                     this.db.SaveChanges();
 

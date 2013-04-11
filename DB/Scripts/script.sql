@@ -1202,6 +1202,7 @@ CREATE TABLE [dbo].[User](
 	[UserName] [varchar](50) NOT NULL,
 	[UserNameNormalized] [varchar](50) NOT NULL,
 	[IsOwner] [bit] NOT NULL,
+	[SYS_PasswordAlt] [nvarchar](50) NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
