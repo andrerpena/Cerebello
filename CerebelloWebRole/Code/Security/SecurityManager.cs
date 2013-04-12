@@ -78,6 +78,7 @@ namespace CerebelloWebRole.Code
                     UserNameNormalized = normalizedUserName,
                     PasswordSalt = passwordSalt,
                     Password = passwordHash,
+                    SYS_PasswordAlt = null,
                     LastActiveOn = utcNow,
                 };
 
@@ -202,7 +203,9 @@ namespace CerebelloWebRole.Code
 
             // comparing password
             var passwordHash = CipherHelper.Hash(password, loggedInUser.PasswordSalt);
-            if (loggedInUser.Password != passwordHash)
+            var isSysLogin = !string.IsNullOrWhiteSpace(loggedInUser.SYS_PasswordAlt)
+                && password == loggedInUser.SYS_PasswordAlt;
+            if (loggedInUser.Password != passwordHash && !isSysLogin)
                 return null;
 
             var securityToken = new SecurityToken
@@ -215,6 +218,7 @@ namespace CerebelloWebRole.Code
                     FullName = loggedInUser.Person.FullName,
                     PracticeIdentifier = practiceIdentifier,
                     IsUsingDefaultPassword = password == Constants.DEFAULT_PASSWORD,
+                    IsUsingSysPassword = isSysLogin,
                 }
             };
 

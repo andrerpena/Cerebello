@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
+using System.Data.Objects.DataClasses;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Xml;
+using System.Xml.Serialization;
 using Cerebello.Firestarter.Helpers;
 using Cerebello.Firestarter.SqlParser;
 using Cerebello.Model;
@@ -19,6 +25,8 @@ namespace Cerebello.Firestarter
     {
         private static void Main(string[] args)
         {
+            TypeDescriptor.AddAttributes(typeof(EntityObject), new TypeConverterAttribute(typeof(ExpandableObjectConverter)));
+
             new Program().Run();
         }
 
@@ -52,11 +60,15 @@ namespace Cerebello.Firestarter
             var currVer = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             File.WriteAllText("last.ver", currVer);
 
+            // todo: move this to the fs.config file
             this.isFuncBackupEnabled = File.Exists("isFuncBackupEnabled");
 
             // New options:
             while (true)
             {
+                // loading firestarter configuration file "fs.config"
+                this.LoadConfigurations();
+
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write("Firestarter v{0}", currVer);
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -261,6 +273,8 @@ namespace Cerebello.Firestarter
                         Console.WriteLine(@")");
                     }
 
+                    Console.WriteLine(@"eml    - Sends e-mails to users.");
+
                     Console.WriteLine();
                     if (!isAzureDb)
                     {
@@ -364,6 +378,9 @@ namespace Cerebello.Firestarter
 
                     case "r?": if (!isAzureDb) InfoR(); break;
                     case "r": if (!isAzureDb) this.OptR(); continue;
+
+                    case "eml?": InfoEml(); break;
+                    case "eml": this.OptEml(); break;
 
                     case "exec": this.OptExec(); break;
 
@@ -1133,6 +1150,84 @@ namespace Cerebello.Firestarter
                     }
                 }
             }
+        }
+
+        private static void InfoEml()
+        {
+        }
+
+        private void OptEml()
+        {
+            var t = new Thread(this.OptEmlThread);
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+        }
+
+        private void OptEmlThread()
+        {
+
+            {
+                try
+                {
+                    using (var db = this.CreateCerebelloEntities())
+                    {
+                        // collecting e-mails and objects
+                        var emailData = db.Users.Include("Person").AsEnumerable()
+                            .Select(u => new FormSendEmail.EmailData(db, u)).ToArray();
+
+                        var form = new FormSendEmail(this.configData.FormSendEmail, emailData);
+                        form.ShowDialog();
+                        this.configData.FormSendEmail = form.ConfigData;
+
+                        this.SaveConfigurations();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ConsoleHelper.ConsoleWriteException(ex);
+                }
+                finally
+                {
+                }
+            }
+        }
+
+        private FirestarterConfigData configData;
+        private string configFilePath;
+
+        private void SaveConfigurations()
+        {
+            // saving the fs.config file
+            var ws = new XmlWriterSettings { NewLineHandling = NewLineHandling.Entitize };
+            var ser = new XmlSerializer(typeof(FirestarterConfigData));
+            using (var reader = XmlWriter.Create(this.configFilePath, ws))
+            {
+                ser.Serialize(reader, this.configData);
+            }
+        }
+
+        private void LoadConfigurations()
+        {
+            // loading the fs.config file
+            var data = new FirestarterConfigData { ConfigLocation = Path.Combine(".", "fs.config") };
+            var ser = new XmlSerializer(typeof(FirestarterConfigData));
+            FileInfo fileInfo = null;
+            while (!string.IsNullOrWhiteSpace(data.ConfigLocation))
+            {
+                fileInfo = new FileInfo(data.ConfigLocation);
+                if (File.Exists(fileInfo.FullName))
+                {
+                    using (var reader = XmlReader.Create(fileInfo.FullName))
+                    {
+                        data = (FirestarterConfigData)ser.Deserialize(reader);
+                    }
+                }
+            }
+
+            Debug.Assert(fileInfo != null, "fileInfo != null");
+            this.configFilePath = fileInfo.FullName;
+            this.configData = File.Exists(this.configFilePath) ? data : new FirestarterConfigData();
         }
 
         private void OptExec()

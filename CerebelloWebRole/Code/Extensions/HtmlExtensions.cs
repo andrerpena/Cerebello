@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -14,12 +15,60 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
-using System.Linq;
 
 namespace CerebelloWebRole.Code.Extensions
 {
     public static class HtmlExtensions
     {
+        public static MvcHtmlString LabelForRequired<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText = null)
+        {
+            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            bool isRequired =
+                metadata.ContainerType.GetProperty(metadata.PropertyName)
+                .GetCustomAttributes(typeof(RequiredAttribute), false)
+                .Any();
+
+            string requiredMvcStr = "";
+            if (isRequired)
+            {
+                var tagBuilder = new TagBuilder("span");
+                tagBuilder.Attributes.Add("class", "required");
+                tagBuilder.SetInnerText("*");
+                requiredMvcStr = tagBuilder.ToString(TagRenderMode.Normal);
+            }
+
+            var labelResult = labelText == null ?
+                LabelExtensions.LabelFor(html, expression) :
+                LabelExtensions.LabelFor(html, expression, labelText);
+            var result = new MvcHtmlString(string.Concat(labelResult, requiredMvcStr));
+            return result;
+        }
+
+        /// <summary>
+        /// Creates an element for a model property, containing the display name.
+        /// </summary>
+        /// <typeparam name="TModel">Type of the model object.</typeparam>
+        /// <typeparam name="TValue">Type returned by the expression that goes to the property.</typeparam>
+        /// <param name="html">HtmlHelper to be used.</param>
+        /// <param name="tagName">The name of the tag to be created.</param>
+        /// <param name="expression">Expression that goes to the model property that will be used to create the element.</param>
+        /// <param name="displayText">Text to be displayed in the element. If left null, the text comes from the model itself.</param>
+        /// <returns>Returns an MvcHtmlString containing the tag with the display name, if it exists; otherwise returns MvcHtmlString.Empty.</returns>
+        [Obsolete("This method is not in use since 2013-04")]
+        public static MvcHtmlString DisplayNameFor<TModel, TValue>(this HtmlHelper<TModel> html, string tagName, Expression<Func<TModel, TValue>> expression, string displayText = null)
+        {
+            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+            string resolvedLabelText = displayText ?? metadata.DisplayName ?? metadata.PropertyName ?? htmlFieldName.Split('.').Last();
+            if (string.IsNullOrEmpty(resolvedLabelText))
+                return MvcHtmlString.Empty;
+
+            var tag = new TagBuilder(tagName);
+            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(htmlFieldName)));
+            tag.SetInnerText(resolvedLabelText);
+            return new MvcHtmlString(tag.ToString(TagRenderMode.Normal));
+        }
+
         /// <summary>
         /// Ids não podem possuir caracteres "especiais". É preciso removê-los do "Name".
         /// </summary>
@@ -44,6 +93,7 @@ namespace CerebelloWebRole.Code.Extensions
             return displayAttr != null ? displayAttr.Name : propInfo.Name;
         }
 
+        [Obsolete("This method is not in use since 2013-04")]
         public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
         {
             var tagBuilder = new TagBuilder("div");

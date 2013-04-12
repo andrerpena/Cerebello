@@ -37,7 +37,7 @@ if (ViewBag.ReturnUrl != null)
 
     <table class="form-table">
         <tr>
-            <th>@Html.LabelFor(model => model.AppointmentDuration)
+            <th>@Html.LabelForRequired(model => model.AppointmentDuration)
             </th>
             <td>@Html.EnumDropdownListFor(model => model.AppointmentDuration)
             </td>
@@ -53,7 +53,7 @@ if (ViewBag.ReturnUrl != null)
                         <li>
                             <div class="day-check">
                                 @Html.CheckBoxFor(model => model.DaysOfWeek[i].IsBusinessDay)
-                                @Html.LabelFor(model => model.DaysOfWeek[i].IsBusinessDay, this.Model.DaysOfWeek[i].Name)
+                                @Html.LabelForRequired(model => model.DaysOfWeek[i].IsBusinessDay, this.Model.DaysOfWeek[i].Name)
                                 @Html.HiddenFor(model => model.DaysOfWeek[i].Name)
                             </div>
                             <div class="table-table-editors small">

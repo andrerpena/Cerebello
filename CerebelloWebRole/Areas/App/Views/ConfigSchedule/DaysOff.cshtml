@@ -35,15 +35,15 @@
 
     <table class="form-table">
         <tr>
-            <th>@Html.LabelFor(model => model.Start)</th>
+            <th>@Html.LabelForRequired(model => model.Start)</th>
             <td class="small">@Html.EditorFor(model => model.Start)</td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.End)</th>
+            <th>@Html.LabelForRequired(model => model.End)</th>
             <td class="small">@Html.EditorFor(model => model.End)</td>
         </tr>
         <tr>
-            <th>@Html.LabelFor(model => model.Description)</th>
+            <th>@Html.LabelForRequired(model => model.Description)</th>
             <td>@Html.TextAreaFor(model => model.Description)</td>
         </tr>
     </table>

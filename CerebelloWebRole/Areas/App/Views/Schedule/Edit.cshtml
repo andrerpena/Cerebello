@@ -48,7 +48,7 @@
             @if (isEditingOrCreating == 'C' || isGenericAppointment)
             {
                 <tr class="generic-appointment-only" style="display: @funcDisplay(isGenericAppointment)">
-                    <th>@Html.LabelFor(model => model.Description)
+                    <th>@Html.LabelForRequired(model => model.Description)
                     </th>
                     <td>
                         @Html.TextAreaFor(model => model.Description)
@@ -58,7 +58,7 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="subsequent-appointments-only" style="display: @funcDisplay(isSubsequentAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientNameLookup)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientNameLookup)</th>
                     <td>
                         @Html.AutocompleteFor(
                             model => model.PatientId,
@@ -87,7 +87,7 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientName)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientName)</th>
                     <td>
                         @Html.EditorFor(model => model.PatientName)
                         <a id="existing-user-link" href="#" class="block-little-link">O paciente já é cadastrado</a>
@@ -97,7 +97,7 @@
             @if (true)
             {
                 <tr class="first-appointment-only subsequent-appointments-only" style="display: @funcDisplay(isFirstAppointment || isSubsequentAppointment)">
-                    <th>@Html.LabelFor(model => model.HealthInsuranceId)</th>
+                    <th>@Html.LabelForRequired(model => model.HealthInsuranceId)</th>
                     <td>
                         @Html.AutocompleteFor(
                             model => model.HealthInsuranceId,
@@ -113,7 +113,7 @@
                     </td>
                 </tr>
                 <tr class="first-appointment-only subsequent-appointments-only" style="display: @funcDisplay(isFirstAppointment || isSubsequentAppointment)">
-                    <th>@Html.LabelFor(model => model.Status)
+                    <th>@Html.LabelForRequired(model => model.Status)
                     </th>
                     <td>
                         @Html.EnumDropdownListFor(model => model.Status, this.Model != null ? (int?)this.Model.Status : null, null)
@@ -123,26 +123,26 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientGender)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientGender)</th>
                     <td>@Html.EnumDropdownListFor(model => model.PatientGender)</td>
                 </tr>
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientDateOfBirth)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientDateOfBirth)</th>
                     <td class="small">@Html.TextBoxFor(model => model.PatientDateOfBirth)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientPhoneLand)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientPhoneLand)</th>
                     <td>@Html.EditorFor(model => model.PatientPhoneLand)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientPhoneCell)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientPhoneCell)</th>
                     <td>@Html.EditorFor(model => model.PatientPhoneCell)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelFor(model => model.PatientEmail)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientEmail)</th>
                     <td>@Html.EditorFor(model => model.PatientEmail)</td>
                 </tr>
             }
@@ -150,7 +150,7 @@
         <hr />
         <table class="form-table">
             <tr>
-                <th>@Html.LabelFor(model => model.LocalDateTime)
+                <th>@Html.LabelForRequired(model => model.LocalDateTime)
                 </th>
                 <td class="small">
                     @Html.EditorFor(model => model.LocalDateTime)
@@ -161,11 +161,10 @@
             </tr>
 
             <tr>
-                <th>Horário
-                </th>
+                <th>@Html.LabelForRequired(model => model.Start, "Horário")</th>
                 <td class="small">
                     <div>
-                        @Html.EditorFor(model => model.Start)<span class="separator">às</span>
+                        @Html.EditorFor(model => model.Start)<span class="separator">@Html.LabelForRequired(model => model.End, "às")</span>
                         @Html.EditorFor(model => model.End)
                         <span id="time-validation-icon" class="@(
  this.Model.DateAndTimeValidationState == DateAndTimeValidationState.Passed ? "validation-passed" :

@@ -326,7 +326,7 @@
                         onPageChanged: function (i, onDataReceived2) {
                             // ativar o activity indicator
                             _this.$el.focus();
-                            _this.fetchData(i, onDataReceived2, null, noFilter);
+                            _this.fetchData(i, onDataReceived2, searchTerm, noFilter);
                         }
                     }).data('pager');
 

@@ -14822,6 +14822,30 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _SecretaryId;
         partial void OnSecretaryIdChanging(Nullable<global::System.Int32> value);
         partial void OnSecretaryIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String SYS_PasswordAlt
+        {
+            get
+            {
+                return _SYS_PasswordAlt;
+            }
+            set
+            {
+                OnSYS_PasswordAltChanging(value);
+                ReportPropertyChanging("SYS_PasswordAlt");
+                _SYS_PasswordAlt = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("SYS_PasswordAlt");
+                OnSYS_PasswordAltChanged();
+            }
+        }
+        private global::System.String _SYS_PasswordAlt;
+        partial void OnSYS_PasswordAltChanging(global::System.String value);
+        partial void OnSYS_PasswordAltChanged();
 
         #endregion
 

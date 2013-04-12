@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 
@@ -22,9 +19,11 @@ namespace CerebelloWebRole.Areas.App.Models
         public String FooterLeft1 { get; set; }
 
         [Display(Name = "Linha 2")]
+        // todo: Why isn't this required?
         public String FooterLeft2 { get; set; }
 
         [Display(Name = "Linha 1")]
+        // todo: Why isn't this required?
         public String FooterRight1 { get; set; }
 
         [Display(Name = "Linha 2")]

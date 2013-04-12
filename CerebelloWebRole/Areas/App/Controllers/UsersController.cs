@@ -366,14 +366,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         if (user.Doctor == null)
                         {
                             user.Doctor = new Doctor { PracticeId = this.DbUser.PracticeId, };
-                            user.Doctor.HealthInsurances.Add(
-                                new HealthInsurance
-                                    {
-                                        PracticeId = this.DbUser.PracticeId,
-                                        Name = "Particular",
-                                        IsActive = true,
-                                        IsParticular = true,
-                                    });
+                            BusHelper.FillNewDoctorUtilityBelt(user.Doctor);
                         }
                     }
 
@@ -679,6 +672,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var user = this.db.Users.Single(u => u.Id == loggedUser.Id);
                 user.Password = newPasswordHash;
                 user.LastActiveOn = this.GetUtcNow();
+                user.SYS_PasswordAlt = null;
 
                 this.db.SaveChanges();
 

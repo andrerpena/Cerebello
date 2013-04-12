@@ -41,12 +41,15 @@ namespace CerebelloWebRole.Areas.App.Models
         public bool PatientFirstAppointment { get; set; }
         
         [Display(Name = "Paciente")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? PatientId { get; set; }
 
         [Display(Name = "Paciente")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String PatientNameLookup { get; set; }
 
         [Display(Name = "Paciente")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String PatientName { get; set; }
 
         [Display(Name = "E-mail")]
@@ -55,11 +58,13 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Sexo")]
         [EnumDataType(typeof(TypeGender))]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? PatientGender { get; set; }
 
         // todo: this property is never being set.
         [Display(Name = "Data de nascimento")]
         [DateOfBirth]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public DateTime? PatientDateOfBirth { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

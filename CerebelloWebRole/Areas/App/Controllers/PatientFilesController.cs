@@ -174,7 +174,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     };
             }
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
