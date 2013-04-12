@@ -67,6 +67,12 @@
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\ThirdParty\JetBrains\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\ThirdParty\Kendo.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Kendo.Mvc.resources">
+      <HintPath>..\ThirdParty\Kendo.Mvc.resources.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.0.1\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>
@@ -280,6 +286,8 @@
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
     <Content Include="Content\Styles\App\introjs.min.css" />
+    <Content Include="Content\Styles\App\kendo.common.min.css" />
+    <Content Include="Content\Styles\App\kendo.default.min.css" />
     <Content Include="Content\Styles\App\Pages\patients.css" />
     <Content Include="Content\Styles\Site\Cancel.css" />
     <Content Include="Content\Styles\App\Pages\camera_window.css" />
@@ -290,6 +298,7 @@
     <Compile Include="Models\IdentityViewModel.cs" />
     <EmbeddedResource Include="Resources\Female-Default-Profile.jpg" />
     <EmbeddedResource Include="Resources\Male-Default-Profile.jpg" />
+    <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
