@@ -10,25 +10,22 @@
      depois no submenu <span class="text-highlight">Configurações de modelos de atestados</span> e, por fim, no submenu <span class="text-highlight">Novo modelo de atestado médico</span>.
 </p>
 <p>
-    Os modelos de atestados são constítuídos de um texto e de campos customizados. Um campo customizado é um campo que deverá ser preenchido pelo
-    médico durante a emissão de um atestado. É possível criar múltiplos campos. O campo <span class="text-highlight">Paciente</span> é criado automaticamente
-    e não é necessário definir.
-</p>
-<p>
-    Para definir um campo, clique no link <span class="text-highlight">Adicionar campo</span>. Os nomes de campos só podem possuir caracteres alfa-numéricos
-    e underline (_) e não podem conter caracteres acentuados. Para referenciar um campo no texto, utilize a sintaxe <code><%nome_do_campo%></code>.
-    Exemplo de texto:
+    Os modelos de atestados são constituídos de um texto e de campos customizados. Um campo customizado é um campo que deverá ser preenchido pelo
+    médico durante a emissão de um atestado. É possível criar múltiplos campos apenas digitando no texto, o nome do campo desejado no formato <code><%nome_do_campo%></code>.
+    Os nomes de campos só podem possuir caracteres alfanuméricos
+    e sublinhado (_) e não podem conter caracteres acentuados.
+    O campo <span class="text-highlight">Paciente</span> é criado automaticamente, e contém o nome do paciente.
 </p>
 <blockquote>
     <code>O paciente <%paciente%> compareceu a uma consulta médica às <%horario%>.</code>
 </blockquote>
 <p>
     Neste atestado, o campo <span class="text-highlight">paciente</span> já é definido automaticamente. O campo <span class="text-highlight">horario</span> precisa
-    ser definido manualmente. Digamos que o nome dado a este modelo é <span class="text-highlight">Atestado de consulta</span>. Durante a consulta, ao acessar
+    ser definido manualmente, no momento em que o atestado for emitido para o paciente. Digamos que o nome dado a este modelo é <span class="text-highlight">Atestado de consulta</span>. Durante a consulta, ao acessar
     o menu <span class="text-highlight">Novo atestado médico</span>, a opção <span class="text-highlight">Atestado de consulta</span> poderá ser selecionada.
-    Neste caso o campo <span class="text-highlight">Horario</span> terá que ser preenchido pelo médico. Se ele preencher, por exemplo, 17:00h e o nome do 
+    Neste caso o campo <span class="text-highlight">Horario</span> terá que ser preenchido pelo médico. Se ele preencher, por exemplo, 17:00 e o nome do 
     paciente for "José da Silva", ao visualizar o atestado para impressão, o texto no PDF será:
 </p>
 <blockquote>
-    O paciente José da Silva compareceu a uma consulta médica às 17:00h.
+    O paciente José da Silva compareceu a uma consulta médica às 17:00.
 </blockquote>
