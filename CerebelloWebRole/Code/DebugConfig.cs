@@ -226,15 +226,15 @@ namespace CerebelloWebRole.Code
         static DebugConfig()
         {
 #if DEBUG
-            // reading the debug.config file placed on the desktop
-            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            cerebelloDebugPath = Path.Combine(desktopPath, "Cerebello.Debug");
+            // reading the debug.config file placed in a common path
+            var commonPath = "C:\\";
+            cerebelloDebugPath = Path.Combine(commonPath, "Cerebello.Debug");
             cerebelloDebugConfigPath = Path.Combine(cerebelloDebugPath, "debug.config");
 
-            if (Directory.Exists(desktopPath))
+            if (Directory.Exists(commonPath))
             {
                 {
-                    var watcher = new FileSystemWatcher(desktopPath, "debug.config");
+                    var watcher = new FileSystemWatcher(commonPath, "debug.config");
                     watcher.Created += WatcherEvent;
                     watcher.Deleted += WatcherEvent;
                     watcher.Changed += WatcherEvent;
@@ -246,7 +246,7 @@ namespace CerebelloWebRole.Code
                 }
 
                 {
-                    var watcher = new FileSystemWatcher(desktopPath, "Cerebello.Debug");
+                    var watcher = new FileSystemWatcher(commonPath, "Cerebello.Debug");
                     watcher.Created += WatcherEvent;
                     watcher.Deleted += WatcherEvent;
                     watcher.Changed += WatcherEvent;
@@ -407,10 +407,18 @@ namespace CerebelloWebRole.Code
             {
 #if DEBUG
                 lock (locker)
-                    if (inst != null)
-                        if (inst.setting != null && inst.setting.DataBase != null && !string.IsNullOrWhiteSpace(inst.setting.DataBase.ConnectionString))
-                            return inst.setting.DataBase.ConnectionString;
+                    if (IsDebug)
+                    {
+                        if (inst != null)
+                            if (inst.setting != null && inst.setting.DataBase != null &&
+                                !string.IsNullOrWhiteSpace(inst.setting.DataBase.ConnectionString))
+                                return inst.setting.DataBase.ConnectionString;
+
+                        // default connection for DEBUG mode is Local
+                        return "name=CerebelloEntities_Local";
+                    }
 #endif
+                // default connection for RELEASE mode is Azure
                 return "name=CerebelloEntities_Azure";
             }
         }
@@ -647,6 +655,8 @@ namespace CerebelloWebRole.Code
             }
         }
 
+        private static bool? tempIsDebug;
+
         /// <summary>
         /// Useful to avoid C# and Resharper complaining about unreachable code,
         /// after #if DEBUG #endif statements, and about unused values before the #if DEBUG code.
@@ -656,7 +666,8 @@ namespace CerebelloWebRole.Code
             get
             {
 #if DEBUG
-                return true;
+                lock (locker)
+                    return tempIsDebug ?? true;
 #endif
                 // pragma: disable warning about unreachable code
 #pragma warning disable 162
@@ -665,6 +676,24 @@ namespace CerebelloWebRole.Code
                 // ReSharper restore HeuristicUnreachableCode
 #pragma warning restore 162
             }
+        }
+
+        /// <summary>
+        /// Sets the IsDebug flag to return false for the duration of the returned disposable object.
+        /// This does not work when compiling in RELEASE mode.
+        /// </summary>
+        /// <returns>Disposable object that returns the IsDebug flag to the original state.</returns>
+        public static Disposer SetDebug(bool value)
+        {
+            lock (locker)
+                tempIsDebug = value;
+
+            return new Disposer(
+                () =>
+                {
+                    lock (locker)
+                        tempIsDebug = null;
+                });
         }
 
         /// <summary>

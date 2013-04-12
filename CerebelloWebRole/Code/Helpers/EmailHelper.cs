@@ -104,46 +104,49 @@ namespace CerebelloWebRole.Code.Helpers
         public static void SendEmail(MailMessage mailMessage)
         {
 #if DEBUG
-            // saving e-mail to the file-system
-            foreach (var saveEmailToPath in DebugConfig.PathListToSaveEmailsTo)
-                SaveEmailLocal(mailMessage, saveEmailToPath);
-
-            foreach (var addressToSendTo in DebugConfig.EmailAddressesToCopyEmailsTo)
-                // ReSharper disable AccessToForEachVariableInClosure
-                foreach (var emailAddress in mailMessage.To.Select(x => new MailAddress(addressToSendTo, x.DisplayName)))
-                    // ReSharper restore AccessToForEachVariableInClosure
-                    mailMessage.Bcc.Add(emailAddress);
-
-            // removing all unallowed email addresses
-            var notAllowed = mailMessage.To.Where(a => !DebugConfig.CanSendEmailToAddress(a.Address)).ToList();
-            foreach (var address in notAllowed)
-                mailMessage.To.Remove(address);
-
-            if (notAllowed.Any() && !mailMessage.To.Any())
+            if (DebugConfig.IsDebug)
             {
-                if (!mailMessage.Bcc.Any())
-                {
-                    // ReSharper disable EmptyGeneralCatchClause
-                    try
-                    {
-                        Debug.Print(
-                            "E-mail ignored: cannot send to the address ({0}) while in DEBUG mode.",
-                            notAllowed.First().Address);
-                    }
-                    catch
-                    {
-                    }
-                    // ReSharper restore EmptyGeneralCatchClause
+                // saving e-mail to the file-system
+                foreach (var saveEmailToPath in DebugConfig.PathListToSaveEmailsTo)
+                    SaveEmailLocal(mailMessage, saveEmailToPath);
 
-                    return;
+                foreach (var addressToSendTo in DebugConfig.EmailAddressesToCopyEmailsTo)
+                    // ReSharper disable AccessToForEachVariableInClosure
+                    foreach (var emailAddress in mailMessage.To.Select(x => new MailAddress(addressToSendTo, x.DisplayName)))
+                        // ReSharper restore AccessToForEachVariableInClosure
+                        mailMessage.Bcc.Add(emailAddress);
+
+                // removing all unallowed email addresses
+                var notAllowed = mailMessage.To.Where(a => !DebugConfig.CanSendEmailToAddress(a.Address)).ToList();
+                foreach (var address in notAllowed)
+                    mailMessage.To.Remove(address);
+
+                if (notAllowed.Any() && !mailMessage.To.Any())
+                {
+                    if (!mailMessage.Bcc.Any())
+                    {
+                        // ReSharper disable EmptyGeneralCatchClause
+                        try
+                        {
+                            Debug.Print(
+                                "E-mail ignored: cannot send to the address ({0}) while in DEBUG mode.",
+                                notAllowed.First().Address);
+                        }
+                        catch
+                        {
+                        }
+                        // ReSharper restore EmptyGeneralCatchClause
+
+                        return;
+                    }
+
+                    mailMessage.To.Add(mailMessage.Bcc[0]);
+                    mailMessage.Bcc.RemoveAt(0);
                 }
 
-                mailMessage.To.Add(mailMessage.Bcc[0]);
-                mailMessage.Bcc.RemoveAt(0);
+                // prepending "[TEST]" when in debug (this will help differentiate real messages from test messages)
+                mailMessage.Subject = "[TEST] " + mailMessage.Subject;
             }
-
-            // prepending "[TEST]" when in debug (this will help differentiate real messages from test messages)
-            mailMessage.Subject = "[TEST] " + mailMessage.Subject;
 #endif
 
             if (!mailMessage.To.Any())
