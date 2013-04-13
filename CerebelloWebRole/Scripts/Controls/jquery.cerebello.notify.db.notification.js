@@ -109,8 +109,7 @@ function notifyCompleteInfo(id) {
     $text.append($("<p>").html("Bem vindo ao Cerebello!"));
     $text.append($("<p>").html("Antes de começar, é importante que você complete as informações sobre seu usuário e seu consultório."));
     $text.append($("<p>").html("Para agendar e realizar consultas, assim como visualizar os perfis dos pacientes, é necessário selecionar um médico primeiro. Selecione um na seção 'Médicos do consultório'."));
-    $text.append($("<p>").html("Algumas telas possuem um menu lateral chamado 'Introdução interativa' onde é possível ter uma visão geral da tela. Experimente!"));
-
+    
     $.notify($text,
         undefined, undefined, true, null, function () {
             $.connection.notificationsHub.server.closeNotification(id);

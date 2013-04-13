@@ -125,7 +125,6 @@ hr {
 
     .top-bar .top-bar-inner {
         margin: 0 auto;
-        max-width: 1200px;
         padding: 0 5px;
     }
 
@@ -478,7 +477,6 @@ fieldset {
 
 .main {
     margin: 10px auto 30px;
-    max-width: 1200px;
     overflow: hidden;
     padding: 0 10px;
 }
@@ -499,7 +497,6 @@ fieldset {
 
     #app-header .title {
         margin: 0 auto;
-        max-width: 1200px;
         overflow: hidden;
         padding: 10px 0;
     }
@@ -564,8 +561,9 @@ fieldset {
 
     #app-header .user-menu-wrapper {
         color: #333333;
-        float: right;
         cursor: pointer;
+        float: right;
+        margin-right: 20px;
     }
 
         #app-header .user-menu-wrapper .picture {
@@ -1494,8 +1492,7 @@ div.message-help {
     margin: 1em 5em 1em 5em;
 }
 
-span.required 
-{
+span.required {
     margin-left: 3px;
     color: Red;
     cursor: default;
