@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
-namespace CallStack.Code.Validators
+namespace CerebelloWebRole.Code.Validation
 {
     /// <summary>
     /// Url attribute for validating URLs
@@ -13,29 +9,21 @@ namespace CallStack.Code.Validators
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public class UrlAttribute : ValidationAttribute
     {
-        private const string pattern = @"^[^\W\d](?:[_\.\-]?\w){3,}$";
-        private static string message = "O campo '{0}' não é uma URL válida";
-
-        static UrlAttribute()
-        {
-            // necessary to enable client side validation
-            DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(UrlAttribute), typeof(RegularExpressionAttributeAdapter));
-        }
-
         public UrlAttribute()
-            : base(pattern)
         {
-            // Setting the default error message.
-            this.ErrorMessage = message;
         }
+
         public override bool IsValid(object value)
         {
-            return base.IsValid(value);
+            var text = value as string;
+            Uri uri;
+
+            return (!string.IsNullOrWhiteSpace(text) && Uri.TryCreate(text, UriKind.Absolute, out uri));
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        public override string FormatErrorMessage(string name)
         {
-            return base.IsValid(value, validationContext);
+            return string.Format("O campo {0} não é uma URL válida", name);
         }
     }
 }

@@ -20,7 +20,7 @@
         @Html.HiddenFor(model => model.Id)
 
         var editPanel = Html.CreateEditPanel();
-        editPanel.AddField(model => model.ChiefComplaint);
+        editPanel.AddField(model => model.ChiefComplaint, EditPanelFieldSize.Large);
         editPanel.AddField(model => model.HistoryOfThePresentIllness, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.HistoryOfThePresentIllness)</text>);
         editPanel.AddField(model => model.PastMedicalHistory, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.PastMedicalHistory)</text>);
         editPanel.AddField(model => model.FamilyDeseases, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.FamilyDeseases)</text>);

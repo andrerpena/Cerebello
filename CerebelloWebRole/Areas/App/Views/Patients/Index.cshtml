@@ -1,5 +1,4 @@
-﻿@model CerebelloWebRole.Areas.App.Models.PatientsIndexViewModel
-@using CerebelloWebRole.Code
+﻿@model PatientsIndexViewModel
 @{
     ViewBag.Title = "Prontuário · Cerebello";
 
@@ -23,24 +22,20 @@ Prontuário
     <link type="text/css" rel="Stylesheet" href="/content/styles/app/jquery.jqplot.min.css" />
 }
 @section SideBar {
-    @{var itemCount = 0;}
     <ul>
         <li>
             <a href="@Url.Action("Create", "Patients")" class="icon-link icon-link-plus">Novo paciente</a>
         </li>
         @if (this.CanAccessAction("ExportDoctorXml", "Report"))
         {
-            itemCount++;
             <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Exportar XML</a> </li>
         }
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
-            itemCount++;
             <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Exportar prontuários em PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadAllPatientsZipFile", "PatientFiles"))
         {
-            itemCount++;
             <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Exportar os arquivos de todos os pacientes em Zip</a> </li>
         }
     </ul>
@@ -48,18 +43,17 @@ Prontuário
 @if (!canCreateMorePatients)
 {
     @:@this.Html.Message(
-    @<text>
-    Sua conta permite cadastrar até @patientsLimit pacientes.
+    @<text>Sua conta permite cadastrar até @patientsLimit pacientes.
              @if (patientsRemaining > 0)
              {
-                 @:Faltam @patientsRemaining para atingir o limite.
+@:Faltam @patientsRemaining para atingir o limite.
              }
              else
              {
                  @:Não é possível cadastrar mais pacientes.
              }
     </text>)
-}
+    }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
     @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())

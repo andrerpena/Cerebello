@@ -74,19 +74,7 @@
             // add the wrapper and the new button
             if (_this.opts.newWindowUrl) {
                 $wrapper.after($('<span/>').addClass("new-button").css("right", rightButtonsOffSet + "px").click(function () {
-
-                    $.modal({
-                        url: _this.opts.newWindowUrl,
-                        width: _this.opts.newWindowWidth,
-                        height: _this.opts.newWindowMinHeight,
-                        title: _this.opts.newWindowTitle,
-                        ok: function (data) {
-                            _this.$inputHidden.val(data.Id);
-                            _this.$el.val(data.Value);
-                        }
-                    });
-
-
+                    _this.showNewWindow();
                 }));
                 _this.$el.addClass("autocomplete-new");
 
@@ -186,6 +174,22 @@
                         if (_this.$el.is(":focus"))
                             _this.fetchData(null, null, _this.$el.val(), false);
                     }, _this.opts.autoFilterDelay);
+                }
+            });
+        },
+        
+        showNewWindow: function() {
+            /// <summary>shows the "new" window</summary>
+            var _this = this;
+            var processedUrl = $.param.querystring(_this.opts.newWindowUrl, "text=" + _this.$el.val());
+            $.modal({
+                url: processedUrl,
+                width: _this.opts.newWindowWidth,
+                height: _this.opts.newWindowMinHeight,
+                title: _this.opts.newWindowTitle,
+                ok: function (data) {
+                    _this.$inputHidden.val(data.Id);
+                    _this.$el.val(data.Value);
                 }
             });
         },
@@ -290,7 +294,7 @@
 
                         // body
                         var $tableBody = $("<tbody>").appendTo($grid);
-                        $.each(data.Rows, function (key, val) {
+                        $.each(data.Rows, function(key, val) {
                             var $row = $("<tr/>").attr("data-val-id", val[_this.opts.columnId]);
 
                             for (var j = 0; j < _this.opts.columns.length; j++) {
@@ -306,9 +310,21 @@
                         });
 
                         _this.$wrapper.html($grid);
+                    } else {
+                        if (_this.opts.newWindowUrl) {
+                            var $message = $("<div/>").addClass("no-results-box").html("A pesquisa não retornou registros. Deseja ");
+                            var $newLink = $("<a/>").attr("href", "#").html("adicionar um novo?").click(function (e) {
+                                e.preventDefault();
+                                if (_this.isDropdownVisible())
+                                    _this.$dropdown.hide();
+                                _this.showNewWindow();
+                            });
+                            $message.append($newLink);
+                            _this.$wrapper.html($message);
+                        } else {
+                            _this.$wrapper.html($("<div/>").addClass("no-results-box").text("A pesquisa não retornou registros"));
+                        }
                     }
-                    else
-                        _this.$wrapper.html($("<div/>").addClass("no-results-box").text("A pesquisa não retornou registros"));
 
                     // focusing the current selected item, if it is in the current page
                     // the if of the current item is store in the hidden field

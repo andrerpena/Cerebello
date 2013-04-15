@@ -1,6 +1,7 @@
 ﻿@model CerebelloWebRole.Areas.App.Models.ExaminationResultViewModel
 @using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
+@using CerebelloWebRole.Code.Controls
 @{
     Layout = null;
     string examResultId = null;
@@ -26,6 +27,7 @@
 
             editPanel.AddField(
                 m => m.MedicalProcedureId,
+                EditPanelFieldSize.Large,
                 format: @<text>
         @(Html.AutocompleteGridFor<ExaminationResultViewModel, MedicalProceduresLookupGridModel, int?>(
                                     m => m.MedicalProcedureId,

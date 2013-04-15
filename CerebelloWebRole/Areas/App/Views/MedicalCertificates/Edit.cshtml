@@ -1,4 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.MedicalCertificateViewModel
+﻿@using CerebelloWebRole.Code.Controls
+@model CerebelloWebRole.Areas.App.Models.MedicalCertificateViewModel
 @{
     Layout = null;
     string certificateId = null;
@@ -20,7 +21,9 @@
         using (Html.BeginScope("MedicalCertificates"))
         {
             var editPanel = this.Html.CreateEditPanel();
-            editPanel.AddField(model => model.ModelId, @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, @Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
+            editPanel.AddField(model => model.ModelId,
+                EditPanelFieldSize.Large,
+                @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, @Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
 
             var a = this.Html.GetComponentNameFor(model => model.ModelName);
             

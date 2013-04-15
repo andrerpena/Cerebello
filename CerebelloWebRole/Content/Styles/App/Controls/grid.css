@@ -1,61 +1,68 @@
-﻿.webgrid
- {
-     width: 100%;
-     border: 0px;
-     border-collapse: collapse;
- }
- 
- .webgrid-header
- {
+﻿.webgrid {
+    border: 1px solid #E3E3E3;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.webgrid-header {
     font-weight: bold;
- }
- 
- .webgrid-header th
- {
-    background-color: #EEEEEE;
-    font-weight: bold;
- }
-  
- .webgrid-footer
- {
+}
+
+    .webgrid-header th {
+        background-color: #EEEEEE;
+        border-color: #E3E3E3;
+        border-style: solid;
+        border-width: 0 0 1px 1px;
+    }
+
+.webgrid-footer {
     height: 30px;
     padding: 6px 5px;
     text-align: center;
- }
- 
- .webgrid-footer a
- {
-    color: #777777;
-    padding: 2px;
- }
+}
 
-  .webgrid-footer td {
-      border: none !important;
-  }
- 
- .webgrid tr td, .webgrid tr th
- {
-    border-bottom: 1px solid #F1EFEF;
-    padding: 8px;
+    .webgrid-footer a {
+        color: #777777;
+        padding: 2px;
+    }
+
+    .webgrid-footer td {
+        border: none !important;
+    }
+
+.webgrid tr td:first-child {
+    border-left-width: 0;
+}
+
+.webgrid tr td {
+    border-color: #E3E3E3;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
     line-height: 1.2em;
- }
-  
- .webgrid-selected-row
- {
-     font-weight: bold;
- }
+    padding: 6px 10px;
+}
 
- .webgrid .action-column {
-     width: 1px;
-     padding: 0 8px;
- }
 
- .webgrid .grid-action-link {
-     width: 16px;
-     height: 16px;
-     display: inline-block;
- }
- 
+.webgrid tr th {
+    line-height: 1.2em;
+    padding: 5px 10px;
+}
+
+.webgrid-selected-row {
+    font-weight: bold;
+}
+
+.webgrid .action-column {
+    width: 1px;
+    padding: 0 8px;
+}
+
+.webgrid .grid-action-link {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
 /* a grid cell that supports icon links*/
 .icon-link-td {
     white-space: nowrap;

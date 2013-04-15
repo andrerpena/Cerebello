@@ -122,9 +122,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
         
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(string text)
         {
-            return this.Edit((int?)null);
+            return this.Edit(null, text);
         }
 
         [HttpPost]
@@ -134,9 +134,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, string text)
         {
-            MedicineLaboratoryViewModel viewModel = null;
+            var viewModel = new MedicineLaboratoryViewModel()
+                {
+                    Name = text
+                };
+
             if (id.HasValue)
             {
                 var laboratory = this.db.Laboratories.FirstOrDefault(l => l.Id == id);
@@ -147,7 +151,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // the resulting view will depend on the request type
-            return this.Request.IsAjaxRequest() ? View("CreateModal", viewModel) : View("Edit", viewModel);
+            return this.Request.IsAjaxRequest() ? View("EditModal", viewModel) : View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -201,7 +205,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // the resulting view will depend on the request type
-            return this.Request.IsAjaxRequest() ? View("CreateModal", formModel) : View("Edit", formModel);
+            return this.Request.IsAjaxRequest() ? View("EditModal", formModel) : View("Edit", formModel);
         }
 
         public ActionResult Search(SearchModel searchModel)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 namespace CerebelloWebRole.Code.Validation
 {
@@ -16,31 +15,14 @@ namespace CerebelloWebRole.Code.Validation
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public class UserNameAttribute : RegularExpressionAttribute
     {
-        private const string pattern = @"^[^\W\d](?:[_\.\-]?\w){3,}$";
-        private static string message = "Nome de usuário não é valido. Tem que ter no mínimo 4 caracteres, começar com letra, "
-                        + "e só pode conter letras, números e os caracteres '_', '-' e '.', sendo que esses últimos "
-                        + "não podem aparecer em sequência, e nem no final.";
-
-        static UserNameAttribute()
-        {
-            // necessary to enable client side validation
-            DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(UserNameAttribute), typeof(RegularExpressionAttributeAdapter));
-        }
+        private const string PATTERN = @"^[^\W\d](?:[_\.\-]?\w){3,}$";
+        private const string MESSAGE = "Nome de usuário não é valido. Tem que ter no mínimo 4 caracteres, começar com letra, " + "e só pode conter letras, números e os caracteres '_', '-' e '.', sendo que esses últimos " + "não podem aparecer em sequência, e nem no final.";
 
         public UserNameAttribute()
-            : base(pattern)
+            : base(PATTERN)
         {
             // Setting the default error message.
-            this.ErrorMessage = message;
-        }
-        public override bool IsValid(object value)
-        {
-            return base.IsValid(value);
-        }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            return base.IsValid(value, validationContext);
+            this.ErrorMessage = MESSAGE;
         }
     }
 }

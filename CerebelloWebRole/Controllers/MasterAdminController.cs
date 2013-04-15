@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Collections;
@@ -282,6 +283,13 @@ namespace CerebelloWebRole.Controllers
             {
                 throw new NotImplementedException("Support for this BillingPeriodType is not implemented yet.");
             }
+        }
+
+        public ActionResult ViewBinFolder()
+        {
+            var binFolder = this.Server.MapPath("~/bin");
+            var folderContents = Directory.GetFiles(binFolder).Aggregate("", (current, file) => current + (file + Environment.NewLine));
+            return this.Content(folderContents, "text/plain");
         }
     }
 }

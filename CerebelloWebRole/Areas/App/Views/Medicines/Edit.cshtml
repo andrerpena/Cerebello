@@ -1,5 +1,5 @@
 ﻿@model MedicineViewModel
-@using CerebelloWebRole.Areas.App.Models
+@using System.Linq.Expressions
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
@@ -14,12 +14,26 @@
     }
     ViewBag.Title = string.Format("{0} · Cerebello", title);
 
-    var editPanel = this.Html.CreateEditPanel(null);
-    editPanel.AddField(model => model.Name, EditPanelFieldSize.Large);
-    editPanel.AddField(model => model.LaboratoryName, EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("Create", "Laboratories"), "Novo laboratório", 500, 100)</text>);
-    editPanel.AddField(model => model.Usage);
-    editPanel.AddField(model => model.ActiveIngredients, @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
-    editPanel.AddField(model => model.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>);
+    var manualEditPanel = this.Html.CreateEditPanel(null);
+    manualEditPanel.AddField(model => model.Name, EditPanelFieldSize.Large);
+    manualEditPanel.AddField(model => model.LaboratoryName, EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("Create", "Laboratories"), "Novo laboratório", 500, 100)</text>);
+    manualEditPanel.AddField(model => model.Usage);
+    manualEditPanel.AddField(model => model.ActiveIngredients, @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
+    manualEditPanel.AddField(model => model.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>);
+
+    var anvisaEditPanel = this.Html.CreateEditPanel(null);
+    anvisaEditPanel.AddField(model => model.AnvisaId,
+        EditPanelFieldSize.Large,
+    @<text>
+    @(Html.AutocompleteGridFor(
+                    model => model.AnvisaId,
+                    model => model.AnvisaText,
+                    Url.Action("LookupSysMedicine", "Medicines"),
+                    gridmodel => gridmodel.Id,
+                    gridmodel => gridmodel.Name,
+                    new Expression<Func<SysMedicineLookupGridModel, object>>[] { gridmodel => gridmodel.LaboratoryName }))
+    </text>);
+    anvisaEditPanel.AddField(model => model.AnvisaCustomText, EditPanelFieldSize.Large);
 }
 
 @section Title {
@@ -40,34 +54,72 @@
 
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("AnvisaImport")" class="icon-link icon-link-import">Importar da Anvisa</a></li>
         <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
     </ul>
-    <hr/>
+    <hr />
     <ul>
         <li><a href="@Url.Action("RegisteringMedicines", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
     </ul>
-    
+
 }
 @using (Html.BeginForm())
 {
-     if (!this.Model.Id.HasValue)
-     {
-         @Html.Message(@<text>
-                            Você está adicionando um medicamento manualmente. Alternativamente, é possível 
-                            <a href="@Url.Action("AnvisaImport")">importar medicamentos da Anvisa</a>.
-                        </text>)
-     }
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
 
-    @editPanel.GetHtml()
 
+    if (!this.Model.Id.HasValue)
+    {
+        // if it's a creation
+    @Html.CheckBoxFor(model => model.IsImporting)
+    @Html.LabelFor(model => model.IsImporting, "Importar medicamento da Anvisa.")
+    <div id="anvisa-panel" style="display: @(this.Model.IsImporting ? "block" : "none")">
+        <p class="info-box">
+            Você está importando um medicamento da Anvisa. Para inserir um medicamento manualmente, desmarque a caixa acima.
+                É possível customizar o nome do medicamento importado da Anvisa. Se o laboratório do medicamento não existir, ele será
+                criado automaticamente.
+        </p>
+        @anvisaEditPanel.GetHtml()
+    </div>
+    <div id="manual-panel" style="display: @(this.Model.IsImporting ? "none" : "block")">
+        <p class="info-box">
+            Você está inserindo um medicamento manualmente. Para importar da Anvisa, marque a caixa acima.
+        </p>
+        @manualEditPanel.GetHtml()
+        <h2>
+            @Html.LabelFor(model => model.Leaflets)
+        </h2>
+        @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula"))
+    </div>
+    }
+    else
+    {
+    @manualEditPanel.GetHtml()
     <h2>
         @Html.LabelFor(model => model.Leaflets)
     </h2>
-
     @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula"))
+    }
+    <script type="text/javascript">
+        $(function () {
+            $("#IsImporting").change(function (e) {
+                if ($(this).is(":checked")) {
+                    $("#anvisa-panel").show();
+                    $("#manual-panel").hide();
+                } else {
+                    $("#anvisa-panel").hide();
+                    $("#manual-panel").show();
+                }
+            });
+            $("#AnvisaText").data("autocomplete").opts.change = function (data) {
+                if (data)
+                    $("#AnvisaCustomText").val(data.Name);
+                else
+                    $("#AnvisaCustomText").val("");
+            };
+        });
+    </script>
+    
     
     <div class="submit-bar">
         <input type="submit" value="salvar medicamento" />

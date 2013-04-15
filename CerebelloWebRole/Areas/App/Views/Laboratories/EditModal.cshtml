@@ -1,23 +1,20 @@
-﻿@model CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel
+﻿@model MedicineLaboratoryViewModel
 @{
     this.Layout = null;
 
-    var cardView = Html.CreateEditPanel();
-    cardView.AddField(m => m.Name);
+    var editPanel = Html.CreateEditPanel();
+    editPanel.AddField(m => m.Name);
 }
 
 <div class="edit-laboratory">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "new_laboratory_form" }))
     {
         @Html.ValidationSummary(false)
-
-        @cardView.GetHtml()
-
+        @editPanel.GetHtml()
         <div class="submit-bar">
             <input type="submit" value="salvar laboratório" />
-            <span class="separator">ou</span> <a href="#" onclick="$(this).trigger('modal-cancel')">cancelar</a>
+            <span class="separator">ou</span> <a href="#" onclick="$(this).trigger('modal-cancel'); return false;">cancelar</a>
         </div>
-
     }
 
     <script type="text/javascript">

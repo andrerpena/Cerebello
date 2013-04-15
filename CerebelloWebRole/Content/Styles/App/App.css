@@ -370,7 +370,6 @@ input, textarea {
 .document {
     background-color: #FFFFFF;
     border: 1px solid #D7D7D7;
-    box-shadow: 0 0 1px #CCCCCC;
     min-height: 260px;
     padding: 0;
     position: relative;
@@ -396,7 +395,8 @@ input, textarea {
         }
 
     .document .document-body .document-main-column {
-        margin-right: 210px;
+        border-right: 1px solid #D7D7D7;
+        margin-right: 220px;
         padding: 15px;
     }
 
@@ -858,7 +858,8 @@ a.gotoPractice {
     }
 
         .search-box .input-submit-wrapper input[type=submit] {
-            padding: 3px 10px;
+            height: 27px;
+            padding: 3px 6px;
         }
 
     .search-box .input-text-wrapper {
@@ -999,7 +1000,7 @@ ul.dayoff-list .delete {
 }
 
     .appointment-panel-wrapper .appointment-panel {
-        background-color: #EEEEEE;
+        background-color: #FBFBFB;
         border: 1px solid rgba(0, 0, 0, 0.05);
         margin: 0 0 10px;
         padding: 10px 10px 0;
@@ -1021,7 +1022,7 @@ ul.dayoff-list .delete {
 }
 
 .medical-appointment-panel {
-    background-color: #EEEEEE;
+    background-color: #FBFBFB;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: black;
     margin-bottom: 10px;

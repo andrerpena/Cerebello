@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Validation;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -14,6 +12,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Descrição")]
         public String Description { get; set; }
 
+        [Url]
         [Display(Name = "URL")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Url { get; set; }

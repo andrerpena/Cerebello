@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -47,9 +49,7 @@ namespace CerebelloWebRole
         protected void Application_Start()
         {
             RegisterTraceListeners(Trace.Listeners);
-
             AreaRegistration.RegisterAllAreas();
-
             RegisterGlobalFilters(GlobalFilters.Filters);
 
             RouteTable.Routes.MapHubs();
@@ -74,7 +74,7 @@ namespace CerebelloWebRole
             // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
             if (RoleEnvironment.IsAvailable)
             {
-               var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
+                var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
                 traceListenerCollection.Add(azureTraceListener);
             }
         }

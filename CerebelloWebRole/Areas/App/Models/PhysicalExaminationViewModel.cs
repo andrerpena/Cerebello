@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -12,6 +9,7 @@ namespace CerebelloWebRole.Areas.App.Models
     public class PhysicalExaminationViewModel
     {
         [Display(Name = "Exame físico")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Notes { get; set; }
 
         public int? PatientId { get; set; }

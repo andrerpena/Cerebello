@@ -7,6 +7,7 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Code.Controls.Autocomplete.Data;
 using CerebelloWebRole.Code.Filters;
 using JetBrains.Annotations;
 
@@ -129,9 +130,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(string text)
         {
-            return this.Edit((int?)null);
+            return this.Edit((int?)null, text);
         }
 
         [HttpPost]
@@ -141,9 +142,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, string text)
         {
-            MedicineViewModel viewModel = new MedicineViewModel();
+            var viewModel = new MedicineViewModel()
+                {
+                    Name = text
+                };
 
             if (id != null)
             {
@@ -151,126 +155,226 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = this.GetViewModelFromModel(medicine);
             }
 
-            return View("Edit", viewModel);
+            return this.Request.IsAjaxRequest() ? View("EditModal", viewModel) : View("Edit", viewModel);
         }
 
         [HttpPost]
         public ActionResult Edit(MedicineViewModel formModel)
         {
-            // if a medicine exists with the same name, a model state error must be placed
-            var existingMedicine = this.db.Medicines.FirstOrDefault(m => m.Name == formModel.Name);
-            if (existingMedicine != null && existingMedicine.Id != formModel.Id)
-                this.ModelState.AddModelError<MedicineViewModel>(
-                    model => model.Name, "Já existe um medicamento cadastrado com o mesmo nome");
-
-            // add validation error when Laboratory Id is invalid
-            Laboratory laboratory = null;
-            if (formModel.LaboratoryId != null)
+            if (formModel.IsImporting)
             {
-                laboratory = this.db.Laboratories.FirstOrDefault(lab => lab.Id == formModel.LaboratoryId && lab.DoctorId == this.Doctor.Id);
-                if (laboratory == null)
-                    this.ModelState.AddModelError<MedicineViewModel>((model) => model.LaboratoryId, "O laboratório informado é inválido");
+                // in this case it's importing the medicine from Anvisa
+
+                // remove model state errors
+                this.ModelState.Remove(() => formModel.Name);
+                this.ModelState.Remove(() => formModel.LaboratoryName);
+
+                // validating the existence of the sys medicine
+                var sysMedicine = this.db.SYS_Medicine.FirstOrDefault(sm => sm.Id == formModel.AnvisaId);
+                if (sysMedicine == null && formModel.AnvisaId.HasValue) // I verify formModel.AnvisaId.HasValue here to prevent double errors
+                    this.ModelState.AddModelError<AnvisaImportViewModel>(model => model.AnvisaId, "O medicamento informado não foi encontrado");
+
+                // validating the name is unique
+                if (sysMedicine != null && this.db.Medicines.Any(m => m.DoctorId == this.Doctor.Id && m.Name == formModel.AnvisaCustomText))
+                    this.ModelState.AddModelError<AnvisaImportViewModel>(
+                        model => model.AnvisaId, "Já existe um medicamento com o mesmo nome do medicamento informado");
+
+                if (this.ModelState.IsValid)
+                {
+                    Debug.Assert(sysMedicine != null, "sysMedicine != null");
+                    var medicine = new Medicine()
+                    {
+                        Name = formModel.AnvisaCustomText,
+                        PracticeId = this.DbPractice.Id,
+                        DoctorId = this.Doctor.Id,
+                        CreatedOn = this.GetUtcNow(),
+                    };
+
+                    // verify the need to create a new laboratory
+                    var laboratory = this.db.Laboratories.FirstOrDefault(l => l.DoctorId == this.Doctor.Id && l.Name == sysMedicine.Laboratory.Name) ??
+                                     new Laboratory()
+                                     {
+                                         Name = sysMedicine.Laboratory.Name,
+                                         PracticeId = this.DbPractice.Id,
+                                         DoctorId = this.Doctor.Id,
+                                         CreatedOn = this.GetUtcNow(),
+                                     };
+                    medicine.Laboratory = laboratory;
+
+                    // verify the need to create new active ingredients
+                    foreach (var ai in sysMedicine.ActiveIngredients)
+                    {
+                        medicine.ActiveIngredients.Add(new MedicineActiveIngredient()
+                        {
+                            Name = ai.Name,
+                            PracticeId = this.DbPractice.Id,
+                        });
+                    }
+
+                    // create the leaflets
+                    foreach (var l in sysMedicine.Leaflets)
+                        medicine.Leaflets.Add(
+                            new Leaflet()
+                            {
+                                Description = l.Description,
+                                Url = l.Url,
+                                PracticeId = this.DbPractice.Id
+                            });
+
+                    this.db.Medicines.AddObject(medicine);
+
+                    this.db.SaveChanges();
+
+                    // depending on whether or not this is an Ajax request,
+                    // this should return an AutocompleteNewJsonResult or the view
+                    if (this.Request.IsAjaxRequest())
+                        return this.Json(
+                            new AutocompleteNewJsonResult()
+                            {
+                                Id = medicine.Id,
+                                Value = medicine.Name
+                            });
+
+                    return this.RedirectToAction("Details", new { id = medicine.Id });
+                }
+
             }
 
-            if (this.ModelState.IsValid)
+            else
             {
-                Medicine medicine = null;
+                // In this case the medicine is being edited manually
 
-                if (formModel.Id.HasValue)
+                // remove model state errors
+                this.ModelState.Remove(() => formModel.AnvisaId);
+                this.ModelState.Remove(() => formModel.AnvisaText);
+                this.ModelState.Remove(() => formModel.AnvisaCustomText);
+
+                // if a medicine exists with the same name, a model state error must be placed
+                var existingMedicine = this.db.Medicines.FirstOrDefault(m => m.Name == formModel.Name);
+                if (existingMedicine != null && existingMedicine.Id != formModel.Id)
+                    this.ModelState.AddModelError<MedicineViewModel>(
+                        model => model.Name, "Já existe um medicamento cadastrado com o mesmo nome");
+
+                // add validation error when Laboratory Id is invalid
+                Laboratory laboratory = null;
+                if (formModel.LaboratoryId != null)
                 {
-                    medicine = this.db.Medicines.FirstOrDefault(m => m.Id == formModel.Id);
-                    if (medicine == null)
-                        return this.ObjectNotFound();
+                    laboratory = this.db.Laboratories.FirstOrDefault(lab => lab.Id == formModel.LaboratoryId && lab.DoctorId == this.Doctor.Id);
+                    if (laboratory == null)
+                        this.ModelState.AddModelError<MedicineViewModel>((model) => model.LaboratoryId, "O laboratório informado é inválido");
                 }
-                else
+
+                if (this.ModelState.IsValid)
                 {
-                    medicine = new Medicine
+                    Medicine medicine = null;
+
+                    if (formModel.Id.HasValue)
+                    {
+                        medicine = this.db.Medicines.FirstOrDefault(m => m.Id == formModel.Id);
+                        if (medicine == null)
+                            return this.ObjectNotFound();
+                    }
+                    else
+                    {
+                        medicine = new Medicine
                         {
                             PracticeId = this.DbUser.PracticeId,
                             DoctorId = this.Doctor.Id,
                             CreatedOn = this.GetUtcNow(),
                         };
-                    this.db.Medicines.AddObject(medicine);
-                }
+                        this.db.Medicines.AddObject(medicine);
+                    }
 
-                medicine.Name = formModel.Name;
-                medicine.Observations = formModel.Observations;
-                medicine.Usage = (short)formModel.Usage;
+                    medicine.Name = formModel.Name;
+                    medicine.Observations = formModel.Observations;
+                    medicine.Usage = (short)formModel.Usage;
 
-                if (formModel.LaboratoryId != null)
-                    medicine.Laboratory = laboratory;
+                    if (formModel.LaboratoryId != null)
+                        medicine.Laboratory = laboratory;
 
-                // Active ingredients
-                {
-                    // Verify whether any existing active ingredient should be REMOVED.
-                    var activeIngredientsDeathQueue = new Queue<MedicineActiveIngredient>();
-                    foreach (var existingActiveIngredient in medicine.ActiveIngredients)
-                        if (formModel.ActiveIngredients.All(a => a.Id != existingActiveIngredient.Id))
-                            activeIngredientsDeathQueue.Enqueue(existingActiveIngredient);
-                    while (activeIngredientsDeathQueue.Any())
-                        this.db.ActiveIngredients.DeleteObject(activeIngredientsDeathQueue.Dequeue());
-
-                    // Verify whether any new active ingredient should be UPDATED or ADDED
-                    foreach (var activeIngredientViewModel in formModel.ActiveIngredients)
+                    // Active ingredients
                     {
-                        var existingActiveIngredient = medicine.ActiveIngredients.SingleOrDefault(l => l.Id == activeIngredientViewModel.Id);
-                        if (existingActiveIngredient == null)
+                        // Verify whether any existing active ingredient should be REMOVED.
+                        var activeIngredientsDeathQueue = new Queue<MedicineActiveIngredient>();
+                        foreach (var existingActiveIngredient in medicine.ActiveIngredients)
+                            if (formModel.ActiveIngredients.All(a => a.Id != existingActiveIngredient.Id))
+                                activeIngredientsDeathQueue.Enqueue(existingActiveIngredient);
+                        while (activeIngredientsDeathQueue.Any())
+                            this.db.ActiveIngredients.DeleteObject(activeIngredientsDeathQueue.Dequeue());
+
+                        // Verify whether any new active ingredient should be UPDATED or ADDED
+                        foreach (var activeIngredientViewModel in formModel.ActiveIngredients)
                         {
-                            // ADD when not existing
-                            medicine.ActiveIngredients.Add(
-                                new MedicineActiveIngredient()
+                            var existingActiveIngredient = medicine.ActiveIngredients.SingleOrDefault(l => l.Id == activeIngredientViewModel.Id);
+                            if (existingActiveIngredient == null)
+                            {
+                                // ADD when not existing
+                                medicine.ActiveIngredients.Add(
+                                    new MedicineActiveIngredient()
                                     {
-                                        Name = activeIngredientViewModel.Name
+                                        Name = activeIngredientViewModel.Name,
+                                        PracticeId = this.DbPractice.Id
                                     });
-                        }
-                        else
-                        {
-                            // UPDATE when existing
-                            existingActiveIngredient.Name = activeIngredientViewModel.Name;
+                            }
+                            else
+                            {
+                                // UPDATE when existing
+                                existingActiveIngredient.Name = activeIngredientViewModel.Name;
+                            }
                         }
                     }
-                }
 
-                // Leaflets
-                {
-                    // Verify whether any existing leaflet must be REMOVED
-                    var leafletsDeathQueue = new Queue<Leaflet>();
-                    foreach (var existingLeaflet in medicine.Leaflets)
-                        if (formModel.Leaflets.All(l => l.Id != existingLeaflet.Id))
-                            leafletsDeathQueue.Enqueue(existingLeaflet);
-                    while (leafletsDeathQueue.Any())
-                        this.db.Leaflets.DeleteObject(leafletsDeathQueue.Dequeue());
-
-                    // Verify whether any leaflet should be UPDATED or ADDED
-                    foreach (var leafletViewModel in formModel.Leaflets)
+                    // Leaflets
                     {
-                        var existingLeaftlet = medicine.Leaflets.SingleOrDefault(l => l.Id == leafletViewModel.Id);
-                        if (existingLeaftlet == null)
+                        // Verify whether any existing leaflet must be REMOVED
+                        var leafletsDeathQueue = new Queue<Leaflet>();
+                        foreach (var existingLeaflet in medicine.Leaflets)
+                            if (formModel.Leaflets.All(l => l.Id != existingLeaflet.Id))
+                                leafletsDeathQueue.Enqueue(existingLeaflet);
+                        while (leafletsDeathQueue.Any())
+                            this.db.Leaflets.DeleteObject(leafletsDeathQueue.Dequeue());
+
+                        // Verify whether any leaflet should be UPDATED or ADDED
+                        foreach (var leafletViewModel in formModel.Leaflets)
                         {
-                            // ADD when not existing
-                            medicine.Leaflets.Add(
-                                new Leaflet()
+                            var existingLeaftlet = medicine.Leaflets.SingleOrDefault(l => l.Id == leafletViewModel.Id);
+                            if (existingLeaftlet == null)
+                            {
+                                // ADD when not existing
+                                medicine.Leaflets.Add(
+                                    new Leaflet()
                                     {
                                         PracticeId = this.DbPractice.Id,
                                         Url = leafletViewModel.Url,
                                         Description = leafletViewModel.Description
                                     });
-                        }
-                        else
-                        {
-                            // UPDATE when existing
-                            existingLeaftlet.Url = leafletViewModel.Url;
-                            existingLeaftlet.Description = leafletViewModel.Description;
+                            }
+                            else
+                            {
+                                // UPDATE when existing
+                                existingLeaftlet.Url = leafletViewModel.Url;
+                                existingLeaftlet.Description = leafletViewModel.Description;
+                            }
                         }
                     }
+
+                    db.SaveChanges();
+
+                    // depending on whether or not this is an Ajax request,
+                    // this should return an AutocompleteNewJsonResult or the view
+                    if (this.Request.IsAjaxRequest())
+                        return this.Json(
+                            new AutocompleteNewJsonResult()
+                            {
+                                Id = medicine.Id,
+                                Value = medicine.Name
+                            });
+
+                    return Redirect(Url.Action("details", new { id = medicine.Id }));
                 }
-
-                db.SaveChanges();
-
-                return Redirect(Url.Action("details", new { id = medicine.Id }));
             }
 
-            return View("Edit", formModel);
+            return this.Request.IsAjaxRequest() ? View("EditModal", formModel) : View("Edit", formModel);
         }
 
         [HttpGet]
@@ -332,7 +436,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var result = new AutocompleteJsonResult()
             {
                 Rows = new System.Collections.ArrayList(query.ToList()),
-                Count = query.Count()
+                Count = baseQuery.Count()
             };
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
@@ -401,71 +505,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult AnvisaImport()
         {
             return View();
-        }
-
-        [HttpPost]
-        public ActionResult AnvisaImport(AnvisaImportViewModel formModel)
-        {
-            // validating the existence of the sys medicine
-            var sysMedicine = this.db.SYS_Medicine.FirstOrDefault(sm => sm.Id == formModel.AnvisaId);
-            if (sysMedicine == null && formModel.AnvisaId.HasValue) // I verify formModel.AnvisaId.HasValue here to prevent double errors
-                this.ModelState.AddModelError<AnvisaImportViewModel>(model => model.AnvisaId, "O medicamento informado não foi encontrado");
-
-            // validating the name is unique
-            if (this.db.Medicines.Any(m => m.DoctorId == this.Doctor.Id && m.Name == sysMedicine.Name))
-                this.ModelState.AddModelError<AnvisaImportViewModel>(
-                    model => model.AnvisaId, "Já existe um medicamento com o mesmo nome do medicamento informado");
-
-            if (this.ModelState.IsValid)
-            {
-                Debug.Assert(sysMedicine != null, "sysMedicine != null");
-                var medicine = new Medicine()
-                    {
-                        Name = sysMedicine.Name,
-                        PracticeId = this.DbPractice.Id,
-                        DoctorId = this.Doctor.Id,
-                        CreatedOn = this.GetUtcNow(),
-                    };
-
-                // verify the need to create a new laboratory
-                var laboratory = this.db.Laboratories.FirstOrDefault(l => l.DoctorId == this.Doctor.Id && l.Name == sysMedicine.Laboratory.Name) ??
-                                 new Laboratory()
-                                     {
-                                         Name = sysMedicine.Laboratory.Name,
-                                         PracticeId = this.DbPractice.Id,
-                                         DoctorId = this.Doctor.Id,
-                                         CreatedOn = this.GetUtcNow(),
-                                     };
-                medicine.Laboratory = laboratory;
-
-                // verify the need to create new active ingredients
-                foreach (var ai in sysMedicine.ActiveIngredients)
-                {
-                    medicine.ActiveIngredients.Add(new MedicineActiveIngredient()
-                    {
-                        Name = ai.Name,
-                        PracticeId = this.DbPractice.Id,
-                    });
-                }
-
-                // create the leaflets
-                foreach (var l in sysMedicine.Leaflets)
-                    medicine.Leaflets.Add(
-                        new Leaflet()
-                            {
-                                Description = l.Description,
-                                Url = l.Url,
-                                PracticeId = this.DbPractice.Id
-                            });
-
-                this.db.Medicines.AddObject(medicine);
-
-                this.db.SaveChanges();
-
-                return this.RedirectToAction("Details", new { id = medicine.Id });
-            }
-
-            return this.View(formModel);
         }
 
         /// <summary>

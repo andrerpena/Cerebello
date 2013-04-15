@@ -1,0 +1,98 @@
+﻿@model MedicineViewModel
+@using System.Linq.Expressions
+@using CerebelloWebRole.Code.Controls
+@{
+    this.Layout = null;
+
+    var manualEditPanel = this.Html.CreateEditPanel(null);
+    manualEditPanel.AddField(model => model.Name, EditPanelFieldSize.Large);
+    manualEditPanel.AddField(model => model.LaboratoryName, EditPanelFieldSize.Large, @<text>@Html.AutocompleteFor(m => m.LaboratoryId, m => m.LaboratoryName, Url.Action("AutocompleteLaboratories"), @Url.Action("Create", "Laboratories"), "Novo laboratório", 500, 100)</text>);
+    manualEditPanel.AddField(model => model.Usage);
+    manualEditPanel.AddField(model => model.ActiveIngredients, @<text>@Html.CollectionEditorInlineFor(m2 => m2.ActiveIngredients, "ActiveIngredientEditor", "Adicionar princípio ativo")</text>);
+    manualEditPanel.AddField(model => model.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>);
+
+    var anvisaEditPanel = this.Html.CreateEditPanel(null);
+    anvisaEditPanel.AddField(model => model.AnvisaId,
+        EditPanelFieldSize.Large,
+    @<text>
+    @(Html.AutocompleteGridFor(
+                    model => model.AnvisaId,
+                    model => model.AnvisaText,
+                    Url.Action("LookupSysMedicine", "Medicines"),
+                    gridmodel => gridmodel.Id,
+                    gridmodel => gridmodel.Name,
+                    new Expression<Func<SysMedicineLookupGridModel, object>>[] { gridmodel => gridmodel.LaboratoryName }))
+    </text>);
+    anvisaEditPanel.AddField(model => model.AnvisaCustomText, EditPanelFieldSize.Large);
+}
+
+<div class="edit-medicine">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "new_medicine_form" }))
+    {
+        @Html.ValidationSummary(false)
+        
+        if (!this.Model.Id.HasValue)
+        {
+            // if it's a creation
+        @Html.CheckBoxFor(model => model.IsImporting)
+        @Html.LabelFor(model => model.IsImporting, "Importar medicamento da Anvisa.")
+
+        <div id="anvisa-panel" style="display: @(this.Model.IsImporting ? "block" : "none")">
+            <p class="info-box">
+                Você está importando um medicamento da Anvisa. Para inserir um medicamento manualmente, desmarque a caixa acima.
+                É possível customizar o nome do medicamento importado da Anvisa. Se o laboratório do medicamento não existir, ele será
+                criado automaticamente.
+            </p>
+            @anvisaEditPanel.GetHtml()
+        </div>
+        <div id="manual-panel" style="display: @(this.Model.IsImporting ? "none" : "block")">
+            <p class="info-box">
+                Você está inserindo um medicamento manualmente. Para importar da Anvisa, marque a caixa acima.
+            </p>
+            @manualEditPanel.GetHtml()
+            <h2>
+                @Html.LabelFor(model => model.Leaflets)
+            </h2>
+            @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula"))
+        </div>
+        }
+        else
+        {
+        @manualEditPanel.GetHtml()
+        <h2>
+            @Html.LabelFor(model => model.Leaflets)
+        </h2>
+        @(Html.CollectionEditorFor(m => m.Leaflets, "LeafletEditor", "Adicionar bula"))
+        }
+        <script type="text/javascript">
+            $(function () {
+                $("#IsImporting").change(function (e) {
+                    if ($(this).is(":checked")) {
+                        $("#anvisa-panel").show();
+                        $("#manual-panel").hide();
+                    } else {
+                        $("#anvisa-panel").hide();
+                        $("#manual-panel").show();
+                    }
+                });
+                $("#AnvisaText").data("autocomplete").opts.change = function (data) {
+                    if (data)
+                        $("#AnvisaCustomText").val(data.Name);
+                    else
+                        $("#AnvisaCustomText").val("");
+                };
+            });
+        </script>
+        
+        <div class="submit-bar">
+            <input type="submit" value="salvar medicamento" />
+            <span class="separator">ou</span> <a href="#" onclick="$(this).trigger('modal-cancel'); return false;">cancelar</a>
+        </div>
+    }
+
+    <script type="text/javascript">
+        $("#new_medicine_form").modalForm();
+    </script>
+</div>
+
+
