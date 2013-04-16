@@ -133,7 +133,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in patient.Anamneses
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, r.CreatedOn),
+                                     LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
                                      Id = r.Id
                                  })
                  group avm by avm.LocalDate.Date
@@ -148,7 +148,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in patient.PhysicalExaminations
                       select new SessionEvent
                       {
-                          LocalDate = ConvertToLocalDateTime(practice, r.CreatedOn),
+                          LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
                           Id = r.Id
                       })
                  group pe by pe.LocalDate.Date
@@ -163,7 +163,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in patient.DiagnosticHypotheses
                       select new SessionEvent
                       {
-                          LocalDate = ConvertToLocalDateTime(practice, r.CreatedOn),
+                          LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
                           Id = r.Id
                       })
                  group pe by pe.LocalDate.Date
@@ -178,7 +178,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in patient.Receipts
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, r.CreatedOn),
+                                     LocalDate = ConvertToLocalDateTime(practice, r.IssuanceDate),
                                      Id = r.Id
                                  })
                  group rvm by rvm.LocalDate.Date
@@ -193,7 +193,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from c in patient.MedicalCertificates
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, c.CreatedOn),
+                                     LocalDate = ConvertToLocalDateTime(practice, c.IssuanceDate),
                                      Id = c.Id
                                  })
                  group cvm by cvm.LocalDate.Date
@@ -208,7 +208,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from c in patient.ExaminationRequests
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, c.CreatedOn),
+                                     LocalDate = ConvertToLocalDateTime(practice, c.RequestDate),
                                      Id = c.Id
                                  })
                  group ervm by ervm.LocalDate.Date
@@ -223,7 +223,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from c in patient.ExaminationResults
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, c.CreatedOn),
+                                     LocalDate = ConvertToLocalDateTime(practice, c.ReceiveDate),
                                      Id = c.Id
                                  })
                  group ervm by ervm.LocalDate.Date
@@ -238,7 +238,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from d in patient.Diagnoses
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, d.CreatedOn),
+                                     LocalDate = ConvertToLocalDateTime(practice, d.MedicalRecordDate),
                                      Id = d.Id
                                  })
                  group dvm by dvm.LocalDate.Date
@@ -253,7 +253,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from d in patient.PatientFiles
                       select new SessionEvent
                       {
-                          LocalDate = ConvertToLocalDateTime(practice, d.File.CreatedOn),
+                          LocalDate = ConvertToLocalDateTime(practice, d.ReceiveDate),
                           Id = d.Id
                       })
                  group dvm by dvm.LocalDate.Date
