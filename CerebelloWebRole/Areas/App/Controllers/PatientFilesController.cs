@@ -184,32 +184,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(PatientFileViewModel formModel)
         {
-            var fileName = Request.Headers["X-File-Name"];
-
-            // if fileSize is 0, fileName will not be null. But I must ensure it's not null
-            // otherwise I won't be able to store the file
-            if (!formModel.Id.HasValue && String.IsNullOrEmpty(fileName))
-                this.ModelState.AddModelError<PatientFileViewModel>(model => model.PostedFile, "O arquivo é requerido");
-
             PatientFile patientFile;
 
             if (formModel.Id == null)
             {
                 Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
                 patientFile = new PatientFile
-                {
-                    File = new File
-                        {
-                            CreatedOn = this.GetUtcNow(),
-                            PracticeId = this.DbUser.PracticeId,
-                        },
-                    PatientId = formModel.PatientId.Value,
-                    PracticeId = this.DbUser.PracticeId,
-                };
+                    {
+                        File = new File
+                            {
+                                CreatedOn = this.GetUtcNow(),
+                                PracticeId = this.DbUser.PracticeId,
+                            },
+                        PatientId = formModel.PatientId.Value,
+                        PracticeId = this.DbUser.PracticeId,
+                    };
                 this.db.PatientFiles.AddObject(patientFile);
             }
             else
+            {
                 patientFile = this.db.PatientFiles.FirstOrDefault(pe => pe.Id == formModel.Id);
+                this.ModelState.Remove(() => formModel.File);
+            }
 
             if (this.ModelState.IsValid)
             {
@@ -217,18 +213,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // file to Azure
                 if (!formModel.Id.HasValue)
                 {
-                    //File's content is available in Request.InputStream property
-                    var fileContent = Request.InputStream;
-                    //Creating a FileStream to save file's content
+                    // File's content is available in formModel.File.InputStream property
+                    var fileContent = formModel.File.InputStream;
+
+                    // Creating a FileStream to save file's content
                     fileContent.Seek(0, SeekOrigin.Begin);
 
                     var storageManager = new WindowsAzureBlobStorageManager();
-                    storageManager.UploadFileToStorage(fileContent, Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, fileName);
+                    storageManager.UploadFileToStorage(fileContent, Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, formModel.File.FileName);
                     fileContent.Dispose();
 
-                    Debug.Assert(fileName != null, "fileName != null");
+                    Debug.Assert(formModel.File.FileName != null, "formModel.File.FileName != null");
 
-                    patientFile.File.FileName = fileName;
+                    patientFile.File.FileName = formModel.File.FileName;
                     patientFile.File.ContainerName = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
                 }
 

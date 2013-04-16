@@ -21,11 +21,11 @@
         @Html.HiddenFor(model => model.PatientId)
         @Html.HiddenFor(model => model.Id)
 
-        var editPanel = this.Html.CreateEditPanel();
-        if (!this.Model.Id.HasValue || this.Model.Id == 0)
-        {
-            editPanel.AddField(model => model.PostedFile, @<text><input type="file" id="PostedFile" name="PostedFile" /></text>);
-        }
+                var editPanel = this.Html.CreateEditPanel();
+                if (!this.Model.Id.HasValue || this.Model.Id == 0)
+                {
+                    editPanel.AddField(model => model.File, @<text><input type="file" id="File" name="File" /></text>);
+                }
                 editPanel.AddField(model => model.Description,
                                    EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Description, new { rows = 5 })</text>);
 

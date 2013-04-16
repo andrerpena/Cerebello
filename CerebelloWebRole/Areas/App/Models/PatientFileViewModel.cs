@@ -22,11 +22,9 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Description { get; set; }
 
-        /// <summary>
-        /// This will ALWAYS BE NULL because files cannot be posted via ajax
-        /// </summary>
         [Display(Name = "Arquivo")]
-        public HttpPostedFileBase PostedFile { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public HttpPostedFileBase File { get; set; }
 
         [Display(Name = "Data do arquivo")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
