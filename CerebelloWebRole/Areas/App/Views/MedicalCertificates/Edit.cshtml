@@ -24,6 +24,7 @@
             editPanel.AddField(model => model.ModelId,
                 EditPanelFieldSize.Large,
                 @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, @Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
+            editPanel.AddField(model => model.IssuanceDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.IssuanceDate)</text>);
 
             var a = this.Html.GetComponentNameFor(model => model.ModelName);
             

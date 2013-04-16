@@ -29,5 +29,13 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         [Display(Name = "Arquivo")]
         public HttpPostedFileBase PostedFile { get; set; }
+
+        [Display(Name = "Data do arquivo")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? FileDate { get; set; }
+
+        [Display(Name = "Data de recebimento")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? ReceiveDate { get; set; }
     }
 }

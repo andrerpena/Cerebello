@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
@@ -52,5 +53,9 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Sintomas")]
         public List<DiagnosticHypothesisViewModel> DiagnosticHypotheses { get; set; }
+
+        [Display(Name = "Data de registro")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? MedicalRecordDate { get; set; }
     }
 }

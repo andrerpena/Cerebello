@@ -20,7 +20,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 PatientId = diagnosis.PatientId,
                 Text = diagnosis.Observations,
                 Cid10Code = diagnosis.Cid10Code,
-                Cid10Name = diagnosis.Cid10Name
+                Cid10Name = diagnosis.Cid10Name,
+                MedicalRecordDate = diagnosis.MedicalRecordDate,
             };
         }
 
@@ -53,7 +54,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new DiagnosisViewModel()
                 {
                     Id = null,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
             return View("Edit", viewModel);
@@ -93,6 +95,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.Observations = formModel.Text;
                 dbObject.Cid10Code = formModel.Cid10Code;
                 dbObject.Cid10Name = formModel.Cid10Name;
+                dbObject.MedicalRecordDate = formModel.MedicalRecordDate;
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.

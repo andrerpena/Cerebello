@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -18,5 +21,9 @@ namespace CerebelloWebRole.Areas.App.Models
         //public DateTime? Date { get; set; }
 
         public List<ReceiptMedicineViewModel> ReceiptMedicines { get; set; }
+
+        [Display(Name = "Data de emissão")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? IssuanceDate { get; set; }
     }
 }

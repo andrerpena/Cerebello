@@ -29,7 +29,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 RegularAndAcuteMedications = anamnese.RegularAndAcuteMedications,
                 ReviewOfSystems = anamnese.ReviewOfSystems,
                 SexualHistory = anamnese.SexualHistory,
-                SocialHistory = anamnese.SocialDiseases
+                SocialHistory = anamnese.SocialDiseases,
+                MedicalRecordDate = anamnese.MedicalRecordDate,
             };
         }
 
@@ -62,7 +63,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new AnamneseViewModel()
                 {
                     Id = null,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
             return View("Edit", viewModel);
@@ -105,7 +107,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.ReviewOfSystems = formModel.ReviewOfSystems;
                 anamnese.SexualHistory = formModel.SexualHistory;
                 anamnese.SocialDiseases = formModel.SocialHistory;
-                
+                anamnese.MedicalRecordDate = formModel.MedicalRecordDate;
+
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.

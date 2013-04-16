@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
 
@@ -42,5 +43,9 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         [Display(Name = "Notas")]
         public string Notes { get; set; }
+
+        [Display(Name = "Data da requisição")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? RequestDate { get; set; }
     }
 }

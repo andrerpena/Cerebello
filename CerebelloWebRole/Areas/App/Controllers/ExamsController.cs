@@ -20,6 +20,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Notes = examRequest.Text,
                 MedicalProcedureName = examRequest.MedicalProcedureName,
                 MedicalProcedureCode = examRequest.MedicalProcedureCode,
+                RequestDate = examRequest.RequestDate,
             };
         }
 
@@ -60,7 +61,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new ExaminationRequestViewModel()
                 {
                     Id = id,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    RequestDate = this.GetPracticeLocalNow(),
                 };
 
             return View("Edit", viewModel);
@@ -106,6 +108,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     : null;
 
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
+                dbObject.RequestDate = formModel.RequestDate.Value;
 
                 db.SaveChanges();
 

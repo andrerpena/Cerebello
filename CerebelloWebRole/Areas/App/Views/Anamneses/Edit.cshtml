@@ -30,6 +30,7 @@
         editPanel.AddField(model => model.RegularAndAcuteMedications, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.RegularAndAcuteMedications)</text>);
         editPanel.AddField(model => model.SexualHistory, EditPanelFieldSize.Large);
         editPanel.AddField(model => model.Conclusion, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Conclusion)</text>);
+        editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
         
         @editPanel.GetHtml()
 

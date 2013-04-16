@@ -25,6 +25,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 Id = receipt.Id,
                 PatientId = receipt.PatientId, // expected to be null here
+                IssuanceDate = receipt.IssuanceDate,
                 ReceiptMedicines = (from rm in receipt.ReceiptMedicines
                                     select new ReceiptMedicineViewModel()
                                     {
@@ -67,7 +68,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new ReceiptViewModel()
                 {
                     Id = null,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    IssuanceDate = this.GetPracticeLocalNow(),
                 };
 
             return View("Edit", viewModel);
@@ -135,6 +137,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         (m) => this.db.ReceiptMedicines.DeleteObject(m)
                     );
 
+                receipt.IssuanceDate = formModel.IssuanceDate.Value;
                 db.SaveChanges();
 
                 return View("Details", GetViewModel(receipt));

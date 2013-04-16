@@ -22,7 +22,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Cid10Code = diagnosticHypothesis.Cid10Code,
                 Cid10Name = diagnosticHypothesis.Cid10Name,
                 Text = diagnosticHypothesis.Observations,
-                PatientId = diagnosticHypothesis.PatientId
+                PatientId = diagnosticHypothesis.PatientId,
+                MedicalRecordDate = diagnosticHypothesis.MedicalRecordDate,
             };
         }
 
@@ -56,7 +57,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new DiagnosticHypothesisViewModel()
                 {
                     Id = null,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
             return View("Edit", viewModel);
@@ -85,6 +87,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 diagnosticHypothesis.Observations = formModel.Text;
                 diagnosticHypothesis.Cid10Code = formModel.Cid10Code;
                 diagnosticHypothesis.Cid10Name = formModel.Cid10Name;
+                diagnosticHypothesis.MedicalRecordDate = formModel.MedicalRecordDate;
 
                 db.SaveChanges();
 

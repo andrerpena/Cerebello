@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
 
@@ -15,5 +16,9 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? PatientId { get; set; }
 
         public int? Id { get; set; }
+
+        [Display(Name = "Data de registro")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? MedicalRecordDate { get; set; }
     }
 }

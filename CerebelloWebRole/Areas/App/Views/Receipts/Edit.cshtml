@@ -34,6 +34,10 @@
             }
         </ul>
         
+        var editPanel = this.Html.CreateEditPanel();
+        editPanel.AddField(model => model.IssuanceDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.IssuanceDate)</text>);
+        @editPanel.GetHtml()
+        
         <div class="inline-link-bar">
             <a href="#" class="add-medicine inline-link">Incluir medicamento</a>
             <a href="@Url.Action("index", "medicines")" target="_blank" class="inline-link">Gerenciar medicamentos</a>

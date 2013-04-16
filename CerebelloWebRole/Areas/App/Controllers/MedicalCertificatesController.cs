@@ -32,6 +32,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                     Id = model.Id,
                                     PatientId = model.PatientId,
                                     ModelName = model.ModelMedicalCertificate != null ? model.ModelMedicalCertificate.Name : null,
+                                    IssuanceDate = model.IssuanceDate,
                                     Fields = (from f in model.Fields
                                               select new MedicalCertificateFieldViewModel()
                                                          {
@@ -78,6 +79,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PatientId = certificate.PatientId,
                     ModelName = certificate.ModelMedicalCertificate.Name,
                     ModelId = certificate.ModelMedicalCertificateId,
+                    IssuanceDate = certificate.IssuanceDate,
                     Fields = (from f in certificate.Fields
                               select new MedicalCertificateFieldViewModel()
                               {
@@ -92,7 +94,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new MedicalCertificateViewModel()
                 {
                     Id = id,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    IssuanceDate = this.GetPracticeLocalNow(),
                 };
             }
 
@@ -205,6 +208,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // the only situation in which ModelName will be null is when the model certificate has been removed
                     ModelName = certificate.ModelMedicalCertificate != null ? certificate.ModelMedicalCertificate.Name : null,
                     PatientId = certificate.PatientId,
+                    IssuanceDate = certificate.IssuanceDate,
                     Fields = (from f in certificate.Fields
                               select new MedicalCertificateFieldViewModel()
                               {

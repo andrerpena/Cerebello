@@ -18,7 +18,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Id = physicalExamination.Id,
                     PatientId = physicalExamination.PatientId,
-                    Notes = physicalExamination.Notes
+                    Notes = physicalExamination.Notes,
+                    MedicalRecordDate = physicalExamination.MedicalRecordDate,
                 };
         }
 
@@ -51,7 +52,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new PhysicalExaminationViewModel()
                 {
                     Id = null,
-                    PatientId = patientId
+                    PatientId = patientId,
+                    MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
             return View("Edit", viewModel);
@@ -80,6 +82,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 Debug.Assert(physicalExamination != null, "physicalExamination != null");
                 physicalExamination.Notes = formModel.Notes;
+                physicalExamination.MedicalRecordDate = formModel.MedicalRecordDate;
                 this.db.SaveChanges();
 
                 return View("Details", GetViewModel(physicalExamination));

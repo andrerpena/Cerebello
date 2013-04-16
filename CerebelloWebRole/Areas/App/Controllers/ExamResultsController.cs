@@ -19,6 +19,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                            Text = examResult.Text,
                            MedicalProcedureCode = examResult.MedicalProcedureCode,
                            MedicalProcedureName = examResult.MedicalProcedureName,
+                           ExaminationDate = examResult.ExaminationDate,
+                           ReceiveDate = examResult.ReceiveDate,
                        };
         }
 
@@ -67,7 +69,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new ExaminationResultViewModel
                                 {
                                     Id = null,
-                                    PatientId = patientId
+                                    PatientId = patientId,
+                                    ExaminationDate = null,
+                                    ReceiveDate = this.GetPracticeLocalNow(),
                                 };
             }
 
@@ -117,6 +121,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue
                     ? this.db.SYS_MedicalProcedure.Where(mp => mp.Id == formModel.MedicalProcedureId).Select(mp => mp.Code).FirstOrDefault()
                     : null;
+                dbObject.ExaminationDate = formModel.ExaminationDate.Value;
+                dbObject.ReceiveDate = formModel.ReceiveDate.Value;
 
                 db.SaveChanges();
 

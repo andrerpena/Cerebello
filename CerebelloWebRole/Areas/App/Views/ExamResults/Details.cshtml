@@ -9,6 +9,7 @@
         cardView.AddField(model => model.MedicalProcedureName, wholeRow: true);
         cardView.AddField(model => model.MedicalProcedureCode, wholeRow: true);
         cardView.AddField(model => model.Text, wholeRow: true);
+        cardView.AddField(model => model.ExaminationDate, @<text>@(this.Model.ExaminationDate.Value.ToString("dd/MM/yyyy"))</text>, wholeRow: true);
 
         @cardView.GetHtml()
     }

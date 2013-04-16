@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Xml.Serialization;
+using CerebelloWebRole.App_GlobalResources;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -44,5 +46,9 @@ namespace CerebelloWebRole.Areas.App.Models
         /// The options for certificate model
         /// </summary>
         public List<SelectListItem> ModelOptions { get; set; }
+
+        [Display(Name = "Data de emissão")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public DateTime? IssuanceDate { get; set; }
     }
 }

@@ -2383,7 +2383,8 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="chiefComplaint">Initial value of the ChiefComplaint property.</param>
-        public static Anamnese CreateAnamnese(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.String chiefComplaint)
+        /// <param name="medicalRecordDate">Initial value of the MedicalRecordDate property.</param>
+        public static Anamnese CreateAnamnese(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.String chiefComplaint, global::System.DateTime medicalRecordDate)
         {
             Anamnese anamnese = new Anamnese();
             anamnese.Id = id;
@@ -2391,6 +2392,7 @@ namespace Cerebello.Model
             anamnese.CreatedOn = createdOn;
             anamnese.PracticeId = practiceId;
             anamnese.ChiefComplaint = chiefComplaint;
+            anamnese.MedicalRecordDate = medicalRecordDate;
             return anamnese;
         }
 
@@ -2736,6 +2738,30 @@ namespace Cerebello.Model
         private global::System.String _RegularAndAcuteMedications;
         partial void OnRegularAndAcuteMedicationsChanging(global::System.String value);
         partial void OnRegularAndAcuteMedicationsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime MedicalRecordDate
+        {
+            get
+            {
+                return _MedicalRecordDate;
+            }
+            set
+            {
+                OnMedicalRecordDateChanging(value);
+                ReportPropertyChanging("MedicalRecordDate");
+                _MedicalRecordDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MedicalRecordDate");
+                OnMedicalRecordDateChanged();
+            }
+        }
+        private global::System.DateTime _MedicalRecordDate;
+        partial void OnMedicalRecordDateChanging(global::System.DateTime value);
+        partial void OnMedicalRecordDateChanged();
 
         #endregion
 
@@ -5934,13 +5960,15 @@ namespace Cerebello.Model
         /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.Int32 practiceId)
+        /// <param name="medicalRecordDate">Initial value of the MedicalRecordDate property.</param>
+        public static Diagnosis CreateDiagnosis(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.DateTime medicalRecordDate)
         {
             Diagnosis diagnosis = new Diagnosis();
             diagnosis.Id = id;
             diagnosis.PatientId = patientId;
             diagnosis.CreatedOn = createdOn;
             diagnosis.PracticeId = practiceId;
+            diagnosis.MedicalRecordDate = medicalRecordDate;
             return diagnosis;
         }
 
@@ -6118,6 +6146,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime MedicalRecordDate
+        {
+            get
+            {
+                return _MedicalRecordDate;
+            }
+            set
+            {
+                OnMedicalRecordDateChanging(value);
+                ReportPropertyChanging("MedicalRecordDate");
+                _MedicalRecordDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MedicalRecordDate");
+                OnMedicalRecordDateChanged();
+            }
+        }
+        private global::System.DateTime _MedicalRecordDate;
+        partial void OnMedicalRecordDateChanging(global::System.DateTime value);
+        partial void OnMedicalRecordDateChanged();
 
         #endregion
 
@@ -6184,7 +6236,8 @@ namespace Cerebello.Model
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="patientId">Initial value of the PatientId property.</param>
-        public static DiagnosticHypothesis CreateDiagnosticHypothesis(global::System.Int32 id, global::System.String cid10Name, global::System.Int32 practiceId, global::System.DateTime createdOn, global::System.Int32 patientId)
+        /// <param name="medicalRecordDate">Initial value of the MedicalRecordDate property.</param>
+        public static DiagnosticHypothesis CreateDiagnosticHypothesis(global::System.Int32 id, global::System.String cid10Name, global::System.Int32 practiceId, global::System.DateTime createdOn, global::System.Int32 patientId, global::System.DateTime medicalRecordDate)
         {
             DiagnosticHypothesis diagnosticHypothesis = new DiagnosticHypothesis();
             diagnosticHypothesis.Id = id;
@@ -6192,6 +6245,7 @@ namespace Cerebello.Model
             diagnosticHypothesis.PracticeId = practiceId;
             diagnosticHypothesis.CreatedOn = createdOn;
             diagnosticHypothesis.PatientId = patientId;
+            diagnosticHypothesis.MedicalRecordDate = medicalRecordDate;
             return diagnosticHypothesis;
         }
 
@@ -6369,6 +6423,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PatientId;
         partial void OnPatientIdChanging(global::System.Int32 value);
         partial void OnPatientIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime MedicalRecordDate
+        {
+            get
+            {
+                return _MedicalRecordDate;
+            }
+            set
+            {
+                OnMedicalRecordDateChanging(value);
+                ReportPropertyChanging("MedicalRecordDate");
+                _MedicalRecordDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MedicalRecordDate");
+                OnMedicalRecordDateChanged();
+            }
+        }
+        private global::System.DateTime _MedicalRecordDate;
+        partial void OnMedicalRecordDateChanging(global::System.DateTime value);
+        partial void OnMedicalRecordDateChanged();
 
         #endregion
 
@@ -6954,7 +7032,8 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="medicalProcedureName">Initial value of the MedicalProcedureName property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static ExaminationRequest CreateExaminationRequest(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureName, global::System.Int32 practiceId)
+        /// <param name="requestDate">Initial value of the RequestDate property.</param>
+        public static ExaminationRequest CreateExaminationRequest(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureName, global::System.Int32 practiceId, global::System.DateTime requestDate)
         {
             ExaminationRequest examinationRequest = new ExaminationRequest();
             examinationRequest.Id = id;
@@ -6962,6 +7041,7 @@ namespace Cerebello.Model
             examinationRequest.CreatedOn = createdOn;
             examinationRequest.MedicalProcedureName = medicalProcedureName;
             examinationRequest.PracticeId = practiceId;
+            examinationRequest.RequestDate = requestDate;
             return examinationRequest;
         }
 
@@ -7139,6 +7219,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime RequestDate
+        {
+            get
+            {
+                return _RequestDate;
+            }
+            set
+            {
+                OnRequestDateChanging(value);
+                ReportPropertyChanging("RequestDate");
+                _RequestDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("RequestDate");
+                OnRequestDateChanged();
+            }
+        }
+        private global::System.DateTime _RequestDate;
+        partial void OnRequestDateChanging(global::System.DateTime value);
+        partial void OnRequestDateChanged();
 
         #endregion
 
@@ -7206,7 +7310,9 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="medicalProcedureName">Initial value of the MedicalProcedureName property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static ExaminationResult CreateExaminationResult(global::System.Int32 id, global::System.String text, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureName, global::System.Int32 practiceId)
+        /// <param name="examinationDate">Initial value of the ExaminationDate property.</param>
+        /// <param name="receiveDate">Initial value of the ReceiveDate property.</param>
+        public static ExaminationResult CreateExaminationResult(global::System.Int32 id, global::System.String text, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String medicalProcedureName, global::System.Int32 practiceId, global::System.DateTime examinationDate, global::System.DateTime receiveDate)
         {
             ExaminationResult examinationResult = new ExaminationResult();
             examinationResult.Id = id;
@@ -7215,6 +7321,8 @@ namespace Cerebello.Model
             examinationResult.CreatedOn = createdOn;
             examinationResult.MedicalProcedureName = medicalProcedureName;
             examinationResult.PracticeId = practiceId;
+            examinationResult.ExaminationDate = examinationDate;
+            examinationResult.ReceiveDate = receiveDate;
             return examinationResult;
         }
 
@@ -7392,6 +7500,54 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime ExaminationDate
+        {
+            get
+            {
+                return _ExaminationDate;
+            }
+            set
+            {
+                OnExaminationDateChanging(value);
+                ReportPropertyChanging("ExaminationDate");
+                _ExaminationDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ExaminationDate");
+                OnExaminationDateChanged();
+            }
+        }
+        private global::System.DateTime _ExaminationDate;
+        partial void OnExaminationDateChanging(global::System.DateTime value);
+        partial void OnExaminationDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime ReceiveDate
+        {
+            get
+            {
+                return _ReceiveDate;
+            }
+            set
+            {
+                OnReceiveDateChanging(value);
+                ReportPropertyChanging("ReceiveDate");
+                _ReceiveDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ReceiveDate");
+                OnReceiveDateChanged();
+            }
+        }
+        private global::System.DateTime _ReceiveDate;
+        partial void OnReceiveDateChanging(global::System.DateTime value);
+        partial void OnReceiveDateChanged();
 
         #endregion
 
@@ -8692,7 +8848,8 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="text">Initial value of the Text property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static MedicalCertificate CreateMedicalCertificate(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String text, global::System.Int32 practiceId)
+        /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
+        public static MedicalCertificate CreateMedicalCertificate(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String text, global::System.Int32 practiceId, global::System.DateTime issuanceDate)
         {
             MedicalCertificate medicalCertificate = new MedicalCertificate();
             medicalCertificate.Id = id;
@@ -8700,6 +8857,7 @@ namespace Cerebello.Model
             medicalCertificate.CreatedOn = createdOn;
             medicalCertificate.Text = text;
             medicalCertificate.PracticeId = practiceId;
+            medicalCertificate.IssuanceDate = issuanceDate;
             return medicalCertificate;
         }
 
@@ -8853,6 +9011,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime IssuanceDate
+        {
+            get
+            {
+                return _IssuanceDate;
+            }
+            set
+            {
+                OnIssuanceDateChanging(value);
+                ReportPropertyChanging("IssuanceDate");
+                _IssuanceDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IssuanceDate");
+                OnIssuanceDateChanged();
+            }
+        }
+        private global::System.DateTime _IssuanceDate;
+        partial void OnIssuanceDateChanging(global::System.DateTime value);
+        partial void OnIssuanceDateChanged();
 
         #endregion
 
@@ -10973,13 +11155,17 @@ namespace Cerebello.Model
         /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="fileId">Initial value of the FileId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static PatientFile CreatePatientFile(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 fileId, global::System.Int32 practiceId)
+        /// <param name="fileDate">Initial value of the FileDate property.</param>
+        /// <param name="receiveDate">Initial value of the ReceiveDate property.</param>
+        public static PatientFile CreatePatientFile(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 fileId, global::System.Int32 practiceId, global::System.DateTime fileDate, global::System.DateTime receiveDate)
         {
             PatientFile patientFile = new PatientFile();
             patientFile.Id = id;
             patientFile.PatientId = patientId;
             patientFile.FileId = fileId;
             patientFile.PracticeId = practiceId;
+            patientFile.FileDate = fileDate;
+            patientFile.ReceiveDate = receiveDate;
             return patientFile;
         }
 
@@ -11085,6 +11271,54 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime FileDate
+        {
+            get
+            {
+                return _FileDate;
+            }
+            set
+            {
+                OnFileDateChanging(value);
+                ReportPropertyChanging("FileDate");
+                _FileDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FileDate");
+                OnFileDateChanged();
+            }
+        }
+        private global::System.DateTime _FileDate;
+        partial void OnFileDateChanging(global::System.DateTime value);
+        partial void OnFileDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime ReceiveDate
+        {
+            get
+            {
+                return _ReceiveDate;
+            }
+            set
+            {
+                OnReceiveDateChanging(value);
+                ReportPropertyChanging("ReceiveDate");
+                _ReceiveDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ReceiveDate");
+                OnReceiveDateChanged();
+            }
+        }
+        private global::System.DateTime _ReceiveDate;
+        partial void OnReceiveDateChanging(global::System.DateTime value);
+        partial void OnReceiveDateChanged();
 
         #endregion
 
@@ -11710,7 +11944,8 @@ namespace Cerebello.Model
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="notes">Initial value of the Notes property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static PhysicalExamination CreatePhysicalExamination(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String notes, global::System.Int32 practiceId)
+        /// <param name="medicalRecordDate">Initial value of the MedicalRecordDate property.</param>
+        public static PhysicalExamination CreatePhysicalExamination(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.String notes, global::System.Int32 practiceId, global::System.DateTime medicalRecordDate)
         {
             PhysicalExamination physicalExamination = new PhysicalExamination();
             physicalExamination.Id = id;
@@ -11718,6 +11953,7 @@ namespace Cerebello.Model
             physicalExamination.CreatedOn = createdOn;
             physicalExamination.Notes = notes;
             physicalExamination.PracticeId = practiceId;
+            physicalExamination.MedicalRecordDate = medicalRecordDate;
             return physicalExamination;
         }
 
@@ -11847,6 +12083,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime MedicalRecordDate
+        {
+            get
+            {
+                return _MedicalRecordDate;
+            }
+            set
+            {
+                OnMedicalRecordDateChanging(value);
+                ReportPropertyChanging("MedicalRecordDate");
+                _MedicalRecordDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MedicalRecordDate");
+                OnMedicalRecordDateChanged();
+            }
+        }
+        private global::System.DateTime _MedicalRecordDate;
+        partial void OnMedicalRecordDateChanging(global::System.DateTime value);
+        partial void OnMedicalRecordDateChanged();
 
         #endregion
 
@@ -12571,13 +12831,15 @@ namespace Cerebello.Model
         /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static Receipt CreateReceipt(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.Int32 practiceId)
+        /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
+        public static Receipt CreateReceipt(global::System.Int32 id, global::System.Int32 patientId, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.DateTime issuanceDate)
         {
             Receipt receipt = new Receipt();
             receipt.Id = id;
             receipt.PatientId = patientId;
             receipt.CreatedOn = createdOn;
             receipt.PracticeId = practiceId;
+            receipt.IssuanceDate = issuanceDate;
             return receipt;
         }
 
@@ -12683,6 +12945,30 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime IssuanceDate
+        {
+            get
+            {
+                return _IssuanceDate;
+            }
+            set
+            {
+                OnIssuanceDateChanging(value);
+                ReportPropertyChanging("IssuanceDate");
+                _IssuanceDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IssuanceDate");
+                OnIssuanceDateChanged();
+            }
+        }
+        private global::System.DateTime _IssuanceDate;
+        partial void OnIssuanceDateChanging(global::System.DateTime value);
+        partial void OnIssuanceDateChanged();
 
         #endregion
 

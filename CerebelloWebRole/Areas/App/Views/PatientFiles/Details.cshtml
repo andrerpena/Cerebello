@@ -8,6 +8,7 @@
         var cardView = this.Html.CreateCardView();
         cardView.AddField(model => model.FileName, @<text><a target="_blank" href="@Url.Action("DownloadFile", "PatientFiles", new { fileName = this.Model.FileName })">@this.Model.FileName</a></text>, wholeRow: true);
         cardView.AddField(model => model.Description, wholeRow: true);
+        cardView.AddField(model => model.FileDate, @<text>@(this.Model.FileDate.Value.ToString("dd/MM/yyyy"))</text>, wholeRow: true);
         
         @cardView.GetHtml()
     }

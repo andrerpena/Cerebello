@@ -343,6 +343,7 @@
           <Property Name="Allergies" Type="varchar(max)" />
           <Property Name="SexualHistory" Type="varchar(max)" />
           <Property Name="Conclusion" Type="varchar(max)" />
+          <Property Name="MedicalRecordDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Appointment">
           <Key>
@@ -484,6 +485,7 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="MedicalRecordDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="DiagnosticHypothesis">
           <Key>
@@ -496,6 +498,7 @@
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="MedicalRecordDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -522,6 +525,7 @@
           <Property Name="MedicalProcedureCode" Type="nchar" MaxLength="12" />
           <Property Name="MedicalProcedureName" Type="nvarchar" Nullable="false" MaxLength="310" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="RequestDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="ExaminationResult">
           <Key>
@@ -534,6 +538,8 @@
           <Property Name="MedicalProcedureCode" Type="nchar" MaxLength="12" />
           <Property Name="MedicalProcedureName" Type="nvarchar" Nullable="false" MaxLength="310" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="ExaminationDate" Type="datetime" Nullable="false" />
+          <Property Name="ReceiveDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="File">
           <Key>
@@ -608,6 +614,7 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="Text" Type="text" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="IssuanceDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="MedicalCertificateField">
           <Key>
@@ -699,6 +706,8 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="FileId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="FileDate" Type="datetime" Nullable="false" />
+          <Property Name="ReceiveDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -739,6 +748,7 @@
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="Notes" Type="text" Nullable="false" />
+          <Property Name="MedicalRecordDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -770,6 +780,7 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="IssuanceDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="ReceiptMedicine">
           <Key>
@@ -2007,6 +2018,7 @@
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_Receipt_Patient" FromRole="Receipt" ToRole="Patient" />
           <NavigationProperty Name="ReceiptMedicines" Relationship="Cerebello.Model.FK_ReceiptMedicine_Receipt" FromRole="Receipt" ToRole="ReceiptMedicine" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="IssuanceDate" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="ReceiptMedicine">
           <Key>
@@ -2249,6 +2261,7 @@
           <Property Type="String" Name="SexualHistory" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="RegularAndAcuteMedications" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="MedicalRecordDate" Precision="3" Nullable="false" />
         </EntityType>
         <Association Name="FK_Anamnese_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -2487,6 +2500,7 @@
           <NavigationProperty Name="Fields" Relationship="Cerebello.Model.FK_MedicalCertificateField_MedicalCertificate" FromRole="MedicalCertificate" ToRole="MedicalCertificateField" />
           <Property Type="String" Name="Text" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="IssuanceDate" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="MedicalCertificateField">
           <Key>
@@ -2547,6 +2561,7 @@
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <Property Type="String" Name="Cid10Name" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="MedicalRecordDate" Precision="3" Nullable="false" />
         </EntityType>
         <Association Name="FK_User_Doctor">
           <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="0..1" />
@@ -2640,6 +2655,7 @@
           <Property Type="String" Name="MedicalProcedureCode" MaxLength="12" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="MedicalProcedureName" Nullable="false" MaxLength="310" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="RequestDate" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_ExaminationRequest_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -2665,6 +2681,8 @@
           <Property Type="String" Name="MedicalProcedureCode" MaxLength="12" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="MedicalProcedureName" Nullable="false" MaxLength="310" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="ExaminationDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="ReceiveDate" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_ExaminationResult_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -2983,6 +3001,7 @@
           <Property Type="String" Name="Notes" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="PhysicalExamination" ToRole="Patient" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="MedicalRecordDate" Precision="3" Nullable="false" />
         </EntityType>
         <Association Name="FK_PhysicalExamination_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -3018,6 +3037,8 @@
           <NavigationProperty Name="File" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="PatientFile" ToRole="File" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="PatientFile" ToRole="Patient" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="DateTime" Name="FileDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="ReceiveDate" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_PatientFile_File">
           <End Type="Cerebello.Model.File" Role="File" Multiplicity="1" />
@@ -3078,6 +3099,7 @@
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <Property Type="Int32" Name="PatientId" Nullable="false" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_DiagnosticHypothesis_Patient" FromRole="DiagnosticHypothesis" ToRole="Patient" />
+          <Property Type="DateTime" Name="MedicalRecordDate" Precision="3" Nullable="false" />
         </EntityType>
         <Association Name="FK_DiagnosticHypothesis_Patient">
           <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
@@ -3237,7 +3259,7 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="People"><EntityTypeMapping TypeName="Cerebello.Model.Person"><MappingFragment StoreEntitySet="Person">
-            <ScalarProperty Name="PictureBlobName" ColumnName="PictureBlobName" />
+                <ScalarProperty Name="PictureBlobName" ColumnName="PictureBlobName" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="PhoneLand" ColumnName="PhoneLand" />
                 <ScalarProperty Name="EmailGravatarHash" ColumnName="EmailGravatarHash" />
@@ -3275,6 +3297,7 @@
             <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Receipts"><EntityTypeMapping TypeName="Cerebello.Model.Receipt"><MappingFragment StoreEntitySet="Receipt">
+                <ScalarProperty Name="IssuanceDate" ColumnName="IssuanceDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="PatientId" ColumnName="PatientId" />
@@ -3310,6 +3333,7 @@
           <EntitySetMapping Name="Anamnese">
             <EntityTypeMapping TypeName="Cerebello.Model.Anamnese">
               <MappingFragment StoreEntitySet="Anamnese">
+                <ScalarProperty Name="MedicalRecordDate" ColumnName="MedicalRecordDate" />
                 <ScalarProperty Name="RegularAndAcuteMedications" ColumnName="RegularAndAcuteMedications" />
                 <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
                 <ScalarProperty Name="SexualHistory" ColumnName="SexualHistory" />
@@ -3478,6 +3502,7 @@
           <EntitySetMapping Name="MedicalCertificates">
             <EntityTypeMapping TypeName="Cerebello.Model.MedicalCertificate">
               <MappingFragment StoreEntitySet="MedicalCertificate">
+                <ScalarProperty Name="IssuanceDate" ColumnName="IssuanceDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -3501,6 +3526,7 @@
           <EntitySetMapping Name="Diagnoses">
             <EntityTypeMapping TypeName="Cerebello.Model.Diagnosis">
               <MappingFragment StoreEntitySet="Diagnosis">
+                <ScalarProperty Name="MedicalRecordDate" ColumnName="MedicalRecordDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Cid10Name" ColumnName="Cid10Name" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -3558,6 +3584,7 @@
           <EntitySetMapping Name="ExaminationRequests">
             <EntityTypeMapping TypeName="Cerebello.Model.ExaminationRequest">
               <MappingFragment StoreEntitySet="ExaminationRequest">
+                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="MedicalProcedureName" ColumnName="MedicalProcedureName" />
                 <ScalarProperty Name="MedicalProcedureCode" ColumnName="MedicalProcedureCode" />
@@ -3571,6 +3598,8 @@
           <EntitySetMapping Name="ExaminationResults">
             <EntityTypeMapping TypeName="Cerebello.Model.ExaminationResult">
               <MappingFragment StoreEntitySet="ExaminationResult">
+                <ScalarProperty Name="ReceiveDate" ColumnName="ReceiveDate" />
+                <ScalarProperty Name="ExaminationDate" ColumnName="ExaminationDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="MedicalProcedureName" ColumnName="MedicalProcedureName" />
                 <ScalarProperty Name="MedicalProcedureCode" ColumnName="MedicalProcedureCode" />
@@ -3741,6 +3770,7 @@
           <EntitySetMapping Name="PhysicalExaminations">
             <EntityTypeMapping TypeName="Cerebello.Model.PhysicalExamination">
               <MappingFragment StoreEntitySet="PhysicalExamination">
+                <ScalarProperty Name="MedicalRecordDate" ColumnName="MedicalRecordDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -3764,6 +3794,8 @@
           <EntitySetMapping Name="PatientFiles">
             <EntityTypeMapping TypeName="Cerebello.Model.PatientFile">
               <MappingFragment StoreEntitySet="PatientFile">
+                <ScalarProperty Name="ReceiveDate" ColumnName="ReceiveDate" />
+                <ScalarProperty Name="FileDate" ColumnName="FileDate" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="PatientId" ColumnName="PatientId" />
@@ -3796,6 +3828,7 @@
           <EntitySetMapping Name="DiagnosticHypotheses">
             <EntityTypeMapping TypeName="Cerebello.Model.DiagnosticHypothesis">
               <MappingFragment StoreEntitySet="DiagnosticHypothesis">
+                <ScalarProperty Name="MedicalRecordDate" ColumnName="MedicalRecordDate" />
                 <ScalarProperty Name="PatientId" ColumnName="PatientId" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />

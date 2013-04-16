@@ -135,7 +135,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     CreatedOn = patientFile.File.CreatedOn,
                     Description = patientFile.File.Description,
                     FileContainer = patientFile.File.ContainerName,
-                    FileName = patientFile.File.FileName
+                    FileName = patientFile.File.FileName,
+                    FileDate = patientFile.FileDate,
+                    ReceiveDate = patientFile.ReceiveDate,
                 };
         }
 
@@ -170,7 +172,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel = new PatientFileViewModel()
                     {
                         Id = null,
-                        PatientId = patientId.Value
+                        PatientId = patientId.Value,
+                        FileDate = null,
+                        ReceiveDate = this.GetPracticeLocalNow(),
                     };
             }
 
@@ -231,6 +235,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Debug.Assert(patientFile != null, "patientFile != null");
 
                 patientFile.File.Description = formModel.Description;
+                patientFile.FileDate = formModel.FileDate.Value;
+                patientFile.ReceiveDate = formModel.ReceiveDate.Value;
                 this.db.SaveChanges();
                 return View("Details", GetViewModel(patientFile));
             }
