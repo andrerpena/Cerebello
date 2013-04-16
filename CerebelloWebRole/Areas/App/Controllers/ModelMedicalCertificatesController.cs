@@ -197,6 +197,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult AutocompleteModelMedicalCertificates(string term, int pageSize, int pageIndex)
         {
             IQueryable<ModelMedicalCertificate> baseQuery = this.db.ModelMedicalCertificates;
+            baseQuery = baseQuery.Where(c => c.DoctorId == this.Doctor.Id);
             if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(c => c.Name.Contains(term));
 
