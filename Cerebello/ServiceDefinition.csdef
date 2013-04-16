@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="Cerebello" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2012-10.1.8">
   <WebRole name="CerebelloWebRole" vmsize="Small">
+    <Startup>
+      <Task commandLine="newrelic.cmd" executionContext="elevated" taskType="simple">
+        <Environment>
+          <Variable name="EMULATED">
+            <RoleInstanceValue xpath="/RoleEnvironment/Deployment/@emulated" />
+          </Variable>
+          <Variable name="IsWorkerRole" value="false" />
+        </Environment>
+      </Task>
+    </Startup>
     <Sites>
       <Site name="Web">
         <Bindings>
