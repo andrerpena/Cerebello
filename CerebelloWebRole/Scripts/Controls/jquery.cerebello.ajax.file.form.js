@@ -16,38 +16,34 @@
     }
 
     AjaxFileForm.prototype = {
-
         init: function () {
             var _this = this;
             $.validator.unobtrusive.parse(_this.$el);
             _this.$el.submit(function () {
                 if ($(this).valid()) {
-                    
-                    // the GET query string
-                    var formData = $(this).serialize();
-                    
-                    // the action will include everything that is not the file as a GET query string
-                    var formAction = this.action + (formData ? "?" + formData : "");
 
+                    // browser supports xhr2 (that is html5)
+                    // creating and filling FormData object
+                    var formData = new FormData();
+                    var data1 = $(this).serializeArray();
+                    for (var itInput = 0; itInput < data1.length; itInput++) {
+                        formData.append(data1[itInput].name, data1[itInput].value);
+                    }
                     var fileInputs = $("input[type=file]", $(this));
-                    if (fileInputs.lenght > 0)
-                        throw "There can be no more than 1 file input in the form";
 
-                    var fileInput = fileInputs.length ? fileInputs[0] : null;
-                    var fileName = fileInput ? fileInput.files[0].name : null;
-                    var fileType = fileInput ? fileInput.files[0].type : null;
-                    var fileSize = fileInput ? fileInput.files[0].size : null;
+                    for (var itFileInput = 0; itFileInput < fileInputs.length; itFileInput++) {
+                        var fileInput = fileInputs[itFileInput];
+                        for (var itFile = 0; itFile < fileInput.files.length; itFile++) {
+                            var file = fileInput.files[itFileInput];
+                            formData.append($(fileInput).attr("name"), file);
+                        }
+                    }
 
+                    // sending request
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', formAction);
-                    xhr.setRequestHeader('Content-type', 'multipart/form-data');
-                    //Appending file information in Http headers
-                    xhr.setRequestHeader('X-File-Name', fileName);
-                    xhr.setRequestHeader('X-File-Type', fileType);
-                    xhr.setRequestHeader('X-File-Size', fileSize);
-                    //Sending file in XMLHttpRequest
-                    xhr.send(fileInput ? fileInput.files[0] : null);
-                    xhr.onreadystatechange = function() {
+                    xhr.open('POST', this.action);
+
+                    xhr.onreadystatechange = function () {
                         if (xhr.readyState == 4 && xhr.status == 200) {
                             var contentTypeHeader = xhr.getResponseHeader("Content-Type");
                             var data = xhr.response;
@@ -65,11 +61,14 @@
                             _this.opts.error.call(_this.$el);
                         }
                     };
+
+                    xhr.send(formData);
                 }
+
                 return false;
             });
         }
-    }
+    };
 
     $.fn.ajaxFileForm = function (options) {
         if (this.length) {
