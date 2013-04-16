@@ -1,18 +1,12 @@
 ﻿@model DiagnosticHypothesisViewModel
+@using System.Diagnostics
 @using System.Linq.Expressions
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
     Layout = null;
-    string diagnosticHypothesisId;
-    if (this.Model != null && this.Model.Id == null)
-    {
-        diagnosticHypothesisId = "new-" + Guid.NewGuid().ToString();
-    }
-    else
-    {
-        diagnosticHypothesisId = this.Model.Id.ToString();
-    }
+    Debug.Assert(this.Model != null, "this.Model != null");
+    var diagnosticHypothesisId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
 
 <div class="diagnostic-hypothesis-edit appointment-panel" data-val-id="diagnostic-hypothesis-@diagnosticHypothesisId">

@@ -1,18 +1,10 @@
-﻿@using System.Diagnostics
+﻿@model PhysicalExaminationViewModel
+@using System.Diagnostics
 @using CerebelloWebRole.Code.Controls
-@model PhysicalExaminationViewModel
 @{
     this.Layout = null;
-    string physicalExaminationId = null;
-    if (this.Model != null && Model.Id == null)
-    {
-        physicalExaminationId = "new-" + Guid.NewGuid().ToString();
-    }
-    else
-    {
-        Debug.Assert(Model != null, "Model != null");
-        physicalExaminationId = Model.Id.ToString();
-    }
+    Debug.Assert(this.Model != null, "this.Model != null");
+    var physicalExaminationId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
 <div class="physicalExamination-edit appointment-panel" data-val-id="physicalExamination-@physicalExaminationId">
     @using (Html.BeginForm(null, null, FormMethod.Post))

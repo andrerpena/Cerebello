@@ -3,16 +3,8 @@
 @using CerebelloWebRole.Code.Controls
 @{
     this.Layout = null;
-    string patientFileId = null;
-    if (this.Model != null && Model.Id == null)
-    {
-        patientFileId = "new-" + Guid.NewGuid().ToString();
-    }
-    else
-    {
-        Debug.Assert(Model != null, "Model != null");
-        patientFileId = Model.Id.ToString();
-    }
+    Debug.Assert(this.Model != null, "this.Model != null");
+    var patientFileId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
 <div class="patientFile-edit appointment-panel" data-val-id="patientFile-@patientFileId">
     <div class="xhr2">

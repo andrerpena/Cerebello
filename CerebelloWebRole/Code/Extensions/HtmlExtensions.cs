@@ -484,13 +484,13 @@ namespace CerebelloWebRole.Code.Extensions
         /// <returns>a GUID string</returns>
         private static string GetCollectionItemIndex(string collectionIndexFieldName, HttpContextBase httpContext)
         {
-            Queue<string> previousIndices = (Queue<string>)httpContext.Items[collectionIndexFieldName];
+            var previousIndices = (Queue<string>)httpContext.Items[collectionIndexFieldName];
             if (previousIndices == null)
             {
                 httpContext.Items[collectionIndexFieldName] = previousIndices = new Queue<string>();
 
                 string previousIndicesValues = httpContext.Request[collectionIndexFieldName];
-                if (!String.IsNullOrWhiteSpace(previousIndicesValues))
+                if (!string.IsNullOrWhiteSpace(previousIndicesValues))
                 {
                     foreach (string index in previousIndicesValues.Split(','))
                         previousIndices.Enqueue(index);
@@ -503,7 +503,7 @@ namespace CerebelloWebRole.Code.Extensions
         public abstract class CollectionItemScopeBase<TModel> : IDisposable
         {
             private readonly HtmlHelper<TModel> _html;
-            private readonly string _previousPrefix;
+            private readonly string previousPrefix;
 
             /// <summary>
             /// Writes the beggining of the collection item
@@ -539,8 +539,8 @@ namespace CerebelloWebRole.Code.Extensions
                 html.ViewData.Add("collectionIndex", itemIndex);
                 html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
 
-                this._previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
                 html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
+                this.previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
 
                 this._html = html;
             }
@@ -550,7 +550,7 @@ namespace CerebelloWebRole.Code.Extensions
             /// </summary>
             public void Dispose()
             {
-                this._html.ViewData.TemplateInfo.HtmlFieldPrefix = this._previousPrefix;
+                this._html.ViewData.TemplateInfo.HtmlFieldPrefix = this.previousPrefix;
                 this.WriteEnd(this._html);
             }
         }

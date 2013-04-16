@@ -1,19 +1,13 @@
-﻿@using CerebelloWebRole.Code.Controls
-@model AnamneseViewModel
+﻿@model AnamneseViewModel
+@using System.Diagnostics
+@using CerebelloWebRole.Code.Controls
 @{
     Layout = null;
-    string anamneseId;
-    if (this.Model != null && this.Model.Id == null)
-    {
-        anamneseId = "new-" + Guid.NewGuid().ToString();
-    }
-    else
-    {
-        anamneseId = Model.Id.ToString();
-    }
+    Debug.Assert(this.Model != null, "this.Model != null");
+    var anamneseId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
 <div class="anamnese-edit appointment-panel" data-val-id="anamnese-@anamneseId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
         @Html.ValidationSummary(false)
         @Html.HiddenFor(model => model.PatientId)

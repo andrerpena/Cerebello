@@ -16,9 +16,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class AnamnesesController : DoctorController
     {
+        /// <summary>
+        /// Constructs a view-model for an anamnesis, given the DB object representing it.
+        /// </summary>
+        /// <param name="anamnese">The DB object representing the anamnesis.</param>
+        /// <returns>The view-model that contains data about the anamnesis.</returns>
         public static AnamneseViewModel GetViewModel(Anamnese anamnese)
         {
-            return new AnamneseViewModel()
+            return new AnamneseViewModel
             {
                 Id = anamnese.Id,
                 PatientId = anamnese.PatientId,
@@ -74,9 +79,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         /// <summary>
         /// Requirements:
-        ///    - The list of diagnoses passed in must be sinchronized with the server
+        ///    - The list of diagnoses passed in must be synchronized with the server
         /// </summary>
-        /// <param name="formModel"></param>
+        /// <param name="formModel">View model with data to edit/create an anamnese.</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult Edit(AnamneseViewModel formModel)
@@ -114,10 +119,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return View("Details", GetViewModel(anamnese));
+                return this.View("Details", GetViewModel(anamnese));
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <summary>
@@ -128,7 +133,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <returns></returns>
         public ActionResult DiagnosticHypothesisEditor(DiagnosticHypothesisViewModel formModel)
         {
-            return View(formModel);
+            return this.View(formModel);
         }
 
         /// <summary>
