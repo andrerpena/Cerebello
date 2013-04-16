@@ -27,6 +27,15 @@
         /// </summary>
         public const string DEFAULT_PASSWORD = "123abc";
 
+#if DEBUG
+        /// <summary>
+        /// These DEBUG values are required... we cannot risk other official accounts with data
+        /// being uploaded in debug mode.
+        /// </summary>
+        public const string AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME = "patientfiles-debug";
+        public const string AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME = "temp-debug";
+        public const string PERSON_PROFILE_PICTURE_CONTAINER_NAME = "personprofilepictures-debug";
+#else
         /// <summary>
         /// The name of the file container for the patient files.
         /// A file container is a subset for the files storaged.
@@ -47,6 +56,7 @@
         /// *MUST BE LOWER CASE* (really, I lost 1 hour trying to figure out way. Ask Azure team)
         /// </summary>
         public const string PERSON_PROFILE_PICTURE_CONTAINER_NAME = "personprofilepictures";
+#endif
 
 #if DEBUG
         public const string DOMAIN = "localhost";
