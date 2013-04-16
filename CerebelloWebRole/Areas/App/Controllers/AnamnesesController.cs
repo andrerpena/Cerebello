@@ -109,7 +109,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.ReviewOfSystems = formModel.ReviewOfSystems;
                 anamnese.SexualHistory = formModel.SexualHistory;
                 anamnese.SocialDiseases = formModel.SocialHistory;
-                anamnese.MedicalRecordDate = formModel.MedicalRecordDate;
+                anamnese.MedicalRecordDate = formModel.MedicalRecordDate.Value;
 
                 db.SaveChanges();
 

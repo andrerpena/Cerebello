@@ -87,7 +87,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 diagnosticHypothesis.Observations = formModel.Text;
                 diagnosticHypothesis.Cid10Code = formModel.Cid10Code;
                 diagnosticHypothesis.Cid10Name = formModel.Cid10Name;
-                diagnosticHypothesis.MedicalRecordDate = formModel.MedicalRecordDate;
+                diagnosticHypothesis.MedicalRecordDate = formModel.MedicalRecordDate.Value;
 
                 db.SaveChanges();
 

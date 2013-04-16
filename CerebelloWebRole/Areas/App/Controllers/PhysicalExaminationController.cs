@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 Debug.Assert(physicalExamination != null, "physicalExamination != null");
                 physicalExamination.Notes = formModel.Notes;
-                physicalExamination.MedicalRecordDate = formModel.MedicalRecordDate;
+                physicalExamination.MedicalRecordDate = formModel.MedicalRecordDate.Value;
                 this.db.SaveChanges();
 
                 return View("Details", GetViewModel(physicalExamination));

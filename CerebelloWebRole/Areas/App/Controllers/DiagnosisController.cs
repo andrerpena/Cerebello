@@ -95,7 +95,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.Observations = formModel.Text;
                 dbObject.Cid10Code = formModel.Cid10Code;
                 dbObject.Cid10Name = formModel.Cid10Name;
-                dbObject.MedicalRecordDate = formModel.MedicalRecordDate;
+                dbObject.MedicalRecordDate = formModel.MedicalRecordDate.Value;
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
