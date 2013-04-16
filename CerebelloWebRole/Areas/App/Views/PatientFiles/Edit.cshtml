@@ -15,11 +15,16 @@
     }
 }
 <div class="patientFile-edit appointment-panel" data-val-id="patientFile-@patientFileId">
+    <div class="xhr2">
+        @Html.Message("A função de upload de arquivos ainda não é suportada pelo seu browser.")
+    </div>
     @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+        <div class="xhr2" style="display: none;">
+            @{
+                @Html.ValidationSummary(false)
+                @Html.HiddenFor(model => model.PatientId)
+                @Html.HiddenFor(model => model.Id)
 
                 var editPanel = this.Html.CreateEditPanel();
                 if (!this.Model.Id.HasValue || this.Model.Id == 0)
@@ -32,14 +37,17 @@
                 editPanel.AddField(model => model.FileDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.FileDate)</text>);
                 editPanel.AddField(model => model.ReceiveDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.ReceiveDate)</text>);
                 @editPanel.GetHtml()
+            }
+        </div>
 
         <div class="submit-bar">
-            <input type="submit" value="salvar arquivo" />
-            <span class="separator">ou</span>
+            <span class="xhr2" style="display: none;">
+                <input type="submit" value="salvar arquivo" />
+                <span class="separator">ou</span>
+            </span>
             <a href="#" class="cancel">cancelar</a>
         </div>
     }
-
     <script type="text/javascript">
         (function () {
             var $container = $("div[data-val-id='patientFile-@patientFileId']");
@@ -48,16 +56,19 @@
                     $container.replaceWith(result);
                 }
             });
+            if (new XMLHttpRequest().upload) {
+                $(".xhr2", $container).toggle();
+            }
             $('a.cancel', $container).click(function (e) {
                 e.preventDefault();
-                    @if (Model.Id != null)
-                    {
-                        @:$.ajax({ url: "@(Url.Action("Details", new { id = Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
-                    }
-                    else
-                    {
-                        @:$container.remove();
-                    }
+                @if (Model.Id != null)
+                {
+                    @:$.ajax({ url: "@(Url.Action("Details", new { id = Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
+                }
+                else
+                {
+                    @:$container.remove();
+                }
             });
         })();
     </script>
