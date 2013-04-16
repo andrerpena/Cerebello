@@ -265,7 +265,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             result.Id = patient.Id;
             result.Observations = patient.Person.Observations;
 
-            result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.Single());
+            result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.FirstOrDefault())
+                ?? new AddressViewModel();
 
             result.Sessions = this.GetAllSessionsData(patient);
 
