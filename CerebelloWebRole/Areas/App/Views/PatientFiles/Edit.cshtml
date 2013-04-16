@@ -1,5 +1,6 @@
-﻿@using System.Diagnostics
-@model PatientFileViewModel
+﻿@model PatientFileViewModel
+@using System.Diagnostics
+@using CerebelloWebRole.Code.Controls
 @{
     this.Layout = null;
     string patientFileId = null;
@@ -25,8 +26,8 @@
         {
             editPanel.AddField(model => model.PostedFile, @<text><input type="file" id="PostedFile" name="PostedFile" /></text>);
         }
-        editPanel.AddField(model => model.Description,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Description, new { rows = 5 })</text>);
+                editPanel.AddField(model => model.Description,
+                                   EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Description, new { rows = 5 })</text>);
 
                 editPanel.AddField(model => model.FileDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.FileDate)</text>);
                 editPanel.AddField(model => model.ReceiveDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.ReceiveDate)</text>);

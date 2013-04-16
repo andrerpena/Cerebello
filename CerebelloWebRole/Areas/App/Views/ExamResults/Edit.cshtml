@@ -1,4 +1,4 @@
-﻿@model CerebelloWebRole.Areas.App.Models.ExaminationResultViewModel
+﻿@model ExaminationResultViewModel
 @using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
 @using CerebelloWebRole.Code.Controls
@@ -42,7 +42,7 @@
 
             editPanel.AddField(
                 m => m.Text,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
+                EditPanelFieldSize.Large,
                 format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
 
             editPanel.AddField(model => model.ExaminationDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.ExaminationDate)</text>);

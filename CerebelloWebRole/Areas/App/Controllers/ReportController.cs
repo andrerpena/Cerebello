@@ -267,7 +267,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.Single());
 
-            result.Sessions = GetAllSessionsData(patient);
+            result.Sessions = this.GetAllSessionsData(patient);
 
             return result;
         }
@@ -275,7 +275,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         private List<SessionData> GetAllSessionsData(Patient patient)
         {
             var sessions = PatientsController.GetSessionViewModels(this.practice, patient)
-                                             .Select(GetSessionData)
+                                             .Select(this.GetSessionData)
                                              .ToList();
 
             return sessions;

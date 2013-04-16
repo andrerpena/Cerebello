@@ -34,10 +34,10 @@
                     gm => gm.Cid10Name,
                     new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
 
-            editPanel.AddField(
-                m => m.Text,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-                format: @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+                editPanel.AddField(
+                    m => m.Text,
+                    EditPanelFieldSize.Large,
+                    format: @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
         
                 editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
 
@@ -65,7 +65,7 @@
                     e.preventDefault();
                     @if (Model.Id != null)
                     {
-                        @:$.ajax({url: "@Url.Action("details", new {id = Model.Id})", success: function(result) { $container.replaceWith(result); }});   
+                        @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
                     }
                     else
                     {

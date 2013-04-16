@@ -75,7 +75,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 };
             }
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -126,10 +126,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 db.SaveChanges();
 
-                return View("Details", GetViewModel(dbObject));
+                return this.View("Details", GetViewModel(dbObject));
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <summary>

@@ -201,11 +201,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (!string.IsNullOrEmpty(term))
                 baseQuery = baseQuery.Where(c => c.Name.Contains(term));
 
-
             var queryResult = (from c in baseQuery.OrderBy(c => c.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList()
                                select new AutocompleteRow
                                {
-                                   Id = c.Id.ToString(),
+                                   Id = c.Id.ToString("0"),
                                    Value = c.Name
                                }).ToList();
 
@@ -220,7 +219,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult FieldEditor(ModelMedicalCertificateFieldViewModel viewModel)
         {
-            return View(viewModel);
+            return this.View(viewModel);
         }
     }
 }

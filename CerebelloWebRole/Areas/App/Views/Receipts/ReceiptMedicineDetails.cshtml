@@ -3,7 +3,7 @@
     Layout = null;
 
     var cardView = this.Html.CreateCardView(true);
-    cardView.AddLinkField(model => model.MedicineText, "details", "medicines", model => new { id = model.MedicineId}, wholeRow: true);
+    cardView.AddLinkField(model => model.MedicineText, "Details", "Medicines", model => new { id = model.MedicineId}, wholeRow: true);
     cardView.AddField(model => model.Quantity, wholeRow: true);
     cardView.AddField(model => model.Prescription, wholeRow: true);
     cardView.AddField(model => model.Observations, wholeRow: true);

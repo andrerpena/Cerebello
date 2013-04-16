@@ -69,7 +69,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             zipMemoryStream.Seek(0, SeekOrigin.Begin);
             return this.File(zipMemoryStream, "application/zip", patient.Person.FullName + " - Arquivos - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
         }
-        
+
 
         /// <summary>
         /// Downloads a zip file with all files from all patients
@@ -128,7 +128,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             if (patientFile == null)
                 return new PatientFileViewModel();
-            return new PatientFileViewModel()
+            return new PatientFileViewModel
                 {
                     Id = patientFile.Id,
                     PatientId = patientFile.PatientId,
@@ -169,7 +169,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
             {
                 Debug.Assert(patientId != null, "patientId != null");
-                viewModel = new PatientFileViewModel()
+                viewModel = new PatientFileViewModel
                     {
                         Id = null,
                         PatientId = patientId.Value,
@@ -196,15 +196,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (formModel.Id == null)
             {
                 Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
-                patientFile = new PatientFile()
+                patientFile = new PatientFile
                 {
-                    File = new File()
+                    File = new File
                         {
                             CreatedOn = this.GetUtcNow(),
-                            PracticeId = this.DbUser.PracticeId
+                            PracticeId = this.DbUser.PracticeId,
                         },
                     PatientId = formModel.PatientId.Value,
-                    PracticeId = this.DbUser.PracticeId
+                    PracticeId = this.DbUser.PracticeId,
                 };
                 this.db.PatientFiles.AddObject(patientFile);
             }
@@ -238,12 +238,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patientFile.FileDate = formModel.FileDate.Value;
                 patientFile.ReceiveDate = formModel.ReceiveDate.Value;
                 this.db.SaveChanges();
-                return View("Details", GetViewModel(patientFile));
+                return this.View("Details", GetViewModel(patientFile));
             }
 
             return this.View("Edit", GetViewModel(patientFile));
         }
-
 
         [HttpGet]
         public JsonResult Delete(int id)

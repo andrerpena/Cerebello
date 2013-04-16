@@ -73,6 +73,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (id.HasValue)
             {
                 var certificate = this.db.MedicalCertificates.FirstOrDefault(mc => mc.Id == id.Value);
+                // todo: use GetViewModel method
+                //viewModel = GetViewModel(certificate);
                 viewModel = new MedicalCertificateViewModel()
                 {
                     Id = certificate.Id,
@@ -81,12 +83,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     ModelId = certificate.ModelMedicalCertificateId,
                     IssuanceDate = certificate.IssuanceDate,
                     Fields = (from f in certificate.Fields
-                              select new MedicalCertificateFieldViewModel()
+                              select new MedicalCertificateFieldViewModel
                               {
                                   Id = f.Id,
                                   Name = f.Name,
-                                  Value = f.Value
-                              }).ToList()
+                                  Value = f.Value,
+                              }).ToList(),
                 };
             }
             else
@@ -99,7 +101,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
             }
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         /// <remarks>
@@ -199,9 +201,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         },
                         (m) => this.db.MedicalCertificateFields.DeleteObject(m));
 
+                certificate.IssuanceDate = formModel.IssuanceDate.Value;
                 this.db.SaveChanges();
 
-                var viewModel = new MedicalCertificateViewModel()
+                // todo: use GetViewModel method:
+                //var viewModel = GetViewModel(certificate);
+
+                var viewModel = new MedicalCertificateViewModel
                 {
                     Id = certificate.Id,
                     ModelId = certificate.ModelMedicalCertificateId,
@@ -214,15 +220,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                               {
                                   Id = f.Id,
                                   Name = f.Name,
-                                  Value = f.Value
-                              }).ToList()
+                                  Value = f.Value,
+                              }).ToList(),
                 };
 
                 return this.View("Details", viewModel);
             }
 
             formModel.ModelOptions = this.db.ModelMedicalCertificates.ToList().Select(mmc => new SelectListItem() { Text = mmc.Name, Value = mmc.Id.ToString() }).ToList();
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <remarks>

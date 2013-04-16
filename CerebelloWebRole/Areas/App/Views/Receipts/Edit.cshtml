@@ -1,4 +1,5 @@
 ﻿@using System.Diagnostics
+@using CerebelloWebRole.Code.Controls
 @model ReceiptViewModel
 @{
     Layout = null;
@@ -40,7 +41,7 @@
         
         <div class="inline-link-bar">
             <a href="#" class="add-medicine inline-link">Incluir medicamento</a>
-            <a href="@Url.Action("index", "medicines")" target="_blank" class="inline-link">Gerenciar medicamentos</a>
+            <a href="@Url.Action("Index", "Medicines")" target="_blank" class="inline-link">Gerenciar medicamentos</a>
         </div>
     
         <div class="submit-bar">
@@ -56,7 +57,7 @@
             $(".add-medicine", $container).click(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: "@Url.Action("receiptmedicineeditor")",
+                    url: "@Url.Action("ReceiptMedicineEditor")",
                     success: function(result) {
                         $(".medicines-list", $container).append(result);
                     }
@@ -69,9 +70,9 @@
             });
             $('a.cancel', $container).click(function(e) {
                 e.preventDefault();
-                @if(Model.Id != null) 
+                @if (Model.Id != null)
                 {
-                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                    @:$.ajax({url: "@Url.Action("Details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
                 }
                 else
                 {

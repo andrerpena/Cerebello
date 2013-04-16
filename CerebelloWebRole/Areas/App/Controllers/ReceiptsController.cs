@@ -140,9 +140,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 receipt.IssuanceDate = formModel.IssuanceDate.Value;
                 db.SaveChanges();
 
-                return View("Details", GetViewModel(receipt));
+                return this.View("Details", GetViewModel(receipt));
             }
-            return View("Edit", formModel);
+
+            return this.View("Edit", formModel);
         }
 
         public ActionResult ReceiptMedicineEditor(ReceiptMedicineViewModel formModel)

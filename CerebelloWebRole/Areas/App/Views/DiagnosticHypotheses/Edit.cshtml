@@ -37,17 +37,17 @@
 
             editPanel.AddField(
                 m => m.Text,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
-    
+                EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
 
             editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
+        
         @editPanel.GetHtml()
 
         <div class="submit-bar">
             <input type="submit" value="salvar hipótese diagnóstica" />
             <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
         </div>
-}
+        }
     <script type="text/javascript">
         (function () {
             var $container = $("div[data-val-id='diagnostic-hypothesis-@diagnosticHypothesisId']");

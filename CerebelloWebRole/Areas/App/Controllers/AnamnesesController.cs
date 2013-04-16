@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
@@ -12,6 +11,9 @@ using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    /// <summary>
+    /// Controller of anamneses.
+    /// </summary>
     public class AnamnesesController : DoctorController
     {
         public static AnamneseViewModel GetViewModel(Anamnese anamnese)
@@ -67,7 +69,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         /// <summary>

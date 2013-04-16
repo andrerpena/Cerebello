@@ -332,7 +332,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         /// <summary>
-        /// Action that termitates the payment process, and the redirects to PaymentConfirmed action.
+        /// Action that termitates the payment process, and then redirects to PaymentConfirmed action.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
