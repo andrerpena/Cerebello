@@ -542,8 +542,11 @@ namespace CerebelloWebRole.Code.Extensions
                 html.ViewData.Add("collectionIndex", itemIndex);
                 html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
 
-                html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
                 this.previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
+                if (string.IsNullOrWhiteSpace(this.previousPrefix))
+                    html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
+                else
+                    html.ViewData.TemplateInfo.HtmlFieldPrefix += '.' + collectionItemName;
 
                 this._html = html;
             }

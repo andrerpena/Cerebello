@@ -9,6 +9,8 @@
 <div class="appointment-panel" data-val-id="anamnese-@anamneseId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
+        using (this.Html.BeginScope("Anamnesis"))
+        {
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
         @this.Html.HiddenFor(model => model.Id)
@@ -32,6 +34,7 @@
             <input type="submit" value="salvar anamnese" />
             <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
         </div>
+        }
     }
     <script type="text/javascript">
         (function() {

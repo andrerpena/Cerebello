@@ -9,6 +9,8 @@
 <div class="appointment-panel" data-val-id="receipt-@receiptId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
+        using (this.Html.BeginScope("Receipt"))
+        {
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
         @this.Html.HiddenFor(model => model.Id)
@@ -41,6 +43,7 @@
             <span class="separator">ou</span>
             <a href="#" class="cancel">cancelar</a>
         </div>
+        }
     }
 
     <script type="text/javascript">
