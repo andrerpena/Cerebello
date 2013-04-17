@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report Width="16.2000007065137cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
+<Report Width="16.2000007629395cm" Culture="pt-BR" Name="PatientsReport" xmlns="http://schemas.telerik.com/reporting/2012/2">
   <Items>
     <PageHeaderSection Height="0.314882040023804in" Name="pageHeaderSection1">
       <Style Visible="False" />
     </PageHeaderSection>
-    <DetailSection PageBreak="None" KeepTogether="False" Height="9.90019969105165cm" Name="detailSection1">
+    <DetailSection PageBreak="None" KeepTogether="False" Height="1cm" Name="detailSection1">
       <Style>
         <Font Size="9pt" />
       </Style>
       <Items>
-        <Panel Size="15.9998998769152cm, 1.00009961843214cm" Location="0.0000999212206807cm, 2.00019923686427cm" Name="panel1">
+        <Panel Size="15.9998998641968cm, 1.00009965896606cm" Location="0.0000999212206807cm, 1.700199842453cm" Name="panel1">
           <Items>
-            <TextBox Value="Exames físicos" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAnamneses">
+            <TextBox Value="Exames físicos" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.100000001490116cm, 0.100000001490116cm" Name="labelAnamneses">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -21,12 +21,12 @@
                 </FormattingRule>
               </ConditionalFormatting>
             </TextBox>
-            <Table KeepTogether="False" Size="11.9999979813894cm, 0.800099870758458cm" Location="3.83645822662033cm, 0.0999999495347355cm" Name="tableExamesFisicos">
+            <Table KeepTogether="False" Size="11.9999980926514cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0999999493360519cm" Name="tableExamesFisicos">
               <Body>
                 <Cells>
                   <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Notes" CanShrink="True" Size="11.9999979813894cm, 0.400049935379229cm" Name="textBox4">
+                      <TextBox Value="=Notes" CanShrink="True" Size="11.9999980926514cm, 0.400049924850464cm" Name="textBox4">
                         <Style>
                           <Padding Top="4pt" Bottom="4pt" />
                         </Style>
@@ -35,7 +35,7 @@
                   </TableCell>
                 </Cells>
                 <Columns>
-                  <Column Width="11.9999979813894cm" />
+                  <Column Width="11.9999980926514cm" />
                 </Columns>
                 <Rows>
                   <Row Height="0.400049935379229cm" />
@@ -52,7 +52,7 @@
               <ColumnGroups>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Exame físico" CanShrink="True" Size="11.9999979813894cm, 0.400049935379229cm" Name="textBox7">
+                    <TextBox Value="Exame físico" CanShrink="True" Size="11.9999980926514cm, 0.400049924850464cm" Name="textBox7">
                       <Style Color="DimGray" LineWidth="0.5pt">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -82,9 +82,9 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 0.999699933537247cm" Location="0cm, 4.25772772072119cm" Name="panel2">
+        <Panel Size="16cm, 0.999699950218201cm" Location="0cm, 3.70020008087158cm" Name="panel2">
           <Items>
-            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645822662033cm, 0.0997003877246272cm" Name="Receipts">
+            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.099700391292572cm" Name="Receipts">
               <Style Visible="True" />
               <ConditionalFormatting>
                 <FormattingRule>
@@ -95,7 +95,7 @@
                 </FormattingRule>
               </ConditionalFormatting>
             </SubReport>
-            <TextBox Value="Receitas" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998998264499554cm, 0.099700391292572cm" Name="labelReceitas">
+            <TextBox Value="Receitas" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998998284339905cm, 0.099700391292572cm" Name="labelReceitas">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -115,9 +115,9 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="15.9998013687189cm, 0.999800056622027cm" Location="0.0000999212206807cm, 5.38614193557503cm" Name="panel3">
+        <Panel Size="15.9997997283936cm, 0.999800086021423cm" Location="0.0000999212206807cm, 4.70019912719727cm" Name="panel3">
           <Items>
-            <Table KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0998001070872913cm" Name="tablePedidosDeExame">
+            <Table KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0998001098632813cm" Name="tablePedidosDeExame">
               <Body>
                 <Cells>
                   <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
@@ -206,7 +206,7 @@
                 <Binding Path="DataSource" Expression="=ExaminationRequests" />
               </Bindings>
             </Table>
-            <TextBox Value="Pedidos de exame" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998001070872913cm, 0.0998001098632813cm" Name="labelPedidosDeExame">
+            <TextBox Value="Pedidos de exame" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998001098632813cm, 0.0998001098632813cm" Name="labelPedidosDeExame">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -226,9 +226,9 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 1cm" Location="0.00010012308484875cm, 6.51465627351366cm" Name="panel4">
+        <Panel Size="16cm, 1cm" Location="0.00010012308484875cm, 5.70019960403442cm" Name="panel4">
           <Items>
-            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.84cm, 0.1cm" Name="tableResultadosDeExames">
+            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83999991416931cm, 0.100000001490116cm" Name="tableResultadosDeExames">
               <Body>
                 <Cells>
                   <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
@@ -317,7 +317,7 @@
                 <Binding Path="DataSource" Expression="=ExaminationResults" />
               </Bindings>
             </Table>
-            <TextBox Value="Resultados de exames" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0997997033651752cm, 0.100000001490116cm" Name="labelResultadosDeExames">
+            <TextBox Value="Resultados de exames" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0997997000813484cm, 0.100000001490116cm" Name="labelResultadosDeExames">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -337,9 +337,9 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 1cm" Location="0cm, 7.64337206878819cm" Name="panel5">
+        <Panel Size="16cm, 1cm" Location="0cm, 6.70020055770874cm" Name="panel5">
           <Items>
-            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0995990534734989cm" Name="tableDiagnosticos">
+            <Table ColumnHeadersPrintOnEveryPage="False" KeepTogether="False" Size="12.0000991821289cm, 0.800099849700928cm" Location="3.83645820617676cm, 0.0995990559458733cm" Name="tableDiagnosticos">
               <Body>
                 <Cells>
                   <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
@@ -428,7 +428,7 @@
                 <Binding Path="DataSource" Expression="=Diagnosis" />
               </Bindings>
             </Table>
-            <TextBox Value="Diagnósticos" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998998284339905cm, 0.0995990534734989cm" Name="labelDiagnosticos">
+            <TextBox Value="Diagnósticos" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.0998998284339905cm, 0.0995990559458733cm" Name="labelDiagnosticos">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -448,9 +448,9 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="15.9998998769152cm, 1.00039837279801cm" Location="0cm, 8.77208544173003cm" Name="panel6">
+        <Panel Size="15.9998998641968cm, 1.00039839744568cm" Location="0cm, 7.70019912719727cm" Name="panel6">
           <Items>
-            <TextBox Value="Atestados" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.1cm, 0.1cm" Name="labelAtestados">
+            <TextBox Value="Atestados" CanShrink="False" Size="3.49999976158142cm, 0.800099849700928cm" Location="0.100000001490116cm, 0.100000001490116cm" Name="labelAtestados">
               <ConditionalFormatting>
                 <FormattingRule>
                   <Style Visible="False" />
@@ -460,7 +460,7 @@
                 </FormattingRule>
               </ConditionalFormatting>
             </TextBox>
-            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.8cm, 0.1cm" Name="MedicalCertificates">
+            <SubReport KeepTogether="False" Size="12.0001001358032cm, 0.800099849700928cm" Location="3.79999995231628cm, 0.100000001490116cm" Name="MedicalCertificates">
               <Style Visible="True" />
               <ConditionalFormatting>
                 <FormattingRule>
@@ -495,16 +495,8 @@
               </Style>
             </TextBox>
           </Items>
-          <ConditionalFormatting>
-            <FormattingRule>
-              <Style Visible="False" />
-              <Filters>
-                <Filter Expression="=Anamneses.Count" Operator="Equal" Value="0" />
-              </Filters>
-            </FormattingRule>
-          </ConditionalFormatting>
         </Panel>
-        <Panel Size="15.9998998641968cm, 1.00009965896606cm" Location="0.0000999212206807cm, 0.871385135254479cm" Name="panel8">
+        <Panel Size="15.9998998641968cm, 1.00009965896606cm" Location="0.0000999212206807cm, 0.700200319290161cm" Name="panel8">
           <Items>
             <TextBox Value="Anamneses" CanShrink="False" Size="3.4998996257782cm, 0.800099849700928cm" Location="0.100000001490116cm, 0.100000001490116cm" Name="textBox1">
               <ConditionalFormatting>
@@ -537,25 +529,25 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
-        <Panel Size="16cm, 1cm" Location="0cm, 3.12901333847406cm" Name="panel10">
+        <Panel Size="16cm, 1cm" Location="0cm, 2.700199842453cm" Name="panel10">
           <Items>
-            <TextBox Value="Hipóteses diagnósticas" Size="3.5cm, 0.8cm" Location="0.1cm, 0.1cm" Name="textBox2" />
-            <Table Size="12cm, 0.8cm" Location="3.84cm, 0.1cm" Name="table1">
+            <TextBox Value="Hipóteses diagnósticas" Size="3.5cm, 0.800000011920929cm" Location="0.100000001490116cm, 0.100000001490116cm" Name="textBox2" />
+            <Table Size="12cm, 0.800000011920929cm" Location="3.83999991416931cm, 0.100000001490116cm" Name="table1">
               <Body>
                 <Cells>
                   <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Cid10Code" Size="3.99999976158142cm, 0.4cm" Name="textBox26" />
+                      <TextBox Value="=Cid10Code" Size="3.99999976158142cm, 0.400000005960464cm" Name="textBox26" />
                     </ReportItem>
                   </TableCell>
                   <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Cid10Name" Size="3.99999976158142cm, 0.4cm" Name="textBox27" />
+                      <TextBox Value="=Cid10Name" Size="3.99999976158142cm, 0.400000005960464cm" Name="textBox27" />
                     </ReportItem>
                   </TableCell>
                   <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
                     <ReportItem>
-                      <TextBox Value="=Text" Size="3.99999976158142cm, 0.4cm" Name="textBox28" />
+                      <TextBox Value="=Text" Size="3.99999976158142cm, 0.400000005960464cm" Name="textBox28" />
                     </ReportItem>
                   </TableCell>
                 </Cells>
@@ -579,7 +571,7 @@
               <ColumnGroups>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Cid10" Size="3.99999976158142cm, 0.4cm" Name="textBox3">
+                    <TextBox Value="Cid10" Size="3.99999976158142cm, 0.400000005960464cm" Name="textBox3">
                       <Style Color="DimGray">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -588,7 +580,7 @@
                 </TableGroup>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Hipótese" Size="3.99999976158142cm, 0.4cm" Name="textBox5">
+                    <TextBox Value="Hipótese" Size="3.99999976158142cm, 0.400000005960464cm" Name="textBox5">
                       <Style Color="DimGray">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -597,7 +589,7 @@
                 </TableGroup>
                 <TableGroup>
                   <ReportItem>
-                    <TextBox Value="Notas" Size="3.99999976158142cm, 0.4cm" Name="textBox6">
+                    <TextBox Value="Notas" Size="3.99999976158142cm, 0.400000005960464cm" Name="textBox6">
                       <Style Color="DimGray">
                         <BorderStyle Bottom="Dotted" />
                       </Style>
@@ -619,6 +611,7 @@
             </FormattingRule>
           </ConditionalFormatting>
         </Panel>
+        <Panel Size="15.9998994731931cm, 0.299401936150338cm" Location="0cm, 8.70079780536658cm" Name="panel9" />
       </Items>
     </DetailSection>
     <PageFooterSection Height="0.252047210931778in" Name="pageFooterSection1">

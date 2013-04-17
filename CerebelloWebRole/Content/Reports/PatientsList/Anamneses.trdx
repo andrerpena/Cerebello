@@ -19,7 +19,7 @@
         <TextBox Value="Revisão de sistemas" Size="3.60000014305115cm, 0.400099515914917cm" Location="0.00010012308484875cm, 1.4287853994906cm" Name="textBox10" />
         <TextBox Value="=FamilyDeseases" Size="8.19989967346191cm, 0.40009942650795cm" Location="3.80000019073486cm, 1.90501387542448cm" Name="textBox13" />
         <TextBox Value="Histórico familiar (HF)" Size="3.60000014305115cm, 0.400099515914917cm" Location="0.00010002215276472cm, 1.90501388804079cm" Name="textBox14" />
-        <TextBox Value="=SocialDeseases" Size="8.19989967346191cm, 0.40009942650795cm" Location="3.80000019073486cm, 2.38124246490519cm" Name="textBox15" />
+        <TextBox Value="=SocialHistory" Size="8.19989967346191cm, 0.40009942650795cm" Location="3.80000019073486cm, 2.38124246490519cm" Name="textBox15" />
         <TextBox Value="História pessoal (fisiológica) e história social" Size="3.60000014305115cm, 0.400099515914917cm" Location="0.00010002215276472cm, 2.38124247752151cm" Name="textBox16" />
         <TextBox Value="Medicações de uso regular" Size="3.60000014305115cm, 0.400099515914917cm" Location="0.00010012308484875cm, 2.85747106700223cm" Name="textBox17" />
         <TextBox Value="=RegularAndAcuteMedications" Size="8.19989967346191cm, 0.40009942650795cm" Location="3.80000042915344cm, 2.85747105438591cm" Name="textBox18" />
