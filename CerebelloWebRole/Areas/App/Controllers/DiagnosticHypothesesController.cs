@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -40,9 +38,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(DiagnosticHypothesisViewModel viewModel)
+        public ActionResult Create(DiagnosticHypothesisViewModel[] diagnosticHypotheses)
         {
-            return this.Edit(viewModel);
+            return this.Edit(diagnosticHypotheses);
         }
 
 
@@ -65,8 +63,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(DiagnosticHypothesisViewModel formModel)
+        public ActionResult Edit(DiagnosticHypothesisViewModel[] diagnosticHypotheses)
         {
+            var formModel = diagnosticHypotheses.Single();
+
             Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
             if (this.ModelState.IsValid)
             {

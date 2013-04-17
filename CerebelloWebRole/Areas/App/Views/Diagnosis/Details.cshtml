@@ -7,7 +7,7 @@
     {
         var cardView = this.Html.CreateCardView(true);
         cardView.AddField(model => model.Cid10Name, wholeRow: true);
-        cardView.AddField(model => model.Cid10Code, wholeRow: true);
+        cardView.AddField(model => model.Cid10Code, header: "Código CID-10", wholeRow: true);
         cardView.AddField(model => model.Text, wholeRow: true);
 
         @cardView.GetHtml()
@@ -20,7 +20,7 @@
         $(".edit-diagnosis", $("div[data-val-id='diagnosis-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.ajax({
-                url: "@Url.Action("edit", "diagnosis", new { id = Model.Id })",
+                url: "@Url.Action("Edit", "Diagnosis", new { id = Model.Id })",
                 success: function(result) {
                     $("div[data-val-id='diagnosis-@Model.Id']").replaceWith(result);
                 }

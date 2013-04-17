@@ -1,13 +1,13 @@
 ﻿@model AddressViewModel
 @{
     var editPanel = this.Html.CreateEditPanel();
-    editPanel.AddField(m => m.CEP, format: @<text> @Html.EditorFor(model => model.CEP)
+    editPanel.AddField(m => m.CEP, @<text> @Html.EditorFor(model => model.CEP)
     <div>
         <a class="getCepInfo block-little-link" href="#" style="display: inline-block">Obter endereço</a>
         <img class="getCepInfoActivityIndicator" src="/content/images/progress.gif" style="display: none" />
     </div>
     </text>);
-    editPanel.AddField(m => m.StateProvince, format:
+    editPanel.AddField(m => m.StateProvince,
     @<text> @* there seems to be a BUG regarding DropdownListFors inside editor templates
          and possibly inside collection-editors. This is a workaraound (I'm forcingly
          setting the value).

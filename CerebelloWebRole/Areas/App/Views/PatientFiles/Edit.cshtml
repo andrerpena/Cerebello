@@ -12,7 +12,7 @@
     </div>
     @using (this.Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        using (this.Html.BeginScope("PatientFile"))
+        using (this.Html.BeginScope("PatientFiles"))
         {
             <div class="xhr2" style="display: none;">
                 @{

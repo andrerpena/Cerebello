@@ -2,16 +2,13 @@
 @model PracticeHomeControllerViewModel
 @{
     var title = "Editando consultório";
-    ViewBag.Title = string.Format("{0} · Cerebello", title);
-    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     // creating edit panel
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.PracticeName);
-    editPanel.AddField(
-        m => m.PracticeTimeZone,
-        EditPanelFieldSize.XLarge,
-        format: @<text>@Html.EnumDropdownListFor(model => model.PracticeTimeZone)</text>);
+    editPanel.AddField(m => m.PracticeTimeZone, this.Html.EnumDropdownListFor, EditPanelFieldSize.XLarge);
     editPanel.AddField(m => m.PhoneMain, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.PhoneAlt, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.Pabx, EditPanelFieldSize.Small);
@@ -25,23 +22,23 @@
     @LockIcon.Script(LockAccessType.AdminOrOwner)
 }
 @section SideBar {
-    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
+    <a href="@this.Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 }
 
-@using (Html.BeginForm())
+@using (this.Html.BeginForm())
 {
-    @Html.ValidationSummary(false)
+    @this.Html.ValidationSummary(false)
 
     @editPanel.GetHtml()
 
     <h2>
-        @Html.LabelFor(model => model.Address)
+        @this.Html.LabelFor(model => model.Address)
     </h2>
-    @Html.EditorFor(model => model.Address)
+    @this.Html.EditorFor(model => model.Address)
 
     <div class="submit-bar">
         <input type="submit" value="salvar configurações" />
         <span class="separator">ou</span>
-        @Html.ActionLink("cancelar", "Index")
+        @this.Html.ActionLink("cancelar", "Index")
     </div>
 }

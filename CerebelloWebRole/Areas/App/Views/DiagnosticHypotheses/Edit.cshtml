@@ -13,7 +13,7 @@
 
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (this.Html.BeginScope("PhysicalExamination"))
+        using (this.Html.BeginScope("DiagnosticHypotheses"))
         {
             @this.Html.ValidationSummary(false)
             @this.Html.HiddenFor(model => model.PatientId)

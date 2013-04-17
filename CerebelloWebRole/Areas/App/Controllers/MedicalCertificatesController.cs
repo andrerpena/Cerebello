@@ -128,7 +128,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(MedicalCertificateViewModel[] medicalCertificates)
         {
-            var formModel = medicalCertificates[0];
+            var formModel = medicalCertificates.Single();
 
             ModelMedicalCertificate certificateModel = null;
 

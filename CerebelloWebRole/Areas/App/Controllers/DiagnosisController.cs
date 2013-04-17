@@ -10,6 +10,7 @@ using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
+    // todo: plural of diagnosis is diagnoses
     public class DiagnosisController : DoctorController
     {
         public static DiagnosisViewModel GetViewModel(Diagnosis diagnosis)
@@ -32,9 +33,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(DiagnosisViewModel[] diagnosis)
+        public ActionResult Create(DiagnosisViewModel[] diagnoses)
         {
-            return this.Edit(diagnosis);
+            return this.Edit(diagnoses);
         }
 
         public ActionResult Details(int id)
@@ -68,9 +69,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(DiagnosisViewModel[] diagnosis)
+        public ActionResult Edit(DiagnosisViewModel[] diagnoses)
         {
-            var formModel = diagnosis[0];
+            var formModel = diagnoses.Single();
 
             if (string.IsNullOrEmpty(formModel.Text) && string.IsNullOrEmpty(formModel.Cid10Name))
                 this.ModelState.AddModelError("", "É necessário preencher um diagnóstico CID-10 ou as notas");

@@ -10,7 +10,7 @@
 <div class="appointment-panel" data-val-id="examrequest-@examRequestId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (this.Html.BeginScope("ExamRequest"))
+        using (this.Html.BeginScope("ExamRequests"))
         {
             @this.Html.ValidationSummary(false)
             @this.Html.HiddenFor(model => model.PatientId)

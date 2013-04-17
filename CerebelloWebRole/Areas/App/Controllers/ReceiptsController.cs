@@ -52,9 +52,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(ReceiptViewModel viewModel)
+        public ActionResult Create(ReceiptViewModel[] receipts)
         {
-            return this.Edit(viewModel);
+            return this.Edit(receipts);
         }
 
         [HttpGet]
@@ -76,8 +76,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ReceiptViewModel formModel)
+        public ActionResult Edit(ReceiptViewModel[] receipts)
         {
+            var formModel = receipts.Single();
+
             Receipt receipt;
 
             if (formModel.ReceiptMedicines == null)

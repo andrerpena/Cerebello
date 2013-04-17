@@ -569,11 +569,18 @@ namespace CerebelloWebRole.Code.Extensions
             /// </summary>
             protected CollectionItemScopeBase(HtmlHelper<TModel> html, string collectionName)
             {
+                string prefix;
+                this.previousPrefix = prefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
+
                 this.WriteBegin(html);
 
-                var collectionIndexFieldName = String.Format("{0}.Index", collectionName);
+                string collectionNamePrefix;
+                if (string.IsNullOrWhiteSpace(this.previousPrefix)) collectionNamePrefix = collectionName;
+                else collectionNamePrefix = prefix + '.' + collectionName;
+
+                var collectionIndexFieldName = String.Format("{0}.Index", collectionNamePrefix);
                 var itemIndex = GetCollectionItemIndex(collectionIndexFieldName, html.ViewContext.HttpContext);
-                var collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
+                var collectionItemName = String.Format("{0}[{1}]", collectionNamePrefix, itemIndex);
 
                 var indexField = new TagBuilder("input");
                 indexField.MergeAttributes(new Dictionary<string, string>() {
@@ -586,11 +593,7 @@ namespace CerebelloWebRole.Code.Extensions
                 html.ViewData.Add("collectionIndex", itemIndex);
                 html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
 
-                this.previousPrefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
-                if (string.IsNullOrWhiteSpace(this.previousPrefix))
-                    html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
-                else
-                    html.ViewData.TemplateInfo.HtmlFieldPrefix += '.' + collectionItemName;
+                html.ViewData.TemplateInfo.HtmlFieldPrefix = collectionItemName;
 
                 this._html = html;
             }

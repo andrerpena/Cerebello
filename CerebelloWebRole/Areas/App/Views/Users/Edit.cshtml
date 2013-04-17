@@ -12,9 +12,9 @@
     {
         title = "Novo usuário";
     }
-    ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
 
-    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var editPanel = this.Html.CreateEditPanel();
 
@@ -36,9 +36,9 @@
     }
 
     editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.Gender, format: @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
+    editPanel.AddField(m => m.Gender, this.Html.EnumDropdownListFor);
     editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.MaritalStatus, format: @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
+    editPanel.AddField(m => m.MaritalStatus, this.Html.EnumDropdownListFor);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.Cpf);
     editPanel.AddField(m => m.Profissao);
@@ -66,10 +66,10 @@
     editPanelMedic.AddField(
         m => m.MedicalSpecialtyId,
         EditPanelFieldSize.Large,
-        format: @<text>@(Html.AutocompleteGridFor<UserViewModel, MedicalSpecialtiesLookupGridModel, int?>(
+        @<text>@(this.Html.AutocompleteGridFor(
                                 m => m.MedicalSpecialtyId,
                                 m => m.MedicalSpecialtyName,
-                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties", new { area = "" }),
+                                this.Url.Action("LookupMedicalSpecialties", "MedicalSpecialties", new { area = "" }),
                                 pm => pm.Id,
                                 pm => pm.Name,
                                 new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }))</text>);
@@ -77,14 +77,12 @@
     editPanelMedic.AddField(
         m => m.MedicalEntityId,
         EditPanelFieldSize.Large,
-        format: @<text>@Html.DropDownListFor(
+        @<text>@this.Html.DropDownListFor(
             m => m.MedicalEntityId,
             (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
             "")</text>);
 
-    editPanelMedic.AddField(
-        m => m.MedicalEntityJurisdiction,
-        format: @<text>@Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)</text>);
+    editPanelMedic.AddField(m => m.MedicalEntityJurisdiction, this.Html.EnumDropdownListFor);
 
     var editPanelContact = this.Html.CreateEditPanel();
     editPanelContact.AddField(m => m.Email);
@@ -126,11 +124,11 @@
 @section SideBar {
     <a href="http://gravatar.com/emails" class="icon-link icon-link-config">Alterar imagem do Gravatar</a>
 
-    <a href="@Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
+    <a href="@this.Url.Action("Index", "PracticeHome")" class="icon-link icon-link-home">Consultório</a>
 }
-@using (Html.BeginForm())
+@using (this.Html.BeginForm())
 {
-    @Html.ValidationSummary(false)
+    @this.Html.ValidationSummary(false)
 
     @editPanel.GetHtml()
 
@@ -138,7 +136,7 @@
     { 
     @Html.Message(string.Format(
         "A senha padrão deste usuário é {0}. Essa senha será usada somente para fazer o primeiro acesso ao sistema.",
-        CerebelloWebRole.Code.Constants.DEFAULT_PASSWORD))
+        Constants.DEFAULT_PASSWORD))
     }
 
     if (this.ViewBag.CanEditRole == true)
@@ -148,21 +146,21 @@
     }
     else
     {
-        @:@Html.HiddenFor(m => m.IsAdministrador)
-        @:@Html.HiddenFor(m => m.IsSecretary)
-        @:@Html.HiddenFor(m => m.IsDoctor)
+        @:@this.Html.HiddenFor(m => m.IsAdministrador)
+        @:@this.Html.HiddenFor(m => m.IsSecretary)
+        @:@this.Html.HiddenFor(m => m.IsDoctor)
     }
 
-    <div id="MedicEditPanel" @(new MvcHtmlString(Model != null && this.Model.IsDoctor ? "" : "style=\"display: none\""))>
+    <div id="MedicEditPanel" @(new MvcHtmlString(this.Model != null && this.Model.IsDoctor ? "" : "style=\"display: none\""))>
         <h2>Informações do médico</h2>
         @editPanelMedic.GetHtml()
     </div>
     
     <h2>
-        @Html.LabelFor(model => model.Address)
+        @this.Html.LabelFor(model => model.Address)
     </h2>
 
-    @Html.EditorFor(model => model.Address)
+    @this.Html.EditorFor(model => model.Address)
 
     <h2>Informações de contato
     </h2>
@@ -172,6 +170,6 @@
     <div class="submit-bar">
         <input type="submit" value="salvar usuário" />
         <span class="separator">ou</span>
-        @Html.ActionLink("cancelar", "Index", "PracticeHome")
+        @this.Html.ActionLink("cancelar", "Index", "PracticeHome")
     </div>
 }

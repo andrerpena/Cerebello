@@ -120,10 +120,23 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="modelState">ModelState object from which the model property will be removed, and thus be considered as valid.</param>
         /// <param name="expression">Expression tree that goes to the property that should be made valid.</param>
-        public static void Remove(this ModelStateDictionary modelState, Expression<Func<object>> expression)
+        /// <param name="hasPrefix">Whether the model-state entry name has a prefix or not.</param>
+        public static void Remove(this ModelStateDictionary modelState, Expression<Func<object>> expression, bool hasPrefix = false)
         {
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
-            modelState.Remove(propertyInfo.Name);
+            if (hasPrefix)
+            {
+                var name = '.' + propertyInfo.Name;
+                foreach (var modelStateItem in modelState.ToArray())
+                {
+                    if (modelStateItem.Key.EndsWith(name))
+                        modelState.Remove(modelStateItem.Key);
+                }
+            }
+            else
+            {
+                modelState.Remove(propertyInfo.Name);
+            }
         }
 
         /// <summary>
@@ -147,6 +160,7 @@ namespace CerebelloWebRole.Code
                 if (!modelStateItem.Value.Errors.Any())
                     modelState.Remove(modelStateItem);
             }
+
             return anyRemoved;
         }
 

@@ -54,9 +54,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(AnamneseViewModel viewModel)
+        public ActionResult Create(AnamneseViewModel[] anamneses)
         {
-            return this.Edit(viewModel);
+            return this.Edit(anamneses);
         }
 
         [HttpGet]
@@ -81,11 +81,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Requirements:
         ///    - The list of diagnoses passed in must be synchronized with the server
         /// </summary>
-        /// <param name="formModel">View model with data to edit/create an anamnese.</param>
+        /// <param name="anamneses">View model with data to edit/create an anamnese.</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(AnamneseViewModel formModel)
+        public ActionResult Edit(AnamneseViewModel[] anamneses)
         {
+            var formModel = anamneses.Single();
+
             Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
             if (this.ModelState.IsValid)
             {

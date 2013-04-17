@@ -154,9 +154,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(PatientFileViewModel viewModel)
+        public ActionResult Create(PatientFileViewModel[] patientFiles)
         {
-            return this.Edit(viewModel);
+            return this.Edit(patientFiles);
         }
 
         [HttpGet]
@@ -182,8 +182,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(PatientFileViewModel formModel)
+        public ActionResult Edit(PatientFileViewModel[] patientFiles)
         {
+            var formModel = patientFiles.Single();
+
             PatientFile patientFile;
 
             if (formModel.Id == null)
@@ -204,7 +206,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
             {
                 patientFile = this.db.PatientFiles.FirstOrDefault(pe => pe.Id == formModel.Id);
-                this.ModelState.Remove(() => formModel.File);
+                this.ModelState.Remove(() => formModel.File, hasPrefix: true);
             }
 
             if (this.ModelState.IsValid)

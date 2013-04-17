@@ -42,9 +42,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(ExaminationResultViewModel[] examResult)
+        public ActionResult Create(ExaminationResultViewModel[] examResults)
         {
-            return this.Edit(examResult);
+            return this.Edit(examResults);
         }
 
         [HttpGet]
@@ -79,11 +79,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ExaminationResultViewModel[] examResult)
+        public ActionResult Edit(ExaminationResultViewModel[] examResults)
         {
-            ExaminationResult dbObject;
+            var formModel = examResults.Single();
 
-            var formModel = examResult[0];
+            ExaminationResult dbObject;
 
             if (formModel.Id == null)
             {
@@ -120,7 +120,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
                 dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue
                     ? this.db.SYS_MedicalProcedure.Where(mp => mp.Id == formModel.MedicalProcedureId).Select(mp => mp.Code).FirstOrDefault()
-                    : null;
+                    : formModel.MedicalProcedureCode;
                 dbObject.ExaminationDate = formModel.ExaminationDate.Value;
                 dbObject.ReceiveDate = formModel.ReceiveDate.Value;
 

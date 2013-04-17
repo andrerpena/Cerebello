@@ -9,7 +9,7 @@
 <div class="appointment-panel" data-val-id="receipt-@receiptId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (this.Html.BeginScope("Receipt"))
+        using (this.Html.BeginScope("Receipts"))
         {
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
@@ -20,12 +20,12 @@
             {
                 foreach (var receiptMedicine in this.Model.ReceiptMedicines)
                 {
-                    @this.Html.Partial("ReceiptMedicineEditor", receiptMedicine)
+                    @this.Html.Partial("ReceiptMedicineEditor", new ViewDataDictionary(this.ViewData) { Model = receiptMedicine })
                 }
             }
             else
             {
-                @this.Html.Partial("ReceiptMedicineEditor", new ViewDataDictionary())
+                @this.Html.Partial("ReceiptMedicineEditor", new ViewDataDictionary(this.ViewData) { Model = null })
             }
         </ul>
 
@@ -34,7 +34,7 @@
         @editPanel.GetHtml()
 
         <div class="inline-link-bar">
-            <a href="#" class="add-medicine inline-link">Incluir medicamento</a>
+            <a href="@this.Url.Action("ReceiptMedicineEditor", new { this.ViewData.TemplateInfo.HtmlFieldPrefix })" class="add-medicine inline-link">Incluir medicamento</a>
             <a href="@this.Url.Action("Index", "Medicines")" target="_blank" class="inline-link">Gerenciar medicamentos</a>
         </div>
 
@@ -52,7 +52,7 @@
             $(".add-medicine", $container).click(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: "@this.Url.Action("ReceiptMedicineEditor")",
+                    url: $(this).attr("href"),
                     success: function(result) {
                         $(".medicines-list", $container).append(result);
                     }

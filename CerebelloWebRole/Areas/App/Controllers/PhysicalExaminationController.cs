@@ -14,7 +14,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             if (physicalExamination == null)
                 return new PhysicalExaminationViewModel();
-            return new PhysicalExaminationViewModel()
+
+            return new PhysicalExaminationViewModel
                 {
                     Id = physicalExamination.Id,
                     PatientId = physicalExamination.PatientId,
@@ -36,9 +37,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(PhysicalExaminationViewModel viewModel)
+        public ActionResult Create(PhysicalExaminationViewModel[] physicalExaminations)
         {
-            return this.Edit(viewModel);
+            return this.Edit(physicalExaminations);
         }
 
         [HttpGet]
@@ -60,8 +61,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(PhysicalExaminationViewModel formModel)
+        public ActionResult Edit(PhysicalExaminationViewModel[] physicalExaminations)
         {
+            var formModel = physicalExaminations.Single();
+
             PhysicalExamination physicalExamination;
 
             if (formModel.Id == null)
