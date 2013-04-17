@@ -23,6 +23,50 @@ namespace CerebelloWebRole.Code.Extensions
     /// </summary>
     public static class HtmlExtensions
     {
+        /// <summary>
+        /// Renders a file upload input box for a field.
+        /// </summary>
+        /// <typeparam name="TModel">Type of the model object.</typeparam>
+        /// <typeparam name="TValue">Type of the model property.</typeparam>
+        /// <param name="html">The HtmlHelper used to get context information.</param>
+        /// <param name="expression">Expression that indicates the model property to render the file upload input box for.</param>
+        /// <returns>Returns an MvcHtmlString containing the rendered file upload input box.</returns>
+        public static MvcHtmlString FileUploadFor<TModel, TValue>(
+            this HtmlHelper<TModel> html,
+            Expression<Func<TModel, TValue>> expression)
+        {
+            return FileUploadFor(html, expression, null);
+        }
+
+        /// <summary>
+        /// Renders a file upload input box for a field.
+        /// </summary>
+        /// <typeparam name="TModel">Type of the model object.</typeparam>
+        /// <typeparam name="TValue">Type of the model property.</typeparam>
+        /// <param name="html">The HtmlHelper used to get context information.</param>
+        /// <param name="expression">Expression that indicates the model property to render the file upload input box for.</param>
+        /// <param name="htmlAttributes">Attributes to add to the input field.</param>
+        /// <returns>Returns an MvcHtmlString containing the rendered file upload input box.</returns>
+        public static MvcHtmlString FileUploadFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes)
+        {
+            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+
+            if (!typeof(HttpPostedFileBase).IsAssignableFrom(metadata.ModelType))
+                throw new Exception(
+                    string.Format(
+                        "Cannot create an input of type='File' for the model property, "
+                            + "because it does not inherit from 'HttpPostedFileBase'. Property: '{0}'",
+                        metadata.PropertyName));
+
+            var tagBuilder = new TagBuilder("input");
+            tagBuilder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            tagBuilder.Attributes["type"] = "File";
+            tagBuilder.Attributes["id"] = html.ViewData.TemplateInfo.GetFullHtmlFieldId(metadata.PropertyName);
+            tagBuilder.Attributes["name"] = html.ViewData.TemplateInfo.GetFullHtmlFieldName(metadata.PropertyName);
+            var result = new MvcHtmlString(tagBuilder.ToString(TagRenderMode.SelfClosing));
+            return result;
+        }
+
         public static MvcHtmlString LabelForRequired<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText = null)
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
