@@ -2,29 +2,27 @@
 @using System.Diagnostics
 @using CerebelloWebRole.Code.Controls
 @{
-    Layout = null;
+    this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
     var certificateId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 
-    string autocompleteName = null;
-    string htmlFieldPrefix = null;
+    string autocompleteName;
+    string htmlFieldPrefix;
 }
-<div class="certificate-edit appointment-panel" data-val-id="certificate-@certificateId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+<div class="appointment-panel" data-val-id="certificate-@certificateId">
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (Html.BeginScope("MedicalCertificates"))
+        using (this.Html.BeginScope("MedicalCertificates"))
         {
             var editPanel = this.Html.CreateEditPanel();
             editPanel.AddField(model => model.ModelId,
                 EditPanelFieldSize.Large,
-                @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, @Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
-            editPanel.AddField(model => model.IssuanceDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.IssuanceDate)</text>);
+                @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, this.Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
+            editPanel.AddField(model => model.IssuanceDate, this.Html.EditorFor, EditPanelFieldSize.Large);
 
-            var a = this.Html.GetComponentNameFor(model => model.ModelName);
-            
-            @Html.ValidationSummary(false)
-            @Html.HiddenFor(model => model.PatientId)
-            @Html.HiddenFor(model => model.Id)
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
 
             @editPanel.GetHtml()
 
@@ -32,10 +30,10 @@
             htmlFieldPrefix = this.ViewData.TemplateInfo.HtmlFieldPrefix;
             
             <div class="fields-wrapper">
-                @Html.Partial("MedicalCertificateFieldsEditor")        
+                @this.Html.Partial("MedicalCertificateFieldsEditor")        
             </div>
             <div class="inline-link-bar">
-                <a href="@Url.Action("Index", "ModelMedicalCertificates")" target="_blank" class="inline-link" >Gerenciar modelos de atestados</a>
+                <a href="@this.Url.Action("Index", "ModelMedicalCertificates")" target="_blank" class="inline-link" >Gerenciar modelos de atestados</a>
             </div>
             <div class="submit-bar">
                 <input type="submit" value="salvar atestado" />
@@ -57,8 +55,8 @@
                 console.log(data);
                 console.log(data.Id);
                 $.ajax({
-                    url: "@Url.Action("MedicalCertificateFieldsEditor")",
-                    data: { modelId: data.Id, certificateId: @(Model.Id != null ? Model.Id.ToString() : "null"), htmlFieldPrefix: '@htmlFieldPrefix' },
+                    url: "@this.Url.Action("MedicalCertificateFieldsEditor")",
+                    data: { modelId: data.Id, certificateId: @(this.Model.Id != null ? Model.Id.ToString() : "null"), htmlFieldPrefix: '@htmlFieldPrefix' },
                         success: function(result) {
                             $(".fields-wrapper", $container).html(result);
                         },
@@ -70,9 +68,9 @@
             
             $('a.cancel', $container).click(function(e) {
                 e.preventDefault();
-                @if (Model.Id != null)
+                @if (this.Model.Id != null)
                 {
-                    @:$.ajax({url: "@Url.Action("Details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                    @:$.ajax({url: "@this.Url.Action("Details", new { id = this.Model.Id })", success: function(result) { $container.replaceWith(result); }});   
                 }
                 else
                 {

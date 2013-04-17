@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Mvc.Html;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.ComponentModel.DataAnnotations;
-using System.Web.WebPages;
+using System.Text;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
+using System.Web.Routing;
 using CerebelloWebRole.Code.Extensions;
 
 namespace CerebelloWebRole.Code.Controls
@@ -50,14 +49,36 @@ namespace CerebelloWebRole.Code.Controls
             this.Model = model;
         }
 
-        public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool wholeRow = false)
+        /// <summary>
+        /// Adds a field to the edit panel.
+        /// </summary>
+        /// <typeparam name="TValue">Type of value returned from the model property to add to the edit panel.</typeparam>
+        /// <param name="expression">Expression that represents the property of the model to be added to the edit panel.</param>
+        /// <param name="size"></param>
+        /// <param name="editorFormat"></param>
+        /// <param name="formatDescription"></param>
+        /// <param name="header"></param>
+        /// <param name="wholeRow"></param>
+        public void AddField<TValue>(
+            Expression<Func<TModel, TValue>> expression,
+            EditPanelFieldSize size = EditPanelFieldSize.Default,
+            Func<dynamic, object> editorFormat = null,
+            Func<dynamic, object> formatDescription = null,
+            string header = null,
+            bool wholeRow = false)
         {
-            this.Fields.Add(new EditPanelField<TModel, TValue>(exp, EditPanelFieldSize.Default, format, formatDescription, header, wholeRow));
+            this.Fields.Add(
+                new EditPanelField<TModel, TValue>(expression, size, editorFormat, formatDescription, header, wholeRow));
         }
 
-        public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, EditPanelFieldSize size, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool wholeRow = false)
+        /// <summary>
+        /// Adds a field to the edit panel.
+        /// </summary>
+        /// <typeparam name="TValue">Type of value returned from the model property to add to the edit panel.</typeparam>
+        /// <param name="expression">Expression that represents the property of the model to be added to the edit panel.</param>
+        public void AddField<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-            this.Fields.Add(new EditPanelField<TModel, TValue>(exp, size, format, formatDescription, header, wholeRow));
+            this.Fields.Add(new EditPanelField<TModel, TValue>(expression));
         }
 
         /// <summary>
@@ -65,14 +86,17 @@ namespace CerebelloWebRole.Code.Controls
         /// </summary>
         /// <typeparam name="TValue">Type of value returned from the model property to add to the edit panel.</typeparam>
         /// <param name="expression">Expression that represents the property of the model to be added to the edit panel.</param>
-        /// <param name="exprFormat">Delegate that renders the editor for the property represented by the expression.</param>
-        /// <param name="size">Size of the editor.</param>
-        public void AddField<TValue>(Expression<Func<TModel, TValue>> expression, Func<Expression<Func<TModel, TValue>>, object> exprFormat, EditPanelFieldSize size)
+        /// <param name="expressionFormat">Delegate that renders the editor for the property represented by the expression.</param>
+        /// <param name="size">[optional] Size of the editor.</param>
+        public void AddField<TValue>(
+            Expression<Func<TModel, TValue>> expression,
+            Func<Expression<Func<TModel, TValue>>, object> expressionFormat,
+            EditPanelFieldSize size = EditPanelFieldSize.Default)
         {
-            if (exprFormat == null)
-                throw new ArgumentNullException("exprFormat");
+            if (expressionFormat == null)
+                throw new ArgumentNullException("expressionFormat");
 
-            var format = (Func<dynamic, object>)(d => exprFormat(expression));
+            var format = (Func<dynamic, object>)(d => expressionFormat(expression));
             this.Fields.Add(new EditPanelField<TModel, TValue>(expression, size, format));
         }
 
@@ -84,6 +108,7 @@ namespace CerebelloWebRole.Code.Controls
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
             var rows = new List<List<EditPanelFieldBase>>();
+
             // a primeira coisa a fazer é organizar os campos em rows
             {
                 List<EditPanelFieldBase> currentRow = null;
@@ -100,7 +125,6 @@ namespace CerebelloWebRole.Code.Controls
                         // a entrar em outra linha numa próxima interação
                         currentRow = null;
                     }
-
                     else if (currentRow == null || currentRow.Count == this.FieldsPerRow)
                     {
                         currentRow = new List<EditPanelFieldBase> { field };
@@ -198,14 +222,15 @@ namespace CerebelloWebRole.Code.Controls
                     var labelForMethodGeneric = labelForMethod.MakeGenericMethod(typeof(TModel), valueType);
 
                     var headerContent = field.Header != null
-                            ? new MvcHtmlString(field.Header).ToString()
-                            : labelForMethodGeneric.Invoke(null,
-                                                            new object[]
-                                                                {
-                                                                    this.HtmlHelper,
-                                                                    expressionPropertyValue
-                                                                })
-                                                    .ToString();
+                        ? new MvcHtmlString(field.Header).ToString()
+                        : labelForMethodGeneric.Invoke(
+                            null,
+                            new object[]
+                                {
+                                    this.HtmlHelper,
+                                    expressionPropertyValue
+                                })
+                            .ToString();
 
                     if (propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), true).Length == 1 &&
                         !string.IsNullOrEmpty(headerContent))
@@ -214,20 +239,17 @@ namespace CerebelloWebRole.Code.Controls
                     // in case it's a text field
                     if (field.GetType().GetGenericTypeDefinition() == typeof(EditPanelField<,>))
                     {
-
                         MethodInfo editorForMethodGeneric = null;
 
                         // verifico as situações especiais
                         // 1) verifico se é um enum
-                        if (propertyInfo.PropertyType.IsEnum || ((propertyInfo.PropertyType == typeof(int) ||
-                                                                  propertyInfo.PropertyType.IsGenericType &&
-                                                                  propertyInfo.PropertyType.GetGenericTypeDefinition() ==
-                                                                  typeof(Nullable<>)
-                                                                  &&
-                                                                  propertyInfo.PropertyType.GetGenericArguments()[0] ==
-                                                                  typeof(int)) &&
-                                                                 propertyInfo.GetCustomAttributes(
-                                                                     typeof(EnumDataTypeAttribute), true).Length > 0))
+                        if (propertyInfo.PropertyType.IsEnum
+                            || (
+                                (propertyInfo.PropertyType == typeof(int)
+                                || propertyInfo.PropertyType.IsGenericType
+                                    && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>)
+                                    && propertyInfo.PropertyType.GetGenericArguments()[0] == typeof(int))
+                                && propertyInfo.GetCustomAttributes(typeof(EnumDataTypeAttribute), true).Length > 0))
                         {
                             var editorForMethod =
                                 (from m in
@@ -246,18 +268,16 @@ namespace CerebelloWebRole.Code.Controls
                             editorForMethodGeneric = editorForMethod.MakeGenericMethod(typeof(TModel), valueType);
                         }
 
-
-
-                        // table value td format
+                        // table value td editorFormat
                         tableValueTdContent.InnerHtml = field.Format != null
-                                                            ? field.Format(this.Model).ToString()
-                                                            : editorForMethodGeneric.Invoke(null,
-                                                                                            new object[]
-                                                                                                {
-                                                                                                    this.HtmlHelper,
-                                                                                                    expressionPropertyValue
-                                                                                                }).ToString();
-
+                            ? field.Format(this.Model).ToString()
+                            : editorForMethodGeneric.Invoke(
+                                null,
+                                new object[]
+                                    {
+                                        this.HtmlHelper,
+                                        expressionPropertyValue
+                                    }).ToString();
                     }
 
                     // in case it's a text-field
@@ -274,7 +294,7 @@ namespace CerebelloWebRole.Code.Controls
 
                         displayForMethodGeneric = displayForMethod.MakeGenericMethod(typeof(TModel), valueType);
 
-                        // table value td format
+                        // table value td editorFormat
                         tableValueTdContent.AddCssClass("text-content");
                         tableValueTdContent.InnerHtml = field.Format != null
                                                             ? field.Format(this.Model).ToString()
@@ -299,14 +319,11 @@ namespace CerebelloWebRole.Code.Controls
                     tableTrContentBuilder.Append((!string.IsNullOrEmpty(headerContent) ? tableHeaderTd.ToString() : "") + tableValueTd);
                 }
 
-
                 if (tableTrContentBuilder.Length > 0)
                 {
                     tableTr.InnerHtml = tableTrContentBuilder.ToString();
-                    tableContentBuilder.Append(tableTr.ToString());
+                    tableContentBuilder.Append(tableTr);
                 }
-
-
             }
 
             table.InnerHtml = tableContentBuilder.ToString();

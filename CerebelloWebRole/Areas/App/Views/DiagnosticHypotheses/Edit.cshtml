@@ -4,43 +4,43 @@
 @using CerebelloWebRole.Code.Controls
 @using CerebelloWebRole.Code.Extensions
 @{
-    Layout = null;
+    this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
     var diagnosticHypothesisId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
 
-<div class="diagnostic-hypothesis-edit appointment-panel" data-val-id="diagnostic-hypothesis-@diagnosticHypothesisId">
+<div class="appointment-panel" data-val-id="diagnostic-hypothesis-@diagnosticHypothesisId">
 
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
         {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
 
             var editPanel = this.Html.CreateEditPanel();
             editPanel.AddField(
-                        m => m.Cid10Name,
-                        EditPanelFieldSize.Large,
-        @<text>@(Html.AutocompleteGridFor<DiagnosticHypothesisViewModel, CidAutocompleteGridModel, string>(
-                            m => m.Cid10Code,
-                            m => m.Cid10Name,
-                            Url.Action("AutocompleteDiagnoses"),
-                            gm => gm.Cid10Code,
-                            gm => gm.Cid10Name,
-                            new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
+                m => m.Cid10Name,
+                EditPanelFieldSize.Large,
+                @<text>@(Html.AutocompleteGridFor<DiagnosticHypothesisViewModel, CidAutocompleteGridModel, string>(
+                             m => m.Cid10Code,
+                             m => m.Cid10Name,
+                             this.Url.Action("AutocompleteDiagnoses"),
+                             gm => gm.Cid10Code,
+                             gm => gm.Cid10Name,
+                             new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
 
             editPanel.AddField(
                 m => m.Text,
-                EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+                EditPanelFieldSize.Large, @<text>@this.Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
 
-            editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
-        
-        @editPanel.GetHtml()
+            editPanel.AddField(model => model.MedicalRecordDate, this.Html.EditorFor, EditPanelFieldSize.Large);
 
-        <div class="submit-bar">
-            <input type="submit" value="salvar hipótese diagnóstica" />
-            <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
-        </div>
+            @editPanel.GetHtml()
+
+            <div class="submit-bar">
+                <input type="submit" value="salvar hipótese diagnóstica" />
+                <span class="separator">ou</span> <a href="#" class="cancel">cancelar</a>
+            </div>
         }
     <script type="text/javascript">
         (function () {
@@ -52,14 +52,14 @@
             });
             $('a.cancel', $container).click(function (e) {
                 e.preventDefault();
-                @if (Model.Id != null)
+                @if (this.Model.Id != null)
                 {
-                    @:$.ajax({ url: "@Url.Action("details", new { id = Model.Id })", success: function (result) { $container.replaceWith(result); } });   
+                    @:$.ajax({ url: "@this.Url.Action("details", new { id = this.Model.Id })", success: function (result) { $container.replaceWith(result); } });   
                 }
                 else
                 {
                     @:$container.remove();
-                                                }
+                }
             });
         })();
     </script>

@@ -3,43 +3,43 @@
 @using System.Linq.Expressions
 @using CerebelloWebRole.Code.Controls
 @{
-    Layout = null;
+    this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
     var examResultId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="examresult-edit appointment-panel" data-val-id="examresult-@examResultId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+<div class="appointment-panel" data-val-id="examresult-@examResultId">
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (Html.BeginScope("ExamResult"))
+        using (this.Html.BeginScope("ExamResult"))
         {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+        @this.Html.ValidationSummary(false)
+        @this.Html.HiddenFor(model => model.PatientId)
+        @this.Html.HiddenFor(model => model.Id)
 
-            var editPanel = Html.CreateEditPanel();
+            var editPanel = this.Html.CreateEditPanel();
 
             editPanel.AddField(
                 m => m.MedicalProcedureId,
                 EditPanelFieldSize.Large,
-                format: @<text>
-        @(Html.AutocompleteGridFor<ExaminationResultViewModel, MedicalProceduresLookupGridModel, int?>(
+                @<text>
+        @(this.Html.AutocompleteGridFor(
                                     m => m.MedicalProcedureId,
                                     m => m.MedicalProcedureName,
-                                    Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
+                                    this.Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
                                     pm => pm.Id,
                                     pm => pm.Name,
                                     new Expression<Func<MedicalProceduresLookupGridModel, object>>[] { pm => pm.Code }
                             ))
-        @Html.HiddenFor(m => m.MedicalProcedureCode)
+        @this.Html.HiddenFor(m => m.MedicalProcedureCode)
         </text>);
 
             editPanel.AddField(
                 m => m.Text,
                 EditPanelFieldSize.Large,
-                format: @<text>@Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
+                @<text>@this.Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
 
-            editPanel.AddField(model => model.ExaminationDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.ExaminationDate)</text>);
-            editPanel.AddField(model => model.ReceiveDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.ReceiveDate)</text>);
+            editPanel.AddField(model => model.ExaminationDate, this.Html.EditorFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.ReceiveDate, this.Html.EditorFor, EditPanelFieldSize.Large);
 
         @editPanel.GetHtml()
 
@@ -63,14 +63,14 @@
                 });
                 $('a.cancel', $container).click(function (e) {
                     e.preventDefault();
-                    @if (Model.Id != null)
+                    @if (this.Model.Id != null)
                     {
-                        @:$.ajax({ url: "@(Url.Action("Details", new { id = Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
+                        @:$.ajax({ url: "@(this.Url.Action("Details", new { id = this.Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
                     }
                     else
                     {
                         @:$container.remove();
-                                        }
+                    }
                 });
             })();
         </script>

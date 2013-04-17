@@ -18,6 +18,9 @@ using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code.Extensions
 {
+    /// <summary>
+    /// Extensions for the HtmlHelper class.
+    /// </summary>
     public static class HtmlExtensions
     {
         public static MvcHtmlString LabelForRequired<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText = null)

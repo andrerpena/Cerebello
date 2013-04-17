@@ -6,39 +6,39 @@
     Debug.Assert(this.Model != null, "this.Model != null");
     var patientFileId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="patientFile-edit appointment-panel" data-val-id="patientFile-@patientFileId">
+<div class="appointment-panel" data-val-id="patientFile-@patientFileId">
     <div class="xhr2">
-        @Html.Message("A função de upload de arquivos ainda não é suportada pelo seu browser.")
+        @this.Html.Message("A função de upload de arquivos ainda não é suportada pelo seu browser.")
     </div>
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (this.Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <div class="xhr2" style="display: none;">
-            @{
-                @Html.ValidationSummary(false)
-                @Html.HiddenFor(model => model.PatientId)
-                @Html.HiddenFor(model => model.Id)
+            <div class="xhr2" style="display: none;">
+                @{
+                    @this.Html.ValidationSummary(false)
+                    @this.Html.HiddenFor(model => model.PatientId)
+                    @this.Html.HiddenFor(model => model.Id)
 
                 var editPanel = this.Html.CreateEditPanel();
                 if (!this.Model.Id.HasValue || this.Model.Id == 0)
                 {
                     editPanel.AddField(model => model.File, @<text><input type="file" id="File" name="File" /></text>);
                 }
-                editPanel.AddField(model => model.Description,
-                                   EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Description, new { rows = 5 })</text>);
+                    editPanel.AddField(model => model.Description,
+                                       EditPanelFieldSize.Large, @<text>@this.Html.TextAreaFor(model => model.Description, new { rows = 5 })</text>);
 
-                @editPanel.GetHtml()
             }
-        </div>
                     editPanel.AddField(model => model.FileDate, Html.EditorFor, EditPanelFieldSize.Large);
                     editPanel.AddField(model => model.ReceiveDate, Html.EditorFor, EditPanelFieldSize.Large);
+                    @editPanel.GetHtml()
+            </div>
 
-        <div class="submit-bar">
-            <span class="xhr2" style="display: none;">
-                <input type="submit" value="salvar arquivo" />
-                <span class="separator">ou</span>
-            </span>
-            <a href="#" class="cancel">cancelar</a>
-        </div>
+            <div class="submit-bar">
+                <span class="xhr2" style="display: none;">
+                    <input type="submit" value="salvar arquivo" />
+                    <span class="separator">ou</span>
+                </span>
+                <a href="#" class="cancel">cancelar</a>
+            </div>
     }
     <script type="text/javascript">
         (function () {
@@ -53,9 +53,9 @@
             }
             $('a.cancel', $container).click(function (e) {
                 e.preventDefault();
-                @if (Model.Id != null)
+                @if (this.Model.Id != null)
                 {
-                    @:$.ajax({ url: "@(Url.Action("Details", new { id = Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
+                    @:$.ajax({ url: "@(this.Url.Action("Details", new { id = this.Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
                 }
                 else
                 {

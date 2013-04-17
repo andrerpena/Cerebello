@@ -2,16 +2,16 @@
 @using System.Diagnostics
 @using CerebelloWebRole.Code.Controls
 @{
-    Layout = null;
+    this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
     var anamneseId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="anamnese-edit appointment-panel" data-val-id="anamnese-@anamneseId">
+<div class="appointment-panel" data-val-id="anamnese-@anamneseId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+        @this.Html.ValidationSummary(false)
+        @this.Html.HiddenFor(model => model.PatientId)
+        @this.Html.HiddenFor(model => model.Id)
 
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(model => model.ChiefComplaint, EditPanelFieldSize.Large);
@@ -43,9 +43,9 @@
             });
             $('a.cancel', $container).click(function(e) {
                 e.preventDefault();
-                @if (Model.Id != null)
+                @if (this.Model.Id != null)
                 {
-                    @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                    @:$.ajax({url: "@this.Url.Action("details", new { id = this.Model.Id })", success: function(result) { $container.replaceWith(result); }});   
                 }
                 else
                 {

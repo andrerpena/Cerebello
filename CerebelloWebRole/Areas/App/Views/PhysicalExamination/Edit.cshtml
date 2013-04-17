@@ -6,24 +6,24 @@
     Debug.Assert(this.Model != null, "this.Model != null");
     var physicalExaminationId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="physicalExamination-edit appointment-panel" data-val-id="physicalExamination-@physicalExaminationId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+<div class="appointment-panel" data-val-id="physicalExamination-@physicalExaminationId">
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        @Html.ValidationSummary(false)
-        @Html.HiddenFor(model => model.PatientId)
-        @Html.HiddenFor(model => model.Id)
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
 
-        var editPanel = this.Html.CreateEditPanel();
-        editPanel.AddField(model => model.Notes,
-                EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
-        editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
-        @editPanel.GetHtml()
+            var editPanel = this.Html.CreateEditPanel();
+            editPanel.AddField(model => model.Notes,
+                               EditPanelFieldSize.Large, @<text>@this.Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
+            editPanel.AddField(model => model.MedicalRecordDate, this.Html.EditorFor, EditPanelFieldSize.Large);
+            @editPanel.GetHtml()
 
-        <div class="submit-bar">
-            <input type="submit" value="salvar exame físico" />
-            <span class="separator">ou</span>
-            <a href="#" class="cancel">cancelar</a>
-        </div>
+            <div class="submit-bar">
+                <input type="submit" value="salvar exame físico" />
+                <span class="separator">ou</span>
+                <a href="#" class="cancel">cancelar</a>
+            </div>
     }
 
     <script type="text/javascript">
@@ -36,14 +36,14 @@
             });
             $('a.cancel', $container).click(function (e) {
                 e.preventDefault();
-                    @if (Model.Id != null)
+                    @if (this.Model.Id != null)
                     {
-                        @:$.ajax({ url: "@(Url.Action("Details", new { id = Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
+                        @:$.ajax({ url: "@(this.Url.Action("Details", new { id = this.Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
                     }
                     else
                     {
                         @:$container.remove();
-                                        }
+                    }
                 });
         })();
     </script>

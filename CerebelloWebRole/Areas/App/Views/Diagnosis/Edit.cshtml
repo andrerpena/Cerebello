@@ -3,27 +3,27 @@
 @using System.Linq.Expressions
 @using CerebelloWebRole.Code.Controls
 @{
-    Layout = null;
+    this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
     var examRequestId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="diagnosis-edit appointment-panel" data-val-id="diagnosis-@examRequestId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+<div class="appointment-panel" data-val-id="diagnosis-@examRequestId">
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (Html.BeginScope("Diagnosis"))
+        using (this.Html.BeginScope("Diagnosis"))
         {
-            @Html.ValidationSummary(false)
-            @Html.HiddenFor(model => model.PatientId)
-            @Html.HiddenFor(model => model.Id)
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
 
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(
                 m => m.Cid10Code,
                 EditPanelFieldSize.Large,
-                format: @<text>@(Html.AutocompleteGridFor<DiagnosisViewModel, CidAutocompleteGridModel, string>(
+                @<text>@(Html.AutocompleteGridFor(
                     m => m.Cid10Code,
                     m => m.Cid10Name,
-                    Url.Action("AutocompleteDiagnoses"),
+                    this.Url.Action("AutocompleteDiagnoses"),
                     gm => gm.Cid10Code,
                     gm => gm.Cid10Name,
                     new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
@@ -31,7 +31,7 @@
                 editPanel.AddField(
                     m => m.Text,
                     EditPanelFieldSize.Large,
-                    format: @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
+                    @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
         
                 editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
 
@@ -57,9 +57,9 @@
                 });
                 $('a.cancel', $container).click(function(e) {
                     e.preventDefault();
-                    @if (Model.Id != null)
+                    @if (this.Model.Id != null)
                     {
-                        @:$.ajax({url: "@Url.Action("details", new { id = Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                        @:$.ajax({url: "@this.Url.Action("details", new { id = this.Model.Id })", success: function(result) { $container.replaceWith(result); }});   
                     }
                     else
                     {

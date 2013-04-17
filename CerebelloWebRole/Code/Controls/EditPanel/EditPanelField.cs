@@ -17,11 +17,11 @@ namespace CerebelloWebRole.Code.Controls
         public Expression<Func<TModel, TValue>> Expression { get; set; }
 // ReSharper restore MemberCanBePrivate.Global
 
-        public EditPanelField(Expression<Func<TModel, TValue>> exp, EditPanelFieldSize size = EditPanelFieldSize.Default, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool foreverAlone = false)
+        public EditPanelField(Expression<Func<TModel, TValue>> expression, EditPanelFieldSize size = EditPanelFieldSize.Default, Func<dynamic, object> editorFormat = null, Func<dynamic, object> formatDescription = null, string header = null, bool foreverAlone = false)
         {
-            this.Format = format;
+            this.Format = editorFormat;
             this.FormatDescription = formatDescription;
-            this.Expression = exp;
+            this.Expression = expression;
             this.Header = header;
             this.WholeRow = foreverAlone;
             this.Size = size;

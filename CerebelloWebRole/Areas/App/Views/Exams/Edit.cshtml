@@ -3,41 +3,41 @@
 @using System.Linq.Expressions
 @using CerebelloWebRole.Code.Controls
 @{
-    Layout = null;
+    this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
     var examRequestId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="examrequest-edit appointment-panel" data-val-id="examrequest-@examRequestId">
-    @using (Html.BeginForm(null, null, FormMethod.Post))
+<div class="appointment-panel" data-val-id="examrequest-@examRequestId">
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (Html.BeginScope("ExamRequest"))
+        using (this.Html.BeginScope("ExamRequest"))
         {
-            @Html.ValidationSummary(false)
-            @Html.HiddenFor(model => model.PatientId)
-            @Html.HiddenFor(model => model.Id)
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
     
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(
                 m => m.MedicalProcedureId,
                 EditPanelFieldSize.Large,
-                format: @<text>
-                            @(Html.AutocompleteGridFor<ExaminationRequestViewModel, MedicalProceduresLookupGridModel, int?>(
+                @<text>
+                            @(this.Html.AutocompleteGridFor(
                                     m => m.MedicalProcedureId,
                                     m => m.MedicalProcedureName,
-                                    Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
+                                    this.Url.Action("LookupMedicalProcedures", "MedicalProcedures"),
                                     pm => pm.Id,
                                     pm => pm.Name,
                                     new Expression<Func<MedicalProceduresLookupGridModel, object>>[] { pm => pm.Code }
                             ))
-                            @Html.HiddenFor(m => m.MedicalProcedureCode)
+                            @this.Html.HiddenFor(m => m.MedicalProcedureCode)
                         </text>);
         
             editPanel.AddField(
                 m => m.Notes,
-                CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large,
-                format: @<text>@Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
+                EditPanelFieldSize.Large,
+                @<text>@this.Html.TextAreaFor(model => model.Notes, new { rows = 5 })</text>);
 
-            editPanel.AddField(model => model.RequestDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.RequestDate)</text>);
+            editPanel.AddField(model => model.RequestDate, this.Html.EditorFor, EditPanelFieldSize.Large);
             @editPanel.GetHtml()
         
             <div class="inline-link-bar">
@@ -60,9 +60,9 @@
                 });
                 $('a.cancel', $container).click(function(e) {
                     e.preventDefault();
-                    @if (Model.Id != null)
+                    @if (this.Model.Id != null)
                     {
-                        @:$.ajax({url: "@(Url.Action("Details", new { id = Model.Id }))", success: function(result) { $container.replaceWith(result); }});   
+                        @:$.ajax({url: "@(this.Url.Action("Details", new { id = this.Model.Id }))", success: function(result) { $container.replaceWith(result); }});   
                     }
                     else
                     {
