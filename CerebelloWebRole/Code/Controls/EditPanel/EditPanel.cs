@@ -60,6 +60,22 @@ namespace CerebelloWebRole.Code.Controls
             this.Fields.Add(new EditPanelField<TModel, TValue>(exp, size, format, formatDescription, header, wholeRow));
         }
 
+        /// <summary>
+        /// Adds a field to the edit panel, passing a method to render the editor.
+        /// </summary>
+        /// <typeparam name="TValue">Type of value returned from the model property to add to the edit panel.</typeparam>
+        /// <param name="expression">Expression that represents the property of the model to be added to the edit panel.</param>
+        /// <param name="exprFormat">Delegate that renders the editor for the property represented by the expression.</param>
+        /// <param name="size">Size of the editor.</param>
+        public void AddField<TValue>(Expression<Func<TModel, TValue>> expression, Func<Expression<Func<TModel, TValue>>, object> exprFormat, EditPanelFieldSize size)
+        {
+            if (exprFormat == null)
+                throw new ArgumentNullException("exprFormat");
+
+            var format = (Func<dynamic, object>)(d => exprFormat(expression));
+            this.Fields.Add(new EditPanelField<TModel, TValue>(expression, size, format));
+        }
+
         public void AddTextField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool wholeRow = false)
         {
             this.Fields.Add(new EditPanelTextField<TModel, TValue>(exp, format, formatDescription, header, wholeRow));

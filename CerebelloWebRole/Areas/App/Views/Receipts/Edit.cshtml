@@ -28,7 +28,7 @@
         </ul>
 
         var editPanel = this.Html.CreateEditPanel();
-        editPanel.AddField(model => model.IssuanceDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.IssuanceDate)</text>);
+        editPanel.AddField(model => model.IssuanceDate, this.Html.EditorFor, EditPanelFieldSize.Large);
         @editPanel.GetHtml()
 
         <div class="inline-link-bar">

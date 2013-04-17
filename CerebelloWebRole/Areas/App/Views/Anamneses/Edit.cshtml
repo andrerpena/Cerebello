@@ -13,18 +13,18 @@
         @Html.HiddenFor(model => model.PatientId)
         @Html.HiddenFor(model => model.Id)
 
-        var editPanel = Html.CreateEditPanel();
-        editPanel.AddField(model => model.ChiefComplaint, EditPanelFieldSize.Large);
-        editPanel.AddField(model => model.HistoryOfThePresentIllness, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.HistoryOfThePresentIllness)</text>);
-        editPanel.AddField(model => model.PastMedicalHistory, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.PastMedicalHistory)</text>);
-        editPanel.AddField(model => model.FamilyDeseases, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.FamilyDeseases)</text>);
-        editPanel.AddField(model => model.SocialHistory, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.SocialHistory)</text>);
-        editPanel.AddField(model => model.ReviewOfSystems, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.ReviewOfSystems)</text>);
-        editPanel.AddField(model => model.Allergies, EditPanelFieldSize.Large);
-        editPanel.AddField(model => model.RegularAndAcuteMedications, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.RegularAndAcuteMedications)</text>);
-        editPanel.AddField(model => model.SexualHistory, EditPanelFieldSize.Large);
-        editPanel.AddField(model => model.Conclusion, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Conclusion)</text>);
-        editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Large, @<text>@Html.EditorFor(model => model.MedicalRecordDate)</text>);
+            var editPanel = Html.CreateEditPanel();
+            editPanel.AddField(model => model.ChiefComplaint, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.HistoryOfThePresentIllness, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.PastMedicalHistory, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.FamilyDeseases, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.SocialHistory, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.ReviewOfSystems, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.Allergies, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.RegularAndAcuteMedications, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.SexualHistory, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.Conclusion, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.MedicalRecordDate, this.Html.EditorFor, EditPanelFieldSize.Large);
         
         @editPanel.GetHtml()
 
