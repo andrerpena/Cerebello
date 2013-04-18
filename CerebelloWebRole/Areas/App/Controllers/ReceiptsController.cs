@@ -17,32 +17,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ReceiptsController : DoctorController
     {
-        public static ReceiptViewModel GetViewModel(Receipt receipt)
+        public static ReceiptViewModel GetViewModel(Receipt receipt, Func<DateTime, DateTime> toLocal)
         {
             if (receipt == null)
                 return new ReceiptViewModel();
-            return new ReceiptViewModel()
-            {
-                Id = receipt.Id,
-                PatientId = receipt.PatientId, // expected to be null here
-                IssuanceDate = receipt.IssuanceDate,
-                ReceiptMedicines = (from rm in receipt.ReceiptMedicines
-                                    select new ReceiptMedicineViewModel()
-                                    {
-                                        Id = rm.Id,
-                                        MedicineId = rm.Medicine.Id,
-                                        MedicineText = rm.Medicine.Name,
-                                        Observations = rm.Observations,
-                                        Prescription = rm.Prescription,
-                                        Quantity = rm.Quantity
-                                    }).ToList()
-            };
+
+            return new ReceiptViewModel
+                {
+                    Id = receipt.Id,
+                    PatientId = receipt.PatientId, // expected to be null here
+                    IssuanceDate = toLocal(receipt.IssuanceDate),
+                    ReceiptMedicines = (from rm in receipt.ReceiptMedicines
+                                        select new ReceiptMedicineViewModel()
+                                            {
+                                                Id = rm.Id,
+                                                MedicineId = rm.Medicine.Id,
+                                                MedicineText = rm.Medicine.Name,
+                                                Observations = rm.Observations,
+                                                Prescription = rm.Prescription,
+                                                Quantity = rm.Quantity
+                                            }).ToList()
+                };
         }
 
         public ActionResult Details(int id)
         {
             var receipt = this.db.Receipts.First(r => r.Id == id);
-            return this.View(GetViewModel(receipt));
+            return this.View(GetViewModel(receipt, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -60,10 +61,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpGet]
         public ActionResult Edit(int? id, int? patientId)
         {
-            ReceiptViewModel viewModel = null;
+            ReceiptViewModel viewModel;
 
             if (id != null)
-                viewModel = GetViewModel((from r in db.Receipts where r.Id == id select r).First());
+                viewModel = GetViewModel(
+                    (from r in db.Receipts where r.Id == id select r).First(),
+                    this.GetToLocalDateTimeConverter());
             else
                 viewModel = new ReceiptViewModel()
                 {
@@ -72,7 +75,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     IssuanceDate = this.GetPracticeLocalNow(),
                 };
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -136,13 +139,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             m.Observations = vm.Observations;
                             m.Prescription = vm.Prescription;
                         },
-                        (m) => this.db.ReceiptMedicines.DeleteObject(m)
+                        m => this.db.ReceiptMedicines.DeleteObject(m)
                     );
 
-                receipt.IssuanceDate = formModel.IssuanceDate.Value;
+                receipt.IssuanceDate = this.ConvertToUtcDateTime(formModel.IssuanceDate.Value);
                 db.SaveChanges();
 
-                return this.View("Details", GetViewModel(receipt));
+                return this.View("Details", GetViewModel(receipt, this.GetToLocalDateTimeConverter()));
             }
 
             return this.View("Edit", formModel);
@@ -150,12 +153,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult ReceiptMedicineEditor(ReceiptMedicineViewModel formModel)
         {
-            return View(formModel);
+            return this.View(formModel);
         }
 
         public ActionResult ReceiptMedicineDetails(ReceiptMedicineViewModel formModel)
         {
-            return View(formModel);
+            return this.View(formModel);
         }
 
         [HttpGet]

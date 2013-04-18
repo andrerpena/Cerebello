@@ -10,18 +10,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ExamResultsController : DoctorController
     {
-        public static ExaminationResultViewModel GetViewModel(ExaminationResult examResult)
+        public static ExaminationResultViewModel GetViewModel(ExaminationResult examResult, Func<DateTime, DateTime> toLocal)
         {
             return new ExaminationResultViewModel
-                       {
-                           Id = examResult.Id,
-                           PatientId = examResult.PatientId,
-                           Text = examResult.Text,
-                           MedicalProcedureCode = examResult.MedicalProcedureCode,
-                           MedicalProcedureName = examResult.MedicalProcedureName,
-                           ExaminationDate = examResult.ExaminationDate,
-                           ReceiveDate = examResult.ReceiveDate,
-                       };
+                {
+                    Id = examResult.Id,
+                    PatientId = examResult.PatientId,
+                    Text = examResult.Text,
+                    MedicalProcedureCode = examResult.MedicalProcedureCode,
+                    MedicalProcedureName = examResult.MedicalProcedureName,
+                    ExaminationDate = toLocal(examResult.ExaminationDate),
+                    ReceiveDate = toLocal(examResult.ReceiveDate),
+                };
         }
 
         public ActionResult Details(int id)
@@ -32,7 +32,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 .Where(r => r.Id == id)
                 .First(r => r.Patient.Doctor.Users.FirstOrDefault().PracticeId == practiceId);
 
-            return this.View(GetViewModel(examResult));
+            return this.View(GetViewModel(examResult, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -62,7 +62,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // todo: if modelObj is null, we must tell the user that this object does not exist.
 
-                viewModel = GetViewModel(modelObj);
+                viewModel = GetViewModel(modelObj, this.GetToLocalDateTimeConverter());
             }
             else
             {
@@ -121,12 +121,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue
                     ? this.db.SYS_MedicalProcedure.Where(mp => mp.Id == formModel.MedicalProcedureId).Select(mp => mp.Code).FirstOrDefault()
                     : formModel.MedicalProcedureCode;
-                dbObject.ExaminationDate = formModel.ExaminationDate.Value;
-                dbObject.ReceiveDate = formModel.ReceiveDate.Value;
+                dbObject.ExaminationDate = this.ConvertToUtcDateTime(formModel.ExaminationDate.Value);
+                dbObject.ReceiveDate = this.ConvertToUtcDateTime(formModel.ReceiveDate.Value);
 
                 db.SaveChanges();
 
-                return this.View("Details", GetViewModel(dbObject));
+                return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
             }
 
             return this.View("Edit", formModel);

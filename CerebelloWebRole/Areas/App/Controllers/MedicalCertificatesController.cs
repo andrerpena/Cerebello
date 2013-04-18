@@ -20,27 +20,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Details(int id)
         {
             var model = this.db.MedicalCertificates.Include("ModelMedicalCertificate").FirstOrDefault(m => m.Id == id);
-            var viewModel = GetViewModel(model);
+            var viewModel = GetViewModel(model, this.GetToLocalDateTimeConverter());
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
-        public static MedicalCertificateViewModel GetViewModel(MedicalCertificate model)
+        public static MedicalCertificateViewModel GetViewModel(MedicalCertificate model, Func<DateTime, DateTime> toLocal)
         {
-            var viewModel = new MedicalCertificateViewModel()
-                                {
-                                    Id = model.Id,
-                                    PatientId = model.PatientId,
-                                    ModelName = model.ModelMedicalCertificate != null ? model.ModelMedicalCertificate.Name : null,
-                                    IssuanceDate = model.IssuanceDate,
-                                    Fields = (from f in model.Fields
-                                              select new MedicalCertificateFieldViewModel()
-                                                         {
-                                                             Id = f.Id,
-                                                             Name = f.Name,
-                                                             Value = f.Value
-                                                         }).ToList()
-                                };
+            var viewModel = new MedicalCertificateViewModel
+                {
+                    Id = model.Id,
+                    PatientId = model.PatientId,
+                    ModelName = model.ModelMedicalCertificate != null ? model.ModelMedicalCertificate.Name : null,
+                    IssuanceDate = toLocal(model.IssuanceDate),
+                    Fields = (from f in model.Fields
+                              select new MedicalCertificateFieldViewModel()
+                                  {
+                                      Id = f.Id,
+                                      Name = f.Name,
+                                      Value = f.Value
+                                  }).ToList()
+                };
+
             return viewModel;
         }
 
@@ -75,13 +76,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var certificate = this.db.MedicalCertificates.FirstOrDefault(mc => mc.Id == id.Value);
                 // todo: use GetViewModel method
                 //viewModel = GetViewModel(certificate);
-                viewModel = new MedicalCertificateViewModel()
+                viewModel = new MedicalCertificateViewModel
                 {
                     Id = certificate.Id,
                     PatientId = certificate.PatientId,
                     ModelName = certificate.ModelMedicalCertificate.Name,
                     ModelId = certificate.ModelMedicalCertificateId,
-                    IssuanceDate = certificate.IssuanceDate,
+                    IssuanceDate = this.ConvertToLocalDateTime(certificate.IssuanceDate),
                     Fields = (from f in certificate.Fields
                               select new MedicalCertificateFieldViewModel
                               {
@@ -201,7 +202,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         },
                         (m) => this.db.MedicalCertificateFields.DeleteObject(m));
 
-                certificate.IssuanceDate = formModel.IssuanceDate.Value;
+                certificate.IssuanceDate = this.ConvertToUtcDateTime(formModel.IssuanceDate.Value);
                 this.db.SaveChanges();
 
                 // todo: use GetViewModel method:
@@ -214,7 +215,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     // the only situation in which ModelName will be null is when the model certificate has been removed
                     ModelName = certificate.ModelMedicalCertificate != null ? certificate.ModelMedicalCertificate.Name : null,
                     PatientId = certificate.PatientId,
-                    IssuanceDate = certificate.IssuanceDate,
+                    IssuanceDate = this.ConvertToLocalDateTime(certificate.IssuanceDate),
                     Fields = (from f in certificate.Fields
                               select new MedicalCertificateFieldViewModel()
                               {

@@ -21,7 +21,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="anamnese">The DB object representing the anamnesis.</param>
         /// <returns>The view-model that contains data about the anamnesis.</returns>
-        public static AnamneseViewModel GetViewModel(Anamnese anamnese)
+        public static AnamneseViewModel GetViewModel(Anamnese anamnese, Func<DateTime, DateTime> toLocal)
         {
             return new AnamneseViewModel
             {
@@ -37,14 +37,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 ReviewOfSystems = anamnese.ReviewOfSystems,
                 SexualHistory = anamnese.SexualHistory,
                 SocialHistory = anamnese.SocialDiseases,
-                MedicalRecordDate = anamnese.MedicalRecordDate,
+                MedicalRecordDate = toLocal(anamnese.MedicalRecordDate),
             };
         }
 
         public ActionResult Details(int id)
         {
             var anamnese = this.db.Anamnese.First(a => a.Id == id);
-            return this.View(GetViewModel(anamnese));
+            return this.View(GetViewModel(anamnese, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -65,9 +65,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             AnamneseViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel((from a in db.Anamnese where a.Id == id select a).First());
+                viewModel = GetViewModel(
+                    (from a in db.Anamnese where a.Id == id select a).First(),
+                    this.GetToLocalDateTimeConverter());
             else
-                viewModel = new AnamneseViewModel()
+                viewModel = new AnamneseViewModel
                 {
                     Id = null,
                     PatientId = patientId,
@@ -116,12 +118,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.ReviewOfSystems = formModel.ReviewOfSystems;
                 anamnese.SexualHistory = formModel.SexualHistory;
                 anamnese.SocialDiseases = formModel.SocialHistory;
-                anamnese.MedicalRecordDate = formModel.MedicalRecordDate.Value;
+                anamnese.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
 
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return this.View("Details", GetViewModel(anamnese));
+                return this.View("Details", GetViewModel(anamnese, this.GetToLocalDateTimeConverter()));
             }
 
             return this.View("Edit", formModel);

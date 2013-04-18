@@ -13,7 +13,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     // todo: plural of diagnosis is diagnoses
     public class DiagnosisController : DoctorController
     {
-        public static DiagnosisViewModel GetViewModel(Diagnosis diagnosis)
+        public static DiagnosisViewModel GetViewModel(Diagnosis diagnosis, Func<DateTime, DateTime> toLocal)
         {
             return new DiagnosisViewModel
             {
@@ -22,7 +22,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Text = diagnosis.Observations,
                 Cid10Code = diagnosis.Cid10Code,
                 Cid10Name = diagnosis.Cid10Name,
-                MedicalRecordDate = diagnosis.MedicalRecordDate,
+                MedicalRecordDate = toLocal(diagnosis.MedicalRecordDate),
             };
         }
 
@@ -41,7 +41,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Details(int id)
         {
             var diagnosis = this.db.Diagnoses.First(a => a.Id == id);
-            return this.View(GetViewModel(diagnosis));
+            return this.View(GetViewModel(diagnosis, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -50,7 +50,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             DiagnosisViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel((from a in db.Diagnoses where a.Id == id select a).First());
+                viewModel = GetViewModel(
+                    (from a in db.Diagnoses where a.Id == id select a).First(),
+                    this.GetToLocalDateTimeConverter());
             else
                 viewModel = new DiagnosisViewModel()
                 {
@@ -59,7 +61,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         /// <summary>
@@ -96,14 +98,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.Observations = formModel.Text;
                 dbObject.Cid10Code = formModel.Cid10Code;
                 dbObject.Cid10Name = formModel.Cid10Name;
-                dbObject.MedicalRecordDate = formModel.MedicalRecordDate.Value;
+                dbObject.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return View("Details", GetViewModel(dbObject));
+                return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <summary>

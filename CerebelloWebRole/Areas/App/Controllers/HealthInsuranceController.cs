@@ -26,8 +26,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var model = new HealthInsuranceIndexViewModel
                 {
                     HealthInsurances = (from m in this.db.HealthInsurances
-                                            .Where(m => m.Doctor.Id == this.Doctor.Id)
-                                            .OrderBy(m => m.Name).ToList()
+                        .Where(m => m.Doctor.Id == this.Doctor.Id)
+                        .OrderBy(m => m.Name).ToList()
                                         select new HealthInsuranceViewModel
                                             {
                                                 Id = m.Id,

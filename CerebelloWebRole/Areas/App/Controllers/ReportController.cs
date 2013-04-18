@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
@@ -284,30 +285,64 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private SessionData GetSessionData(SessionViewModel arg)
         {
+            var anamneseGetter = this.ViewModelGetter<Anamnese, AnamneseViewModel>(AnamnesesController.GetViewModel);
+            var receiptGetter = this.ViewModelGetter<Receipt, ReceiptViewModel>(ReceiptsController.GetViewModel);
+            var physicalExaminationGetter = this.ViewModelGetter<PhysicalExamination, PhysicalExaminationViewModel>(PhysicalExaminationController.GetViewModel);
+            var diagnosticHypothesisGetter = this.ViewModelGetter<DiagnosticHypothesis, DiagnosticHypothesisViewModel>(DiagnosticHypothesesController.GetViewModel);
+            var examsGetter = this.ViewModelGetter<ExaminationRequest, ExaminationRequestViewModel>(ExamsController.GetViewModel);
+            var examResultsGetter = this.ViewModelGetter<ExaminationResult, ExaminationResultViewModel>(ExamResultsController.GetViewModel);
+            var diagnosisGetter = this.ViewModelGetter<Diagnosis, DiagnosisViewModel>(DiagnosisController.GetViewModel);
+            var medicalCertificateGetter = this.ViewModelGetter<MedicalCertificate, MedicalCertificateViewModel>(MedicalCertificatesController.GetViewModel);
+
             var result = new SessionData
                 {
                     Date = arg.Date,
                     Anamneses = this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
-                                    .Select(AnamnesesController.GetViewModel).ToList(),
+                        .Select(anamneseGetter).ToList(),
                     Receipts = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
-                                   .Select(ReceiptsController.GetViewModel).ToList(),
+                        .Select(receiptGetter).ToList(),
                     PhysicalExaminations = this.db.PhysicalExaminations.Where(x => arg.PhysicalExaminationIds.Contains(x.Id))
-                                               .Select(PhysicalExaminationController.GetViewModel).ToList(),
+                        .Select(physicalExaminationGetter).ToList(),
                     DiagnosticHipotheses = this.db.DiagnosticHypotheses.Where(x => arg.DiagnosticHipothesesId.Contains(x.Id))
-                                                .Select(DiagnosticHypothesesController.GetViewModel).ToList(),
+                        .Select(diagnosticHypothesisGetter).ToList(),
                     ExaminationRequests = this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
-                                              .Select(ExamsController.GetViewModel).ToList(),
+                        .Select(examsGetter).ToList(),
                     ExaminationResults = this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
-                                             .Select(ExamResultsController.GetViewModel).ToList(),
+                        .Select(examResultsGetter).ToList(),
                     Diagnosis = this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
-                                    .Select(DiagnosisController.GetViewModel).ToList(),
+                        .Select(diagnosisGetter).ToList(),
                     MedicalCertificates = this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
-                                              .Select(MedicalCertificatesController.GetViewModel).ToList()
+                        .Select(medicalCertificateGetter).ToList()
                 };
 
             return result;
         }
 
+        private Func<TModel, TViewModel> ViewModelGetter<TModel, TViewModel>(Func<TModel, Func<DateTime, DateTime>, TViewModel> fnc)
+        {
+            return m => fnc(m, this.ToLocalConverter());
+        }
+
+        private readonly object locker = new object();
+        private Func<DateTime, DateTime> toLocalCache;
+        private Func<DateTime, DateTime> ToLocalConverter()
+        {
+            if (this.toLocalCache == null)
+                lock (this.locker)
+                    if (this.toLocalCache == null)
+                    {
+                        var practiceId = this.practice.Id;
+                        var timeZoneId = this.db.Practices.Where(p => p.Id == practiceId).Select(p => p.WindowsTimeZoneId).Single();
+                        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+                        Func<DateTime, DateTime> toLocal = utcDateTime => TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, timeZoneInfo);
+
+                        Thread.MemoryBarrier();
+
+                        this.toLocalCache = toLocal;
+                    }
+
+            return this.toLocalCache;
+        }
 
         public class PdfDoctorData : XmlDoctorData
         {

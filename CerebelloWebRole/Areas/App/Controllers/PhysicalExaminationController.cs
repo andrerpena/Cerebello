@@ -10,7 +10,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class PhysicalExaminationController : DoctorController
     {
-        public static PhysicalExaminationViewModel GetViewModel(PhysicalExamination physicalExamination)
+        public static PhysicalExaminationViewModel GetViewModel(PhysicalExamination physicalExamination, Func<DateTime, DateTime> toLocal)
         {
             if (physicalExamination == null)
                 return new PhysicalExaminationViewModel();
@@ -20,14 +20,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Id = physicalExamination.Id,
                     PatientId = physicalExamination.PatientId,
                     Notes = physicalExamination.Notes,
-                    MedicalRecordDate = physicalExamination.MedicalRecordDate,
+                    MedicalRecordDate = toLocal(physicalExamination.MedicalRecordDate),
                 };
         }
 
         public ActionResult Details(int id)
         {
             var physicalExamination = this.db.PhysicalExaminations.First(pe => pe.Id == id);
-            return this.View(GetViewModel(physicalExamination));
+            return this.View(GetViewModel(physicalExamination, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -48,7 +48,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             PhysicalExaminationViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel((from r in db.PhysicalExaminations where r.Id == id select r).First());
+                viewModel = GetViewModel(
+                    (from r in db.PhysicalExaminations where r.Id == id select r).First(),
+                    this.GetToLocalDateTimeConverter());
             else
                 viewModel = new PhysicalExaminationViewModel()
                 {
@@ -70,7 +72,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (formModel.Id == null)
             {
                 Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
-                physicalExamination = new PhysicalExamination()
+                physicalExamination = new PhysicalExamination
                     {
                         CreatedOn = this.GetUtcNow(),
                         PatientId = formModel.PatientId.Value,
@@ -85,13 +87,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 Debug.Assert(physicalExamination != null, "physicalExamination != null");
                 physicalExamination.Notes = formModel.Notes;
-                physicalExamination.MedicalRecordDate = formModel.MedicalRecordDate.Value;
+                physicalExamination.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
                 this.db.SaveChanges();
 
-                return View("Details", GetViewModel(physicalExamination));
+                return this.View("Details", GetViewModel(physicalExamination, this.GetToLocalDateTimeConverter()));
             }
 
-            return this.View("Edit", GetViewModel(physicalExamination));
+            return this.View("Edit", GetViewModel(physicalExamination, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]

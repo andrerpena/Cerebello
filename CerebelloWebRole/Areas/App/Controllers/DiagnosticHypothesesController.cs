@@ -12,23 +12,23 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class DiagnosticHypothesesController : DoctorController
     {
-        public static DiagnosticHypothesisViewModel GetViewModel(DiagnosticHypothesis diagnosticHypothesis)
+        public static DiagnosticHypothesisViewModel GetViewModel(DiagnosticHypothesis diagnosticHypothesis, Func<DateTime, DateTime> toLocal)
         {
-            return new DiagnosticHypothesisViewModel()
+            return new DiagnosticHypothesisViewModel
             {
                 Id = diagnosticHypothesis.Id,
                 Cid10Code = diagnosticHypothesis.Cid10Code,
                 Cid10Name = diagnosticHypothesis.Cid10Name,
                 Text = diagnosticHypothesis.Observations,
                 PatientId = diagnosticHypothesis.PatientId,
-                MedicalRecordDate = diagnosticHypothesis.MedicalRecordDate,
+                MedicalRecordDate = toLocal(diagnosticHypothesis.MedicalRecordDate),
             };
         }
 
         public ActionResult Details(int id)
         {
             var diagnosticHypothesis = this.db.DiagnosticHypotheses.First(dh => dh.Id == id);
-            return this.View(GetViewModel(diagnosticHypothesis));
+            return this.View(GetViewModel(diagnosticHypothesis, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -50,7 +50,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             DiagnosticHypothesisViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel((from a in db.DiagnosticHypotheses where a.Id == id select a).First());
+                viewModel = GetViewModel(
+                    (from a in db.DiagnosticHypotheses where a.Id == id select a).First(),
+                    this.GetToLocalDateTimeConverter());
             else
                 viewModel = new DiagnosticHypothesisViewModel()
                 {
@@ -59,7 +61,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     MedicalRecordDate = this.GetPracticeLocalNow(),
                 };
 
-            return View("Edit", viewModel);
+            return this.View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -87,15 +89,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 diagnosticHypothesis.Observations = formModel.Text;
                 diagnosticHypothesis.Cid10Code = formModel.Cid10Code;
                 diagnosticHypothesis.Cid10Name = formModel.Cid10Name;
-                diagnosticHypothesis.MedicalRecordDate = formModel.MedicalRecordDate.Value;
+                diagnosticHypothesis.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
 
                 db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return View("Details", GetViewModel(diagnosticHypothesis));
+                return this.View("Details", GetViewModel(diagnosticHypothesis, this.GetToLocalDateTimeConverter()));
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         [HttpGet]

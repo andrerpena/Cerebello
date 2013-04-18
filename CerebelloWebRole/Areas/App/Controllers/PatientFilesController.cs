@@ -67,9 +67,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             zipMemoryStream.Seek(0, SeekOrigin.Begin);
-            return this.File(zipMemoryStream, "application/zip", patient.Person.FullName + " - Arquivos - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
+            return this.File(
+                zipMemoryStream,
+                "application/zip",
+                patient.Person.FullName + " - Arquivos - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
-
 
         /// <summary>
         /// Downloads a zip file with all files from all patients
@@ -121,13 +123,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             mainZipMemoryStream.Seek(0, SeekOrigin.Begin);
-            return this.File(mainZipMemoryStream, "application/zip", this.Doctor.Users.ElementAt(0).Person.FullName + " - Arquivos dos pacientes - " + ConvertToLocalDateTime(this.DbPractice, this.GetUtcNow()).ToShortDateString() + ".zip");
+            return this.File(
+                mainZipMemoryStream,
+                "application/zip",
+                this.Doctor.Users.ElementAt(0).Person.FullName + " - Arquivos dos pacientes - " +
+                    this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
 
-        private static PatientFileViewModel GetViewModel(PatientFile patientFile)
+        private static PatientFileViewModel GetViewModel(PatientFile patientFile, Func<DateTime, DateTime> toLocal)
         {
             if (patientFile == null)
                 return new PatientFileViewModel();
+
             return new PatientFileViewModel
                 {
                     Id = patientFile.Id,
@@ -136,15 +143,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Description = patientFile.File.Description,
                     FileContainer = patientFile.File.ContainerName,
                     FileName = patientFile.File.FileName,
-                    FileDate = patientFile.FileDate,
-                    ReceiveDate = patientFile.ReceiveDate,
+                    FileDate = toLocal(patientFile.FileDate),
+                    ReceiveDate = toLocal(patientFile.ReceiveDate),
                 };
         }
 
         public ActionResult Details(int id)
         {
             var patientFile = this.db.PatientFiles.First(pf => pf.Id == id);
-            return this.View(GetViewModel(patientFile));
+            return this.View(GetViewModel(patientFile, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -165,7 +172,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             PatientFileViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel((from pf in db.PatientFiles where pf.Id == id select pf).First());
+                viewModel = GetViewModel(
+                    (from pf in db.PatientFiles where pf.Id == id select pf).First(),
+                    this.GetToLocalDateTimeConverter());
             else
             {
                 Debug.Assert(patientId != null, "patientId != null");
@@ -234,13 +243,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Debug.Assert(patientFile != null, "patientFile != null");
 
                 patientFile.File.Description = formModel.Description;
-                patientFile.FileDate = formModel.FileDate.Value;
-                patientFile.ReceiveDate = formModel.ReceiveDate.Value;
+                patientFile.FileDate = this.ConvertToUtcDateTime(formModel.FileDate.Value);
+                patientFile.ReceiveDate = this.ConvertToUtcDateTime(formModel.ReceiveDate.Value);
                 this.db.SaveChanges();
-                return this.View("Details", GetViewModel(patientFile));
+                return this.View("Details", GetViewModel(patientFile, this.GetToLocalDateTimeConverter()));
             }
 
-            return this.View("Edit", GetViewModel(patientFile));
+            return this.View("Edit", GetViewModel(patientFile, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]

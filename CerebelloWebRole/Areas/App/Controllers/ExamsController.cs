@@ -11,7 +11,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class ExamsController : DoctorController
     {
-        public static ExaminationRequestViewModel GetViewModel(ExaminationRequest examRequest)
+        public static ExaminationRequestViewModel GetViewModel(ExaminationRequest examRequest, Func<DateTime, DateTime> toLocal)
         {
             return new ExaminationRequestViewModel()
             {
@@ -20,14 +20,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Notes = examRequest.Text,
                 MedicalProcedureName = examRequest.MedicalProcedureName,
                 MedicalProcedureCode = examRequest.MedicalProcedureCode,
-                RequestDate = examRequest.RequestDate,
+                RequestDate = toLocal(examRequest.RequestDate),
             };
         }
 
         public ActionResult Details(int id)
         {
             var examRequest = this.db.ExaminationRequests.First(a => a.Id == id);
-            return this.View(GetViewModel(examRequest));
+            return this.View(GetViewModel(examRequest, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -55,7 +55,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // todo: if modelObj is null, we must tell the user that this object does not exist.
 
-                viewModel = GetViewModel(modelObj);
+                viewModel = GetViewModel(modelObj, this.GetToLocalDateTimeConverter());
             }
             else
                 viewModel = new ExaminationRequestViewModel()
@@ -108,11 +108,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     : formModel.MedicalProcedureCode;
 
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
-                dbObject.RequestDate = formModel.RequestDate.Value;
+                dbObject.RequestDate = this.ConvertToUtcDateTime(formModel.RequestDate.Value);
 
                 db.SaveChanges();
 
-                return this.View("Details", GetViewModel(dbObject));
+                return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
             }
 
             return this.View("Edit", formModel);

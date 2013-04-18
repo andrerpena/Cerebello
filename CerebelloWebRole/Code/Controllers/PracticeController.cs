@@ -136,6 +136,20 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
+        /// Converts the specified UTC date and time for the location of the current practice.
+        /// </summary>
+        /// <param name="utcDateTime"></param>
+        /// <returns></returns>
+        public DateTime ConvertToLocalDateTime(DateTime utcDateTime)
+        {
+            if (this.DbPractice == null) throw new Exception("'DbPractice' must not be null.");
+
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(this.DbPractice.WindowsTimeZoneId);
+            var result = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, timeZoneInfo);
+            return result;
+        }
+
+        /// <summary>
         /// Converts the specified date and time at the location of the current practice to UTC.
         /// </summary>
         /// <param name="practice"> </param>
@@ -149,6 +163,19 @@ namespace CerebelloWebRole.Code
             return DateTimeHelper.ConvertToUtcDateTime(practiceDateTime, timeZoneInfo);
         }
 
+        /// <summary>
+        /// Converts the specified date and time at the location of the current practice to UTC.
+        /// </summary>
+        /// <param name="practiceDateTime"></param>
+        /// <returns></returns>
+        public DateTime ConvertToUtcDateTime(DateTime practiceDateTime)
+        {
+            if (this.DbPractice == null) throw new Exception("'DbPractice' must not be null.");
+
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(this.DbPractice.WindowsTimeZoneId);
+            return DateTimeHelper.ConvertToUtcDateTime(practiceDateTime, timeZoneInfo);
+        }
+
         public DateTime GetPracticeLocalNow()
         {
             return ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
@@ -157,6 +184,11 @@ namespace CerebelloWebRole.Code
         public virtual bool IsSelfUser(User user)
         {
             return false;
+        }
+
+        protected Func<DateTime, DateTime> GetToLocalDateTimeConverter()
+        {
+            return d => ConvertToLocalDateTime(this.DbPractice, d);
         }
     }
 }
