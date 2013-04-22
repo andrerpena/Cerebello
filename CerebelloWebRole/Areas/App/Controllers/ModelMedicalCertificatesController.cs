@@ -131,31 +131,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 certificateModel.PracticeId = this.DbPractice.Id;
 
                 var fieldsFoundInText =
-                    Regex.Matches(formModel.Text, @"<%(.+?)%>", RegexOptions.IgnoreCase).Cast<Match>().Select(m => m.Groups[1].Value.Trim()).ToList();
-
-                var harakiriQueue = new Queue<ModelMedicalCertificateField>();
+                    Regex.Matches(formModel.Text, @"\<%([^%]+?)%\>", RegexOptions.IgnoreCase)
+                        .Cast<Match>().Select(m => m.Groups[1].Value.Trim()).ToList();
 
                 // delete fields found in the DB that don't have a matching field in text
-                foreach (var dbField in certificateModel.Fields.Where(dbField => fieldsFoundInText.All(f => f != dbField.Name)))
-                    harakiriQueue.Enqueue(dbField);
-                while (harakiriQueue.Any())
-                    this.db.ModelMedicalCertificateFields.DeleteObject(harakiriQueue.First());
+                var itemsToDelete = certificateModel.Fields
+                    .Where(dbField => fieldsFoundInText.All(f => f != dbField.Name))
+                    .ToList();
+
+                foreach (var itemToDelete in itemsToDelete)
+                    this.db.ModelMedicalCertificateFields.DeleteObject(itemToDelete);
 
                 // add new fields to the DB
-                foreach (var field in fieldsFoundInText.Where(field => certificateModel.Fields.All(f => f.Name != field)).Where(field => StringHelper.RemoveDiacritics(field).ToLower() != "paciente"))
+                foreach (var field in fieldsFoundInText
+                    .Where(field => certificateModel.Fields.All(f => f.Name != field))
+                    .Where(field => StringHelper.RemoveDiacritics(field).ToLower() != "paciente"))
+                {
                     certificateModel.Fields.Add(
-                        new ModelMedicalCertificateField()
+                        new ModelMedicalCertificateField
                             {
                                 PracticeId = this.DbUser.PracticeId,
                                 Name = field
                             });
+                }
 
                 db.SaveChanges();
 
-                return Redirect(Url.Action("details", new { id = certificateModel.Id }));
+                return this.Redirect(this.Url.Action("Details", new { id = certificateModel.Id }));
             }
 
-            return View("Edit", formModel);
+            return this.View("Edit", formModel);
         }
 
         /// <remarks>
