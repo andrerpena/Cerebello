@@ -29,6 +29,9 @@ namespace CerebelloWebRole.Code.Access
 
         private static ConcurrentDictionary<Type, bool> hasPracticeId = new ConcurrentDictionary<Type, bool>();
 
+        private static ConcurrentDictionary<Type, Delegate[]> propGetters = new ConcurrentDictionary<Type, Delegate[]>();
+        private static ConcurrentDictionary<Type, Delegate[]> propDateTimeGetters = new ConcurrentDictionary<Type, Delegate[]>();
+
         public int SaveChanges()
         {
             // checking changed elements to see if there is something wrong
@@ -38,17 +41,44 @@ namespace CerebelloWebRole.Code.Access
                 bool isPracticeIdInvalid = false;
                 if (obj != null)
                 {
+                    // checking the PracticeId property
                     var type = obj.GetType();
-                    if (hasPracticeId.GetOrAdd(type, t => t.GetProperty("PracticeId") != null && t.GetProperty("PracticeId").PropertyType == typeof(int)))
+                    if (hasPracticeId.GetOrAdd(
+                        type,
+                        t => t.GetProperty("PracticeId") != null && t.GetProperty("PracticeId").PropertyType == typeof(int)))
                     {
                         dynamic dyn = obj;
                         if ((int)dyn.PracticeId != this.practice.Id)
-                            isPracticeIdInvalid = true;
+                            throw new Exception("Invalid value for 'PracticeId' property.");
+                    }
+
+                    // getting all property getters
+                    var properties = propGetters.GetOrAdd(
+                        type,
+                        t => t.GetProperties()
+                            .Select(
+                                p => Delegate.CreateDelegate(
+                                    typeof(Func<,>).MakeGenericType(type, p.PropertyType),
+                                    p.GetGetMethod()))
+                            .ToArray());
+
+                    // checking DateTime properties (they must all be UTC)
+                    if (DebugConfig.IsDebug)
+                    {
+                        var dateTimeProps = propDateTimeGetters.GetOrAdd(
+                            type,
+                            t => (from pg in properties
+                                  let rt = pg.GetType().GetMethod("Invoke").ReturnType
+                                  where rt == typeof(DateTime) || rt == typeof(DateTime?)
+                                  select pg).ToArray());
+
+                        if (dateTimeProps.Select(pg => ((DateTime?)((dynamic)pg).DynamicInvoke(new[] { obj })))
+                            .Any(dt => dt.HasValue && dt.Value.Kind != DateTimeKind.Utc))
+                        {
+                            throw new Exception("Invalid value for 'DateTime' property.");
+                        }
                     }
                 }
-
-                if (isPracticeIdInvalid)
-                    throw new Exception("Invalid value for 'PracticeId' property.");
             }
 
             return this.db.SaveChanges();

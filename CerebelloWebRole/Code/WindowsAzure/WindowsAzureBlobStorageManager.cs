@@ -2,6 +2,7 @@
 using System.IO;
 using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -54,13 +55,20 @@ namespace CerebelloWebRole.Code.WindowsAzure
             if (containerName == null) throw new ArgumentNullException("containerName");
             if (fileName == null) throw new ArgumentNullException("fileName");
 
-            var container = this.GetOrCreateBlogContainer(containerName);
+            if (RoleEnvironment.IsAvailable)
+            {
+                var container = this.GetOrCreateBlogContainer(containerName);
 
-            // Retrieve reference to the blob
-            var blockBlob = container.GetBlockBlobReference(fileName);
+                // Retrieve reference to the blob
+                var blockBlob = container.GetBlockBlobReference(fileName);
 
-            // Create or overwrite the "myblob" blob with contents from a local file.
-            blockBlob.UploadFromStream(stream);
+                // Create or overwrite the "myblob" blob with contents from a local file.
+                blockBlob.UploadFromStream(stream);
+            }
+            else
+            {
+                // todo: DEBUG: when not in Azure, save file locally
+            }
         }
 
         /// <summary>

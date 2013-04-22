@@ -107,8 +107,8 @@ namespace CerebelloWebRole.Code.Helpers
             if (DebugConfig.IsDebug)
             {
                 // saving e-mail to the file-system
-                foreach (var saveEmailToPath in DebugConfig.PathListToSaveEmailsTo)
-                    SaveEmailLocal(mailMessage, saveEmailToPath);
+                foreach (var storageEmailSavers in DebugConfig.StorageEmailSavers)
+                    storageEmailSavers(mailMessage);
 
                 foreach (var addressToSendTo in DebugConfig.EmailAddressesToCopyEmailsTo)
                     // ReSharper disable AccessToForEachVariableInClosure
@@ -229,7 +229,7 @@ namespace CerebelloWebRole.Code.Helpers
         /// <param name="message">E-mail message to be saved.</param>
         /// <param name="path">Path where e-mails should be saved.</param>
         /// <remarks>E-mails are organized automatically by email address using subdirectories.</remarks>
-        private static void SaveEmailLocal(MailMessage message, string path)
+        internal static void SaveEmailLocal(MailMessage message, string path)
         {
             foreach (var eachDestinationAddress in message.To)
             {

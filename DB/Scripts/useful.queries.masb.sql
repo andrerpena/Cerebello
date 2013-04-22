@@ -9,7 +9,7 @@ select PR.Id, PR.UrlIdentifier, LastActiveOn, U.UserName from practice PR
 select * from glb_token
 
 -- Info about an user
-select U.Id, U.UserName, U.SYS_PasswordAlt, PR.UrlIdentifier from [user] U join Practice PR on PR.OwnerId = U.Id
+select U.Id, U.UserName, U.SYS_PasswordAlt, PR.UrlIdentifier, PR.Id from [user] U join Practice PR on PR.OwnerId = U.Id
 	where UserName = 'Alefarpaiva'
 
 --update [user] set SYS_PasswordAlt = 'Masb@1567' where Id = 29
@@ -20,7 +20,7 @@ select * from Person
 join [user] U on U.PersonId = Person.Id
 where U.PracticeId = 22
 
-select OwnerId, SYS_PasswordAlt, UserName, Password from practice PR join [user] U on PR.OwnerId = U.Id
+select OwnerId, SYS_PasswordAlt, UserName, [Password] from practice PR join [user] U on PR.OwnerId = U.Id
 
 --update [user] set SYS_PasswordAlt = 'Masb@1567' where Id = 1
 
@@ -36,12 +36,12 @@ select * from Patient
 
 
 -- check datetime columns of medical record items
-select MedicalRecordDate from dbo.Anamnese
-select MedicalRecordDate from dbo.Diagnosis
-select MedicalRecordDate from dbo.DiagnosticHypothesis
-select RequestDate from dbo.ExaminationRequest
-select ExaminationDate, ReceiveDate from dbo.ExaminationResult
-select IssuanceDate from dbo.MedicalCertificate
-select FileDate, ReceiveDate from dbo.PatientFile
-select MedicalRecordDate from dbo.PhysicalExamination
-select IssuanceDate from dbo.Receipt
+select CreatedOn, MedicalRecordDate from dbo.Anamnese						where PracticeId = 22
+select CreatedOn, MedicalRecordDate from dbo.Diagnosis						where PracticeId = 22
+select CreatedOn, MedicalRecordDate from dbo.DiagnosticHypothesis			where PracticeId = 22
+select CreatedOn, RequestDate from dbo.ExaminationRequest					where PracticeId = 22
+select CreatedOn, ExaminationDate, ReceiveDate from dbo.ExaminationResult	where PracticeId = 22
+select CreatedOn, IssuanceDate from dbo.MedicalCertificate					where PracticeId = 22
+select FileDate, ReceiveDate from dbo.PatientFile							where PracticeId = 22
+select CreatedOn, MedicalRecordDate from dbo.PhysicalExamination			where PracticeId = 22
+select CreatedOn, IssuanceDate from dbo.Receipt								where PracticeId = 22

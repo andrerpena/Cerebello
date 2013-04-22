@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
+using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code
@@ -29,6 +31,9 @@ namespace CerebelloWebRole.Code
 
                 [XmlElement("emails")]
                 public EmailsList Emails { get; set; }
+
+                [XmlElement("storages")]
+                public StoragesList Storages { get; set; }
 
                 public override string ToString()
                 {
@@ -213,11 +218,41 @@ namespace CerebelloWebRole.Code
                 }
             }
 
+            public class StoragesList
+            {
+                [XmlElement("item")]
+                public List<StorageItem> Items { get; set; }
+
+                public class StorageItem
+                {
+                    [XmlAttribute("name")]
+                    public string Name { get; set; }
+
+                    [XmlAttribute("type")]
+                    public string Type { get; set; }
+
+                    [XmlAttribute("value")]
+                    public string Value { get; set; }
+
+                    public override string ToString()
+                    {
+                        return string.Format(@"<item name=""{0}"" type=""{1}"" value=""{2}"">", this.Name, this.Type, this.Value);
+                    }
+                }
+
+                public override string ToString()
+                {
+                    return string.Format(@"storages");
+                }
+            }
+
             public override string ToString()
             {
                 return "configuration";
             }
         }
+
+        public delegate void MailSaver(MailMessage message);
 
         // this class is used only for debugging purposes... it may not be injectable, nor testable in any way
         private static readonly string cerebelloDebugPath;
@@ -494,7 +529,7 @@ namespace CerebelloWebRole.Code
             {
 #if DEBUG
                 lock (locker)
-                    if (PathListToSaveEmailsTo.Any())
+                    if (StorageEmailSavers.Any())
                         return true;
 #endif
                 return false;
@@ -617,42 +652,65 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        private string[] redirectEmailsToFileSystem;
+        private MailSaver[] storageEmailSavers;
         /// <summary>
         /// 
         /// </summary>
-        public static string[] PathListToSaveEmailsTo
+        public static MailSaver[] StorageEmailSavers
         {
             get
             {
 #if DEBUG
                 lock (locker)
                 {
-                    if (inst != null && inst.redirectEmailsToFileSystem == null)
+                    if (inst != null && inst.storageEmailSavers == null)
                     {
                         if (inst.config != null && inst.setting != null && inst.setting.SendEmailsTo != null && inst.setting.SendEmailsTo.Enabled)
                         {
-                            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                            Func<ConfigurationItem.EmailsList.EmailItem, string> getPath = i =>
-                                scii(i.Type, "desktop") ? Path.Combine(desktopPath, i.Value) :
-                                scii(i.Type, "file") ? i.Value :
-                                "";
-
+                            var storagesList = inst.config.Debug.Storages.Items;
                             var itemNames = inst.setting.SendEmailsTo.Use.Split(';');
-                            inst.redirectEmailsToFileSystem = inst.config.Debug.Emails.Items
+                            inst.storageEmailSavers = inst.config.Debug.Emails.Items
                                          .Where(x => itemNames.Contains(x.Name, iic)
-                                                  && new[] { "desktop", "path" }.Contains(x.Type.ToLowerInvariant(), iic))
-                                         .Select(getPath)
+                                                  && new[] { "storage" }.Contains(x.Type, iic))
+                                         .Select(e => GetStorageSaver(storagesList, e.Value))
+                                         .Where(saver => saver != null)
                                          .ToArray();
                         }
                     }
 
-                    if (inst != null && inst.redirectEmailsToFileSystem != null)
-                        return inst.redirectEmailsToFileSystem;
+                    if (inst != null && inst.storageEmailSavers != null)
+                        return inst.storageEmailSavers;
                 }
 #endif
-                return new string[0];
+                return new MailSaver[0];
             }
+        }
+
+        private static MailSaver GetStorageSaver(List<ConfigurationItem.StoragesList.StorageItem> storagesList, string path)
+        {
+            string localPath = null;
+            if (Regex.IsMatch(path, @"^[a-z]\:\\", RegexOptions.IgnoreCase))
+            {
+                // path entered directly
+                localPath = path;
+            }
+            else
+            {
+                var match = Regex.Match(path, @"^(?<NAME>.*?)(\\(?<PATH>.*)|$)", RegexOptions.IgnoreCase);
+                if (match.Success)
+                {
+                    var name = match.Groups["NAME"].Value;
+                    var subdir = match.Groups["PATH"].Value;
+                    var storage = storagesList.Single(st => scii(st.Name, name));
+                    if (scii(storage.Type, "local"))
+                        localPath = Path.Combine(storage.Value, subdir);
+                }
+            }
+
+            if (localPath != null)
+                return m => EmailHelper.SaveEmailLocal(m, localPath);
+
+            return null;
         }
 
         private static bool? tempIsDebug;
