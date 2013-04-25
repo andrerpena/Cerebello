@@ -292,8 +292,13 @@
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Sounds\chat.mp3" />
     <Content Include="Content\Sounds\chat.wav" />
+    <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
+    <Content Include="Content\Styles\App\bootstrap-image-gallery.min.css" />
+    <Content Include="Content\Styles\App\bootstrap-responsive.min.css" />
+    <Content Include="Content\Styles\App\bootstrap.min.css" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
     <Content Include="Content\Styles\App\introjs.min.css" />
+    <Content Include="Content\Styles\App\jquery.fileupload-ui.css" />
     <Content Include="Content\Styles\App\kendo.common.min.css" />
     <Content Include="Content\Styles\App\kendo.default.min.css" />
     <Content Include="Content\Styles\App\Pages\patients.css" />
@@ -689,6 +694,9 @@
     <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="Scripts\App\Pages\practice.js" />
     <Content Include="Scripts\App\schedule.js" />
+    <Content Include="Scripts\bootstrap-image-gallery.min.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\Controls\jquery.camera.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.container2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list2.js" />
@@ -729,6 +737,10 @@
     <Content Include="Scripts\jquery.arp.pager.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.watermark.js" />
     <Content Include="Scripts\jquery.ba-bbq.min.js" />
+    <Content Include="Scripts\jquery.fileupload-fp.js" />
+    <Content Include="Scripts\jquery.fileupload-ui.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.jqplot.min.js" />
     <Content Include="Scripts\jquery.maskedinput-1.3.min.js" />
     <Content Include="Scripts\jquery.signalR-1.0.1.js" />
@@ -740,10 +752,12 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.webcam.js" />
     <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\load-image.min.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
     <Content Include="Scripts\scripts-app.js" />
     <Content Include="Scripts\scripts.js" />
+    <Content Include="Scripts\tmpl.min.js" />
     <Content Include="Specs\Model\ModelMedicalCertificateField.txt" />
     <Content Include="Specs\Model\ModelMedicalCertificate.txt" />
     <Content Include="Specs\Tests\GeneralModelTests.txt" />

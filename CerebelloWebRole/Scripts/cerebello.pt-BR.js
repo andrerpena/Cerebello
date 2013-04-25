@@ -3,6 +3,21 @@
 cerebello = typeof cerebello == "undefined" ? {} : cerebello;
 
 cerebello.res = {
+    fileupload: {
+        errors: {
+            maxFileSize: "Arquivo é muito grande",
+            minFileSize: "Arquivo é muito pequeno",
+            acceptFileTypes: "Tipo de arquivo não permitido",
+            maxNumberOfFiles: "Número máximo de arquivos excedido",
+            uploadedBytes: "Upload excedeu o máximo de dados",
+            emptyResult: "Resultado de upload vazio"
+        },
+        error: "Erro",
+        start: "Iniciar",
+        cancel: "Cancelar",
+        destroy: "Excluir"
+    },
+
     confirmationBase: {
         // The error message displayed when the server returns an error.
         errorMessage: "Não foi possível executar a operação {operationName}.",
@@ -72,7 +87,7 @@ cerebello.res = {
         // The first time it is formatted with 'options' object. Fields are like this '{field}'.
         // The second time it is formatted with 'data' object from json response. Fields are like this '{{field}}'
         successMessage: "{objectType} foi excluído",
-        
+
         // Warning message, added at the end of the message.
         warnMessage: "Registros que dependem deste podem ser excluídos também.",
     },
