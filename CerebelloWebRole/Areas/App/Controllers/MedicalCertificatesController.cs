@@ -191,6 +191,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     certificate.ModelMedicalCertificateId = null;
 
+                certificate.Patient.IsBackedUp = false;
                 certificate.Fields.Update(
                         formModel.Fields,
                         (vm, m) => vm.Name == m.Name,

@@ -112,7 +112,14 @@
             @foreach (var untypedNotification in ((List<UntypedNotificationData>)this.ViewBag.PastNotifications))
             {
                 // I'm calling a SignalR client method MANUALLY here, but it shouldn't be a problem
-                @:$.connection.notificationsHub.client.notify(@untypedNotification.Id, '@untypedNotification.Type', @(Html.Raw(untypedNotification.Data)));
+                if (untypedNotification.Data != null)
+                {
+                    @:$.connection.notificationsHub.client.notify(@untypedNotification.Id, '@untypedNotification.Type', @(Html.Raw(untypedNotification.Data)));
+                }
+                else
+                {
+                    @:$.connection.notificationsHub.client.notify(@untypedNotification.Id, '@untypedNotification.Type');
+                }
             }
         });
     </script>

@@ -112,7 +112,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var mailMessage = this.CreateEmailMessagePartial("AccountDataEmail", toAddress, emailViewModel);
 
                     // attaching pdf
-                    var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor, this.Request);
+                    var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor);
 
                     mailMessage.Attachments.Add(
                         new Attachment(

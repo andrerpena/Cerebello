@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
@@ -35,7 +34,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var rg = new ReportData(db, practice);
 
-            var doctorData = rg.GetXml(doctor, null);
+            var doctorData = rg.GetReportDataSourceForXml(doctor, null);
 
             var stringBuilder = new StringBuilder();
             using (var writer = new StringWriter(stringBuilder))
@@ -47,41 +46,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return stringBuilder.ToString();
         }
 
-        [SelfPermission]
-        public FileContentResult ExportPatientsPdf(int? patientId)
+        internal static RenderingResult ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
         {
-            var pdf = ExportPatientsPdf(patientId, this.db, this.DbPractice, this.Doctor, this.Request);
-
-            // Returning the generated PDF as a file.
-            return this.File(pdf.DocumentBytes, pdf.MimeType);
-
-            //var fileName = pdf.DocumentName + "." + pdf.Extension;
-            //return this.File(result.DocumentBytes, result.MimeType, Server.UrlEncode(fileName));
-        }
-
-        internal static RenderingResult ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor, HttpRequestBase request)
-        {
-            // todo: must get doctor with everything at once... and use all data
-            //// Getting doctors with everything they have.
-            //var doctor = this.db.Doctors
-            //    .Include("Users")
-            //    .Include("Users.Person")
-            //    .Include("Users.Person.Addresses")
-            //    .Include("Patients")
-            //    .Include("Patients.Person")
-            //    .Include("Patients.Person.Addresses")
-            //    .Include("Patients.Anamneses")
-            //    .Include("Patients.Receipts")
-            //    .Include("Patients.MedicalCertificates")
-            //    .Include("Patients.ExaminationRequests")
-            //    .Include("Patients.ExaminationResults")
-            //    .Include("Patients.Diagnoses")
-            //    .SingleOrDefault(x => x.Id == doctorId);
-
-            var rg = new ReportData(db, practice);
-            var doctorData = rg.GetPdf(doctor, patientId);
-
-            Report reportMain;
+            var reportDataSource = new ReportData(db, practice).GetReportDataSourceForPdf(doctor, patientId);
+            Report telerikReport;
 
             if (DebugConfig.IsDebug && DebugConfig.UseLocalResourcesOnly)
             {
@@ -89,16 +57,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var resourcePath = String.Format("C:\\Cerebello\\CerebelloWebRole\\Content\\Reports\\PatientsList\\Doctor.trdx");
 
                 // Creating the report and exporting PDF.
-                reportMain = CreateReportFromFile(resourcePath);
-            }
-            else if (false)
-            {
-                // Getting URL of the report model.
-                var domain = request.Url.GetLeftPart(UriPartial.Authority);
-                var urlMain = new Uri(String.Format("{0}/Content/Reports/PatientsList/Doctor.trdx", domain));
-
-                // Creating the report and exporting PDF.
-                reportMain = CreateReportFromUrl(urlMain);
+                telerikReport = CreateReportFromFile(resourcePath);
             }
             else
             {
@@ -106,41 +65,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var resourcePath = String.Format("Content\\Reports\\PatientsList\\Doctor.trdx");
 
                 // Creating the report and exporting PDF.
-                reportMain = CreateReportFromResource(resourcePath);
+                telerikReport = CreateReportFromResource(resourcePath);
             }
 
             // Creating the report and exporting PDF.
-            using (reportMain)
+            using (telerikReport)
             {
-                reportMain.DataSource = new[] { doctorData };
+                telerikReport.DataSource = new[] { reportDataSource };
 
                 // Exporting PDF from report.
                 var reportProcessor = new ReportProcessor();
-                var pdf = reportProcessor.RenderReport("PDF", reportMain, null);
+                var pdf = reportProcessor.RenderReport("PDF", telerikReport, null);
                 return pdf;
             }
         }
 
-        private static Report CreateReportFromUrl(Uri uri)
+        [SelfPermission]
+        public FileContentResult ExportPatientsPdf(int? patientId)
         {
-            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
-            Report report;
-            using (var xmlReader = XmlReader.Create(uri.ToString(), settings))
-            {
-                var xmlSerializer = new ReportXmlSerializer();
-                report = (Report)xmlSerializer.Deserialize(xmlReader);
-            }
+            var pdf = ExportPatientsPdf(patientId, this.db, this.DbPractice, this.Doctor);
 
-            var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
-            foreach (var eachSubReport in subReports)
-            {
-                var uriSub = new Uri(uri, String.Format("{0}.trdx", eachSubReport.Name));
-                var reportSub = CreateReportFromUrl(uriSub);
-                report.Disposed += (s, e) => reportSub.Dispose();
-                eachSubReport.ReportSource = reportSub;
-            }
-
-            return report;
+            // Returning the generated PDF as a file.
+            return this.File(pdf.DocumentBytes, pdf.MimeType);
         }
 
         private static Report CreateReportFromResource(string resourceName)
@@ -173,9 +119,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private static Report CreateReportFromFile(string fileName)
         {
-            var asm = typeof(ReportController).Assembly;
-            var asmName = asm.GetName().Name;
-
             var settings = new XmlReaderSettings { IgnoreWhitespace = true };
             Report report;
             using (var fileStream = System.IO.File.Open(fileName, FileMode.Open))
@@ -200,7 +143,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
     public class ReportData
     {
-        private bool isPdf;
         private readonly CerebelloEntitiesAccessFilterWrapper db;
         private readonly Practice practice;
 
@@ -210,20 +152,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             this.practice = practice;
         }
 
-        public XmlDoctorData GetXml(Doctor doctor, int? patientId)
+        public XmlDoctorData GetReportDataSourceForXml(Doctor doctor, int? patientId)
         {
-            return this.GetBackupData(doctor, patientId, false);
+            return this.GetReportDataSource(doctor, patientId, false);
         }
 
-        public PdfDoctorData GetPdf(Doctor doctor, int? patientId)
+        public PdfDoctorData GetReportDataSourceForPdf(Doctor doctor, int? patientId)
         {
-            return (PdfDoctorData)this.GetBackupData(doctor, patientId, true);
+            return (PdfDoctorData)this.GetReportDataSource(doctor, patientId, true);
         }
 
-        private XmlDoctorData GetBackupData(Doctor doctor, int? patientId, bool isPdf)
+        private XmlDoctorData GetReportDataSource(Doctor doctor, int? patientId, bool isPdf)
         {
-            this.isPdf = isPdf;
-
             var docUser = doctor.Users.Single();
             var docPerson = docUser.Person;
 
@@ -231,7 +171,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doctor);
 
             // Getting all patients data.
-            var doctorData = this.isPdf ? new PdfDoctorData() : new XmlDoctorData();
+            var doctorData = isPdf ? new PdfDoctorData() : new XmlDoctorData();
             PatientsController.FillPersonViewModel(this.practice, docPerson, doctorData);
             UsersController.FillUserViewModel(docUser, this.practice, doctorData);
             UsersController.FillDoctorViewModel(docUser, medicalEntity, medicalSpecialty, doctorData, doctor);
@@ -242,14 +182,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 doctorData.Patients = doctor.Patients
                                             .Where(p => p.Id == patientId)
-                                            .Select(this.GetPatientData)
+                                            .Select(p => this.GetPatientData(p, isPdf))
                                             .OrderBy(x => x.FullName)
                                             .ToList();
             }
             else
             {
                 doctorData.Patients = doctor.Patients
-                                            .Select(this.GetPatientData)
+                                            .Select(p => this.GetPatientData(p, isPdf))
                                             .OrderBy(x => x.FullName)
                                             .ToList();
             }
@@ -257,9 +197,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return doctorData;
         }
 
-        private XmlPatientData GetPatientData(Patient patient)
+        private XmlPatientData GetPatientData(Patient patient, bool isPdf)
         {
-            var result = this.isPdf ? new PdfPatientData() : new XmlPatientData();
+            var result = isPdf ? new PdfPatientData() : new XmlPatientData();
 
             PatientsController.FillPersonViewModel(this.practice, patient.Person, result);
 

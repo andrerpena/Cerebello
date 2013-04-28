@@ -108,6 +108,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     anamnese = this.db.Anamnese.First(a => a.Id == formModel.Id);
 
+                anamnese.Patient.IsBackedUp = false;
                 anamnese.Allergies = formModel.Allergies;
                 anamnese.ChiefComplaint = formModel.ChiefComplaint;
                 anamnese.Conclusion = formModel.Conclusion;
@@ -127,17 +128,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             return this.View("Edit", formModel);
-        }
-
-        /// <summary>
-        /// Will retrieve an editor for diagnosis. This is useful for the collection editor to request a new editor for 
-        /// a newly create diagnosis at client-side
-        /// </summary>
-        /// <param name="formModel"></param>
-        /// <returns></returns>
-        public ActionResult DiagnosticHypothesisEditor(DiagnosticHypothesisViewModel formModel)
-        {
-            return this.View(formModel);
         }
 
         /// <summary>

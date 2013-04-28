@@ -21,12 +21,18 @@ namespace CerebelloWebRole
             RouteHelper.RegisterAllRoutes();
 
             // Creating workers and running them.
-            var intervalScheduler30Min = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30.0))
+            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30.0))
                 {
                     new EmailSenderWorker()
                 };
+            emailSenderScheduler.Start();
 
-            intervalScheduler30Min.Start();
+            // Creating workers and running them.
+            var dropboxSynchronzerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60.0))
+                {
+                    new DropboxSynchronizerWorker()
+                };
+            dropboxSynchronzerScheduler.Start();
 
             // Calling base to stop execution of this method forever.
             base.Run();

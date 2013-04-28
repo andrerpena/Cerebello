@@ -43,7 +43,7 @@ namespace CerebelloWebRole.Controllers
                 {
                     // extract practice name from returnUrl
                     var routeData = RouteHelper.GetRouteDataByUrl("~" + returnUrl);
-                    if (routeData.Values.ContainsKey("practice"))
+                    if (routeData != null && routeData.Values.ContainsKey("practice"))
                         viewModel.PracticeIdentifier = (string)routeData.Values["practice"];
 
                     if (this.User.Identity.IsAuthenticated)

@@ -20,6 +20,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class PatientFilesController : DoctorController
     {
+        [SelfPermission]
+        public ActionResult DownloadBackup(int patientId)
+        {
+            var patient = db.Patients.First(p => p.Id == patientId);
+            var backup = BackupHelper.GeneratePatientBackup(this.db, patient);
+            return this.File(
+                backup,
+                "application/zip",
+                patient.Person.FullName + " - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
+        }
+
         /// <summary>
         /// Downloads the specified file
         /// </summary>
@@ -48,7 +59,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult DownloadZipFile(int patientId)
         {
-            var patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            var patient = this.db.Patients.First(p => p.Id == patientId);
             var zipMemoryStream = new MemoryStream();
 
             using (var zip = new ZipFile())
@@ -242,6 +253,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 Debug.Assert(patientFile != null, "patientFile != null");
 
+                patientFile.Patient.IsBackedUp = false;
                 patientFile.File.Description = formModel.Description;
                 patientFile.FileDate = this.ConvertToUtcDateTime(formModel.FileDate.Value);
                 patientFile.ReceiveDate = this.ConvertToUtcDateTime(formModel.ReceiveDate.Value);
