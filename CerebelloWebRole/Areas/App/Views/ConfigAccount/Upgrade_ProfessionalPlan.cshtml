@@ -187,7 +187,7 @@
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="1" @(this.Model.DoctorCount == 1 ? "checked='checked'" : "")/></td>
                 <td class="label">somente 1 médico</td>
-                <td class="irrelevant" price="0">R$ 0,00</td>
+                <td class="irrelevant price" price="0">R$ 0,00</td>
             </tr>
             @{ int prev = 1; }
             @foreach (var size in sizes)
