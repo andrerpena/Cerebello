@@ -72,7 +72,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
             if (this.ModelState.IsValid)
             {
-                DiagnosticHypothesis diagnosticHypothesis = null;
+                DiagnosticHypothesis diagnosticHypothesis;
                 if (formModel.Id == null)
                 {
                     diagnosticHypothesis = new DiagnosticHypothesis
@@ -86,6 +86,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     diagnosticHypothesis = this.db.DiagnosticHypotheses.First(a => a.Id == formModel.Id);
 
+                diagnosticHypothesis.Patient.IsBackedUp = false;
                 diagnosticHypothesis.Observations = formModel.Text;
                 diagnosticHypothesis.Cid10Code = formModel.Cid10Code;
                 diagnosticHypothesis.Cid10Name = formModel.Cid10Name;

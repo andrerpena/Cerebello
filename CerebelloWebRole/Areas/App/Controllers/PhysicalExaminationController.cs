@@ -86,6 +86,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (this.ModelState.IsValid)
             {
                 Debug.Assert(physicalExamination != null, "physicalExamination != null");
+                physicalExamination.Patient.IsBackedUp = false;
                 physicalExamination.Notes = formModel.Notes;
                 physicalExamination.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
                 this.db.SaveChanges();

@@ -20,6 +20,7 @@
           <EntitySet Name="Diagnosis" EntityType="cerebelloModel.Store.Diagnosis" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DiagnosticHypothesis" EntityType="cerebelloModel.Store.DiagnosticHypothesis" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Doctor" EntityType="cerebelloModel.Store.Doctor" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DropboxInfo" EntityType="cerebelloModel.Store.DropboxInfo" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationRequest" EntityType="cerebelloModel.Store.ExaminationRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ExaminationResult" EntityType="cerebelloModel.Store.ExaminationResult" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="File" EntityType="cerebelloModel.Store.File" store:Type="Tables" Schema="dbo" />
@@ -130,6 +131,10 @@
             <End Role="Patient" EntitySet="Patient" />
             <End Role="DiagnosticHypothesis" EntitySet="DiagnosticHypothesis" />
           </AssociationSet>
+          <AssociationSet Name="FK_DropboxInfo_Practice" Association="cerebelloModel.Store.FK_DropboxInfo_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="DropboxInfo" EntitySet="DropboxInfo" />
+          </AssociationSet>
           <AssociationSet Name="FK_ExaminationRequest_Patient" Association="cerebelloModel.Store.FK_ExaminationRequest_Patient">
             <End Role="Patient" EntitySet="Patient" />
             <End Role="ExaminationRequest" EntitySet="ExaminationRequest" />
@@ -200,6 +205,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Patient_Person" Association="cerebelloModel.Store.FK_Patient_Person">
             <End Role="Person" EntitySet="Person" />
+            <End Role="Patient" EntitySet="Patient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_Practice" Association="cerebelloModel.Store.FK_Patient_Practice">
+            <End Role="Practice" EntitySet="Practice" />
             <End Role="Patient" EntitySet="Patient" />
           </AssociationSet>
           <AssociationSet Name="FK_PatientFile_File" Association="cerebelloModel.Store.FK_PatientFile_File">
@@ -514,6 +523,18 @@
           <Property Name="MedicalSpecialtyName" Type="nvarchar" Nullable="false" MaxLength="71" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="DropboxInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="Secret" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Token" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="DisplayName" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Email" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Uid" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityType Name="ExaminationRequest">
           <Key>
             <PropertyRef Name="Id" />
@@ -697,6 +718,7 @@
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="LastUsedHealthInsuranceId" Type="int" />
+          <Property Name="IsBackedUp" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PatientFile">
           <Key>
@@ -1134,6 +1156,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DropboxInfo_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="DropboxInfo" Type="cerebelloModel.Store.DropboxInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DropboxInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ExaminationRequest_Patient">
           <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
           <End Role="ExaminationRequest" Type="cerebelloModel.Store.ExaminationRequest" Multiplicity="*" />
@@ -1349,6 +1383,18 @@
             </Principal>
             <Dependent Role="Patient">
               <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1853,6 +1899,15 @@
             <End Role="Practice" EntitySet="Practices" />
             <End Role="Notification" EntitySet="Notifications" />
           </AssociationSet>
+          <EntitySet Name="DropboxInfoes" EntityType="Cerebello.Model.DropboxInfo" />
+          <AssociationSet Name="FK_DropboxInfo_Practice" Association="Cerebello.Model.FK_DropboxInfo_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="DropboxInfo" EntitySet="DropboxInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_Practice" Association="Cerebello.Model.FK_Patient_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="Patient" EntitySet="Patients" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1953,6 +2008,8 @@
           <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="Patient" ToRole="PhysicalExamination" />
           <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="Patient" ToRole="PatientFile" />
           <NavigationProperty Name="DiagnosticHypotheses" Relationship="Cerebello.Model.FK_DiagnosticHypothesis_Patient" FromRole="Patient" ToRole="DiagnosticHypothesis" />
+          <Property Type="Boolean" Name="IsBackedUp" Nullable="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Patient_Practice" FromRole="Patient" ToRole="Practice" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -2007,6 +2064,8 @@
           <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_Practice" FromRole="Practice" ToRole="Appointment" />
           <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Practice" ToRole="Notification" />
           <Property Type="Int32" Name="Province" />
+          <NavigationProperty Name="DropboxInfos" Relationship="Cerebello.Model.FK_DropboxInfo_Practice" FromRole="Practice" ToRole="DropboxInfo" />
+          <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_Practice" FromRole="Practice" ToRole="Patient" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -3199,6 +3258,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DropboxInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="String" Name="Secret" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Token" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_DropboxInfo_Practice" FromRole="DropboxInfo" ToRole="Practice" />
+          <Property Type="String" Name="DisplayName" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="String" Name="Email" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="Int64" Name="Uid" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_DropboxInfo_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.DropboxInfo" Role="DropboxInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DropboxInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3251,7 +3347,8 @@
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Patients"><EntityTypeMapping TypeName="Cerebello.Model.Patient"><MappingFragment StoreEntitySet="Patient">
-            <ScalarProperty Name="LastUsedHealthInsuranceId" ColumnName="LastUsedHealthInsuranceId" />
+            <ScalarProperty Name="IsBackedUp" ColumnName="IsBackedUp" />
+                <ScalarProperty Name="LastUsedHealthInsuranceId" ColumnName="LastUsedHealthInsuranceId" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Registration" ColumnName="Registration" />
@@ -3852,6 +3949,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DropboxInfoes">
+            <EntityTypeMapping TypeName="Cerebello.Model.DropboxInfo">
+              <MappingFragment StoreEntitySet="DropboxInfo">
+                <ScalarProperty Name="Uid" ColumnName="Uid" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Secret" ColumnName="Secret" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3872,7 +3982,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="80">
+      <Diagram Name="CerebelloEntities" ZoomLevel="57">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -4223,6 +4333,9 @@
         <AssociationConnector Association="Cerebello.Model.FK_Notification_User1" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_Practice" />
         <AssociationConnector Association="Cerebello.Model.FK_Notification_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.DropboxInfo" Width="1.5" PointX="21.125" PointY="16" />
+        <AssociationConnector Association="Cerebello.Model.FK_DropboxInfo_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_Patient_Practice" />
         </Diagram>
     </Diagrams>
   </Designer>

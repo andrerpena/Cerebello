@@ -45,6 +45,10 @@
         {
             <li><a href="@Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
         }
+        @if (this.CanAccessAction("DownloadBackup", "PatientFiles"))
+        {
+            <li><a href="@Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar backup em Zip</a> </li>
+        }
     </ul>
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {

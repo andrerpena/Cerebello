@@ -142,6 +142,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         m => this.db.ReceiptMedicines.DeleteObject(m)
                     );
 
+                receipt.Patient.IsBackedUp = false;
                 receipt.IssuanceDate = this.ConvertToUtcDateTime(formModel.IssuanceDate.Value);
                 db.SaveChanges();
 

@@ -95,6 +95,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     dbObject = this.db.Diagnoses.First(a => a.Id == formModel.Id);
 
+                dbObject.Patient.IsBackedUp = false;
                 dbObject.Observations = formModel.Text;
                 dbObject.Cid10Code = formModel.Cid10Code;
                 dbObject.Cid10Name = formModel.Cid10Name;

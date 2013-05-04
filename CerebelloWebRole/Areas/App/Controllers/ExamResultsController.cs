@@ -116,6 +116,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (this.ModelState.IsValid)
             {
+                dbObject.Patient.IsBackedUp = false;
                 dbObject.Text = formModel.Text;
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
                 dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue

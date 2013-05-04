@@ -106,6 +106,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var profilePictureBlobName = "profile_picture_" + personId;
                 storageManager.UploadFileToStorage(tempFile, Constants.PERSON_PROFILE_PICTURE_CONTAINER_NAME, profilePictureBlobName);
                 person.PictureBlobName = profilePictureBlobName;
+
+                // this controller shouldn't know about patients but.. it's the easiest way to do this now
+                if (person.Patients.Any())
+                    person.Patients.First().IsBackedUp = false;
+
                 this.db.SaveChanges();
 
                 return this.Json(

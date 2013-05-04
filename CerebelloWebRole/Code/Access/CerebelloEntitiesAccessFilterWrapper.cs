@@ -27,7 +27,19 @@ namespace CerebelloWebRole.Code.Access
             this.db = db;
         }
 
-        private static ConcurrentDictionary<Type, bool> hasPracticeId = new ConcurrentDictionary<Type, bool>();
+        public User SetCurrentUserById(int userId)
+        {
+            this.user = this.db.Users.Include("Practice").SingleOrDefault(u => u.Id == userId);
+
+            if (this.user != null)
+                this.practice = this.user.Practice;
+
+            this.AccountDisabled = this.practice == null || this.practice.AccountDisabled;
+
+            return this.user;
+        }
+
+        private static readonly ConcurrentDictionary<Type, bool> hasPracticeId = new ConcurrentDictionary<Type, bool>();
 
         public int SaveChanges()
         {
@@ -55,18 +67,6 @@ namespace CerebelloWebRole.Code.Access
         }
 
         public DbConnection Connection { get { return this.db.Connection; } }
-
-        public User SetCurrentUserById(int userId)
-        {
-            this.user = this.db.Users.Include("Practice").SingleOrDefault(u => u.Id == userId);
-
-            if (this.user != null)
-                this.practice = this.user.Practice;
-
-            this.AccountDisabled = this.practice == null || this.practice.AccountDisabled;
-
-            return this.user;
-        }
 
         public bool AccountDisabled { get; set; }
 
@@ -253,6 +253,11 @@ namespace CerebelloWebRole.Code.Access
         public FilteredObjectSetWrapper<Notification> Notifications
         {
             get { return new FilteredObjectSetWrapper<Notification>(this.db.Notifications, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<DropboxInfo> DropboxInfos
+        {
+            get { return new FilteredObjectSetWrapper<DropboxInfo>(this.db.DropboxInfoes, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public ObjectSet<SYS_ActiveIngredient> SYS_ActiveIngredient

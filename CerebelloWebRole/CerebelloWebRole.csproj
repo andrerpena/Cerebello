@@ -52,6 +52,9 @@
     <Reference Include="CipherLite">
       <HintPath>..\ThirdParty\CipherLite.dll</HintPath>
     </Reference>
+    <Reference Include="DropNet">
+      <HintPath>..\packages\DropNet.1.9.3\lib\net35\DropNet.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -114,6 +117,9 @@
     <Reference Include="PayPal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\PayPal-API\PayPal.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\DropNet.1.9.3\lib\net35\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
       <Private>True</Private>
@@ -220,6 +226,7 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\CameraWindowController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
@@ -230,6 +237,7 @@
     <Compile Include="Areas\App\Models\CameraWindowViewModel.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigBackupViewModel.cs" />
     <Compile Include="Code\CerebelloEntities.cs" />
     <Compile Include="Code\Access\LockAccessType.cs" />
     <Compile Include="Code\Access\LockElementActionType.cs" />
@@ -260,6 +268,7 @@
     <Compile Include="Code\Bus.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Disposer.cs" />
+    <Compile Include="Code\Helpers\BackupHelper.cs" />
     <Compile Include="Code\Helpers\BusHelper.cs" />
     <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\Hubs\ChatHub.cs" />
@@ -285,8 +294,10 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Images\Site\backup.png" />
     <Content Include="Content\Camera\jscam.swf" />
     <Content Include="Content\Camera\jscam_canvas_only.swf" />
+    <Content Include="Content\Images\Site\BizSpark_Startup.jpg" />
     <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Sounds\chat.mp3" />
@@ -308,6 +319,7 @@
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
+    <Compile Include="WorkerRole.Code\Workers\DropboxSynchronizerWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
@@ -566,9 +578,6 @@
     <Content Include="Content\Images\Site\escolha.png" />
     <Content Include="Content\Images\Site\experimente.png" />
     <Content Include="Content\Images\Site\green-tick.png" />
-    <Content Include="Content\Images\Site\hero_bg - Copy - Copy.jpg" />
-    <Content Include="Content\Images\Site\hero_bg - Copy.jpg" />
-    <Content Include="Content\Images\Site\hero_bg.jpg" />
     <Content Include="Content\Images\Site\logo_transp.png" />
     <Content Include="Content\Images\Site\medicamentos.png" />
     <Content Include="Content\Images\Site\prontuario.png" />
@@ -714,6 +723,7 @@
     <Content Include="newrelic.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\App\Views\ConfigBackup\Index.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
