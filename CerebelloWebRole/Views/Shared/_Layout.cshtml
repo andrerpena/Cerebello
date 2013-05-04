@@ -91,7 +91,7 @@
                 @if (this.User is AuthenticatedPrincipal)
                 {
                     var userData = (this.User as AuthenticatedPrincipal).Profile;
-                    <li><a href="@Url.Action("Index", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
+                    <li><a href="@Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
                     <li><a href="@Url.Action("LogoutLogin", "Authentication")">Eu não sou @userData.FullName</a></li>
                 }
                 else
