@@ -173,7 +173,7 @@
                     @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
                 }
                 { id: "profile", text: "Perfil do usuário", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
-                { id: "logout", text: "Sair", href: "@Url.Action("logout", "Authentication", new { area = "" })" }
+                { id: "logout", text: "Sair", href: "@Url.Action("Logout", "Authentication", new { area = "" })" }
             ]
         });
     </script>

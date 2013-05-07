@@ -1,25 +1,47 @@
 ﻿@{
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
 
-    var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
     var configControllerNames = new string[] { "config", "configschedule", "modelmedicalcertificates", "configdocuments", "healthinsurance" };
-    var practiceId = ViewBag.Practice.Id;
-    var doctor = (CerebelloWebRole.Areas.App.Models.DoctorViewModel)ViewBag.Doctor;
+    var practiceId = this.ViewBag.Practice.Id;
+    var doctor = (DoctorViewModel)this.ViewBag.Doctor;
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     string scheduleDateStr = localNow.ToString("yyyy-MM-dd");
+
+    var allDoctors = (List<DoctorViewModel>)this.ViewBag.AllDoctors;
 }
 @section MainMenu {
-    <div class="doctor-card" data-intro="Este é o médico selecionado. Todas as informações nesta página são relativas a este médico. Para trocar o médico, clique em 'Ir para o consultório' e selecione outro médico" data-step="2">
+    <div id="doctor-card" class="doctor-card" data-intro="Este é o médico selecionado. Todas as informações nesta página são relativas a este médico. Para trocar o médico, clique em 'Ir para o consultório' e selecione outro médico" data-step="2">
         <div class="doctor-picture">
             <img src="@doctor.ImageUrl" /></div>
         <div class="doctor-info">
-            <p class="name">
-                <a href="@Url.Action("Index", "DoctorHome")">@doctor.Name</a></p>
+            <p class="name">@doctor.Name</p>
             <p class="crm">@doctor.CRM (@doctor.MedicalEntity)</p>
         </div>
     </div>
+    <script type="text/javascript">
+        $("#doctor-card").dropdownMenu({
+            items: [
+                { id: "practice", text: "Ir para consultório", href: "@Url.Action("Index", "PracticeHome", new { area = "App" })" }
+            @if (allDoctors.Count > 1)
+            {
+                for (int itDoc = 0; itDoc < allDoctors.Count; itDoc++)
+                {
+                    if (itDoc == 0)
+                    {
+                        @:,{ id: "other-doctors-title", text: "Outros médicos", cssClass: "header" }
+                    }
+                    if (allDoctors[itDoc].Id != doctor.Id)
+                    {
+                        @:,{ id: "doctor-@(allDoctors[itDoc].Id)", text: "@this.Html.Raw(allDoctors[itDoc].Name)", href: "@Url.Action("Index", "DoctorHome", new { doctor = allDoctors[itDoc].UrlIdentifier, area = "App" })" }
+                    }
+                }
+            }
+            ]
+        });
+    </script>
     <ul class="tabNav">
         <li class="@(controllerName.Equals("doctorhome") ? "youarehere" : "")"><a href="@Url.Action("Index", "DoctorHome")" class="home-icon" data-intro="Esta é a tela de início do médico. Aqui estão todas as informações do médico e a fila de atendimento para hoje" data-step="3">
             Início</a> </li>
