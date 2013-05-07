@@ -50,8 +50,20 @@
             }
             @if (canAccessConfig)
             {
-                <li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")">
+                @*<li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")">
                     <a href="@Url.Action("Index", "Config")" class="config-icon">Configurações</a>
+                </li>*@
+                <li class="@(this.IsController("ConfigSchedule") ? "youarehere" : "")">
+                    <a href="@Url.Action("Edit", "ConfigSchedule")" class="config-icon">Configurações da agenda</a> 
+                </li>
+                <li class="@(this.IsAction("Edit", "ConfigDocuments") ? "youarehere" : "")">
+                    <a href="@Url.Action("Edit", "ConfigDocuments")" class="config-icon">Configurações de documentos</a> 
+                </li>
+                <li class="@(this.IsAction("Index", "ModelMedicalCertificates") ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "ModelMedicalCertificates")" class="config-icon">Modelos de atestados</a> 
+                </li>
+                <li class="@(this.IsAction("Index", "HealthInsurance") ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "HealthInsurance")" class="config-icon">Convênios</a> 
                 </li>
             }
         </ul>
