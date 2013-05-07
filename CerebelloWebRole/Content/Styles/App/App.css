@@ -559,6 +559,34 @@ fieldset {
             width: 200px;
         }
 
+    #app-header .configurations {
+        color: #333333;
+        cursor: pointer;
+        float: right;
+        margin-right: 20px;
+        height: 27px;
+    }
+
+        #app-header .configurations .text {
+            position: relative;
+            top: -4px;
+        }
+
+            #app-header .configurations .text a {
+                display: block;
+                margin-right: 0;
+                padding: 10px 0 8px 34px;
+                text-decoration: none;
+                text-shadow: 0 1px 1px #FFFFFF;
+                background-repeat: no-repeat;
+                background-position: 4px 50%;
+                color: #333333;
+            }
+
+                #app-header .configurations .text a.config-icon {
+                    background-image: url("/content/images/app/icons/config-off.png");
+                }
+
     #app-header .user-menu-wrapper {
         color: #333333;
         cursor: pointer;
@@ -597,6 +625,8 @@ fieldset {
             padding: 10px 0 8px 34px;
             text-decoration: none;
             text-shadow: 0 1px 1px #FFFFFF;
+            background-repeat: no-repeat;
+            background-position: 4px 50%;
         }
 
         .tabNav li.youarehere a {
@@ -733,14 +763,9 @@ fieldset {
     float: left;
 }
 
-.tabNav li a {
-    background-repeat: no-repeat;
-    background-position: 4px 50%;
+.tabNav li a.home-icon {
+    background-image: url("/content/images/app/icons/home-off.png");
 }
-
-    .tabNav li a.home-icon {
-        background-image: url("/content/images/app/icons/home-off.png");
-    }
 
 .tabNav li.youarehere a.home-icon {
     background-image: url("/content/images/app/icons/home-off.png");
@@ -817,10 +842,14 @@ td.value {
 .doctor-card {
     margin-bottom: 15px;
     margin-top: 0;
+    min-height: 32px;
+    cursor: pointer;
 }
 
     .doctor-card .doctor-picture {
         float: left;
+        width: 32px;
+        height: 32px;
     }
 
     .doctor-card .doctor-info {

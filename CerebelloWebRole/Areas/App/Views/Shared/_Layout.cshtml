@@ -156,6 +156,18 @@
                     </span><span class="arrow-down">▼</span>
                 </div>
             </div>
+            @if (userInfo.IsOwner)
+            {
+                <div class="configurations">
+                    <div class="text">
+                        <span>
+                            <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
+                                @*@LockIcon.Icon("lock-account-config")*@
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            }
             <div class="top-actions-bar-wrapper">
                 <div class="top-actions-bar">
                     @RenderSection("TopActions");
