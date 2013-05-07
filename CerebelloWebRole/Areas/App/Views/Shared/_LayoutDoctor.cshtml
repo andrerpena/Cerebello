@@ -26,7 +26,7 @@
         <li class="@(controllerName.Equals("schedule") ? "youarehere" : "")"><a href="@Url.Action("Index", "Schedule")" class="schedule-icon" data-intro="Esta é a agenda do médico. É possível visualizar as consultas agendadas e marcar novas consultas" data-step="4">
             Agenda</a> </li>
         <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "Patients")" class="contact-icon" data-intro="Todas as informações sobre pacientes estão aqui. É possível pesquisar por pacientes e visualizar os históricos. Para realizar uma nova consulta, selecione o paciente desejado e clique nos links de ações na parte inferior da ficha do paciente" data-step="5">
-            Prontuário</a> </li>
+            Prontuários</a> </li>
     </ul>
     <div style="margin-right: 10px; text-align: right;">
         <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "Index", controller = "PracticeHome" })">
