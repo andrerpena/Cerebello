@@ -126,9 +126,9 @@ namespace CerebelloWebRole.Code.Extensions
             return original.Replace('[', '_').Replace(']', '_').Replace('.', '_');
         }
 
-        public static string FieldName<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
+        public static IHtmlString FieldName<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
         {
-            return ExpressionHelper.GetPropertyInfoFromMemberExpression(expression).Name;
+            return html.Raw(ExpressionHelper.GetPropertyInfoFromMemberExpression(expression).Name);
         }
 
         public static string FieldLabelText<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
