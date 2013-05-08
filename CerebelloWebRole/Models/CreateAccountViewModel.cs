@@ -62,6 +62,7 @@ namespace CerebelloWebRole.Models
         /// </summary>
         [Display(Name = "Nome do consultório")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [StringLength(50)] // this number is replicated in the view
         public string PracticeName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

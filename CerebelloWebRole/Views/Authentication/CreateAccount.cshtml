@@ -68,7 +68,8 @@
                         <div class="control-group">
                             @Html.LabelFor(model => model.PracticeName)
                             <div class="controls">
-                                @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge" })
+                                @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge", maxlength = 50 })
+                                <div class="alert alert-info">Até 50 caracteres.</div>
                             </div>
                         </div>
                         <div class="control-group">
@@ -156,27 +157,24 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label for="@this.Html.FieldName(model => model.EMail)">
-                                @this.Html.FieldLabelText(model => model.EMail)
-                                <span class="label" style="margin: 0 4px;">Será enviada uma mensagem para validar o seu e-mail</span>
-                            </label>
+                            @Html.LabelFor(model => model.EMail)
                             <div class="controls">
                                 @Html.TextBoxFor(model => model.EMail, new { @class = "input-xlarge" })
+                                <div class="alert alert-info">Será enviada uma mensagem para validar o seu endereço de e-mail.</div>
                             </div>
                         </div>
                         <div class="control-group">
                             @Html.LabelFor(model => model.Password)
                             <div class="controls">
                                 @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                                <div class="alert alert-info">Use 6 ou mais caracteres, hífen, sublinhado, acentuação, letras maiúsculas e minúsculas e outros sinais e símbolos como @("@, #, $, %, &, *, +, etc.").</div>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label for="@this.Html.FieldName(model => model.ConfirmPassword)">
-                                @this.Html.FieldLabelText(model => model.ConfirmPassword)
-                                <span class="label" style="margin: 0 4px;">Repita a senha</span>
-                            </label>
+                            @Html.LabelFor(model => model.ConfirmPassword)
                             <div class="controls">
                                 @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "input-xlarge" })
+                                <div class="alert alert-info">Repita a senha.</div>
                             </div>
                         </div>
                     </div>
