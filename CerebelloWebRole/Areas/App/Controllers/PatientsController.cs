@@ -8,6 +8,7 @@ using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
 using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.WindowsAzure;
 using DropNet;
@@ -313,6 +314,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         //
         // GET: /App/Patients/
 
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var model =

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
@@ -12,7 +13,7 @@ namespace CerebelloWebRole.Code.Extensions
     /// Extension methods to the view page that allows changin the view
     /// accordin to access control rules, and other route informations.
     /// </summary>
-    public static class AccessExtensions
+    public static class WebViewPageExtensions
     {
         /// <summary>
         /// Checks whether the current user can access the specified action.
@@ -36,8 +37,24 @@ namespace CerebelloWebRole.Code.Extensions
             if (@this == null)
                 throw new ArgumentNullException("this");
 
+            var routeValuesDic = new RouteValueDictionary(routeValues);
             var mvcHelper = new MvcActionHelper(
-                @this.ViewContext.Controller.ControllerContext, action, controller, method, routeValues);
+                @this.ViewContext.Controller.ControllerContext, action, controller, method, routeValuesDic);
+
+            if (mvcHelper.ActionDescriptor == null)
+            {
+                // The view does not exist... this means that nobody can access it.
+                return false;
+            }
+
+            if (routeValues != null)
+            {
+                // checking action parameters
+                var actionParams = mvcHelper.ActionDescriptor.GetParameters();
+
+                // todo: check routeValuesDic to see if the contained values fit the actionParams
+                // todo: maybe we should try to bind values (it could be slow)
+            }
 
             // Getting the current DB User... (the logged user).
             var cerebelloController = @this.ViewContext.Controller as CerebelloController;
@@ -116,6 +133,40 @@ namespace CerebelloWebRole.Code.Extensions
             var currentController = routeData.GetRequiredString("controller");
 
             return controllerNames.Any(cn => string.Equals(currentController, cn, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static bool CanAlternateBetweenUsers(
+            this WebViewPage @this,
+            [AspMvcAction]string action = null,
+            [AspMvcController]string controller = null,
+            string method = "GET",
+            object routeValues = null)
+        {
+            // TODO: must cache all of these informations
+            // todo: this method is similar to CanAccessAction... maybe we can merge them somehow
+
+            if (@this == null)
+                throw new ArgumentNullException("this");
+
+            var routeValuesDic = new RouteValueDictionary(routeValues);
+            var mvcHelper = new MvcActionHelper(
+                @this.ViewContext.Controller.ControllerContext, action, controller, method, routeValuesDic);
+
+            if (mvcHelper.ActionDescriptor == null)
+            {
+                // The view does not exist... this means that nobody can access it.
+                return false;
+            }
+
+            var attributes = mvcHelper
+                    .GetFilters()
+                    .Select(f => f.Instance)
+                    .OfType<CanAlternateUserAttribute>()
+                    .ToArray();
+
+            var result = attributes.Length > 0;
+
+            return result;
         }
     }
 }

@@ -2,6 +2,7 @@
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
 
     var controllerName = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString().ToLower();
     var configControllerNames = new string[] { "config", "configschedule", "modelmedicalcertificates", "configdocuments", "healthinsurance" };
     var practiceId = this.ViewBag.Practice.Id;
     var doctor = (DoctorViewModel)this.ViewBag.Doctor;
@@ -10,7 +11,7 @@
 
     string scheduleDateStr = localNow.ToString("yyyy-MM-dd");
 
-    var allDoctors = (List<DoctorViewModel>)this.ViewBag.AllDoctors;
+    var allDoctors = ((List<DoctorViewModel>)this.ViewBag.AllDoctors).OrderBy(d => d.Name).ToList();
 }
 @section MainMenu {
     <div id="doctor-card" class="doctor-card" data-intro="Este é o médico selecionado. Todas as informações nesta página são relativas a este médico. Para trocar o médico, clique em 'Ir para o consultório' e selecione outro médico" data-step="2">
@@ -33,9 +34,34 @@
                     {
                         @:,{ id: "other-doctors-title", text: "Outros médicos", cssClass: "header" }
                     }
-                    if (allDoctors[itDoc].Id != doctor.Id)
+                    //if (allDoctors[itDoc].Id != doctor.Id)
                     {
-                        @:,{ id: "doctor-@(allDoctors[itDoc].Id)", text: "@this.Html.Raw(allDoctors[itDoc].Name)", href: "@Url.Action("Index", "DoctorHome", new { doctor = allDoctors[itDoc].UrlIdentifier, area = "App" })" }
+                        string href = null;
+                        var isDoctorHome = string.Equals(controllerName, "DoctorHome", StringComparison.OrdinalIgnoreCase);
+                        var isIndex = string.Equals(actionName, "Index", StringComparison.OrdinalIgnoreCase);
+
+                        // Go to the doctor home by defaut.
+                        if (this.CanAccessAction("Index", "DoctorHome") && this.CanAlternateBetweenUsers("Index", "DoctorHome"))
+                        {
+                            href = this.Url.Action("Index", "DoctorHome", new { doctor = allDoctors[itDoc].UrlIdentifier, area = "App" });
+                        }
+
+                        // If the current user can access the "Index" of the current controller for the other user, then use it.
+                        if (!isDoctorHome && this.CanAccessAction("Index", controllerName) && this.CanAlternateBetweenUsers("Index", controllerName))
+                        {
+                            href = this.Url.Action("Index", controllerName, new { doctor = allDoctors[itDoc].UrlIdentifier, area = "App" });
+                        }
+                        
+                        // If the current user can access the same specific page of the other user, then use it.
+                        if (!isDoctorHome && !isIndex && this.CanAccessAction(actionName, controllerName) && this.CanAlternateBetweenUsers(actionName, controllerName))
+                        {
+                            href = this.Url.Action(actionName, controllerName, new { doctor = allDoctors[itDoc].UrlIdentifier, area = "App" });
+                        }
+
+                        if (href != null)
+                        {
+                            @:,{ id: "doctor-@(allDoctors[itDoc].Id)", text: "@this.Html.Raw(allDoctors[itDoc].Name)", href: "@href" }
+                        }
                     }
                 }
             }

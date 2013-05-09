@@ -269,6 +269,7 @@
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Disposer.cs" />
     <Compile Include="Code\Helpers\BackupHelper.cs" />
+    <Compile Include="Code\Filters\CanAlternateUserAttribute.cs" />
     <Compile Include="Code\Helpers\BusHelper.cs" />
     <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\Hubs\ChatHub.cs" />
@@ -418,7 +419,7 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
     <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
-    <Compile Include="Code\Extensions\AccessExtensions.cs" />
+    <Compile Include="Code\Extensions\WebViewPageExtensions.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />

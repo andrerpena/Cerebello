@@ -19,6 +19,25 @@ namespace CerebelloWebRole.Code.Helpers
             object routeValues = null,
             string protocol = null,
             string hostName = null)
+            : this(
+                currentControllerContext,
+                actionName,
+                controllerName,
+                httpMethod,
+                new RouteValueDictionary(routeValues),
+                protocol,
+                hostName)
+        {
+        }
+
+        public MvcActionHelper(
+            ControllerContext currentControllerContext,
+            [AspMvcAction] string actionName = null,
+            [AspMvcController] string controllerName = null,
+            string httpMethod = "GET",
+            RouteValueDictionary routeValues = null,
+            string protocol = null,
+            string hostName = null)
         {
             this.CurrentControllerContext = currentControllerContext;
 
@@ -43,7 +62,7 @@ namespace CerebelloWebRole.Code.Helpers
             this.Uri = new Uri(urlHelper.Action(
                 this.ActionName,
                 this.ControllerName,
-                new RouteValueDictionary(routeValues),
+                routeValues,
                 protocol ?? currentUri.Scheme,
                 hostName ?? currentUri.Host));
 
