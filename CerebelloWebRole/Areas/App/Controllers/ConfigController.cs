@@ -1,11 +1,9 @@
 ﻿using System.Web.Mvc;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Filters;
-using DropNet;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
+    [Code.Filters.SelfOrUserRolePermission(Code.Filters.UserRoleFlags.Administrator)]
     public class ConfigController : DoctorController
     {
         //

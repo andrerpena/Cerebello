@@ -7,10 +7,8 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.WindowsAzure;
-using DropNet;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -687,18 +685,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
 
             return View(model);
-        }
-
-        public bool Synchronize(int id)
-        {
-            var patient = this.db.Patients.First(p => p.Id == id);
-            var patientBackup = BackupHelper.GeneratePatientBackup(this.db, patient);
-            var dropboxInfo = patient.Practice.DropboxInfos.First();
-            var dropbox = new DropNetClient("r1ndpw0o5lh755x", "qrmdxee9kzbd81i", dropboxInfo.Token, dropboxInfo.Secret);
-            dropbox.UploadFile(
-                "/", string.Format("{0} ({1})", patient.Person.FullName, patient.Id), patientBackup.ToArray());
-
-            return true;
         }
     }
 }

@@ -10,16 +10,16 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Url for getting user authorization
         /// </summary>
-        public string DropboxAuthorizationUrl { get; set; }
+        public string GoogleDriveAuthorizationUrl { get; set; }
 
         /// <summary>
-        /// If the dropbox is associated or not
+        /// If the Google Drive is associated or not
         /// </summary>
-        public bool DropboxAssociated { get; set; }
+        public bool GoogleDriveAssociated { get; set; }
 
         /// <summary>
-        /// Dropbox user e-mail
+        /// Google Drive user e-mail
         /// </summary>
-        public string DropboxEmail { get; set; }
+        public string GoogleDriveEmail { get; set; }
     }
 }

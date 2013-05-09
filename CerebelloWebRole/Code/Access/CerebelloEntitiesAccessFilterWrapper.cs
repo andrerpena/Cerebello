@@ -255,9 +255,19 @@ namespace CerebelloWebRole.Code.Access
             get { return new FilteredObjectSetWrapper<Notification>(this.db.Notifications, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
-        public FilteredObjectSetWrapper<DropboxInfo> DropboxInfos
+        public FilteredObjectSetWrapper<GoogleUserAccoutInfo> GoogleUserAccountInfo
         {
-            get { return new FilteredObjectSetWrapper<DropboxInfo>(this.db.DropboxInfoes, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<GoogleUserAccoutInfo>(this.db.GoogleUserAccoutInfoes, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<GoogleDrivePracticeInfo> GoogleDrivePracticeInfo
+        {
+            get { return new FilteredObjectSetWrapper<GoogleDrivePracticeInfo>(this.db.GoogleDrivePracticeInfoes, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<GoogleDrivePatientInfo> GoogleDrivePatientInfo
+        {
+            get { return new FilteredObjectSetWrapper<GoogleDrivePatientInfo>(this.db.GoogleDrivePatientInfoes, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public ObjectSet<SYS_ActiveIngredient> SYS_ActiveIngredient

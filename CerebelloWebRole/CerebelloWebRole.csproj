@@ -52,8 +52,28 @@
     <Reference Include="CipherLite">
       <HintPath>..\ThirdParty\CipherLite.dll</HintPath>
     </Reference>
-    <Reference Include="DropNet">
-      <HintPath>..\packages\DropNet.1.9.3\lib\net35\DropNet.dll</HintPath>
+    <Reference Include="DotNetOpenAuth, Version=4.0.0.11165, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\ThirdParty\GoogleDrive\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.3.0.15233, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Authentication.OAuth2, Version=1.3.0.15231, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Drive.v2, Version=1.2.4722.20895, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.Drive.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Oauth2.v2, Version=1.3.0.15233, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.Oauth2.v2.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
@@ -69,9 +89,6 @@
     </Reference>
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\ThirdParty\JetBrains\JetBrains.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Kendo.Mvc">
-      <HintPath>..\ThirdParty\Kendo.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.Mvc.resources">
       <HintPath>..\ThirdParty\Kendo.Mvc.resources.dll</HintPath>
@@ -107,9 +124,15 @@
     <Reference Include="NewRelic.Api.Agent">
       <HintPath>..\packages\NewRelicWindowsAzure.1.0.0.35\lib\NewRelic.Api.Agent.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\ThirdParty\GoogleDrive\Newtonsoft.Json.Net35.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Silverlight">
+      <HintPath>..\ThirdParty\GoogleDrive\Lib\Newtonsoft.Json.Silverlight.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -230,6 +253,11 @@
     <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
+    <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
+    <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
+    <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
+    <Compile Include="Code\Google\GoogleApiHelper.cs" />
+    <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PersonFilesController.cs" />
@@ -320,7 +348,7 @@
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
-    <Compile Include="WorkerRole.Code\Workers\DropboxSynchronizerWorker.cs" />
+    <Compile Include="WorkerRole.Code\Workers\GoogleDriveSynchronizerWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />

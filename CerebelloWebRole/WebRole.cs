@@ -28,11 +28,11 @@ namespace CerebelloWebRole
             emailSenderScheduler.Start();
 
             // Creating workers and running them.
-            var dropboxSynchronzerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60.0))
+            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60.0))
                 {
-                    new DropboxSynchronizerWorker()
+                    new GoogleDriveSynchronizerWorker()
                 };
-            dropboxSynchronzerScheduler.Start();
+            googleDriverSynchronizerScheduler.Start();
 
             // Calling base to stop execution of this method forever.
             base.Run();

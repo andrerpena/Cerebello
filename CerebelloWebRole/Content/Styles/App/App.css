@@ -397,6 +397,7 @@ input, textarea {
     .document .document-body .document-main-column {
         border-right: 1px solid #D7D7D7;
         margin-right: 220px;
+        min-height: 600px;
         padding: 15px;
     }
 

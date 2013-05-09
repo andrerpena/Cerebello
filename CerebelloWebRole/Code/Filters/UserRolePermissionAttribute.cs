@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Web.Mvc;
-using Cerebello.Model;
 
 namespace CerebelloWebRole.Code.Filters
 {
@@ -15,7 +13,7 @@ namespace CerebelloWebRole.Code.Filters
             this.RoleFlags = roleFlags;
         }
 
-        public UserRoleFlags RoleFlags { get; private set; }
+        private UserRoleFlags RoleFlags { get; set; }
 
         public override bool CanAccessResource(PermissionContext permissionContext)
         {

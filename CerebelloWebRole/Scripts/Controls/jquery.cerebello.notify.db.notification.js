@@ -117,14 +117,14 @@ function notifyCompleteInfo(id) {
         });
 }
 
-function notifyDropboxAssociated(id) {
+function notifyGoogleDriveAssociated(id) {
     /// <summary>notify the user that the account now is associated</summary>
 
     var $text = $("<div/>");
 
-    $text.append($("<p>").html("Sua conta agora está associada ao Dropbox e fazendo backup automaticamente de todas as informações clínicas dos pacientes."));
-    $text.append($("<p>").html("As informações dos seus pacientes agora estão disponíveis em quaisquer dispositivos vinculados à sua conta do Dropbox: Seu computador pessoal, tablet, smartphone e etc."));
-    $text.append($("<p>").html("Você é responsável pela segurança destas informações. Não vincule o Cerebello a uma conta do Dropbox à qual outras pessoas possuem acesso."));
+    $text.append($("<p>").html("Sua conta agora está associada ao Google Drive e fazendo backup automaticamente de todas as informações clínicas dos pacientes."));
+    $text.append($("<p>").html("As informações dos seus pacientes agora estão disponíveis em quaisquer dispositivos vinculados à sua conta do Google Drive: Seu computador pessoal, tablet, smartphone e etc."));
+    $text.append($("<p>").html("Você é responsável pela segurança destas informações. Não vincule o Cerebello a uma conta do Google Drive à qual outras pessoas possuem acesso."));
     
     $.notify($text,
         undefined, undefined, true, null, function () {
@@ -132,13 +132,13 @@ function notifyDropboxAssociated(id) {
         });
 }
 
-function notifyDropboxDesassociated(id) {
+function notifyGoogleDriveDesassociated(id) {
     /// <summary>notify the user that the account now is associated</summary>
 
     var $text = $("<div/>");
 
-    $text.append($("<p>").html("A associação da sua conta ao Dropbox foi removida."));
-    $text.append($("<p>").html("As informações dos seus pacientes não estão mais sendo enviadas para o Dropbox automaticamente. Todas as informações previamente enviadas serão mantidas no Dropbox e devem ser removidas manualmente."));
+    $text.append($("<p>").html("A associação da sua conta ao Google Drive foi removida."));
+    $text.append($("<p>").html("As informações dos seus pacientes não estão mais sendo enviadas para o Google Drive automaticamente. Todas as informações previamente enviadas serão mantidas no Google Drive e devem ser removidas manualmente."));
 
     $.notify($text,
         undefined, undefined, true, null, function () {
@@ -166,11 +166,11 @@ function notifyDropboxDesassociated(id) {
             case "COMPLETE_INFO":
                 notifyCompleteInfo(id);
                 break;
-            case "DROPBOX_ASSOCIATED":
-                notifyDropboxAssociated(id);
+            case "GOOGLE_DRIVE_ASSOCIATED":
+                notifyGoogleDriveAssociated(id);
                 break;
-            case "DROPBOX_DESASSOCIATED":
-                notifyDropboxDesassociated(id);
+            case "GOOGLE_DRIVE_DESASSOCIATED":
+                notifyGoogleDriveDesassociated(id);
                 break;
             default:
                 throw "Invalid notification type";
