@@ -119,7 +119,8 @@
                                       Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
                                       pm => pm.Id,
                                       pm => pm.Name,
-                                      new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code }
+                                      new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code },
+                                      htmlAttributesForInput: new { @class = "input-xlarge" }
                                       ))
                             </div>
                         </div>
@@ -143,6 +144,7 @@
                             @Html.LabelFor(model => model.MedicCRM)
                             <div class="controls">
                                 @Html.TextBoxFor(model => model.MedicCRM)
+                                <div class="alert alert-info">Digite apenas o número. Sem a sigla do conselho médico nem do estado.</div>
                             </div>
                         </div>
                     </div>

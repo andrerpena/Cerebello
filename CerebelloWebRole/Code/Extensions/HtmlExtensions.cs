@@ -337,15 +337,15 @@ namespace CerebelloWebRole.Code.Extensions
         /// <summary>
         /// Lookup grid
         /// </summary>
-        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, Expression<Func<TGridModel, object>>[] otherColumns = null, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0, bool noFilterOnDropDown = false)
+        public static MvcHtmlString AutocompleteGridFor<TModel, TGridModel, TId>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TId>> expressionId, Expression<Func<TModel, string>> expressionText, string actionUrl, Expression<Func<TGridModel, object>> expressionLookupId, Expression<Func<TGridModel, object>> expressionLookupText, Expression<Func<TGridModel, object>>[] otherColumns = null, string newWindowUrl = null, string newWindowTitle = null, int newWindowWidth = 0, int newWindowMinHeight = 0, bool noFilterOnDropDown = false, object htmlAttributesForInput = null)
         {
-            if (((Object)expressionId) == null) throw new ArgumentNullException("expressionId");
-            if (((Object)expressionText) == null) throw new ArgumentNullException("expressionText");
+            if (expressionId == null) throw new ArgumentNullException("expressionId");
+            if (expressionText == null) throw new ArgumentNullException("expressionText");
             if (String.IsNullOrEmpty(actionUrl)) throw new ArgumentException("The string cannot be null nor empty", "actionUrl");
-            if (((Object)expressionLookupId) == null) throw new ArgumentNullException("expressionLookupId");
-            if (((Object)expressionLookupText) == null) throw new ArgumentNullException("expressionLookupText");
+            if (expressionLookupId == null) throw new ArgumentNullException("expressionLookupId");
+            if (expressionLookupText == null) throw new ArgumentNullException("expressionLookupText");
 
-            TagBuilder scriptTag = new TagBuilder("script");
+            var scriptTag = new TagBuilder("script");
             scriptTag.Attributes["type"] = "text/javascript";
 
             var idPropertyInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expressionId);
@@ -415,17 +415,20 @@ namespace CerebelloWebRole.Code.Extensions
                 (htmlHelper.ViewData.ModelState[inputHiddenName] != null && htmlHelper.ViewData.ModelState[inputHiddenName].Errors.Count > 0))
                 inputTextClasses.Add("autocomplete-validation-error");
 
-            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, new
-            {
-                @class = string.Join(" ", inputTextClasses.ToArray()),
-                //autocomplete = "off" (this is done via script now, so that the browser restores the value of the input,
-                // when hitting back button in chrome and firefox, and also when pressing F5 in firefox).
-            }));
+            // Note: htmlAttrDic["autocomplete"] = "off" (this is done via script now, so that the browser restores the value of the input,
+            // when hitting back button in chrome and firefox, and also when pressing F5 in firefox).
+            var htmlAttrDic = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributesForInput);
+            if (htmlAttrDic.ContainsKey("class"))
+                htmlAttrDic["class"] += " " + string.Join(" ", inputTextClasses.ToArray());
+            else
+                htmlAttrDic["class"] = string.Join(" ", inputTextClasses.ToArray());
+
+            tagBuilder.Append(htmlHelper.TextBoxFor(expressionText, htmlAttrDic));
             tagBuilder.AppendLine();
             tagBuilder.Append(htmlHelper.HiddenFor(expressionId));
             tagBuilder.AppendLine();
 
-            tagBuilder.Append(scriptTag.ToString());
+            tagBuilder.Append(scriptTag);
 
             return new MvcHtmlString(tagBuilder.ToString());
         }
