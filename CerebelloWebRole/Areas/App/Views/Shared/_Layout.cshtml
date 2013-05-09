@@ -156,6 +156,18 @@
                     </span><span class="arrow-down">▼</span>
                 </div>
             </div>
+            @if (userInfo.IsOwner)
+            {
+                <div class="configurations">
+                    <div class="text">
+                        <span>
+                            <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
+                                @*@LockIcon.Icon("lock-account-config")*@
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            }
             <div class="top-actions-bar-wrapper">
                 <div class="top-actions-bar">
                     @RenderSection("TopActions");
@@ -173,7 +185,7 @@
                     @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
                 }
                 { id: "profile", text: "Perfil do usuário", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
-                { id: "logout", text: "Sair", href: "@Url.Action("logout", "Authentication", new { area = "" })" }
+                { id: "logout", text: "Sair", href: "@Url.Action("Logout", "Authentication", new { area = "" })" }
             ]
         });
     </script>

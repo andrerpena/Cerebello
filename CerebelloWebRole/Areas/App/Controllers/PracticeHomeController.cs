@@ -147,5 +147,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             return this.View(formModel);
         }
+
+        public ActionResult RedirectToDoctorHome()
+        {
+            if (this.DbUser != null)
+            {
+                var practice = this.DbPractice.UrlIdentifier;
+                if (this.DbUser.DoctorId != null)
+                {
+                    var doctor = this.DbUser.Doctor.UrlIdentifier;
+                    return this.RedirectToAction("Index", "DoctorHome", new { practice, doctor, area = "App" });
+                }
+                else
+                {
+                    return this.RedirectToAction("Index", "PracticeHome", new { practice, area = "App" });
+                }
+            }
+
+            // todo: this should never happen
+            return this.RedirectToAction("Index");
+        }
     }
 }

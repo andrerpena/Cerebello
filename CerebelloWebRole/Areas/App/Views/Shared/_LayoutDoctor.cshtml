@@ -1,32 +1,54 @@
 ﻿@{
     Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
 
-    var controllerName = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
     var configControllerNames = new string[] { "config", "configschedule", "modelmedicalcertificates", "configdocuments", "healthinsurance" };
-    var practiceId = ViewBag.Practice.Id;
-    var doctor = (CerebelloWebRole.Areas.App.Models.DoctorViewModel)ViewBag.Doctor;
+    var practiceId = this.ViewBag.Practice.Id;
+    var doctor = (DoctorViewModel)this.ViewBag.Doctor;
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     string scheduleDateStr = localNow.ToString("yyyy-MM-dd");
+
+    var allDoctors = (List<DoctorViewModel>)this.ViewBag.AllDoctors;
 }
 @section MainMenu {
-    <div class="doctor-card" data-intro="Este é o médico selecionado. Todas as informações nesta página são relativas a este médico. Para trocar o médico, clique em 'Ir para o consultório' e selecione outro médico" data-step="2">
+    <div id="doctor-card" class="doctor-card" data-intro="Este é o médico selecionado. Todas as informações nesta página são relativas a este médico. Para trocar o médico, clique em 'Ir para o consultório' e selecione outro médico" data-step="2">
         <div class="doctor-picture">
             <img src="@doctor.ImageUrl" /></div>
         <div class="doctor-info">
-            <p class="name">
-                <a href="@Url.Action("Index", "DoctorHome")">@doctor.Name</a></p>
+            <p class="name">@doctor.Name</p>
             <p class="crm">@doctor.CRM (@doctor.MedicalEntity)</p>
         </div>
     </div>
+    <script type="text/javascript">
+        $("#doctor-card").dropdownMenu({
+            items: [
+                { id: "practice", text: "Ir para consultório", href: "@Url.Action("Index", "PracticeHome", new { area = "App" })" }
+            @if (allDoctors.Count > 1)
+            {
+                for (int itDoc = 0; itDoc < allDoctors.Count; itDoc++)
+                {
+                    if (itDoc == 0)
+                    {
+                        @:,{ id: "other-doctors-title", text: "Outros médicos", cssClass: "header" }
+                    }
+                    if (allDoctors[itDoc].Id != doctor.Id)
+                    {
+                        @:,{ id: "doctor-@(allDoctors[itDoc].Id)", text: "@this.Html.Raw(allDoctors[itDoc].Name)", href: "@Url.Action("Index", "DoctorHome", new { doctor = allDoctors[itDoc].UrlIdentifier, area = "App" })" }
+                    }
+                }
+            }
+            ]
+        });
+    </script>
     <ul class="tabNav">
         <li class="@(controllerName.Equals("doctorhome") ? "youarehere" : "")"><a href="@Url.Action("Index", "DoctorHome")" class="home-icon" data-intro="Esta é a tela de início do médico. Aqui estão todas as informações do médico e a fila de atendimento para hoje" data-step="3">
             Início</a> </li>
         <li class="@(controllerName.Equals("schedule") ? "youarehere" : "")"><a href="@Url.Action("Index", "Schedule")" class="schedule-icon" data-intro="Esta é a agenda do médico. É possível visualizar as consultas agendadas e marcar novas consultas" data-step="4">
             Agenda</a> </li>
         <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "Patients")" class="contact-icon" data-intro="Todas as informações sobre pacientes estão aqui. É possível pesquisar por pacientes e visualizar os históricos. Para realizar uma nova consulta, selecione o paciente desejado e clique nos links de ações na parte inferior da ficha do paciente" data-step="5">
-            Prontuário</a> </li>
+            Prontuários</a> </li>
     </ul>
     <div style="margin-right: 10px; text-align: right;">
         <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "Index", controller = "PracticeHome" })">
@@ -50,8 +72,20 @@
             }
             @if (canAccessConfig)
             {
-                <li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")">
+                @*<li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")">
                     <a href="@Url.Action("Index", "Config")" class="config-icon">Configurações</a>
+                </li>*@
+                <li class="@(this.IsController("ConfigSchedule") ? "youarehere" : "")">
+                    <a href="@Url.Action("Edit", "ConfigSchedule")" class="config-icon">Configurações da agenda</a> 
+                </li>
+                <li class="@(this.IsController("ConfigDocuments") ? "youarehere" : "")">
+                    <a href="@Url.Action("Edit", "ConfigDocuments")" class="config-icon">Configurações de documentos</a> 
+                </li>
+                <li class="@(this.IsController("ModelMedicalCertificates") ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "ModelMedicalCertificates")" class="config-icon">Modelos de atestados</a> 
+                </li>
+                <li class="@(this.IsController("HealthInsurance") ? "youarehere" : "")">
+                    <a href="@Url.Action("Index", "HealthInsurance")" class="config-icon">Convênios</a> 
                 </li>
             }
         </ul>
