@@ -811,6 +811,22 @@ fieldset {
     background-image: url("/content/images/app/icons/config-off.png");
 }
 
+.tabNav li a.healthinsurance-icon {
+    background-image: url("/content/images/app/icons/healthinsurance-off.png");
+}
+
+.tabNav li.youarehere a.healthinsurance-icon {
+    background-image: url("/content/images/app/icons/healthinsurance-off.png");
+}
+
+.tabNav li a.medicalcertificate-icon {
+    background-image: url("/content/images/app/icons/medicalcertificate-off.png");
+}
+
+.tabNav li.youarehere a.medicalcertificate-icon {
+    background-image: url("/content/images/app/icons/medicalcertificate-off.png");
+}
+
 /* pacientes do consultório */
 
 .doctors-list li {

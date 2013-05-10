@@ -83,17 +83,15 @@
     @{
         var canAccessConfig = this.CanAccessAction("Index", "Config");
         var canAccessMedicines = this.CanAccessAction("Index", "Medicines");
-        var idHrNeeded = canAccessConfig || canAccessMedicines;
     }
-    @if (idHrNeeded)
+    @if (canAccessConfig || canAccessMedicines)
     {
         <hr />
         <ul class="tabNav">
             @if (canAccessMedicines)
             {
                 <li class="@(controllerName.Equals("medicines") || controllerName.Equals("laboratories") ? "youarehere" : "")">
-                    <a href="@Url.Action("Index", "Medicines")" class="medicines-icon">
-                              Medicamentos</a>
+                    <a href="@Url.Action("Index", "Medicines")" class="medicines-icon">Medicamentos</a>
                 </li>
             }
             @if (canAccessConfig)
@@ -101,20 +99,29 @@
                 @*<li class="@(configControllerNames.Contains(controllerName) ? "youarehere" : "")">
                     <a href="@Url.Action("Index", "Config")" class="config-icon">Configurações</a>
                 </li>*@
-                <li class="@(this.IsController("ConfigSchedule") ? "youarehere" : "")">
-                    <a href="@Url.Action("Edit", "ConfigSchedule")" class="config-icon">Configurações da agenda</a> 
-                </li>
-                <li class="@(this.IsController("ConfigDocuments") ? "youarehere" : "")">
-                    <a href="@Url.Action("Edit", "ConfigDocuments")" class="config-icon">Configurações de documentos</a> 
-                </li>
                 <li class="@(this.IsController("ModelMedicalCertificates") ? "youarehere" : "")">
-                    <a href="@Url.Action("Index", "ModelMedicalCertificates")" class="config-icon">Modelos de atestados</a> 
+                    <a href="@Url.Action("Index", "ModelMedicalCertificates")" class="medicalcertificate-icon">Modelos de atestados</a>
                 </li>
                 <li class="@(this.IsController("HealthInsurance") ? "youarehere" : "")">
-                    <a href="@Url.Action("Index", "HealthInsurance")" class="config-icon">Convênios</a> 
+                    <a href="@Url.Action("Index", "HealthInsurance")" class="healthinsurance-icon">Convênios</a>
                 </li>
             }
         </ul>
+        if (canAccessConfig)
+        {
+        <hr />
+        }
+        if (canAccessConfig)
+        {
+        <ul class="tabNav">
+            <li class="@(this.IsController("ConfigSchedule") ? "youarehere" : "")">
+                <a href="@Url.Action("Edit", "ConfigSchedule")" class="config-icon">Configurações da agenda</a>
+            </li>
+            <li class="@(this.IsController("ConfigDocuments") ? "youarehere" : "")">
+                <a href="@Url.Action("Edit", "ConfigDocuments")" class="config-icon">Configurações de documentos</a>
+            </li>
+        </ul>
+        }
     }
 }
 
