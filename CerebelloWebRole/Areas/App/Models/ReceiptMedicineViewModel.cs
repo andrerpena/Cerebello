@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Model.Metadata;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -13,6 +10,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Medicamento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("É necessário selecionar um medicamento cadastrado da lista. Ao começar a digitar, o sistema irá sugerir medicamentos. Caso o medicamento procurado não possa ser encontrado, clique no botão +. É possível cadastrar um medicamento novo ou importar um do banco da Anvisa")]
         public int? MedicineId { get; set; }
 
         [Display(Name = "Medicamento")]

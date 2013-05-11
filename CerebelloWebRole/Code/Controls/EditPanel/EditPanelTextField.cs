@@ -13,10 +13,9 @@ namespace CerebelloWebRole.Code.Controls
         public Expression<Func<TModel, TValue>> Expression { get; set; }
 // ReSharper restore MemberCanBePrivate.Global
 
-        public EditPanelTextField(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool foreverAlone = false)
+        public EditPanelTextField(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, string header = null, bool foreverAlone = false)
         {
             this.Format = format;
-            this.FormatDescription = formatDescription;
             this.Expression = exp;
             this.Header = header;
             this.WholeRow = foreverAlone;

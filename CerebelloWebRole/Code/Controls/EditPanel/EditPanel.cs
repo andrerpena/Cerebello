@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using CerebelloWebRole.Code.Extensions;
+using CerebelloWebRole.Code.Model.Metadata;
 
 namespace CerebelloWebRole.Code.Controls
 {
@@ -24,15 +25,15 @@ namespace CerebelloWebRole.Code.Controls
     {
         private TModel Model { get; set; }
 
-        public List<EditPanelFieldBase> Fields { get; set; }
+        private List<EditPanelFieldBase> Fields { get; set; }
 
-        public String Title { get; set; }
+        private String Title { get; set; }
 
-        public HtmlHelper<TModel> HtmlHelper { get; set; }
+        private HtmlHelper<TModel> HtmlHelper { get; set; }
 
-        public int FieldsPerRow { get; set; }
+        private int FieldsPerRow { get; set; }
 
-        public bool IsChildPanel { get; set; }
+        private bool IsChildPanel { get; set; }
 
         public EditPanel(HtmlHelper<TModel> htmlHelper, String title, int fieldsPerRow = 1, bool isChildPanel = false)
         {
@@ -63,12 +64,11 @@ namespace CerebelloWebRole.Code.Controls
             Expression<Func<TModel, TValue>> expression,
             EditPanelFieldSize size = EditPanelFieldSize.Default,
             Func<dynamic, object> editorFormat = null,
-            Func<dynamic, object> formatDescription = null,
             string header = null,
             bool wholeRow = false)
         {
             this.Fields.Add(
-                new EditPanelField<TModel, TValue>(expression, size, editorFormat, formatDescription, header, wholeRow));
+                new EditPanelField<TModel, TValue>(expression, size, editorFormat, header, wholeRow));
         }
 
         /// <summary>
@@ -100,9 +100,9 @@ namespace CerebelloWebRole.Code.Controls
             this.Fields.Add(new EditPanelField<TModel, TValue>(expression, size, format));
         }
 
-        public void AddTextField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, Func<dynamic, object> formatDescription = null, string header = null, bool wholeRow = false)
+        public void AddTextField<TValue>(Expression<Func<TModel, TValue>> exp, Func<dynamic, object> format = null, string header = null, bool wholeRow = false)
         {
-            this.Fields.Add(new EditPanelTextField<TModel, TValue>(exp, format, formatDescription, header, wholeRow));
+            this.Fields.Add(new EditPanelTextField<TModel, TValue>(exp, format, header, wholeRow));
         }
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
@@ -204,9 +204,6 @@ namespace CerebelloWebRole.Code.Controls
                     var tableValueTdContent = new TagBuilder("div");
                     tableValueTdContent.AddCssClass("content");
 
-                    var tableValueTdDescription = new TagBuilder("div");
-                    tableValueTdDescription.AddCssClass("description");
-
                     if (i == row.Count - 1 && row.Count < this.FieldsPerRow)
                     {
                         tableValueTd.Attributes["colspan"] = (1 + (this.FieldsPerRow - row.Count) * 2).ToString();
@@ -225,7 +222,7 @@ namespace CerebelloWebRole.Code.Controls
                         ? new MvcHtmlString(field.Header).ToString()
                         : labelForMethodGeneric.Invoke(
                             null,
-                            new object[]
+                            new[]
                                 {
                                     this.HtmlHelper,
                                     expressionPropertyValue
@@ -273,7 +270,7 @@ namespace CerebelloWebRole.Code.Controls
                             ? field.Format(this.Model).ToString()
                             : editorForMethodGeneric.Invoke(
                                 null,
-                                new object[]
+                                new[]
                                     {
                                         this.HtmlHelper,
                                         expressionPropertyValue
@@ -306,15 +303,28 @@ namespace CerebelloWebRole.Code.Controls
                                                                                                 }).ToString();
                     }
 
-                    // table value td description format
-                    tableValueTdDescription.InnerHtml = field.FormatDescription != null
-                                                            ? field.FormatDescription(this.Model)
-                                                                   .ToString()
-                                                                   .Trim()
-                                                            : null;
-
                     tableHeaderTd.InnerHtml = headerContent;
-                    tableValueTd.InnerHtml = tableValueTdContent + (string.IsNullOrEmpty(tableValueTdDescription.InnerHtml) ? "" : tableValueTdDescription.ToString());
+
+                    var helpAttribute = propertyInfo.GetCustomAttributes(typeof(TooltipAttribute), true).Cast<TooltipAttribute>().FirstOrDefault();
+                    if (helpAttribute != null)
+                    {
+                        var helpButton = new TagBuilder("span");
+                        helpButton.AddCssClass("tooltip-button");
+
+                        var helpButtonId = "help-button-" + Guid.NewGuid().ToString("N");
+                        helpButton.Attributes["id"] = helpButtonId;
+
+                        var helpScript = new TagBuilder("script")
+                            {
+                                InnerHtml = string.Format("$('#{0}').tooltip({{text:'{1}'}});", helpButtonId, helpAttribute.HelpMessage)
+                            };
+
+                        tableValueTdContent.InnerHtml += helpButton.ToString();
+                        tableValueTdContent.InnerHtml += helpScript.ToString();
+                    }
+
+
+                    tableValueTd.InnerHtml = tableValueTdContent.ToString();
 
                     tableTrContentBuilder.Append((!string.IsNullOrEmpty(headerContent) ? tableHeaderTd.ToString() : "") + tableValueTd);
                 }

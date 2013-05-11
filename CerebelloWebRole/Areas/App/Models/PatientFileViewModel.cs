@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Model.Metadata;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -28,10 +29,12 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Data do arquivo")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("Data relativa ao arquivo. Por exemplo, se for uma foto, data em que a foto foi tirada")]
         public DateTime? FileDate { get; set; }
 
         [Display(Name = "Data de recebimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("Data em que o arquivo foi cadastrado")]
         public DateTime? ReceiveDate { get; set; }
     }
 }

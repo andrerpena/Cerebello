@@ -57,8 +57,9 @@ div.balloon-wrapper {
 
 .balloon-links li .header
 {
-    color: #333333 !important;
-    font-weight: bold;
+    color: #999999 !important;
+    display: block;
+    margin-top: 6px;
 }
 
 .balloon-links li .notes

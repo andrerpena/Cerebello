@@ -256,6 +256,7 @@
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
+    <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
     <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
@@ -333,6 +334,7 @@
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Sounds\chat.mp3" />
     <Content Include="Content\Sounds\chat.wav" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.tooltip.css" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
     <Content Include="Content\Styles\App\introjs.min.css" />
     <Content Include="Content\Styles\App\kendo.common.min.css" />
@@ -755,6 +757,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\App\Views\ConfigBackup\Index.cshtml" />
+    <Content Include="Scripts\Controls\jquery.cerebello.tooltip.js" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
