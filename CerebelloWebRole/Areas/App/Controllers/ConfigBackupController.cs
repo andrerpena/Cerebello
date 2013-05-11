@@ -36,12 +36,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 viewModel.GoogleDriveAssociated = false;
 
                 // this url needs to be absolute, because it's going to Google
-                var returnUrl = string.Format(
+                var callbackUrl = string.Format(
                     "{0}://{1}{2}",
                     this.Url.RequestContext.HttpContext.Request.Url.Scheme,
                     this.Url.RequestContext.HttpContext.Request.Url.Host,
                     this.Url.Action("AssociateGoogleDrive", "GoogleDriveCallback", new { area = (string)null }));
-
 
                 // this url can be relative
                 var associateUrl = string.Format(
@@ -63,7 +62,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 queryParameters.Set(
                     "scope",
                     "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile");
-                queryParameters.Set("redirect_uri", returnUrl);
+                queryParameters.Set("redirect_uri", callbackUrl);
                 queryParameters.Set("state", googleSessionToken + "|" + HttpUtility.UrlEncode(associateUrl));
 
                 authorizationUrlBuilder.Query = queryParameters.ToString();
@@ -82,7 +81,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <returns></returns>
         public ActionResult AssociateGoogleDrive(string code)
         {
-            var authorizationState = GoogleApiHelper.ExchangeCode(code);
+            // this url needs to be absolute, because it's going to Google
+            var callbackUrl = string.Format(
+                "{0}://{1}{2}",
+                this.Url.RequestContext.HttpContext.Request.Url.Scheme,
+                this.Url.RequestContext.HttpContext.Request.Url.Host,
+                this.Url.Action("AssociateGoogleDrive", "GoogleDriveCallback", new { area = (string)null }));
+
+            var authorizationState = GoogleApiHelper.ExchangeCode(code, null, callbackUrl);
 
             var client = new WebClient();
             client.Headers["Authorization"] = "OAuth " + authorizationState.AccessToken;

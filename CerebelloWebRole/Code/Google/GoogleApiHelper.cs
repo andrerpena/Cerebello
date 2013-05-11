@@ -61,14 +61,19 @@ namespace CerebelloWebRole.Code.Google
         /// Exchange an authorization code for OAuth 2.0 credentials.
         /// </summary>
         /// <param name="authorizationCode">Authorization code to exchange for OAuth 2.0 credentials.</param>
+        /// <param name="refreshToken"></param>
+        /// <param name="callbackUrl"></param>
         /// <returns>OAuth 2.0 credentials.</returns>
-        /// <exception cref="CodeExchangeException">An error occurred.</exception>
-        public static IAuthorizationState ExchangeCode(String authorizationCode, string refreshToken = null)
+        public static IAuthorizationState ExchangeCode([NotNull] String authorizationCode, string refreshToken,
+                                                       [NotNull] string callbackUrl)
         {
+            if (authorizationCode == null) throw new ArgumentNullException("authorizationCode");
+            if (callbackUrl == null) throw new ArgumentNullException("callbackUrl");
+
             var provider = new NativeApplicationClient(
                 GoogleAuthenticationServer.Description, "647667148.apps.googleusercontent.com", "SHvBqFmGtXq5bTPqY242oNvB");
             IAuthorizationState state = new AuthorizationState();
-            state.Callback = new Uri("https://127.0.0.1/GoogleDriveCallback/AssociateGoogleDrive");
+            state.Callback = new Uri(callbackUrl);
             state.RefreshToken = refreshToken;
             try
             {
@@ -110,7 +115,6 @@ namespace CerebelloWebRole.Code.Google
         /// <summary>
         /// Retrieve an IAuthenticator instance using the provided state.
         /// </summary>
-        /// <param name="credentials">OAuth 2.0 credentials to use.</param>
         /// <returns>Authenticator using the provided OAuth 2.0 credentials</returns>
         public static IAuthenticator GetAuthenticator(string refreshToken, string accessKey)
         {

@@ -130,9 +130,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\GoogleDrive\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Silverlight">
-      <HintPath>..\ThirdParty\GoogleDrive\Lib\Newtonsoft.Json.Silverlight.dll</HintPath>
-    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -140,9 +137,6 @@
     <Reference Include="PayPal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\PayPal-API\PayPal.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\packages\DropNet.1.9.3\lib\net35\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
       <Private>True</Private>

@@ -38,14 +38,12 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                 {
                     try
                     {
-
                         var doctor = db.Doctors.First(d => d.Id == patientGroup.Key);
                         dbWrapper.SetCurrentUserById(doctor.Users.First().Id);
                         var doctorGoogleAccountInfo = doctor.Users.First().Person.GoogleUserAccoutInfoes.FirstOrDefault();
                         if (doctorGoogleAccountInfo != null)
                         {
                             // in this case the doctor for these patients have a Google Account associated
-
                             var requestAccessResult = GoogleApiHelper.RequestAccessToken(doctorGoogleAccountInfo.RefreshToken);
                             var authenticator = GoogleApiHelper.GetAuthenticator(
                                 doctorGoogleAccountInfo.RefreshToken, requestAccessResult.access_token);
