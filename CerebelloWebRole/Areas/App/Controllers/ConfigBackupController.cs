@@ -11,6 +11,7 @@ using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Google;
 using CerebelloWebRole.Code.Google.Data;
+using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Notifications;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -153,12 +154,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Marks all patients to backup
         /// </summary>
         /// <returns></returns>
-        public ActionResult MarkAllToBackup()
+        public ActionResult BackupDoctor()
         {
+            foreach (var patient in this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id))
+                patient.IsBackedUp = false;
+            this.db.SaveChanges();
+
             foreach (var patient in this.db.Patients)
                 patient.IsBackedUp = false;
             this.db.SaveChanges();
-            return null;
+
+            BackupHelper.BackupEverything(this.db.innerDb);
+
+            return this.Json(new { Ok = true }, JsonRequestBehavior.AllowGet);
         }
     }
 }

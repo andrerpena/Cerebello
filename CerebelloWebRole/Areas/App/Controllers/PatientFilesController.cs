@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult DownloadBackup(int patientId)
         {
-            var patient = db.Patients.First(p => p.Id == patientId);
+            var patient = this.db.Patients.First(p => p.Id == patientId);
             var backup = BackupHelper.GeneratePatientBackup(this.db, patient);
             return this.File(
                 backup,
@@ -184,7 +184,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from pf in db.PatientFiles where pf.Id == id select pf).First(),
+                    (from pf in this.db.PatientFiles where pf.Id == id select pf).First(),
                     this.GetToLocalDateTimeConverter());
             else
             {

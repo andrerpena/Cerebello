@@ -60,8 +60,8 @@
     <script type="text/javascript">
         $("#markToBackup").click(function (e) {
             e.preventDefault();
-            $.ajax("@Url.Action("MarkAllToBackup")");
-            alert("Seus pacientes foram marcados para backup. Pode demorar até 60 minutos para que os arquivos estejam visíveis no Google Drive.");
+            $.ajax("@Url.Action("BackupDoctor")");
+            alert("O backup dos seus pacientes foi iniciado. Pode demorar alguns minutos até que os arquivos possam ser visualizados no Google Drive.");
         });
     </script>
 }

@@ -111,7 +111,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
                 dbObject.RequestDate = this.ConvertToUtcDateTime(formModel.RequestDate.Value);
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
             }

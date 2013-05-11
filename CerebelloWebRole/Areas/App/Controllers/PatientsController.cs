@@ -480,7 +480,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             });
                 }
 
-                db.SaveChanges();
+                this.db.SaveChanges();
                 return this.RedirectToAction("Details", new { id = patient.Id });
             }
 
@@ -500,7 +500,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var patient = db.Patients.First(m => m.Id == id);
+                var patient = this.db.Patients.First(m => m.Id == id);
 
                 // delete anamneses manually
                 var anamneses = patient.Anamneses.ToList();
@@ -658,7 +658,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new SearchViewModel<PatientViewModel>();
 
-            var query = from patient in db.Patients.Include("Person")
+            var query = from patient in this.db.Patients.Include("Person")
                         where patient.DoctorId == this.Doctor.Id
                         select patient;
 

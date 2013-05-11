@@ -127,7 +127,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 healthInsurance.IsActive = formModel.IsActive;
                 healthInsurance.IsParticular = formModel.IsParticular;
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.Redirect(this.Url.Action("Details", new { id = healthInsurance.Id }));
             }

@@ -66,7 +66,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from a in db.Anamnese where a.Id == id select a).First(),
+                    (from a in this.db.Anamnese where a.Id == id select a).First(),
                     this.GetToLocalDateTimeConverter());
             else
                 viewModel = new AnamneseViewModel
@@ -121,7 +121,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.SocialDiseases = formModel.SocialHistory;
                 anamnese.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
                 return this.View("Details", GetViewModel(anamnese, this.GetToLocalDateTimeConverter()));

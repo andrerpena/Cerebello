@@ -13,6 +13,22 @@ namespace CerebelloWebRole
 
         public override bool OnStart()
         {
+            var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
+
+            // Set an overall quota of 8GB.
+            config.OverallQuotaInMB = 4096;
+            // Set the sub-quotas and make sure it is less than the OverallQuotaInMB set above
+            config.Logs.BufferQuotaInMB = 512;
+
+            var myTimeSpan = TimeSpan.FromMinutes(2);
+            config.Logs.ScheduledTransferPeriod = myTimeSpan;//Transfer data to storage every 2 minutes
+
+            // Filter what will be sent to persistent storage.
+            config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Undefined;//Transfer everything
+            // Apply the updated configuration to the diagnostic monitor.
+            // The first parameter is for the connection string configuration setting.
+            DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
+
             return base.OnStart();
         }
 
@@ -21,14 +37,14 @@ namespace CerebelloWebRole
             RouteHelper.RegisterAllRoutes();
 
             // Creating workers and running them.
-            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30.0))
+            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
                 {
                     new EmailSenderWorker()
                 };
             emailSenderScheduler.Start();
 
             // Creating workers and running them.
-            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60.0))
+            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
                 {
                     new GoogleDriveSynchronizerWorker()
                 };

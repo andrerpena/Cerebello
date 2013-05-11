@@ -2,8 +2,8 @@
 using System.IO;
 using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using CloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount;
 
 namespace CerebelloWebRole.Code.WindowsAzure
 {

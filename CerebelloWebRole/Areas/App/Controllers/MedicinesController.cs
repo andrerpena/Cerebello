@@ -359,7 +359,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         }
                     }
 
-                    db.SaveChanges();
+                    this.db.SaveChanges();
 
                     // depending on whether or not this is an Ajax request,
                     // this should return an AutocompleteNewJsonResult or the view
@@ -522,7 +522,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new SearchViewModel<MedicineViewModel>();
 
-            var query = from medicine in db.Medicines
+            var query = from medicine in this.db.Medicines
                         where medicine.DoctorId == this.Doctor.Id
                         select medicine;
 

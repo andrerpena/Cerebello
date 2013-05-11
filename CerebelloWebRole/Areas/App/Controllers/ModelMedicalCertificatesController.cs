@@ -156,7 +156,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             });
                 }
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.Redirect(this.Url.Action("Details", new { id = certificateModel.Id }));
             }

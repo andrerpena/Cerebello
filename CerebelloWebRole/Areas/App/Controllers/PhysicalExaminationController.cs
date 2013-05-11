@@ -49,7 +49,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from r in db.PhysicalExaminations where r.Id == id select r).First(),
+                    (from r in this.db.PhysicalExaminations where r.Id == id select r).First(),
                     this.GetToLocalDateTimeConverter());
             else
                 viewModel = new PhysicalExaminationViewModel()

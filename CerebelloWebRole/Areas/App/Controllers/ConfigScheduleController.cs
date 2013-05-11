@@ -291,7 +291,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 config.SaturdayLunchStartTime = formModel.DaysOfWeek[6].LunchStartTime;
                 config.SaturdayLunchEndTime = formModel.DaysOfWeek[6].LunchEndTime;
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 if (!string.IsNullOrEmpty(returnUrl))
                     return this.Redirect(returnUrl);
@@ -306,7 +306,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var currentDate = this.GetPracticeLocalNow().Date;
 
-            var daysOffQuery = db.CFG_DayOff
+            var daysOffQuery = this.db.CFG_DayOff
                 .Where(df => df.DoctorId == this.Doctor.Id);
 
             if (!showPast)

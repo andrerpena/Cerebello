@@ -299,7 +299,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 BillingPaymentMethod = "PayPal Invoice",
                             };
 
-                        db.SaveChanges();
+                        this.db.SaveChanges();
 
                         return this.RedirectToAction("UpgradeDone");
                     }
