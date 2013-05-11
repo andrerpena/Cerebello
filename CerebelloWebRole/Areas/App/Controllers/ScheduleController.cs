@@ -8,6 +8,7 @@ using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Access;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -95,6 +96,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return string.Join(" ", classes);
         }
 
+        [CanAlternateUser]
         public ActionResult Index()
         {
             // verify min and max times

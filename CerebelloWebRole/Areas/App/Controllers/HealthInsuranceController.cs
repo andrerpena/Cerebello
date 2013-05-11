@@ -21,6 +21,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <returns>ActionResult containing all health insurances.</returns>
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var model = new HealthInsuranceIndexViewModel

@@ -10,6 +10,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     public class ConfigDocumentsController : DoctorController
     {
         [HttpGet]
+        [CanAlternateUser]
         public ActionResult Edit(string returnUrl)
         {
             var config = this.Doctor.CFG_Documents;

@@ -18,6 +18,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     public class ConfigScheduleController : DoctorController
     {
         [HttpGet]
+        [CanAlternateUser]
         public ActionResult Edit(string returnUrl)
         {
             var config = this.Doctor.CFG_Schedule;
@@ -354,6 +355,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
+        [CanAlternateUser]
         public ActionResult DaysOff(bool? showPast, string returnUrl)
         {
             var viewModel = this.GetDaysOffViewModel(showPast ?? false);

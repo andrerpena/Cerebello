@@ -100,6 +100,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         //
         // GET: /App/Medicines/
 
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var viewModel = new MedicinesIndexViewModel
@@ -444,7 +445,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult ActiveIngredientEditor(MedicineActiveIngredientViewModel viewModel)
         {
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpGet]
@@ -498,13 +499,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public ActionResult LeafletEditor(MedicineLeafletViewModel viewModel)
         {
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpGet]
         public ActionResult AnvisaImport()
         {
-            return View();
+            return this.View();
         }
 
         /// <summary>

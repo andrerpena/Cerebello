@@ -21,6 +21,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class ModelMedicalCertificatesController : DoctorController
     {
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var model = new ModelMedicalCertificatesIndexViewModel
