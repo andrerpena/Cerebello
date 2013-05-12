@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Microsoft.AspNet.SignalR.JS</id>
     <version>1.0.1</version>
@@ -15,5 +15,6 @@
     <dependencies>
       <dependency id="jQuery" version="1.6.4" />
     </dependencies>
+    <references />
   </metadata>
 </package>
