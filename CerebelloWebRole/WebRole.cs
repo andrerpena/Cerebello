@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.WindowsAzure.Diagnostics;
@@ -34,6 +35,8 @@ namespace CerebelloWebRole
 
         public override void Run()
         {
+            MvcApplication.RegisterTraceListeners(Trace.Listeners);
+
             RouteHelper.RegisterAllRoutes();
 
             // Creating workers and running them.
@@ -43,7 +46,7 @@ namespace CerebelloWebRole
                 };
             testInfraScheduler.Start();
 
-            // todo: this interval was 30 before... why is it 2 now???
+            // todo: this interval was 30... why is it 2 now???
             var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
                 {
                     new EmailSenderWorker()

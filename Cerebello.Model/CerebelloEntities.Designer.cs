@@ -14538,7 +14538,7 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.DateTime CreatedOn
         {
@@ -14548,14 +14548,11 @@ namespace Cerebello.Model
             }
             set
             {
-                if (_CreatedOn != value)
-                {
-                    OnCreatedOnChanging(value);
-                    ReportPropertyChanging("CreatedOn");
-                    _CreatedOn = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("CreatedOn");
-                    OnCreatedOnChanged();
-                }
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
             }
         }
         private global::System.DateTime _CreatedOn;

@@ -59,7 +59,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                     var storageManager = new WindowsAzureBlobStorageManager();
                     using (var stream = new MemoryStream(new byte[0]))
                         storageManager.UploadFileToStorage(
-                            stream, "WorkerTest", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh':'mm")));
+                            stream, "worker-test", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh':'mm")));
                 }
                 catch (Exception ex)
                 {
@@ -106,7 +106,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         var storageManager = new WindowsAzureBlobStorageManager();
                         using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(fileText.ToString())))
                             storageManager.UploadFileToStorage(
-                                stream, "WorkerTest", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh':'mm")));
+                                stream, "worker-test", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh':'mm")));
                     }
                     catch
                     {

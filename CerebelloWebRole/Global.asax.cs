@@ -68,7 +68,7 @@ namespace CerebelloWebRole
         /// <param name="traceListenerCollection">
         /// The trace Listener Collection to register trace listeners at.
         /// </param>
-        private static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
+        public static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
         {
             // This replaces web.config setting: configuration\system.diagnostics\trace\listeners\add type="Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener, Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" name="AzureDiagnostics"
             // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
