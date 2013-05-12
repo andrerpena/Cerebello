@@ -37,20 +37,26 @@ namespace CerebelloWebRole
             RouteHelper.RegisterAllRoutes();
 
             // Creating workers and running them.
+            var testInfraScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
+                {
+                    new TestWorker()
+                };
+            testInfraScheduler.Start();
+
+            // todo: this interval was 30 before... why is it 2 now???
             var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
                 {
                     new EmailSenderWorker()
                 };
             emailSenderScheduler.Start();
 
-            // Creating workers and running them.
             var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
                 {
                     new GoogleDriveSynchronizerWorker()
                 };
             googleDriverSynchronizerScheduler.Start();
 
-            // Calling base to stop execution of this method forever.
+            // Calling base to hold execution in this method forever.
             base.Run();
         }
     }
