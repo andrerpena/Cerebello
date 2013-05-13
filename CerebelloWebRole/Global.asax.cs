@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Notifications;
+using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace CerebelloWebRole
@@ -20,7 +20,7 @@ namespace CerebelloWebRole
         /// Registers global filters.
         /// </summary>
         /// <param name="filters">Filters collection to register the global filters at.</param>
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        private static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new CanonicalUrlHttpsFilter());
             filters.Add(new HandleErrorAttribute());
@@ -48,6 +48,23 @@ namespace CerebelloWebRole
         /// </summary>
         protected void Application_Start()
         {
+            var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
+            // Set an overall quota of 8GB.
+            config.OverallQuotaInMB = 4096;
+            // Set the sub-quotas and make sure it is less than the OverallQuotaInMB set above
+            config.Logs.BufferQuotaInMB = 512;
+
+            var myTimeSpan = TimeSpan.FromMinutes(2);
+            config.Logs.ScheduledTransferPeriod = myTimeSpan;//Transfer data to storage every 2 minutes
+
+            // Filter what will be sent to persistent storage.
+            config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Undefined;//Transfer everything
+            // Apply the updated configuration to the diagnostic monitor.
+            // The first parameter is for the connection string configuration setting.
+            DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
+            Trace.Listeners.Add(new DiagnosticMonitorTraceListener());
+
+
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
 
@@ -63,7 +80,7 @@ namespace CerebelloWebRole
         void Application_Error(object sender, EventArgs e)
         {
             // Get the exception object.
-            var exc = Server.GetLastError();
+            var exc = this.Server.GetLastError();
             Trace.TraceError("Unhandled exception in an HTTP request. Ex: " + exc.Message);
         }
 
