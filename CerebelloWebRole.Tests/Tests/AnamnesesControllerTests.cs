@@ -68,7 +68,7 @@ namespace CerebelloWebRole.Tests.Tests
             }
 
             // executing the test
-            controller.Create(formModel);
+            controller.Create(new[] { formModel });
 
             Assert.IsTrue(controller.ModelState.IsValid);
 
@@ -103,7 +103,7 @@ namespace CerebelloWebRole.Tests.Tests
 
             var mr = new MockRepository(true);
             var controller = mr.CreateController<AnamnesesController>();
-            controller.Create(formModel);
+            controller.Create(new[] { formModel });
 
             Assert.IsTrue(controller.ModelState.IsValid);
 

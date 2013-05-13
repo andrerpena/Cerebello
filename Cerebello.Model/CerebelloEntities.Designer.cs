@@ -946,6 +946,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<GoogleUserAccoutInfo> _GoogleUserAccoutInfoes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<SPECIAL_Test> SPECIAL_Test
+        {
+            get
+            {
+                if ((_SPECIAL_Test == null))
+                {
+                    _SPECIAL_Test = base.CreateObjectSet<SPECIAL_Test>("SPECIAL_Test");
+                }
+                return _SPECIAL_Test;
+            }
+        }
+        private ObjectSet<SPECIAL_Test> _SPECIAL_Test;
 
         #endregion
 
@@ -1357,6 +1373,14 @@ namespace Cerebello.Model
         public void AddToGoogleUserAccoutInfoes(GoogleUserAccoutInfo googleUserAccoutInfo)
         {
             base.AddObject("GoogleUserAccoutInfoes", googleUserAccoutInfo);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the SPECIAL_Test EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSPECIAL_Test(SPECIAL_Test sPECIAL_Test)
+        {
+            base.AddObject("SPECIAL_Test", sPECIAL_Test);
         }
 
         #endregion
@@ -14431,6 +14455,116 @@ namespace Cerebello.Model
 
         #endregion
 
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="SPECIAL_Test")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class SPECIAL_Test : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new SPECIAL_Test object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static SPECIAL_Test CreateSPECIAL_Test(global::System.Int32 id, global::System.DateTime createdOn)
+        {
+            SPECIAL_Test sPECIAL_Test = new SPECIAL_Test();
+            sPECIAL_Test.Id = id;
+            sPECIAL_Test.CreatedOn = createdOn;
+            return sPECIAL_Test;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Value
+        {
+            get
+            {
+                return _Value;
+            }
+            set
+            {
+                OnValueChanging(value);
+                ReportPropertyChanging("Value");
+                _Value = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Value");
+                OnValueChanged();
+            }
+        }
+        private global::System.String _Value;
+        partial void OnValueChanging(global::System.String value);
+        partial void OnValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                if (_CreatedOn != value)
+                {
+                    OnCreatedOnChanging(value);
+                    ReportPropertyChanging("CreatedOn");
+                    _CreatedOn = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("CreatedOn");
+                    OnCreatedOnChanged();
+                }
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+
+        #endregion
+
+    
     }
     
     /// <summary>

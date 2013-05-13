@@ -348,6 +348,7 @@
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
+    <Compile Include="WorkerRole.Code\Workers\TestWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\GoogleDriveSynchronizerWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
@@ -808,6 +809,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Authentication\InternalCreateAccountEmail.cshtml" />
     <Content Include="Views\MasterAdmin\Log.cshtml" />
+    <Content Include="Views\TestWorker\TestEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
