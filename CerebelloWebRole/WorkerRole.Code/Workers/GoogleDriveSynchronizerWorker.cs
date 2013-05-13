@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using CerebelloWebRole.Code.Helpers;
 
@@ -22,6 +23,8 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             // If it is not running, set the value os locker to 1 to indicate that now it is running.
             if (Interlocked.Exchange(ref locker, 1) != 0)
                 return;
+
+            Trace.TraceInformation("Google Drive service in execution (GoogleDriveSynchronizerWorker)");
 
             using (var db = this.CreateNewCerebelloEntities())
                 BackupHelper.BackupEverything(db);

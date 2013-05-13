@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.WindowsAzure.Diagnostics;
@@ -28,7 +29,6 @@ namespace CerebelloWebRole
             // Apply the updated configuration to the diagnostic monitor.
             // The first parameter is for the connection string configuration setting.
             DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
-
             return base.OnStart();
         }
 
@@ -37,14 +37,14 @@ namespace CerebelloWebRole
             RouteHelper.RegisterAllRoutes();
 
             // Creating workers and running them.
-            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
+            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
                 {
                     new EmailSenderWorker()
                 };
             emailSenderScheduler.Start();
 
             // Creating workers and running them.
-            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
+            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60))
                 {
                     new GoogleDriveSynchronizerWorker()
                 };

@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Collections;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code.WindowsAzure;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using System.Linq;
 using CerebelloWebRole.Code;
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.StorageClient;
 
 namespace CerebelloWebRole.Controllers
 {
@@ -306,6 +310,20 @@ namespace CerebelloWebRole.Controllers
                 BackupHelper.BackupEverything(db, errors);
             }
             return "Errors : " + string.Join(",", errors);
+        }
+
+        public ActionResult Log(string message)
+        {
+            if(!string.IsNullOrEmpty(message))
+                Trace.TraceInformation(message);
+
+            var logs = WindowsAzureLogHelper.GetLastDayLogEvents();
+            return this.View(logs);
+        }
+
+        public ActionResult ThrowException()
+        {
+            throw new Exception("THIS IS AN INTENTIONAL ERROR TO TEST LOGGING");
         }
     }
 }

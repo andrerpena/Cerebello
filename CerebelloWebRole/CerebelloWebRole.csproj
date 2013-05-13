@@ -252,6 +252,7 @@
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
+    <Compile Include="Code\WindowsAzure\WindowsAzureLogHelper.cs" />
     <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
@@ -806,6 +807,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Authentication\InternalCreateAccountEmail.cshtml" />
+    <Content Include="Views\MasterAdmin\Log.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
