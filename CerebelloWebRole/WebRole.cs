@@ -43,7 +43,7 @@ namespace CerebelloWebRole
                 };
             testInfraScheduler.Start();
 
-            // todo: this interval was 30 before... why is it 2 now???
+            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
                 {
                     new EmailSenderWorker()
                 };

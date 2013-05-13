@@ -48,7 +48,6 @@ namespace CerebelloWebRole
         /// </summary>
         protected void Application_Start()
         {
-            //RegisterTraceListeners(Trace.Listeners);
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
 
@@ -63,30 +62,10 @@ namespace CerebelloWebRole
 
         void Application_Error(object sender, EventArgs e)
         {
-            // Code that runs when an unhandled error occurs
-
             // Get the exception object.
-            Exception exc = Server.GetLastError();
+            var exc = Server.GetLastError();
             Trace.TraceError("Unhandled exception in an HTTP request. Ex: " + exc.Message);
         }
-
-        ///// <summary>
-        ///// Registers trace listeners to be used by the application.
-        ///// Generally web.config is used to do this, but there are special cases.
-        ///// </summary>
-        ///// <param name="traceListenerCollection">
-        ///// The trace Listener Collection to register trace listeners at.
-        ///// </param>
-        //private static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
-        //{
-        //    // This replaces web.config setting: configuration\system.diagnostics\trace\listeners\add type="Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener, Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" name="AzureDiagnostics"
-        //    // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
-        //    if (RoleEnvironment.IsAvailable)
-        //    {
-        //        var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
-        //        traceListenerCollection.Add(azureTraceListener);
-        //    }
-        //}
 
         /// <summary>
         /// Authenticates the current request.
