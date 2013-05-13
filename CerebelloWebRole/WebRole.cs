@@ -9,13 +9,11 @@ namespace CerebelloWebRole
 {
     public class WebRole : RoleEntryPoint
     {
-        // Running Multiple Websites in a Windows Azure Web Role 34:
-        // http://www.wadewegner.com/2011/02/running-multiple-websites-in-a-windows-azure-web-role/
-
-        public override bool OnStart()
+        public override void Run()
         {
-            var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
+            RouteHelper.RegisterAllRoutes();
 
+            var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
             // Set an overall quota of 8GB.
             config.OverallQuotaInMB = 4096;
             // Set the sub-quotas and make sure it is less than the OverallQuotaInMB set above
@@ -29,15 +27,9 @@ namespace CerebelloWebRole
             // Apply the updated configuration to the diagnostic monitor.
             // The first parameter is for the connection string configuration setting.
             DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
-
-            return base.OnStart();
-        }
-
-        public override void Run()
-        {
+            Trace.Listeners.Add(new DiagnosticMonitorTraceListener());
             MvcApplication.RegisterTraceListeners(Trace.Listeners);
 
-            RouteHelper.RegisterAllRoutes();
 
             // Creating workers and running them.
             var testInfraScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
@@ -46,14 +38,13 @@ namespace CerebelloWebRole
                 };
             testInfraScheduler.Start();
 
-            // todo: this interval was 30... why is it 2 now???
-            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
+            var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
                 {
                     new EmailSenderWorker()
                 };
             emailSenderScheduler.Start();
 
-            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(2))
+            var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60))
                 {
                     new GoogleDriveSynchronizerWorker()
                 };

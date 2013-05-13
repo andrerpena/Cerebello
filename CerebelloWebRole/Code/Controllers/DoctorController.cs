@@ -22,7 +22,6 @@ namespace CerebelloWebRole.Code
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-
             // if the base has already set a result, then we just exit this method
             if (filterContext.Result != null)
                 return;
@@ -75,7 +74,7 @@ namespace CerebelloWebRole.Code
                 })
                 .ToList();
 
-            this.ViewBag.Doctor = doctorViewModels.Where(doc => doc.Id == doctor.Id).FirstOrDefault();
+            this.ViewBag.Doctor = doctorViewModels.FirstOrDefault(doc => doc.Id == doctor.Id);
 
             this.ViewBag.AllDoctors = doctorViewModels;
         }

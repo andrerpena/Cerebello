@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Notifications;
+using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace CerebelloWebRole
@@ -20,7 +20,7 @@ namespace CerebelloWebRole
         /// Registers global filters.
         /// </summary>
         /// <param name="filters">Filters collection to register the global filters at.</param>
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        private static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new CanonicalUrlHttpsFilter());
             filters.Add(new HandleErrorAttribute());
@@ -48,7 +48,23 @@ namespace CerebelloWebRole
         /// </summary>
         protected void Application_Start()
         {
-            RegisterTraceListeners(Trace.Listeners);
+            var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
+            // Set an overall quota of 8GB.
+            config.OverallQuotaInMB = 4096;
+            // Set the sub-quotas and make sure it is less than the OverallQuotaInMB set above
+            config.Logs.BufferQuotaInMB = 512;
+
+            var myTimeSpan = TimeSpan.FromMinutes(2);
+            config.Logs.ScheduledTransferPeriod = myTimeSpan;//Transfer data to storage every 2 minutes
+
+            // Filter what will be sent to persistent storage.
+            config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Undefined;//Transfer everything
+            // Apply the updated configuration to the diagnostic monitor.
+            // The first parameter is for the connection string configuration setting.
+            DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
+            Trace.Listeners.Add(new DiagnosticMonitorTraceListener());
+
+
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
 
@@ -61,22 +77,12 @@ namespace CerebelloWebRole
             NotificationsHelper.CreateNotificationsJob();
         }
 
-        /// <summary>
-        /// Registers trace listeners to be used by the application.
-        /// Generally web.config is used to do this, but there are special cases.
-        /// </summary>
-        /// <param name="traceListenerCollection">
-        /// The trace Listener Collection to register trace listeners at.
-        /// </param>
+        void Application_Error(object sender, EventArgs e)
         public static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
         {
-            // This replaces web.config setting: configuration\system.diagnostics\trace\listeners\add type="Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener, Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" name="AzureDiagnostics"
-            // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
-            if (RoleEnvironment.IsAvailable)
-            {
-                var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
-                traceListenerCollection.Add(azureTraceListener);
-            }
+            // Get the exception object.
+            var exc = this.Server.GetLastError();
+            Trace.TraceError("Unhandled exception in an HTTP request. Ex: " + exc.Message);
         }
 
         /// <summary>

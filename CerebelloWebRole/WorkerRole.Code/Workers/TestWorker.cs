@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Mail;
 using System.Text;
@@ -27,6 +28,8 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             // If it is not running, set the value os locker to 1 to indicate that now it is running.
             if (Interlocked.Exchange(ref locker, 1) != 0)
                 return;
+
+            Trace.TraceInformation("Test worker service in execution (TestWorker)");
 
             var utcNow = this.GetUtcNow();
             using (var db = this.CreateNewCerebelloEntities())

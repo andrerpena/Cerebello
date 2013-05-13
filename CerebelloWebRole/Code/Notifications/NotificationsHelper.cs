@@ -21,6 +21,8 @@ namespace CerebelloWebRole.Code.Notifications
                     {
                         while (true)
                         {
+                            Trace.TraceInformation("Notification service in execution (NotificationsHelper)");
+
                             using (var db = new CerebelloEntities())
                             {
                                 // this TUPLE is: Notification AND NotificationData (which is SPECIFIC for each type of notification)
@@ -34,9 +36,9 @@ namespace CerebelloWebRole.Code.Notifications
                                 {
                                     GenerateNotificationsForNewMedicalAppointments(db, referenceTime, notificationsToBeDispatched);
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
-                                    // log error
+                                    Trace.TraceError("Could not generate notifications for medical appointments. Ex:" + ex.Message);
                                 }
 
                                 // check for generic appointments
@@ -44,9 +46,9 @@ namespace CerebelloWebRole.Code.Notifications
                                 {
                                     GenerateNotificationsForNewGenericAppointments(db, referenceTime, notificationsToBeDispatched);
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
-                                    // log error
+                                    Trace.TraceError("Could not generate notifications for generic appointments. Ex:" + ex.Message);
                                 }
 
                                 // dispatch notifications to the client
@@ -56,9 +58,9 @@ namespace CerebelloWebRole.Code.Notifications
                             Thread.Sleep(5 * 60 * 1000);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // exceptions cannot be unhandled or the service will stop
+                        Trace.TraceError("Error in the notifications service. Ex:" + ex.Message);
                     }
                 }, null);
         }
