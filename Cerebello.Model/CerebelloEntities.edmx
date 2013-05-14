@@ -48,6 +48,7 @@
           <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SPECIAL_Test" EntityType="cerebelloModel.Store.SPECIAL_Test" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Cid10" EntityType="cerebelloModel.Store.SYS_Cid10" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ContractType" EntityType="cerebelloModel.Store.SYS_ContractType" store:Type="Tables" Schema="dbo" />
@@ -861,6 +862,14 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SPECIAL_Test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="SYS_ActiveIngredient">
           <Key>
@@ -2029,6 +2038,7 @@
             <End Role="Practice" EntitySet="Practices" />
             <End Role="Doctor" EntitySet="Doctors" />
           </AssociationSet>
+          <EntitySet Name="SPECIAL_Test" EntityType="Cerebello.Model.SPECIAL_Test" />
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -3503,6 +3513,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SPECIAL_Test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Value" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4189,6 +4207,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SPECIAL_Test">
+            <EntityTypeMapping TypeName="Cerebello.Model.SPECIAL_Test">
+              <MappingFragment StoreEntitySet="SPECIAL_Test">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -4209,7 +4236,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="72">
+      <Diagram Name="CerebelloEntities" ZoomLevel="100">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -4570,6 +4597,7 @@
         <AssociationConnector Association="Cerebello.Model.FK_GoogleAccoutInfo_Person1" />
         <AssociationConnector Association="Cerebello.Model.FK_GoogleAccoutInfo_Practice1" />
         <AssociationConnector Association="Cerebello.Model.FK_Doctor_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.SPECIAL_Test" Width="1.5" PointX="8.3148172946250138" PointY="31.924575373495266" />
         </Diagram>
     </Diagrams>
   </Designer>

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Notifications;
+using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace CerebelloWebRole
@@ -48,7 +48,11 @@ namespace CerebelloWebRole
         /// </summary>
         protected void Application_Start()
         {
+            // Trace listeners should always be the first thing here.
             RegisterTraceListeners(Trace.Listeners);
+
+            Trace.TraceInformation("MvcApplication.Application_Start()");
+
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
 
@@ -68,15 +72,27 @@ namespace CerebelloWebRole
         /// <param name="traceListenerCollection">
         /// The trace Listener Collection to register trace listeners at.
         /// </param>
-        private static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
+        public static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
         {
             // This replaces web.config setting: configuration\system.diagnostics\trace\listeners\add type="Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener, Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" name="AzureDiagnostics"
             // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
             if (RoleEnvironment.IsAvailable)
             {
-                var azureTraceListener = new Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener();
-                traceListenerCollection.Add(azureTraceListener);
+                // See 'diagnostics.wadcfg' file. It contains all configurations of the DiagnosticMonitor.
+                // It is not needed to configure nor start the DiagnosticMonitor manually in code.
+                // It will be started automatically and will use settings in the 'diagnostics.wadcfg' file.
+                // All we need to do is to add the trace listener.
+                // reference: http://www.windowsazure.com/en-us/develop/net/common-tasks/diagnostics/
+                // google: https://www.google.com/search?q=diagnostics.wadcfg
+                traceListenerCollection.Add(new DiagnosticMonitorTraceListener());
             }
+        }
+
+        void Application_Error(object sender, EventArgs e)
+        {
+            // Get the exception object.
+            var exc = this.Server.GetLastError();
+            Trace.TraceError("Unhandled exception in an HTTP request. Ex: " + exc.Message);
         }
 
         /// <summary>

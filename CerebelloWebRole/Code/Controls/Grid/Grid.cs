@@ -95,6 +95,9 @@ namespace CerebelloWebRole.Code.Controls
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
+            if(this.model == null)
+                throw new Exception("Cannot render grid. Model is null");
+
             if (this.model.Any())
             {
                 // the way the grid is bound depends on the "Count" property. If it has been set, then 
@@ -174,14 +177,12 @@ namespace CerebelloWebRole.Code.Controls
                         selectedRowStyle: "webgrid-selected-row",
                         rowStyle: "webgrid-row-style").ToString());
             }
-            else
-            {
-                TagBuilder noRecords = new TagBuilder("div");
-                noRecords.AddCssClass("message-warning");
-                noRecords.SetInnerText("Não existem registros a serem exibidos");
 
-                return new MvcHtmlString(noRecords.ToString());
-            }
+            var noRecords = new TagBuilder("div");
+            noRecords.AddCssClass("message-warning");
+            noRecords.SetInnerText("Não existem registros a serem exibidos");
+
+            return new MvcHtmlString(noRecords.ToString());
         }
     }
 }

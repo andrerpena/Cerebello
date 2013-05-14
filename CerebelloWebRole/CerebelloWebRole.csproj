@@ -252,6 +252,7 @@
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
+    <Compile Include="Code\WindowsAzure\WindowsAzureLogHelper.cs" />
     <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
@@ -347,6 +348,7 @@
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
+    <Compile Include="WorkerRole.Code\Workers\TestWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\GoogleDriveSynchronizerWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
@@ -753,6 +755,9 @@
     </Content>
     <Content Include="Areas\App\Views\ConfigBackup\Index.cshtml" />
     <Content Include="Scripts\Controls\jquery.cerebello.tooltip.js" />
+    <Content Include="diagnostics.wadcfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -806,6 +811,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Authentication\InternalCreateAccountEmail.cshtml" />
+    <Content Include="Views\MasterAdmin\Log.cshtml" />
+    <EmbeddedResource Include="Views\TestWorker\TestEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />

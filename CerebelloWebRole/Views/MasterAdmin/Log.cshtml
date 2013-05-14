@@ -1,0 +1,37 @@
+﻿@model List<CerebelloWebRole.Code.WindowsAzure.WindowsAzureLogHelper.TraceLogsEntity>
+@{
+    this.Layout = null;
+
+    var grid = this.Html.CreateGrid(this.Model);
+    grid.AddField(model => model.PartitionKey);
+    grid.AddField(model => model.Timestamp);
+    grid.AddField(model => model.Level);
+    grid.AddField(model => model.Role);
+    grid.AddField(model => model.RoleInstance);
+    grid.AddField(model => model.Message, @<text><strong>@item.Message</strong></text>);
+    
+    
+}
+<html>
+<head>
+    <link href="@Url.Content("~/Content/Styles/App/App.css")" rel="Stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/App/Controls/grid.css")" rel="Stylesheet" type="text/css" />
+    <style>
+        body {
+            margin: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-bottom: 10px">
+        <strong>Informações importantes:</strong>
+        <ul>
+            <li>Este log está exibindo informações das últimas 3 horas, em ordem decrescente (quanto mais no topo, mais recente).</li>
+            <li>Somente os LEVELS 2, 3 e 4 estão sendo exibidos. Trace.TraceError = 2, Trace.TraceWarning = 3 e Trace.TraceInformation = 4.</li>
+            <li>O flush do TRACE para o LOG acontece de 2 em 2 minutos. Então demora até 2 minutos para que seu TRACE venha para esta lista.</li>
+            <li>É possível inserir uma mensagem de log passando o parâmetro opcional MESSAGE. Ex: /masteradmin/log?message=teste 3. Demora até 2 minutos para que ela apareça na lista</li>
+        </ul>
+    </div>
+    @grid.GetHtml()
+</body>
+</html>
