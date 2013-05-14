@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,8 +19,23 @@ namespace Cerebello.SolutionSetup
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static int Main(string[] args)
         {
+            try
+            {
+                return Main2(args);
+            }
+            catch
+            {
+            }
+
+            return 99;
+        }
+
+        static int Main2(string[] args)
+        {
+            bool check = args.Any(s => s == "\\c" || s == "\\check");
+
             SetupInfo setupInfo;
             var ser = new XmlSerializer(typeof(SetupInfo));
 
@@ -46,7 +62,7 @@ namespace Cerebello.SolutionSetup
                     if (dirInfo == null)
                     {
                         MessageBox.Show("Cannot find 'Cerebello.sln' in the current directory or any parent directory.");
-                        return;
+                        return 2;
                     }
 
                     sln = dirInfo.GetFiles("Cerebello.sln");
@@ -66,16 +82,16 @@ namespace Cerebello.SolutionSetup
                 || setupInfo.TestsUncommitedConfig.IsGreaterOrEqual(1)
                 || setupInfo.FirestarterUncommitedConfig.IsGreaterOrEqual(1);
 
-            if (isSetupOk)
-                return;
+            if (check && isSetupOk)
+                return 0;
 
             // check to see if solution is already setup
             if (!HasAdminPrivileges())
             {
-                if (!TryRestartWithAdminPrivileges())
-                    MessageBox.Show("Could not start with administrative privileges.");
+                if (!TryRestartWithAdminPrivileges(args))
+                    MessageBox.Show("Could not start solution setup with administrative privileges.");
 
-                return;
+                return 3;
             }
 
             Application.EnableVisualStyles();
@@ -83,8 +99,12 @@ namespace Cerebello.SolutionSetup
             var frm = new Form1(setupInfo);
             if (frm.ShowDialog() == DialogResult.OK)
             {
+                var dirVisualStudio = new DirectoryInfo(@"C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio");
+                var azureTargets = dirVisualStudio.GetFiles("Microsoft.WindowsAzure.targets", SearchOption.AllDirectories);
+                setupInfo.AzureTargets = azureTargets;
+
                 // applying the setup
-                RunSetup(setupInfo);
+                RunSetup(setupInfo, !check);
 
                 // saving setup info file
                 var ws = new XmlWriterSettings { NewLineHandling = NewLineHandling.Entitize };
@@ -93,6 +113,12 @@ namespace Cerebello.SolutionSetup
                     ser.Serialize(reader, setupInfo);
                 }
             }
+            else
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         private static bool HasAdminPrivileges()
@@ -108,8 +134,10 @@ namespace Cerebello.SolutionSetup
             return false;
         }
 
-        private static bool TryRestartWithAdminPrivileges()
+        private static bool TryRestartWithAdminPrivileges(string[] args = null)
         {
+            args = args ?? new string[0];
+
             // Launch itself as administrator
             var proc = new ProcessStartInfo
             {
@@ -117,6 +145,7 @@ namespace Cerebello.SolutionSetup
                 WorkingDirectory = Environment.CurrentDirectory,
                 FileName = Application.ExecutablePath,
                 Verb = "runas",
+                Arguments = string.Join(" ", args),
             };
 
             try
@@ -133,9 +162,9 @@ namespace Cerebello.SolutionSetup
             return true;
         }
 
-        private static void RunSetup(SetupInfo setupInfo)
+        private static void RunSetup(SetupInfo setupInfo, bool force)
         {
-            if (!(setupInfo.FirestarterUncommitedConfig.IsGreaterOrEqual(1)))
+            if (force || !setupInfo.FirestarterUncommitedConfig.IsGreaterOrEqual(1))
             {
                 try
                 {
@@ -157,7 +186,7 @@ namespace Cerebello.SolutionSetup
                 }
             }
 
-            if (!(setupInfo.TestsUncommitedConfig.IsGreaterOrEqual(1)))
+            if (force || !setupInfo.TestsUncommitedConfig.IsGreaterOrEqual(1))
             {
                 try
                 {
@@ -179,35 +208,70 @@ namespace Cerebello.SolutionSetup
                 }
             }
 
-            var azureTarget =
-                @"C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v11.0\Windows Azure Tools\1.8\Microsoft.WindowsAzure.targets";
-
-            if (!(setupInfo.WindowsAzureTargets.IsGreaterOrEqual(1)))
+            if (force || !setupInfo.WindowsAzureTargets.IsGreaterOrEqual(1))
             {
                 try
                 {
-                    if (File.Exists(azureTarget))
+                    var azureTargets = setupInfo.AzureTargets;
+
+                    foreach (var azureTarget in azureTargets)
                     {
-                        var dllsToLetIn = new[] {
-                            "System.EnterpriseServices.Wrapper.dll",
-                        };
+                        var dllsToLetIn = new[]
+                            {
+                                "System.EnterpriseServices.Wrapper.dll",
+                            };
 
-                        var strDlls = string.Join(
-                            " And ",
-                            dllsToLetIn.Select(s => string.Format("'%(WebFiles.Filename)%(WebFiles.Extension)' != '{0}'", s)));
+                        var neededAnds =
+                            dllsToLetIn
+                                .OrderBy(s => s)
+                                .Select(s => string.Format("'%(WebFiles.Filename)%(WebFiles.Extension)' != '{0}'", s))
+                                .ToArray();
 
-                        var lines = File.ReadAllLines(azureTarget);
+                        var lines = File.ReadAllLines(azureTarget.FullName);
+                        bool changed = false;
                         for (int itLine = 0; itLine < lines.Length; itLine++)
                         {
                             var curLine = lines[itLine];
-                            if (curLine.Contains("<_AssembliesToValidate") && curLine.Contains("Include=\"@(WebFiles);@(WorkerFiles)\""))
-                                lines[itLine] = "      <_AssembliesToValidate Include=\"@(WebFiles);@(WorkerFiles)\" "
-                                    + "Condition=\" '%(Extension)' == '.dll'"
-                                    + " And " + strDlls
-                                    + "\" >";
+
+                            if (curLine.Contains("<_AssembliesToValidate")
+                                && curLine.Contains("Include=\"@(WebFiles);@(WorkerFiles)\""))
+                            {
+                                var match = Regex.Match(curLine, @"Condition\=""(?<CONDITION>(?:\\""|.)*?)""");
+                                var oldCondition = match.Groups["CONDITION"].Value;
+
+                                var oldAnds = oldCondition.Split(new[] { " AND ", " And ", " and " }, StringSplitOptions.None);
+
+                                var itemsAnd = new List<string>();
+
+                                foreach (var currentAnd in oldAnds)
+                                    if (!itemsAnd.Contains(currentAnd))
+                                        itemsAnd.Add(currentAnd.Trim());
+
+                                var oldCount = itemsAnd.Count;
+
+                                foreach (var neededAnd in neededAnds)
+                                    if (!itemsAnd.Contains(neededAnd))
+                                        itemsAnd.Add(neededAnd.Trim());
+
+                                var newCount = itemsAnd.Count;
+
+                                // if any needed AND item is missing, we must change the line
+                                if (oldCount < newCount)
+                                {
+                                    var newLine = Regex.Replace(
+                                        lines[itLine],
+                                        @"Condition\=""(?<CONDITION>(?:\\""|.)*?)""",
+                                        string.Format("Condition=\" {0} \"", string.Join(" And ", itemsAnd)));
+
+                                    lines[itLine] = newLine;
+
+                                    changed = true;
+                                }
+                            }
                         }
 
-                        File.WriteAllLines(azureTarget, lines);
+                        if (changed)
+                            File.WriteAllLines(azureTarget.FullName, lines);
 
                         setupInfo.WindowsAzureTargets = new SetupInfo.Version(1);
                     }

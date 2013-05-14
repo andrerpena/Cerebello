@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace Cerebello.SolutionSetup
@@ -67,6 +64,9 @@ namespace Cerebello.SolutionSetup
 
         [XmlElement("user-values")]
         public Properties Props { get; set; }
+
+        [XmlIgnore]
+        public FileInfo[] AzureTargets { get; set; }
     }
 
     public static class SetupInfoExtensions

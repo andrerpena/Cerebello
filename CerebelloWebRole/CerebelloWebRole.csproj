@@ -1080,6 +1080,8 @@ rmdir /s /q "$(ProjectDir)obj\Debug\CSAutoParameterize"
 
 del /s /f /q "%25userprofile%25\AppData\Local\Temp\Temporary ASP.NET Files\*.cs"
 
+"$(ProjectDir)..\Cerebello.SolutionSetup.exe" \check
+
 exit 0</PreBuildEvent>
   </PropertyGroup>
 </Project>
