@@ -755,6 +755,9 @@
     </Content>
     <Content Include="Areas\App\Views\ConfigBackup\Index.cshtml" />
     <Content Include="Scripts\Controls\jquery.cerebello.tooltip.js" />
+    <Content Include="diagnostics.wadcfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -809,7 +812,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Authentication\InternalCreateAccountEmail.cshtml" />
     <Content Include="Views\MasterAdmin\Log.cshtml" />
-    <Content Include="Views\TestWorker\TestEmail.cshtml" />
+    <EmbeddedResource Include="Views\TestWorker\TestEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />

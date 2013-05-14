@@ -20,7 +20,7 @@ namespace CerebelloWebRole
         /// Registers global filters.
         /// </summary>
         /// <param name="filters">Filters collection to register the global filters at.</param>
-        private static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new CanonicalUrlHttpsFilter());
             filters.Add(new HandleErrorAttribute());
@@ -48,22 +48,10 @@ namespace CerebelloWebRole
         /// </summary>
         protected void Application_Start()
         {
-            var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
-            // Set an overall quota of 8GB.
-            config.OverallQuotaInMB = 4096;
-            // Set the sub-quotas and make sure it is less than the OverallQuotaInMB set above
-            config.Logs.BufferQuotaInMB = 512;
+            // Trace listeners should always be the first thing here.
+            RegisterTraceListeners(Trace.Listeners);
 
-            var myTimeSpan = TimeSpan.FromMinutes(2);
-            config.Logs.ScheduledTransferPeriod = myTimeSpan;//Transfer data to storage every 2 minutes
-
-            // Filter what will be sent to persistent storage.
-            config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Undefined;//Transfer everything
-            // Apply the updated configuration to the diagnostic monitor.
-            // The first parameter is for the connection string configuration setting.
-            DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
-            Trace.Listeners.Add(new DiagnosticMonitorTraceListener());
-
+            Trace.TraceInformation("MvcApplication.Application_Start()");
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -77,8 +65,30 @@ namespace CerebelloWebRole
             NotificationsHelper.CreateNotificationsJob();
         }
 
-        void Application_Error(object sender, EventArgs e)
+        /// <summary>
+        /// Registers trace listeners to be used by the application.
+        /// Generally web.config is used to do this, but there are special cases.
+        /// </summary>
+        /// <param name="traceListenerCollection">
+        /// The trace Listener Collection to register trace listeners at.
+        /// </param>
         public static void RegisterTraceListeners(TraceListenerCollection traceListenerCollection)
+        {
+            // This replaces web.config setting: configuration\system.diagnostics\trace\listeners\add type="Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorTraceListener, Microsoft.WindowsAzure.Diagnostics, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" name="AzureDiagnostics"
+            // This is done because DiagnosticMonitorTraceListener class throws exception when not running in azure/devfabric.
+            if (RoleEnvironment.IsAvailable)
+            {
+                // See 'diagnostics.wadcfg' file. It contains all configurations of the DiagnosticMonitor.
+                // It is not needed to configure nor start the DiagnosticMonitor manually in code.
+                // It will be started automatically and will use settings in the 'diagnostics.wadcfg' file.
+                // All we need to do is to add the trace listener.
+                // reference: http://www.windowsazure.com/en-us/develop/net/common-tasks/diagnostics/
+                // google: https://www.google.com/search?q=diagnostics.wadcfg
+                traceListenerCollection.Add(new DiagnosticMonitorTraceListener());
+            }
+        }
+
+        void Application_Error(object sender, EventArgs e)
         {
             // Get the exception object.
             var exc = this.Server.GetLastError();
