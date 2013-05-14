@@ -41,3 +41,4 @@ Uncommited.config
 !/ThirdParty/*
 !/ThirdParty/**/*
 *.orig
+solution-setup-info.xml

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Mail;
@@ -55,6 +56,9 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                     exSaveToDb = ex;
                 }
 
+                if (exSaveToDb == null)
+                    Trace.TraceInformation("Test worker: DB object saved");
+
                 // trying to save a file in the storage
                 Exception exSaveToStorage = null;
                 try
@@ -62,24 +66,37 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                     var storageManager = new WindowsAzureBlobStorageManager();
                     using (var stream = new MemoryStream(new byte[0]))
                         storageManager.UploadFileToStorage(
-                            stream, "WorkerTest", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh':'mm")));
+                            stream, "worker-test", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh'-'mm")));
                 }
                 catch (Exception ex)
                 {
                     exSaveToStorage = ex;
                 }
 
+                if (exSaveToStorage == null)
+                    Trace.TraceInformation("Test worker: blob saved to storage");
+
                 // Sending e-mail about test status
                 Exception exSendEmail = null;
                 try
                 {
-                    var obj = new { exSaveToDb, exSaveToStorage };
-                    this.CreateEmailMessage("TestEmail", new MailAddress("cerebello@cerebello.com.br"), obj);
+                    var obj = new Dictionary<string, Exception>
+                        {
+                            { "exSaveToDb", exSaveToDb },
+                            { "exSaveToStorage", exSaveToStorage },
+                        };
+
+                    var mailMessage = this.CreateEmailMessage("TestEmail", new MailAddress("cerebello@cerebello.com.br"), obj);
+                    if (!this.TrySendEmail(mailMessage))
+                        throw new Exception("Cannot send e-mail message.");
                 }
                 catch (Exception ex)
                 {
                     exSendEmail = ex;
                 }
+
+                if (exSendEmail == null)
+                    Trace.TraceInformation("Test worker: e-mail message sent");
 
                 // Save result to storage
                 var fileText = new StringBuilder(1000);
@@ -109,7 +126,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         var storageManager = new WindowsAzureBlobStorageManager();
                         using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(fileText.ToString())))
                             storageManager.UploadFileToStorage(
-                                stream, "WorkerTest", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh':'mm")));
+                                stream, "worker-test", string.Format("{0}", utcNow.ToString("yyyy'-'MM'-'dd hh'-'mm")));
                     }
                     catch
                     {

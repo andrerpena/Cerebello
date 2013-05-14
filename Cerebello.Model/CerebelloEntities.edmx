@@ -48,13 +48,7 @@
           <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SPECIAL_Test" EntityType="cerebelloModel.Store.SPECIAL_Test" store:Type="Tables" store:Schema="dbo" store:Name="SPECIAL_Test">
-            <DefiningQuery>SELECT 
-      [SPECIAL_Test].[Id] AS [Id], 
-      [SPECIAL_Test].[CreatedOn] AS [CreatedOn], 
-      [SPECIAL_Test].[Value] AS [Value]
-      FROM [dbo].[SPECIAL_Test] AS [SPECIAL_Test]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="SPECIAL_Test" EntityType="cerebelloModel.Store.SPECIAL_Test" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Cid10" EntityType="cerebelloModel.Store.SYS_Cid10" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ContractType" EntityType="cerebelloModel.Store.SYS_ContractType" store:Type="Tables" Schema="dbo" />
@@ -869,13 +863,9 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'cerebello.dbo.SPECIAL_Test' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
         <EntityType Name="SPECIAL_Test">
           <Key>
             <PropertyRef Name="Id" />
-            <PropertyRef Name="CreatedOn" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -3526,7 +3516,6 @@
         <EntityType Name="SPECIAL_Test">
           <Key>
             <PropertyRef Name="Id" />
-            <PropertyRef Name="CreatedOn" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="Value" MaxLength="1000" FixedLength="false" Unicode="true" />
@@ -4247,7 +4236,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="72">
+      <Diagram Name="CerebelloEntities" ZoomLevel="100">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />

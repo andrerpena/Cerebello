@@ -1,10 +1,10 @@
-﻿@model dynamic
+﻿@model Dictionary<string, Exception>
 @{
     Layout = null;
     this.ViewBag.Title = "E-mail de teste de Workers";
 
-    var exSaveToDb = (Exception)this.Model.exSaveToDb;
-    var exSaveToStorage = (Exception)this.Model.exSaveToStorage;
+    var exSaveToDb = this.Model["exSaveToDb"];
+    var exSaveToStorage = this.Model["exSaveToStorage"];
 }
 
 @if (this.ViewBag.IsBodyHtml == true)

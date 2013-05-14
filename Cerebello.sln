@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Firestarter", "Ce
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole.Tests", "CerebelloWebRole.Tests\CerebelloWebRole.Tests.csproj", "{6EE63206-FF20-496B-83F1-232944BE6E97}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{A28BCBB0-C7EE-4D6B-B4FD-38BEA2766486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.SolutionSetup", "Cerebello.SolutionSetup\Cerebello.SolutionSetup.csproj", "{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Cerebello.vsmdi
@@ -85,6 +89,15 @@ Global
 		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|x86.ActiveCfg = Release|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +105,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4A012C95-90A6-42E5-A510-1163A86E47B2} = {8A758F7D-C82A-4010-9E99-621949FCC440}
 		{6EE63206-FF20-496B-83F1-232944BE6E97} = {8A758F7D-C82A-4010-9E99-621949FCC440}
+		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7} = {A28BCBB0-C7EE-4D6B-B4FD-38BEA2766486}
 	EndGlobalSection
 EndGlobal
