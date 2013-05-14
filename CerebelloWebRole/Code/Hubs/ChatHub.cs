@@ -45,7 +45,7 @@ namespace CerebelloWebRole.Code.Hubs
                     Id = user.Id,
                     Name = user.Person.FullName,
                     Status = userStatus,
-                    GravatarUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s32)
+                    ProfilePictureUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s32)
                 };
         }
 
@@ -98,23 +98,7 @@ namespace CerebelloWebRole.Code.Hubs
                 this.Clients.Client(connectionId).usersListChanged(this.GetUsersList());
         }
 
-        private void BroadcastMessage(int otherUserId, Cerebello.Model.ChatMessage dbChatMessage, string clientGuid)
-        {
-            var myUserId = this.GetMyUserId();
-            var myRoomId = this.GetMyRoomId();
-            var connectionIds = new List<string>();
-            lock (connections)
-            {
-                if (connections[myRoomId].ContainsKey(otherUserId))
-                    connectionIds.AddRange(connections[myRoomId][otherUserId]);
-                if (connections[myRoomId].ContainsKey(myUserId))
-                    connectionIds.AddRange(connections[myRoomId][myUserId]);
-            }
-            foreach (var connectionId in connectionIds)
-                this.Clients.Client(connectionId).newMessage(this.GetChatMessage(dbChatMessage, clientGuid));
-        }
-
-        public List<ChatUser> GetUsersList()
+        private List<ChatUser> GetUsersList()
         {
             var myRoomId = this.GetMyRoomId();
             var practiceId = this.db.Practices.Where(p => p.UrlIdentifier == myRoomId).Select(p => p.Id).FirstOrDefault();
@@ -165,7 +149,35 @@ namespace CerebelloWebRole.Code.Hubs
 
             this.db.SaveChanges();
 
-            this.BroadcastMessage(otherUserId, dbChatMessage, clientGuid);
+            var myRoomId = this.GetMyRoomId();
+            var connectionIds = new List<string>();
+            lock (connections)
+            {
+                if (connections[myRoomId].ContainsKey(otherUserId))
+                    connectionIds.AddRange(connections[myRoomId][otherUserId]);
+                if (connections[myRoomId].ContainsKey(myUserId))
+                    connectionIds.AddRange(connections[myRoomId][myUserId]);
+            }
+            foreach (var connectionId in connectionIds)
+                this.Clients.Client(connectionId).sendMessage(this.GetChatMessage(dbChatMessage, clientGuid));
+        }
+
+        /// <summary>
+        /// Sends a message to a particular user
+        /// </summary>
+        public void SendTypingSignal(int otherUserId)
+        {
+            var myUserId = this.GetMyUserId();
+            var myRoomId = this.GetMyRoomId();
+
+            var connectionIds = new List<string>();
+            lock (connections)
+            {
+                if (connections[myRoomId].ContainsKey(otherUserId))
+                    connectionIds.AddRange(connections[myRoomId][otherUserId]);
+            }
+            foreach (var connectionId in connectionIds)
+                this.Clients.Client(connectionId).sendTypingSignal(this.GetUserInfo(myUserId));
         }
 
         public override System.Threading.Tasks.Task OnConnected()

@@ -627,7 +627,7 @@
     <Content Include="Content\Styles\App\CancelAccountPage.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.notify.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
-    <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.chatjs.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.delete.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
     <Content Include="Content\Styles\App\Controls\grid.css" />
@@ -728,9 +728,6 @@
     <Content Include="Scripts\App\Pages\practice.js" />
     <Content Include="Scripts\App\schedule.js" />
     <Content Include="Scripts\Controls\jquery.camera.window.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.chat.container2.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list2.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.chat.window2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.file.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.modal.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.notify.db.notification.js" />
@@ -741,6 +738,8 @@
     <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
     <Content Include="Scripts\cerebello.pt-BR.js" />
+    <Content Include="Scripts\Controls\jquery.chatjs.js" />
+    <Content Include="Scripts\Controls\jquery.chatjs.signalradapter.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Content\Sounds\chat.ogg" />

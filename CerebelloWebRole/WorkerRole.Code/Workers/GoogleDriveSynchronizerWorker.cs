@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Threading;
 using CerebelloWebRole.Code.Helpers;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
