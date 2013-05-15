@@ -321,6 +321,8 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Images\Site\mail.png" />
+    <Content Include="Content\Images\Site\phone.png" />
     <Content Include="Content\Images\Site\backup.png" />
     <Content Include="Content\Camera\jscam.swf" />
     <Content Include="Content\Camera\jscam_canvas_only.swf" />
