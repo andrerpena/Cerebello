@@ -24,6 +24,9 @@
           <EntitySet Name="ExaminationResult" EntityType="cerebelloModel.Store.ExaminationResult" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="File" EntityType="cerebelloModel.Store.File" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GLB_Token" EntityType="cerebelloModel.Store.GLB_Token" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GoogleDrivePatientInfo" EntityType="cerebelloModel.Store.GoogleDrivePatientInfo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GoogleDrivePracticeInfo" EntityType="cerebelloModel.Store.GoogleDrivePracticeInfo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GoogleUserAccoutInfo" EntityType="cerebelloModel.Store.GoogleUserAccoutInfo" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="HealthInsurance" EntityType="cerebelloModel.Store.HealthInsurance" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Holiday" EntityType="cerebelloModel.Store.Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Laboratory" EntityType="cerebelloModel.Store.Laboratory" store:Type="Tables" Schema="dbo" />
@@ -46,6 +49,7 @@
           <EntitySet Name="Receipt" EntityType="cerebelloModel.Store.Receipt" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ReceiptMedicine" EntityType="cerebelloModel.Store.ReceiptMedicine" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Secretary" EntityType="cerebelloModel.Store.Secretary" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SPECIAL_Test" EntityType="cerebelloModel.Store.SPECIAL_Test" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ActiveIngredient" EntityType="cerebelloModel.Store.SYS_ActiveIngredient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_Cid10" EntityType="cerebelloModel.Store.SYS_Cid10" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SYS_ContractType" EntityType="cerebelloModel.Store.SYS_ContractType" store:Type="Tables" Schema="dbo" />
@@ -131,6 +135,10 @@
             <End Role="Patient" EntitySet="Patient" />
             <End Role="DiagnosticHypothesis" EntitySet="DiagnosticHypothesis" />
           </AssociationSet>
+          <AssociationSet Name="FK_Doctor_Practice" Association="cerebelloModel.Store.FK_Doctor_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="Doctor" EntitySet="Doctor" />
+          </AssociationSet>
           <AssociationSet Name="FK_ExaminationRequest_Patient" Association="cerebelloModel.Store.FK_ExaminationRequest_Patient">
             <End Role="Patient" EntitySet="Patient" />
             <End Role="ExaminationRequest" EntitySet="ExaminationRequest" />
@@ -142,6 +150,26 @@
           <AssociationSet Name="FK_File_File" Association="cerebelloModel.Store.FK_File_File">
             <End Role="File" EntitySet="File" />
             <End Role="File1" EntitySet="File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleAccoutInfo_Person" Association="cerebelloModel.Store.FK_GoogleAccoutInfo_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="GoogleUserAccoutInfo" EntitySet="GoogleUserAccoutInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleAccoutInfo_Practice" Association="cerebelloModel.Store.FK_GoogleAccoutInfo_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="GoogleUserAccoutInfo" EntitySet="GoogleUserAccoutInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleDrivePatientInfo_Patient" Association="cerebelloModel.Store.FK_GoogleDrivePatientInfo_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="GoogleDrivePatientInfo" EntitySet="GoogleDrivePatientInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleDrivePatientInfo_Practice" Association="cerebelloModel.Store.FK_GoogleDrivePatientInfo_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="GoogleDrivePatientInfo" EntitySet="GoogleDrivePatientInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleDrivePracticeInfo_Practice" Association="cerebelloModel.Store.FK_GoogleDrivePracticeInfo_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="GoogleDrivePracticeInfo" EntitySet="GoogleDrivePracticeInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_HealthInsurance_Doctor" Association="cerebelloModel.Store.FK_HealthInsurance_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
@@ -205,6 +233,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Patient_Person" Association="cerebelloModel.Store.FK_Patient_Person">
             <End Role="Person" EntitySet="Person" />
+            <End Role="Patient" EntitySet="Patient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_Practice" Association="cerebelloModel.Store.FK_Patient_Practice">
+            <End Role="Practice" EntitySet="Practice" />
             <End Role="Patient" EntitySet="Patient" />
           </AssociationSet>
           <AssociationSet Name="FK_PatientFile_File" Association="cerebelloModel.Store.FK_PatientFile_File">
@@ -578,6 +610,35 @@
           <Property Name="Type" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="200" />
         </EntityType>
+        <EntityType Name="GoogleDrivePatientInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="PatientBackupFileId" Type="varchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="GoogleDrivePracticeInfo">
+          <Key>
+            <PropertyRef Name="int" />
+          </Key>
+          <Property Name="int" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="CerebelloFolderId" Type="varchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="GoogleUserAccoutInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AuthenticationCode" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="RefreshToken" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Email" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="PersonId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="HealthInsurance">
           <Key>
             <PropertyRef Name="Id" />
@@ -713,6 +774,7 @@
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="LastUsedHealthInsuranceId" Type="int" />
+          <Property Name="IsBackedUp" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PatientFile">
           <Key>
@@ -829,6 +891,14 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SPECIAL_Test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="SYS_ActiveIngredient">
           <Key>
@@ -1163,6 +1233,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Doctor_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ExaminationRequest_Patient">
           <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
           <End Role="ExaminationRequest" Type="cerebelloModel.Store.ExaminationRequest" Multiplicity="*" />
@@ -1196,6 +1278,66 @@
             </Principal>
             <Dependent Role="File1">
               <PropertyRef Name="RelatedFileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleAccoutInfo_Person">
+          <End Role="Person" Type="cerebelloModel.Store.Person" Multiplicity="1" />
+          <End Role="GoogleUserAccoutInfo" Type="cerebelloModel.Store.GoogleUserAccoutInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleUserAccoutInfo">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleAccoutInfo_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="GoogleUserAccoutInfo" Type="cerebelloModel.Store.GoogleUserAccoutInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleUserAccoutInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleDrivePatientInfo_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+          <End Role="GoogleDrivePatientInfo" Type="cerebelloModel.Store.GoogleDrivePatientInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleDrivePatientInfo">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleDrivePatientInfo_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="GoogleDrivePatientInfo" Type="cerebelloModel.Store.GoogleDrivePatientInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleDrivePatientInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleDrivePracticeInfo_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="GoogleDrivePracticeInfo" Type="cerebelloModel.Store.GoogleDrivePracticeInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleDrivePracticeInfo">
+              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1390,6 +1532,18 @@
             </Principal>
             <Dependent Role="Patient">
               <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1931,6 +2085,38 @@
             <End Role="File" EntitySet="Files" />
             <End Role="File1" EntitySet="Files" />
           </AssociationSet>
+          <AssociationSet Name="FK_Patient_Practice" Association="Cerebello.Model.FK_Patient_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="Patient" EntitySet="Patients" />
+          </AssociationSet>
+          <EntitySet Name="GoogleDrivePatientInfoes" EntityType="Cerebello.Model.GoogleDrivePatientInfo" />
+          <EntitySet Name="GoogleDrivePracticeInfoes" EntityType="Cerebello.Model.GoogleDrivePracticeInfo" />
+          <EntitySet Name="GoogleUserAccoutInfoes" EntityType="Cerebello.Model.GoogleUserAccoutInfo" />
+          <AssociationSet Name="FK_GoogleDrivePatientInfo_Patient" Association="Cerebello.Model.FK_GoogleDrivePatientInfo_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="GoogleDrivePatientInfo" EntitySet="GoogleDrivePatientInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleDrivePatientInfo_Practice" Association="Cerebello.Model.FK_GoogleDrivePatientInfo_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="GoogleDrivePatientInfo" EntitySet="GoogleDrivePatientInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleDrivePracticeInfo_Practice" Association="Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="GoogleDrivePracticeInfo" EntitySet="GoogleDrivePracticeInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleAccoutInfo_Person1" Association="Cerebello.Model.FK_GoogleAccoutInfo_Person1">
+            <End Role="Person" EntitySet="People" />
+            <End Role="GoogleUserAccoutInfo" EntitySet="GoogleUserAccoutInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleAccoutInfo_Practice1" Association="Cerebello.Model.FK_GoogleAccoutInfo_Practice1">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="GoogleUserAccoutInfo" EntitySet="GoogleUserAccoutInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Doctor_Practice" Association="Cerebello.Model.FK_Doctor_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="Doctor" EntitySet="Doctors" />
+          </AssociationSet>
+          <EntitySet Name="SPECIAL_Test" EntityType="Cerebello.Model.SPECIAL_Test" />
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1994,6 +2180,7 @@
           <Property Type="String" Name="MedicalSpecialtyName" Nullable="false" MaxLength="71" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <NavigationProperty Name="HealthInsurances" Relationship="Cerebello.Model.FK_HealthInsurance_Doctor" FromRole="Doctor" ToRole="HealthInsurance" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Doctor_Practice" FromRole="Doctor" ToRole="Practice" />
         </EntityType>
         <EntityType Name="Laboratory">
           <Key>
@@ -2032,6 +2219,9 @@
           <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="Patient" ToRole="PatientFile" />
           <NavigationProperty Name="DiagnosticHypotheses" Relationship="Cerebello.Model.FK_DiagnosticHypothesis_Patient" FromRole="Patient" ToRole="DiagnosticHypothesis" />
           <NavigationProperty Name="PatientFileGroups" Relationship="Cerebello.Model.FK_PatientFileGroup_Patient" FromRole="Patient" ToRole="PatientFileGroup" />
+          <Property Type="Boolean" Name="IsBackedUp" Nullable="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Patient_Practice" FromRole="Patient" ToRole="Practice" />
+          <NavigationProperty Name="GoogleDrivePatientInfoes" Relationship="Cerebello.Model.FK_GoogleDrivePatientInfo_Patient" FromRole="Patient" ToRole="GoogleDrivePatientInfo" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -2057,6 +2247,7 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <NavigationProperty Name="Addresses" Relationship="Cerebello.Model.PersonAddress" FromRole="Person" ToRole="Address" />
           <Property Type="String" Name="PictureBlobName" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GoogleUserAccoutInfoes" Relationship="Cerebello.Model.FK_GoogleAccoutInfo_Person1" FromRole="Person" ToRole="GoogleUserAccoutInfo" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -2086,6 +2277,11 @@
           <NavigationProperty Name="Appointments" Relationship="Cerebello.Model.FK_Appointment_Practice" FromRole="Practice" ToRole="Appointment" />
           <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_Practice" FromRole="Practice" ToRole="Notification" />
           <Property Type="Int32" Name="Province" />
+          <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_Practice" FromRole="Practice" ToRole="Patient" />
+          <NavigationProperty Name="GoogleDrivePatientInfoes" Relationship="Cerebello.Model.FK_GoogleDrivePatientInfo_Practice" FromRole="Practice" ToRole="GoogleDrivePatientInfo" />
+          <NavigationProperty Name="GoogleDrivePracticeInfoes" Relationship="Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice" FromRole="Practice" ToRole="GoogleDrivePracticeInfo" />
+          <NavigationProperty Name="GoogleUserAccoutInfoes" Relationship="Cerebello.Model.FK_GoogleAccoutInfo_Practice1" FromRole="Practice" ToRole="GoogleUserAccoutInfo" />
+          <NavigationProperty Name="Doctors" Relationship="Cerebello.Model.FK_Doctor_Practice" FromRole="Practice" ToRole="Doctor" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -3335,6 +3531,132 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Patient_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GoogleDrivePatientInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PatientId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="String" Name="PatientBackupFileId" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_GoogleDrivePatientInfo_Patient" FromRole="GoogleDrivePatientInfo" ToRole="Patient" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_GoogleDrivePatientInfo_Practice" FromRole="GoogleDrivePatientInfo" ToRole="Practice" />
+        </EntityType>
+        <EntityType Name="GoogleDrivePracticeInfo">
+          <Key>
+            <PropertyRef Name="int" />
+          </Key>
+          <Property Type="Int32" Name="int" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="String" Name="CerebelloFolderId" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice" FromRole="GoogleDrivePracticeInfo" ToRole="Practice" />
+        </EntityType>
+        <EntityType Name="GoogleUserAccoutInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="AuthenticationCode" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RefreshToken" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PersonId" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Cerebello.Model.FK_GoogleAccoutInfo_Person1" FromRole="GoogleUserAccoutInfo" ToRole="Person" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_GoogleAccoutInfo_Practice1" FromRole="GoogleUserAccoutInfo" ToRole="Practice" />
+        </EntityType>
+        <Association Name="FK_GoogleDrivePatientInfo_Patient">
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
+          <End Type="Cerebello.Model.GoogleDrivePatientInfo" Role="GoogleDrivePatientInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleDrivePatientInfo">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleDrivePatientInfo_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.GoogleDrivePatientInfo" Role="GoogleDrivePatientInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleDrivePatientInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleDrivePracticeInfo_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.GoogleDrivePracticeInfo" Role="GoogleDrivePracticeInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleDrivePracticeInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleAccoutInfo_Person1">
+          <End Type="Cerebello.Model.Person" Role="Person" Multiplicity="1" />
+          <End Type="Cerebello.Model.GoogleUserAccoutInfo" Role="GoogleUserAccoutInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleUserAccoutInfo">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GoogleAccoutInfo_Practice1">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.GoogleUserAccoutInfo" Role="GoogleUserAccoutInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GoogleUserAccoutInfo">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Doctor_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SPECIAL_Test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Value" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3387,7 +3709,8 @@
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Patients"><EntityTypeMapping TypeName="Cerebello.Model.Patient"><MappingFragment StoreEntitySet="Patient">
-            <ScalarProperty Name="LastUsedHealthInsuranceId" ColumnName="LastUsedHealthInsuranceId" />
+            <ScalarProperty Name="IsBackedUp" ColumnName="IsBackedUp" />
+                <ScalarProperty Name="LastUsedHealthInsuranceId" ColumnName="LastUsedHealthInsuranceId" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Registration" ColumnName="Registration" />
@@ -4005,6 +4328,47 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="GoogleDrivePatientInfoes">
+            <EntityTypeMapping TypeName="Cerebello.Model.GoogleDrivePatientInfo">
+              <MappingFragment StoreEntitySet="GoogleDrivePatientInfo">
+                <ScalarProperty Name="PatientBackupFileId" ColumnName="PatientBackupFileId" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GoogleDrivePracticeInfoes">
+            <EntityTypeMapping TypeName="Cerebello.Model.GoogleDrivePracticeInfo">
+              <MappingFragment StoreEntitySet="GoogleDrivePracticeInfo">
+                <ScalarProperty Name="CerebelloFolderId" ColumnName="CerebelloFolderId" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="int" ColumnName="int" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GoogleUserAccoutInfoes">
+            <EntityTypeMapping TypeName="Cerebello.Model.GoogleUserAccoutInfo">
+              <MappingFragment StoreEntitySet="GoogleUserAccoutInfo">
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+                <ScalarProperty Name="AuthenticationCode" ColumnName="AuthenticationCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SPECIAL_Test">
+            <EntityTypeMapping TypeName="Cerebello.Model.SPECIAL_Test">
+              <MappingFragment StoreEntitySet="SPECIAL_Test">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -4025,7 +4389,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="72">
+      <Diagram Name="CerebelloEntities" ZoomLevel="100">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -4360,7 +4724,7 @@
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
         <AssociationConnector Association="Cerebello.Model.PersonAddress" />
-        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="31.875" PointY="24.125" FillColor="Green" />
+        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="34.25" PointY="25.125" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
         <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="38.75" PointY="29" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="36.875" PointY="29" FillColor="ForestGreen" />
@@ -4380,6 +4744,17 @@
         <AssociationConnector Association="Cerebello.Model.FK_PatientFileGroup_Patient" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_PatientFileGroup" />
         <AssociationConnector Association="Cerebello.Model.FK_File_File" />
+        <AssociationConnector Association="Cerebello.Model.FK_Patient_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.GoogleDrivePatientInfo" Width="1.5" PointX="28.5" PointY="30.25" FillColor="MistyRose" />
+        <EntityTypeShape EntityType="Cerebello.Model.GoogleDrivePracticeInfo" Width="1.5" PointX="30.25" PointY="33" FillColor="MistyRose" />
+        <EntityTypeShape EntityType="Cerebello.Model.GoogleUserAccoutInfo" Width="1.5" PointX="33.25" PointY="34.5" FillColor="MistyRose" />
+        <AssociationConnector Association="Cerebello.Model.FK_GoogleDrivePatientInfo_Patient" />
+        <AssociationConnector Association="Cerebello.Model.FK_GoogleDrivePatientInfo_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_GoogleAccoutInfo_Person1" />
+        <AssociationConnector Association="Cerebello.Model.FK_GoogleAccoutInfo_Practice1" />
+        <AssociationConnector Association="Cerebello.Model.FK_Doctor_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.SPECIAL_Test" Width="1.5" PointX="8.3148172946250138" PointY="31.924575373495266" />
         </Diagram>
     </Diagrams>
   </Designer>

@@ -109,12 +109,43 @@ function notifyCompleteInfo(id) {
     $text.append($("<p>").html("Bem vindo ao Cerebello!"));
     $text.append($("<p>").html("Antes de começar, é importante que você complete as informações sobre seu usuário e seu consultório."));
     $text.append($("<p>").html("Para agendar e realizar consultas, assim como visualizar os perfis dos pacientes, é necessário selecionar um médico primeiro. Selecione um na seção 'Médicos do consultório'."));
+    $text.append($("<p>").html("O backup automático está desabilitado até que você configure sua conta do Dropbox. Para isto, dentro do perfil do médico, acesse o menu de configurações."));
     
     $.notify($text,
         undefined, undefined, true, null, function () {
             $.connection.notificationsHub.server.closeNotification(id);
         });
 }
+
+function notifyGoogleDriveAssociated(id) {
+    /// <summary>notify the user that the account now is associated</summary>
+
+    var $text = $("<div/>");
+
+    $text.append($("<p>").html("Sua conta agora está associada ao Google Drive e fazendo backup automaticamente de todas as informações clínicas dos pacientes."));
+    $text.append($("<p>").html("As informações dos seus pacientes agora estão disponíveis em quaisquer dispositivos vinculados à sua conta do Google Drive: Seu computador pessoal, tablet, smartphone e etc."));
+    $text.append($("<p>").html("Você é responsável pela segurança destas informações. Não vincule o Cerebello a uma conta do Google Drive à qual outras pessoas possuem acesso."));
+    
+    $.notify($text,
+        undefined, undefined, true, null, function () {
+            $.connection.notificationsHub.server.closeNotification(id);
+        });
+}
+
+function notifyGoogleDriveDesassociated(id) {
+    /// <summary>notify the user that the account now is associated</summary>
+
+    var $text = $("<div/>");
+
+    $text.append($("<p>").html("A associação da sua conta ao Google Drive foi removida."));
+    $text.append($("<p>").html("As informações dos seus pacientes não estão mais sendo enviadas para o Google Drive automaticamente. Todas as informações previamente enviadas serão mantidas no Google Drive e devem ser removidas manualmente."));
+
+    $.notify($text,
+        undefined, undefined, true, null, function () {
+            $.connection.notificationsHub.server.closeNotification(id);
+        });
+}
+
 
 (function ($) {
 
@@ -134,6 +165,12 @@ function notifyCompleteInfo(id) {
                 break;
             case "COMPLETE_INFO":
                 notifyCompleteInfo(id);
+                break;
+            case "GOOGLE_DRIVE_ASSOCIATED":
+                notifyGoogleDriveAssociated(id);
+                break;
+            case "GOOGLE_DRIVE_DESASSOCIATED":
+                notifyGoogleDriveDesassociated(id);
                 break;
             default:
                 throw "Invalid notification type";

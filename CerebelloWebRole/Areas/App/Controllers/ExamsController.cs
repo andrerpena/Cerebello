@@ -102,6 +102,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (this.ModelState.IsValid)
             {
+                dbObject.Patient.IsBackedUp = false;
                 dbObject.Text = formModel.Notes;
                 dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue
                     ? this.db.SYS_MedicalProcedure.Where(mp => mp.Id == formModel.MedicalProcedureId).Select(mp => mp.Code).FirstOrDefault()
@@ -110,7 +111,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
                 dbObject.RequestDate = this.ConvertToUtcDateTime(formModel.RequestDate.Value);
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
             }

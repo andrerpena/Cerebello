@@ -51,7 +51,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from a in db.DiagnosticHypotheses where a.Id == id select a).First(),
+                    (from a in this.db.DiagnosticHypotheses where a.Id == id select a).First(),
                     this.GetToLocalDateTimeConverter());
             else
                 viewModel = new DiagnosticHypothesisViewModel()
@@ -72,7 +72,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
             if (this.ModelState.IsValid)
             {
-                DiagnosticHypothesis diagnosticHypothesis = null;
+                DiagnosticHypothesis diagnosticHypothesis;
                 if (formModel.Id == null)
                 {
                     diagnosticHypothesis = new DiagnosticHypothesis
@@ -86,12 +86,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     diagnosticHypothesis = this.db.DiagnosticHypotheses.First(a => a.Id == formModel.Id);
 
+                diagnosticHypothesis.Patient.IsBackedUp = false;
                 diagnosticHypothesis.Observations = formModel.Text;
                 diagnosticHypothesis.Cid10Code = formModel.Cid10Code;
                 diagnosticHypothesis.Cid10Name = formModel.Cid10Name;
                 diagnosticHypothesis.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
                 return this.View("Details", GetViewModel(diagnosticHypothesis, this.GetToLocalDateTimeConverter()));

@@ -8,6 +8,7 @@ using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Access;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
@@ -95,6 +96,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return string.Join(" ", classes);
         }
 
+        [CanAlternateUser]
         public ActionResult Index()
         {
             // verify min and max times
@@ -1238,7 +1240,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var utcFirst = ConvertToUtcDateTime(this.DbPractice, localFirst);
             var utcLast = ConvertToUtcDateTime(this.DbPractice, localLast);
 
-            var result = (from a in db.Appointments
+            var result = (from a in this.db.Appointments
                           where a.Start >= utcFirst && a.End < utcLast
                           select a).ToList()
                 .Select(a => ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("'d'dd_MM_yyyy"))

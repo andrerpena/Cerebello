@@ -116,6 +116,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (this.ModelState.IsValid)
             {
+                dbObject.Patient.IsBackedUp = false;
                 dbObject.Text = formModel.Text;
                 dbObject.MedicalProcedureName = formModel.MedicalProcedureName;
                 dbObject.MedicalProcedureCode = formModel.MedicalProcedureId.HasValue
@@ -124,7 +125,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 dbObject.ExaminationDate = this.ConvertToUtcDateTime(formModel.ExaminationDate.Value);
                 dbObject.ReceiveDate = this.ConvertToUtcDateTime(formModel.ReceiveDate.Value);
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
             }

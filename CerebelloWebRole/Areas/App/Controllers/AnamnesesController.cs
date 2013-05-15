@@ -66,7 +66,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from a in db.Anamnese where a.Id == id select a).First(),
+                    (from a in this.db.Anamnese where a.Id == id select a).First(),
                     this.GetToLocalDateTimeConverter());
             else
                 viewModel = new AnamneseViewModel
@@ -108,6 +108,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 else
                     anamnese = this.db.Anamnese.First(a => a.Id == formModel.Id);
 
+                anamnese.Patient.IsBackedUp = false;
                 anamnese.Allergies = formModel.Allergies;
                 anamnese.ChiefComplaint = formModel.ChiefComplaint;
                 anamnese.Conclusion = formModel.Conclusion;
@@ -120,24 +121,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 anamnese.SocialDiseases = formModel.SocialHistory;
                 anamnese.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
                 return this.View("Details", GetViewModel(anamnese, this.GetToLocalDateTimeConverter()));
             }
 
             return this.View("Edit", formModel);
-        }
-
-        /// <summary>
-        /// Will retrieve an editor for diagnosis. This is useful for the collection editor to request a new editor for 
-        /// a newly create diagnosis at client-side
-        /// </summary>
-        /// <param name="formModel"></param>
-        /// <returns></returns>
-        public ActionResult DiagnosticHypothesisEditor(DiagnosticHypothesisViewModel formModel)
-        {
-            return this.View(formModel);
         }
 
         /// <summary>

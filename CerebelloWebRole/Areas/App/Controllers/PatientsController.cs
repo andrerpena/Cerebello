@@ -7,6 +7,8 @@ using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Controls;
+using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Json;
 using CerebelloWebRole.Code.WindowsAzure;
 using JetBrains.Annotations;
@@ -276,10 +278,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                         physicalExaminationsByDate.ContainsKey(eventDate)
                                             ? physicalExaminationsByDate[eventDate].Select(a => a.Id).ToList()
                                     : new List<int>(),
-                                    DiagnosticHipothesesId = 
-                                    diagnosticHypothesesByDate.ContainsKey(eventDate)
-                                    ? diagnosticHypothesesByDate[eventDate].Select(a => a.Id).ToList()
-                                    : new List<int>(),
+                                     DiagnosticHipothesesId =
+                                     diagnosticHypothesesByDate.ContainsKey(eventDate)
+                                     ? diagnosticHypothesesByDate[eventDate].Select(a => a.Id).ToList()
+                                     : new List<int>(),
                                      ReceiptIds =
                                          receiptsByDate.ContainsKey(eventDate)
                                              ? receiptsByDate[eventDate].Select(v => v.Id).ToList()
@@ -311,6 +313,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         //
         // GET: /App/Patients/
 
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var model =
@@ -445,6 +448,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 patient.Doctor = this.Doctor;
 
+                patient.IsBackedUp = false;
                 patient.Person.BirthPlace = formModel.BirthPlace;
                 patient.Person.CPF = formModel.Cpf;
                 patient.Person.CPFOwner = formModel.CpfOwner;
@@ -476,7 +480,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             });
                 }
 
-                db.SaveChanges();
+                this.db.SaveChanges();
                 return this.RedirectToAction("Details", new { id = patient.Id });
             }
 
@@ -496,7 +500,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var patient = db.Patients.First(m => m.Id == id);
+                var patient = this.db.Patients.First(m => m.Id == id);
 
                 // delete anamneses manually
                 var anamneses = patient.Anamneses.ToList();
@@ -654,7 +658,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new SearchViewModel<PatientViewModel>();
 
-            var query = from patient in db.Patients.Include("Person")
+            var query = from patient in this.db.Patients.Include("Person")
                         where patient.DoctorId == this.Doctor.Id
                         select patient;
 

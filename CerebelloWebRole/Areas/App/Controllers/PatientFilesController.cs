@@ -21,6 +21,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class PatientFilesController : DoctorController
     {
+        [SelfPermission]
+        public ActionResult DownloadBackup(int patientId)
+        {
+            var patient = this.db.Patients.First(p => p.Id == patientId);
+            var backup = BackupHelper.GeneratePatientBackup(this.db, patient);
+            return this.File(
+                backup,
+                "application/zip",
+                patient.Person.FullName + " - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
+        }
+
         /// <summary>
         /// Downloads the specified file
         /// </summary>
@@ -49,7 +60,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult DownloadZipFile(int patientId)
         {
-            var patient = this.db.Patients.FirstOrDefault(p => p.Id == patientId);
+            var patient = this.db.Patients.First(p => p.Id == patientId);
             var zipMemoryStream = new MemoryStream();
 
             using (var zip = new ZipFile())
@@ -287,7 +298,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from pf in db.PatientFileGroups where pf.Id == id select pf).First(),
+                    (from pf in this.db.PatientFileGroups where pf.Id == id select pf).First(),
                     this.GetToLocalDateTimeConverter());
             else
             {
@@ -443,6 +454,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Debug.Assert(formModel.ReceiveDate != null, "formModel.ReceiveDate != null");
                 dbFileGroup.ReceiveDate = this.ConvertToUtcDateTime(formModel.ReceiveDate.Value);
 
+                patientFile.Patient.IsBackedUp = false;
                 this.db.SaveChanges();
 
                 // moving files that are stored in a temporary location

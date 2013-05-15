@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Model.Metadata;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -26,6 +27,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// ModelMedicalCertificate
         /// </summary>
         [Display(Name="Modelo de atestado")]
+        [Tooltip("É necessário escolher um entre os modelos de atestado cadastrados. Ao começar a digitar, o sistema irá sugerir modelos. Caso o modelo em questão não seja encontrado, é possível cadastrar um novo clicando no botão Gerenciar modelos de atestado abaixo.")]
         public int? ModelId { get; set; }
 
         /// <summary>
@@ -49,6 +51,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Data de emissão")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("Data em que o atestado foi registrado")]
         public DateTime? IssuanceDate { get; set; }
     }
 }

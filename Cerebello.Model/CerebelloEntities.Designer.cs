@@ -76,6 +76,13 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFileGroup_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PatientFileGroup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFileGroup), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_PatientFileGroup", "PatientFileGroup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.PatientFileGroup), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_File_File", "File", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.File), "File1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.File), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "GoogleDrivePatientInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleDrivePatientInfo), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "GoogleDrivePatientInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleDrivePatientInfo), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleDrivePracticeInfo_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "GoogleDrivePracticeInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleDrivePracticeInfo), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Person1", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "GoogleUserAccoutInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleUserAccoutInfo), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Practice1", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "GoogleUserAccoutInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleUserAccoutInfo), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Doctor_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Doctor), true)]
 
 #endregion
 
@@ -911,6 +918,70 @@ namespace Cerebello.Model
         }
         private ObjectSet<PatientFileGroup> _PatientFileGroups;
 
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<GoogleDrivePatientInfo> GoogleDrivePatientInfoes
+        {
+            get
+            {
+                if ((_GoogleDrivePatientInfoes == null))
+                {
+                    _GoogleDrivePatientInfoes = base.CreateObjectSet<GoogleDrivePatientInfo>("GoogleDrivePatientInfoes");
+                }
+                return _GoogleDrivePatientInfoes;
+            }
+        }
+        private ObjectSet<GoogleDrivePatientInfo> _GoogleDrivePatientInfoes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<GoogleDrivePracticeInfo> GoogleDrivePracticeInfoes
+        {
+            get
+            {
+                if ((_GoogleDrivePracticeInfoes == null))
+                {
+                    _GoogleDrivePracticeInfoes = base.CreateObjectSet<GoogleDrivePracticeInfo>("GoogleDrivePracticeInfoes");
+                }
+                return _GoogleDrivePracticeInfoes;
+            }
+        }
+        private ObjectSet<GoogleDrivePracticeInfo> _GoogleDrivePracticeInfoes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<GoogleUserAccoutInfo> GoogleUserAccoutInfoes
+        {
+            get
+            {
+                if ((_GoogleUserAccoutInfoes == null))
+                {
+                    _GoogleUserAccoutInfoes = base.CreateObjectSet<GoogleUserAccoutInfo>("GoogleUserAccoutInfoes");
+                }
+                return _GoogleUserAccoutInfoes;
+            }
+        }
+        private ObjectSet<GoogleUserAccoutInfo> _GoogleUserAccoutInfoes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<SPECIAL_Test> SPECIAL_Test
+        {
+            get
+            {
+                if ((_SPECIAL_Test == null))
+                {
+                    _SPECIAL_Test = base.CreateObjectSet<SPECIAL_Test>("SPECIAL_Test");
+                }
+                return _SPECIAL_Test;
+            }
+        }
+        private ObjectSet<SPECIAL_Test> _SPECIAL_Test;
+
         #endregion
 
         #region AddTo Methods
@@ -1305,6 +1376,38 @@ namespace Cerebello.Model
         public void AddToPatientFileGroups(PatientFileGroup patientFileGroup)
         {
             base.AddObject("PatientFileGroups", patientFileGroup);
+        }
+
+        /// <summary>
+        /// Deprecated Method for adding a new object to the GoogleDrivePatientInfoes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToGoogleDrivePatientInfoes(GoogleDrivePatientInfo googleDrivePatientInfo)
+        {
+            base.AddObject("GoogleDrivePatientInfoes", googleDrivePatientInfo);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the GoogleDrivePracticeInfoes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToGoogleDrivePracticeInfoes(GoogleDrivePracticeInfo googleDrivePracticeInfo)
+        {
+            base.AddObject("GoogleDrivePracticeInfoes", googleDrivePracticeInfo);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the GoogleUserAccoutInfoes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToGoogleUserAccoutInfoes(GoogleUserAccoutInfo googleUserAccoutInfo)
+        {
+            base.AddObject("GoogleUserAccoutInfoes", googleUserAccoutInfo);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the SPECIAL_Test EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSPECIAL_Test(SPECIAL_Test sPECIAL_Test)
+        {
+            base.AddObject("SPECIAL_Test", sPECIAL_Test);
         }
 
         #endregion
@@ -7036,6 +7139,44 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Doctor_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Doctor_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Doctor_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Doctor_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_Doctor_Practice", "Practice", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -8125,6 +8266,665 @@ namespace Cerebello.Model
         #endregion
 
     
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="GoogleDrivePatientInfo")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class GoogleDrivePatientInfo : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new GoogleDrivePatientInfo object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="patientId">Initial value of the PatientId property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="patientBackupFileId">Initial value of the PatientBackupFileId property.</param>
+        public static GoogleDrivePatientInfo CreateGoogleDrivePatientInfo(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 practiceId, global::System.String patientBackupFileId)
+        {
+            GoogleDrivePatientInfo googleDrivePatientInfo = new GoogleDrivePatientInfo();
+            googleDrivePatientInfo.Id = id;
+            googleDrivePatientInfo.PatientId = patientId;
+            googleDrivePatientInfo.PracticeId = practiceId;
+            googleDrivePatientInfo.PatientBackupFileId = patientBackupFileId;
+            return googleDrivePatientInfo;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PatientId
+        {
+            get
+            {
+                return _PatientId;
+            }
+            set
+            {
+                OnPatientIdChanging(value);
+                ReportPropertyChanging("PatientId");
+                _PatientId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PatientId");
+                OnPatientIdChanged();
+            }
+        }
+        private global::System.Int32 _PatientId;
+        partial void OnPatientIdChanging(global::System.Int32 value);
+        partial void OnPatientIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PatientBackupFileId
+        {
+            get
+            {
+                return _PatientBackupFileId;
+            }
+            set
+            {
+                OnPatientBackupFileIdChanging(value);
+                ReportPropertyChanging("PatientBackupFileId");
+                _PatientBackupFileId = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("PatientBackupFileId");
+                OnPatientBackupFileIdChanged();
+            }
+        }
+        private global::System.String _PatientBackupFileId;
+        partial void OnPatientBackupFileIdChanging(global::System.String value);
+        partial void OnPatientBackupFileIdChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Patient", "Patient")]
+        public Patient Patient
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_GoogleDrivePatientInfo_Patient", "Patient").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_GoogleDrivePatientInfo_Patient", "Patient").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Patient> PatientReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_GoogleDrivePatientInfo_Patient", "Patient");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_GoogleDrivePatientInfo_Patient", "Patient", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePatientInfo_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePatientInfo_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePatientInfo_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePatientInfo_Practice", "Practice", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="GoogleDrivePracticeInfo")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class GoogleDrivePracticeInfo : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new GoogleDrivePracticeInfo object.
+        /// </summary>
+        /// <param name="int">Initial value of the int property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="cerebelloFolderId">Initial value of the CerebelloFolderId property.</param>
+        public static GoogleDrivePracticeInfo CreateGoogleDrivePracticeInfo(global::System.Int32 @int, global::System.Int32 practiceId, global::System.String cerebelloFolderId)
+        {
+            GoogleDrivePracticeInfo googleDrivePracticeInfo = new GoogleDrivePracticeInfo();
+            googleDrivePracticeInfo.@int = @int;
+            googleDrivePracticeInfo.PracticeId = practiceId;
+            googleDrivePracticeInfo.CerebelloFolderId = cerebelloFolderId;
+            return googleDrivePracticeInfo;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 @int
+        {
+            get
+            {
+                return _int;
+            }
+            set
+            {
+                if (_int != value)
+                {
+                    OnintChanging(value);
+                    ReportPropertyChanging("int");
+                    _int = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("int");
+                    OnintChanged();
+                }
+            }
+        }
+        private global::System.Int32 _int;
+        partial void OnintChanging(global::System.Int32 value);
+        partial void OnintChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String CerebelloFolderId
+        {
+            get
+            {
+                return _CerebelloFolderId;
+            }
+            set
+            {
+                OnCerebelloFolderIdChanging(value);
+                ReportPropertyChanging("CerebelloFolderId");
+                _CerebelloFolderId = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("CerebelloFolderId");
+                OnCerebelloFolderIdChanged();
+            }
+        }
+        private global::System.String _CerebelloFolderId;
+        partial void OnCerebelloFolderIdChanging(global::System.String value);
+        partial void OnCerebelloFolderIdChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleDrivePracticeInfo_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice", "Practice", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="GoogleUserAccoutInfo")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class GoogleUserAccoutInfo : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new GoogleUserAccoutInfo object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="authenticationCode">Initial value of the AuthenticationCode property.</param>
+        /// <param name="refreshToken">Initial value of the RefreshToken property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="name">Initial value of the Name property.</param>
+        /// <param name="email">Initial value of the Email property.</param>
+        /// <param name="personId">Initial value of the PersonId property.</param>
+        public static GoogleUserAccoutInfo CreateGoogleUserAccoutInfo(global::System.Int32 id, global::System.String authenticationCode, global::System.String refreshToken, global::System.Int32 practiceId, global::System.String name, global::System.String email, global::System.Int32 personId)
+        {
+            GoogleUserAccoutInfo googleUserAccoutInfo = new GoogleUserAccoutInfo();
+            googleUserAccoutInfo.Id = id;
+            googleUserAccoutInfo.AuthenticationCode = authenticationCode;
+            googleUserAccoutInfo.RefreshToken = refreshToken;
+            googleUserAccoutInfo.PracticeId = practiceId;
+            googleUserAccoutInfo.Name = name;
+            googleUserAccoutInfo.Email = email;
+            googleUserAccoutInfo.PersonId = personId;
+            return googleUserAccoutInfo;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String AuthenticationCode
+        {
+            get
+            {
+                return _AuthenticationCode;
+            }
+            set
+            {
+                OnAuthenticationCodeChanging(value);
+                ReportPropertyChanging("AuthenticationCode");
+                _AuthenticationCode = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("AuthenticationCode");
+                OnAuthenticationCodeChanged();
+            }
+        }
+        private global::System.String _AuthenticationCode;
+        partial void OnAuthenticationCodeChanging(global::System.String value);
+        partial void OnAuthenticationCodeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String RefreshToken
+        {
+            get
+            {
+                return _RefreshToken;
+            }
+            set
+            {
+                OnRefreshTokenChanging(value);
+                ReportPropertyChanging("RefreshToken");
+                _RefreshToken = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("RefreshToken");
+                OnRefreshTokenChanged();
+            }
+        }
+        private global::System.String _RefreshToken;
+        partial void OnRefreshTokenChanging(global::System.String value);
+        partial void OnRefreshTokenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Email
+        {
+            get
+            {
+                return _Email;
+            }
+            set
+            {
+                OnEmailChanging(value);
+                ReportPropertyChanging("Email");
+                _Email = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Email");
+                OnEmailChanged();
+            }
+        }
+        private global::System.String _Email;
+        partial void OnEmailChanging(global::System.String value);
+        partial void OnEmailChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PersonId
+        {
+            get
+            {
+                return _PersonId;
+            }
+            set
+            {
+                OnPersonIdChanging(value);
+                ReportPropertyChanging("PersonId");
+                _PersonId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PersonId");
+                OnPersonIdChanged();
+            }
+        }
+        private global::System.Int32 _PersonId;
+        partial void OnPersonIdChanging(global::System.Int32 value);
+        partial void OnPersonIdChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Person1", "Person")]
+        public Person Person
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_GoogleAccoutInfo_Person1", "Person").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_GoogleAccoutInfo_Person1", "Person").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Person> PersonReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Cerebello.Model.FK_GoogleAccoutInfo_Person1", "Person");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Cerebello.Model.FK_GoogleAccoutInfo_Person1", "Person", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Practice1", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleAccoutInfo_Practice1", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleAccoutInfo_Practice1", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_GoogleAccoutInfo_Practice1", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_GoogleAccoutInfo_Practice1", "Practice", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -10793,13 +11593,15 @@ namespace Cerebello.Model
         /// <param name="doctorId">Initial value of the DoctorId property.</param>
         /// <param name="personId">Initial value of the PersonId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static Patient CreatePatient(global::System.Int32 id, global::System.Int32 doctorId, global::System.Int32 personId, global::System.Int32 practiceId)
+        /// <param name="isBackedUp">Initial value of the IsBackedUp property.</param>
+        public static Patient CreatePatient(global::System.Int32 id, global::System.Int32 doctorId, global::System.Int32 personId, global::System.Int32 practiceId, global::System.Boolean isBackedUp)
         {
             Patient patient = new Patient();
             patient.Id = id;
             patient.DoctorId = doctorId;
             patient.PersonId = personId;
             patient.PracticeId = practiceId;
+            patient.IsBackedUp = isBackedUp;
             return patient;
         }
 
@@ -10953,6 +11755,30 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _LastUsedHealthInsuranceId;
         partial void OnLastUsedHealthInsuranceIdChanging(Nullable<global::System.Int32> value);
         partial void OnLastUsedHealthInsuranceIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsBackedUp
+        {
+            get
+            {
+                return _IsBackedUp;
+            }
+            set
+            {
+                OnIsBackedUpChanging(value);
+                ReportPropertyChanging("IsBackedUp");
+                _IsBackedUp = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsBackedUp");
+                OnIsBackedUpChanged();
+            }
+        }
+        private global::System.Boolean _IsBackedUp;
+        partial void OnIsBackedUpChanging(global::System.Boolean value);
+        partial void OnIsBackedUpChanged();
 
         #endregion
 
@@ -11311,6 +12137,66 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFileGroup>("Cerebello.Model.FK_PatientFileGroup_Patient", "PatientFileGroup", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Patient_Practice", "Practice")]
+        public Practice Practice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Patient_Practice", "Practice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Patient_Practice", "Practice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Practice> PracticeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Practice>("Cerebello.Model.FK_Patient_Practice", "Practice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Practice>("Cerebello.Model.FK_Patient_Practice", "Practice", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Patient", "GoogleDrivePatientInfo")]
+        public EntityCollection<GoogleDrivePatientInfo> GoogleDrivePatientInfoes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GoogleDrivePatientInfo>("Cerebello.Model.FK_GoogleDrivePatientInfo_Patient", "GoogleDrivePatientInfo");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GoogleDrivePatientInfo>("Cerebello.Model.FK_GoogleDrivePatientInfo_Patient", "GoogleDrivePatientInfo", value);
                 }
             }
         }
@@ -12439,6 +13325,28 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Person1", "GoogleUserAccoutInfo")]
+        public EntityCollection<GoogleUserAccoutInfo> GoogleUserAccoutInfoes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GoogleUserAccoutInfo>("Cerebello.Model.FK_GoogleAccoutInfo_Person1", "GoogleUserAccoutInfo");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GoogleUserAccoutInfo>("Cerebello.Model.FK_GoogleAccoutInfo_Person1", "GoogleUserAccoutInfo", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -13327,6 +14235,116 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Patient_Practice", "Patient")]
+        public EntityCollection<Patient> Patients
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Patient>("Cerebello.Model.FK_Patient_Practice", "Patient");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Patient>("Cerebello.Model.FK_Patient_Practice", "Patient", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Practice", "GoogleDrivePatientInfo")]
+        public EntityCollection<GoogleDrivePatientInfo> GoogleDrivePatientInfoes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GoogleDrivePatientInfo>("Cerebello.Model.FK_GoogleDrivePatientInfo_Practice", "GoogleDrivePatientInfo");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GoogleDrivePatientInfo>("Cerebello.Model.FK_GoogleDrivePatientInfo_Practice", "GoogleDrivePatientInfo", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleDrivePracticeInfo_Practice", "GoogleDrivePracticeInfo")]
+        public EntityCollection<GoogleDrivePracticeInfo> GoogleDrivePracticeInfoes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GoogleDrivePracticeInfo>("Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice", "GoogleDrivePracticeInfo");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GoogleDrivePracticeInfo>("Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice", "GoogleDrivePracticeInfo", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Practice1", "GoogleUserAccoutInfo")]
+        public EntityCollection<GoogleUserAccoutInfo> GoogleUserAccoutInfoes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GoogleUserAccoutInfo>("Cerebello.Model.FK_GoogleAccoutInfo_Practice1", "GoogleUserAccoutInfo");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GoogleUserAccoutInfo>("Cerebello.Model.FK_GoogleAccoutInfo_Practice1", "GoogleUserAccoutInfo", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_Doctor_Practice", "Doctor")]
+        public EntityCollection<Doctor> Doctors
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Doctor>("Cerebello.Model.FK_Doctor_Practice", "Doctor");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Doctor>("Cerebello.Model.FK_Doctor_Practice", "Doctor", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -13955,6 +14973,113 @@ namespace Cerebello.Model
 
         #endregion
 
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="SPECIAL_Test")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class SPECIAL_Test : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new SPECIAL_Test object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static SPECIAL_Test CreateSPECIAL_Test(global::System.Int32 id, global::System.DateTime createdOn)
+        {
+            SPECIAL_Test sPECIAL_Test = new SPECIAL_Test();
+            sPECIAL_Test.Id = id;
+            sPECIAL_Test.CreatedOn = createdOn;
+            return sPECIAL_Test;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Value
+        {
+            get
+            {
+                return _Value;
+            }
+            set
+            {
+                OnValueChanging(value);
+                ReportPropertyChanging("Value");
+                _Value = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Value");
+                OnValueChanged();
+            }
+        }
+        private global::System.String _Value;
+        partial void OnValueChanging(global::System.String value);
+        partial void OnValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+
+        #endregion
+
+    
     }
     
     /// <summary>

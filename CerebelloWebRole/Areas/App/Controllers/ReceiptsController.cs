@@ -65,7 +65,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from r in db.Receipts where r.Id == id select r).First(),
+                    (from r in this.db.Receipts where r.Id == id select r).First(),
                     this.GetToLocalDateTimeConverter());
             else
                 viewModel = new ReceiptViewModel()
@@ -142,8 +142,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         m => this.db.ReceiptMedicines.DeleteObject(m)
                     );
 
+                receipt.Patient.IsBackedUp = false;
                 receipt.IssuanceDate = this.ConvertToUtcDateTime(formModel.IssuanceDate.Value);
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.View("Details", GetViewModel(receipt, this.GetToLocalDateTimeConverter()));
             }

@@ -24,7 +24,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Object context used throughout all the controller
         /// </summary>
-        protected CerebelloEntitiesAccessFilterWrapper db = null;
+        public CerebelloEntitiesAccessFilterWrapper db = null;
 
         public User DbUser { get; private set; }
 
@@ -66,10 +66,7 @@ namespace CerebelloWebRole.Code
             // this is because of how tests work
             // if a test controller has been created, this.db has already been populated
             // otherwise let's create a regular one
-            if (this.db == null)
-                this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities());
-
-            return this.db;
+            return this.db ?? (this.db = new CerebelloEntitiesAccessFilterWrapper(this.CreateNewCerebelloEntities()));
         }
 
         internal void InitDbUser(RequestContext requestContext)
@@ -105,7 +102,7 @@ namespace CerebelloWebRole.Code
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            db.Dispose();
+            this.db.Dispose();
         }
 
         /// <summary>

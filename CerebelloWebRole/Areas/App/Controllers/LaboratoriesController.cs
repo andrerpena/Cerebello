@@ -212,7 +212,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var model = new SearchViewModel<MedicineLaboratoryViewModel>();
 
-            var query = from laboratory in db.Laboratories
+            var query = from laboratory in this.db.Laboratories
                         where laboratory.DoctorId == this.Doctor.Id
                         select laboratory;
 

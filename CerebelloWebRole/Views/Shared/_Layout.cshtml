@@ -91,7 +91,7 @@
                 @if (this.User is AuthenticatedPrincipal)
                 {
                     var userData = (this.User as AuthenticatedPrincipal).Profile;
-                    <li><a href="@Url.Action("Index", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
+                    <li><a href="@Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
                     <li><a href="@Url.Action("LogoutLogin", "Authentication")">Eu não sou @userData.FullName</a></li>
                 }
                 else
@@ -118,7 +118,9 @@
                     <li><a href="mailto:cerebello@cerebello.com.br">Fale Conosco</a></li>
                 </ul>
             </div>
-
+            <div class="span12">
+                <p style="margin: 0; padding: 0">Telefone: (11) 3280-0995. E-mail: <a href="mailto:cerebello@cerebello.com.br">cerebello@cerebello.com.br</a></p>
+            </div>
             <div class="span12">
                 <a class="twitter-link" href="https://twitter.com/cerebellohq" target="_blank">Siga o Cerebello no Twitter</a>
             </div>

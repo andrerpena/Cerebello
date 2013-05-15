@@ -21,6 +21,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <returns>ActionResult containing all health insurances.</returns>
         [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var model = new HealthInsuranceIndexViewModel
@@ -126,7 +127,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 healthInsurance.IsActive = formModel.IsActive;
                 healthInsurance.IsParticular = formModel.IsParticular;
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.Redirect(this.Url.Action("Details", new { id = healthInsurance.Id }));
             }

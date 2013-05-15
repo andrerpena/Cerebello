@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Model.Metadata;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -56,6 +57,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Data de registro")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("Data em que a anamnese foi registrada")]
         public DateTime? MedicalRecordDate { get; set; }
     }
 }

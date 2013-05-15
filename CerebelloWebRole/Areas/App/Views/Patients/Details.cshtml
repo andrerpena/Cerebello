@@ -45,6 +45,10 @@
         {
             <li><a href="@Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
         }
+        @if (this.CanAccessAction("DownloadBackup", "PatientFiles"))
+        {
+            <li><a href="@Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar backup em Zip</a> </li>
+        }
     </ul>
     <script type="text/javascript">
         $("#delete-patient-link").click(function (e) {
@@ -624,13 +628,13 @@
                 </div>
                 <!-- exam requirement -->
                 <div>
-                    <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Exams", new { patientId = Model.Id })">Nova solicitação de exames</a>
+                    <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Exams", new { patientId = Model.Id })">Nova solicitação de exame ou procedimento</a>
                     <div class="new-exams-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- exam result -->
                 <div>
-                    <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "ExamResults", new { patientId = Model.Id })">Novo resultado de exame</a>
+                    <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "ExamResults", new { patientId = Model.Id })">Novo resultado de exame ou procedimento</a>
                     <div class="new-exam-result-wrapper appointment-panel-wrapper">
                     </div>
                 </div>

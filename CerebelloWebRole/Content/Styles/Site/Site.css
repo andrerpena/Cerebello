@@ -310,3 +310,23 @@ body {
     font-size: 12px;
     padding: 0 3px 2px;
 }
+
+.contact-phone-li {
+    background-image: url("/content/images/site/phone.png");
+    background-position: 0 3px;
+    background-repeat: no-repeat;
+    background-size: 16px auto;
+    list-style: none outside none;
+    padding-left: 21px;
+    margin: 3px 0;
+}
+
+.contact-email-li {
+    background-image: url("/content/images/site/mail.png");
+    background-position: 0 3px;
+    background-repeat: no-repeat;
+    background-size: 16px auto;
+    list-style: none outside none;
+    padding-left: 21px;
+    margin: 3px 0;
+}

@@ -52,6 +52,29 @@
     <Reference Include="CipherLite">
       <HintPath>..\ThirdParty\CipherLite.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetOpenAuth, Version=4.0.0.11165, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\ThirdParty\GoogleDrive\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.3.0.15233, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Authentication.OAuth2, Version=1.3.0.15231, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Drive.v2, Version=1.2.4722.20895, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.Drive.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Oauth2.v2, Version=1.3.0.15233, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Google.Apis.Oauth2.v2.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -67,23 +90,20 @@
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\ThirdParty\JetBrains\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Kendo.Mvc">
-      <HintPath>..\ThirdParty\Kendo.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Kendo.Mvc.resources">
       <HintPath>..\ThirdParty\Kendo.Mvc.resources.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.0.1\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.1.0\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.SignalR.Owin, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.0.1\lib\net40\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.1.0\lib\net40\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.0.1\lib\net40\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.1.0\lib\net40\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -101,12 +121,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="NewRelic.Api.Agent">
       <HintPath>..\packages\NewRelicWindowsAzure.1.0.0.35\lib\NewRelic.Api.Agent.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\GoogleDrive\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -224,8 +248,16 @@
     <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\CameraWindowController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
+    <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
+    <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
+    <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
+    <Compile Include="Code\Google\GoogleApiHelper.cs" />
+    <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
+    <Compile Include="Code\WindowsAzure\WindowsAzureLogHelper.cs" />
+    <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
     <Compile Include="Areas\App\Controllers\PatientFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PersonFilesController.cs" />
@@ -236,6 +268,7 @@
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
     <Compile Include="Areas\App\Models\PatientFilesGroupViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigBackupViewModel.cs" />
     <Compile Include="Code\CerebelloEntities.cs" />
     <Compile Include="Code\Access\LockAccessType.cs" />
     <Compile Include="Code\Access\LockElementActionType.cs" />
@@ -266,6 +299,8 @@
     <Compile Include="Code\Bus.cs" />
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Disposer.cs" />
+    <Compile Include="Code\Helpers\BackupHelper.cs" />
+    <Compile Include="Code\Filters\CanAlternateUserAttribute.cs" />
     <Compile Include="Code\Helpers\BusHelper.cs" />
     <Compile Include="Code\Helpers\FileHelper.cs" />
     <Compile Include="Code\HostEnv.cs" />
@@ -293,8 +328,14 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="Content\Images\Site\mail.png" />
+    <Content Include="Content\Images\Site\phone.png" />
+    <Content Include="Content\Images\Site\backup.png" />
     <Content Include="Content\Camera\jscam.swf" />
     <Content Include="Content\Camera\jscam_canvas_only.swf" />
+    <Content Include="Content\Images\Site\BizSpark_Startup.jpg" />
+    <Content Include="Content\Images\App\Icons\healthinsurance-off.png" />
+    <Content Include="Content\Images\App\Icons\medicalcertificate-off.png" />
     <Content Include="Content\Images\App\FileIcons\generic-80.png" />
     <Content Include="Content\Images\App\FileIcons\generic-outline-80.png" />
     <Content Include="Content\Images\App\FileIcons\generic-outline.png" />
@@ -305,6 +346,7 @@
     <Content Include="Content\Sounds\chat.mp3" />
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.tooltip.css" />
     <Content Include="Content\Styles\App\bootstrap-image-gallery.min.css" />
     <Content Include="Content\Styles\App\bootstrap-modals-only.css" />
     <Content Include="Content\Styles\App\bootstrap-responsive.min.css" />
@@ -327,6 +369,8 @@
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
+    <Compile Include="WorkerRole.Code\Workers\TestWorker.cs" />
+    <Compile Include="WorkerRole.Code\Workers\GoogleDriveSynchronizerWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
     <Compile Include="Controllers\MedicalSpecialtiesController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosisController.cs" />
@@ -425,7 +469,7 @@
     <Compile Include="Code\Controls\Autocomplete\Data\AutocompleteRow.cs" />
     <Compile Include="Code\Controls\Autocomplete\AutocompleteHelper.cs" />
     <Compile Include="Code\Data\UserInfo.cs" />
-    <Compile Include="Code\Extensions\AccessExtensions.cs" />
+    <Compile Include="Code\Extensions\WebViewPageExtensions.cs" />
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
@@ -585,9 +629,6 @@
     <Content Include="Content\Images\Site\escolha.png" />
     <Content Include="Content\Images\Site\experimente.png" />
     <Content Include="Content\Images\Site\green-tick.png" />
-    <Content Include="Content\Images\Site\hero_bg - Copy - Copy.jpg" />
-    <Content Include="Content\Images\Site\hero_bg - Copy.jpg" />
-    <Content Include="Content\Images\Site\hero_bg.jpg" />
     <Content Include="Content\Images\Site\logo_transp.png" />
     <Content Include="Content\Images\Site\medicamentos.png" />
     <Content Include="Content\Images\Site\prontuario.png" />
@@ -607,7 +648,7 @@
     <Content Include="Content\Styles\App\CancelAccountPage.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.notify.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.confirmation.css" />
-    <Content Include="Content\Styles\App\Controls\jquery.cerebello.chat.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.chatjs.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.delete.confirmation.css" />
     <Content Include="Content\Styles\App\Controls\editpanel.css" />
     <Content Include="Content\Styles\App\Controls\grid.css" />
@@ -711,9 +752,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\Controls\jquery.camera.window.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.chat.container2.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.chat.user.list2.js" />
-    <Content Include="Scripts\Controls\jquery.cerebello.chat.window2.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.file.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.modal.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.notify.db.notification.js" />
@@ -724,6 +762,8 @@
     <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
     <Content Include="Scripts\cerebello.pt-BR.js" />
+    <Content Include="Scripts\Controls\jquery.chatjs.js" />
+    <Content Include="Scripts\Controls\jquery.chatjs.signalradapter.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Content\Sounds\chat.ogg" />
@@ -734,6 +774,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="newrelic.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\App\Views\ConfigBackup\Index.cshtml" />
+    <Content Include="Scripts\Controls\jquery.cerebello.tooltip.js" />
+    <Content Include="diagnostics.wadcfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
@@ -756,8 +801,8 @@
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.jqplot.min.js" />
     <Content Include="Scripts\jquery.maskedinput-1.3.min.js" />
-    <Content Include="Scripts\jquery.signalR-1.0.1.js" />
-    <Content Include="Scripts\jquery.signalR-1.0.1.min.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.0.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.0.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.ui.datepicker-pt-BR.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
@@ -795,6 +840,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Authentication\InternalCreateAccountEmail.cshtml" />
+    <Content Include="Views\MasterAdmin\Log.cshtml" />
+    <EmbeddedResource Include="Views\TestWorker\TestEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
@@ -1061,6 +1108,8 @@ rmdir /s /q "$(ProjectDir)obj\Release\CSAutoParameterize"
 rmdir /s /q "$(ProjectDir)obj\Debug\CSAutoParameterize"
 
 del /s /f /q "%25userprofile%25\AppData\Local\Temp\Temporary ASP.NET Files\*.cs"
+
+"$(ProjectDir)..\Cerebello.SolutionSetup.exe" \check
 
 exit 0</PreBuildEvent>
   </PropertyGroup>

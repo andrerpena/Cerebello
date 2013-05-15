@@ -19,6 +19,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
     [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class ModelMedicalCertificatesController : DoctorController
     {
+        [CanAlternateUser]
         public ActionResult Index()
         {
             var model = new ModelMedicalCertificatesIndexViewModel
@@ -153,7 +154,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             });
                 }
 
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.Redirect(this.Url.Action("Details", new { id = certificateModel.Id }));
             }

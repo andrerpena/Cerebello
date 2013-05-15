@@ -238,7 +238,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // Note: User name cannot be edited, and should not be validated.
                 this.ModelState.ClearPropertyErrors(() => formModel.UserName);
 
-                user = db.Users.First(p => p.Id == formModel.Id);
+                user = this.db.Users.First(p => p.Id == formModel.Id);
 
                 // TODO: suggest that r# use the attribute EdmScalarPropertyAttribute(IsNullable=false)
                 // as a way to determine if a property can ever receive a null value or not
@@ -487,7 +487,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
 
                 // Saving all the changes.
-                db.SaveChanges();
+                this.db.SaveChanges();
 
                 return this.RedirectToAction("Details", new { id = user.Id });
             }

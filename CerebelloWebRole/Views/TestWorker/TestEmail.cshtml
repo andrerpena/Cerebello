@@ -1,0 +1,47 @@
+﻿@model Dictionary<string, Exception>
+@{
+    Layout = null;
+    this.ViewBag.Title = "E-mail de teste de Workers";
+
+    var exSaveToDb = this.Model["exSaveToDb"];
+    var exSaveToStorage = this.Model["exSaveToStorage"];
+}
+
+@if (this.ViewBag.IsBodyHtml == true)
+{
+    @:<!DOCTYPE html >
+
+    <html>
+    <head>
+        <title>@this.ViewBag.Title</title>
+    </head>
+    <body>
+        <div>
+            Se você estiver recebendo este e-mail é porque os Workers podem mandar e-mails,
+            pois este e-mail foi enviado pelo TestWorker.
+        </div>
+        <div>
+            @if (exSaveToDb != null)
+            {
+                @:Save to DB failed: @exSaveToDb
+            }
+        </div>
+        <div>
+            @if (exSaveToStorage != null)
+            {
+                @:Save to Storage failed: @exSaveToStorage
+            }
+        </div>
+    </body>
+    </html>
+}
+Se você estiver recebendo este e-mail é porque os Workers podem mandar e-mails,
+pois este e-mail foi enviado pelo TestWorker.
+@if (exSaveToDb != null)
+{
+    @:Save to DB failed: @exSaveToDb.Message
+}
+@if (exSaveToStorage != null)
+{
+    @:Save to Storage failed: @exSaveToStorage.Message
+}

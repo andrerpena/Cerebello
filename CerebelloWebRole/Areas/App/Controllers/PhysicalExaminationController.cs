@@ -49,7 +49,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (id != null)
                 viewModel = GetViewModel(
-                    (from r in db.PhysicalExaminations where r.Id == id select r).First(),
+                    (from r in this.db.PhysicalExaminations where r.Id == id select r).First(),
                     this.GetToLocalDateTimeConverter());
             else
                 viewModel = new PhysicalExaminationViewModel()
@@ -86,6 +86,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (this.ModelState.IsValid)
             {
                 Debug.Assert(physicalExamination != null, "physicalExamination != null");
+                physicalExamination.Patient.IsBackedUp = false;
                 physicalExamination.Notes = formModel.Notes;
                 physicalExamination.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
                 this.db.SaveChanges();

@@ -37,10 +37,11 @@
                 <ul class="green-checks">
                     <li>Tenha acesso às suas informações de qualquer lugar: PC, tablets ou smartphones.</li>
                     <li>Não se preocupe com instalações, servidores, segurança ou backup. Nós cuidamos da infraestrutura enquanto você cuida do que é mais importante: Seus pacientes.</li>
-                    <li>Seus dados e arquivos estão seguros, com backup automático e com alta disponibilidade nos <a href="http://www.windowsazure.com/pt-br/">servidores da Microsoft</a>. Todas as informações inseridas circulam com criptografia 128 bits.</li>
+                    <li>Seus dados e arquivos estão seguros e com alta disponibilidade nos <a href="http://www.windowsazure.com/pt-br/">servidores da Microsoft</a>. 
+                        Além disso, você possui a segurança do backup automático e disponibilidade off-line dos dados através da sincronia automática com o <a href="http://drive.google.com/" target="_blank">Google Drive</a>.
+                        Todas as informações inseridas circulam com criptografia 128 bits.</li>
                     <li>O Cerebello passa por atualizações constantes e está sempre melhorando. Todas as atualizações estão incluídas no pacote sem custo adicional. Além disso, nós estamos sempre abertos às suas <a href="http://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello" target="_blank">sugestões de melhorias</a>.</li>
-                    <li>
-                        Experimente gratuitamente todos os recursos pelo tempo que desejar com um
+                    <li>Experimente gratuitamente todos os recursos pelo tempo que desejar com um
                         limite de 50 pacientes. A qualquer momento você pode atualizar para uma conta
                         profissional, com custo a partir de <code>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR / 12)</code> mensais na assinatura anual.
                         <a href="@Url.Action("PricesAndPlans")">Veja os preços e planos.</a>
@@ -50,6 +51,12 @@
                 <p>Você pode começar a utilizar o software agora e ver por você mesmo. Sem burocracia, sem informar dados de cartão de crédito e só demora 5 minutos:</p>
 
                 <a class="btn btn-warning btn-large" href="@Url.Action("CreateAccount", "Authentication")">Comece a usar o Cerebello</a>
+                
+                <h3 style="margin-top: 20px">Fale conosco:</h3>
+                <ul>
+                    <li class="contact-phone-li">(11) 3280-0995</li>
+                    <li class="contact-email-li"><a href="mailto:cerebello@cerebello.com.br">cerebello@cerebello.com.br</a></li>
+                </ul>
             </div>
             <div class="span6">
                 <div class="row">
@@ -113,6 +120,20 @@
                         <h3>Múltiplos usuários</h3>
                         <p>Trabalhe com secretárias e outros médicos no mesmo consultório.</p>
                         <p>O Cerebello possui ferramentas para facilitar a colaboração entre usuários como notificações e chat.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span1">
+                        <img src="/Content/Images/Site/backup.png" class="features-icon" />
+                    </div>
+                    <div class="span5">
+                        <h3>Backup automático</h3>
+                        <p>
+                            Todos os dados dos seus pacientes são automaticamente sincronizados com a sua conta no <a href="http://drive.google.com/" target="_blank">Google Drive</a>,
+                            incluindo dados clínicos, fotos de perfil e arquivos do paciente.
+                            Você possui acesso a essas informações off-line no seu computador a qualquer momento, ou online através do seu smarphone ou tablet.
+                            Mais segurança para você. A sincroniza é feita a cada 60 minutos.
+                        </p>
                     </div>
                 </div>
             </div>

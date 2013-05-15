@@ -3,8 +3,8 @@ using System.IO;
 using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using CloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount;
 
 namespace CerebelloWebRole.Code.WindowsAzure
 {
@@ -20,7 +20,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
         /// </summary>
         /// <param name="containerName"></param>
         /// <returns></returns>
-        private CloudBlobContainer GetOrCreateBlogContainer([NotNull] string containerName)
+        private CloudBlobContainer GetOrCreateBlobContainer([NotNull] string containerName)
         {
             if (containerName == null) throw new ArgumentNullException("containerName");
 
@@ -57,7 +57,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
 
             if (RoleEnvironment.IsAvailable)
             {
-                var container = this.GetOrCreateBlogContainer(containerName);
+                var container = this.GetOrCreateBlobContainer(containerName);
 
                 // Retrieve reference to the blob
                 var blockBlob = container.GetBlockBlobReference(fileName);
@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
             if (containerName == null) throw new ArgumentNullException("containerName");
             if (fileName == null) throw new ArgumentNullException("fileName");
 
-            var container = this.GetOrCreateBlogContainer(containerName);
+            var container = this.GetOrCreateBlobContainer(containerName);
 
             // Retrieve reference to the blob
             var blockBlob = container.GetBlockBlobReference(fileName);
@@ -105,7 +105,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
             if (containerName == null) throw new ArgumentNullException("containerName");
             if (fileName == null) throw new ArgumentNullException("fileName");
 
-            var container = this.GetOrCreateBlogContainer(containerName);
+            var container = this.GetOrCreateBlobContainer(containerName);
 
             // Retrieve reference to a blob named "myblob.txt".
             var blockBlob = container.GetBlockBlobReference(fileName);

@@ -1,0 +1,79 @@
+﻿@model ConfigBackupViewModel
+
+@{
+    ViewBag.Title = "Configurações de backup";
+}
+
+@section Title {
+    @ViewBag.Title
+}
+
+@section Styles {
+    <style type="text/css">
+        .status-disabled {
+            background-color: #FFFFE6;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #DD390D;
+            font-size: 12px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            margin-top: 0;
+            padding: 10px;
+        }
+
+        .status-enabled {
+            background-color: #E6F9E8;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #035402;
+            font-size: 12px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            margin-top: 0;
+            padding: 10px;
+        }
+
+        .link-button.associate {
+            color: darkgreen;
+        }
+
+        .link-button.desassociate {
+            color: darkred;
+        }
+    </style>
+}
+
+
+@if (this.Model.GoogleDriveAssociated)
+{
+    <p class="status-enabled">Status: <span class="status">Habilitado</span> <br />Conta Google Drive: @this.Model.GoogleDriveEmail</p>
+    <p>
+        O backup automatico está habilitado. Todos os dados dos seus pacientes estão automaticamente sendo sincronizados com a pasta
+        <b>/Cerebello</b> do seu Google Drive e acessíveis de qualquer dispositivo (computador pessoal, tablets e smartphones). O backup
+        automático é realizado a cada 60 minutos.
+    </p>
+    <a href="@Url.Action("DesassociateGoogleDrive")" class="link-button desassociate" >Desassociar com o Google Drive e desabilitar backup automático</a>
+    <p>
+        Se a pasta <b>/Cerebello</b> ou qualquer arquivo de backup de paciente foi excluido por engado, é possível iniciar o processo de backup manualmente.
+        Não é necessário clicar no botão abaixo após ativar o backup.
+    </p>
+    <a id="markToBackup" class="link-button" href="#">Iniciar o processo de backup manualmente</a>
+    <script type="text/javascript">
+        $("#markToBackup").click(function (e) {
+            e.preventDefault();
+            $.ajax("@Url.Action("BackupDoctor")");
+            alert("O backup dos seus pacientes foi iniciado. Pode demorar alguns minutos até que os arquivos possam ser visualizados no Google Drive.");
+        });
+    </script>
+}
+else
+{
+    <p class="status-disabled">Status: <span class="status">Desabilitado</span></p>
+    <p>
+        O backup automático está desabilitado. Para habilitá-lo é necessário que você possua uma conta no <a href="https://drive.google.com/" target="_blank">Google Drive</a>.
+        O Google Drive é um serviço gratúito de hospedagem e sincronia de arquivos entre dispositivos (computador pessoal, tablets e smartphones). Após criar sua conta, é necessário
+        associá-la ao Cerebello clicando no botão abaixo. Após a associação estiver concluída, o Cerebello irá sincronizar todos os dados dos seus pacientes automaticamente, o que inclui
+        a foto de perfil, dados históricos em PDF e XML e todos os arquivos enviados para a ficha do paciente. Esses dados estarão disponíveis em todos os dispositivos
+        vinculados à sua conta do Google Drive. A sincronia é feita a cada 60 minutos.
+    </p>
+    <a href="@this.Model.GoogleDriveAuthorizationUrl" class="link-button associate" >Associar com o Google Drive e habilitar backup automático</a>
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>DropNet</id>
+    <version>1.9.3</version>
+    <title>DropNet</title>
+    <authors>Damian Karzon,  Github Contributors</authors>
+    <owners>Damian Karzon,  Github Contributors</owners>
+    <licenseUrl>https://github.com/dkarzon/DropNet/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>http://dkdevelopment.net/what-im-doing/dropnet/</projectUrl>
+    <iconUrl>http://dkdevelopment.net/Images/DropNetIcon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.NET Client for the Dropbox API (.NET 3.5 and Windows Phone)</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>DROPBOX API .NET WP7</tags>
+    <references>
+      <reference file="DropNet.dll" />
+      <reference file="RestSharp.dll" />
+      <reference file="DropNet.WindowsPhone.dll" />
+      <reference file="RestSharp.WindowsPhone.dll" />
+    </references>
+  </metadata>
+</package>
