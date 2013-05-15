@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
+using CerebelloWebRole.Code.Model.Metadata;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -53,6 +54,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         [Display(Name = "Data dos arquivos")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("Data relacionado ao conteúdo dos arquivos. Por exemplo, se forem imagems, indica a data em que estas foram produzidas.")]
         public DateTime? FileGroupDate { get; set; }
 
         /// <summary>
@@ -60,6 +62,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         [Display(Name = "Data de recebimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Tooltip("Data de recebimento dos arquivos. Indica quando estes foram anexados ao prontuário do paciente.")]
         public DateTime? ReceiveDate { get; set; }
 
         /// <summary>

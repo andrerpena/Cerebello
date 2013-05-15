@@ -160,7 +160,7 @@ namespace CerebelloWebRole.Code.Access
 
         public FilteredObjectSetWrapper<PatientFileGroup> PatientFileGroups
         {
-            get { return new FilteredObjectSetWrapper<PatientFileGroup>(this.db.PatientFileGroups, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<PatientFileGroup>(this.innerDb.PatientFileGroups, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public FilteredObjectSetWrapper<Doctor> Doctors

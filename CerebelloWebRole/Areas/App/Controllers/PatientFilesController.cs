@@ -454,7 +454,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 Debug.Assert(formModel.ReceiveDate != null, "formModel.ReceiveDate != null");
                 dbFileGroup.ReceiveDate = this.ConvertToUtcDateTime(formModel.ReceiveDate.Value);
 
-                patientFile.Patient.IsBackedUp = false;
+                dbFileGroup.Patient.IsBackedUp = false;
                 this.db.SaveChanges();
 
                 // moving files that are stored in a temporary location
