@@ -12,7 +12,7 @@ using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.WindowsAzure;
 using Ionic.Zip;
 using JetBrains.Annotations;
-using File = Cerebello.Model.File;
+using File = Cerebello.Model.FileMetadata;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -71,9 +71,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var patientFile in patientFiles)
                 {
                     var fileStream = storageManager.DownloadFileFromStorage(
-                        Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.File.FileName);
+                        Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
 
-                    zip.AddEntry(patientFile.File.FileName, fileStream);
+                    zip.AddEntry(patientFile.FileMetadata.FileName, fileStream);
                 }
                 zip.Save(zipMemoryStream);
             }
@@ -115,9 +115,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             try
                             {
                                 var fileStream = storageManager.DownloadFileFromStorage(
-                                    Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.File.FileName);
+                                    Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
 
-                                innerZip.AddEntry(patientFile.File.FileName, fileStream);
+                                innerZip.AddEntry(patientFile.FileMetadata.FileName, fileStream);
                             }
                             catch (Exception ex)
                             {
@@ -162,8 +162,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Id = dbFile.Id,
                     FileTitle = dbFile.Title,
-                    FileContainer = dbFile.File.ContainerName,
-                    FileName = dbFile.File.FileName,
+                    FileContainer = dbFile.FileMetadata.ContainerName,
+                    FileName = dbFile.FileMetadata.FileName,
                 }));
 
             FillFileLengths(result, null);
@@ -372,7 +372,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
                     patientFile = new PatientFile
                     {
-                        File = new File
+                        FileMetadata = new File
                         {
                             CreatedOn = this.GetUtcNow(),
                             PracticeId = this.DbUser.PracticeId,
@@ -422,10 +422,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 if (!idsToKeep.Contains(patientFile.Id))
                 {
-                    var originalFileName = patientFile.File.FileName;
+                    var originalFileName = patientFile.FileMetadata.FileName;
                     var destPath = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
 
-                    this.db.Files.DeleteObject(patientFile.File);
+                    this.db.Files.DeleteObject(patientFile.FileMetadata);
                     this.db.PatientFiles.DeleteObject(patientFile);
 
                     Action removeFile = () =>
@@ -475,11 +475,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public JsonResult Delete(int id)
         {
             var patientFile = this.db.PatientFiles.First(m => m.Id == id);
-            var file = patientFile.File;
+            var file = patientFile.FileMetadata;
             try
             {
                 var storageManager = new WindowsAzureBlobStorageManager();
-                storageManager.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.File.FileName);
+                storageManager.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
 
                 this.db.PatientFiles.DeleteObject(patientFile);
                 this.db.Files.DeleteObject(file);
@@ -496,7 +496,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult Image(int id, int w, int h)
         {
             var dbPatientFile = this.db.PatientFiles.First(m => m.Id == id);
-            var dbFile = dbPatientFile.File;
+            var dbFile = dbPatientFile.FileMetadata;
 
             var container = dbFile.ContainerName;
             var fileName = string.Format("{0}{1}", dbPatientFile.Id, Path.GetExtension(dbFile.FileName));
@@ -525,7 +525,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult File(int id)
         {
             var dbPatientFile = this.db.PatientFiles.First(m => m.Id == id);
-            var dbFile = dbPatientFile.File;
+            var dbFile = dbPatientFile.FileMetadata;
 
             var container = dbFile.ContainerName;
             var storageFileName = string.Format("{0}{1}", dbPatientFile.Id, Path.GetExtension(dbFile.FileName));

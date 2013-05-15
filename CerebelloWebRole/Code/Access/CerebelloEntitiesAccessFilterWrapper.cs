@@ -148,9 +148,9 @@ namespace CerebelloWebRole.Code.Access
             get { return new FilteredObjectSetWrapper<Diagnosis>(this.innerDb.Diagnoses, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
-        public FilteredObjectSetWrapper<File> Files
+        public FilteredObjectSetWrapper<FileMetadata> Files
         {
-            get { return new FilteredObjectSetWrapper<File>(this.innerDb.Files, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<FileMetadata>(this.innerDb.FileMetadatas, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public FilteredObjectSetWrapper<PatientFile> PatientFiles

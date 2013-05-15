@@ -64,7 +64,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Practice_Address", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.Address), "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Practice), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "PersonAddress", "Address", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Address), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Person))]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PhysicalExamination_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PhysicalExamination", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PhysicalExamination), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_File", "File", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.File), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_FileMetadata", "FileMetadata", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.FileMetadata), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_DiagnosticHypothesis_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "DiagnosticHypothesis", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.DiagnosticHypothesis), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_BillingItem_Billing", "Billing", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Billing), "BillingItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.BillingItem), true)]
@@ -75,7 +75,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFileGroup_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PatientFileGroup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFileGroup), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_PatientFileGroup", "PatientFileGroup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.PatientFileGroup), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
-[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_File_File", "File", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.File), "File1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.File), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_FileMetadata_FileMetadata", "FileMetadata", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.FileMetadata), "FileMetadata1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.FileMetadata), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Patient_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Patient), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "GoogleDrivePatientInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleDrivePatientInfo), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleDrivePatientInfo_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "GoogleDrivePatientInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleDrivePatientInfo), true)]
@@ -825,18 +825,18 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<File> Files
+        public ObjectSet<FileMetadata> FileMetadatas
         {
             get
             {
-                if ((_Files == null))
+                if ((_FileMetadatas == null))
                 {
-                    _Files = base.CreateObjectSet<File>("Files");
+                    _FileMetadatas = base.CreateObjectSet<FileMetadata>("FileMetadatas");
                 }
-                return _Files;
+                return _FileMetadatas;
             }
         }
-        private ObjectSet<File> _Files;
+        private ObjectSet<FileMetadata> _FileMetadatas;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -917,7 +917,7 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<PatientFileGroup> _PatientFileGroups;
-
+    
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
@@ -1331,11 +1331,11 @@ namespace Cerebello.Model
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Files EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the FileMetadatas EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToFiles(File file)
+        public void AddToFileMetadatas(FileMetadata fileMetadata)
         {
-            base.AddObject("Files", file);
+            base.AddObject("FileMetadatas", fileMetadata);
         }
     
         /// <summary>
@@ -1377,7 +1377,7 @@ namespace Cerebello.Model
         {
             base.AddObject("PatientFileGroups", patientFileGroup);
         }
-
+    
         /// <summary>
         /// Deprecated Method for adding a new object to the GoogleDrivePatientInfoes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
@@ -7767,30 +7767,30 @@ namespace Cerebello.Model
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="File")]
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="FileMetadata")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class File : EntityObject
+    public partial class FileMetadata : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new File object.
+        /// Create a new FileMetadata object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="containerName">Initial value of the ContainerName property.</param>
         /// <param name="fileName">Initial value of the FileName property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static File CreateFile(global::System.Int32 id, global::System.String containerName, global::System.String fileName, global::System.DateTime createdOn, global::System.Int32 practiceId)
+        public static FileMetadata CreateFileMetadata(global::System.Int32 id, global::System.String containerName, global::System.String fileName, global::System.DateTime createdOn, global::System.Int32 practiceId)
         {
-            File file = new File();
-            file.Id = id;
-            file.ContainerName = containerName;
-            file.FileName = fileName;
-            file.CreatedOn = createdOn;
-            file.PracticeId = practiceId;
-            return file;
+            FileMetadata fileMetadata = new FileMetadata();
+            fileMetadata.Id = id;
+            fileMetadata.ContainerName = containerName;
+            fileMetadata.FileName = fileName;
+            fileMetadata.CreatedOn = createdOn;
+            fileMetadata.PracticeId = practiceId;
+            return fileMetadata;
         }
 
         #endregion
@@ -7949,24 +7949,24 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> RelatedFileId
+        public Nullable<global::System.Int32> RelatedFileMetadataId
         {
             get
             {
-                return _RelatedFileId;
+                return _RelatedFileMetadataId;
             }
             set
             {
-                OnRelatedFileIdChanging(value);
-                ReportPropertyChanging("RelatedFileId");
-                _RelatedFileId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("RelatedFileId");
-                OnRelatedFileIdChanged();
+                OnRelatedFileMetadataIdChanging(value);
+                ReportPropertyChanging("RelatedFileMetadataId");
+                _RelatedFileMetadataId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("RelatedFileMetadataId");
+                OnRelatedFileMetadataIdChanged();
             }
         }
-        private Nullable<global::System.Int32> _RelatedFileId;
-        partial void OnRelatedFileIdChanging(Nullable<global::System.Int32> value);
-        partial void OnRelatedFileIdChanged();
+        private Nullable<global::System.Int32> _RelatedFileMetadataId;
+        partial void OnRelatedFileMetadataIdChanging(Nullable<global::System.Int32> value);
+        partial void OnRelatedFileMetadataIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8027,18 +8027,18 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_File", "PatientFile")]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_FileMetadata", "PatientFile")]
         public EntityCollection<PatientFile> PatientFiles
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_File", "PatientFile");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_FileMetadata", "PatientFile");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_File", "PatientFile", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_FileMetadata", "PatientFile", value);
                 }
             }
         }
@@ -8049,18 +8049,18 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_File_File", "File1")]
-        public EntityCollection<File> File1
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_FileMetadata_FileMetadata", "FileMetadata1")]
+        public EntityCollection<FileMetadata> FileMetadata1
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<File>("Cerebello.Model.FK_File_File", "File1");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata1");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<File>("Cerebello.Model.FK_File_File", "File1", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata1", value);
                 }
             }
         }
@@ -8071,16 +8071,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_File_File", "File")]
-        public File File2
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_FileMetadata_FileMetadata", "FileMetadata")]
+        public FileMetadata FileMetadata2
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_File_File", "File").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_File_File", "File").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata").Value = value;
             }
         }
         /// <summary>
@@ -8088,17 +8088,17 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<File> File2Reference
+        public EntityReference<FileMetadata> FileMetadata2Reference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_File_File", "File");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<File>("Cerebello.Model.FK_File_File", "File", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata", value);
                 }
             }
         }
@@ -12140,7 +12140,7 @@ namespace Cerebello.Model
                 }
             }
         }
-
+    
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
@@ -12220,15 +12220,15 @@ namespace Cerebello.Model
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="patientId">Initial value of the PatientId property.</param>
-        /// <param name="fileId">Initial value of the FileId property.</param>
+        /// <param name="fileMetadataId">Initial value of the FileMetadataId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="fileGroupId">Initial value of the FileGroupId property.</param>
-        public static PatientFile CreatePatientFile(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 fileId, global::System.Int32 practiceId, global::System.Int32 fileGroupId)
+        public static PatientFile CreatePatientFile(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 fileMetadataId, global::System.Int32 practiceId, global::System.Int32 fileGroupId)
         {
             PatientFile patientFile = new PatientFile();
             patientFile.Id = id;
             patientFile.PatientId = patientId;
-            patientFile.FileId = fileId;
+            patientFile.FileMetadataId = fileMetadataId;
             patientFile.PracticeId = practiceId;
             patientFile.FileGroupId = fileGroupId;
             return patientFile;
@@ -12294,24 +12294,24 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 FileId
+        public global::System.Int32 FileMetadataId
         {
             get
             {
-                return _FileId;
+                return _FileMetadataId;
             }
             set
             {
-                OnFileIdChanging(value);
-                ReportPropertyChanging("FileId");
-                _FileId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("FileId");
-                OnFileIdChanged();
+                OnFileMetadataIdChanging(value);
+                ReportPropertyChanging("FileMetadataId");
+                _FileMetadataId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FileMetadataId");
+                OnFileMetadataIdChanged();
             }
         }
-        private global::System.Int32 _FileId;
-        partial void OnFileIdChanging(global::System.Int32 value);
-        partial void OnFileIdChanged();
+        private global::System.Int32 _FileMetadataId;
+        partial void OnFileMetadataIdChanging(global::System.Int32 value);
+        partial void OnFileMetadataIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -12396,16 +12396,16 @@ namespace Cerebello.Model
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_File", "File")]
-        public File File
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_FileMetadata", "FileMetadata")]
+        public FileMetadata FileMetadata
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_PatientFile_File", "File").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FileMetadata>("Cerebello.Model.FK_PatientFile_FileMetadata", "FileMetadata").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_PatientFile_File", "File").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FileMetadata>("Cerebello.Model.FK_PatientFile_FileMetadata", "FileMetadata").Value = value;
             }
         }
         /// <summary>
@@ -12413,17 +12413,17 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<File> FileReference
+        public EntityReference<FileMetadata> FileMetadataReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_PatientFile_File", "File");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<FileMetadata>("Cerebello.Model.FK_PatientFile_FileMetadata", "FileMetadata");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<File>("Cerebello.Model.FK_PatientFile_File", "File", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<FileMetadata>("Cerebello.Model.FK_PatientFile_FileMetadata", "FileMetadata", value);
                 }
             }
         }

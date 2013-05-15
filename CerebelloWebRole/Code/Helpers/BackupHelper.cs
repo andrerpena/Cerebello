@@ -50,8 +50,8 @@ namespace CerebelloWebRole.Code.Helpers
                         foreach (var patientFile in patientFiles)
                         {
                             var fileStream = storageManager.DownloadFileFromStorage(
-                                Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.File.FileName);
-                            var fileName = patientFile.File.FileName;
+                                Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
+                            var fileName = patientFile.FileMetadata.FileName;
                             for (var i = 2;; i++)
                             {
                                 if (patientFilesZip.ContainsEntry(fileName))

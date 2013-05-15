@@ -90,7 +90,17 @@ CREATE NONCLUSTERED INDEX IX_File_ExpirationDate ON dbo.[File]
 	)
 GO
 
+EXEC sp_rename 'File', 'FileMetadata'
+EXEC sp_rename 'FileMetadata.RelatedFileId', 'RelatedFileMetadataId', 'COLUMN'
+EXEC sp_rename 'FileMetadata.IX_File_ExpirationDate', 'IX_FileMetadata_ExpirationDate', 'INDEX'
+EXEC sp_rename 'FileMetadata.PK_File', 'PK_FileMetadata', 'INDEX'
+EXEC sp_rename 'FK_File_File', 'FK_FileMetadata_FileMetadata'
+EXEC sp_rename 'FK_PatientFile_File', 'FK_PatientFile_FileMetadata'
+EXEC sp_rename 'PatientFile.FileId', 'FileMetadataId', 'COLUMN'
+
+
+
+
+
 COMMIT
 GO
-
-EXEC sp_rename 'File', 'FileMetadata'
