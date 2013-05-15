@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Drawing;
@@ -36,15 +39,49 @@ namespace CerebelloWebRole.Code
             return image;
         }
 
-        public static Image ResizeImage(Image img, int width, int height)
+        public static MemoryStream ResizeImage(Stream srcStream, int width, int height, ImageFormat format, bool keepAspect = false, bool canGrow = true)
         {
-            Bitmap b = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage((Image)b);
+            var stream = new MemoryStream();
+            using (var srcImage = Image.FromStream(srcStream))
+            using (var newImage = ResizeImage(srcImage, width, height, keepAspect, canGrow))
+            {
+                if (newImage == null)
+                    return null;
 
-            g.DrawImage(img, 0, 0, width, height);
-            g.Dispose();
+                newImage.Save(stream, format);
+                return stream;
+            }
+        }
 
-            return (Image)b;
+        public static Bitmap ResizeImage(Image srcImage, int width, int height, bool keepAspect = false, bool canGrow = true)
+        {
+            int w2 = width;
+            int h2 = height;
+
+            if (keepAspect)
+            {
+                w2 = Math.Min(w2, (int)(srcImage.Width * height / (float)srcImage.Height));
+                h2 = Math.Min(h2, (int)(srcImage.Height * width / (float)srcImage.Width));
+            }
+
+            if (!canGrow)
+            {
+                w2 = Math.Min(w2, srcImage.Width);
+                h2 = Math.Min(h2, srcImage.Height);
+            }
+
+            if (srcImage.Width == w2 && srcImage.Height == h2)
+                return null;
+
+            var newImage = new Bitmap(w2, h2, srcImage.PixelFormat);
+            using (var graphics = Graphics.FromImage(newImage))
+            {
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                graphics.DrawImage(srcImage, new Rectangle(0, 0, w2, h2));
+                return newImage;
+            }
         }
     }
 }

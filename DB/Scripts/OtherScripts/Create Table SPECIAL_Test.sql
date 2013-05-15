@@ -1,0 +1,15 @@
+DROP TABLE dbo.SPECIAL_Test
+GO
+CREATE TABLE dbo.SPECIAL_Test
+	(
+	Id int NOT NULL IDENTITY (1, 1),
+	CreatedOn datetime NOT NULL,
+	Value nvarchar(1000) NULL,
+	)
+GO
+ALTER TABLE dbo.SPECIAL_Test ADD CONSTRAINT
+	PK_SPECIAL_Test_1 PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) 
+GO

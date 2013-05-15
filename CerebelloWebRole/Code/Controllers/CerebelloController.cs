@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Access;
 using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Data;
+using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Code
@@ -124,6 +129,122 @@ namespace CerebelloWebRole.Code
                     text = "O registro solicitado não existe no banco de dados",
                 },
                 JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Creates an action result with a thumbnail image of a file in the storage.
+        /// </summary>
+        /// <param name="maxWidth">Maximum width of the thumbnail image.</param>
+        /// <param name="maxHeight">Maximum height of the thumbnail image.</param>
+        /// <param name="container">Container name of the source image file.</param>
+        /// <param name="fileName">Name of the source image file.</param>
+        /// <param name="thumbFileName">Name of the thumbnail image cache file.</param>
+        /// <param name="useCache">Whether to use a cached thumbnail or not.</param>
+        /// <returns>The ActionResult containing the thumbnail image.</returns>
+        protected ActionResult GetOrCreateThumb(
+            int maxWidth, int maxHeight, string container, string fileName, string thumbFileName, bool useCache = true)
+        {
+            byte[] array;
+            string contentType;
+            if (!TryGetOrCreateThumb(maxWidth, maxHeight, container, fileName, thumbFileName, useCache, out array, out contentType))
+                return new StatusCodeResult(HttpStatusCode.NotFound);
+
+            return this.File(array, contentType);
+        }
+
+        /// <summary>
+        /// Creates a thumbnail image of a file in the storage.
+        /// </summary>
+        /// <param name="maxWidth">Maximum width of the thumbnail image.</param>
+        /// <param name="maxHeight">Maximum height of the thumbnail image.</param>
+        /// <param name="container">Container name of the source image file.</param>
+        /// <param name="fileName">Name of the source image file.</param>
+        /// <param name="thumbFileName">Name of the thumbnail image cache file.</param>
+        /// <param name="useCache">Whether to use a cached thumbnail or not.</param>
+        /// <param name="array">Array containing the thumbnail image bytes.</param>
+        /// <param name="contentType">The content type of the data in the returned array.</param>
+        /// <returns>True if thumbnail image exists; otherwise false.</returns>
+        public static bool TryGetOrCreateThumb(
+            int maxWidth,
+            int maxHeight,
+            string container,
+            string fileName,
+            string thumbFileName,
+            bool useCache,
+            out byte[] array,
+            out string contentType)
+        {
+            var basePath = @"D:\Profile - MASB\Desktop\Cerebello.Debug\Storage\";
+            var location = Path.Combine(basePath, container);
+            var sourceFullFileName = Path.Combine(location, fileName);
+            var thumbFullFileName = string.IsNullOrEmpty(thumbFileName) ? null : Path.Combine(location, thumbFileName);
+
+            if (useCache && !string.IsNullOrEmpty(thumbFullFileName) && System.IO.File.Exists(thumbFullFileName))
+            {
+                using (var srcStream = System.IO.File.OpenRead(thumbFullFileName))
+                using (var stream = new MemoryStream((int)srcStream.Length))
+                {
+                    srcStream.CopyTo(stream);
+                    {
+                        array = stream.ToArray();
+                        contentType = MimeTypesHelper.GetContentType(Path.GetExtension(sourceFullFileName));
+                        return true;
+                    }
+                }
+            }
+
+            var fileInfo = new FileInfo(sourceFullFileName);
+            if (!fileInfo.Exists)
+            {
+                array = null;
+                contentType = null;
+                return false;
+            }
+
+            if (!StringHelper.IsImageFileName(fileName))
+            {
+                array = null;
+                contentType = null;
+                return false;
+            }
+
+            using (var srcStream = System.IO.File.OpenRead(sourceFullFileName))
+            using (var srcImage = Image.FromStream(srcStream))
+            using (var newImage = ImageHelper.ResizeImage(srcImage, maxWidth, maxHeight, keepAspect: true, canGrow: false))
+            using (var newStream = new MemoryStream())
+            {
+                if (newImage == null)
+                {
+                    srcStream.Position = 0;
+                    srcStream.CopyTo(newStream);
+                    contentType = MimeTypesHelper.GetContentType(Path.GetExtension(sourceFullFileName));
+                }
+                else
+                {
+                    var imageFormat = (newImage.Width * newImage.Height > 10000)
+                        ? ImageFormat.Jpeg
+                        : ImageFormat.Png;
+
+                    contentType = (newImage.Width * newImage.Height > 10000)
+                        ? "image/jpeg"
+                        : "image/png";
+
+                    newImage.Save(newStream, imageFormat);
+                }
+
+                array = newStream.ToArray();
+
+                if (useCache && newImage != null && !string.IsNullOrEmpty(thumbFullFileName))
+                {
+                    var dirThumb = Path.GetDirectoryName(thumbFullFileName);
+                    if (dirThumb != null) Directory.CreateDirectory(dirThumb);
+
+                    using (var thumbFileStream = System.IO.File.Create(thumbFullFileName))
+                        thumbFileStream.Write(array, 0, array.Length);
+                }
+            }
+
+            return true;
         }
     }
 }

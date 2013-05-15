@@ -247,7 +247,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // patientFiles
             var patientFilesByDate =
                 (from dvm in
-                     (from d in patient.PatientFiles
+                     (from d in patient.PatientFileGroups
                       select new SessionEvent
                       {
                           LocalDate = ConvertToLocalDateTime(practice, d.ReceiveDate),

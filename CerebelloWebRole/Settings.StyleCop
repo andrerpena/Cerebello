@@ -2,6 +2,7 @@
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
       <Value>cerebello</Value>
+      <Value>json</Value>
       <Value>mvc</Value>
       <Value>smtp</Value>
     </CollectionProperty>

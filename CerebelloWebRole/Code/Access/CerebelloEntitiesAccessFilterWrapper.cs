@@ -29,16 +29,12 @@ namespace CerebelloWebRole.Code.Access
 
         private static ConcurrentDictionary<Type, bool> hasPracticeId = new ConcurrentDictionary<Type, bool>();
 
-        private static ConcurrentDictionary<Type, Delegate[]> propGetters = new ConcurrentDictionary<Type, Delegate[]>();
-        private static ConcurrentDictionary<Type, Delegate[]> propDateTimeGetters = new ConcurrentDictionary<Type, Delegate[]>();
-
         public int SaveChanges()
         {
             // checking changed elements to see if there is something wrong
             foreach (var objectStateEntry in this.db.ObjectStateManager.GetObjectStateEntries(EntityState.Added | EntityState.Modified))
             {
                 var obj = objectStateEntry.Entity;
-                bool isPracticeIdInvalid = false;
                 if (obj != null)
                 {
                     // checking the PracticeId property
@@ -52,30 +48,21 @@ namespace CerebelloWebRole.Code.Access
                             throw new Exception("Invalid value for 'PracticeId' property.");
                     }
 
-                    // getting all property getters
-                    var properties = propGetters.GetOrAdd(
-                        type,
-                        t => t.GetProperties()
-                            .Select(
-                                p => Delegate.CreateDelegate(
-                                    typeof(Func<,>).MakeGenericType(type, p.PropertyType),
-                                    p.GetGetMethod()))
-                            .ToArray());
-
                     // checking DateTime properties (they must all be UTC)
                     if (DebugConfig.IsDebug)
                     {
-                        var dateTimeProps = propDateTimeGetters.GetOrAdd(
-                            type,
-                            t => (from pg in properties
-                                  let rt = pg.GetType().GetMethod("Invoke").ReturnType
-                                  where rt == typeof(DateTime) || rt == typeof(DateTime?)
-                                  select pg).ToArray());
+                        var changedProperties = objectStateEntry.GetModifiedProperties();
 
-                        if (dateTimeProps.Select(pg => ((DateTime?)((dynamic)pg).DynamicInvoke(new[] { obj })))
-                            .Any(dt => dt.HasValue && dt.Value.Kind != DateTimeKind.Utc))
+                        foreach (var changedProperty in changedProperties)
                         {
-                            throw new Exception("Invalid value for 'DateTime' property.");
+                            var newValue = objectStateEntry.CurrentValues[changedProperty];
+
+                            if (newValue is DateTime)
+                            {
+                                var value = (DateTime)newValue;
+                                if (value.Kind != DateTimeKind.Utc)
+                                    throw new Exception("Invalid value for 'DateTime' property: " + changedProperty + ".");
+                            }
                         }
                     }
                 }
@@ -169,6 +156,11 @@ namespace CerebelloWebRole.Code.Access
         public FilteredObjectSetWrapper<PatientFile> PatientFiles
         {
             get { return new FilteredObjectSetWrapper<PatientFile>(this.db.PatientFiles, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<PatientFileGroup> PatientFileGroups
+        {
+            get { return new FilteredObjectSetWrapper<PatientFileGroup>(this.db.PatientFileGroups, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public FilteredObjectSetWrapper<Doctor> Doctors

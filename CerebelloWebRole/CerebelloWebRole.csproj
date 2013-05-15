@@ -14,7 +14,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -209,6 +209,9 @@
     <Reference Include="System.Web.Services">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <Private>True</Private>
     </Reference>
@@ -228,9 +231,11 @@
     <Compile Include="Areas\App\Controllers\PersonFilesController.cs" />
     <Compile Include="Areas\App\Controllers\PhysicalExaminationController.cs" />
     <Compile Include="Areas\App\Controllers\ReportController.cs" />
+    <Compile Include="Areas\App\Controllers\TempFileController.cs" />
     <Compile Include="Areas\App\Models\CameraWindowViewModel.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
     <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
+    <Compile Include="Areas\App\Models\PatientFilesGroupViewModel.cs" />
     <Compile Include="Code\CerebelloEntities.cs" />
     <Compile Include="Code\Access\LockAccessType.cs" />
     <Compile Include="Code\Access\LockElementActionType.cs" />
@@ -262,10 +267,12 @@
     <Compile Include="Code\Controls\CardView\CardViewFieldBase.cs" />
     <Compile Include="Code\Disposer.cs" />
     <Compile Include="Code\Helpers\BusHelper.cs" />
+    <Compile Include="Code\Helpers\FileHelper.cs" />
     <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\Hubs\ChatHub.cs" />
     <Compile Include="Code\Hubs\CerebelloHub.cs" />
     <Compile Include="Code\Hubs\NotificationsHub.cs" />
+    <Compile Include="Code\Mvc\DefaultDictionaryBinder.cs" />
     <Compile Include="Code\Notifications\Data\CompletePracticeInfoNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\NewUserCreatedNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\CompleteUserInfoNotificationData.cs" />
@@ -288,14 +295,20 @@
     <Compile Include="Code\Helpers\RazorHelper.cs" />
     <Content Include="Content\Camera\jscam.swf" />
     <Content Include="Content\Camera\jscam_canvas_only.swf" />
+    <Content Include="Content\Images\App\FileIcons\generic-80.png" />
+    <Content Include="Content\Images\App\FileIcons\generic-outline-80.png" />
+    <Content Include="Content\Images\App\FileIcons\generic-outline.png" />
+    <Content Include="Content\Images\App\FileIcons\generic.png" />
+    <Content Include="Content\Images\App\generalFile.png" />
     <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
     <Content Include="Content\Sounds\chat.mp3" />
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
     <Content Include="Content\Styles\App\bootstrap-image-gallery.min.css" />
+    <Content Include="Content\Styles\App\bootstrap-modals-only.css" />
     <Content Include="Content\Styles\App\bootstrap-responsive.min.css" />
-    <Content Include="Content\Styles\App\bootstrap.min.css" />
+    <Content Include="Content\Styles\App\FileIcons.css" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
     <Content Include="Content\Styles\App\introjs.min.css" />
     <Content Include="Content\Styles\App\jquery.fileupload-ui.css" />

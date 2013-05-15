@@ -38,6 +38,7 @@
           <EntitySet Name="Notification" EntityType="cerebelloModel.Store.Notification" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Patient" EntityType="cerebelloModel.Store.Patient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PatientFile" EntityType="cerebelloModel.Store.PatientFile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PatientFileGroup" EntityType="cerebelloModel.Store.PatientFileGroup" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Person" EntityType="cerebelloModel.Store.Person" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PersonAddress" EntityType="cerebelloModel.Store.PersonAddress" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PhysicalExamination" EntityType="cerebelloModel.Store.PhysicalExamination" store:Type="Tables" Schema="dbo" />
@@ -138,6 +139,10 @@
             <End Role="Patient" EntitySet="Patient" />
             <End Role="ExaminationResult" EntitySet="ExaminationResult" />
           </AssociationSet>
+          <AssociationSet Name="FK_File_File" Association="cerebelloModel.Store.FK_File_File">
+            <End Role="File" EntitySet="File" />
+            <End Role="File1" EntitySet="File" />
+          </AssociationSet>
           <AssociationSet Name="FK_HealthInsurance_Doctor" Association="cerebelloModel.Store.FK_HealthInsurance_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
             <End Role="HealthInsurance" EntitySet="HealthInsurance" />
@@ -209,6 +214,14 @@
           <AssociationSet Name="FK_PatientFile_Patient" Association="cerebelloModel.Store.FK_PatientFile_Patient">
             <End Role="Patient" EntitySet="Patient" />
             <End Role="PatientFile" EntitySet="PatientFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_PatientFileGroup" Association="cerebelloModel.Store.FK_PatientFile_PatientFileGroup">
+            <End Role="PatientFileGroup" EntitySet="PatientFileGroup" />
+            <End Role="PatientFile" EntitySet="PatientFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFileGroup_Patient" Association="cerebelloModel.Store.FK_PatientFileGroup_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="PatientFileGroup" EntitySet="PatientFileGroup" />
           </AssociationSet>
           <AssociationSet Name="FK_PersonAddress_Address" Association="cerebelloModel.Store.FK_PersonAddress_Address">
             <End Role="Address" EntitySet="Address" />
@@ -551,6 +564,9 @@
           <Property Name="Description" Type="varchar(max)" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="RelatedFileId" Type="int" />
+          <Property Name="RelationType" Type="nvarchar" MaxLength="50" />
+          <Property Name="ExpirationDate" Type="datetime" />
         </EntityType>
         <EntityType Name="GLB_Token">
           <Key>
@@ -706,8 +722,21 @@
           <Property Name="PatientId" Type="int" Nullable="false" />
           <Property Name="FileId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
-          <Property Name="FileDate" Type="datetime" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+          <Property Name="FileGroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PatientFileGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PatientId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+          <Property Name="GroupTitle" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="GroupNotes" Type="nvarchar(max)" />
+          <Property Name="FileGroupDate" Type="datetime" Nullable="false" />
           <Property Name="ReceiveDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -1158,6 +1187,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_File_File">
+          <End Role="File" Type="cerebelloModel.Store.File" Multiplicity="0..1" />
+          <End Role="File1" Type="cerebelloModel.Store.File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File1">
+              <PropertyRef Name="RelatedFileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_HealthInsurance_Doctor">
           <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
           <End Role="HealthInsurance" Type="cerebelloModel.Store.HealthInsurance" Multiplicity="*" />
@@ -1372,6 +1413,30 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PatientFile">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_PatientFileGroup">
+          <End Role="PatientFileGroup" Type="cerebelloModel.Store.PatientFileGroup" Multiplicity="1" />
+          <End Role="PatientFile" Type="cerebelloModel.Store.PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PatientFileGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="FileGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFileGroup_Patient">
+          <End Role="Patient" Type="cerebelloModel.Store.Patient" Multiplicity="1" />
+          <End Role="PatientFileGroup" Type="cerebelloModel.Store.PatientFileGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFileGroup">
               <PropertyRef Name="PatientId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1853,6 +1918,19 @@
             <End Role="Practice" EntitySet="Practices" />
             <End Role="Notification" EntitySet="Notifications" />
           </AssociationSet>
+          <EntitySet Name="PatientFileGroups" EntityType="Cerebello.Model.PatientFileGroup" />
+          <AssociationSet Name="FK_PatientFileGroup_Patient" Association="Cerebello.Model.FK_PatientFileGroup_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientFileGroup" EntitySet="PatientFileGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientFile_PatientFileGroup" Association="Cerebello.Model.FK_PatientFile_PatientFileGroup">
+            <End Role="PatientFileGroup" EntitySet="PatientFileGroups" />
+            <End Role="PatientFile" EntitySet="PatientFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_File_File" Association="Cerebello.Model.FK_File_File">
+            <End Role="File" EntitySet="Files" />
+            <End Role="File1" EntitySet="Files" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1953,6 +2031,7 @@
           <NavigationProperty Name="PhysicalExaminations" Relationship="Cerebello.Model.FK_PhysicalExamination_Patient" FromRole="Patient" ToRole="PhysicalExamination" />
           <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="Patient" ToRole="PatientFile" />
           <NavigationProperty Name="DiagnosticHypotheses" Relationship="Cerebello.Model.FK_DiagnosticHypothesis_Patient" FromRole="Patient" ToRole="DiagnosticHypothesis" />
+          <NavigationProperty Name="PatientFileGroups" Relationship="Cerebello.Model.FK_PatientFileGroup_Patient" FromRole="Patient" ToRole="PatientFileGroup" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -3026,6 +3105,11 @@
           <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="File" ToRole="PatientFile" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="Int32" Name="RelatedFileId" />
+          <Property Type="String" Name="RelationType" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ExpirationDate" Precision="3" />
+          <NavigationProperty Name="File1" Relationship="Cerebello.Model.FK_File_File" FromRole="File" ToRole="File1" />
+          <NavigationProperty Name="File2" Relationship="Cerebello.Model.FK_File_File" FromRole="File1" ToRole="File" />
         </EntityType>
         <EntityType Name="PatientFile">
           <Key>
@@ -3037,8 +3121,9 @@
           <NavigationProperty Name="File" Relationship="Cerebello.Model.FK_PatientFile_File" FromRole="PatientFile" ToRole="File" />
           <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PatientFile_Patient" FromRole="PatientFile" ToRole="Patient" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
-          <Property Type="DateTime" Name="FileDate" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="ReceiveDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Title" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="FileGroupId" Nullable="false" />
+          <NavigationProperty Name="PatientFileGroup" Relationship="Cerebello.Model.FK_PatientFile_PatientFileGroup" FromRole="PatientFile" ToRole="PatientFileGroup" />
         </EntityType>
         <Association Name="FK_PatientFile_File">
           <End Type="Cerebello.Model.File" Role="File" Multiplicity="1" />
@@ -3196,6 +3281,57 @@
             </Principal>
             <Dependent Role="Notification">
               <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PatientFileGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="PatientId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <Property Type="String" Name="GroupTitle" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="FileGroupDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="ReceiveDate" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Patient" Relationship="Cerebello.Model.FK_PatientFileGroup_Patient" FromRole="PatientFileGroup" ToRole="Patient" />
+          <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_PatientFileGroup" FromRole="PatientFileGroup" ToRole="PatientFile" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+          <Property Type="String" Name="GroupNotes" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_PatientFileGroup_Patient">
+          <End Type="Cerebello.Model.Patient" Role="Patient" Multiplicity="1" />
+          <End Type="Cerebello.Model.PatientFileGroup" Role="PatientFileGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFileGroup">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientFile_PatientFileGroup">
+          <End Type="Cerebello.Model.PatientFileGroup" Role="PatientFileGroup" Multiplicity="1" />
+          <End Type="Cerebello.Model.PatientFile" Role="PatientFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PatientFileGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientFile">
+              <PropertyRef Name="FileGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_File_File">
+          <End Type="Cerebello.Model.File" Role="File" Multiplicity="0..1" />
+          <End Type="Cerebello.Model.File" Role="File1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File1">
+              <PropertyRef Name="RelatedFileId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3782,6 +3918,9 @@
           <EntitySetMapping Name="Files">
             <EntityTypeMapping TypeName="Cerebello.Model.File">
               <MappingFragment StoreEntitySet="File">
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="RelationType" ColumnName="RelationType" />
+                <ScalarProperty Name="RelatedFileId" ColumnName="RelatedFileId" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -3794,8 +3933,8 @@
           <EntitySetMapping Name="PatientFiles">
             <EntityTypeMapping TypeName="Cerebello.Model.PatientFile">
               <MappingFragment StoreEntitySet="PatientFile">
-                <ScalarProperty Name="ReceiveDate" ColumnName="ReceiveDate" />
-                <ScalarProperty Name="FileDate" ColumnName="FileDate" />
+                <ScalarProperty Name="FileGroupId" ColumnName="FileGroupId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="PatientId" ColumnName="PatientId" />
@@ -3852,6 +3991,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PatientFileGroups">
+            <EntityTypeMapping TypeName="Cerebello.Model.PatientFileGroup">
+              <MappingFragment StoreEntitySet="PatientFileGroup">
+                <ScalarProperty Name="GroupNotes" ColumnName="GroupNotes" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ReceiveDate" ColumnName="ReceiveDate" />
+                <ScalarProperty Name="FileGroupDate" ColumnName="FileGroupDate" />
+                <ScalarProperty Name="GroupTitle" ColumnName="GroupTitle" />
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3872,7 +4025,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="80">
+      <Diagram Name="CerebelloEntities" ZoomLevel="72">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="12.5" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="21" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -3880,8 +4033,8 @@
         <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="3.25" PointX="34.5" PointY="19.375" Height="3.7109993489583335" IsExpanded="true" FillColor="LightGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="33.875" PointY="1.125" Height="4.6725065104166674" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Practice" Width="5.25" PointX="21.75" PointY="5.875" Height="2.3648893229166674" IsExpanded="true" FillColor="Black" />
-        <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="32.125" PointY="27" Height="2.1725878906249996" IsExpanded="true" FillColor="ForestGreen" />
-        <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="2.125" PointX="29.125" PointY="26.625" Height="2.1725878906250031" IsExpanded="true" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="32.125" PointY="27.375" Height="2.1725878906249996" IsExpanded="true" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="2.125" PointX="29.125" PointY="27.125" Height="2.1725878906250031" IsExpanded="true" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Secretary" Width="1.5" PointX="12.125" PointY="7.375" Height="1.4033821614583353" IsExpanded="true" FillColor="Peru" />
         <EntityTypeShape EntityType="Cerebello.Model.User" Width="3.875" PointX="14.25" PointY="5" Height="4.4802050781250031" IsExpanded="true" FillColor="Peru" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_Doctor" ManuallyRouted="false">
@@ -4207,10 +4360,10 @@
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
         <AssociationConnector Association="Cerebello.Model.PersonAddress" />
-        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="34" PointY="24.625" FillColor="Green" />
+        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="31.875" PointY="24.125" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
-        <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="39.125" PointY="29.25" FillColor="ForestGreen" />
-        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="37.125" PointY="29.5" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.File" Width="1.5" PointX="38.75" PointY="29" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="36.875" PointY="29" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_File" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Patient" />
         <EntityTypeShape EntityType="Cerebello.Model.Billing" Width="2" PointX="42.375" PointY="7.875" FillColor="Orange" />
@@ -4223,6 +4376,10 @@
         <AssociationConnector Association="Cerebello.Model.FK_Notification_User1" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_Practice" />
         <AssociationConnector Association="Cerebello.Model.FK_Notification_Practice" />
+        <EntityTypeShape EntityType="Cerebello.Model.PatientFileGroup" Width="1.5" PointX="35" PointY="29" FillColor="ForestGreen" />
+        <AssociationConnector Association="Cerebello.Model.FK_PatientFileGroup_Patient" />
+        <AssociationConnector Association="Cerebello.Model.FK_PatientFile_PatientFileGroup" />
+        <AssociationConnector Association="Cerebello.Model.FK_File_File" />
         </Diagram>
     </Diagrams>
   </Designer>

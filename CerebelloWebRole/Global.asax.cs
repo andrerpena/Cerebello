@@ -55,6 +55,8 @@ namespace CerebelloWebRole
             RouteTable.Routes.MapHubs();
             RegisterRoutes(RouteTable.Routes);
 
+            ModelBinders.Binders.DefaultBinder = new DefaultDictionaryBinder();
+
             DefaultModelBinder.ResourceClassKey = "ModelStrings";
 
             // Will create a thread to send notifications

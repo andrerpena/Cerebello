@@ -1,0 +1,96 @@
+BEGIN TRANSACTION
+GO
+
+CREATE TABLE dbo.PatientFileGroup
+	(
+	Id int NOT NULL IDENTITY (1, 1),
+	PatientId int NOT NULL,
+	PracticeId int NOT NULL,
+	GroupTitle nvarchar(100) NOT NULL,
+	GroupNotes nvarchar(MAX) NULL,
+	FileGroupDate datetime NOT NULL,
+	ReceiveDate datetime NOT NULL
+	)
+GO
+ALTER TABLE dbo.PatientFileGroup ADD CONSTRAINT
+	PK_PatientFileGroup_1 PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+
+GO
+ALTER TABLE dbo.PatientFileGroup SET (LOCK_ESCALATION = TABLE)
+GO
+
+
+
+
+ALTER TABLE dbo.PatientFileGroup ADD CONSTRAINT
+	FK_PatientFileGroup_Patient FOREIGN KEY
+	(
+	PatientId
+	) REFERENCES dbo.Patient
+	(
+	Id
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+GO
+
+
+
+
+ALTER TABLE dbo.PatientFile ADD
+	Title nvarchar(100) NULL,
+	FileGroupId int NOT NULL
+
+ALTER TABLE dbo.PatientFile DROP COLUMN	FileDate
+ALTER TABLE dbo.PatientFile DROP COLUMN	ReceiveDate
+
+ALTER TABLE dbo.PatientFile ADD CONSTRAINT
+	FK_PatientFile_PatientFileGroup FOREIGN KEY
+	(
+	FileGroupId
+	) REFERENCES dbo.PatientFileGroup
+	(
+	Id
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+GO
+
+ALTER TABLE dbo.PatientFileGroup ADD
+	CreatedOn datetime NOT NULL
+GO
+
+
+
+
+ALTER TABLE dbo.[File] ADD
+	RelatedFileId int NULL,
+	RelationType nvarchar(50) NULL
+GO
+
+ALTER TABLE dbo.[File] ADD CONSTRAINT
+	FK_File_File FOREIGN KEY
+	(
+	RelatedFileId
+	) REFERENCES dbo.[File]
+	(
+	Id
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+
+ALTER TABLE dbo.[File] ADD
+	ExpirationDate datetime NULL
+GO
+CREATE NONCLUSTERED INDEX IX_File_ExpirationDate ON dbo.[File]
+	(
+	ExpirationDate
+	)
+GO
+
+COMMIT
+GO
+
+EXEC sp_rename 'File', 'FileMetadata'

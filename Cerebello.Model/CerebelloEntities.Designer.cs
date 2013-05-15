@@ -73,6 +73,9 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_User1", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.User), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Appointment_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Appointment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Appointment), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Notification_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Notification", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Notification), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFileGroup_Patient", "Patient", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Patient), "PatientFileGroup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFileGroup), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_PatientFile_PatientFileGroup", "PatientFileGroup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.PatientFileGroup), "PatientFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.PatientFile), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_File_File", "File", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.File), "File1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.File), true)]
 
 #endregion
 
@@ -891,6 +894,22 @@ namespace Cerebello.Model
             }
         }
         private ObjectSet<BillingItem> _BillingItems;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<PatientFileGroup> PatientFileGroups
+        {
+            get
+            {
+                if ((_PatientFileGroups == null))
+                {
+                    _PatientFileGroups = base.CreateObjectSet<PatientFileGroup>("PatientFileGroups");
+                }
+                return _PatientFileGroups;
+            }
+        }
+        private ObjectSet<PatientFileGroup> _PatientFileGroups;
 
         #endregion
 
@@ -1278,6 +1297,14 @@ namespace Cerebello.Model
         public void AddToBillingItems(BillingItem billingItem)
         {
             base.AddObject("BillingItems", billingItem);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the PatientFileGroups EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPatientFileGroups(PatientFileGroup patientFileGroup)
+        {
+            base.AddObject("PatientFileGroups", patientFileGroup);
         }
 
         #endregion
@@ -7775,6 +7802,78 @@ namespace Cerebello.Model
         private global::System.Int32 _PracticeId;
         partial void OnPracticeIdChanging(global::System.Int32 value);
         partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> RelatedFileId
+        {
+            get
+            {
+                return _RelatedFileId;
+            }
+            set
+            {
+                OnRelatedFileIdChanging(value);
+                ReportPropertyChanging("RelatedFileId");
+                _RelatedFileId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("RelatedFileId");
+                OnRelatedFileIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _RelatedFileId;
+        partial void OnRelatedFileIdChanging(Nullable<global::System.Int32> value);
+        partial void OnRelatedFileIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String RelationType
+        {
+            get
+            {
+                return _RelationType;
+            }
+            set
+            {
+                OnRelationTypeChanging(value);
+                ReportPropertyChanging("RelationType");
+                _RelationType = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("RelationType");
+                OnRelationTypeChanged();
+            }
+        }
+        private global::System.String _RelationType;
+        partial void OnRelationTypeChanging(global::System.String value);
+        partial void OnRelationTypeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> ExpirationDate
+        {
+            get
+            {
+                return _ExpirationDate;
+            }
+            set
+            {
+                OnExpirationDateChanging(value);
+                ReportPropertyChanging("ExpirationDate");
+                _ExpirationDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ExpirationDate");
+                OnExpirationDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _ExpirationDate;
+        partial void OnExpirationDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnExpirationDateChanged();
 
         #endregion
 
@@ -7799,6 +7898,66 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_File", "PatientFile", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_File_File", "File1")]
+        public EntityCollection<File> File1
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<File>("Cerebello.Model.FK_File_File", "File1");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<File>("Cerebello.Model.FK_File_File", "File1", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_File_File", "File")]
+        public File File2
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_File_File", "File").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_File_File", "File").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<File> File2Reference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<File>("Cerebello.Model.FK_File_File", "File");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<File>("Cerebello.Model.FK_File_File", "File", value);
                 }
             }
         }
@@ -11133,6 +11292,28 @@ namespace Cerebello.Model
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFileGroup_Patient", "PatientFileGroup")]
+        public EntityCollection<PatientFileGroup> PatientFileGroups
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PatientFileGroup>("Cerebello.Model.FK_PatientFileGroup_Patient", "PatientFileGroup");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFileGroup>("Cerebello.Model.FK_PatientFileGroup_Patient", "PatientFileGroup", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -11155,17 +11336,15 @@ namespace Cerebello.Model
         /// <param name="patientId">Initial value of the PatientId property.</param>
         /// <param name="fileId">Initial value of the FileId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        /// <param name="fileDate">Initial value of the FileDate property.</param>
-        /// <param name="receiveDate">Initial value of the ReceiveDate property.</param>
-        public static PatientFile CreatePatientFile(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 fileId, global::System.Int32 practiceId, global::System.DateTime fileDate, global::System.DateTime receiveDate)
+        /// <param name="fileGroupId">Initial value of the FileGroupId property.</param>
+        public static PatientFile CreatePatientFile(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 fileId, global::System.Int32 practiceId, global::System.Int32 fileGroupId)
         {
             PatientFile patientFile = new PatientFile();
             patientFile.Id = id;
             patientFile.PatientId = patientId;
             patientFile.FileId = fileId;
             patientFile.PracticeId = practiceId;
-            patientFile.FileDate = fileDate;
-            patientFile.ReceiveDate = receiveDate;
+            patientFile.FileGroupId = fileGroupId;
             return patientFile;
         }
 
@@ -11275,50 +11454,50 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.DateTime FileDate
+        public global::System.String Title
         {
             get
             {
-                return _FileDate;
+                return _Title;
             }
             set
             {
-                OnFileDateChanging(value);
-                ReportPropertyChanging("FileDate");
-                _FileDate = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("FileDate");
-                OnFileDateChanged();
+                OnTitleChanging(value);
+                ReportPropertyChanging("Title");
+                _Title = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Title");
+                OnTitleChanged();
             }
         }
-        private global::System.DateTime _FileDate;
-        partial void OnFileDateChanging(global::System.DateTime value);
-        partial void OnFileDateChanged();
+        private global::System.String _Title;
+        partial void OnTitleChanging(global::System.String value);
+        partial void OnTitleChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.DateTime ReceiveDate
+        public global::System.Int32 FileGroupId
         {
             get
             {
-                return _ReceiveDate;
+                return _FileGroupId;
             }
             set
             {
-                OnReceiveDateChanging(value);
-                ReportPropertyChanging("ReceiveDate");
-                _ReceiveDate = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("ReceiveDate");
-                OnReceiveDateChanged();
+                OnFileGroupIdChanging(value);
+                ReportPropertyChanging("FileGroupId");
+                _FileGroupId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FileGroupId");
+                OnFileGroupIdChanged();
             }
         }
-        private global::System.DateTime _ReceiveDate;
-        partial void OnReceiveDateChanging(global::System.DateTime value);
-        partial void OnReceiveDateChanged();
+        private global::System.Int32 _FileGroupId;
+        partial void OnFileGroupIdChanging(global::System.Int32 value);
+        partial void OnFileGroupIdChanged();
 
         #endregion
 
@@ -11397,6 +11576,345 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_PatientFile_Patient", "Patient", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_PatientFileGroup", "PatientFileGroup")]
+        public PatientFileGroup PatientFileGroup
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PatientFileGroup>("Cerebello.Model.FK_PatientFile_PatientFileGroup", "PatientFileGroup").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PatientFileGroup>("Cerebello.Model.FK_PatientFile_PatientFileGroup", "PatientFileGroup").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PatientFileGroup> PatientFileGroupReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PatientFileGroup>("Cerebello.Model.FK_PatientFile_PatientFileGroup", "PatientFileGroup");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PatientFileGroup>("Cerebello.Model.FK_PatientFile_PatientFileGroup", "PatientFileGroup", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Cerebello.Model", Name="PatientFileGroup")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PatientFileGroup : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new PatientFileGroup object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="patientId">Initial value of the PatientId property.</param>
+        /// <param name="practiceId">Initial value of the PracticeId property.</param>
+        /// <param name="groupTitle">Initial value of the GroupTitle property.</param>
+        /// <param name="fileGroupDate">Initial value of the FileGroupDate property.</param>
+        /// <param name="receiveDate">Initial value of the ReceiveDate property.</param>
+        /// <param name="createdOn">Initial value of the CreatedOn property.</param>
+        public static PatientFileGroup CreatePatientFileGroup(global::System.Int32 id, global::System.Int32 patientId, global::System.Int32 practiceId, global::System.String groupTitle, global::System.DateTime fileGroupDate, global::System.DateTime receiveDate, global::System.DateTime createdOn)
+        {
+            PatientFileGroup patientFileGroup = new PatientFileGroup();
+            patientFileGroup.Id = id;
+            patientFileGroup.PatientId = patientId;
+            patientFileGroup.PracticeId = practiceId;
+            patientFileGroup.GroupTitle = groupTitle;
+            patientFileGroup.FileGroupDate = fileGroupDate;
+            patientFileGroup.ReceiveDate = receiveDate;
+            patientFileGroup.CreatedOn = createdOn;
+            return patientFileGroup;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PatientId
+        {
+            get
+            {
+                return _PatientId;
+            }
+            set
+            {
+                OnPatientIdChanging(value);
+                ReportPropertyChanging("PatientId");
+                _PatientId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PatientId");
+                OnPatientIdChanged();
+            }
+        }
+        private global::System.Int32 _PatientId;
+        partial void OnPatientIdChanging(global::System.Int32 value);
+        partial void OnPatientIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PracticeId
+        {
+            get
+            {
+                return _PracticeId;
+            }
+            set
+            {
+                OnPracticeIdChanging(value);
+                ReportPropertyChanging("PracticeId");
+                _PracticeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PracticeId");
+                OnPracticeIdChanged();
+            }
+        }
+        private global::System.Int32 _PracticeId;
+        partial void OnPracticeIdChanging(global::System.Int32 value);
+        partial void OnPracticeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String GroupTitle
+        {
+            get
+            {
+                return _GroupTitle;
+            }
+            set
+            {
+                OnGroupTitleChanging(value);
+                ReportPropertyChanging("GroupTitle");
+                _GroupTitle = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("GroupTitle");
+                OnGroupTitleChanged();
+            }
+        }
+        private global::System.String _GroupTitle;
+        partial void OnGroupTitleChanging(global::System.String value);
+        partial void OnGroupTitleChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime FileGroupDate
+        {
+            get
+            {
+                return _FileGroupDate;
+            }
+            set
+            {
+                OnFileGroupDateChanging(value);
+                ReportPropertyChanging("FileGroupDate");
+                _FileGroupDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FileGroupDate");
+                OnFileGroupDateChanged();
+            }
+        }
+        private global::System.DateTime _FileGroupDate;
+        partial void OnFileGroupDateChanging(global::System.DateTime value);
+        partial void OnFileGroupDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime ReceiveDate
+        {
+            get
+            {
+                return _ReceiveDate;
+            }
+            set
+            {
+                OnReceiveDateChanging(value);
+                ReportPropertyChanging("ReceiveDate");
+                _ReceiveDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ReceiveDate");
+                OnReceiveDateChanged();
+            }
+        }
+        private global::System.DateTime _ReceiveDate;
+        partial void OnReceiveDateChanging(global::System.DateTime value);
+        partial void OnReceiveDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime CreatedOn
+        {
+            get
+            {
+                return _CreatedOn;
+            }
+            set
+            {
+                OnCreatedOnChanging(value);
+                ReportPropertyChanging("CreatedOn");
+                _CreatedOn = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CreatedOn");
+                OnCreatedOnChanged();
+            }
+        }
+        private global::System.DateTime _CreatedOn;
+        partial void OnCreatedOnChanging(global::System.DateTime value);
+        partial void OnCreatedOnChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String GroupNotes
+        {
+            get
+            {
+                return _GroupNotes;
+            }
+            set
+            {
+                OnGroupNotesChanging(value);
+                ReportPropertyChanging("GroupNotes");
+                _GroupNotes = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("GroupNotes");
+                OnGroupNotesChanged();
+            }
+        }
+        private global::System.String _GroupNotes;
+        partial void OnGroupNotesChanging(global::System.String value);
+        partial void OnGroupNotesChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFileGroup_Patient", "Patient")]
+        public Patient Patient
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_PatientFileGroup_Patient", "Patient").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_PatientFileGroup_Patient", "Patient").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Patient> PatientReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Patient>("Cerebello.Model.FK_PatientFileGroup_Patient", "Patient");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Patient>("Cerebello.Model.FK_PatientFileGroup_Patient", "Patient", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_PatientFile_PatientFileGroup", "PatientFile")]
+        public EntityCollection<PatientFile> PatientFiles
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_PatientFileGroup", "PatientFile");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PatientFile>("Cerebello.Model.FK_PatientFile_PatientFileGroup", "PatientFile", value);
                 }
             }
         }

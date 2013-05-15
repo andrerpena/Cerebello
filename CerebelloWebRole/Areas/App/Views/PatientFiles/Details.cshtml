@@ -1,20 +1,66 @@
-﻿@model PatientFileViewModel
+﻿@model PatientFilesGroupViewModel
 @{
-    this.Layout = null;              
+    this.Layout = null;
 }
 <div class="patientFile-details medical-appointment-details-panel" data-val-id="patientFile-@Model.Id">
     @if (Model != null)
     {
         var cardView = this.Html.CreateCardView();
-        cardView.AddField(model => model.FileName, @<text><a target="_blank" href="@Url.Action("DownloadFile", "PatientFiles", new { fileName = this.Model.FileName })">@this.Model.FileName</a></text>, wholeRow: true);
-        cardView.AddField(model => model.Description, wholeRow: true);
-        cardView.AddField(model => model.FileDate, @<text>@(this.Model.FileDate.Value.ToString("dd/MM/yyyy"))</text>, wholeRow: true);
+        cardView.AddField(model => model.Title, wholeRow: true);
+        cardView.AddField(model => model.Notes, wholeRow: true);
+        cardView.AddField(model => model.FileGroupDate, @<text>@(this.Model.FileGroupDate.Value.ToString("dd/MM/yyyy"))</text>, wholeRow: true);
         
         @cardView.GetHtml()
+
+        var galleryName = "gallery-" + this.Model.Id;
+        
+        <div id="@galleryName" data-delegate="#@galleryName" data-toggle="modal-gallery" data-target="#modal-gallery">
+            @foreach (var eachPatientFile in this.Model.Files)
+            {
+                var isImage = StringHelper.IsImageFileName(eachPatientFile.FileName);
+                var isDocument = StringHelper.IsDocumentFileName(eachPatientFile.FileName);
+                var dataGallery = isImage ? "gallery" : "";
+                <div class="filebox">
+                    <div class="preview">
+                        @if (isImage)
+                        {
+                            <a
+                                href="@this.Url.Action("Image", new { id = eachPatientFile.Id, w = 1024, h = 768 })"
+                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.FileName + ")")"
+                                data-gallery="@dataGallery"
+                                data-delegate="#@galleryName"
+                                data-download="@this.Url.Action("File", new { id = eachPatientFile.Id })">
+                                <img src="@this.Url.Action("Image", new { id = eachPatientFile.Id, w = 80, h = 80 })">
+                            </a>
+                        }
+                        else if (isDocument)
+                        {
+                            <a
+                                href="@this.Url.Action("File", new { id = eachPatientFile.Id })"
+                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.FileName + ")")"
+                                class="document-file-icon">
+                            </a>
+                        }
+                        else
+                        {
+                            <a
+                                href="@this.Url.Action("File", new { id = eachPatientFile.Id })"
+                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.FileName + ")")"
+                                class="generic-file-icon">
+                            </a>
+                        }
+                    </div>
+                    <div class="name">
+                            <a href="@this.Url.Action("File", new { id = eachPatientFile.Id })" title="@eachPatientFile.FileName" target="_blank">@StringHelper.FirstNonEmpty(eachPatientFile.FileTitle, eachPatientFile.FileName)</a>
+                    </div>
+                    <div class="size"><span>@eachPatientFile.FileLengthStr</span></div>
+                </div>
+            }
+        </div>
     }
     <div class="inline-link-bar">
-        <a href="#" class="edit-patientFile inline-link">Editar arquivo</a>
-        <a href="#" class="delete-patientFile inline-link">Excluir arquivo</a>
+        <a href="#" class="edit-patientFile inline-link">Editar grupo de arquivos</a>
+        <a href="#" class="delete-patientFile inline-link">Excluir grupo de arquivos</a>
     </div>
     <script type="text/javascript">
         $(".edit-patientFile", $("div[data-val-id='patientFile-@Model.Id']")).click(function (e) {
@@ -27,7 +73,7 @@
             });
         });
 
-            $(".delete-patientFile", $("div[data-val-id='patientFile-@Model.Id']")).click(function (e) {
+        $(".delete-patientFile", $("div[data-val-id='patientFile-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.deleteConfirmation({
                 objectType: "arquivo",
@@ -37,7 +83,6 @@
                     window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
                 }
             });
-                });
-
+        });
     </script>
 </div>

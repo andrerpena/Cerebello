@@ -194,21 +194,29 @@ namespace CerebelloWebRole.Code
             return !AllEmpty(strs);
         }
 
-        public static string Join(string separator, string lastSeparator, params string[] userRoles)
+        /// <summary>
+        /// Joins multiple string using separators between them, and using a special last separator.
+        /// (e.g. "a, b, c AND d" is the result of Join(", ", " AND ", "a", "b", "c", "d"))
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <param name="lastSeparator"></param>
+        /// <param name="itemsToJoin"></param>
+        /// <returns></returns>
+        public static string Join(string separator, string lastSeparator, params string[] itemsToJoin)
         {
-            if (userRoles == null)
-                throw new ArgumentNullException("userRoles");
+            if (itemsToJoin == null)
+                throw new ArgumentNullException("itemsToJoin");
 
-            if (userRoles.Length == 0)
+            if (itemsToJoin.Length == 0)
                 return "";
 
-            if (userRoles.Length == 1)
-                return userRoles[0];
+            if (itemsToJoin.Length == 1)
+                return itemsToJoin[0];
 
-            if (userRoles.Length == 2)
-                return userRoles[0] + lastSeparator + userRoles[1];
+            if (itemsToJoin.Length == 2)
+                return itemsToJoin[0] + lastSeparator + itemsToJoin[1];
 
-            return string.Join(separator, userRoles.Take(userRoles.Length - 1)) + lastSeparator + userRoles[userRoles.Length - 1];
+            return string.Join(separator, itemsToJoin.Take(itemsToJoin.Length - 1)) + lastSeparator + itemsToJoin[itemsToJoin.Length - 1];
         }
 
         /// <summary>
@@ -220,6 +228,66 @@ namespace CerebelloWebRole.Code
         {
             var ptBr = CultureInfo.GetCultureInfo("pt-BR");
             return value.ToString("R$ 0.00", ptBr);
+        }
+
+        /// <summary>
+        /// Indicates whether the string representing a file name is an image file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file to test.</param>
+        /// <returns>Returns true if the file name is an image file name; otherwise false.</returns>
+        public static bool IsImageFileName(string fileName)
+        {
+            fileName = fileName.ToLowerInvariant();
+            return fileName.EndsWith(".jpg") || fileName.EndsWith(".png") || fileName.EndsWith(".bmp") || fileName.EndsWith(".jpeg") || fileName.EndsWith(".gif");
+        }
+
+        /// <summary>
+        /// Indicates whether the string representing a file name is a text document file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file to test.</param>
+        /// <returns>Returns true if the file name is text document file name; otherwise false.</returns>
+        public static bool IsDocumentFileName(string fileName)
+        {
+            fileName = fileName.ToLowerInvariant();
+            return fileName.EndsWith(".txt")
+                || fileName.EndsWith(".odt")
+                || fileName.EndsWith(".pdf")
+                || fileName.EndsWith(".xps")
+                || fileName.EndsWith(".mht")
+                || fileName.EndsWith(".mhtml")
+                || fileName.EndsWith(".htm")
+                || fileName.EndsWith(".html")
+                || fileName.EndsWith(".wri")
+                || fileName.EndsWith(".rtf")
+                || fileName.EndsWith(".doc")
+                || fileName.EndsWith(".docx");
+        }
+
+        /// <summary>
+        /// Indicates whether the string representing a file name is a spread sheet file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file to test.</param>
+        /// <returns>Returns true if the file name is a spread sheet file name; otherwise false.</returns>
+        public static bool IsSpreadSheetFileName(string fileName)
+        {
+            fileName = fileName.ToLowerInvariant();
+            return fileName.EndsWith(".csv")
+                || fileName.EndsWith(".xls")
+                || fileName.EndsWith(".xlsx")
+                || fileName.EndsWith(".ods");
+        }
+
+        /// <summary>
+        /// Gets the first non-empty string from the list.
+        /// </summary>
+        /// <param name="strings">Array of string to get the first non-empty entry from.</param>
+        /// <returns>The first non-empty string or null if none exists.</returns>
+        public static string FirstNonEmpty(params string[] strings)
+        {
+            if (strings == null)
+                return null;
+
+            return strings.FirstOrDefault(s => !string.IsNullOrEmpty(s));
         }
     }
 }

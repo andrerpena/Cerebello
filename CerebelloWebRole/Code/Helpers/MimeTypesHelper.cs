@@ -13,7 +13,7 @@ namespace CerebelloWebRole.Code.Helpers
         /// </summary>
         public static string GetContentType(string fileExtension)
         {
-            var mimeTypes = new Dictionary<String, String>
+            var mimeTypes = new Dictionary<String, String>(StringComparer.InvariantCultureIgnoreCase)
             {
                 {".bmp", "image/bmp"},
                 {".gif", "image/gif"},
