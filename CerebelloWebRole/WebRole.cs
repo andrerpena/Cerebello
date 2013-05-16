@@ -1,5 +1,8 @@
 using System;
+using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
@@ -52,6 +55,15 @@ namespace CerebelloWebRole
         public override void Run()
         {
             Trace.TraceInformation("WebRole.Run(): webrole running");
+
+            var allConnections = string.Join(
+                "; ",
+                ConfigurationManager.ConnectionStrings
+                    .OfType<ConnectionStringSettings>()
+                    .Select(c => string.Format("{0}", c.Name)));
+
+            Trace.TraceInformation("WebRole.Run(): Available connection strings: " + allConnections);
+            Trace.TraceInformation("WebRole.Run(): DebugConfig.DataBaseConnectionString=" + DebugConfig.DataBaseConnectionString);
 
             RouteHelper.RegisterAllRoutes();
 

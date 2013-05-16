@@ -48,7 +48,10 @@ namespace CerebelloWebRole.Models
         {
             public TraceLogItem(string message)
             {
-                var match = Regex.Match(message, @"^(?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:;\sTraceSource\s\'(?<SOURCE>.*?)\'\sevent)?$");
+                var match = Regex.Match(
+                    message,
+                    @"^(?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:;\sTraceSource\s\'(?<SOURCE>.*?)\'\sevent)?$",
+                    RegexOptions.Singleline);
 
                 this.Message = message;
                 var nodes = match.Groups["NODES"].Value;

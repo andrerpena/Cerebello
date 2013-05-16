@@ -33,9 +33,19 @@
     <text>: </text>
     }
 
-    var textItems = Regex.Split(item.Text, @"\[(.*?)\]");
+    var lines = Regex.Split(item.Text, @"\r\n|\r|\n", RegexOptions.Singleline);
     <strong>
-        @for (int it = 0; it < textItems.Length; it++)
+    @for (int itLine = 0; itLine < lines.Length; itLine++)
+    {
+        if (itLine > 0)
+        {
+            <br />
+        }
+        
+        var line = lines[itLine];
+        var textItems = Regex.Split(line, @"\[(.*?)\]");
+        
+        for (int it = 0; it < textItems.Length; it++)
         {
             var text = textItems[it];
             if (it % 2 == 0)
@@ -50,6 +60,7 @@
                 {<text>[<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@text</a>]</text>}
             }
         }
+    }
     </strong>
 }
 
