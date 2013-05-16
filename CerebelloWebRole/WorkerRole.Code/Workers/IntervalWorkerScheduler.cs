@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
@@ -48,8 +49,8 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                     if (ex != null)
                         Trace.TraceError(
                             string.Format(
-                                "IntervalWorkerScheduler.Run(taskScheduler): Worker of type {1} ended with exception: {0}",
-                                ex.Message,
+                                "IntervalWorkerScheduler.Run(taskScheduler): [Worker of type {1}] ended with exception: {0}",
+                                TraceHelper.GetExceptionMessage(ex),
                                 typeName));
                 };
 

@@ -3,11 +3,12 @@
     this.Layout = null;
 
     var grid = this.Html.CreateGrid(this.Model.Logs);
-    grid.AddField(model => model.Timestamp, @<text><span style="white-space: nowrap">@DateTime.Parse(item.Timestamp).ToString("yyyy-MM-dd hh:mm")</span></text>);
+    grid.AddField(model => model.Timestamp, @<text><span style="white-space: nowrap">@item.Timestamp.ToString("yyyy-MM-dd hh:mm")</span></text>);
     grid.AddField(model => model.Level, @<text>@Log.Level(this.Url, item.Level, this.Model)</text>);
     grid.AddField(model => model.Role);
     grid.AddField(model => model.RoleInstance, @<text>@Log.RoleInstance(this.Url, item.RoleInstance, this.Model)</text>);
-    grid.AddField(model => model.Message, @<text>@Log.Message(this.Url, item.Message, this.Model)</text>);
+    grid.AddField(model => model.Source, @<text>@Log.Source(this.Url, item.Source, this.Model)</text>);
+    grid.AddField(model => model.Message, @<text>@Log.Message(this.Url, item, this.Model)</text>);
 }
 <html>
 <head>
@@ -17,6 +18,38 @@
         body {
             margin: 1em;
         }
+
+        .button-bar {
+            margin: 4px 0;
+        }
+
+        a.button {
+            background: #2672EC;
+            color: #fff;
+            padding: 0 6px;
+            display: inline-block;
+            font-size: 12px;
+            line-height: 24px;
+            height: 24px;
+            vertical-align: bottom;
+        }
+            a.button > span {
+                vertical-align: middle;
+            }
+
+            a.button:hover {
+                background: #5A94F1;
+                color: #fff;
+                text-decoration: none;
+            }
+
+            a.button.disabled, a.button.disabled:hover {
+                background: #bbb;
+            }
+
+            a.button.small {
+                font-size: 9px;
+            }
     </style>
 </head>
 <body>
@@ -27,7 +60,61 @@
             <li>Somente os LEVELS 2, 3 e 4 estão sendo exibidos. Trace.TraceError = 2, Trace.TraceWarning = 3 e Trace.TraceInformation = 4.</li>
             <li>O flush do TRACE para o LOG acontece de 2 em 2 minutos. Então demora até 2 minutos para que seu TRACE venha para esta lista.</li>
             <li>É possível inserir uma mensagem de log passando o parâmetro opcional MESSAGE. Ex: /masteradmin/log?message=teste 3. Demora até 2 minutos para que ela apareça na lista</li>
+            <li>Clique nos links que aparecem na tabela para filtrar usando a característica clicada.</li>
+            <li>Quando houverem filtros é possível limpar os mesmos usando os botões de limpar filtros. Quando os botões estiverem cinza, é porque o filtro está desativado, quando estiverem azuis, é porque existe algum filtro para aquela característica.</li>
         </ul>
+    </div>
+    <div class="button-bar">
+        <a href="@this.Url.Action("Log")" class="button @(this.Model.HasAnyFilter() ? "" : "disabled")" onclick="@(this.Model.HasAnyFilter() ? "" : "return false;")"><span>Clear all filters</span></a>
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasLevelFilter() ? "" : "disabled")" onclick="@(this.Model.HasLevelFilter() ? "" : "return false;")"><span>Clear level filters</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterRoleInstance = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasRoleInstanceFilter() ? "" : "disabled")" onclick="@(this.Model.HasRoleInstanceFilter() ? "" : "return false;")"><span>Clear instance filter</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterSource = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasSourceFilter() ? "" : "disabled")" onclick="@(this.Model.HasSourceFilter() ? "" : "return false;")"><span>Clear source filter</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterPath = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasPathFilter() ? "" : "disabled")" onclick="@(this.Model.HasPathFilter() ? "" : "return false;")"><span>Clear code location filter</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterSpecial = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+                <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasSpecialFilter() ? "" : "disabled")" onclick="@(this.Model.HasSpecialFilter() ? "" : "return false;")"><span>Clear special filters</span></a>
+            }
+            if (this.Model.FilterSpecial != null)
+            {
+                foreach (var item in new HashSet<string>(this.Model.FilterSpecial))
+                {
+                    var vm = this.Model.Clone();
+                    vm.FilterSpecial.Remove(item);
+                    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                    vm.FilterSpecial = null;
+                    
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small"><span>Remove [@item]</span></a>
+                }
+            }
+        }
     </div>
     @grid.GetHtml()
 </body>

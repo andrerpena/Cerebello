@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Threading;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
@@ -142,7 +143,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             }
             catch (Exception ex)
             {
-                Trace.TraceError("EmailSenderWorker.RunOnce(): catch Exception: " + ex.Message);
+                Trace.TraceError(string.Format("EmailSenderWorker.RunOnce(): exception while trying to send e-mails: {0}", TraceHelper.GetExceptionMessage(ex)));
             }
 
             // setting locker value to 0

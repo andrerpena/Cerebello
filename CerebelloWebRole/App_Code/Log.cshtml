@@ -1,29 +1,18 @@
 ﻿@using System.Text
 @using System.Text.RegularExpressions
 @using System.Web.Mvc
+@using CerebelloWebRole.Code
 @using CerebelloWebRole.Models
 
-@helper Message(UrlHelper url, string message, LogViewModel viewModel)
+@helper Message(UrlHelper url, LogViewModel.TraceLogItem item, LogViewModel viewModel)
 {
-    var match = Regex.Match(message, @"^(?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:;\sTraceSource\s\'(?<SOURCE>.*?)\'\sevent)?$");
-
-    var nodes = match.Groups["NODES"].Value;
-    var text = match.Groups["TEXT"].Value;
-    var source = match.Groups["SOURCE"].Value;
-
-    if (!string.IsNullOrWhiteSpace(source))
+    // (?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:;\sTraceSource\s\'(?<SOURCE>.*?)\'\sevent)?
+    
+    if (!string.IsNullOrWhiteSpace(item.Path))
     {
-        var vm = viewModel.Clone();
-        vm.Logs = null;
-        vm.FilterSource = source;
-    <text><a href="@url.Action("Log", "MasterAdmin", vm)">@source</a>: </text>
-    }
+        var nodeSplit = item.Path.Split('.');
 
-    if (!string.IsNullOrWhiteSpace(nodes))
-    {
-        var nodeSplit = nodes.Split('.');
-
-        var currentNodePath = new StringBuilder(nodes.Length);
+        var currentNodePath = new StringBuilder(item.Path.Length);
         foreach (var node in nodeSplit)
         {
             bool hasDot = currentNodePath.Length > 0;
@@ -35,31 +24,63 @@
             currentNodePath.Append(node.Trim());
 
             var vm = viewModel.Clone();
-            vm.Logs = null;
+            var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+            vm.FilterSpecial = null;
             vm.FilterPath = currentNodePath.ToString();
 
-            {<text><span>@(hasDot ? "." : "")</span><a href="@url.Action("Log", "MasterAdmin", vm)">@node</a></text>}
+            {<text><span>@(hasDot ? "." : "")</span><a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@node</a></text>}
         }
-        <text>: </text>
+    <text>: </text>
     }
-    
-    <strong>@text</strong>
+
+    var textItems = Regex.Split(item.Text, @"\[(.*?)\]");
+    <strong>
+        @for (int it = 0; it < textItems.Length; it++)
+        {
+            var text = textItems[it];
+            if (it % 2 == 0)
+            {<text>@text</text>}
+            else
+            {
+                var vm = viewModel.Clone();
+                var list = vm.FilterSpecial ?? new List<string>();
+                vm.FilterSpecial = null;
+                list.Add(text);
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", list);
+                {<text>[<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@text</a>]</text>}
+            }
+        }
+    </strong>
 }
 
 @helper RoleInstance(UrlHelper url, string roleInstance, LogViewModel viewModel)
 {
     var vm = viewModel.Clone();
-    vm.Logs = null;
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
     vm.FilterRoleInstance = roleInstance;
 
-    {<a href="@url.Action("Log", "MasterAdmin", vm)">@roleInstance</a>}
+    if (!string.IsNullOrWhiteSpace(roleInstance))
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@roleInstance</a>}
 }
 
-@helper Level(UrlHelper url, string level, LogViewModel viewModel)
+@helper Source(UrlHelper url, string source, LogViewModel viewModel)
 {
     var vm = viewModel.Clone();
-    vm.Logs = null;
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterSource = source;
+
+    if (!string.IsNullOrWhiteSpace(source))
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@source</a>}
+}
+
+@helper Level(UrlHelper url, int level, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
     vm.FilterLevel = level;
 
-    {<a href="@url.Action("Log", "MasterAdmin", vm)">@level</a>}
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@level</a>}
 }

@@ -51,7 +51,7 @@ namespace CerebelloWebRole
             // Trace listeners should always be the first thing here.
             RegisterTraceListeners(Trace.Listeners);
 
-            Trace.TraceInformation("MvcApplication.Application_Start(): app started!");
+            Trace.TraceInformation(string.Format("MvcApplication.Application_Start(): app started! [Debug={0}]", DebugConfig.IsDebug));
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);

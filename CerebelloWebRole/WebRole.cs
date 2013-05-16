@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.WindowsAzure.ServiceRuntime;
@@ -30,7 +31,7 @@ namespace CerebelloWebRole
             // Trace listeners should always be the first thing here.
             MvcApplication.RegisterTraceListeners(Trace.Listeners);
 
-            Trace.TraceInformation("WebRole.OnStart(): webrole started!");
+            Trace.TraceInformation(string.Format("WebRole.OnStart(): webrole started! [Debug={0}]", DebugConfig.IsDebug));
 
             // This is where DLL's and other dependencies should be installed in the System.
             // Of course, a check must be made before installing anything to see if they are not yet installed.
