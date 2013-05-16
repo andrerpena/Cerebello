@@ -31,12 +31,15 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                 return;
 
             Trace.TraceInformation("E-mail notification service in execution (EmailSenderWorker)");
+            var emailsSent = 0;
 
             try
             {
                 var utcNow = this.GetUtcNow();
                 using (var db = this.CreateNewCerebelloEntities())
                 {
+                    Trace.TraceInformation("EmailSenderWorker.RunOnce(): this.CreateNewCerebelloEntities()");
+
                     var next40H = utcNow.AddHours(40.0);
 
                     // One e-mail will be sent 40 hours before the appointment.
@@ -91,6 +94,12 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                                 })
                         .ToArray();
 
+                    Trace.TraceInformation("EmailSenderWorker.RunOnce(): got list of appointments from database");
+
+                    bool traceMessageCreated = false;
+                    bool traceEmailSent = false;
+                    bool traceEmailNotSent = false;
+                    bool traceDbSaved = false;
                     foreach (var eachItem in items)
                     {
                         if (string.IsNullOrWhiteSpace(eachItem.EmailViewModel.PatientEmail))
@@ -101,13 +110,34 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         var toAddress = new MailAddress(emailViewModel.PatientEmail, emailViewModel.PatientName);
                         var mailMessage = this.CreateEmailMessage("AppointmentReminderEmail", toAddress, emailViewModel);
 
+                        if (!traceMessageCreated)
+                            Trace.TraceInformation("EmailSenderWorker.RunOnce(): var mailMessage = { rendered e-mail message }");
+                        traceMessageCreated = true;
+
                         if (this.TrySendEmail(mailMessage))
                         {
+                            if (!traceEmailSent)
+                                Trace.TraceInformation("EmailSenderWorker.RunOnce(): this.TrySendEmail(mailMessage) => true");
+                            traceEmailSent = true;
+
+                            emailsSent++;
                             this.EmailsCount++;
                             eachItem.Appointment.ReminderEmailSent = true;
                             db.SaveChanges();
+
+                            if (!traceDbSaved)
+                                Trace.TraceInformation("EmailSenderWorker.RunOnce(): db.SaveChanges()");
+                            traceDbSaved = true;
+                        }
+                        else
+                        {
+                            if (!traceEmailNotSent)
+                                Trace.TraceInformation("EmailSenderWorker.RunOnce(): this.TrySendEmail(mailMessage) => false");
+                            traceEmailNotSent = true;
                         }
                     }
+
+                    Trace.TraceInformation(string.Format("EmailSenderWorker.RunOnce(): emailsSent => {0}", emailsSent));
                 }
             }
             catch (Exception ex)

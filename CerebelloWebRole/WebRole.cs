@@ -60,20 +60,24 @@ namespace CerebelloWebRole
                     new TestWorker()
                 };
             testInfraScheduler.Start();
+            Trace.TraceInformation("WebRole.Run(): TestWorker thread started");
 
             var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
                 {
                     new EmailSenderWorker()
                 };
             emailSenderScheduler.Start();
+            Trace.TraceInformation("WebRole.Run(): EmailSenderWorker thread started");
 
             var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60))
                 {
                     new GoogleDriveSynchronizerWorker()
                 };
             googleDriverSynchronizerScheduler.Start();
+            Trace.TraceInformation("WebRole.Run(): GoogleDriveSynchronizerWorker thread started");
 
             // Calling base to hold execution in this method forever.
+            Trace.TraceInformation("WebRole.Run(): base.Run() -- running forever!");
             base.Run();
         }
     }
