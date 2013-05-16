@@ -96,6 +96,9 @@ namespace CerebelloWebRole.Code
 
         public static string AppendQuery(string url, string query)
         {
+            if (string.IsNullOrWhiteSpace(query))
+                return url;
+
             if (url.Contains("?"))
                 return url + "&" + query;
 
@@ -107,7 +110,11 @@ namespace CerebelloWebRole.Code
             if (list == null)
                 return null;
 
-            return string.Join("&", list.Select(s => string.Format("{0}={1}", paramName, HttpUtility.UrlEncode(s))));
+            return string.Join(
+                "&",
+                list
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Select(s => string.Format("{0}={1}", paramName, HttpUtility.UrlEncode(s))));
         }
     }
 }

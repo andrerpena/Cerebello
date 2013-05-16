@@ -307,9 +307,9 @@ namespace CerebelloWebRole.Controllers
                     patient.IsBackedUp = false;
                 db.SaveChanges();
 
-
                 BackupHelper.BackupEverything(db, errors);
             }
+
             return "Errors : " + string.Join(",", errors);
         }
 
@@ -318,12 +318,15 @@ namespace CerebelloWebRole.Controllers
             if (!string.IsNullOrEmpty(formModel.Message))
                 Trace.TraceInformation("MasterAdminController.Log(formModel): " + formModel.Message);
 
-            IEnumerable<LogViewModel.TraceLogItem> logs = WindowsAzureLogHelper.GetLastDayLogEvents()
+            IEnumerable<WindowsAzureLogHelper.TraceLogsEntity> logsSource = WindowsAzureLogHelper.GetLogEvents(
+                formModel.Page ?? 1, formModel.FilterLevel, formModel.FilterRoleInstance, formModel.FilterPath);
+
+            var logs = logsSource
                 .Select(
                     item => new LogViewModel.TraceLogItem(item.Message)
                         {
                             Timestamp = DateTime.Parse(item.Timestamp),
-                            Level = int.Parse(item.Level),
+                            Level = item.Level,
                             RoleInstance = item.RoleInstance,
                             Role = item.Role,
                         });

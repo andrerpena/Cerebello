@@ -33,6 +33,7 @@
             height: 24px;
             vertical-align: bottom;
         }
+
             a.button > span {
                 vertical-align: middle;
             }
@@ -50,6 +51,16 @@
             a.button.small {
                 font-size: 9px;
             }
+
+        .page-number {
+            vertical-align: bottom;
+            font-size: 14px;
+            line-height: 24px;
+            font-weight: bold;
+            width: 32px;
+            display: inline-block;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +111,7 @@
                 vm.FilterSpecial = null;
                 var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
                 vm.FilterSpecial = null;
-                <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasSpecialFilter() ? "" : "disabled")" onclick="@(this.Model.HasSpecialFilter() ? "" : "return false;")"><span>Clear special filters</span></a>
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasSpecialFilter() ? "" : "disabled")" onclick="@(this.Model.HasSpecialFilter() ? "" : "return false;")"><span>Clear special filters</span></a>
             }
             if (this.Model.FilterSpecial != null)
             {
@@ -114,6 +125,21 @@
             <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small"><span>Remove [@item]</span></a>
                 }
             }
+        }
+    </div>
+    <div class="button-bar">
+        @{
+            var vmPage = this.Model.Clone();
+            var q1 = UrlBuilder.GetListQueryParams("FilterSpecial", vmPage.FilterSpecial);
+            vmPage.FilterSpecial = null;
+
+            vmPage.Page = (this.Model.Page ?? 1) - 1;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vmPage), q1)" class="button small @((this.Model.Page ?? 1) > 1 ? "" : "disabled")" onclick="@((this.Model.Page ?? 1) > 1 ? "" : "return false;")"><span>Previous</span></a>
+
+            <span class="page-number">@(this.Model.Page ?? 1)</span>
+        
+            vmPage.Page = (this.Model.Page ?? 1) + 1;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vmPage), q1)" class="button small"><span>Next</span></a>
         }
     </div>
     @grid.GetHtml()

@@ -21,6 +21,13 @@ namespace CerebelloWebRole.Models
             return result;
         }
 
+        private int page;
+        public int? Page
+        {
+            get { return this.page <= 1 ? (int?)null : this.page; }
+            set { this.page = Math.Max(value ?? 1, 1); }
+        }
+
         public string Message { get; set; }
 
         public List<TraceLogItem> Logs { get; set; }
