@@ -30,7 +30,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             if (Interlocked.Exchange(ref locker, 1) != 0)
                 return;
 
-            Trace.TraceInformation("E-mail notification service in execution (EmailSenderWorker)");
+            Trace.TraceInformation("EmailSenderWorker.RunOnce(): service in execution");
             var emailsSent = 0;
 
             try
@@ -142,7 +142,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             }
             catch (Exception ex)
             {
-                Trace.TraceError("Error sending e-mails. Ex: " + ex.Message);
+                Trace.TraceError("EmailSenderWorker.RunOnce(): catch Exception: " + ex.Message);
             }
 
             // setting locker value to 0

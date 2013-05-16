@@ -30,7 +30,7 @@ namespace CerebelloWebRole
             // Trace listeners should always be the first thing here.
             MvcApplication.RegisterTraceListeners(Trace.Listeners);
 
-            Trace.TraceInformation("WebRole.OnStart()");
+            Trace.TraceInformation("WebRole.OnStart(): webrole started!");
 
             // This is where DLL's and other dependencies should be installed in the System.
             // Of course, a check must be made before installing anything to see if they are not yet installed.
@@ -50,7 +50,7 @@ namespace CerebelloWebRole
         /// </remarks>
         public override void Run()
         {
-            Trace.TraceInformation("WebRole.Run()");
+            Trace.TraceInformation("WebRole.Run(): webrole running");
 
             RouteHelper.RegisterAllRoutes();
 

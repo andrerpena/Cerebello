@@ -307,6 +307,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                              ? patientFilesByDate[eventDate].Select(v => v.Id).ToList()
                                              : new List<int>()
                                  }).ToList();
+
             return sessions;
         }
 

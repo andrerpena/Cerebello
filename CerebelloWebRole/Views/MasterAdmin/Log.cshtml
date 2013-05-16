@@ -1,16 +1,13 @@
-﻿@model List<CerebelloWebRole.Code.WindowsAzure.WindowsAzureLogHelper.TraceLogsEntity>
+﻿@model LogViewModel
 @{
     this.Layout = null;
 
-    var grid = this.Html.CreateGrid(this.Model);
-    grid.AddField(model => model.PartitionKey);
-    grid.AddField(model => model.Timestamp);
-    grid.AddField(model => model.Level);
+    var grid = this.Html.CreateGrid(this.Model.Logs);
+    grid.AddField(model => model.Timestamp, @<text><span style="white-space: nowrap">@DateTime.Parse(item.Timestamp).ToString("yyyy-MM-dd hh:mm")</span></text>);
+    grid.AddField(model => model.Level, @<text>@Log.Level(this.Url, item.Level, this.Model)</text>);
     grid.AddField(model => model.Role);
-    grid.AddField(model => model.RoleInstance);
-    grid.AddField(model => model.Message, @<text><strong>@item.Message</strong></text>);
-    
-    
+    grid.AddField(model => model.RoleInstance, @<text>@Log.RoleInstance(this.Url, item.RoleInstance, this.Model)</text>);
+    grid.AddField(model => model.Message, @<text>@Log.Message(this.Url, item.Message, this.Model)</text>);
 }
 <html>
 <head>

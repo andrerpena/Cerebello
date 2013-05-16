@@ -1,0 +1,65 @@
+﻿@using System.Text
+@using System.Text.RegularExpressions
+@using System.Web.Mvc
+@using CerebelloWebRole.Models
+
+@helper Message(UrlHelper url, string message, LogViewModel viewModel)
+{
+    var match = Regex.Match(message, @"^(?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:;\sTraceSource\s\'(?<SOURCE>.*?)\'\sevent)?$");
+
+    var nodes = match.Groups["NODES"].Value;
+    var text = match.Groups["TEXT"].Value;
+    var source = match.Groups["SOURCE"].Value;
+
+    if (!string.IsNullOrWhiteSpace(source))
+    {
+        var vm = viewModel.Clone();
+        vm.Logs = null;
+        vm.FilterSource = source;
+    <text><a href="@url.Action("Log", "MasterAdmin", vm)">@source</a>: </text>
+    }
+
+    if (!string.IsNullOrWhiteSpace(nodes))
+    {
+        var nodeSplit = nodes.Split('.');
+
+        var currentNodePath = new StringBuilder(nodes.Length);
+        foreach (var node in nodeSplit)
+        {
+            bool hasDot = currentNodePath.Length > 0;
+            if (hasDot)
+            {
+                currentNodePath.Append('.');
+            }
+
+            currentNodePath.Append(node.Trim());
+
+            var vm = viewModel.Clone();
+            vm.Logs = null;
+            vm.FilterPath = currentNodePath.ToString();
+
+            {<text><span>@(hasDot ? "." : "")</span><a href="@url.Action("Log", "MasterAdmin", vm)">@node</a></text>}
+        }
+        <text>: </text>
+    }
+    
+    <strong>@text</strong>
+}
+
+@helper RoleInstance(UrlHelper url, string roleInstance, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    vm.Logs = null;
+    vm.FilterRoleInstance = roleInstance;
+
+    {<a href="@url.Action("Log", "MasterAdmin", vm)">@roleInstance</a>}
+}
+
+@helper Level(UrlHelper url, string level, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    vm.Logs = null;
+    vm.FilterLevel = level;
+
+    {<a href="@url.Action("Log", "MasterAdmin", vm)">@level</a>}
+}

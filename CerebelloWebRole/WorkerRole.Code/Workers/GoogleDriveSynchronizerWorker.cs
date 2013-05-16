@@ -24,7 +24,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             if (Interlocked.Exchange(ref locker, 1) != 0)
                 return;
 
-            Trace.TraceInformation("Google Drive service in execution (GoogleDriveSynchronizerWorker)");
+            Trace.TraceInformation("GoogleDriveSynchronizerWorker.RunOnce(): service in execution");
 
             using (var db = this.CreateNewCerebelloEntities())
                 BackupHelper.BackupEverything(db);

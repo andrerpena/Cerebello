@@ -43,11 +43,15 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
         /// <param name="taskScheduler">The TaskScheduler to use to schedule tasks to be run.</param>
         private void Run([NotNull]TaskScheduler taskScheduler)
         {
-            Action<Exception> logException = ex =>
-            {
-                if (ex != null)
-                    Trace.TraceError(ex.Message);
-            };
+            Action<string, Exception> logException = (typeName, ex) =>
+                {
+                    if (ex != null)
+                        Trace.TraceError(
+                            string.Format(
+                                "IntervalWorkerScheduler.Run(taskScheduler): Worker of type {1} ended with exception: {0}",
+                                ex.Message,
+                                typeName));
+                };
 
             while (true)
             {
@@ -62,7 +66,10 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         // Observing Exception so that Task finalization does not rethrows it.
                         // If Task finalization is allowed to rethrow exceptions, then process will die,
                         // regardless of the try/catch block surrouding this method.
-                        task.ContinueWith(t => logException(t.Exception));
+                        // ReSharper disable ConditionIsAlwaysTrueOrFalse
+                        var typeName = eachWorker == null ? "[NULL]" : eachWorker.GetType().Name;
+                        // ReSharper restore ConditionIsAlwaysTrueOrFalse
+                        task.ContinueWith(t => logException(typeName, t.Exception));
                     }
 
                     Thread.Sleep(this.timeSpan);

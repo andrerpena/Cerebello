@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Collections;
@@ -312,13 +313,50 @@ namespace CerebelloWebRole.Controllers
             return "Errors : " + string.Join(",", errors);
         }
 
-        public ActionResult Log(string message)
+        public ActionResult Log(LogViewModel formModel)
         {
-            if(!string.IsNullOrEmpty(message))
-                Trace.TraceInformation(message);
+            if (!string.IsNullOrEmpty(formModel.Message))
+                Trace.TraceInformation("MasterAdminController.Log(formModel): " + formModel.Message);
 
-            var logs = WindowsAzureLogHelper.GetLastDayLogEvents();
-            return this.View(logs);
+            IEnumerable<WindowsAzureLogHelper.TraceLogsEntity> logs = WindowsAzureLogHelper.GetLastDayLogEvents();
+
+            if (!string.IsNullOrWhiteSpace(formModel.FilterPath)
+                && !string.IsNullOrWhiteSpace(formModel.FilterSource)
+                && !string.IsNullOrWhiteSpace(formModel.FilterText))
+            {
+                logs = logs.Where(l => FilterLogMessages(l.Message, formModel));
+            }
+
+            if (!string.IsNullOrWhiteSpace(formModel.FilterRoleInstance))
+            {
+                logs = logs.Where(l => formModel.FilterRoleInstance == l.RoleInstance);
+            }
+
+            if (!string.IsNullOrWhiteSpace(formModel.FilterLevel))
+            {
+                logs = logs.Where(l => formModel.FilterLevel == l.Level);
+            }
+
+            formModel.Logs = logs.ToList();
+
+            return this.View(formModel);
+        }
+
+        private static bool FilterLogMessages(string message, LogViewModel formModel)
+        {
+            var match = Regex.Match(message, @"^(?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:TraceSource\s\'(?<SOURCE>.*?)\'\sevent)?$");
+
+            var nodes = match.Groups["NODES"].Value;
+            var text = match.Groups["TEXT"].Value;
+            var source = match.Groups["SOURCE"].Value;
+
+            nodes = string.Join(".", nodes.Split('.').Select(s => s.Trim()));
+
+            bool result = (string.IsNullOrWhiteSpace(formModel.FilterPath) || nodes.StartsWith(formModel.FilterPath))
+                && (string.IsNullOrWhiteSpace(formModel.FilterSource) || formModel.FilterSource == source)
+                && (string.IsNullOrWhiteSpace(formModel.FilterText) || text.IndexOf(formModel.FilterText, StringComparison.InvariantCultureIgnoreCase) > 0);
+
+            return result;
         }
 
         public ActionResult ThrowException()
