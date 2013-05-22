@@ -53,16 +53,26 @@ input, textarea {
         margin-bottom: 0;
     }
 
-        .topbar .nav li {
-            float: left;
+        .topbar .nav li > a {
+            height: 18px;
+            font-size: 13px;
+            line-height: 18px;
+            padding: 4px 10px;
         }
 
-            .topbar .nav li a {
-                font-size: 13px;
-                line-height: 18px;
-                padding: 4px 10px;
-                text-align: center;
-            }
+        .topbar .nav > li > a {
+            text-align: center;
+        }
+
+    .topbar img.user-icon {
+        vertical-align: top;
+        position: relative;
+        top: -1px;
+        width: 20px;
+        height: 20px;
+        border: none;
+        margin: 0;
+    }
 
 
 .hero {

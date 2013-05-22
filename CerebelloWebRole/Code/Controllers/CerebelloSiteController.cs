@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Data;
 using CerebelloWebRole.Code.Security;
 
 namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// This is the base Controller for all Controllers inside the App.
-    /// The site and documentation Controllers will NOT be CerebelloController
+    /// The site and documentation Controllers will be CerebelloSiteController.
     /// </summary>
-    public class CerebelloController : RootController
+    public class CerebelloSiteController : RootController
     {
         /// <summary>
         /// Object context used throughout all the controller
@@ -25,8 +22,6 @@ namespace CerebelloWebRole.Code
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-
-            this.InitDb();
 
             // Note that this is not CerebelloController responsability to ensure the user is logged in
             // or that the user exists, simply because there's no way to return anything here in the
@@ -43,21 +38,6 @@ namespace CerebelloWebRole.Code
                 // this ViewBag will carry user information to the View
                 this.ViewBag.UserInfo = CerebelloController.GetUserInfo(this.DbUser);
             }
-        }
-
-        internal static UserInfo GetUserInfo(User dbUser)
-        {
-            return new UserInfo
-                {
-                    Id = dbUser.Id,
-                    DisplayName = dbUser.Person.FullName,
-                    GravatarEmailHash = dbUser.Person.EmailGravatarHash,
-                    // the following properties will only be set if the current user is a doctor
-                    DoctorId = dbUser.DoctorId,
-                    DoctorUrlIdentifier = dbUser.Doctor != null ? dbUser.Doctor.UrlIdentifier : null,
-                    AdministratorId = dbUser.AdministratorId,
-                    IsOwner = dbUser.IsOwner,
-                };
         }
 
         internal CerebelloEntitiesAccessFilterWrapper InitDb()
@@ -88,44 +68,11 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-
-            // if the base has already set a result, then we just exit this method
-            if (filterContext.Result != null)
-                return;
-
-            Debug.Assert(this.DbUser != null, "this.DbUser must not be null");
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            this.db.Dispose();
-        }
-
-        /// <summary>
-        /// Returns a view indicating that the requested object does not exist in the database
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult ObjectNotFound()
-        {
-            return this.View("ObjectNotFound");
-        }
-
-        /// <summary>
-        /// Returns a Json indicating that the requested object does not exist in the database
-        /// </summary>
-        /// <returns></returns>
-        public JsonResult ObjectNotFoundJson()
-        {
-            return this.Json(new
-                {
-                    success = false,
-                    text = "O registro solicitado não existe no banco de dados",
-                },
-                JsonRequestBehavior.AllowGet);
+            if (this.db != null)
+                this.db.Dispose();
         }
     }
 }

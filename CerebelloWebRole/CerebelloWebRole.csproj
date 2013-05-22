@@ -248,6 +248,7 @@
     <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
+    <Compile Include="Code\Controllers\CerebelloSiteController.cs" />
     <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />

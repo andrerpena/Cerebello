@@ -1,4 +1,5 @@
-﻿@using CerebelloWebRole.Code.Security
+﻿@using CerebelloWebRole.Code.Data
+@using CerebelloWebRole.Code.Security
 @{
     this.Layout = "_EmptyLayout.cshtml";
 }
@@ -91,8 +92,26 @@
                 @if (this.User is AuthenticatedPrincipal)
                 {
                     var userData = (this.User as AuthenticatedPrincipal).Profile;
-                    <li><a href="@Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
-                    <li><a href="@Url.Action("LogoutLogin", "Authentication")">Eu não sou @userData.FullName</a></li>
+                    var userInfo = this.ViewBag.UserInfo as UserInfo;
+                    
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span>
+                                @if (userInfo != null)
+                                {
+                                    <img class="user-icon" src="@this.Html.Raw(GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, GravatarHelper.Size.s24))" width="20" height="20" />
+                                }
+                                @userData.FullName
+                                <b class="caret"></b>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
+                            <li><a href="@Url.Action("LogoutLogin", "Authentication", new { area = "" })">Trocar usuário</a></li>
+                            <li><a href="@Url.Action("Logout", "Authentication", new { area = "" })">Sair</a></li>
+                        </ul>
+                    </li>
+                    
                 }
                 else
                 {

@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Collections;
-using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.WindowsAzure;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.WorkerRole.Code.Workers;
-using System.Linq;
-using CerebelloWebRole.Code;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
 
 namespace CerebelloWebRole.Controllers
 {
