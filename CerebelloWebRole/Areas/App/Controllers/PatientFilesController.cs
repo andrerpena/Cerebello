@@ -425,7 +425,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var originalFileName = patientFile.FileMetadata.FileName;
                     var destPath = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
 
-                    this.db.Files.DeleteObject(patientFile.FileMetadata);
+                    this.db.FileMetadatas.DeleteObject(patientFile.FileMetadata);
                     this.db.PatientFiles.DeleteObject(patientFile);
 
                     Action removeFile = () =>
@@ -482,7 +482,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 storageManager.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
 
                 this.db.PatientFiles.DeleteObject(patientFile);
-                this.db.Files.DeleteObject(file);
+                this.db.FileMetadatas.DeleteObject(file);
                 this.db.SaveChanges();
                 return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }

@@ -602,7 +602,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     storage.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, file.FileName);
 
                     this.db.PatientFiles.DeleteObject(patientFile);
-                    this.db.Files.DeleteObject(file);
+                    this.db.FileMetadatas.DeleteObject(file);
 
                     patientFiles.Remove(patientFile);
                 }
