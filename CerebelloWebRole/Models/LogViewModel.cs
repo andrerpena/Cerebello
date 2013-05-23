@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Models
 {
@@ -53,7 +54,7 @@ namespace CerebelloWebRole.Models
             if (this.FilterLevel == null)
                 return new HashSet<int>(new[] { 2, 3, 4 });
 
-            return new HashSet<int>(((this.FilterLevel ?? "none") == "none" ? "" : this.FilterLevel)
+            return new HashSet<int>((this.FilterLevel == "none" ? "" : this.FilterLevel)
                 .Split('-')
                 .Select(s => s.Trim())
                 .Where(s => Regex.IsMatch(s, @"\d+"))
