@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 
@@ -24,7 +25,7 @@ namespace CerebelloWebRole.Code.WindowsAzure
             public string Message { get; set; }
         }
 
-        public static List<TraceLogsEntity> GetLogEvents(int page, int? filterLevel, string filterRoleInstance, string filterPath)
+        public static List<TraceLogsEntity> GetLogEvents(int page, int[] filterLevels, string filterRoleInstance, string filterPath)
         {
             var storageAccount =
                 CloudStorageAccount.Parse(
@@ -42,17 +43,32 @@ namespace CerebelloWebRole.Code.WindowsAzure
                             where string.Compare(row.PartitionKey, "0" + endDate, StringComparison.Ordinal) <= 0
                             select row;
 
-            if (filterLevel != null)
+            if (filterLevels != null)
             {
-                selection = from row in selection
-                            where row.Level == filterLevel.Value
-                            select row;
-            }
-            else
-            {
-                selection = from row in selection
-                            where row.Level == 2 || row.Level == 3 || row.Level == 4
-                            select row;
+                if (filterLevels.Length == 1)
+                    selection = selection.Where(row => row.Level == filterLevels[0]);
+
+                if (filterLevels.Length == 2)
+                    selection = selection.Where(row => row.Level == filterLevels[0]
+                        || row.Level == filterLevels[1]);
+
+                if (filterLevels.Length == 3)
+                    selection = selection.Where(row => row.Level == filterLevels[0]
+                        || row.Level == filterLevels[1]
+                        || row.Level == filterLevels[2]);
+
+                if (filterLevels.Length == 4)
+                    selection = selection.Where(row => row.Level == filterLevels[0]
+                        || row.Level == filterLevels[1]
+                        || row.Level == filterLevels[2]
+                        || row.Level == filterLevels[3]);
+
+                if (filterLevels.Length >= 5)
+                    selection = selection.Where(row => row.Level == filterLevels[0]
+                        || row.Level == filterLevels[1]
+                        || row.Level == filterLevels[2]
+                        || row.Level == filterLevels[3]
+                        || row.Level == filterLevels[4]);
             }
 
             if (!string.IsNullOrWhiteSpace(filterRoleInstance))

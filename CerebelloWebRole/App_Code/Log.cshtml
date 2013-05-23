@@ -102,7 +102,7 @@
     var vm = viewModel.Clone();
     var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
     vm.FilterSpecial = null;
-    vm.FilterLevel = level;
+    vm.SetLevels(new HashSet<int>(new[] { level }));
 
     {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@level</span></a>}
 }

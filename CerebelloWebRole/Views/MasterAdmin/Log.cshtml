@@ -90,13 +90,6 @@
         @{
             {
                 var vm = this.Model.Clone();
-                vm.FilterLevel = null;
-                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
-                vm.FilterSpecial = null;
-            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasLevelFilter() ? "" : "disabled")" onclick="@(this.Model.HasLevelFilter() ? "" : "return false;")"><span>Clear level filters</span></a>
-            }
-            {
-                var vm = this.Model.Clone();
                 vm.FilterRole = null;
                 var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
                 vm.FilterSpecial = null;
@@ -122,6 +115,29 @@
                 var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
                 vm.FilterSpecial = null;
             <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasPathFilter() ? "" : "disabled")" onclick="@(this.Model.HasPathFilter() ? "" : "return false;")"><span>Clear code location filter</span></a>
+            }
+        }
+    </div>
+    <div class="button-bar">
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasLevelFilter() ? "" : "disabled")" onclick="@(this.Model.HasLevelFilter() ? "" : "return false;")"><span>Default level filters</span></a>
+            }
+            for (var lvl = 1; lvl <= 5; lvl++)
+            {
+                var vm = this.Model.Clone();
+                var levels = vm.GetLevels();
+                var isEnabled = levels.Contains(lvl);
+                if (isEnabled) { levels.Remove(lvl); }
+                else { levels.Add(lvl); }
+                vm.SetLevels(levels);
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small @(isEnabled ? "" : "disabled")"><span>Level @lvl</span></a>
             }
         }
     </div>

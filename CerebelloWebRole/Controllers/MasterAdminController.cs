@@ -315,8 +315,9 @@ namespace CerebelloWebRole.Controllers
             if (!string.IsNullOrEmpty(formModel.Message))
                 Trace.TraceInformation("MasterAdminController.Log(formModel): " + formModel.Message);
 
+            var levels = formModel.GetLevels();
             IEnumerable<WindowsAzureLogHelper.TraceLogsEntity> logsSource = WindowsAzureLogHelper.GetLogEvents(
-                formModel.Page ?? 1, formModel.FilterLevel, formModel.FilterRoleInstance, formModel.FilterPath);
+                formModel.Page ?? 1, levels.ToArray(), formModel.FilterRoleInstance, formModel.FilterPath);
 
             var logs = logsSource
                 .Select(
@@ -341,7 +342,7 @@ namespace CerebelloWebRole.Controllers
                 logs = logs.Where(l => formModel.FilterRoleInstance == l.RoleInstance);
 
             if (formModel.HasLevelFilter())
-                logs = logs.Where(l => formModel.FilterLevel == l.Level);
+                logs = logs.Where(l => levels.Contains(l.Level));
 
             if (formModel.HasSpecialFilter())
                 logs = logs.Where(l => l.SpecialStrings.Any(s => formModel.FilterSpecial.Contains(s)));

@@ -40,13 +40,49 @@ namespace CerebelloWebRole.Models
 
         public string FilterRole { get; set; }
 
-        public int? FilterLevel { get; set; }
+        public string FilterLevel { get; set; }
 
         public List<string> FilterSpecial { get; set; }
 
         public string FilterText { get; set; }
 
         public string FilterTimestamp { get; set; }
+
+        public HashSet<int> GetLevels()
+        {
+            if (this.FilterLevel == null)
+                return new HashSet<int>(new[] { 2, 3, 4 });
+
+            return new HashSet<int>(((this.FilterLevel ?? "none") == "none" ? "" : this.FilterLevel)
+                .Split('-')
+                .Select(s => s.Trim())
+                .Where(s => Regex.IsMatch(s, @"\d+"))
+                .Select(int.Parse));
+        }
+
+        public void SetLevels(HashSet<int> levels)
+        {
+            if (levels == null || levels.Count == 0)
+            {
+                this.FilterLevel = "none";
+            }
+            else
+            {
+                var hashSet = new HashSet<int>(levels);
+                this.FilterLevel = IsDefaultLevels(hashSet) ? null : string.Join("-", levels.OrderBy(i => i));
+            }
+        }
+
+        public bool IsDefaultLevels()
+        {
+            var hashSet = this.GetLevels();
+            return IsDefaultLevels(hashSet);
+        }
+
+        private static bool IsDefaultLevels(HashSet<int> hashSet)
+        {
+            return hashSet.Count == 3 && hashSet.Contains(2) && hashSet.Contains(3) && hashSet.Contains(4);
+        }
 
         public class TraceLogItem
         {
