@@ -3,9 +3,9 @@
     this.Layout = null;
 
     var grid = this.Html.CreateGrid(this.Model.Logs);
-    grid.AddField(model => model.Timestamp, @<text><span style="white-space: nowrap">@item.Timestamp.ToString("yyyy-MM-dd hh:mm")</span></text>);
+    grid.AddField(model => model.Timestamp, @<text>@Log.Timestamp(this.Url, item.Timestamp, this.Model)</text>);
     grid.AddField(model => model.Level, @<text>@Log.Level(this.Url, item.Level, this.Model)</text>);
-    grid.AddField(model => model.Role);
+    grid.AddField(model => model.Role, @<text>@Log.Role(this.Url, item.Role, this.Model)</text>);
     grid.AddField(model => model.RoleInstance, @<text>@Log.RoleInstance(this.Url, item.RoleInstance, this.Model)</text>);
     grid.AddField(model => model.Source, @<text>@Log.Source(this.Url, item.Source, this.Model)</text>);
     grid.AddField(model => model.Message, @<text>@Log.Message(this.Url, item, this.Model)</text>);
@@ -52,6 +52,14 @@
                 font-size: 9px;
             }
 
+            a.button.green {
+                background: #26EC72;
+            }
+
+            a.button.green {
+                background: #5AF194;
+            }
+
         .page-number {
             vertical-align: bottom;
             font-size: 14px;
@@ -77,6 +85,8 @@
     </div>
     <div class="button-bar">
         <a href="@this.Url.Action("Log")" class="button @(this.Model.HasAnyFilter() ? "" : "disabled")" onclick="@(this.Model.HasAnyFilter() ? "" : "return false;")"><span>Clear all filters</span></a>
+    </div>
+    <div class="button-bar">
         @{
             {
                 var vm = this.Model.Clone();
@@ -84,6 +94,13 @@
                 var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
                 vm.FilterSpecial = null;
             <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasLevelFilter() ? "" : "disabled")" onclick="@(this.Model.HasLevelFilter() ? "" : "return false;")"><span>Clear level filters</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterRole = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasRoleFilter() ? "" : "disabled")" onclick="@(this.Model.HasRoleFilter() ? "" : "return false;")"><span>Clear role filter</span></a>
             }
             {
                 var vm = this.Model.Clone();
@@ -106,6 +123,10 @@
                 vm.FilterSpecial = null;
             <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasPathFilter() ? "" : "disabled")" onclick="@(this.Model.HasPathFilter() ? "" : "return false;")"><span>Clear code location filter</span></a>
             }
+        }
+    </div>
+    <div class="button-bar">
+        @{
             {
                 var vm = this.Model.Clone();
                 vm.FilterSpecial = null;
@@ -124,6 +145,24 @@
                     
             <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small"><span>Remove [@item]</span></a>
                 }
+            }
+        }
+    </div>
+    <div class="button-bar">
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterTimestamp = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasTimestampFilter() ? "" : "disabled")" onclick="@(this.Model.HasTimestampFilter() ? "" : "return false;")"><span>Clear timestamp filters</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterTimestamp = "now";
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small"><span>Filter from NOW</span></a>
             }
         }
     </div>

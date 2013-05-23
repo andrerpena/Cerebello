@@ -993,7 +993,7 @@
     <EmbeddedResource Include="Content\Reports\PatientsList\Anamneses.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\Receipts.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
-    <Content Include="App.config">
+    <Content Include="WaIISHost.exe.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

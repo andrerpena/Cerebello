@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
@@ -327,23 +328,48 @@ namespace CerebelloWebRole.Controllers
                             Role = item.Role,
                         });
 
-            if (!string.IsNullOrWhiteSpace(formModel.FilterPath))
+            if (formModel.HasPathFilter())
                 logs = logs.Where(l => l.Path.StartsWith(formModel.FilterPath));
 
-            if (!string.IsNullOrWhiteSpace(formModel.FilterSource))
+            if (formModel.HasSourceFilter())
                 logs = logs.Where(l => l.Source.Equals(formModel.FilterSource, StringComparison.InvariantCultureIgnoreCase));
 
-            if (!string.IsNullOrWhiteSpace(formModel.FilterText))
+            if (formModel.HasTextFilter())
                 logs = logs.Where(l => l.Text.IndexOf(formModel.FilterText, StringComparison.InvariantCultureIgnoreCase) > 0);
 
-            if (!string.IsNullOrWhiteSpace(formModel.FilterRoleInstance))
+            if (formModel.HasRoleInstanceFilter())
                 logs = logs.Where(l => formModel.FilterRoleInstance == l.RoleInstance);
 
-            if (formModel.FilterLevel != null)
+            if (formModel.HasLevelFilter())
                 logs = logs.Where(l => formModel.FilterLevel == l.Level);
 
-            if (formModel.FilterSpecial != null && formModel.FilterSpecial.Count > 0)
+            if (formModel.HasSpecialFilter())
                 logs = logs.Where(l => l.SpecialStrings.Any(s => formModel.FilterSpecial.Contains(s)));
+
+            if (formModel.HasRoleFilter())
+                logs = logs.Where(l => formModel.FilterRole == l.Role);
+
+            if (formModel.HasTimestampFilter())
+            {
+                if (formModel.FilterTimestamp == "now")
+                {
+                    var vm = formModel.Clone();
+                    vm.FilterLevel = null;
+                    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                    vm.FilterTimestamp = this.GetUtcNow().ToString("yyyy'-'MM'-'dd'-'HH'-'mm");
+
+                    return this.Redirect(UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q));
+                }
+
+                var date =
+                    DateTime.Parse(
+                        Regex.Replace(
+                            formModel.FilterTimestamp,
+                            @"(\d{4})\-(\d{2})\-(\d{2})\-(\d{2})\-(\d{2})",
+                            @"$1-$2-$3T$4:$5:00"));
+
+                logs = logs.Where(l => l.Timestamp > date);
+            }
 
             formModel.Logs = logs.ToList();
 

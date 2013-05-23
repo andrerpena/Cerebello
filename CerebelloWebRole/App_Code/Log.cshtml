@@ -72,7 +72,18 @@
     vm.FilterRoleInstance = roleInstance;
 
     if (!string.IsNullOrWhiteSpace(roleInstance))
-    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@roleInstance</a>}
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@roleInstance</span></a>}
+}
+
+@helper Role(UrlHelper url, string role, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterRole = role;
+
+    if (!string.IsNullOrWhiteSpace(role))
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@role</span></a>}
 }
 
 @helper Source(UrlHelper url, string source, LogViewModel viewModel)
@@ -83,7 +94,7 @@
     vm.FilterSource = source;
 
     if (!string.IsNullOrWhiteSpace(source))
-    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@source</a>}
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@source</span></a>}
 }
 
 @helper Level(UrlHelper url, int level, LogViewModel viewModel)
@@ -93,5 +104,15 @@
     vm.FilterSpecial = null;
     vm.FilterLevel = level;
 
-    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@level</a>}
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@level</span></a>}
+}
+
+@helper Timestamp(UrlHelper url, DateTime timestamp, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterTimestamp = timestamp.ToString("yyyy'-'MM'-'dd'-'HH'-'mm");
+
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@timestamp.ToString("yyyy'-'MM'-'dd' 'HH':'mm")</span></a>}
 }

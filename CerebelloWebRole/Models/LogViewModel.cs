@@ -38,11 +38,15 @@ namespace CerebelloWebRole.Models
 
         public string FilterRoleInstance { get; set; }
 
+        public string FilterRole { get; set; }
+
         public int? FilterLevel { get; set; }
 
         public List<string> FilterSpecial { get; set; }
 
         public string FilterText { get; set; }
+
+        public string FilterTimestamp { get; set; }
 
         public class TraceLogItem
         {
@@ -80,16 +84,20 @@ namespace CerebelloWebRole.Models
             return this.HasLevelFilter()
                 || this.HasPathFilter()
                 || this.HasRoleInstanceFilter()
+                || this.HasRoleFilter()
                 || this.HasSourceFilter()
                 || this.HasSpecialFilter()
+                || this.HasTimestampFilter()
                 || this.HasTextFilter();
         }
 
         public bool HasLevelFilter() { return this.FilterLevel != null; }
         public bool HasPathFilter() { return !string.IsNullOrWhiteSpace(this.FilterPath); }
         public bool HasRoleInstanceFilter() { return !string.IsNullOrWhiteSpace(this.FilterRoleInstance); }
+        public bool HasRoleFilter() { return !string.IsNullOrWhiteSpace(this.FilterRole); }
         public bool HasSourceFilter() { return !string.IsNullOrWhiteSpace(this.FilterSource); }
         public bool HasSpecialFilter() { return this.FilterSpecial != null && this.FilterSpecial.Any(s => !string.IsNullOrWhiteSpace(s)); }
+        public bool HasTimestampFilter() { return !string.IsNullOrWhiteSpace(this.FilterTimestamp); }
         public bool HasTextFilter() { return !string.IsNullOrWhiteSpace(this.FilterText); }
     }
 }
