@@ -323,6 +323,9 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="CerebelloWebRole.Dll.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\Images\Site\mail.png" />
     <Content Include="Content\Images\Site\phone.png" />
     <Content Include="Content\Images\Site\backup.png" />
@@ -805,6 +808,7 @@
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -997,10 +1001,6 @@
     <EmbeddedResource Include="Content\Reports\PatientsList\Anamneses.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\Receipts.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
-    <Content Include="WaIISHost.exe.config">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Contracts\Contrato-plano-profissional.docx" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.odt" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.pdf" />

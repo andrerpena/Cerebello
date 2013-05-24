@@ -136,5 +136,12 @@ namespace CerebelloWebRole.Models
         public bool HasSpecialFilter() { return this.FilterSpecial != null && this.FilterSpecial.Any(s => !string.IsNullOrWhiteSpace(s)); }
         public bool HasTimestampFilter() { return !string.IsNullOrWhiteSpace(this.FilterTimestamp); }
         public bool HasTextFilter() { return !string.IsNullOrWhiteSpace(this.FilterText); }
+
+        private string dateTimeLocation;
+        public string DateTimeLocation
+        {
+            get { return this.dateTimeLocation == "SP-RJ-MG" ? null : this.dateTimeLocation; }
+            set { this.dateTimeLocation = value == "SP-RJ-MG" ? null : value; }
+        }
     }
 }

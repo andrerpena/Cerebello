@@ -3,7 +3,7 @@
     this.Layout = null;
 
     var grid = this.Html.CreateGrid(this.Model.Logs);
-    grid.AddField(model => model.Timestamp, @<text>@Log.Timestamp(this.Url, item.Timestamp, this.Model)</text>);
+    grid.AddField(model => model.Timestamp, @<text>@Log.Timestamp(this.Url, item.Timestamp, this.Model)</text>, string.Format("Timestamp ({0})", (this.Model.DateTimeLocation ?? "SP-RJ-MG").Replace('-', ' ')));
     grid.AddField(model => model.Level, @<text>@Log.Level(this.Url, item.Level, this.Model)</text>);
     grid.AddField(model => model.Role, @<text>@Log.Role(this.Url, item.Role, this.Model)</text>);
     grid.AddField(model => model.RoleInstance, @<text>@Log.RoleInstance(this.Url, item.RoleInstance, this.Model)</text>);
@@ -19,9 +19,25 @@
             margin: 1em;
         }
 
+        h1, h2 {
+            font-size: 20px;
+            text-decoration: none;
+            margin: 18px 0 5px 0;
+            border: none;
+            line-height: 1em;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
         .button-bar {
             margin: 4px 0;
         }
+
+            .button-bar > span {
+                vertical-align: middle;
+            }
 
         a.button {
             background: #2672EC;
@@ -31,7 +47,7 @@
             font-size: 12px;
             line-height: 24px;
             height: 24px;
-            vertical-align: bottom;
+            vertical-align: middle;
         }
 
             a.button > span {
@@ -72,17 +88,18 @@
     </style>
 </head>
 <body>
+    <h1>Visualizador de LOG</h1>
+    <h2>Informações importantes</h2>
     <div style="margin-bottom: 10px">
-        <strong>Informações importantes:</strong>
         <ul>
-            <li>Este log está exibindo informações das últimas 3 horas, em ordem decrescente (quanto mais no topo, mais recente).</li>
-            <li>Somente os LEVELS 2, 3 e 4 estão sendo exibidos. Trace.TraceError = 2, Trace.TraceWarning = 3 e Trace.TraceInformation = 4.</li>
-            <li>O flush do TRACE para o LOG acontece de 2 em 2 minutos. Então demora até 2 minutos para que seu TRACE venha para esta lista.</li>
+            <li>Cada página exibida possui 3 horas de LOG, em ordem decrescente (quanto mais no topo, mais recente).</li>
+            <li>O flush do TRACE para o LOG é forçado ao chamar esta página.</li>
             <li>É possível inserir uma mensagem de log passando o parâmetro opcional MESSAGE. Ex: /masteradmin/log?message=teste 3. Demora até 2 minutos para que ela apareça na lista</li>
             <li>Clique nos links que aparecem na tabela para filtrar usando a característica clicada.</li>
-            <li>Quando houverem filtros é possível limpar os mesmos usando os botões de limpar filtros. Quando os botões estiverem cinza, é porque o filtro está desativado, quando estiverem azuis, é porque existe algum filtro para aquela característica.</li>
+            <li>Use os botões abaixo para filtrar e definir as opções de exibição.</li>
         </ul>
     </div>
+    <h2>Filter options</h2>
     <div class="button-bar">
         <a href="@this.Url.Action("Log")" class="button @(this.Model.HasAnyFilter() ? "" : "disabled")" onclick="@(this.Model.HasAnyFilter() ? "" : "return false;")"><span>Clear all filters</span></a>
     </div>
@@ -139,6 +156,16 @@
                 vm.FilterSpecial = null;
             <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small @(isEnabled ? "" : "disabled")"><span>Level @lvl</span></a>
             }
+            {
+                var vm = this.Model.Clone();
+                var levels = vm.GetLevels();
+                var isEnabled = levels.Count >= 5;
+                levels = new HashSet<int>(new [] { 1, 2, 3, 4, 5 });
+                vm.SetLevels(levels);
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small @(isEnabled ? "" : "disabled")"><span>All levels</span></a>
+            }
         }
     </div>
     <div class="button-bar">
@@ -182,6 +209,22 @@
             }
         }
     </div>
+    <h2>Display options</h2>
+    <div class="button-bar">
+        <span>Date time location</span>
+        @{
+            var modelLoc = (this.Model.DateTimeLocation ?? "SP-RJ-MG").Replace('-', ' ');
+            foreach (var loc in new[] { "UTC", "SP RJ MG" })
+            {
+                var vm = this.Model.Clone();
+                vm.DateTimeLocation = loc.Replace(' ', '-');
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(modelLoc != loc ? "" : "disabled")" onclick="@(modelLoc != loc ? "" : "return false;")"><span>@loc</span></a>
+            }
+        }
+    </div>
+    <h2>Results</h2>
     <div class="button-bar">
         @{
             var vmPage = this.Model.Clone();
