@@ -254,6 +254,7 @@
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
     <Compile Include="Code\Helpers\TraceHelper.cs" />
+    <Compile Include="Code\Hubs\IChatHub.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureLogHelper.cs" />
     <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
