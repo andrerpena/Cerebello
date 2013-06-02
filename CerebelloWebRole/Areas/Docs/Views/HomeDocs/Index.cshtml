@@ -10,20 +10,24 @@
     O Cerebello é um software de gestão de consultórios médicos e pequenas clínicas com foco no <a href="http://pt.wikipedia.org/wiki/Prontu%C3%A1rio_m%C3%A9dico">prontuário eletrônico</a> e agenda.
     O Cerebello funciona online, isto é, não é necessário nenhum tipo de instalação, nem se preocupar com infraestrutura de rede, backup, segurança e etc. Todos os dados ficam armazenados com segurança nas nuvens, 
     <a href="http://www.windowsazure.com/pt-br/">nos servidores da Microsoft</a>.
+    
+    
 </p>
 
 <p>
     Apesar de não obrigatório, o cenário padrão de funcionamento do Cerebello é um consultório que possua pelo menos um médico e uma secretária, ambos com acesso a internet. Quando o médico cria uma conta no Cerebello,
-    é necessário que ele <a href="@Url.Action("ManagingUsers")">cadastre um usuário para a secretária</a>. A partir deste momento ela pode efetuar login normalmente. Uma vez que tanto o médico quanto a secretária estão conectados, eles poderão se
+    é possível <a href="@Url.Action("ManagingUsers")">cadastrar um usuário para a secretária</a>. A partir deste momento, a secretária pode efetuar login no Cerebello normalmente, utilizando o mesmo identificador do consultório. Uma vez que tanto o médico quanto a secretária estão conectados, eles poderão se
     comunicar pelo software e trabalhar em conjunto.
 </p>
 <p>
     Pelo fato do Cerebello e os dados serem hospedados nas nuvens, o médico pode acessar informações dos seus pacientes de qualquer lugar, a qualquer momento, inclusive pelo celular. É possível
-    também exportar os dados dos pacientes para PDF, de forma eles possam ser impressos e acessados off-line, caso seja necessário.
+    também exportar todos os dados dos pacientes para que eles possam ser acessados off-line. O Cerebello também possui um sistema de backup automático sincronizando os dados
+    dos seus pacientes com o <a href="https://drive.google.com/#my-drive">Google Drive</a>. Os dados no <a href="https://drive.google.com/#my-drive">Google Drive</a> podem ser acessados
+    tanto no seu computador pessoal quanto dispositivos móveis.
 </p>
 <p>
     Nós esperamos que você tenha a melhor experiência possível com o Cerebello. <a href="@Url.Action("CreateAccount", "Authentication", new { area = ""})">Crie uma conta de experiência</a>, leia a <a href="@Url.Action("Index")">documentação</a> e,
     caso tenha dúvidas, <a href="mailto:cerebello@cerebello.com.br">entre em contato conosco</a>. Nós vamos estar à sua disposição para sanar qualquer dúvida. Caso o Cerebello não supra suas expectativas ou
     caso você tenha alguma sugestão de melhoria, sinta-se a vontade em <a href="http://cerebello.uservoice.com" target="_blank">sugerir as funcionalidades que você julga necessárias</a>. Nós vamos analisar todas as sugestões
-    e pensar na melhor maneira de torná-las realidade. Nosso interesse é fazer a melhor ferramenta e ajudar o máximo possível no seu dia-a-dia.
+    e pensar na melhor maneira de torná-las realidade. Nosso interesse é fazer do Cerebello a melhor ferramenta e ajudar o máximo possível no seu dia-a-dia do seu consultório.
 </p>

@@ -1,4 +1,24 @@
-﻿.docs-container 
-{
-    margin-top:20px;
+﻿.docs-container {
+    margin-top: 20px;
 }
+
+.thumb {
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+}
+
+    .thumb .description {
+        display: inline-block;
+        font-size: 0.8em;
+    }
+
+    .thumb.right {
+        margin: 0 0 10px 10px;
+        float: right;
+    }
+
+    .thumb.left {
+        margin: 5px 10px 10px 0;
+        float: left;
+    }
