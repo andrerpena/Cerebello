@@ -267,5 +267,7 @@ namespace Cerebello.SolutionSetup.Parser
 
             return null;
         }
+
+        public Type[] StaticTypes { get; set; }
     }
 }

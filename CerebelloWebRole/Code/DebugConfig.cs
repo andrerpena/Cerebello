@@ -59,6 +59,9 @@ namespace CerebelloWebRole.Code
                     [XmlAttribute("name")]
                     public string Name { get; set; }
 
+                    [XmlElement("server")]
+                    public ServerItem Server { get; set; }
+
                     [XmlElement("useLocalResources")]
                     public UseLocalResourcesItem UseLocalResources { get; set; }
 
@@ -71,9 +74,25 @@ namespace CerebelloWebRole.Code
                     [XmlElement("dataBase")]
                     public DataBaseItem DataBase { get; set; }
 
+                    [XmlElement("saveFilesTo")]
+                    public SaveFilesToItem SaveFilesTo { get; set; }
+
                     public override string ToString()
                     {
                         return string.Format(@"<setting name=""{0}"">", this.Name);
+                    }
+
+                    public class ServerItem
+                    {
+                        [XmlAttribute("noHttps")]
+                        public bool NoHttps { get; set; }
+
+                        public override string ToString()
+                        {
+                            return string.Format(
+                                @"<server noHttps=""{0}"">",
+                                this.NoHttps ? "true" : "false");
+                        }
                     }
 
                     public class UseLocalResourcesItem
@@ -107,6 +126,23 @@ namespace CerebelloWebRole.Code
                                 this.Enabled ? "true" : "false",
                                 this.Use,
                                 this.Allowed);
+                        }
+                    }
+
+                    public class SaveFilesToItem
+                    {
+                        [XmlAttribute("enabled")]
+                        public bool Enabled { get; set; }
+
+                        [XmlAttribute("use")]
+                        public string Use { get; set; }
+
+                        public override string ToString()
+                        {
+                            return string.Format(
+                                @"<sendEmailsTo enabled=""{0}"" use=""{1}"">",
+                                this.Enabled ? "true" : "false",
+                                this.Use);
                         }
                     }
 
@@ -252,17 +288,53 @@ namespace CerebelloWebRole.Code
             }
         }
 
+        [XmlRoot("settings")]
+        public class UserSettings
+        {
+            [XmlElement]
+            public string CommonPath { get; set; }
+
+            [XmlElement]
+            public string SolutionPath { get; set; }
+
+            [XmlElement]
+            public string DesktopPath { get; set; }
+        }
+
         public delegate void MailSaver(MailMessage message);
 
         // this class is used only for debugging purposes... it may not be injectable, nor testable in any way
+        private static readonly UserSettings userSettings;
         private static readonly string cerebelloDebugPath;
         private static readonly string cerebelloDebugConfigPath;
 
         static DebugConfig()
         {
 #if DEBUG
+            string uncommitedXml = "Uncommited.xml";
+            if (!File.Exists(uncommitedXml))
+                uncommitedXml = Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Uncommited.xml");
+            if (!File.Exists(uncommitedXml) && HttpContext.Current != null)
+                uncommitedXml = HttpContext.Current.Server.MapPath(uncommitedXml);
+
+            if (File.Exists(uncommitedXml))
+            {
+                var ser = new XmlSerializer(typeof(UserSettings));
+                using (var reader = XmlReader.Create(uncommitedXml))
+                    userSettings = (UserSettings)ser.Deserialize(reader);
+            }
+            else
+            {
+                userSettings = new UserSettings
+                    {
+                        CommonPath = @"C:\",
+                        DesktopPath = @"C:\",
+                        SolutionPath = @"C:\",
+                    };
+            }
+
             // reading the debug.config file placed in a common path
-            var commonPath = "C:\\";
+            var commonPath = userSettings.CommonPath;
             cerebelloDebugPath = Path.Combine(commonPath, "Cerebello.Debug");
             cerebelloDebugConfigPath = Path.Combine(cerebelloDebugPath, "debug.config");
 
@@ -432,6 +504,23 @@ namespace CerebelloWebRole.Code
         private readonly ConfigurationItem config;
         [CanBeNull]
         private readonly ConfigurationItem.DebugItem.SettingItem setting;
+
+        public static string LocalStoragePath
+        {
+            get
+            {
+#if DEBUG
+                lock (locker)
+                    if (IsDebug)
+                    {
+                        // default path is desktop
+                        return Path.Combine(userSettings.DesktopPath, @"Cerebello.Debug\Storage");
+                    }
+#endif
+                // default connection for RELEASE mode is Azure
+                return null;
+            }
+        }
 
         /// <summary>
         /// Gets the database connection to use when debugging.
@@ -686,7 +775,7 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        private static MailSaver GetStorageSaver(List<ConfigurationItem.StoragesList.StorageItem> storagesList, string path)
+        private static MailSaver GetStorageSaver(IEnumerable<ConfigurationItem.StoragesList.StorageItem> storagesList, string path)
         {
             string localPath = null;
             if (Regex.IsMatch(path, @"^[a-z]\:\\", RegexOptions.IgnoreCase))
@@ -779,6 +868,19 @@ namespace CerebelloWebRole.Code
                 }
 
                 return HostEnv.Unknown;
+            }
+        }
+
+        public static bool NoHttps
+        {
+            get
+            {
+#if DEBUG
+                lock (locker)
+                    if (inst != null && inst.setting != null && inst.setting.Server != null)
+                        return inst.setting.Server.NoHttps;
+#endif
+                return false;
             }
         }
     }

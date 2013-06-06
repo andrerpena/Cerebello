@@ -166,12 +166,23 @@ namespace Cerebello.SolutionSetup.Parser
 
             public List<INode> Parameters { get; set; }
 
+            /// <summary>
+            /// Gets or sets the element that this instance method call applies to.
+            /// </summary>
             public INode Element { get; set; }
+
+            /// <summary>
+            /// Gets or sets the type that this static method call applies to.
+            /// </summary>
+            public Type Type { get; set; }
 
             public object Execute(object root)
             {
-                var elementValue = this.Element != null ? this.Element.Execute(root) : root;
                 var paramValues = this.Parameters.Select(exec => exec.Execute(root)).ToArray();
+                if (this.minfo.IsStatic)
+                    return this.minfo.Invoke(null, paramValues);
+
+                var elementValue = this.Element != null ? this.Element.Execute(root) : root;
                 var result = this.minfo.Invoke(elementValue, paramValues);
                 return result;
             }
@@ -183,14 +194,20 @@ namespace Cerebello.SolutionSetup.Parser
             /// <returns>Returns the type of the parsed expression, by doing a static analysis.</returns>
             public Type Compile(Type rootType)
             {
-                var elementType = this.Element != null ? this.Element.Compile(rootType) : rootType;
+                var isStatic = this.Type != null;
+                var type = this.Type ?? (this.Element != null ? this.Element.Compile(rootType) : rootType);
+
                 var paramTypes = this.Parameters.Select(exec => exec.Compile(rootType)).ToArray();
 
-                this.minfo = elementType.GetMethod(this.Name, paramTypes);
+                this.minfo = isStatic
+                    ? type.GetMethod(this.Name, BindingFlags.Static | BindingFlags.Public, null, paramTypes, null)
+                    : type.GetMethod(this.Name, BindingFlags.Instance | BindingFlags.Public, null, paramTypes, null);
+
                 if (this.minfo == null)
                 {
-                    var mis = elementType.GetMethods()
+                    var mis = type.GetMethods()
                         .Where(pi => pi.Name == this.Name)
+                        .Where(pi => pi.IsStatic == isStatic)
                         .ToArray();
 
                     var miParams = mis
@@ -445,11 +462,11 @@ namespace Cerebello.SolutionSetup.Parser
             /// <returns>Returns an object that results from parsing the code.</returns>
             public override object Read(SimpleParser parser, object prevData)
             {
-                var prevExecutor = (INode)prevData;
+                var prevExecutor = prevData as INode;
 
                 parser.SkipSpaces();
 
-                if (prevExecutor == null)
+                if (prevData == null)
                 {
                     var name = this.ReadName(parser);
 
@@ -460,7 +477,13 @@ namespace Cerebello.SolutionSetup.Parser
 
                     // this is a global property
                     if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        var typeReference = parser.StaticTypes.SingleOrDefault(t => t.Name == name);
+                        if (typeReference != null)
+                            return typeReference;
+
                         return new PropertyGet { Name = name, Element = null };
+                    }
 
                     // this is an array construct
                     if (parser.ReadChar('{'))
@@ -531,7 +554,7 @@ namespace Cerebello.SolutionSetup.Parser
                         var name = this.ReadName(parser);
 
                         // this is a direct method call in the previous element
-                        var call = ReadMethodCall(parser, prevExecutor, name);
+                        var call = ReadMethodCall(parser, prevData, name);
                         if (call != null)
                             return call;
 
@@ -602,20 +625,43 @@ namespace Cerebello.SolutionSetup.Parser
                     parser.SkipSpaces();
                     if (parser.ReadChar('('))
                     {
-                        var prevExecutor = (INode)prevData;
-                        var type = prevData == null ? parser.GlobalType : prevExecutor.Compile(parser.GlobalType);
-                        var isMethodGroup = type.GetMethods().Any(m => m.Name == name);
-                        if (isMethodGroup)
-                        {
-                            var paramValues = parser.ReadList<ValueBuilder, INode>(ReadListSeparator);
-                            if (paramValues.Count == 1 && paramValues[0] == null)
-                                paramValues.Clear();
+                        var prevType = prevData as Type;
 
-                            parser.SkipSpaces();
-                            if (parser.ReadChar(')'))
+                        if (prevType != null)
+                        {
+                            var isMethodGroup = prevType.GetMethods(BindingFlags.Static | BindingFlags.Public).Any(m => m.Name == name);
+                            if (isMethodGroup)
                             {
-                                la.Success();
-                                return new Call { Element = prevExecutor, Name = name, Parameters = paramValues };
+                                var paramValues = parser.ReadList<ValueBuilder, INode>(ReadListSeparator);
+                                if (paramValues.Count == 1 && paramValues[0] == null)
+                                    paramValues.Clear();
+
+                                parser.SkipSpaces();
+                                if (parser.ReadChar(')'))
+                                {
+                                    la.Success();
+                                    return new Call { Type = prevType, Element = null, Name = name, Parameters = paramValues };
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var prevExecutor = (INode)prevData;
+                            var type = prevData == null ? parser.GlobalType : prevExecutor.Compile(parser.GlobalType);
+
+                            var isMethodGroup = type.GetMethods(BindingFlags.Instance | BindingFlags.Public).Any(m => m.Name == name);
+                            if (isMethodGroup)
+                            {
+                                var paramValues = parser.ReadList<ValueBuilder, INode>(ReadListSeparator);
+                                if (paramValues.Count == 1 && paramValues[0] == null)
+                                    paramValues.Clear();
+
+                                parser.SkipSpaces();
+                                if (parser.ReadChar(')'))
+                                {
+                                    la.Success();
+                                    return new Call { Element = prevExecutor, Name = name, Parameters = paramValues };
+                                }
                             }
                         }
                     }

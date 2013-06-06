@@ -40,6 +40,9 @@ namespace Cerebello.SolutionSetup
         [XmlElement("tests-uncommited-config")]
         public Version TestsUncommitedConfig { get; set; }
 
+        [XmlElement("cerebello-uncommited-xml")]
+        public Version CerebelloUncommitedXml { get; set; }
+
         public class Properties
         {
             [XmlElement("operator-name")]
@@ -48,18 +51,13 @@ namespace Cerebello.SolutionSetup
             public string OperatorName { get; set; }
 
             [XmlIgnore] // use current path
-            public string SolutionPath { get; internal set; }
+            [Description("Path of the solution.")]
+            public string SolutionPath { get; set; }
 
-            [Browsable(false)]
-            public PathStatic Path { get { return new PathStatic(); } }
-
-            public class PathStatic
-            {
-                public string Combine(string a, string b)
-                {
-                    return System.IO.Path.Combine(a, b);
-                }
-            }
+            [XmlIgnore]
+            [Description("Path of the desktop for the operator of this computer. "
+                + "This is used as an obvious location for debug purposes.")]
+            public string DesktopPath { get; set; }
         }
 
         [XmlElement("user-values")]

@@ -34,7 +34,24 @@ namespace Cerebello.SolutionSetup
 
         static int Main2(string[] args)
         {
-            bool check = args.Any(s => s == "\\c" || s == "\\check");
+            var joinArgs = string.Join(" ", args);
+
+            var argsMatches = Regex.Matches(joinArgs, @"(?<CHECK>\\c\w|\\check\w)|(?:\\d:""(?<DESKTOP>.*?)"")");
+
+            bool check = argsMatches.Cast<Match>().Any(m => m.Groups["CHECK"].Success);
+            string desktopPath = argsMatches.Cast<Match>()
+                .Select(m => m.Groups["DESKTOP"])
+                .Where(m => m.Success)
+                .Select(m => m.Value)
+                .LastOrDefault();
+
+            if (string.IsNullOrWhiteSpace(desktopPath))
+                desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+            var newArgs = new List<string>();
+            if (check) newArgs.Add(@"\c");
+            if (!string.IsNullOrWhiteSpace(desktopPath))
+                newArgs.Add(string.Format(@"\d:""{0}""", desktopPath));
 
             SetupInfo setupInfo;
             var ser = new XmlSerializer(typeof(SetupInfo));
@@ -73,6 +90,7 @@ namespace Cerebello.SolutionSetup
                     if (setupInfo.Props == null)
                         setupInfo.Props = new SetupInfo.Properties();
 
+                    setupInfo.Props.DesktopPath = desktopPath;
                     setupInfo.Props.SolutionPath = dirInfo.FullName;
                 }
             }
@@ -88,7 +106,7 @@ namespace Cerebello.SolutionSetup
             // check to see if solution is already setup
             if (!HasAdminPrivileges())
             {
-                if (!TryRestartWithAdminPrivileges(args))
+                if (!TryRestartWithAdminPrivileges(newArgs.ToArray()))
                     MessageBox.Show("Could not start solution setup with administrative privileges.");
 
                 return 3;
@@ -164,6 +182,28 @@ namespace Cerebello.SolutionSetup
 
         private static void RunSetup(SetupInfo setupInfo, bool force)
         {
+            if (force || !setupInfo.CerebelloUncommitedXml.IsGreaterOrEqual(1))
+            {
+                try
+                {
+                    var fsUncommitedXmlTemplate = Path.Combine(
+                        setupInfo.Props.SolutionPath,
+                        @"CerebelloWebRole\Uncommited.template.xml");
+
+                    var fsUncommitedXml = Path.Combine(
+                        setupInfo.Props.SolutionPath,
+                        @"CerebelloWebRole\Uncommited.xml");
+
+                    var newText = ProcessTemplate(File.ReadAllText(fsUncommitedXmlTemplate), setupInfo.Props, true);
+                    File.WriteAllText(fsUncommitedXml, newText);
+
+                    setupInfo.CerebelloUncommitedXml = new SetupInfo.Version(1);
+                }
+                catch
+                {
+                }
+            }
+
             if (force || !setupInfo.FirestarterUncommitedConfig.IsGreaterOrEqual(1))
             {
                 try
@@ -290,7 +330,11 @@ namespace Cerebello.SolutionSetup
 
         private static string MatchEval(Match m, object data, bool htmlEncode)
         {
-            var parser = new SimpleParser(m.Groups[1].Value) { GlobalType = data.GetType() };
+            var parser = new SimpleParser(m.Groups[1].Value)
+                {
+                    GlobalType = data.GetType(),
+                    StaticTypes = new[] { typeof(Path) },
+                };
             var valueExecutor = parser.Read<TemplateParser.ValueBuilder, TemplateParser.INode>();
             var type = valueExecutor.Compile(parser.GlobalType);
             var value = valueExecutor.Execute(data);
