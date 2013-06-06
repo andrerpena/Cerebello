@@ -256,6 +256,9 @@
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
+    <Compile Include="Code\Services\AzureStorageService.cs" />
+    <Compile Include="Code\Services\IStorageService.cs" />
+    <Compile Include="Code\Services\LocalStorageService.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureLogHelper.cs" />
     <Compile Include="Controllers\GoogleDriveCallbackController.cs" />
     <Compile Include="Areas\App\Controllers\LaboratoriesController.cs" />
@@ -302,7 +305,7 @@
     <Compile Include="Code\Helpers\BackupHelper.cs" />
     <Compile Include="Code\Filters\CanAlternateUserAttribute.cs" />
     <Compile Include="Code\Helpers\BusHelper.cs" />
-    <Compile Include="Code\Helpers\FileHelper.cs" />
+    <Compile Include="Code\Helpers\CerebelloFileInfo.cs" />
     <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\Hubs\ChatHub.cs" />
     <Compile Include="Code\Hubs\CerebelloHub.cs" />
