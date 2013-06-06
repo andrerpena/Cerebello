@@ -801,12 +801,16 @@
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery-1.8.1.min.js" />
+    <Content Include="Scripts\jquery-1.8.3.js" />
+    <Content Include="Scripts\jquery-1.8.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.23.custom.min.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.form.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.caret.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.modal.js" />
     <Content Include="Scripts\jquery-ui-1.8.24.js" />
     <Content Include="Scripts\jquery-ui-1.8.24.min.js" />
+    <Content Include="Scripts\jquery-ui-1.9.1.js" />
+    <Content Include="Scripts\jquery-ui-1.9.1.min.js" />
     <Content Include="Scripts\jquery.arp.pager.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.watermark.js" />
     <Content Include="Scripts\jquery.ba-bbq.min.js" />
