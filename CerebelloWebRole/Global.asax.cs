@@ -4,10 +4,16 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Access;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Notifications;
+using CerebelloWebRole.Code.Services;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using SimpleInjector;
+using SimpleInjector.Extensions;
+using SimpleInjector.Integration.Web;
+using SimpleInjector.Integration.Web.Mvc;
 
 namespace CerebelloWebRole
 {
@@ -65,6 +71,24 @@ namespace CerebelloWebRole
 
             // Will create a thread to send notifications
             NotificationsHelper.CreateNotificationsJob();
+
+            SetupDependencyInjector();
+        }
+
+        private static void SetupDependencyInjector()
+        {
+            // 1. Create a new Simple Injector container
+            var container = new Container();
+
+            // 2. Configure the container (register)
+            container.Register(() => new DateTimeService() as IDateTimeService);
+            container.Register(() => DebugConfig.IsDebug ? new LocalStorageService() : new AzureStorageService() as IStorageService);
+
+            // 3. Optionally verify the container's configuration.
+            container.Verify();
+
+            // 4. Register the container as MVC3 IDependencyResolver.
+            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
         }
 
         /// <summary>
