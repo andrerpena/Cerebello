@@ -434,25 +434,31 @@ GO
 /****** End Object:  Table [dbo].[ExaminationResult] ******/
 
 
-/****** Begin Object:  Table [dbo].[File] ******/
+/****** Begin Object:  Table [dbo].[FileMetadata] ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[File](
+CREATE TABLE [dbo].[FileMetadata](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ContainerName] [varchar](250) NOT NULL,
-	[FileName] [varchar](250) NOT NULL,
+	[BlobName] [nvarchar](500) NOT NULL,
 	[Description] [varchar](max) NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[PracticeId] [int] NOT NULL,
- CONSTRAINT [PK_File] PRIMARY KEY CLUSTERED 
+	[RelatedFileMetadataId] [int] NULL,
+	[RelationType] [nvarchar](50) NULL,
+	[ExpirationDate] [datetime] NULL,
+	[SourceFileName] [nvarchar](250) NOT NULL,
+	[Tag] [nvarchar](64) NULL,
+	[OwnerUserId] [int] NULL,
+ CONSTRAINT [PK_FileMetadata] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** End Object:  Table [dbo].[File] ******/
+/****** End Object:  Table [dbo].[FileMetadata] ******/
 
 
 /****** Begin Object:  Table [dbo].[GLB_Token] ******/
@@ -814,10 +820,10 @@ GO
 CREATE TABLE [dbo].[PatientFile](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PatientId] [int] NOT NULL,
-	[FileId] [int] NOT NULL,
+	[FileMetadataId] [int] NOT NULL,
 	[PracticeId] [int] NOT NULL,
-	[FileDate] [datetime] NOT NULL,
-	[ReceiveDate] [datetime] NOT NULL,
+	[Title] [nvarchar](100) NULL,
+	[FileGroupId] [int] NOT NULL,
  CONSTRAINT [PK_PatientFiles] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -825,6 +831,29 @@ CREATE TABLE [dbo].[PatientFile](
 )
 GO
 /****** End Object:  Table [dbo].[PatientFile] ******/
+
+
+/****** Begin Object:  Table [dbo].[PatientFileGroup] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PatientFileGroup](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PatientId] [int] NOT NULL,
+	[PracticeId] [int] NOT NULL,
+	[GroupTitle] [nvarchar](100) NOT NULL,
+	[GroupNotes] [nvarchar](max) NULL,
+	[FileGroupDate] [datetime] NOT NULL,
+	[ReceiveDate] [datetime] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+ CONSTRAINT [PK_PatientFileGroup_1] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+/****** End Object:  Table [dbo].[PatientFileGroup] ******/
 
 
 /****** Begin Object:  Table [dbo].[Person] ******/
@@ -1263,6 +1292,25 @@ GO
 /****** End Object:  Index [IX_DayOff_Date] ******/
 
 
+/****** Begin Object:  Index [IX_FileMetadata_ContainerName_Tag] ******/
+CREATE NONCLUSTERED INDEX [IX_FileMetadata_ContainerName_Tag] ON [dbo].[FileMetadata] 
+(
+	[ContainerName] ASC,
+	[Tag] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+/****** End Object:  Index [IX_FileMetadata_ContainerName_Tag] ******/
+
+
+/****** Begin Object:  Index [IX_FileMetadata_ExpirationDate] ******/
+CREATE NONCLUSTERED INDEX [IX_FileMetadata_ExpirationDate] ON [dbo].[FileMetadata] 
+(
+	[ExpirationDate] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+/****** End Object:  Index [IX_FileMetadata_ExpirationDate] ******/
+
+
 /****** Begin Object:  Index [IX_SYS_MedicalEntity_Code] ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_SYS_MedicalEntity_Code] ON [dbo].[SYS_MedicalEntity] 
 (
@@ -1559,6 +1607,24 @@ GO
 /****** End Object:  ForeignKey [FK_ExaminationResult_Patient] ******/
 
 
+/****** Begin Object:  ForeignKey [FK_FileMetadata_FileMetadata] ******/
+ALTER TABLE [dbo].[FileMetadata]  WITH CHECK ADD  CONSTRAINT [FK_FileMetadata_FileMetadata] FOREIGN KEY([RelatedFileMetadataId])
+REFERENCES [dbo].[FileMetadata] ([Id])
+GO
+ALTER TABLE [dbo].[FileMetadata] CHECK CONSTRAINT [FK_FileMetadata_FileMetadata]
+GO
+/****** End Object:  ForeignKey [FK_FileMetadata_FileMetadata] ******/
+
+
+/****** Begin Object:  ForeignKey [FK_FileMetadata_OwnerUser] ******/
+ALTER TABLE [dbo].[FileMetadata]  WITH CHECK ADD  CONSTRAINT [FK_FileMetadata_OwnerUser] FOREIGN KEY([OwnerUserId])
+REFERENCES [dbo].[User] ([Id])
+GO
+ALTER TABLE [dbo].[FileMetadata] CHECK CONSTRAINT [FK_FileMetadata_OwnerUser]
+GO
+/****** End Object:  ForeignKey [FK_FileMetadata_OwnerUser] ******/
+
+
 /****** Begin Object:  ForeignKey [FK_GoogleAccoutInfo_Person] ******/
 ALTER TABLE [dbo].[GoogleUserAccoutInfo]  WITH CHECK ADD  CONSTRAINT [FK_GoogleAccoutInfo_Person] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Person] ([Id])
@@ -1759,13 +1825,13 @@ GO
 /****** End Object:  ForeignKey [FK_Patient_Practice] ******/
 
 
-/****** Begin Object:  ForeignKey [FK_PatientFile_File] ******/
-ALTER TABLE [dbo].[PatientFile]  WITH NOCHECK ADD  CONSTRAINT [FK_PatientFile_File] FOREIGN KEY([FileId])
-REFERENCES [dbo].[File] ([Id])
+/****** Begin Object:  ForeignKey [FK_PatientFile_FileMetadata] ******/
+ALTER TABLE [dbo].[PatientFile]  WITH NOCHECK ADD  CONSTRAINT [FK_PatientFile_FileMetadata] FOREIGN KEY([FileMetadataId])
+REFERENCES [dbo].[FileMetadata] ([Id])
 GO
-ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_File]
+ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_FileMetadata]
 GO
-/****** End Object:  ForeignKey [FK_PatientFile_File] ******/
+/****** End Object:  ForeignKey [FK_PatientFile_FileMetadata] ******/
 
 
 /****** Begin Object:  ForeignKey [FK_PatientFile_Patient] ******/
@@ -1775,6 +1841,24 @@ GO
 ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_Patient]
 GO
 /****** End Object:  ForeignKey [FK_PatientFile_Patient] ******/
+
+
+/****** Begin Object:  ForeignKey [FK_PatientFile_PatientFileGroup] ******/
+ALTER TABLE [dbo].[PatientFile]  WITH CHECK ADD  CONSTRAINT [FK_PatientFile_PatientFileGroup] FOREIGN KEY([FileGroupId])
+REFERENCES [dbo].[PatientFileGroup] ([Id])
+GO
+ALTER TABLE [dbo].[PatientFile] CHECK CONSTRAINT [FK_PatientFile_PatientFileGroup]
+GO
+/****** End Object:  ForeignKey [FK_PatientFile_PatientFileGroup] ******/
+
+
+/****** Begin Object:  ForeignKey [FK_PatientFileGroup_Patient] ******/
+ALTER TABLE [dbo].[PatientFileGroup]  WITH CHECK ADD  CONSTRAINT [FK_PatientFileGroup_Patient] FOREIGN KEY([PatientId])
+REFERENCES [dbo].[Patient] ([Id])
+GO
+ALTER TABLE [dbo].[PatientFileGroup] CHECK CONSTRAINT [FK_PatientFileGroup_Patient]
+GO
+/****** End Object:  ForeignKey [FK_PatientFileGroup_Patient] ******/
 
 
 /****** Begin Object:  ForeignKey [FK_PersonAddress_Address] ******/

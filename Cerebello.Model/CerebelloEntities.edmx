@@ -151,6 +151,10 @@
             <End Role="FileMetadata" EntitySet="FileMetadata" />
             <End Role="FileMetadata1" EntitySet="FileMetadata" />
           </AssociationSet>
+          <AssociationSet Name="FK_FileMetadata_OwnerUser" Association="cerebelloModel.Store.FK_FileMetadata_OwnerUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="FileMetadata" EntitySet="FileMetadata" />
+          </AssociationSet>
           <AssociationSet Name="FK_GoogleAccoutInfo_Person" Association="cerebelloModel.Store.FK_GoogleAccoutInfo_Person">
             <End Role="Person" EntitySet="Person" />
             <End Role="GoogleUserAccoutInfo" EntitySet="GoogleUserAccoutInfo" />
@@ -592,13 +596,16 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ContainerName" Type="varchar" Nullable="false" MaxLength="250" />
-          <Property Name="FileName" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="BlobName" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="Description" Type="varchar(max)" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="RelatedFileMetadataId" Type="int" />
           <Property Name="RelationType" Type="nvarchar" MaxLength="50" />
           <Property Name="ExpirationDate" Type="datetime" />
+          <Property Name="SourceFileName" Type="nvarchar" Nullable="false" MaxLength="250" />
+          <Property Name="Tag" Type="nvarchar" MaxLength="64" />
+          <Property Name="OwnerUserId" Type="int" />
         </EntityType>
         <EntityType Name="GLB_Token">
           <Key>
@@ -1278,6 +1285,18 @@
             </Principal>
             <Dependent Role="FileMetadata1">
               <PropertyRef Name="RelatedFileMetadataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FileMetadata_OwnerUser">
+          <End Role="User" Type="cerebelloModel.Store.User" Multiplicity="0..1" />
+          <End Role="FileMetadata" Type="cerebelloModel.Store.FileMetadata" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileMetadata">
+              <PropertyRef Name="OwnerUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2117,6 +2136,10 @@
             <End Role="Doctor" EntitySet="Doctors" />
           </AssociationSet>
           <EntitySet Name="SPECIAL_Test" EntityType="Cerebello.Model.SPECIAL_Test" />
+          <AssociationSet Name="FK_FileMetadata_OwnerUser" Association="Cerebello.Model.FK_FileMetadata_OwnerUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="FileMetadata" EntitySet="FileMetadatas" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -2344,6 +2367,7 @@
           <NavigationProperty Name="Secretary" Relationship="Cerebello.Model.FK_User_Secretary" FromRole="User" ToRole="Secretary" />
           <NavigationProperty Name="Notifications" Relationship="Cerebello.Model.FK_Notification_User1" FromRole="User" ToRole="Notification" />
           <Property Type="String" Name="SYS_PasswordAlt" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FileMetadatas" Relationship="Cerebello.Model.FK_FileMetadata_OwnerUser" FromRole="User" ToRole="FileMetadata" />
         </EntityType>
         <Association Name="FK_Appointment_Doctor">
           <End Role="Doctor" Type="Cerebello.Model.Doctor" Multiplicity="1">
@@ -3296,7 +3320,6 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="ContainerName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="FileName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
           <NavigationProperty Name="PatientFiles" Relationship="Cerebello.Model.FK_PatientFile_FileMetadata" FromRole="FileMetadata" ToRole="PatientFile" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
@@ -3304,8 +3327,13 @@
           <Property Type="Int32" Name="RelatedFileMetadataId" />
           <Property Type="String" Name="RelationType" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="ExpirationDate" Precision="3" />
-          <NavigationProperty Name="FileMetadata1" Relationship="Cerebello.Model.FK_FileMetadata_FileMetadata" FromRole="FileMetadata" ToRole="FileMetadata1" />
-          <NavigationProperty Name="FileMetadata2" Relationship="Cerebello.Model.FK_FileMetadata_FileMetadata" FromRole="FileMetadata1" ToRole="FileMetadata" />
+          <NavigationProperty Name="ChildFileMetadatas" Relationship="Cerebello.Model.FK_FileMetadata_FileMetadata" FromRole="FileMetadata" ToRole="FileMetadata1" />
+          <NavigationProperty Name="ParentFileMetadata" Relationship="Cerebello.Model.FK_FileMetadata_FileMetadata" FromRole="FileMetadata1" ToRole="FileMetadata" />
+          <Property Type="String" Name="SourceFileName" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Type="String" Name="BlobName" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Type="String" Name="Tag" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="OwnerUserId" />
+          <NavigationProperty Name="OwnerUser" Relationship="Cerebello.Model.FK_FileMetadata_OwnerUser" FromRole="FileMetadata" ToRole="User" />
         </EntityType>
         <EntityType Name="PatientFile">
           <Key>
@@ -3657,6 +3685,18 @@
           <Property Type="String" Name="Value" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
         </EntityType>
+        <Association Name="FK_FileMetadata_OwnerUser">
+          <End Type="Cerebello.Model.User" Role="User" Multiplicity="0..1" />
+          <End Type="Cerebello.Model.FileMetadata" Role="FileMetadata" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileMetadata">
+              <PropertyRef Name="OwnerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4241,13 +4281,16 @@
           <EntitySetMapping Name="FileMetadatas">
             <EntityTypeMapping TypeName="Cerebello.Model.FileMetadata">
               <MappingFragment StoreEntitySet="FileMetadata">
+                <ScalarProperty Name="OwnerUserId" ColumnName="OwnerUserId" />
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="BlobName" ColumnName="BlobName" />
+                <ScalarProperty Name="SourceFileName" ColumnName="SourceFileName" />
                 <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
                 <ScalarProperty Name="RelationType" ColumnName="RelationType" />
                 <ScalarProperty Name="RelatedFileMetadataId" ColumnName="RelatedFileMetadataId" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="ContainerName" ColumnName="ContainerName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -4389,15 +4432,15 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="100">
+      <Diagram Name="CerebelloEntities" ZoomLevel="82">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="16.625" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="25.125" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
         <EntityTypeShape EntityType="Cerebello.Model.Laboratory" Width="1.5" PointX="20.125" PointY="31.125" Height="1.9802864583333317" IsExpanded="true" FillColor="RoyalBlue" />
-        <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="3.25" PointX="34.5" PointY="23.5" Height="3.7109993489583335" IsExpanded="true" FillColor="LightGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Patient" Width="3.625" PointX="34.5" PointY="23.5" Height="3.7109993489583335" IsExpanded="true" FillColor="LightGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Person" Width="2.25" PointX="33.875" PointY="1.125" Height="4.6725065104166674" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Practice" Width="5.25" PointX="21.75" PointY="5.875" Height="2.3648893229166674" IsExpanded="true" FillColor="Black" />
-        <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="32.125" PointY="31.5" Height="2.1725878906249996" IsExpanded="true" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.Receipt" Width="1.5" PointX="32.125" PointY="31.375" Height="2.1725878906249996" IsExpanded="true" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.ReceiptMedicine" Width="2.125" PointX="29.125" PointY="31.25" Height="2.1725878906250031" IsExpanded="true" FillColor="ForestGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Secretary" Width="1.5" PointX="12.125" PointY="7.375" Height="1.4033821614583353" IsExpanded="true" FillColor="Peru" />
         <EntityTypeShape EntityType="Cerebello.Model.User" Width="3.875" PointX="14.25" PointY="5" Height="4.4802050781250031" IsExpanded="true" FillColor="Peru" />
@@ -4610,7 +4653,7 @@
         <EntityTypeShape EntityType="Cerebello.Model.SYS_MedicalSpecialty" Width="2.125" PointX="42.875" PointY="30" Height="1.7879850260416674" FillColor="Firebrick" />
         <EntityTypeShape EntityType="Cerebello.Model.Holiday" Width="2" PointX="8.625" PointY="0.5" Height="1.5956835937500102" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.SYS_Holiday" Width="1.5" PointX="0.5" PointY="11.25" Height="1.5956835937499996" FillColor="Firebrick" />
-        <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="37.125" PointY="29.75" Height="2.3648893229166674" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.ExaminationRequest" Width="1.875" PointX="37.375" PointY="29.875" Height="2.3648893229166674" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_ExaminationRequest_Patient">
           <ConnectorPoint PointX="6.15625" PointY="15.960999348958334" />
           <ConnectorPoint PointX="6.15625" PointY="25.307444661458334" />
@@ -4724,10 +4767,10 @@
         <AssociationConnector Association="Cerebello.Model.FK_ActiveIngredient_Medicine" />
         <AssociationConnector Association="Cerebello.Model.FK_Practice_Address" />
         <AssociationConnector Association="Cerebello.Model.PersonAddress" />
-        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="34.25" PointY="29.25" FillColor="Green" />
+        <EntityTypeShape EntityType="Cerebello.Model.PhysicalExamination" Width="2" PointX="34" PointY="29.5" FillColor="Green" />
         <AssociationConnector Association="Cerebello.Model.FK_PhysicalExamination_Patient" />
-        <EntityTypeShape EntityType="Cerebello.Model.FileMetadata" Width="1.5" PointX="38.75" PointY="33.125" FillColor="ForestGreen" />
-        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="36.875" PointY="33.125" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.FileMetadata" Width="2" PointX="6.125" PointY="33.125" FillColor="DarkSlateGray" />
+        <EntityTypeShape EntityType="Cerebello.Model.PatientFile" Width="1.5" PointX="36.375" PointY="37" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_FileMetadata" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_Patient" />
         <EntityTypeShape EntityType="Cerebello.Model.Billing" Width="2" PointX="42.375" PointY="7.875" FillColor="Orange" />
@@ -4740,7 +4783,7 @@
         <AssociationConnector Association="Cerebello.Model.FK_Notification_User1" />
         <AssociationConnector Association="Cerebello.Model.FK_Appointment_Practice" />
         <AssociationConnector Association="Cerebello.Model.FK_Notification_Practice" />
-        <EntityTypeShape EntityType="Cerebello.Model.PatientFileGroup" Width="1.5" PointX="35" PointY="33.125" FillColor="ForestGreen" />
+        <EntityTypeShape EntityType="Cerebello.Model.PatientFileGroup" Width="1.5" PointX="37" PointY="33.5" FillColor="ForestGreen" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFileGroup_Patient" />
         <AssociationConnector Association="Cerebello.Model.FK_PatientFile_PatientFileGroup" />
         <AssociationConnector Association="Cerebello.Model.FK_FileMetadata_FileMetadata" />
@@ -4755,6 +4798,7 @@
         <AssociationConnector Association="Cerebello.Model.FK_GoogleAccoutInfo_Practice1" />
         <AssociationConnector Association="Cerebello.Model.FK_Doctor_Practice" />
         <EntityTypeShape EntityType="Cerebello.Model.SPECIAL_Test" Width="1.5" PointX="0.5" PointY="16.25" />
+        <AssociationConnector Association="Cerebello.Model.FK_FileMetadata_OwnerUser" />
         </Diagram>
     </Diagrams>
   </Designer>

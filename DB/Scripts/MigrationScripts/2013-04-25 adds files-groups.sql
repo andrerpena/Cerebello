@@ -98,7 +98,44 @@ EXEC sp_rename 'FK_File_File', 'FK_FileMetadata_FileMetadata'
 EXEC sp_rename 'FK_PatientFile_File', 'FK_PatientFile_FileMetadata'
 EXEC sp_rename 'PatientFile.FileId', 'FileMetadataId', 'COLUMN'
 
+EXEC sp_rename 'FileMetadata.FileName', 'BlobName', 'COLUMN'
 
+ALTER TABLE dbo.FileMetadata ADD
+	SourceFileName nvarchar(250) NULL
+GO
+update dbo.FileMetadata set SourceFileName = BlobName
+GO
+ALTER TABLE dbo.FileMetadata ALTER COLUMN
+	SourceFileName nvarchar(250) NOT NULL
+GO
+ALTER TABLE dbo.FileMetadata ALTER COLUMN
+	BlobName nvarchar(500) NOT NULL
+GO
+ALTER TABLE dbo.FileMetadata ADD
+	Tag nvarchar(64) NULL
+GO
+CREATE NONCLUSTERED INDEX IX_FileMetadata_ContainerName_Tag ON dbo.FileMetadata
+	(
+	ContainerName,
+	Tag
+	)
+GO
+
+
+
+
+ALTER TABLE dbo.FileMetadata ADD
+	OwnerUserId int NULL
+ALTER TABLE dbo.FileMetadata ADD CONSTRAINT
+	FK_FileMetadata_OwnerUser FOREIGN KEY
+	(
+	OwnerUserId
+	) REFERENCES dbo.[User]
+	(
+	Id
+	) ON UPDATE  NO ACTION
+	 ON DELETE  NO ACTION
+GO
 
 
 

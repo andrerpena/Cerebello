@@ -83,6 +83,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Person1", "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Person), "GoogleUserAccoutInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleUserAccoutInfo), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_GoogleAccoutInfo_Practice1", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "GoogleUserAccoutInfo", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.GoogleUserAccoutInfo), true)]
 [assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_Doctor_Practice", "Practice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Cerebello.Model.Practice), "Doctor", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.Doctor), true)]
+[assembly: EdmRelationshipAttribute("Cerebello.Model", "FK_FileMetadata_OwnerUser", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(Cerebello.Model.User), "FileMetadata", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Cerebello.Model.FileMetadata), true)]
 
 #endregion
 
@@ -7779,17 +7780,19 @@ namespace Cerebello.Model
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="containerName">Initial value of the ContainerName property.</param>
-        /// <param name="fileName">Initial value of the FileName property.</param>
         /// <param name="createdOn">Initial value of the CreatedOn property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
-        public static FileMetadata CreateFileMetadata(global::System.Int32 id, global::System.String containerName, global::System.String fileName, global::System.DateTime createdOn, global::System.Int32 practiceId)
+        /// <param name="sourceFileName">Initial value of the SourceFileName property.</param>
+        /// <param name="blobName">Initial value of the BlobName property.</param>
+        public static FileMetadata CreateFileMetadata(global::System.Int32 id, global::System.String containerName, global::System.DateTime createdOn, global::System.Int32 practiceId, global::System.String sourceFileName, global::System.String blobName)
         {
             FileMetadata fileMetadata = new FileMetadata();
             fileMetadata.Id = id;
             fileMetadata.ContainerName = containerName;
-            fileMetadata.FileName = fileName;
             fileMetadata.CreatedOn = createdOn;
             fileMetadata.PracticeId = practiceId;
+            fileMetadata.SourceFileName = sourceFileName;
+            fileMetadata.BlobName = blobName;
             return fileMetadata;
         }
 
@@ -7847,30 +7850,6 @@ namespace Cerebello.Model
         private global::System.String _ContainerName;
         partial void OnContainerNameChanging(global::System.String value);
         partial void OnContainerNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String FileName
-        {
-            get
-            {
-                return _FileName;
-            }
-            set
-            {
-                OnFileNameChanging(value);
-                ReportPropertyChanging("FileName");
-                _FileName = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("FileName");
-                OnFileNameChanged();
-            }
-        }
-        private global::System.String _FileName;
-        partial void OnFileNameChanging(global::System.String value);
-        partial void OnFileNameChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8015,6 +7994,102 @@ namespace Cerebello.Model
         private Nullable<global::System.DateTime> _ExpirationDate;
         partial void OnExpirationDateChanging(Nullable<global::System.DateTime> value);
         partial void OnExpirationDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String SourceFileName
+        {
+            get
+            {
+                return _SourceFileName;
+            }
+            set
+            {
+                OnSourceFileNameChanging(value);
+                ReportPropertyChanging("SourceFileName");
+                _SourceFileName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("SourceFileName");
+                OnSourceFileNameChanged();
+            }
+        }
+        private global::System.String _SourceFileName;
+        partial void OnSourceFileNameChanging(global::System.String value);
+        partial void OnSourceFileNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String BlobName
+        {
+            get
+            {
+                return _BlobName;
+            }
+            set
+            {
+                OnBlobNameChanging(value);
+                ReportPropertyChanging("BlobName");
+                _BlobName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("BlobName");
+                OnBlobNameChanged();
+            }
+        }
+        private global::System.String _BlobName;
+        partial void OnBlobNameChanging(global::System.String value);
+        partial void OnBlobNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Tag
+        {
+            get
+            {
+                return _Tag;
+            }
+            set
+            {
+                OnTagChanging(value);
+                ReportPropertyChanging("Tag");
+                _Tag = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Tag");
+                OnTagChanged();
+            }
+        }
+        private global::System.String _Tag;
+        partial void OnTagChanging(global::System.String value);
+        partial void OnTagChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> OwnerUserId
+        {
+            get
+            {
+                return _OwnerUserId;
+            }
+            set
+            {
+                OnOwnerUserIdChanging(value);
+                ReportPropertyChanging("OwnerUserId");
+                _OwnerUserId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("OwnerUserId");
+                OnOwnerUserIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _OwnerUserId;
+        partial void OnOwnerUserIdChanging(Nullable<global::System.Int32> value);
+        partial void OnOwnerUserIdChanged();
 
         #endregion
 
@@ -8050,7 +8125,7 @@ namespace Cerebello.Model
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_FileMetadata_FileMetadata", "FileMetadata1")]
-        public EntityCollection<FileMetadata> FileMetadata1
+        public EntityCollection<FileMetadata> ChildFileMetadatas
         {
             get
             {
@@ -8072,7 +8147,7 @@ namespace Cerebello.Model
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_FileMetadata_FileMetadata", "FileMetadata")]
-        public FileMetadata FileMetadata2
+        public FileMetadata ParentFileMetadata
         {
             get
             {
@@ -8088,7 +8163,7 @@ namespace Cerebello.Model
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<FileMetadata> FileMetadata2Reference
+        public EntityReference<FileMetadata> ParentFileMetadataReference
         {
             get
             {
@@ -8099,6 +8174,44 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<FileMetadata>("Cerebello.Model.FK_FileMetadata_FileMetadata", "FileMetadata", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_FileMetadata_OwnerUser", "User")]
+        public User OwnerUser
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_FileMetadata_OwnerUser", "User").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_FileMetadata_OwnerUser", "User").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<User> OwnerUserReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("Cerebello.Model.FK_FileMetadata_OwnerUser", "User");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("Cerebello.Model.FK_FileMetadata_OwnerUser", "User", value);
                 }
             }
         }
@@ -17077,6 +17190,28 @@ namespace Cerebello.Model
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Notification>("Cerebello.Model.FK_Notification_User1", "Notification", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Cerebello.Model", "FK_FileMetadata_OwnerUser", "FileMetadata")]
+        public EntityCollection<FileMetadata> FileMetadatas
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<FileMetadata>("Cerebello.Model.FK_FileMetadata_OwnerUser", "FileMetadata");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<FileMetadata>("Cerebello.Model.FK_FileMetadata_OwnerUser", "FileMetadata", value);
                 }
             }
         }
