@@ -264,10 +264,13 @@
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
     <Compile Include="Areas\App\Models\FileViewModel.cs" />
+    <Compile Include="Code\Controllers\CerebelloSiteController.cs" />
     <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
+    <Compile Include="Code\Helpers\TraceHelper.cs" />
+    <Compile Include="Code\Hubs\IChatHub.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
     <Compile Include="Code\Services\AzureStorageService.cs" />
     <Compile Include="Code\Services\DbFileMetadataProvider.cs" />
@@ -347,6 +350,9 @@
     <Compile Include="Code\WindowsAzure\IWindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureBlobStorageManager.cs" />
     <Compile Include="Code\Helpers\RazorHelper.cs" />
+    <Content Include="CerebelloWebRole.Dll.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\Images\Site\mail.png" />
     <Content Include="Content\Images\Site\phone.png" />
     <Content Include="Content\Images\Site\backup.png" />
@@ -379,6 +385,7 @@
     <Content Include="Content\Styles\Site\Cancel.css" />
     <Content Include="Content\Styles\App\Pages\camera_window.css" />
     <Compile Include="Controllers\MasterAdminController.cs" />
+    <Compile Include="Models\LogViewModel.cs" />
     <Compile Include="Models\InternalCreateAccountEmailViewModel.cs" />
     <Compile Include="Models\GenerateInvoiceViewModel.cs" />
     <Compile Include="Models\InternalUpgradeEmailViewModel.cs" />
@@ -801,6 +808,11 @@
     <Content Include="diagnostics.wadcfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Code\Log.cshtml" />
+    <Content Include="App.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -851,6 +863,7 @@
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -1043,10 +1056,7 @@
     <EmbeddedResource Include="Content\Reports\PatientsList\Anamneses.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\Receipts.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
-    <Content Include="App.config">
-      <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Contracts\Contrato-plano-profissional.docx" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.odt" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.pdf" />

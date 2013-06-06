@@ -28,9 +28,12 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             // If this method is already running, then leave the already running alone, and return.
             // If it is not running, set the value os locker to 1 to indicate that now it is running.
             if (Interlocked.Exchange(ref locker, 1) != 0)
+            {
+                Trace.TraceInformation("TestWorker.RunOnce(): already running, exiting now.");
                 return;
+            }
 
-            Trace.TraceInformation("Test worker service in execution (TestWorker)");
+            Trace.TraceInformation("TestWorker.RunOnce(): running service");
 
             var utcNow = this.GetUtcNow();
             using (var db = this.CreateNewCerebelloEntities())
@@ -57,7 +60,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                 }
 
                 if (exSaveToDb == null)
-                    Trace.TraceInformation("Test worker: DB object saved");
+                    Trace.TraceInformation("TestWorker.RunOnce(): DB object saved");
 
                 // trying to save a file in the storage
                 Exception exSaveToStorage = null;
@@ -74,7 +77,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                 }
 
                 if (exSaveToStorage == null)
-                    Trace.TraceInformation("Test worker: blob saved to storage");
+                    Trace.TraceInformation("TestWorker.RunOnce(): blob saved to storage");
 
                 // Sending e-mail about test status
                 Exception exSendEmail = null;
@@ -96,7 +99,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                 }
 
                 if (exSendEmail == null)
-                    Trace.TraceInformation("Test worker: e-mail message sent");
+                    Trace.TraceInformation("TestWorker.RunOnce(): e-mail message sent");
 
                 // Save result to storage
                 var fileText = new StringBuilder(1000);

@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Collections;
-using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.WindowsAzure;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.WorkerRole.Code.Workers;
-using System.Linq;
-using CerebelloWebRole.Code;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
 
 namespace CerebelloWebRole.Controllers
 {
@@ -306,19 +304,77 @@ namespace CerebelloWebRole.Controllers
                     patient.IsBackedUp = false;
                 db.SaveChanges();
 
-
                 BackupHelper.BackupEverything(db, errors);
             }
+
             return "Errors : " + string.Join(",", errors);
         }
 
-        public ActionResult Log(string message)
+        public ActionResult Log(LogViewModel formModel)
         {
-            if(!string.IsNullOrEmpty(message))
-                Trace.TraceInformation(message);
+            if (!string.IsNullOrEmpty(formModel.Message))
+                Trace.TraceInformation("MasterAdminController.Log(formModel): " + formModel.Message);
 
-            var logs = WindowsAzureLogHelper.GetLastDayLogEvents();
-            return this.View(logs);
+            var levels = formModel.GetLevels();
+            IEnumerable<WindowsAzureLogHelper.TraceLogsEntity> logsSource = WindowsAzureLogHelper.GetLogEvents(
+                formModel.Page ?? 1, levels.ToArray(), formModel.FilterRoleInstance, formModel.FilterPath);
+
+            var logs = logsSource
+                .Select(
+                    item => new LogViewModel.TraceLogItem(item.Message)
+                        {
+                            Timestamp = DateTime.Parse(item.Timestamp),
+                            Level = item.Level,
+                            RoleInstance = item.RoleInstance,
+                            Role = item.Role,
+                        });
+
+            if (formModel.HasPathFilter())
+                logs = logs.Where(l => l.Path.StartsWith(formModel.FilterPath));
+
+            if (formModel.HasSourceFilter())
+                logs = logs.Where(l => l.Source.Equals(formModel.FilterSource, StringComparison.InvariantCultureIgnoreCase));
+
+            if (formModel.HasTextFilter())
+                logs = logs.Where(l => l.Text.IndexOf(formModel.FilterText, StringComparison.InvariantCultureIgnoreCase) > 0);
+
+            if (formModel.HasRoleInstanceFilter())
+                logs = logs.Where(l => formModel.FilterRoleInstance == l.RoleInstance);
+
+            if (formModel.HasLevelFilter())
+                logs = logs.Where(l => levels.Contains(l.Level));
+
+            if (formModel.HasSpecialFilter())
+                logs = logs.Where(l => l.SpecialStrings.Any(s => formModel.FilterSpecial.Contains(s)));
+
+            if (formModel.HasRoleFilter())
+                logs = logs.Where(l => formModel.FilterRole == l.Role);
+
+            if (formModel.HasTimestampFilter())
+            {
+                if (formModel.FilterTimestamp == "now")
+                {
+                    var vm = formModel.Clone();
+                    vm.FilterLevel = null;
+                    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                    vm.FilterTimestamp = this.GetUtcNow().ToString("yyyy'-'MM'-'dd'-'HH'-'mm");
+
+                    return this.Redirect(UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q));
+                }
+
+                var date =
+                    DateTime.Parse(
+                        Regex.Replace(
+                            formModel.FilterTimestamp,
+                            @"(\d{4})\-(\d{2})\-(\d{2})\-(\d{2})\-(\d{2})",
+                            @"$1-$2-$3T$4:$5:00"));
+
+                logs = logs.Where(l => l.Timestamp > date);
+            }
+
+            formModel.Logs = logs.ToList();
+
+            return this.View(formModel);
         }
 
         public ActionResult ThrowException()

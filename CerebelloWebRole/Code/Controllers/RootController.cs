@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Cerebello.Model;
 using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Models;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Controllers
+namespace CerebelloWebRole.Code
 {
-    public class RootController : Controller
+    public abstract class RootController : Controller
     {
         public RootController()
         {

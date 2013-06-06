@@ -1,5 +1,9 @@
 using System;
+using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.WindowsAzure.ServiceRuntime;
@@ -30,7 +34,7 @@ namespace CerebelloWebRole
             // Trace listeners should always be the first thing here.
             MvcApplication.RegisterTraceListeners(Trace.Listeners);
 
-            Trace.TraceInformation("WebRole.OnStart()");
+            Trace.TraceInformation(string.Format("WebRole.OnStart(): webrole started! [Debug={0}]", DebugConfig.IsDebug));
 
             // This is where DLL's and other dependencies should be installed in the System.
             // Of course, a check must be made before installing anything to see if they are not yet installed.
@@ -50,7 +54,16 @@ namespace CerebelloWebRole
         /// </remarks>
         public override void Run()
         {
-            Trace.TraceInformation("WebRole.Run()");
+            Trace.TraceInformation("WebRole.Run(): webrole running");
+
+            var allConnections = string.Join(
+                "; ",
+                ConfigurationManager.ConnectionStrings
+                    .OfType<ConnectionStringSettings>()
+                    .Select(c => string.Format("{0}", c.Name)));
+
+            Trace.TraceInformation("WebRole.Run(): Available connection strings: " + allConnections);
+            Trace.TraceInformation("WebRole.Run(): DebugConfig.DataBaseConnectionString=" + DebugConfig.DataBaseConnectionString);
 
             RouteHelper.RegisterAllRoutes();
 
@@ -60,20 +73,24 @@ namespace CerebelloWebRole
                     new TestWorker()
                 };
             testInfraScheduler.Start();
+            Trace.TraceInformation("WebRole.Run(): TestWorker thread started");
 
             var emailSenderScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(30))
                 {
                     new EmailSenderWorker()
                 };
             emailSenderScheduler.Start();
+            Trace.TraceInformation("WebRole.Run(): EmailSenderWorker thread started");
 
             var googleDriverSynchronizerScheduler = new IntervalWorkerScheduler(TimeSpan.FromMinutes(60))
                 {
                     new GoogleDriveSynchronizerWorker()
                 };
             googleDriverSynchronizerScheduler.Start();
+            Trace.TraceInformation("WebRole.Run(): GoogleDriveSynchronizerWorker thread started");
 
             // Calling base to hold execution in this method forever.
+            Trace.TraceInformation("WebRole.Run(): base.Run() -- running forever!");
             base.Run();
         }
     }

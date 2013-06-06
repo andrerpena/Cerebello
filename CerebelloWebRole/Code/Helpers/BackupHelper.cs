@@ -120,7 +120,7 @@ namespace CerebelloWebRole.Code.Helpers
                                 {
                                     var errorMessage = "Error downloading file from Google Drive. Exception message: " + ex.Message;
                                     // the fucking user deleted the fucking folder OR something went wrong downloading the file
-                                    Trace.TraceError(errorMessage);
+                                    Trace.TraceError("BackupHelper.BackupEverything(db, errors): " + errorMessage);
                                     errors.Add(errorMessage);
                                 }
                             }
@@ -177,7 +177,7 @@ namespace CerebelloWebRole.Code.Helpers
                                         {
                                             var errorMessage = "Error updating file from Google Drive. Exception message: " + ex.Message;
                                             // the fucking user deleted the fucking folder OR something went wrong downloading the file
-                                            Trace.TraceError(errorMessage);
+                                            Trace.TraceError("BackupHelper.BackupEverything(db, errors): " + errorMessage);
                                             errors.Add(errorMessage);
                                         }
                                     }
@@ -211,7 +211,7 @@ namespace CerebelloWebRole.Code.Helpers
                                 {
                                     var errorMessage = "Error synchronizing files for a specific doctor. Exception message" + ex.Message;
                                     // the fucking user deleted the fucking folder OR something went wrong downloading the file
-                                    Trace.TraceError(errorMessage);
+                                    Trace.TraceError("BackupHelper.BackupEverything(db, errors): " + errorMessage);
                                     errors.Add(errorMessage);
                                 }
                             }
@@ -221,7 +221,7 @@ namespace CerebelloWebRole.Code.Helpers
                     {
                         var errorMessage = "Error synchronizing files. Exception message" + ex.Message;
                         // the fucking user deleted the fucking folder OR something went wrong downloading the file
-                        Trace.TraceError(errorMessage);
+                        Trace.TraceError("BackupHelper.BackupEverything(db, errors): " + errorMessage);
                         errors.Add(errorMessage);
                     }
                 }

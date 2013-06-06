@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Threading;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
+using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {
@@ -30,13 +31,16 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
             if (Interlocked.Exchange(ref locker, 1) != 0)
                 return;
 
-            Trace.TraceInformation("E-mail notification service in execution (EmailSenderWorker)");
+            Trace.TraceInformation("EmailSenderWorker.RunOnce(): service in execution");
+            var emailsSent = 0;
 
             try
             {
                 var utcNow = this.GetUtcNow();
                 using (var db = this.CreateNewCerebelloEntities())
                 {
+                    Trace.TraceInformation("EmailSenderWorker.RunOnce(): this.CreateNewCerebelloEntities()");
+
                     var next40H = utcNow.AddHours(40.0);
 
                     // One e-mail will be sent 40 hours before the appointment.
@@ -91,6 +95,12 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                                 })
                         .ToArray();
 
+                    Trace.TraceInformation("EmailSenderWorker.RunOnce(): got list of appointments from database");
+
+                    bool traceMessageCreated = false;
+                    bool traceEmailSent = false;
+                    bool traceEmailNotSent = false;
+                    bool traceDbSaved = false;
                     foreach (var eachItem in items)
                     {
                         if (string.IsNullOrWhiteSpace(eachItem.EmailViewModel.PatientEmail))
@@ -101,18 +111,39 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                         var toAddress = new MailAddress(emailViewModel.PatientEmail, emailViewModel.PatientName);
                         var mailMessage = this.CreateEmailMessage("AppointmentReminderEmail", toAddress, emailViewModel);
 
+                        if (!traceMessageCreated)
+                            Trace.TraceInformation("EmailSenderWorker.RunOnce(): var mailMessage = { rendered e-mail message }");
+                        traceMessageCreated = true;
+
                         if (this.TrySendEmail(mailMessage))
                         {
+                            if (!traceEmailSent)
+                                Trace.TraceInformation("EmailSenderWorker.RunOnce(): this.TrySendEmail(mailMessage) => true");
+                            traceEmailSent = true;
+
+                            emailsSent++;
                             this.EmailsCount++;
                             eachItem.Appointment.ReminderEmailSent = true;
                             db.SaveChanges();
+
+                            if (!traceDbSaved)
+                                Trace.TraceInformation("EmailSenderWorker.RunOnce(): db.SaveChanges()");
+                            traceDbSaved = true;
+                        }
+                        else
+                        {
+                            if (!traceEmailNotSent)
+                                Trace.TraceInformation("EmailSenderWorker.RunOnce(): this.TrySendEmail(mailMessage) => false");
+                            traceEmailNotSent = true;
                         }
                     }
+
+                    Trace.TraceInformation(string.Format("EmailSenderWorker.RunOnce(): emailsSent => {0}", emailsSent));
                 }
             }
             catch (Exception ex)
             {
-                Trace.TraceError("Error sending e-mails. Ex: " + ex.Message);
+                Trace.TraceError(string.Format("EmailSenderWorker.RunOnce(): exception while trying to send e-mails: {0}", TraceHelper.GetExceptionMessage(ex)));
             }
 
             // setting locker value to 0

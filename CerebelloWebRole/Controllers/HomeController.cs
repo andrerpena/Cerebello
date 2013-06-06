@@ -1,19 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
-using CerebelloWebRole.Code.Controllers;
+﻿using System.Web.Mvc;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Controllers
 {
-    public class HomeController : RootController
+    public class HomeController : CerebelloSiteController
     {
         //
         // GET: /Home/
 
         public ActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
         public ActionResult Welcome(string practice)

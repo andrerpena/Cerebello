@@ -93,5 +93,28 @@ namespace CerebelloWebRole.Code
             string queryString = builder.ToString();
             return this.pagePath + this.pageName + queryString;
         }
+
+        public static string AppendQuery(string url, string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return url;
+
+            if (url.Contains("?"))
+                return url + "&" + query;
+
+            return url + "?" + query;
+        }
+
+        public static string GetListQueryParams(string paramName, List<string> list)
+        {
+            if (list == null)
+                return null;
+
+            return string.Join(
+                "&",
+                list
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Select(s => string.Format("{0}={1}", paramName, HttpUtility.UrlEncode(s))));
+        }
     }
 }

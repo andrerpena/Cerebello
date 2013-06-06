@@ -1,0 +1,131 @@
+﻿@using System.Text
+@using System.Text.RegularExpressions
+@using System.Web.Mvc
+@using Cerebello.Model
+@using CerebelloWebRole.Code
+@using CerebelloWebRole.Models
+
+@helper Message(UrlHelper url, LogViewModel.TraceLogItem item, LogViewModel viewModel)
+{
+    // (?:(?<NODES>.*?)\:)?(?<TEXT>.*?)(?:;\sTraceSource\s\'(?<SOURCE>.*?)\'\sevent)?
+
+    if (!string.IsNullOrWhiteSpace(item.Path))
+    {
+        var nodeSplit = item.Path.Split('.');
+
+        var currentNodePath = new StringBuilder(item.Path.Length);
+        foreach (var node in nodeSplit)
+        {
+            bool hasDot = currentNodePath.Length > 0;
+            if (hasDot)
+            {
+                currentNodePath.Append('.');
+            }
+
+            currentNodePath.Append(node.Trim());
+
+            var vm = viewModel.Clone();
+            var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+            vm.FilterSpecial = null;
+            vm.FilterPath = currentNodePath.ToString();
+
+            {<text><span>@(hasDot ? "." : "")</span><a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@node</a></text>}
+        }
+    <text>: </text>
+    }
+
+    var lines = Regex.Split(item.Text, @"\r\n|\r|\n", RegexOptions.Singleline);
+    <strong>
+        @for (int itLine = 0; itLine < lines.Length; itLine++)
+        {
+            if (itLine > 0)
+            {
+            <br />
+            }
+
+            var line = lines[itLine];
+            var textItems = Regex.Split(line, @"\[(.*?)\]");
+
+            for (int it = 0; it < textItems.Length; it++)
+            {
+                var text = textItems[it];
+                if (it % 2 == 0)
+                {<text>@text</text>}
+                else
+                {
+                    var vm = viewModel.Clone();
+                    var list = vm.FilterSpecial ?? new List<string>();
+                    vm.FilterSpecial = null;
+                    list.Add(text);
+                    var q = UrlBuilder.GetListQueryParams("FilterSpecial", list);
+                    {<text>[<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)">@text</a>]</text>}
+                }
+            }
+        }
+    </strong>
+}
+
+@helper RoleInstance(UrlHelper url, string roleInstance, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterRoleInstance = roleInstance;
+
+    if (!string.IsNullOrWhiteSpace(roleInstance))
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@roleInstance</span></a>}
+}
+
+@helper Role(UrlHelper url, string role, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterRole = role;
+
+    if (!string.IsNullOrWhiteSpace(role))
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@role</span></a>}
+}
+
+@helper Source(UrlHelper url, string source, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterSource = source;
+
+    if (!string.IsNullOrWhiteSpace(source))
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@source</span></a>}
+}
+
+@helper Level(UrlHelper url, int level, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.SetLevels(new HashSet<int>(new[] { level }));
+
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@level</span></a>}
+}
+
+@helper Timestamp(UrlHelper url, DateTime timestamp, LogViewModel viewModel)
+{
+    var vm = viewModel.Clone();
+    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+    vm.FilterSpecial = null;
+    vm.FilterTimestamp = timestamp.ToString("yyyy'-'MM'-'dd'-'HH'-'mm");
+
+    var timestamp2 = timestamp.ToUniversalTime();
+    if (viewModel.DateTimeLocation == "UTC")
+    {
+    }
+    else if (string.IsNullOrWhiteSpace(viewModel.DateTimeLocation) || viewModel.DateTimeLocation.Contains("MG"))
+    {
+        var timeZone = TimeZoneInfo.FindSystemTimeZoneById(
+            TimeZoneDataAttribute.GetAttributeFromEnumValue(TypeEstadoBrasileiroTimeZone.MG).Id);
+
+        timestamp2 = TimeZoneInfo.ConvertTimeFromUtc(timestamp2, timeZone);
+    }
+
+    {<a href="@UrlBuilder.AppendQuery(url.Action("Log", "MasterAdmin", vm), q)"><span style="white-space: nowrap">@timestamp2.ToString("yyyy'-'MM'-'dd' 'HH':'mm")</span></a>}
+}

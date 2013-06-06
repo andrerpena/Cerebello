@@ -1,9 +1,9 @@
 ﻿using System.Web.Mvc;
-using CerebelloWebRole.Code.Controllers;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.Docs.Controllers
 {
-    public class HomeDocsController : RootController
+    public class HomeDocsController : CerebelloSiteController
     {
         //
         // GET: /Docs/HomeDocs/

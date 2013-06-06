@@ -1,16 +1,14 @@
-﻿@model List<CerebelloWebRole.Code.WindowsAzure.WindowsAzureLogHelper.TraceLogsEntity>
+﻿@model LogViewModel
 @{
     this.Layout = null;
 
-    var grid = this.Html.CreateGrid(this.Model);
-    grid.AddField(model => model.PartitionKey);
-    grid.AddField(model => model.Timestamp);
-    grid.AddField(model => model.Level);
-    grid.AddField(model => model.Role);
-    grid.AddField(model => model.RoleInstance);
-    grid.AddField(model => model.Message, @<text><strong>@item.Message</strong></text>);
-    
-    
+    var grid = this.Html.CreateGrid(this.Model.Logs);
+    grid.AddField(model => model.Timestamp, @<text>@Log.Timestamp(this.Url, item.Timestamp, this.Model)</text>, string.Format("Timestamp ({0})", (this.Model.DateTimeLocation ?? "SP-RJ-MG").Replace('-', ' ')));
+    grid.AddField(model => model.Level, @<text>@Log.Level(this.Url, item.Level, this.Model)</text>);
+    grid.AddField(model => model.Role, @<text>@Log.Role(this.Url, item.Role, this.Model)</text>);
+    grid.AddField(model => model.RoleInstance, @<text>@Log.RoleInstance(this.Url, item.RoleInstance, this.Model)</text>);
+    grid.AddField(model => model.Source, @<text>@Log.Source(this.Url, item.Source, this.Model)</text>);
+    grid.AddField(model => model.Message, @<text>@Log.Message(this.Url, item, this.Model)</text>);
 }
 <html>
 <head>
@@ -20,17 +18,227 @@
         body {
             margin: 1em;
         }
+
+        h1, h2 {
+            font-size: 20px;
+            text-decoration: none;
+            margin: 18px 0 5px 0;
+            border: none;
+            line-height: 1em;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        .button-bar {
+            margin: 4px 0;
+        }
+
+            .button-bar > span {
+                vertical-align: middle;
+            }
+
+        a.button {
+            background: #2672EC;
+            color: #fff;
+            padding: 0 6px;
+            display: inline-block;
+            font-size: 12px;
+            line-height: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+            a.button > span {
+                vertical-align: middle;
+            }
+
+            a.button:hover {
+                background: #5A94F1;
+                color: #fff;
+                text-decoration: none;
+            }
+
+            a.button.disabled, a.button.disabled:hover {
+                background: #bbb;
+            }
+
+            a.button.small {
+                font-size: 9px;
+            }
+
+            a.button.green {
+                background: #26EC72;
+            }
+
+            a.button.green {
+                background: #5AF194;
+            }
+
+        .page-number {
+            vertical-align: bottom;
+            font-size: 14px;
+            line-height: 24px;
+            font-weight: bold;
+            width: 32px;
+            display: inline-block;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <h1>Visualizador de LOG</h1>
+    <h2>Informações importantes</h2>
     <div style="margin-bottom: 10px">
-        <strong>Informações importantes:</strong>
         <ul>
-            <li>Este log está exibindo informações das últimas 3 horas, em ordem decrescente (quanto mais no topo, mais recente).</li>
-            <li>Somente os LEVELS 2, 3 e 4 estão sendo exibidos. Trace.TraceError = 2, Trace.TraceWarning = 3 e Trace.TraceInformation = 4.</li>
-            <li>O flush do TRACE para o LOG acontece de 2 em 2 minutos. Então demora até 2 minutos para que seu TRACE venha para esta lista.</li>
+            <li>Cada página exibida possui 3 horas de LOG, em ordem decrescente (quanto mais no topo, mais recente).</li>
+            <li>O flush do TRACE para o LOG é forçado ao chamar esta página.</li>
             <li>É possível inserir uma mensagem de log passando o parâmetro opcional MESSAGE. Ex: /masteradmin/log?message=teste 3. Demora até 2 minutos para que ela apareça na lista</li>
+            <li>Clique nos links que aparecem na tabela para filtrar usando a característica clicada.</li>
+            <li>Use os botões abaixo para filtrar e definir as opções de exibição.</li>
         </ul>
+    </div>
+    <h2>Filter options</h2>
+    <div class="button-bar">
+        <a href="@this.Url.Action("Log")" class="button @(this.Model.HasAnyFilter() ? "" : "disabled")" onclick="@(this.Model.HasAnyFilter() ? "" : "return false;")"><span>Clear all filters</span></a>
+    </div>
+    <div class="button-bar">
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterRole = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasRoleFilter() ? "" : "disabled")" onclick="@(this.Model.HasRoleFilter() ? "" : "return false;")"><span>Clear role filter</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterRoleInstance = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasRoleInstanceFilter() ? "" : "disabled")" onclick="@(this.Model.HasRoleInstanceFilter() ? "" : "return false;")"><span>Clear instance filter</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterSource = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasSourceFilter() ? "" : "disabled")" onclick="@(this.Model.HasSourceFilter() ? "" : "return false;")"><span>Clear source filter</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterPath = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasPathFilter() ? "" : "disabled")" onclick="@(this.Model.HasPathFilter() ? "" : "return false;")"><span>Clear code location filter</span></a>
+            }
+        }
+    </div>
+    <div class="button-bar">
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasLevelFilter() ? "" : "disabled")" onclick="@(this.Model.HasLevelFilter() ? "" : "return false;")"><span>Default level filters</span></a>
+            }
+            for (var lvl = 1; lvl <= 5; lvl++)
+            {
+                var vm = this.Model.Clone();
+                var levels = vm.GetLevels();
+                var isEnabled = levels.Contains(lvl);
+                if (isEnabled) { levels.Remove(lvl); }
+                else { levels.Add(lvl); }
+                vm.SetLevels(levels);
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small @(isEnabled ? "" : "disabled")"><span>Level @lvl</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                var levels = vm.GetLevels();
+                var isEnabled = levels.Count >= 5;
+                levels = new HashSet<int>(new [] { 1, 2, 3, 4, 5 });
+                vm.SetLevels(levels);
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small @(isEnabled ? "" : "disabled")"><span>All levels</span></a>
+            }
+        }
+    </div>
+    <div class="button-bar">
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterSpecial = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasSpecialFilter() ? "" : "disabled")" onclick="@(this.Model.HasSpecialFilter() ? "" : "return false;")"><span>Clear special filters</span></a>
+            }
+            if (this.Model.FilterSpecial != null)
+            {
+                foreach (var item in new HashSet<string>(this.Model.FilterSpecial))
+                {
+                    var vm = this.Model.Clone();
+                    vm.FilterSpecial.Remove(item);
+                    var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                    vm.FilterSpecial = null;
+                    
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small"><span>Remove [@item]</span></a>
+                }
+            }
+        }
+    </div>
+    <div class="button-bar">
+        @{
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterTimestamp = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(this.Model.HasTimestampFilter() ? "" : "disabled")" onclick="@(this.Model.HasTimestampFilter() ? "" : "return false;")"><span>Clear timestamp filters</span></a>
+            }
+            {
+                var vm = this.Model.Clone();
+                vm.FilterLevel = null;
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterTimestamp = "now";
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button small"><span>Filter from NOW</span></a>
+            }
+        }
+    </div>
+    <h2>Display options</h2>
+    <div class="button-bar">
+        <span>Date time location</span>
+        @{
+            var modelLoc = (this.Model.DateTimeLocation ?? "SP-RJ-MG").Replace('-', ' ');
+            foreach (var loc in new[] { "UTC", "SP RJ MG" })
+            {
+                var vm = this.Model.Clone();
+                vm.DateTimeLocation = loc.Replace(' ', '-');
+                var q = UrlBuilder.GetListQueryParams("FilterSpecial", vm.FilterSpecial);
+                vm.FilterSpecial = null;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vm), q)" class="button @(modelLoc != loc ? "" : "disabled")" onclick="@(modelLoc != loc ? "" : "return false;")"><span>@loc</span></a>
+            }
+        }
+    </div>
+    <h2>Results</h2>
+    <div class="button-bar">
+        @{
+            var vmPage = this.Model.Clone();
+            var q1 = UrlBuilder.GetListQueryParams("FilterSpecial", vmPage.FilterSpecial);
+            vmPage.FilterSpecial = null;
+
+            vmPage.Page = (this.Model.Page ?? 1) - 1;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vmPage), q1)" class="button small @((this.Model.Page ?? 1) > 1 ? "" : "disabled")" onclick="@((this.Model.Page ?? 1) > 1 ? "" : "return false;")"><span>Previous</span></a>
+
+            <span class="page-number">@(this.Model.Page ?? 1)</span>
+        
+            vmPage.Page = (this.Model.Page ?? 1) + 1;
+            <a href="@UrlBuilder.AppendQuery(this.Url.Action("Log", vmPage), q1)" class="button small"><span>Next</span></a>
+        }
     </div>
     @grid.GetHtml()
 </body>

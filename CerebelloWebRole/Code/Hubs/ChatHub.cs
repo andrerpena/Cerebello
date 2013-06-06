@@ -10,7 +10,7 @@ using ChatMessage = CerebelloWebRole.Code.Chat.ChatMessage;
 
 namespace CerebelloWebRole.Code.Hubs
 {
-    public class ChatHub : CerebelloHub
+    public class ChatHub : CerebelloHub, IChatHub
     {
         /// <summary>
         /// Current connections

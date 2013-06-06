@@ -154,7 +154,6 @@
 
         // Defaults:
         this.defaults = {
-            practice: null,
             myUser: null,
             otherUser: null,
             initialToggleState: "maximized",
@@ -387,7 +386,6 @@
         // Defaults:
         this.defaults = {
             user: null,
-            practice: null,
             adapter: null
         };
 
@@ -414,7 +412,6 @@
 
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
-                practice: _this.opts.practice,
                 myUser: _this.opts.user,
                 otherUser: otherUser,
                 newMessageUrl: _this.opts.newMessageUrl,

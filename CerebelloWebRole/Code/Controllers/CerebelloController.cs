@@ -10,7 +10,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
 using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Controllers;
 using CerebelloWebRole.Code.Data;
 using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Code.Security;
@@ -19,7 +18,7 @@ using CerebelloWebRole.Code.Services;
 namespace CerebelloWebRole.Code
 {
     /// <summary>
-    /// This is the base Controller for all Controllers inside the App. 
+    /// This is the base Controller for all Controllers inside the App.
     /// The site and documentation Controllers will NOT be CerebelloController
     /// </summary>
     public class CerebelloController : RootController
@@ -50,18 +49,23 @@ namespace CerebelloWebRole.Code
             if (this.DbUser != null)
             {
                 // this ViewBag will carry user information to the View
-                this.ViewBag.UserInfo = new UserInfo
-                    {
-                        Id = this.DbUser.Id,
-                        DisplayName = this.DbUser.Person.FullName,
-                        GravatarEmailHash = this.DbUser.Person.EmailGravatarHash,
-                        // the following properties will only be set if the current user is a doctor
-                        DoctorId = this.DbUser.DoctorId,
-                        DoctorUrlIdentifier = this.DbUser.Doctor != null ? this.DbUser.Doctor.UrlIdentifier : null,
-                        AdministratorId = this.DbUser.AdministratorId,
-                        IsOwner = this.DbUser.IsOwner,
-                    };
+                this.ViewBag.UserInfo = CerebelloController.GetUserInfo(this.DbUser);
             }
+        }
+
+        internal static UserInfo GetUserInfo(User dbUser)
+        {
+            return new UserInfo
+                {
+                    Id = dbUser.Id,
+                    DisplayName = dbUser.Person.FullName,
+                    GravatarEmailHash = dbUser.Person.EmailGravatarHash,
+                    // the following properties will only be set if the current user is a doctor
+                    DoctorId = dbUser.DoctorId,
+                    DoctorUrlIdentifier = dbUser.Doctor != null ? dbUser.Doctor.UrlIdentifier : null,
+                    AdministratorId = dbUser.AdministratorId,
+                    IsOwner = dbUser.IsOwner,
+                };
         }
 
         internal CerebelloEntitiesAccessFilterWrapper InitDb()
@@ -85,7 +89,8 @@ namespace CerebelloWebRole.Code
                     throw new Exception(
                         "HttpContext.User should be a AuthenticatedPrincipal when the user is authenticated");
 
-                var result = this.db.SetCurrentUserById(authenticatedPrincipal.Profile.Id);
+                var db1 = this.InitDb();
+                var result = db1.SetCurrentUserById(authenticatedPrincipal.Profile.Id);
 
                 this.DbUser = result;
             }

@@ -21,7 +21,7 @@ namespace CerebelloWebRole.Code.Notifications
                     {
                         while (true)
                         {
-                            Trace.TraceInformation("Notification service in execution (NotificationsHelper)");
+                            Trace.TraceInformation("NotificationsHelper.CreateNotificationsJob(): Service in execution");
 
                             using (var db = new CerebelloEntities())
                             {
@@ -38,7 +38,7 @@ namespace CerebelloWebRole.Code.Notifications
                                 }
                                 catch (Exception ex)
                                 {
-                                    Trace.TraceError("Could not generate notifications for medical appointments. Ex:" + ex.Message);
+                                    Trace.TraceError("NotificationsHelper.CreateNotificationsJob(): Could not generate notifications for medical appointments. Ex:" + ex.Message);
                                 }
 
                                 // check for generic appointments
@@ -48,7 +48,7 @@ namespace CerebelloWebRole.Code.Notifications
                                 }
                                 catch (Exception ex)
                                 {
-                                    Trace.TraceError("Could not generate notifications for generic appointments. Ex:" + ex.Message);
+                                    Trace.TraceError("NotificationsHelper.CreateNotificationsJob(): Could not generate notifications for generic appointments. Ex:" + ex.Message);
                                 }
 
                                 // dispatch notifications to the client
@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Code.Notifications
                     }
                     catch (Exception ex)
                     {
-                        Trace.TraceError("Error in the notifications service. Ex:" + ex.Message);
+                        Trace.TraceError("NotificationsHelper.CreateNotificationsJob(): Error in the notifications service. Ex:" + ex.Message);
                     }
                 }, null);
         }
