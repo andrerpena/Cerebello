@@ -1,3 +1,28 @@
+-- 
+-- PRACTICE CREATION COUNT PER WEEK (NOT COUNTING THE CANCELED ACCOUNTS)
+-- 
+declare @Interval int = 7;
+declare @WeekOffset int = 0;
+WITH cSequence AS
+(
+    SELECT DATEADD(DAY, @WeekOffset, '2013-03-24') AS StartRange, DATEADD(DAY, @Interval + @WeekOffset, '2013-03-24') AS EndRange
+    UNION ALL
+    SELECT EndRange, DATEADD(DAY, @Interval, EndRange)
+    FROM cSequence 
+    WHERE DATEADD(DAY, @Interval, EndRange) < DATEADD(DAY, @Interval, GETDATE())
+)
+SELECT
+  CONVERT(char(10), StartRange,126) as StartRange,
+  CONVERT(char(10), EndRange,126) as EndRange,
+  (select count(*) from practice PR
+    join [user] U on PR.OwnerId = U.Id
+    join Person PER on U.PersonId = PER.Id
+    where PR.AccountDisabled <> 1 and
+    UrlIdentifier not like 'consultorioplus%' and UrlIdentifier <> 'consultoriodrhouse' and
+    U.UserName <> 'andrerpena' and
+    PR.CreatedOn >= I.StartRange and PR.CreatedOn < I.EndRange) as [Count]
+FROM cSequence I;
+
 --
 -- PRACTICE USAGE
 -- depends on view PatientMedicalRecords (select * from PatientMedicalRecords)
@@ -19,10 +44,11 @@ select
   join Person PER on U.PersonId = PER.Id
   where
     PR.AccountDisabled <> 1 and
-    UrlIdentifier not like 'consultorioplus%' and UrlIdentifier <> 'consultoriodrhouse'
+    UrlIdentifier not like 'consultorioplus%' and UrlIdentifier <> 'consultoriodrhouse' and
+    U.UserName <> 'andrerpena'
     --and UrlIdentifier like '%clin%'
-  order by LastActiveOn desc
-  --order by PR.CreatedOn desc
+  --order by LastActiveOn desc
+  order by PR.CreatedOn desc
 
 --
 -- PATIENTS STATS FOR A PRACTICE
@@ -31,6 +57,7 @@ select
 select
     PS.*,
     PR.UrlIdentifier,
+    DATEDIFF(day, LastActiveOn, GETDATE()) as InactiveDays,
     CASE PS.ElapsedTime WHEN 0 THEN 0.0 ELSE PS.PatientCount * 1.0 / PS.ElapsedTime END as PatientsPerDay
   from (
       select
@@ -41,7 +68,10 @@ select
         from Practice PR
     ) PS
     join Practice PR on PS.Id = PR.Id
-  where PR.AccountDisabled <> 1 and PR.UrlIdentifier not like 'consultorioplus%' and PR.UrlIdentifier <> 'consultoriodrhouse'
+    join [user] U on PR.OwnerId = U.Id
+  where PR.AccountDisabled <> 1 and
+    PR.UrlIdentifier not like 'consultorioplus%' and PR.UrlIdentifier <> 'consultoriodrhouse' and
+    U.UserName <> 'andrerpena'
   order by PatientsPerDay desc, PS.ElapsedTime
 
 --insert into glb_token (Value, ExpirationDate, [Type], Name) values ('5a740aca6e1046b7904b4df6d5fa6826', '2013-05-10', 'VerifyPracticeAndEmail', 'Practice=evandrofontesdeoliveira&UserName=evafoli')
