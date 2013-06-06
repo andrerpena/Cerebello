@@ -64,35 +64,18 @@ namespace CerebelloWebRole.Code.Services
         }
 
         /// <summary>
-        /// Creates a container in the storage if possible, using the given location.
+        /// Deletes a blob in the storage.
+        /// Directories will not be left empty.
         /// </summary>
-        /// <param name="location">A location that starts with a container name.</param>
-        /// <returns>Returns true if directory was created; otherwise false.</returns>
-        public bool CreateContainer(string location)
+        /// <param name="fileLocation">The location of the blob to delete.</param>
+        public void DeleteBlob(string fileLocation)
         {
-            var path = Path.Combine(DebugConfig.LocalStoragePath, location);
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Deletes files in the storage.
-        /// If it is a directory, then all files inside it will be deleted.
-        /// Directories will never be left empty.
-        /// </summary>
-        /// <param name="location">The location of the files to delete.</param>
-        public void DeleteFiles(string location)
-        {
-            var containerName = GetContainerName(location);
+            var containerName = GetContainerName(fileLocation);
             var pathContainer = Path.Combine(DebugConfig.LocalStoragePath, containerName) + '\\';
-            var path = Path.Combine(DebugConfig.LocalStoragePath, location);
+            var path = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             var dirInfo = new DirectoryInfo(path);
             var fileInfo = new FileInfo(path);
+
             while (true)
             {
                 if (pathContainer.StartsWith(dirInfo.FullName))
@@ -147,34 +130,26 @@ namespace CerebelloWebRole.Code.Services
                 stream.CopyTo(fs);
         }
 
-        public Stream OpenAppend(string fileLocation)
+        public void AppendToFile(Stream stream, string fileLocation)
         {
             var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             var fileInfo = new FileInfo(sourcePath);
             if (fileInfo.Exists)
-                return fileInfo.Open(FileMode.Append);
-
-            return null;
+            {
+                using (var streamWrite = fileInfo.Open(FileMode.Append, FileAccess.Write))
+                    stream.CopyTo(streamWrite);
+            }
+            else
+            {
+                using (var streamWrite = fileInfo.Open(FileMode.Create, FileAccess.Write))
+                    stream.CopyTo(streamWrite);
+            }
         }
 
         public bool Exists(string fileLocation)
         {
             var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             return File.Exists(sourcePath);
-        }
-
-        public Stream CreateOrOverwrite(string fileLocation)
-        {
-            // if container already exists, just create the directories inside
-            var destContainer = GetContainerName(fileLocation);
-            if (Directory.Exists(destContainer))
-            {
-                var destDir = Path.GetDirectoryName(fileLocation);
-                Directory.CreateDirectory(destDir);
-            }
-
-            var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
-            return File.Create(sourcePath);
         }
     }
 }

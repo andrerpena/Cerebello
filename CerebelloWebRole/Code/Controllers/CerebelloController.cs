@@ -317,8 +317,7 @@ namespace CerebelloWebRole.Code
 
                     fileMetadataProvider.SaveChanges();
 
-                    using (var thumbFileStream = storage.CreateOrOverwrite(thumbFullStorageFileName))
-                        thumbFileStream.Write(array, 0, array.Length);
+                    storage.SaveFile(new MemoryStream(array), thumbFullStorageFileName);
                 }
             }
 

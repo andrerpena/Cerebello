@@ -1056,7 +1056,6 @@
     <EmbeddedResource Include="Content\Reports\PatientsList\Anamneses.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\Receipts.trdx" />
     <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     <Content Include="Content\Contracts\Contrato-plano-profissional.docx" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.odt" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.pdf" />

@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
-using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.StorageClient;
+using CloudBlobContainer = Microsoft.WindowsAzure.Storage.Blob.CloudBlobContainer;
+using CloudBlockBlob = Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob;
 using CloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount;
 
 namespace CerebelloWebRole.Code.Services
@@ -22,159 +26,190 @@ namespace CerebelloWebRole.Code.Services
             return location.Split(new[] { '\\' }, 2).Skip(1).FirstOrDefault() ?? "";
         }
 
-        /// <summary>
-        /// Gets an existing container or creates a new one
-        /// </summary>
-        /// <param name="containerName"></param>
-        /// <returns></returns>
-        private static CloudBlobContainer GetOrCreateBlobContainer([NotNull] string containerName)
+        class Container
         {
-            if (containerName == null) throw new ArgumentNullException("containerName");
-
-            var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-            var blobClient = storageAccount.CreateCloudBlobClient();
-
-            // Gets a reference to a container.
-            var container = blobClient.GetContainerReference(containerName);
-
-            // Create the container if it doesn't already exist.
-            if (container.CreateIfNotExists())
-            {
-                // Setup the new container.
-                container.SetPermissions(
-                   new BlobContainerPermissions
-                   {
-                       PublicAccess = BlobContainerPublicAccessType.Off,
-                   });
-            }
-
-            return container;
+            public bool? Exists { get; set; }
+            public CloudBlobContainer CloudBlobContainer { get; set; }
         }
 
-        private CloudBlockBlob GetCloudBlockBlob(string fileLocation)
+        class Blob
         {
-            var containerName = GetContainerName(fileLocation);
-            var containerRef = this.containersMap.GetOrAdd(containerName, GetOrCreateBlobContainer);
-            var blobName = GetBlobName(fileLocation);
-            var blobRef = containerRef.GetBlockBlobReference(blobName);
-            return blobRef;
+            public bool? Exists { get; set; }
+            public bool AttributesFetched { get; set; }
+            public Container Container { get; set; }
+            public CloudBlockBlob CloudBlockBlob { get; set; }
         }
 
-        private readonly ConcurrentDictionary<string, CloudBlobContainer> containersMap
-            = new ConcurrentDictionary<string, CloudBlobContainer>();
+        private readonly Dictionary<string, Container> containersMap
+            = new Dictionary<string, Container>();
 
-        private readonly ConcurrentDictionary<string, CloudBlockBlob> blobsMap
-            = new ConcurrentDictionary<string, CloudBlockBlob>();
+        private readonly Dictionary<string, Blob> blobsMap
+            = new Dictionary<string, Blob>();
 
-        private readonly ConcurrentDictionary<CloudBlockBlob, CloudBlockBlob> blobsFetchAttrMap
-            = new ConcurrentDictionary<CloudBlockBlob, CloudBlockBlob>();
-
-        private CloudBlockBlob GetCloudBlockBlob(string fileLocation, bool useCache, bool fetchAttributes = false)
+        private Blob GetCloudBlockBlob(string fileLocation, bool fetchAttributes = false, bool createContainer = false)
         {
-            var blobRef = useCache
-                ? this.blobsMap.GetOrAdd(fileLocation, this.GetCloudBlockBlob)
-                : this.GetCloudBlockBlob(fileLocation);
+            // getting the object representing the blob
+            Container container = null;
+            Blob blob;
 
-            if (fetchAttributes)
+            if (!blobsMap.TryGetValue(fileLocation, out blob))
             {
-                if (useCache)
+                // Gets the object representing the container.
+                var containerName = GetContainerName(fileLocation);
+
+                if (!containersMap.TryGetValue(containerName, out container))
                 {
-                    this.blobsFetchAttrMap.GetOrAdd(
-                        blobRef,
-                        blob =>
-                        {
-                            // requesting file properties
-                            blob.FetchAttributes();
-                            return blob;
-                        });
+                    var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                    var blobClient = storageAccount.CreateCloudBlobClient();
+                    var containerRef = blobClient.GetContainerReference(containerName);
+                    containersMap[containerName]
+                        = container
+                        = new Container { CloudBlobContainer = containerRef };
                 }
-                else
-                {
-                    blobRef.FetchAttributes();
-                }
+
+                var blobName = GetBlobName(fileLocation);
+                var blobRef = container.CloudBlobContainer.GetBlockBlobReference(blobName);
+                blobsMap[fileLocation]
+                    = blob
+                    = new Blob { CloudBlockBlob = blobRef, Container = container, };
             }
 
-            return blobRef;
+            if (container == null)
+                container = blob.Container;
+
+            if (createContainer && container.Exists != true)
+            {
+                if (container.CloudBlobContainer.CreateIfNotExists())
+                    blob.Exists = false;
+
+                container.Exists = true;
+            }
+
+            if (fetchAttributes && blob.Exists != false && blob.AttributesFetched != true)
+            {
+                bool ok = false;
+                try
+                {
+                    blob.CloudBlockBlob.FetchAttributes();
+                    ok = true;
+                }
+                catch (StorageClientException e)
+                {
+                    if (e.ErrorCode != StorageErrorCode.ResourceNotFound)
+                        throw;
+                }
+
+                blob.Exists = ok;
+                blob.AttributesFetched = ok;
+            }
+
+            return blob;
         }
 
         public long? GetFileLength(string fileLocation)
         {
-            var blobRef = this.GetCloudBlockBlob(fileLocation, useCache: true, fetchAttributes: true);
-            return blobRef.Properties.Length;
+            var blob = this.GetCloudBlockBlob(fileLocation, fetchAttributes: true);
+            if (blob.Exists == true)
+                return blob.CloudBlockBlob.Properties.Length;
+            return null;
         }
 
         public bool Move(string sourceFileLocation, string destinationFileLocation)
         {
-            var blobSrcRef = this.GetCloudBlockBlob(sourceFileLocation, useCache: true);
-            var blobDstRef = this.GetCloudBlockBlob(destinationFileLocation, useCache: true);
-            blobDstRef.StartCopyFromBlob(blobSrcRef);
+            var blobSrc = this.GetCloudBlockBlob(sourceFileLocation);
+            var blobDst = this.GetCloudBlockBlob(destinationFileLocation, createContainer: true);
+            blobDst.CloudBlockBlob.StartCopyFromBlob(blobSrc.CloudBlockBlob);
 
             // requesting operation status
             // todo: measure copy speed, and fetch attributes with less frequency based on avg speed
             while (true)
             {
-                blobDstRef.FetchAttributes();
-                if (blobDstRef.CopyState.Status != CopyStatus.Pending)
+                blobDst.CloudBlockBlob.FetchAttributes();
+                if (blobDst.CloudBlockBlob.CopyState.Status != CopyStatus.Pending)
                     break;
 
                 // sleeping 1 second per remaining 50-megabytes (this is the rate of a commong hard drive)
-                var sleep = (blobDstRef.CopyState.TotalBytes ?? 0 - blobDstRef.CopyState.BytesCopied ?? 0) / (50 * 1024000.0);
+                var sleep = (blobDst.CloudBlockBlob.CopyState.TotalBytes ?? 0 - blobDst.CloudBlockBlob.CopyState.BytesCopied ?? 0) / (50 * 1024000.0);
                 if (sleep > 60)
                     Thread.Sleep(TimeSpan.FromSeconds(60));
                 else if (sleep > 0.1)
                     Thread.Sleep(TimeSpan.FromSeconds(sleep));
             }
 
-            return blobDstRef.CopyState.Status == CopyStatus.Success;
+            var isCopyOk = blobDst.CloudBlockBlob.CopyState.Status == CopyStatus.Success;
+
+            // removing source blob if copy succeded
+            if (isCopyOk)
+            {
+                blobSrc.CloudBlockBlob.DeleteIfExists();
+                blobSrc.Exists = false;
+                blobDst.Exists = true;
+            }
+
+            return isCopyOk;
         }
 
         public Stream OpenRead(string fileLocation)
         {
-            throw new NotImplementedException();
+            var blob = this.GetCloudBlockBlob(fileLocation);
+            var stream = blob.CloudBlockBlob.OpenRead();
+            blob.Exists = true;
+            return stream;
         }
 
-        public bool CreateContainer(string location)
+        public void DeleteBlob(string fileLocation)
         {
-            var blobSrcRef = this.GetCloudBlockBlob(sourceFileLocation, useCache: true);
-          
-            var containerName = GetContainerName(location);
-            var containerRef = this.containersMap.GetOrAdd(containerName, GetOrCreateBlobContainer);
-            var blobName = GetBlobName(location);
-            var blobRef = containerRef.GetBlockBlobReference(blobName);
-
-            var dirName = Path.GetDirectoryName(blobName);
-
-            var dirRef = containerRef.GetDirectoryReference(dirName);
-            dirRef.ListBlobsSegmented()
-
-            throw new NotImplementedException();
-        }
-
-        public void DeleteFiles(string location)
-        {
-            var blobSrcRef = this.GetCloudBlockBlob(sourceFileLocation, useCache:);
-
+            var blob = this.GetCloudBlockBlob(fileLocation);
+            blob.CloudBlockBlob.DeleteIfExists();
+            blob.Exists = false;
         }
 
         public void SaveFile(Stream stream, string fileLocation)
         {
-            throw new NotImplementedException();
+            var blob = this.GetCloudBlockBlob(fileLocation, createContainer: true);
+            blob.CloudBlockBlob.UploadFromStream(stream);
+            blob.Exists = true;
         }
 
-        public Stream OpenAppend(string fileLocation)
+        public void AppendToFile(Stream stream, string fileLocation)
         {
-            throw new NotImplementedException();
+            var blob = this.GetCloudBlockBlob(fileLocation, createContainer: true);
+            var blobRef = blob.CloudBlockBlob;
+            {
+                var blockIds = new List<string>(blobRef.DownloadBlockList().Select(b => b.Name));
+                var curId = blockIds.Count;
+
+                // 4 MB buffer
+                var buffer = new byte[4 * 1024000];
+                while (true)
+                {
+                    int bytesRead = stream.Read(buffer, 0, 4 * 1024000);
+
+                    if (bytesRead == -1)
+                        break;
+
+                    if (bytesRead > 0)
+                    {
+                        var memStream = new MemoryStream(buffer, 0, bytesRead);
+                        var newId = Convert.ToBase64String(Encoding.Default.GetBytes(curId.ToString(CultureInfo.InvariantCulture)));
+                        blobRef.PutBlock(newId, memStream, null);
+                        blockIds.Add(newId);
+                        curId++;
+                    }
+                }
+
+                blobRef.PutBlockList(blockIds);
+
+                blob.Exists = true;
+            }
         }
 
         public bool Exists(string fileLocation)
         {
-            throw new NotImplementedException();
-        }
-
-
-        public Stream CreateOrOverwrite(string fileLocation)
-        {
-            throw new NotImplementedException();
+            var blob = this.GetCloudBlockBlob(fileLocation);
+            if (!blob.Exists.HasValue)
+                blob.Exists = blob.CloudBlockBlob.Exists();
+            return blob.Exists.Value;
         }
     }
 }

@@ -8,18 +8,14 @@ namespace CerebelloWebRole.Code.Services
 
         bool Move(string sourceFileLocation, string destinationFileLocation);
 
-        bool CreateContainer(string location);
-
-        void DeleteFiles(string location);
+        void DeleteBlob(string location);
 
         bool Exists(string fileLocation);
 
         void SaveFile(Stream stream, string fileLocation);
 
-        Stream CreateOrOverwrite(string fileLocation);
-
         Stream OpenRead(string fileLocation);
 
-        Stream OpenAppend(string fileLocation);
+        void AppendToFile(Stream stream, string fileLocation);
     }
 }

@@ -97,7 +97,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // deleting file metadata and storage entries
-            storage.DeleteFiles(dbLocation);
+            storage.DeleteBlob(dbLocation);
             db.FileMetadatas.DeleteObject(metadata);
         }
 
@@ -153,7 +153,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // saving the file to the storage
                 var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
-                this.storage.CreateContainer(containerName);
                 this.storage.SaveFile(file.InputStream, fullStoragePath);
 
                 // returning information to the client
@@ -231,17 +230,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             Debug.Assert(fileName != null, "fileName != null");
             var fullPath = Path.Combine(location, fileName);
 
-            var fileStream = this.storage.OpenAppend(fullPath);
+            this.storage.AppendToFile(inputStream, fullPath);
 
-            if (fileStream == null)
-                return new StatusCodeResult(HttpStatusCode.NotFound);
-
-            long fileLength;
-            using (fileStream)
-            {
-                inputStream.CopyTo(fileStream);
-                fileLength = inputStream.Position;
-            }
+            var fileLength = (long)this.storage.GetFileLength(fullPath);
 
             // todo: must create a valid file metadata, or retrieve an already existing one from the database
             int id = 0;
