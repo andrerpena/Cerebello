@@ -162,12 +162,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 try
                 {
                     var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, 80, 80);
-                    byte[] array;
-                    string contentType;
-                    bool thumbExists = TryGetOrCreateThumb(metadata.Id, 80, 80, fullStoragePath, thumbName, true, this.storage, metadataProvider, out array, out contentType);
-                    if (thumbExists)
+                    var thumbResult = ImageHelper.TryGetOrCreateThumb(metadata.Id, 80, 80, fullStoragePath, thumbName, true, this.storage, metadataProvider);
+                    if (thumbResult.Status == CreateThumbStatus.Ok)
                     {
-                        fileStatus.ThumbnailUrl = @"data:" + contentType + ";base64," + Convert.ToBase64String(array);
+                        fileStatus.ThumbnailUrl = @"data:" + thumbResult.ContentType + ";base64," + Convert.ToBase64String(thumbResult.Data);
                         fileStatus.IsInGallery = true;
                         imageThumbOk = true;
                     }
@@ -296,16 +294,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var containerName = location.Split("\\".ToCharArray(), 2).FirstOrDefault();
 
             if (metadata != null)
-            {
                 if (containerName == metadata.ContainerName && metadata.OwnerUserId == this.DbUser.Id)
-                {
-                    var fileNamePrefix = Path.GetDirectoryName(metadata.BlobName) + "\\";
-                    var normalFileName = StringHelper.NormalizeFileName(metadata.SourceFileName);
-                    var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, w, h);
-                    var fileName = string.Format("{0}\\{1}", containerName, metadata.BlobName);
-                    return this.GetOrCreateThumb(metadata.Id, this.storage, this.datetimeService, w, h, fileName, thumbName);
-                }
-            }
+                    return this.GetOrCreateThumb(metadata, this.storage, this.datetimeService, w, h);
 
             return new StatusCodeResult(HttpStatusCode.NotFound);
         }

@@ -154,174 +154,49 @@ namespace CerebelloWebRole.Code
             int maxHeight,
             bool useCache = true)
         {
-            if (originalMetadata != null)
+            if (originalMetadata == null)
+                throw new ArgumentNullException("originalMetadata");
+
+            if (originalMetadata.OwnerUserId == this.DbUser.Id)
             {
-                if (originalMetadata.OwnerUserId == this.DbUser.Id)
+                var fileNamePrefix = Path.GetDirectoryName(originalMetadata.BlobName) + "\\";
+                var normalFileName = StringHelper.NormalizeFileName(originalMetadata.SourceFileName);
+
+                var thumbName = string.Format(
+                    "{0}\\{1}file-{2}-thumb-{4}x{5}-{3}",
+                    originalMetadata.ContainerName,
+                    fileNamePrefix,
+                    originalMetadata.Id,
+                    normalFileName,
+                    maxWidth,
+                    maxHeight);
+
+                var fileName = string.Format("{0}\\{1}", originalMetadata.ContainerName, originalMetadata.BlobName);
+
+                int originalMetadataId = originalMetadata.Id;
+                var metadataProvider = new DbFileMetadataProvider(this.db, dateTimeService, this.DbUser.PracticeId);
+
+                var thumbResult = ImageHelper.TryGetOrCreateThumb(
+                    originalMetadataId,
+                    maxWidth,
+                    maxHeight,
+                    fileName,
+                    thumbName,
+                    useCache,
+                    storage,
+                    metadataProvider);
+
+                switch (thumbResult.Status)
                 {
-                    var fileNamePrefix = Path.GetDirectoryName(originalMetadata.BlobName) + "\\";
-                    var normalFileName = StringHelper.NormalizeFileName(originalMetadata.SourceFileName);
-
-                    var thumbName = string.Format(
-                        "{0}\\{1}file-{2}-thumb-{4}x{5}-{3}",
-                        originalMetadata.ContainerName,
-                        fileNamePrefix,
-                        originalMetadata.Id,
-                        normalFileName,
-                        maxWidth,
-                        maxHeight);
-
-                    var fileName = string.Format("{0}\\{1}", originalMetadata.ContainerName, originalMetadata.BlobName);
-
-                    return this.GetOrCreateThumb(
-                        originalMetadata.Id, storage, dateTimeService, maxWidth, maxHeight, fileName, thumbName, useCache);
+                    case CreateThumbStatus.Ok: return this.File(thumbResult.Data, thumbResult.ContentType);
+                    case CreateThumbStatus.SourceFileNotFound: return new StatusCodeResult(HttpStatusCode.NotFound);
+                    case CreateThumbStatus.SourceIsNotImage: return this.Redirect(this.Url.Content("~/Content/Images/App/FileIcons/generic-outline.png"));
+                    case CreateThumbStatus.SourceImageTooLarge: return this.Redirect(this.Url.Content("~/Content/Images/App/FileIcons/generic-outline.png"));
+                    default: throw new NotImplementedException();
                 }
             }
 
             return new StatusCodeResult(HttpStatusCode.NotFound);
-        }
-
-        /// <summary>
-        /// Creates an action result with a thumbnail image of a file in the storage.
-        /// </summary>
-        /// <param name="originalMetadataId">Metadata ID of the original image file.</param>
-        /// <param name="storage">The storage service used to store files.</param>
-        /// <param name="dateTimeService">Date time service used to get current date and time.</param>
-        /// <param name="maxWidth">Maximum width of the thumbnail image.</param>
-        /// <param name="maxHeight">Maximum height of the thumbnail image.</param>
-        /// <param name="sourceFullStorageFileName">Name of the source image file.</param>
-        /// <param name="thumbFullStorageFileName">Name of the thumbnail image cache file.</param>
-        /// <param name="useCache">Whether to use a cached thumbnail or not.</param>
-        /// <returns>The ActionResult containing the thumbnail image.</returns>
-        protected ActionResult GetOrCreateThumb(
-            int originalMetadataId,
-            IStorageService storage,
-            IDateTimeService dateTimeService,
-            int maxWidth,
-            int maxHeight,
-            string sourceFullStorageFileName,
-            string thumbFullStorageFileName,
-            bool useCache = true)
-        {
-            var metadataProvider = new DbFileMetadataProvider(this.db, dateTimeService, this.DbUser.PracticeId);
-
-            byte[] array;
-            string contentType;
-
-            if (!TryGetOrCreateThumb(
-                originalMetadataId,
-                maxWidth,
-                maxHeight,
-                sourceFullStorageFileName,
-                thumbFullStorageFileName,
-                useCache,
-                storage,
-                metadataProvider,
-                out array,
-                out contentType))
-            {
-                return new StatusCodeResult(HttpStatusCode.NotFound);
-            }
-
-            return this.File(array, contentType);
-        }
-
-        /// <summary>
-        /// Creates a thumbnail image of a file in the storage.
-        /// </summary>
-        /// <param name="originalMetadataId">Metadata entry ID for the original image file.</param>
-        /// <param name="maxWidth">Maximum width of the thumbnail image.</param>
-        /// <param name="maxHeight">Maximum height of the thumbnail image.</param>
-        /// <param name="sourceFullStorageFileName">Name of the source image file.</param>
-        /// <param name="thumbFullStorageFileName">Name of the thumbnail image cache file.</param>
-        /// <param name="useCache">Whether to use a cached thumbnail or not.</param>
-        /// <param name="storage">Storage service used to get file data.</param>
-        /// <param name="fileMetadataProvider">File metadata provider used to create thumbnail image metadata.</param>
-        /// <param name="array">Array containing the thumbnail image bytes.</param>
-        /// <param name="contentType">The content type of the data in the returned array.</param>
-        /// <returns>True if thumbnail image exists; otherwise false.</returns>
-        public static bool TryGetOrCreateThumb(
-            int originalMetadataId,
-            int maxWidth,
-            int maxHeight,
-            string sourceFullStorageFileName,
-            string thumbFullStorageFileName,
-            bool useCache,
-            IStorageService storage,
-            IFileMetadataProvider fileMetadataProvider,
-            out byte[] array,
-            out string contentType)
-        {
-            if (useCache && !string.IsNullOrEmpty(thumbFullStorageFileName) && storage.Exists(thumbFullStorageFileName))
-            {
-                using (var srcStream = storage.OpenRead(thumbFullStorageFileName))
-                using (var stream = new MemoryStream((int)srcStream.Length))
-                {
-                    srcStream.CopyTo(stream);
-                    {
-                        array = stream.ToArray();
-                        contentType = MimeTypesHelper.GetContentType(Path.GetExtension(thumbFullStorageFileName));
-                        return true;
-                    }
-                }
-            }
-
-            if (!storage.Exists(sourceFullStorageFileName))
-            {
-                array = null;
-                contentType = null;
-                return false;
-            }
-
-            if (!StringHelper.IsImageFileName(sourceFullStorageFileName))
-            {
-                array = null;
-                contentType = null;
-                return false;
-            }
-
-            using (var srcStream = storage.OpenRead(sourceFullStorageFileName))
-            using (var srcImage = Image.FromStream(srcStream))
-            using (var newImage = ImageHelper.ResizeImage(srcImage, maxWidth, maxHeight, keepAspect: true, canGrow: false))
-            using (var newStream = new MemoryStream())
-            {
-                if (newImage == null)
-                {
-                    srcStream.Position = 0;
-                    srcStream.CopyTo(newStream);
-                    contentType = MimeTypesHelper.GetContentType(Path.GetExtension(sourceFullStorageFileName));
-                }
-                else
-                {
-                    var imageFormat = (newImage.Width * newImage.Height > 10000)
-                        ? ImageFormat.Jpeg
-                        : ImageFormat.Png;
-
-                    contentType = (newImage.Width * newImage.Height > 10000)
-                        ? "image/jpeg"
-                        : "image/png";
-
-                    newImage.Save(newStream, imageFormat);
-                }
-
-                array = newStream.ToArray();
-
-                if (useCache && newImage != null && !string.IsNullOrEmpty(thumbFullStorageFileName))
-                {
-                    // saving thumbnail image file metadata
-                    var containerName = thumbFullStorageFileName.Split("\\".ToCharArray(), 2).FirstOrDefault();
-                    var sourceFileName = Path.GetFileName(thumbFullStorageFileName ?? "") ?? "";
-                    var blobName = thumbFullStorageFileName.Split("\\".ToCharArray(), 2).Skip(1).FirstOrDefault();
-                    var relationType = string.Format("thumb-{0}x{1}", maxWidth, maxHeight);
-                    var metadata = fileMetadataProvider.CreateRelated(
-                        originalMetadataId, relationType, containerName, sourceFileName, blobName, null);
-
-                    fileMetadataProvider.SaveChanges();
-
-                    storage.SaveFile(new MemoryStream(array), thumbFullStorageFileName);
-                }
-            }
-
-            return true;
         }
     }
 }

@@ -242,12 +242,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             try
             {
                 var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, fileModel.MetadataId, normalFileName, 80, 80);
-                byte[] array;
-                string contentType;
-                bool thumbExists = TryGetOrCreateThumb(fileModel.MetadataId, 80, 80, fullStoragePath, thumbName, true, storage, fileMetadataProvider, out array, out contentType);
-                if (thumbExists)
+                var thumbResult = ImageHelper.TryGetOrCreateThumb(fileModel.MetadataId, 80, 80, fullStoragePath, thumbName, true, storage, fileMetadataProvider);
+                if (thumbResult.Status == CreateThumbStatus.Ok)
                 {
-                    fileStatus.ThumbnailUrl = @"data:" + contentType + ";base64," + Convert.ToBase64String(array);
+                    fileStatus.ThumbnailUrl = @"data:" + thumbResult.ContentType + ";base64," + Convert.ToBase64String(thumbResult.Data);
                     fileStatus.IsInGallery = true;
                     imageThumbOk = true;
                 }
@@ -535,7 +533,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             ActionResult result;
             try
             {
-                result = this.GetOrCreateThumb(metadata, this.storage, this.datetimeService, w, h);
+                result = metadata != null
+                    ? this.GetOrCreateThumb(metadata, this.storage, this.datetimeService, w, h)
+                    : new StatusCodeResult(HttpStatusCode.NotFound);
             }
             catch (OutOfMemoryException)
             {

@@ -269,6 +269,8 @@
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
+    <Compile Include="Code\Helpers\CreateThumbResult.cs" />
+    <Compile Include="Code\Helpers\CreateThumbStatus.cs" />
     <Compile Include="Code\Helpers\TraceHelper.cs" />
     <Compile Include="Code\Hubs\IChatHub.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
