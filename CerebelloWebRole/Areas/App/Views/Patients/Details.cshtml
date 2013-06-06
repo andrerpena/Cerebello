@@ -34,9 +34,9 @@
 }
 @section SideBar {
     <ul>
-        <li>
-            <a href="@Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit" id="edit-patient-link">Editar paciente</a> <a href="@Url.Action("edit", new { id = Model.Id })"class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a> <a href="@Url.Action("index")" class="icon-link icon-link-home">Resumo de pacientes</a>
-        </li>
+        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit">Editar paciente</a></li>
+        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" data-deleteRedirect="@this.Url.Action("Index")" data-deleteUrl="@this.Url.Action("Delete", new { id = this.Model.Id })" data-objectName="@this.Model.FullName" class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a></li>
+        <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
             <li><a href="@Url.Action("ExportPatientsPdf", "Report", new { patientId = this.Model.Id })" target="_blank" class="icon-link icon-link-import">Exportar PDF</a> </li>
@@ -50,89 +50,25 @@
             <li><a href="@Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar backup em Zip</a> </li>
         }
     </ul>
-    <script type="text/javascript">
-        $("#delete-patient-link").click(function (e) {
-            e.preventDefault();
-            $.deleteConfirmation({
-                objectType: "paciente",
-                objectName: "@this.Model.FullName",
-                url: "@Url.Action("Delete", new { id = this.Model.Id })",
-                success: function() {
-                    alert("Este paciente foi excluído");
-                    window.location = "@Url.Action("Index")";
-                }
-            });
-        });
-    </script>
 }
 @section Scripts
 {
     @LockIcon.Script(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist")
-    <script type="text/javascript" src="/Scripts/jquery.webcam.js"></script>
-    <script type="text/javascript" src="/Scripts/Controls/jquery.camera.window.js"></script>
-    <script type="text/javascript" src="/Scripts/App/Pages/camera-window.js"></script>
-    <script type="text/javascript">
-        var personId = @this.Model.PersonId;
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.webcam.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/Controls/jquery.camera.window.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/App/Pages/camera-window.js")"></script>
 
-        $(function() {
-            $("#alter-picture").click(function(e) {
-                e.preventDefault();
-                $.cameraWindow({
-                    success: function(data) {
-                        $.ajax("@Url.Action("TransferPersonPictureFromTempContainer", "PersonFiles")",
-                            {
-                                data: {
-                                    personId: personId,
-                                    tempFileName: data.fileName
-                                },
-                                success: function() {
-                                    var originalSrc = $("#patient-picture").attr("data-val-original-src");
-                                    $("#patient-picture").attr("src", originalSrc + "&foo=" + new Date().getTime());
-                                },
-                                error: function() {
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/tmpl.min.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/canvas-to-blob.min.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/load-image.min.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.iframe-transport.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload-fp.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload-ui.js")"></script>
 
-                                }
-                            });
-                    }
-                });
-            });
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/bootstrap-image-gallery.min.js")"></script>
 
-            $("#remove-picture").click(function(e) {
-                e.preventDefault();
-                if (confirm("Deseja realmente excluir a foto do paciente? esta operação não pode ser desfeita")) {
-                    $.ajax("@Url.Action("DeleteProfilePicture", "PersonFiles")",
-                        {
-                            data: {
-                                personId: personId
-                            },
-                            success: function() {
-                                var originalSrc = $("#patient-picture").attr("data-val-original-src");
-                                $("#patient-picture").attr("src", originalSrc + "&foo=" + new Date().getTime());
-                            },
-                            error: function() {
-
-                            }
-                        });
-                };
-            });
-        });
-    </script>
-
-    <script src="@Url.Content("~/Scripts/tmpl.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/canvas-to-blob.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/load-image.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.iframe-transport.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.fileupload.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.fileupload-fp.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.fileupload-ui.js")" type="text/javascript"></script>
-
-    <link rel="stylesheet" href="@Url.Content("~/Content/Styles/App/bootstrap-modals-only.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/Styles/App/jquery.fileupload-ui.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/Styles/App/bootstrap-image-gallery.min.css")" />
-
-    <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/bootstrap-image-gallery.min.js")" type="text/javascript"></script>
-    
     <script type="text/javascript" src="@Url.Content("~/Scripts/App/Pages/patient-details.js")"></script>
 
 <!-- The template to display files available for upload -->
@@ -194,12 +130,12 @@
         {% } %}
         <div>
             <input type="hidden" name="{%=file.IndexFieldName%}" value="{%=file.Index%}" autocomplete="off" />
-            <input type="hidden" name="{%=file.IdFieldName%}" value="{%=file.Id%}" autocomplete="off" />
-            <input type="hidden" name="{%=file.FileNameFieldName%}" value="{%=file.FileName%}" autocomplete="off" />
-            <input type="hidden" name="{%=file.FileContainerFieldName%}" value="{%=file.FileContainer%}" autocomplete="off" />
-            <input type="text" name="{%=file.FileTitleFieldName%}" value="{%=file.FileTitle%}" />
-            <a href="#" class="delete btn btn-danger" data-type="{%=file.DeleteType%}" data-url="{%=file.DeleteUrl%}"{% if (file.DeleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                {%=cerebello.res.fileupload.destroy%}
+            <input type="hidden" name="{%=file.FieldNamePrefix + '.Id'%}" value="{%=file.PatientFileId%}" autocomplete="off" />
+            <input type="hidden" name="{%=file.FieldNamePrefix + '.MetadataId'%}" value="{%=file.MetadataId%}" autocomplete="off" />
+            <input type="hidden" name="{%=file.FieldNamePrefix + '.FileName'%}" value="{%=file.FileName%}" autocomplete="off" />
+            <input type="text" name="{%=file.FieldNamePrefix + '.FileTitle'%}" value="{%=file.FileTitle%}" />
+            <a href="#" class="delete btn btn-danger" data-type="DELETE" data-url="{%=file.DeleteUrl%}" data-async="true" data-xhr-fields='{"withCredentials":true}'>
+                {%=cerebello.res.fileupload.destroy%}@*=Excluir*@
             </a>
         </div>
     </div>
@@ -209,9 +145,13 @@
 
 @section Styles
 {
-    <link rel="stylesheet" type="text/css" href="@Url.Content("~/content/Styles/App/Pages/patients.css")" />
-    <link rel="stylesheet" type="text/css" href="@Url.Content("~/content/Styles/App/FileIcons.css")" />
-    <link rel="stylesheet" type="text/css" href="@Url.Content("~/content/Styles/App/Pages/camera_window.css")" />
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/Pages/patients.css")" />
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/FileIcons.css")" />
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/Pages/camera_window.css")" />
+
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/bootstrap-modals-only.css")" />
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/jquery.fileupload-ui.css")" />
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/bootstrap-image-gallery.min.css")" />
 }
 
 <!-- modal-gallery is the modal dialog used for the image gallery -->
@@ -232,7 +172,8 @@
 <div class="patient-info-wrapper">
     <div class="patient-info-picture">
         <img id="patient-picture" src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" data-val-original-src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" />
-        <a href="#" id="alter-picture">Capturar foto</a> | <a href="#" id="remove-picture">Remover foto</a>
+        <a href="#" id="alter-picture" data-UrlTransferPicture="@this.Url.Action("TransferPersonPictureFromTempContainer", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Capturar foto</a>
+        | <a href="#" id="remove-picture" data-UrlDeletePicture="@this.Url.Action("DeleteProfilePicture", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Remover foto</a>
     </div>
     <div class="patient-info-content">
         @cardView.GetHtml()
@@ -421,56 +362,15 @@
                 </div>
                 <!-- patient files -->
                 <div>
-                    <a id="new-patientFile" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PatientFiles", new { patientId = Model.Id })">Enviar arquivo</a>
+                    <a id="new-patientFile" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PatientFiles", new { patientId = Model.Id })">Enviar arquivos</a>
                     <div class="medical-certificate-wrapper appointment-panel-wrapper">
                     </div>
                 </div>
                 <!-- schedule return -->
                 <div>
-                    <a href="#" class="icon-link icon-link-reload schedule-appointment">Marcar retorno</a>
+                    <a href="@this.Url.Action("Create", "Schedule", new { area = "App", findNextAvailable = true, patientId = this.Model.Id, date = retornoDateStr, start = "", end = "", doctorId = "" })" class="icon-link icon-link-reload" id="schedule-appointment">Marcar retorno</a>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            $("a.schedule-appointment").click(function() {
-                $.modal({
-                    url: "@Url.Action("Create", "Schedule", new { findNextAvailable = true })",
-                    title: "Nova consulta",
-                    data: {
-                        date: "@retornoDateStr",
-                        start: "",
-                        end: "",
-                        doctorId: "",
-                        patientId: @(this.Model.Id)
-                        },
-                    width: 480,
-                    height: 200
-                });
-            });
-        </script>
-        <script type="text/javascript">
-            $("a.add-appointment-panel").click(function(e) {
-                e.preventDefault();
-                var $this = $(this);
-                $this.removeClass("icon-link-plus").addClass("icon-link-loading");
-                $.ajax({
-                    url: $this.attr("href"),
-                    cache: false,
-                    success: function(html) {
-                        var $appointmentPanel = $this.siblings(".appointment-panel-wrapper");
-                        $appointmentPanel.show();
-                        $appointmentPanel.prepend(html);
-                        $appointmentPanel.bind("cancel", function() {
-                            if ($appointmentPanel.children().length == 0)
-                                $appointmentPanel.hide();
-                        });
-                        $this.removeClass("icon-link-loading").addClass("icon-link-plus");
-                    },
-                    error: function() {
-                        $this.removeClass("icon-link-loading").addClass("icon-link-plus");
-                    }
-                });
-            });
-        </script>
     </div>
 }

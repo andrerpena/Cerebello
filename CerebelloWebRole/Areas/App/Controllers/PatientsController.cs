@@ -599,7 +599,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var file = patientFile.FileMetadata;
 
                     var storage = new WindowsAzureBlobStorageManager();
-                    storage.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, file.FileName);
+                    storage.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, file.SourceFileName);
 
                     this.db.PatientFiles.DeleteObject(patientFile);
                     this.db.FileMetadatas.DeleteObject(file);

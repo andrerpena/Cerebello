@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Objects;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code.Services;
 using CerebelloWebRole.Code.WindowsAzure;
 using Ionic.Zip;
 using JetBrains.Annotations;
@@ -21,6 +26,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class PatientFilesController : DoctorController
     {
+        private readonly IStorageService storage;
+        private readonly IDateTimeService datetimeService;
+
+        public PatientFilesController(IStorageService storage, IDateTimeService datetimeService)
+        {
+            this.storage = storage;
+            this.datetimeService = datetimeService;
+        }
+
         [SelfPermission]
         public ActionResult DownloadBackup(int patientId)
         {
@@ -71,9 +85,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var patientFile in patientFiles)
                 {
                     var fileStream = storageManager.DownloadFileFromStorage(
-                        Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
+                        Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.SourceFileName);
 
-                    zip.AddEntry(patientFile.FileMetadata.FileName, fileStream);
+                    zip.AddEntry(patientFile.FileMetadata.SourceFileName, fileStream);
                 }
                 zip.Save(zipMemoryStream);
             }
@@ -86,7 +100,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         /// <summary>
-        /// Downloads a zip file with all files from all patients
+        /// Downloads a zip file with all files from all patients.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -115,9 +129,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             try
                             {
                                 var fileStream = storageManager.DownloadFileFromStorage(
-                                    Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
+                                    Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.SourceFileName);
 
-                                innerZip.AddEntry(patientFile.FileMetadata.FileName, fileStream);
+                                innerZip.AddEntry(patientFile.FileMetadata.SourceFileName, fileStream);
                             }
                             catch (Exception ex)
                             {
@@ -142,7 +156,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
 
-        private static PatientFilesGroupViewModel GetViewModel(PatientFileGroup dbFileGroup, Func<DateTime, DateTime> toLocal)
+        private static PatientFilesGroupViewModel GetViewModel(IStorageService storage, PatientFileGroup dbFileGroup, int dbUserId, Func<DateTime, DateTime> toLocal)
         {
             if (dbFileGroup == null)
                 return new PatientFilesGroupViewModel();
@@ -162,121 +176,124 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Id = dbFile.Id,
                     FileTitle = dbFile.Title,
-                    FileContainer = dbFile.FileMetadata.ContainerName,
-                    FileName = dbFile.FileMetadata.FileName,
+                    ContainerName = dbFile.FileMetadata.ContainerName,
+                    SourceFileName = dbFile.FileMetadata.SourceFileName,
+                    BlobName = dbFile.FileMetadata.BlobName,
+                    ExpirationDate = dbFile.FileMetadata.ExpirationDate,
+                    MetadataId = dbFile.FileMetadataId,
                 }));
 
-            FillFileLengths(result, null);
+            FillFileLengths(storage, result, dbUserId);
 
             return result;
         }
 
-        private static void FillFileLengths(PatientFilesGroupViewModel viewModel, int? dbUserId)
+        private static void FillFileLengths(IStorageService storage, PatientFilesGroupViewModel viewModel, int? dbUserId)
         {
             // reading file sizes from the storage
+            // todo: use db to get file size (faster)
             foreach (var eachFile in viewModel.Files)
             {
-                var isTemp = eachFile.FileContainer.StartsWith(
-                    string.Format(
-                        @"{0}\patient-files-{1}-",
-                        Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME,
-                        dbUserId));
+                var fullStoragePath = string.Format("{0}\\{1}", eachFile.ContainerName, eachFile.BlobName);
+                var mustStartWith = string.Format("patient-files-{0}\\", dbUserId);
 
-                var isFinal = eachFile.FileContainer == Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
+                if (!fullStoragePath.StartsWith(mustStartWith))
+                    continue;
 
-                // Validating each file location... otherwise this could be a security hole.
-                if (!isTemp && !isFinal)
-                    throw new Exception("Invalid file location.");
-
-                var fileName = isTemp ?
-                    string.Format(eachFile.FileName) :
-                    string.Format("{0}{1}", eachFile.Id, Path.GetExtension(eachFile.FileName));
-
-                var containerPath = eachFile.FileContainer;
-                var fullFileName = Path.Combine(containerPath, fileName);
-                eachFile.FileLength = FileHelper.GetFileLength(fullFileName);
+                eachFile.FileLength = storage.GetFileLength(fullStoragePath);
             }
         }
 
-        public static List<TempFileController.FilesStatus> GetFilesStatus(UrlHelper url, List<PatientFileViewModel> files, string prefix, int dbUserId)
+        public class FilesStatus : TempFileController.FilesStatus
         {
-            return files.Select(f =>
+            public FilesStatus(int? id, int metadataId, string fileName, long? fileLength, string prefix, string fileTitle)
+                : base(metadataId, fileName, fileLength, prefix)
+            {
+                this.PatientFileId = id;
+                this.FileTitle = fileTitle;
+            }
+
+            public int? PatientFileId { get; set; }
+            public string FileTitle { get; set; }
+        }
+
+        public FilesStatus GetFilesStatus(PatientFileViewModel fileModel, string prefix)
+        {
+            var fileName = fileModel.SourceFileName;
+
+            var containerName = fileModel.ContainerName;
+            var sourceFileName = Path.GetFileName(fileModel.SourceFileName ?? "") ?? "";
+            var normalFileName = StringHelper.RemoveDiacritics(sourceFileName.ToLowerInvariant());
+            var fileNamePrefix = Path.GetDirectoryName(fileModel.BlobName) + "\\";
+
+            var fullStoragePath = string.Format("{0}\\{1}file-{2}-{3}", containerName, fileNamePrefix, fileModel.Id, normalFileName);
+
+            var fileStatus = new FilesStatus(fileModel.Id, fileModel.MetadataId, fileName, fileModel.FileLength, prefix, fileModel.FileTitle);
+
+            var isPatientFiles = Regex.IsMatch(fileModel.ContainerName, @"^patient-files-\d+$");
+
+            // Validating each file location... otherwise this could be a security hole.
+            if (!isPatientFiles)
+                throw new Exception("Invalid file location for patient files.");
+
+            var fileMetadataProvider = new DbFileMetadataProvider(this.db, this.datetimeService, this.DbUser.PracticeId);
+
+            bool imageThumbOk = false;
+            try
+            {
+                var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, fileModel.MetadataId, normalFileName, 80, 80);
+                byte[] array;
+                string contentType;
+                bool thumbExists = TryGetOrCreateThumb(fileModel.MetadataId, 80, 80, fullStoragePath, thumbName, true, storage, fileMetadataProvider, out array, out contentType);
+                if (thumbExists)
                 {
-                    var location = f.FileContainer;
-                    var fileName = f.FileName;
-                    var fileStatus = new TempFileController.FilesStatus(fileName, f.FileLength, prefix, location, f.FileTitle, f.Id);
+                    fileStatus.ThumbnailUrl = @"data:" + contentType + ";base64," + Convert.ToBase64String(array);
+                    fileStatus.IsInGallery = true;
+                    imageThumbOk = true;
+                }
+            }
+            // ReSharper disable EmptyGeneralCatchClause
+            catch
+            // ReSharper restore EmptyGeneralCatchClause
+            {
+            }
 
-                    var isTemp = f.FileContainer.StartsWith(
-                        string.Format(
-                            @"{0}\patient-files-{1}-",
-                            Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME,
-                            dbUserId));
+            if (!imageThumbOk)
+            {
+                if (StringHelper.IsDocumentFileName(fileName))
+                {
+                    fileStatus.IconClass = "document-file-icon";
+                }
+                else
+                {
+                    fileStatus.IconClass = "generic-file-icon";
+                }
+            }
 
-                    var isFinal = f.FileContainer == Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
+            bool isTemp = fileModel.Id == null;
+            if (isTemp)
+            {
+                var location = string.Format("{0}\\{1}", fileModel.ContainerName, fileModel.BlobName);
+                if (imageThumbOk)
+                    fileStatus.UrlLarge = this.Url.Action("Image", "TempFile", new { w = 1024, h = 768, id = fileModel.MetadataId, location });
 
-                    // Validating each file location... otherwise this could be a security hole.
-                    if (!isTemp && !isFinal)
-                        throw new Exception("Invalid file location.");
+                fileStatus.UrlFull = this.Url.Action("File", "TempFile", new { id = fileModel.MetadataId, location });
+            }
+            else
+            {
+                if (imageThumbOk)
+                    fileStatus.UrlLarge = this.Url.Action("Image", "PatientFiles", new { w = 1024, h = 768, id = fileModel.Id });
 
-                    var storageFileName = isTemp ? fileName : string.Format("{0}{1}", f.Id, Path.GetExtension(f.FileName));
+                fileStatus.UrlFull = this.Url.Action("File", "PatientFiles", new { id = fileModel.Id });
+            }
 
-                    bool imageThumbOk = false;
-                    try
-                    {
-                        var thumbName = string.Format(@"thumbs-{0}x{1}\{2}", 80, 80, fileName);
-                        byte[] array;
-                        string contentType;
-                        bool thumbExists = TryGetOrCreateThumb(80, 80, location, storageFileName, thumbName, true, out array, out contentType);
-                        if (thumbExists)
-                        {
-                            fileStatus.ThumbnailUrl = @"data:" + contentType + ";base64," + Convert.ToBase64String(array);
-                            fileStatus.IsInGallery = true;
-                            imageThumbOk = true;
-                        }
-                    }
-                    // ReSharper disable EmptyGeneralCatchClause
-                    catch
-                    // ReSharper restore EmptyGeneralCatchClause
-                    {
-                    }
-
-                    if (!imageThumbOk)
-                    {
-                        if (StringHelper.IsDocumentFileName(fileName))
-                        {
-                            fileStatus.IconClass = "document-file-icon";
-                        }
-                        else
-                        {
-                            fileStatus.IconClass = "generic-file-icon";
-                        }
-                    }
-                    else
-                    {
-                        if (isTemp)
-                            fileStatus.UrlLarge = url.Action("Thumb", "TempFile", new { w = 1024, h = 768, location, fileName });
-                        else
-                            fileStatus.UrlLarge = url.Action("Image", "PatientFiles", new { w = 1024, h = 768, id = f.Id });
-                    }
-
-                    if (isTemp)
-                    {
-                        var tempLocation = location.Substring(location.IndexOf('\\'));
-                        fileStatus.UrlFull = url.Action("File", "TempFile", new { tempLocation, fileName });
-                    }
-                    else
-                    {
-                        fileStatus.UrlFull = url.Action("File", "PatientFiles", new { id = f.Id });
-                    }
-
-                    return fileStatus;
-                }).ToList();
+            return fileStatus;
         }
 
         public ActionResult Details(int id)
         {
             var patientFileGroup = this.db.PatientFileGroups.First(pf => pf.Id == id);
-            return this.View(GetViewModel(patientFileGroup, this.GetToLocalDateTimeConverter()));
+            return this.View(GetViewModel(this.storage, patientFileGroup, this.DbUser.Id, this.GetToLocalDateTimeConverter()));
         }
 
         [HttpGet]
@@ -297,9 +314,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             PatientFilesGroupViewModel viewModel = null;
 
             if (id != null)
+            {
                 viewModel = GetViewModel(
+                    this.storage,
                     (from pf in this.db.PatientFileGroups where pf.Id == id select pf).First(),
+                    this.DbUser.Id,
                     this.GetToLocalDateTimeConverter());
+            }
             else
             {
                 Debug.Assert(patientId != null, "patientId != null");
@@ -314,8 +335,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             viewModel.NewGuid = Guid.NewGuid();
 
+            this.ViewBag.FilesStatusGetter = (FilesStatusGetter)this.GetFilesStatus;
+
             return this.View("Edit", viewModel);
         }
+
+        public delegate FilesStatus FilesStatusGetter(PatientFileViewModel fileModel, string prefix);
 
         [HttpPost]
         public ActionResult Edit(Dictionary<string, PatientFilesGroupViewModel> patientFilesGroups)
@@ -332,36 +357,41 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         PatientId = formModel.PatientId.Value,
                         PracticeId = this.DbUser.PracticeId,
-                        CreatedOn = this.GetUtcNow(),
+                        CreatedOn = this.datetimeService.UtcNow,
                     };
 
                 this.db.PatientFileGroups.AddObject(dbFileGroup);
             }
             else
             {
-                dbFileGroup = this.db.PatientFileGroups.FirstOrDefault(pe => pe.Id == formModel.Id);
+                dbFileGroup = this.db.PatientFileGroups
+                    .Include("PatientFiles")
+                    .Include("PatientFiles.FileMetadata")
+                    .FirstOrDefault(pe => pe.Id == formModel.Id);
             }
 
             Debug.Assert(dbFileGroup != null, "dbFileGroup != null");
-            var allExistingFiles = dbFileGroup.PatientFiles.ToList();
+            var allExistingFilesInGroup = dbFileGroup.PatientFiles.ToDictionary(pf => pf.Id);
 
-            var locationsToKill = new HashSet<string>();
             var idsToKeep = new HashSet<int>(formModel.Files.Where(f => f.Id != null).Select(f => f.Id.Value));
 
             var storageActions = new List<Action>(formModel.Files.Count);
 
+            var metadataProvider = new DbFileMetadataProvider(this.db, this.datetimeService, this.DbUser.PracticeId);
+            var metadataDic = metadataProvider.GetByIds(formModel.Files.Select(f => f.MetadataId).ToArray()).ToDictionary(f => f.Id);
+
             foreach (var eachFile in formModel.Files)
             {
-                var isTemp = eachFile.FileContainer.StartsWith(
-                    string.Format(
-                        @"{0}\patient-files-{1}-",
-                        Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME,
-                        this.DbUser.Id));
-
-                var isFinal = eachFile.FileContainer == Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
-
                 // Validating each file location... otherwise this could be a security hole.
-                if (!isTemp && !isFinal)
+                FileMetadata metadata;
+                metadataDic.TryGetValue(eachFile.MetadataId, out metadata);
+
+                if (metadata == null)
+                    return new StatusCodeResult(HttpStatusCode.NotFound, "Arquivo não encontrado. Outra pessoa deve ter removido esse arquivo neste instante.");
+
+                var validContainer = string.Format("patient-files-{0}", this.DbUser.Id);
+
+                if (metadata.ContainerName != validContainer)
                     throw new Exception("Invalid file location.");
 
                 PatientFile patientFile;
@@ -370,46 +400,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     // creating and adding the new patient file
                     Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
+
                     patientFile = new PatientFile
                     {
-                        FileMetadata = new File
-                        {
-                            CreatedOn = this.GetUtcNow(),
-                            PracticeId = this.DbUser.PracticeId,
-                            FileName = eachFile.FileName,
-                            ContainerName = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME,
-                        },
+                        FileMetadataId = metadata.Id,
                         PatientId = formModel.PatientId.Value,
                         PracticeId = this.DbUser.PracticeId,
                     };
+
                     dbFileGroup.PatientFiles.Add(patientFile);
 
-                    // creating delegate to move the file in the storage, from the temporary location to the final location
-                    if (isTemp)
-                    {
-                        var currentFile = eachFile;
-                        var tempPath = currentFile.FileContainer;
-                        var destPath = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
-                        var tempFullFileName = Path.Combine(tempPath, currentFile.FileName);
-
-                        FileHelper.CreateDirectory(destPath);
-
-                        locationsToKill.Add(tempPath);
-
-                        Action moveToFinalLocation = () =>
-                            {
-                                // patientFile.Id will only be available after saving patientFile to the database
-                                var fileName = patientFile.Id + Path.GetExtension(currentFile.FileName);
-                                var destFullFileName = Path.Combine(destPath, fileName);
-                                FileHelper.Move(tempFullFileName, destFullFileName);
-                            };
-
-                        storageActions.Add(moveToFinalLocation);
-                    }
+                    // changing file metadata:
+                    // - it is not temporary anymore
+                    // - tag is free for another operation
+                    metadata.ExpirationDate = null;
+                    metadata.Tag = null;
                 }
-                else
+                else if (!allExistingFilesInGroup.TryGetValue(eachFile.Id.Value, out patientFile))
                 {
-                    patientFile = allExistingFiles.FirstOrDefault(pe => pe.Id == eachFile.Id);
+                    return new StatusCodeResult(HttpStatusCode.NotFound, "Arquivo não encontrado. Outra pessoa deve ter removido esse arquivo neste instante.");
                 }
 
                 Debug.Assert(patientFile != null, "patientFile != null");
@@ -418,25 +427,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // deleting files that were removed
-            foreach (var patientFile in allExistingFiles)
+            foreach (var patientFileKv in allExistingFilesInGroup)
             {
-                if (!idsToKeep.Contains(patientFile.Id))
+                if (!idsToKeep.Contains(patientFileKv.Key))
                 {
-                    var originalFileName = patientFile.FileMetadata.FileName;
-                    var destPath = Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME;
-
-                    this.db.FileMetadatas.DeleteObject(patientFile.FileMetadata);
-                    this.db.PatientFiles.DeleteObject(patientFile);
-
-                    Action removeFile = () =>
-                    {
-                        // patientFile.Id will only be available after saving patientFile to the database
-                        var fileName = patientFile.Id + Path.GetExtension(originalFileName);
-                        var destFullFileName = Path.Combine(destPath, fileName);
-                        FileHelper.Delete(destFullFileName);
-                    };
-
+                    // create delegate to kill the file metadata and the storage blob
+                    // this is going to be called latter
+                    var metadata = patientFileKv.Value.FileMetadata;
+                    Action removeFile = () => TempFileController.DeleteFileByMetadata(metadata, this.db, this.storage);
                     storageActions.Add(removeFile);
+
+                    // delete patient file (note that changes are not being saved yet)
+                    this.db.PatientFiles.DeleteObject(patientFileKv.Value);
                 }
             }
 
@@ -461,29 +463,61 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var moveAction in storageActions)
                     moveAction();
 
-                foreach (var location in locationsToKill)
-                    FileHelper.DeleteDirectory(location);
-
-                return this.View("Details", GetViewModel(dbFileGroup, this.GetToLocalDateTimeConverter()));
+                return this.View("Details", GetViewModel(this.storage, dbFileGroup, this.DbUser.Id, this.GetToLocalDateTimeConverter()));
             }
 
-            FillFileLengths(formModel, this.DbUser.Id);
+            FillMissingInfos(formModel, this.db.FileMetadatas);
+            FillFileLengths(this.storage, formModel, this.DbUser.Id);
+
+            this.ViewBag.FilesStatusGetter = (FilesStatusGetter)this.GetFilesStatus;
+
             return this.View("Edit", formModel);
+        }
+
+        private void FillMissingInfos(PatientFilesGroupViewModel formModel, IObjectSet<FileMetadata> dbFileMetadataSet)
+        {
+            var ids = formModel.Files.Select(f => f.MetadataId).ToArray();
+            var filesInGroup = dbFileMetadataSet
+                .Where(f => ids.Contains(f.Id))
+                .ToDictionary(f => f.Id);
+
+            foreach (var eachModelFile in formModel.Files)
+            {
+                FileMetadata fileMetadata;
+                if (filesInGroup.TryGetValue(eachModelFile.MetadataId, out fileMetadata))
+                {
+                    eachModelFile.BlobName = fileMetadata.BlobName;
+                    eachModelFile.ContainerName = fileMetadata.ContainerName;
+                    eachModelFile.ExpirationDate = fileMetadata.ExpirationDate;
+                    eachModelFile.SourceFileName = fileMetadata.SourceFileName;
+                }
+            }
         }
 
         [HttpGet]
         public JsonResult Delete(int id)
         {
-            var patientFile = this.db.PatientFiles.First(m => m.Id == id);
-            var file = patientFile.FileMetadata;
+            var patientFileGroup = this.db.PatientFileGroups
+                .Include("PatientFiles")
+                .Include("PatientFiles.FileMetadata")
+                .First(m => m.Id == id);
+
+            var patientFiles = patientFileGroup.PatientFiles.ToArray();
+
+            var metadatas = patientFiles.Select(pf => pf.FileMetadata).ToArray();
+
             try
             {
-                var storageManager = new WindowsAzureBlobStorageManager();
-                storageManager.DeleteFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.FileName);
+                this.db.PatientFileGroups.DeleteObject(patientFileGroup);
 
-                this.db.PatientFiles.DeleteObject(patientFile);
-                this.db.FileMetadatas.DeleteObject(file);
+                foreach (var patientFile in patientFiles)
+                    this.db.PatientFiles.DeleteObject(patientFile);
+
+                foreach (var metadata in metadatas)
+                    TempFileController.DeleteFileByMetadata(metadata, this.db, this.storage);
+
                 this.db.SaveChanges();
+
                 return this.Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -495,17 +529,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult Image(int id, int w, int h)
         {
-            var dbPatientFile = this.db.PatientFiles.First(m => m.Id == id);
-            var dbFile = dbPatientFile.FileMetadata;
+            var dbPatientFile = this.db.PatientFiles.Include("FileMetadata").First(m => m.Id == id);
+            var metadata = dbPatientFile.FileMetadata;
 
-            var container = dbFile.ContainerName;
-            var fileName = string.Format("{0}{1}", dbPatientFile.Id, Path.GetExtension(dbFile.FileName));
-            var thumbFileName = string.Format("{0}.{1}x{2}.png", dbPatientFile.Id, w, h);
+            ActionResult result;
+            try
+            {
+                result = this.GetOrCreateThumb(metadata, this.storage, this.datetimeService, w, h);
+            }
+            catch (OutOfMemoryException)
+            {
+                // this means that the image could not be generated because the image is too large
+                result = this.Redirect(this.Url.Content("~/Content/Images/App/FileIcons/generic-outline-80.png"));
+            }
 
-            var result = this.GetOrCreateThumb(w, h, container, fileName, thumbFileName);
             if (result is StatusCodeResult)
             {
                 var statusResult = result as StatusCodeResult;
+
+                //return this.Redirect(this.Server.MapPath("~/Content/Images/App/FileIcons/error-outline-80.png"));
 
                 this.HttpContext.Response.StatusCode = (int)statusResult.StatusCode;
                 var stream = System.IO.File.OpenRead(this.Server.MapPath("~/Content/Images/App/FileIcons/error-outline-80.png"));
@@ -514,7 +556,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 using (var memoryStream = new MemoryStream())
                 {
                     stream.CopyTo(memoryStream);
-                    return this.File(memoryStream.ToArray(), "image/png", dbFile.FileName);
+                    return this.File(memoryStream.ToArray(), "image/png", metadata.SourceFileName);
                 }
             }
 
@@ -524,27 +566,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult File(int id)
         {
-            var dbPatientFile = this.db.PatientFiles.First(m => m.Id == id);
-            var dbFile = dbPatientFile.FileMetadata;
+            var dbPatientFile = this.db.PatientFiles.Include("FileMetadata").First(m => m.Id == id);
+            var metadata = dbPatientFile.FileMetadata;
 
-            var container = dbFile.ContainerName;
-            var storageFileName = string.Format("{0}{1}", dbPatientFile.Id, Path.GetExtension(dbFile.FileName));
-
-            var fullFileName = Path.Combine(container, storageFileName);
-
-            var stream = FileHelper.OpenRead(fullFileName);
-            if (stream == null)
+            if (metadata != null)
             {
-                this.HttpContext.Response.StatusCode = 404;
-                stream = System.IO.File.OpenRead(this.Server.MapPath("~/Content/Images/App/FileIcons/error-outline-80.png"));
+                var fullStoragePath = string.Format("{0}\\{1}", metadata.ContainerName, metadata.BlobName);
+                var fileName = metadata.SourceFileName;
+                var stream = this.storage.OpenRead(fullStoragePath);
+
+                if (stream == null)
+                    return new StatusCodeResult(HttpStatusCode.NotFound);
+
+                using (stream)
+                using (var memoryStream = new MemoryStream())
+                {
+                    stream.CopyTo(memoryStream);
+                    return this.File(memoryStream.ToArray(), MimeTypesHelper.GetContentType(fileName), fileName);
+                }
             }
 
-            using (stream)
-            using (var memoryStream = new MemoryStream())
-            {
-                stream.CopyTo(memoryStream);
-                return this.File(memoryStream.ToArray(), MimeTypesHelper.GetContentType(storageFileName), dbFile.FileName);
-            }
+            return new StatusCodeResult(HttpStatusCode.NotFound);
         }
     }
 }

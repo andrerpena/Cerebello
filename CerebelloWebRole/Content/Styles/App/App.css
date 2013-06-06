@@ -1061,6 +1061,14 @@ ul.dayoff-list .delete {
         padding: 10px 10px 0;
     }
 
+.prevent-nav {
+    /* class used on elements that when present shoud prevent user navigation */
+}
+
+.nav-away {
+    /* class used on clickable elements, to indicate actions that should be called when navigatin away from the current page */
+}
+
 .widget {
     margin-bottom: 15px;
 }

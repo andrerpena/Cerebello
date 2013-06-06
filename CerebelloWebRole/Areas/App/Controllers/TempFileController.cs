@@ -1,21 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using Cerebello.Model;
 using CerebelloWebRole.Code;
+using CerebelloWebRole.Code.Access;
 using CerebelloWebRole.Code.Filters;
 using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code.Services;
+using System.Linq;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class TempFileController : PracticeController
     {
+        private readonly IStorageService storage;
+        private readonly IDateTimeService datetimeService;
+
+        public TempFileController(IStorageService storage, IDateTimeService datetimeService)
+        {
+            this.storage = storage;
+            this.datetimeService = datetimeService;
+        }
+
         [SelfPermission]
         [AcceptVerbs("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")]
-        public ActionResult Index(string fileId, string prefix, string tempLocation)
+        public ActionResult Index(int? id, string prefix, string location, string tag)
         {
             switch (this.Request.HttpMethod)
             {
@@ -28,11 +43,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 case "POST":
                 case "PUT":
-                    return this.UploadFile(prefix, tempLocation);
+                    return this.UploadFile(prefix, location, tag);
 
                 case "DELETE":
-                    //return this.DeleteFile();
-                    return this.Content("xxx");
+                    return this.DeleteFile(id ?? 0, location);
 
                 case "OPTIONS":
                     //return this.ReturnOptions();
@@ -43,23 +57,67 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
         }
 
-        private ActionResult UploadFile(string prefix, string tempLocation)
+        /// <summary>
+        /// Deletes an uploaded temporary file and all of its dependent files, such as thumbnail image files.
+        /// </summary>
+        /// <param name="fileId">File metadata id.</param>
+        /// <param name="location">Location of the file in the storage. Final file name can be omitted.</param>
+        /// <returns>Returns an action result indicating whether the file has been deleted.</returns>
+        private ActionResult DeleteFile(int fileId, string location)
+        {
+            var metadata = this.db.FileMetadatas.SingleOrDefault(f => f.Id == fileId);
+
+            if (metadata != null)
+            {
+                var containerName = location.Split("\\".ToCharArray(), 2).FirstOrDefault();
+
+                if (metadata.OwnerUserId == this.DbUser.Id)
+                {
+                    if (containerName == metadata.ContainerName)
+                        DeleteFileByMetadata(metadata, this.db, this.storage);
+
+                    this.db.SaveChanges();
+
+                    return new StatusCodeResult(HttpStatusCode.OK);
+                }
+            }
+
+            return new StatusCodeResult(HttpStatusCode.NotFound, "Arquivo não encontrado.");
+        }
+
+        public static void DeleteFileByMetadata(FileMetadata metadata, CerebelloEntitiesAccessFilterWrapper db, IStorageService storage)
+        {
+            var dbLocation = string.Format("{0}\\{1}", metadata.ContainerName, metadata.BlobName);
+
+            // deleting dependent files
+            var relatedFiles = db.FileMetadatas.Where(f => f.RelatedFileMetadataId == metadata.Id).ToList();
+            foreach (var relatedFile in relatedFiles)
+            {
+                DeleteFileByMetadata(relatedFile, db, storage);
+            }
+
+            // deleting file metadata and storage entries
+            storage.DeleteFiles(dbLocation);
+            db.FileMetadatas.DeleteObject(metadata);
+        }
+
+        private ActionResult UploadFile(string prefix, string location, string tag)
         {
             var headerXFileName = this.Request.Headers["X-File-Name"];
 
             if (string.IsNullOrEmpty(headerXFileName))
-                return this.UploadWholeFile(prefix, tempLocation);
+                return this.UploadWholeFile(prefix, location, tag);
 
-            return this.UploadPartialFile(headerXFileName, prefix, tempLocation);
+            return this.UploadPartialFile(headerXFileName, prefix, location, tag);
         }
 
         /// <summary>
         /// Upload whole file.
         /// </summary>
         /// <param name="prefix"> The prefix of the fields to be placed in the HTML. </param>
-        /// <param name="tempLocation"> The temp storage location. </param>
+        /// <param name="location"> The location where the temporary file should be stored. </param>
         /// <returns> The <see cref="ActionResult"/> containing information about execution of the upload. </returns>
-        private ActionResult UploadWholeFile(string prefix, string tempLocation)
+        private ActionResult UploadWholeFile(string prefix, string location, string tag)
         {
             var statuses = new List<FilesStatus>();
 
@@ -68,27 +126,46 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var file = this.Request.Files[i];
 
                 Debug.Assert(file != null, "file != null");
-                var location = Path.Combine(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempLocation);
 
-                FileHelper.CreateDirectory(location);
+                var containerName = location.Split("\\".ToCharArray(), 2).FirstOrDefault();
+                var sourceFileName = Path.GetFileName(file.FileName ?? "") ?? "";
+                var normalFileName = StringHelper.NormalizeFileName(sourceFileName);
+                var fileNamePrefix = location.Split("\\".ToCharArray(), 2).Skip(1).FirstOrDefault();
+                var fileExpirationDate = this.datetimeService.UtcNow + TimeSpan.FromDays(file.ContentLength < 10 * 1024000 ? 2 : 10);
 
-                var fileName = Path.GetFileName(file.FileName);
-                Debug.Assert(fileName != null, "fileName != null");
-                var fullPath = Path.Combine(location, fileName);
+                Debug.Assert(sourceFileName != null, "sourceFileName != null");
 
-                FileHelper.SavePostedFile(file, fullPath);
+                var metadataProvider = new DbFileMetadataProvider(this.db, this.datetimeService, this.DbUser.PracticeId);
 
-                string fullName = Path.GetFileName(file.FileName);
+                // creating the metadata entry for the main file
+                FileMetadata metadata = metadataProvider.CreateTemporary(
+                    containerName,
+                    sourceFileName,
+                    string.Format("{0}file-{1}-{2}", fileNamePrefix, "{id}", normalFileName),
+                    fileExpirationDate,
+                    this.DbUser.Id,
+                    tag,
+                    formatWithId: true);
 
-                var fileStatus = new FilesStatus(fullName, file.ContentLength, prefix, location);
+                metadata.OwnerUserId = this.DbUser.Id;
+
+                metadataProvider.SaveChanges();
+
+                // saving the file to the storage
+                var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
+                this.storage.CreateContainer(containerName);
+                this.storage.SaveFile(file.InputStream, fullStoragePath);
+
+                // returning information to the client
+                var fileStatus = new FilesStatus(metadata.Id, sourceFileName, file.ContentLength, prefix);
 
                 bool imageThumbOk = false;
                 try
                 {
-                    var thumbName = string.Format(@"thumbs-{0}x{1}\{2}", 80, 80, fileName);
+                    var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, 80, 80);
                     byte[] array;
                     string contentType;
-                    bool thumbExists = TryGetOrCreateThumb(80, 80, location, fileName, thumbName, true, out array, out contentType);
+                    bool thumbExists = TryGetOrCreateThumb(metadata.Id, 80, 80, fullStoragePath, thumbName, true, this.storage, metadataProvider, out array, out contentType);
                     if (thumbExists)
                     {
                         fileStatus.ThumbnailUrl = @"data:" + contentType + ";base64," + Convert.ToBase64String(array);
@@ -104,7 +181,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (!imageThumbOk)
                 {
-                    if (StringHelper.IsDocumentFileName(fileName))
+                    if (StringHelper.IsDocumentFileName(sourceFileName))
                     {
                         fileStatus.IconClass = "document-file-icon";
                     }
@@ -115,10 +192,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
                 else
                 {
-                    fileStatus.UrlLarge = this.Url.Action("Thumb", new { w = 1024, h = 768, tempLocation, fileName });
+                    fileStatus.UrlLarge = this.Url.Action("Image", new { w = 1024, h = 768, location, metadata.Id });
                 }
 
-                fileStatus.UrlFull = this.Url.Action("File", new { tempLocation, fileName });
+                fileStatus.UrlFull = this.Url.Action("File", new { location, metadata.Id });
+
+                fileStatus.DeleteUrl = this.Url.Action("Index", new { location, metadata.Id });
 
                 statuses.Add(fileStatus);
             }
@@ -131,11 +210,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="fileName"> The file name. </param>
         /// <param name="prefix"> The prefix of the fields to be placed in the HTML. </param>
-        /// <param name="tempLocation"> The temp storage location. </param>
+        /// <param name="location"> The storage location for the temporary file. </param>
         /// <returns> The <see cref="ActionResult"/> containing information about execution of the upload. </returns>
         /// <exception cref="HttpRequestValidationException"> When more than one file is uploaded, or when the file is null. </exception>
-        private ActionResult UploadPartialFile(string fileName, string prefix, string tempLocation)
+        private ActionResult UploadPartialFile(string fileName, string prefix, string location, string tag)
         {
+            // todo: partial file upload is not yet supported
+
             if (this.Request.Files.Count != 1)
                 throw new HttpRequestValidationException(
                     "Attempt to upload chunked file containing more than one fragment per request");
@@ -146,27 +227,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var inputStream = httpPostedFileBase.InputStream;
 
-            var location = Path.Combine(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempLocation);
-
-            Directory.CreateDirectory(location);
-
             fileName = Path.GetFileName(fileName);
             Debug.Assert(fileName != null, "fileName != null");
             var fullPath = Path.Combine(location, fileName);
 
-            long fileLength;
-            var fileStream = FileHelper.OpenAppend(fullPath);
+            var fileStream = this.storage.OpenAppend(fullPath);
 
             if (fileStream == null)
                 return new StatusCodeResult(HttpStatusCode.NotFound);
 
+            long fileLength;
             using (fileStream)
             {
                 inputStream.CopyTo(fileStream);
                 fileLength = inputStream.Position;
             }
 
-            var fileStatus = new FilesStatus(fileName, fileLength, prefix, location);
+            // todo: must create a valid file metadata, or retrieve an already existing one from the database
+            int id = 0;
+            var fileStatus = new FilesStatus(id, fileName, fileLength, prefix);
 
             // when doing partial upload of a file, no thumb-image will be generated
             // also the file wont display in the gallery (because no url will be provided)
@@ -216,42 +295,85 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// </summary>
         /// <param name="w">Width of the thumbnail image.</param>
         /// <param name="h">Height of the thumbnail image.</param>
-        /// <param name="tempLocation">Location inside the temp container in the storage.</param>
-        /// <param name="fileName">Name of the temporary image file to generate the thumbnail image from.</param>
+        /// <param name="location">Location inside the temp container in the storage.</param>
+        /// <param name="id">Metadata ID of the file to generate thumbnail image to.</param>
         /// <returns>Returns an ActionResult containing the thumbnail image data.</returns>
         [SelfPermission]
-        public ActionResult Thumb(int w, int h, string tempLocation, string fileName)
+        public ActionResult Image(int w, int h, string location, int id)
         {
-            var location = Path.Combine(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempLocation);
-            var thumbName = string.Format(@"thumbs-{0}x{1}\{2}", w, h, fileName);
-            return this.GetOrCreateThumb(w, h, location, fileName, thumbName);
+            var metadata = this.db.FileMetadatas.SingleOrDefault(f => f.Id == id);
+            var containerName = location.Split("\\".ToCharArray(), 2).FirstOrDefault();
+
+            if (metadata != null)
+            {
+                if (containerName == metadata.ContainerName && metadata.OwnerUserId == this.DbUser.Id)
+                {
+                    var fileNamePrefix = Path.GetDirectoryName(metadata.BlobName) + "\\";
+                    var normalFileName = StringHelper.NormalizeFileName(metadata.SourceFileName);
+                    var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, w, h);
+                    var fileName = string.Format("{0}\\{1}", containerName, metadata.BlobName);
+                    return this.GetOrCreateThumb(metadata.Id, this.storage, this.datetimeService, w, h, fileName, thumbName);
+                }
+            }
+
+            return new StatusCodeResult(HttpStatusCode.NotFound);
         }
 
         [SelfPermission]
-        public ActionResult File(string tempLocation, string fileName)
+        public ActionResult File(string location, int id)
         {
-            var location = Path.Combine(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempLocation);
-            var fullFileName = Path.Combine(location, fileName);
+            var metadata = this.db.FileMetadatas.SingleOrDefault(f => f.Id == id);
 
-            var stream = FileHelper.OpenRead(fullFileName);
-
-            if (stream == null)
-                return new StatusCodeResult(HttpStatusCode.NotFound);
-
-            using (stream)
-            using (var memoryStream = new MemoryStream())
+            if (metadata != null)
             {
-                stream.CopyTo(memoryStream);
-                return this.File(memoryStream.ToArray(), MimeTypesHelper.GetContentType(fileName), fileName);
+                var containerName = location.Split("\\".ToCharArray(), 2).FirstOrDefault();
+
+                if (containerName == metadata.ContainerName)
+                {
+                    var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
+                    var fileName = metadata.SourceFileName;
+                    var stream = this.storage.OpenRead(fullStoragePath);
+
+                    if (stream == null)
+                        return new StatusCodeResult(HttpStatusCode.NotFound);
+
+                    using (stream)
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        stream.CopyTo(memoryStream);
+                        return this.File(memoryStream.ToArray(), MimeTypesHelper.GetContentType(fileName), fileName);
+                    }
+                }
             }
+
+            return new StatusCodeResult(HttpStatusCode.NotFound);
         }
 
-        public override bool IsSelfUser(Cerebello.Model.User user)
+        [SelfPermission]
+        public ActionResult DeleteTempFiles(string location, string tag)
+        {
+            // locating the temporary file by tag
+            var containerName = location.Split("\\".ToCharArray(), 2).FirstOrDefault();
+            var mds = this.db.FileMetadatas
+                .Where(f => f.ContainerName == containerName && f.Tag == tag)
+                .Where(f => f.ExpirationDate != null)
+                .ToList();
+
+            foreach (var fileMetadata in mds)
+                if (fileMetadata.OwnerUserId == this.DbUser.Id)
+                    DeleteFileByMetadata(fileMetadata, this.db, this.storage);
+
+            this.db.SaveChanges();
+
+            return this.Content("OK");
+        }
+
+        public override bool IsSelfUser(User user)
         {
             // using request parameters that may contain the user-id
-            var tempLocation = this.Request.Params["tempLocation"];
+            var location = this.Request.Params["location"];
 
-            if (tempLocation.StartsWith(string.Format(@"patient-files-{0}-", user.Id)))
+            if (location.StartsWith(string.Format(@"patient-files-{0}\", user.Id)))
                 return true;
 
             return base.IsSelfUser(user);
@@ -274,8 +396,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             /// </summary>
             public long? Size { get; set; }
 
-            public string progress { get; set; }
-
             /// <summary>
             /// Gets or sets the Url of the large preview image that is used in the gallery preview.
             /// </summary>
@@ -290,6 +410,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             /// Gets or sets the Url of the thumbnail image.
             /// </summary>
             public string ThumbnailUrl { get; set; }
+
+            /// <summary>
+            /// Gets or sets the Url used to delete the file when user wants to.
+            /// This is optional, and if left empty the server must not be called upon deletion.
+            /// </summary>
+            public string DeleteUrl { get; set; }
 
             /// <summary>
             /// Gets or sets the non-image file icon class.
@@ -307,45 +433,30 @@ namespace CerebelloWebRole.Areas.App.Controllers
             /// </summary>
             public bool IsInGallery { get; set; }
 
-            public string IdFieldName { get; set; }
-            public string FileTitleFieldName { get; set; }
-            public string FileNameFieldName { get; set; }
-            public string FileContainerFieldName { get; set; }
-
-            public int? Id { get; set; }
-            public string FileTitle { get; set; }
-            public string FileName { get; set; }
-            public string FileContainer { get; set; }
-
             public string Index { get; set; }
             public string IndexFieldName { get; set; }
 
-            public FilesStatus(string fileName, long? fileLength, string prefix, string location, string fileTitle = null, int? id = null)
+            public string FieldNamePrefix { get; set; }
+
+            public int? MetadataId { get; set; }
+            public string FileName { get; set; }
+
+            public FilesStatus(int id, string fileName, long? fileLength, string prefix)
             {
                 this.Name = fileName;
                 this.Type = "image/png";
                 this.Size = fileLength;
-                this.progress = "1.0";
 
                 var itemPrefixBase = prefix + (string.IsNullOrEmpty(prefix) ? "" : ".") + "Files";
-                var indexStr = id == null ? Guid.NewGuid().ToString() : id.Value.ToString();
-                var itemPrefix = itemPrefixBase + "[" + indexStr + "]";
-                var templateInfo = new TemplateInfo { HtmlFieldPrefix = itemPrefix };
+                var indexStr = id.ToString(CultureInfo.InvariantCulture);
+                this.FieldNamePrefix = itemPrefixBase + "[" + indexStr + "]";
 
                 this.IndexFieldName = itemPrefixBase + ".Index";
                 this.Index = indexStr;
 
-                this.IdFieldName = templateInfo.GetFullHtmlFieldName("Id");
-                this.Id = id;
+                this.MetadataId = id;
 
                 this.FileName = fileName;
-                this.FileNameFieldName = templateInfo.GetFullHtmlFieldName("FileName");
-
-                this.FileContainer = location;
-                this.FileContainerFieldName = templateInfo.GetFullHtmlFieldName("FileContainer");
-
-                this.FileTitle = fileTitle;
-                this.FileTitleFieldName = templateInfo.GetFullHtmlFieldName("FileTitle");
             }
         }
     }

@@ -17,8 +17,8 @@
         <div id="@galleryName" data-delegate="#@galleryName" data-toggle="modal-gallery" data-target="#modal-gallery">
             @foreach (var eachPatientFile in this.Model.Files)
             {
-                var isImage = StringHelper.IsImageFileName(eachPatientFile.FileName);
-                var isDocument = StringHelper.IsDocumentFileName(eachPatientFile.FileName);
+                var isImage = StringHelper.IsImageFileName(eachPatientFile.SourceFileName);
+                var isDocument = StringHelper.IsDocumentFileName(eachPatientFile.SourceFileName);
                 var dataGallery = isImage ? "gallery" : "";
                 <div class="filebox">
                     <div class="preview">
@@ -26,7 +26,7 @@
                         {
                             <a
                                 href="@this.Url.Action("Image", new { id = eachPatientFile.Id, w = 1024, h = 768 })"
-                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.FileName + ")")"
+                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.SourceFileName + ")")"
                                 data-gallery="@dataGallery"
                                 data-delegate="#@galleryName"
                                 data-download="@this.Url.Action("File", new { id = eachPatientFile.Id })">
@@ -37,7 +37,7 @@
                         {
                             <a
                                 href="@this.Url.Action("File", new { id = eachPatientFile.Id })"
-                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.FileName + ")")"
+                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.SourceFileName + ")")"
                                 class="document-file-icon">
                             </a>
                         }
@@ -45,13 +45,13 @@
                         {
                             <a
                                 href="@this.Url.Action("File", new { id = eachPatientFile.Id })"
-                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.FileName + ")")"
+                                title="@(eachPatientFile.FileTitle ?? "(" + eachPatientFile.SourceFileName + ")")"
                                 class="generic-file-icon">
                             </a>
                         }
                     </div>
                     <div class="name">
-                            <a href="@this.Url.Action("File", new { id = eachPatientFile.Id })" title="@eachPatientFile.FileName" target="_blank">@StringHelper.FirstNonEmpty(eachPatientFile.FileTitle, eachPatientFile.FileName)</a>
+                            <a href="@this.Url.Action("File", new { id = eachPatientFile.Id })" title="@eachPatientFile.SourceFileName" target="_blank">@StringHelper.FirstNonEmpty(eachPatientFile.FileTitle, eachPatientFile.SourceFileName)</a>
                     </div>
                     <div class="size"><span>@eachPatientFile.FileLengthStr</span></div>
                 </div>
@@ -76,10 +76,10 @@
         $(".delete-patientFile", $("div[data-val-id='patientFile-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.deleteConfirmation({
-                objectType: "arquivo",
+                objectType: "arquivos",
                 url: "@Url.Action("Delete", "PatientFiles", new { id = this.Model.Id })",
                 success: function (data) {
-                    alert("Este arquivo foi excluído");
+                    alert("Este grupo de arquivos foi excluído");
                     window.location = "@Url.Action("Details", "Patients", new { id = this.Model.PatientId })";
                 }
             });

@@ -263,12 +263,17 @@
     <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
+    <Compile Include="Areas\App\Models\FileViewModel.cs" />
     <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
     <Compile Include="Code\Services\AzureStorageService.cs" />
+    <Compile Include="Code\Services\DbFileMetadataProvider.cs" />
+    <Compile Include="Code\Services\IFileMetadataProvider.cs" />
+    <Compile Include="Code\Services\DateTimeService.cs" />
+    <Compile Include="Code\Services\IDateTimeService.cs" />
     <Compile Include="Code\Services\IStorageService.cs" />
     <Compile Include="Code\Services\LocalStorageService.cs" />
     <Compile Include="Code\WindowsAzure\WindowsAzureLogHelper.cs" />
@@ -317,7 +322,6 @@
     <Compile Include="Code\Helpers\BackupHelper.cs" />
     <Compile Include="Code\Filters\CanAlternateUserAttribute.cs" />
     <Compile Include="Code\Helpers\BusHelper.cs" />
-    <Compile Include="Code\Helpers\CerebelloFileInfo.cs" />
     <Compile Include="Code\HostEnv.cs" />
     <Compile Include="Code\Hubs\ChatHub.cs" />
     <Compile Include="Code\Hubs\CerebelloHub.cs" />
@@ -383,6 +387,7 @@
     <EmbeddedResource Include="Resources\Male-Default-Profile.jpg" />
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
+    <Content Include="Scripts\App\Pages\patient-files-edit.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
     <Compile Include="WorkerRole.Code\Workers\TestWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\GoogleDriveSynchronizerWorker.cs" />

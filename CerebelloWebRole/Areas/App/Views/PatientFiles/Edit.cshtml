@@ -4,18 +4,26 @@
 @using CerebelloWebRole.Code.Controls
 @{
     this.Layout = null;
+    
     Debug.Assert(this.Model != null, "this.Model != null");
+    
     var patientFileId = this.Model.Id == null ?
         string.Format("new-{0}", this.Model.NewGuid) :
         string.Format("edit-{1}-{0}", this.Model.NewGuid, this.Model.Id);
     var fileuploadId = "fileupload-" + patientFileId;
+    var panelId = "patientFile-" + patientFileId;
+    var tag = "temp-" + patientFileId;
 
     var dbUserId = (int)this.ViewBag.UserInfo.Id;
-    var tempLocation = string.Format(@"patient-files-{0}-{1}", dbUserId, patientFileId);
+    var containerName = string.Format(@"patient-files-{0}", dbUserId);
+    var fileNamePrefix = string.Format("patient-{0}\\", this.Model.PatientId);
+    var fullStoragePath = string.Format("{0}\\{1}", containerName, fileNamePrefix);
     
     string prefix;
+
+    var filesStatusGetter = (PatientFilesController.FilesStatusGetter)this.ViewBag.FilesStatusGetter;
 }
-<div class="appointment-panel" data-val-id="patientFile-@patientFileId">
+<div class="appointment-panel prevent-nav" id="@panelId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post, new { id = fileuploadId, enctype = "multipart/form-data" }))
     {
         using (this.Html.BeginScope("PatientFilesGroups"))
@@ -43,7 +51,7 @@
                 <div>
                     <!-- The fileinput-button span is used to style the file input field as button -->
                     <span class="btn btn-success fileinput-button nowrap"><span class="nowrap">Adicionar arquivos</span><input type="file" name="files[]" multiple="multiple" /></span> &nbsp;|&nbsp;
-                    <a class="btn btn-warning cancel nowrap" href="#">Cancelar uploads</a> &nbsp;|&nbsp;
+                    @*<a class="btn btn-warning cancel nowrap" href="#">Cancelar uploads</a> &nbsp;|&nbsp;*@
                     <a class="btn btn-danger delete nowrap" href="#">Excluir selecionados</a> &nbsp;|&nbsp;
                     <a class="btn nowrap select-all" href="#">Selecionar todos</a> &nbsp;|&nbsp;
                     <a class="btn nowrap unselect-all" href="#">Desselecionar todos</a>
@@ -65,102 +73,26 @@
             <div role="presentation" class="table table-striped dropzone">
                 <div class="drophere fade"><div><div>Solte os arquivos aqui</div></div></div>
                 <div id="gallery-@patientFileId" class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
-                    <script type="text/javascript">
-                        $(function() {
-                            'use strict';
-
-                        });
-                    </script>
                 </div>
             </div>
             
             <div class="submit-bar">
                 <input type="submit" value="salvar arquivos" />
                 <span class="separator">ou</span>
-                <a href="#" class="cancel">cancelar</a>
+                <a href="#" class="cancel nav-away">cancelar</a>
             </div>
         }
     }
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/App/Pages/patient-files-edit.js")"></script>
     <script type="text/javascript">
-        $(function () {
-            'use strict';
-
-            // Initialize the jQuery File Upload widget:
-            var $fileupload = $('#@fileuploadId');
-            $fileupload.fileupload();
-
-            $fileupload.fileupload('option', {
-                url: "@this.Html.Raw(this.Url.Action("Index", "TempFile", new { prefix, tempLocation }))",
-                autoUpload: true,
-                maxFileSize: 1073741824,
-                //resizeMaxWidth: 1920,
-                //resizeMaxHeight: 1200,
-                dropZone: $fileupload,
-                // Callback for file deletion:
-                destroy: function (e, data) {
-                    var that = $(this).data('blueimp-fileupload') ||
-                            $(this).data('fileupload');
-                    that._transition(data.context).done(
-                        function () {
-                            $(this).remove();
-                            that._adjustMaxNumberOfFiles(1);
-                            that._trigger('destroyed', e, data);
-                        }
-                    );
-                }
-            });
-            
-            $fileupload.bind('fileuploadfinished', function (e, data) {
-                $("input.toggle", data.context).bind('change', function() {
-                    var $this = $(this);
-                    if ($this.is(":checked"))
-                        $this.parents(".template-download").addClass("selected");
-                    else
-                        $this.parents(".template-download").removeClass("selected");
-                });
-            });
-
-            $fileupload.fileupload('option', 'done')
-                .call($fileupload[0], null, { result:
-                    @(this.Html.Raw(Json.Encode(new
-                        {
-                            files = PatientFilesController.GetFilesStatus(this.Url, this.Model.Files, prefix, dbUserId)
-                        }))) });
-            
-            $('.select-all', $fileupload).bind('click', function (e) {
-                e.preventDefault();
-                var $chk = $('input.toggle', $fileupload);
-                $chk.prop('checked', true);
-                $chk.trigger('change');
-            });
-
-            $('.unselect-all', $fileupload).bind('click', function (e) {
-                e.preventDefault();
-                var $chk = $('input.toggle', $fileupload);
-                $chk.prop('checked', false);
-                $chk.trigger('change');
-            });
+        PatientFilesEdit({
+            PanelId: "@panelId",
+            FileUploadId: "@fileuploadId",
+            FileUploadUrl: "@this.Html.Raw(this.Url.Action("Index", "TempFile", new { area = "App", prefix, location = fullStoragePath, tag }))",
+            FileUploadItems: @(this.Html.Raw(Json.Encode(new { files = this.Model.Files.Select(f => filesStatusGetter(f, prefix)) }))),
+            DeleteTempFilesUrl: "@this.Html.Raw(this.Url.Action("DeleteTempFiles", "TempFile", new { area = "App", location = fullStoragePath, tag }))",
+            DetailsUrl: "@(this.Html.Raw(this.Url.Action("Details", new { id = this.Model.Id })))",
+            IsEditing: @(this.Model.Id != null ? "true" : "false")
         });
-    </script>
-    <script type="text/javascript">
-        (function () {
-            var $container = $("div[data-val-id='patientFile-@patientFileId']");
-            $('form', $container).ajaxFileForm({
-                success: function (result) {
-                    $container.replaceWith(result);
-                }
-            });
-            $('a.cancel', $container).click(function (e) {
-                e.preventDefault();
-                @if (this.Model.Id != null)
-                {
-                    @:$.ajax({ url: "@(this.Url.Action("Details", new { id = this.Model.Id }))", success: function (result) { $container.replaceWith(result); } });   
-                }
-                else
-                {
-                    @:$container.remove();
-                }
-            });
-        })();
     </script>
 </div>

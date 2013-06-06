@@ -289,5 +289,10 @@ namespace CerebelloWebRole.Code
 
             return strings.FirstOrDefault(s => !string.IsNullOrEmpty(s));
         }
+
+        public static object NormalizeFileName(string fileName)
+        {
+            return Regex.Replace(StringHelper.RemoveDiacritics(fileName.ToLowerInvariant()), @"\s+", "-");
+        }
     }
 }
