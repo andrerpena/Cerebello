@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <CommonPath>{{Path.GetPathRoot(SolutionPath)}}</CommonPath>
+  <SolutionPath>{{SolutionPath}}</SolutionPath>
+  <DesktopPath>{{DesktopPath}}</DesktopPath>
+</settings>

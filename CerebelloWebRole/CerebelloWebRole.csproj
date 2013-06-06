@@ -837,6 +837,9 @@
     <Content Include="System.EnterpriseServices.Wrapper.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Uncommited.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1033,6 +1036,7 @@
     <EmbeddedResource Include="Content\Reports\PatientsList\MedicalCertificates.trdx" />
     <Content Include="App.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Contracts\Contrato-plano-profissional.docx" />
     <Content Include="Content\Contracts\Contrato-plano-profissional.odt" />
