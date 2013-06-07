@@ -14,10 +14,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 {
     public class TempFileController : PracticeController
     {
-        private readonly IStorageService storage;
+        private readonly IBlobStorageManager storage;
         private readonly IDateTimeService datetimeService;
 
-        public TempFileController(IStorageService storage, IDateTimeService datetimeService)
+        public TempFileController(IBlobStorageManager storage, IDateTimeService datetimeService)
         {
             this.storage = storage;
             this.datetimeService = datetimeService;
@@ -80,10 +80,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return new StatusCodeResult(HttpStatusCode.NotFound, "Arquivo não encontrado.");
         }
 
-        public static void DeleteFileByMetadata(FileMetadata metadata, CerebelloEntitiesAccessFilterWrapper db, IStorageService storage)
+        public static void DeleteFileByMetadata(FileMetadata metadata, CerebelloEntitiesAccessFilterWrapper db, IBlobStorageManager storage)
         {
-            var dbLocation = string.Format("{0}\\{1}", metadata.ContainerName, metadata.BlobName);
-
             // deleting dependent files
             var relatedFiles = db.FileMetadatas.Where(f => f.RelatedFileMetadataId == metadata.Id).ToList();
             foreach (var relatedFile in relatedFiles)
@@ -92,7 +90,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
 
             // deleting file metadata and storage entries
-            storage.DeleteBlob(dbLocation);
+            storage.DeleteFileFromStorage(metadata.ContainerName, metadata.BlobName);
             db.FileMetadatas.DeleteObject(metadata);
         }
 
@@ -147,8 +145,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 metadataProvider.SaveChanges();
 
                 // saving the file to the storage
-                var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
-                this.storage.SaveFile(file.InputStream, fullStoragePath);
+                this.storage.UploadFileToStorage(file.InputStream, containerName, metadata.BlobName);
 
                 // returning information to the client
                 var fileStatus = new FilesStatus(metadata.Id, sourceFileName, file.ContentLength, prefix);
@@ -156,6 +153,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 bool imageThumbOk = false;
                 try
                 {
+                    var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
                     var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, 80, 80);
                     var thumbResult = ImageHelper.TryGetOrCreateThumb(metadata.Id, 80, 80, fullStoragePath, thumbName, true, this.storage, metadataProvider);
                     if (thumbResult.Status == CreateThumbStatus.Ok)
@@ -221,11 +219,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             fileName = Path.GetFileName(fileName);
             Debug.Assert(fileName != null, "fileName != null");
-            var fullPath = Path.Combine(location, fileName);
+            var fullLocation = new BlobLocation(Path.Combine(location, fileName));
 
-            this.storage.AppendToFile(inputStream, fullPath);
+            // todo: Must append to blob block
+            // this.storage.CreateOrAppendToFile(fullPath, inputStream);
 
-            var fileLength = (long)this.storage.GetFileLength(fullPath);
+            var fileLength = (long)this.storage.GetFileLength(fullLocation.ContainerName, fullLocation.BlobName);
 
             // todo: must create a valid file metadata, or retrieve an already existing one from the database
             int id = 0;
@@ -306,9 +305,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (containerName == metadata.ContainerName)
                 {
-                    var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
                     var fileName = metadata.SourceFileName;
-                    var stream = this.storage.OpenRead(fullStoragePath);
+                    var stream = this.storage.DownloadFileFromStorage(containerName, metadata.BlobName);
 
                     if (stream == null)
                         return new StatusCodeResult(HttpStatusCode.NotFound);

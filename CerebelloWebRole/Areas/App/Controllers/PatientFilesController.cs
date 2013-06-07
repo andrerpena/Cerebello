@@ -21,10 +21,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// </summary>
     public class PatientFilesController : DoctorController
     {
-        private readonly IStorageService storage;
+        private readonly IBlobStorageManager storage;
         private readonly IDateTimeService datetimeService;
 
-        public PatientFilesController(IStorageService storage, IDateTimeService datetimeService)
+        public PatientFilesController(IBlobStorageManager storage, IDateTimeService datetimeService)
         {
             this.storage = storage;
             this.datetimeService = datetimeService;
@@ -151,7 +151,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
 
-        private static PatientFilesGroupViewModel GetViewModel(IStorageService storage, PatientFileGroup dbFileGroup, int dbUserId, Func<DateTime, DateTime> toLocal)
+        private static PatientFilesGroupViewModel GetViewModel(IBlobStorageManager storage, PatientFileGroup dbFileGroup, int dbUserId, Func<DateTime, DateTime> toLocal)
         {
             if (dbFileGroup == null)
                 return new PatientFilesGroupViewModel();
@@ -183,7 +183,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return result;
         }
 
-        private static void FillFileLengths(IStorageService storage, PatientFilesGroupViewModel viewModel, int? dbUserId)
+        private static void FillFileLengths(IBlobStorageManager storage, PatientFilesGroupViewModel viewModel, int? dbUserId)
         {
             // reading file sizes from the storage
             // todo: use db to get file size (faster)
@@ -191,11 +191,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 var fullStoragePath = string.Format("{0}\\{1}", eachFile.ContainerName, eachFile.BlobName);
                 var mustStartWith = string.Format("patient-files-{0}\\", dbUserId);
-
                 if (!fullStoragePath.StartsWith(mustStartWith))
                     continue;
 
-                eachFile.FileLength = storage.GetFileLength(fullStoragePath);
+                eachFile.FileLength = storage.GetFileLength(eachFile.ContainerName, eachFile.BlobName);
             }
         }
 
@@ -566,9 +565,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (metadata != null)
             {
-                var fullStoragePath = string.Format("{0}\\{1}", metadata.ContainerName, metadata.BlobName);
                 var fileName = metadata.SourceFileName;
-                var stream = this.storage.OpenRead(fullStoragePath);
+                var stream = this.storage.DownloadFileFromStorage(metadata.ContainerName, metadata.BlobName);
 
                 if (stream == null)
                     return new StatusCodeResult(HttpStatusCode.NotFound);

@@ -8,6 +8,8 @@ using System.Threading;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.StorageClient;
+using BlobContainerPermissions = Microsoft.WindowsAzure.Storage.Blob.BlobContainerPermissions;
+using BlobContainerPublicAccessType = Microsoft.WindowsAzure.Storage.Blob.BlobContainerPublicAccessType;
 using CloudBlobContainer = Microsoft.WindowsAzure.Storage.Blob.CloudBlobContainer;
 using CloudBlockBlob = Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob;
 using CloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount;
@@ -46,6 +48,13 @@ namespace CerebelloWebRole.Code
         private readonly Dictionary<string, Blob> blobsMap
             = new Dictionary<string, Blob>();
 
+        /// <summary>
+        /// Gets a blob reference to work with.
+        /// </summary>
+        /// <param name="fileLocation">Location of the blob to get a blob object for.</param>
+        /// <param name="fetchAttributes">Whether to fetch blob attributes or not.</param>
+        /// <param name="createContainer">Whether to create the container or not.</param>
+        /// <returns>Return the blob object for the given file location.</returns>
         private Blob GetCloudBlockBlob(string fileLocation, bool fetchAttributes = false, bool createContainer = false)
         {
             // getting the object representing the blob
@@ -77,14 +86,20 @@ namespace CerebelloWebRole.Code
             if (container == null)
                 container = blob.Container;
 
+            // creating container if needed
             if (createContainer && container.Exists != true)
             {
                 if (container.CloudBlobContainer.CreateIfNotExists())
+                {
+                    container.CloudBlobContainer.SetPermissions(
+                        new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off });
                     blob.Exists = false;
+                }
 
                 container.Exists = true;
             }
 
+            // fetching blob attributes
             if (fetchAttributes && blob.Exists != false && blob.AttributesFetched != true)
             {
                 bool ok = false;
@@ -114,10 +129,8 @@ namespace CerebelloWebRole.Code
             return null;
         }
 
-        public bool Move(string sourceFileLocation, string destinationFileLocation)
+        private static bool InternalCopyBlob(Blob blobDst, Blob blobSrc)
         {
-            var blobSrc = this.GetCloudBlockBlob(sourceFileLocation);
-            var blobDst = this.GetCloudBlockBlob(destinationFileLocation, createContainer: true);
             blobDst.CloudBlockBlob.StartCopyFromBlob(blobSrc.CloudBlockBlob);
 
             // requesting operation status
@@ -129,7 +142,8 @@ namespace CerebelloWebRole.Code
                     break;
 
                 // sleeping 1 second per remaining 50-megabytes (this is the rate of a commong hard drive)
-                var sleep = (blobDst.CloudBlockBlob.CopyState.TotalBytes ?? 0 - blobDst.CloudBlockBlob.CopyState.BytesCopied ?? 0) / (50 * 1024000.0);
+                var sleep = (blobDst.CloudBlockBlob.CopyState.TotalBytes ?? 0 - blobDst.CloudBlockBlob.CopyState.BytesCopied ?? 0) /
+                    (50 * 1024000.0);
                 if (sleep > 60)
                     Thread.Sleep(TimeSpan.FromSeconds(60));
                 else if (sleep > 0.1)
@@ -137,6 +151,23 @@ namespace CerebelloWebRole.Code
             }
 
             var isCopyOk = blobDst.CloudBlockBlob.CopyState.Status == CopyStatus.Success;
+
+            return isCopyOk;
+        }
+
+        public bool CopyFile(string fileLocation, string destinationFileLocation)
+        {
+            var blobSrc = this.GetCloudBlockBlob(fileLocation);
+            var blobDst = this.GetCloudBlockBlob(destinationFileLocation, createContainer: true);
+            var isCopyOk = InternalCopyBlob(blobDst, blobSrc);
+            return isCopyOk;
+        }
+
+        public bool MoveFile(string fileLocation, string destinationFileLocation)
+        {
+            var blobSrc = this.GetCloudBlockBlob(fileLocation);
+            var blobDst = this.GetCloudBlockBlob(destinationFileLocation, createContainer: true);
+            var isCopyOk = InternalCopyBlob(blobDst, blobSrc);
 
             // removing source blob if copy succeded
             if (isCopyOk)
@@ -149,7 +180,7 @@ namespace CerebelloWebRole.Code
             return isCopyOk;
         }
 
-        public Stream OpenRead(string fileLocation)
+        public Stream OpenFileForReading(string fileLocation)
         {
             var blob = this.GetCloudBlockBlob(fileLocation);
             var stream = blob.CloudBlockBlob.OpenRead();
@@ -157,21 +188,21 @@ namespace CerebelloWebRole.Code
             return stream;
         }
 
-        public void DeleteBlob(string fileLocation)
+        public void DeleteFileIfExists(string fileLocation)
         {
             var blob = this.GetCloudBlockBlob(fileLocation);
             blob.CloudBlockBlob.DeleteIfExists();
             blob.Exists = false;
         }
 
-        public void SaveFile(Stream stream, string fileLocation)
+        public void CreateOrOverwriteFile(string fileLocation, Stream stream)
         {
             var blob = this.GetCloudBlockBlob(fileLocation, createContainer: true);
             blob.CloudBlockBlob.UploadFromStream(stream);
             blob.Exists = true;
         }
 
-        public void AppendToFile(Stream stream, string fileLocation)
+        public void CreateOrAppendToFile(string fileLocation, Stream stream)
         {
             var blob = this.GetCloudBlockBlob(fileLocation, createContainer: true);
             var blobRef = blob.CloudBlockBlob;
@@ -204,7 +235,7 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        public bool Exists(string fileLocation)
+        public bool FileExists(string fileLocation)
         {
             var blob = this.GetCloudBlockBlob(fileLocation);
             if (!blob.Exists.HasValue)

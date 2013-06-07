@@ -26,13 +26,7 @@ namespace CerebelloWebRole.Code
             return null;
         }
 
-        /// <summary>
-        /// Moves a file from one place to another in the storage, if it exists.
-        /// </summary>
-        /// <param name="sourceFileLocation">Location of the file to move.</param>
-        /// <param name="destinationFileLocation">Destination to move the file to.</param>
-        /// <returns>True if the file was moved; otherwise false.</returns>
-        public bool Move(string sourceFileLocation, string destinationFileLocation)
+        public bool CopyFile(string fileLocation, string destinationFileLocation)
         {
             var destContainer = GetContainerName(destinationFileLocation);
             if (Directory.Exists(destContainer))
@@ -41,7 +35,34 @@ namespace CerebelloWebRole.Code
                 Directory.CreateDirectory(destDir);
             }
 
-            var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, sourceFileLocation);
+            var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
+            var destinationPath = Path.Combine(DebugConfig.LocalStoragePath, destinationFileLocation);
+            var fileInfo = new FileInfo(sourcePath);
+            if (fileInfo.Exists)
+            {
+                fileInfo.CopyTo(destinationPath);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Moves a file from one place to another in the storage, if it exists.
+        /// </summary>
+        /// <param name="fileLocation">Location of the file to move.</param>
+        /// <param name="destinationFileLocation">Destination to move the file to.</param>
+        /// <returns>True if the file was moved; otherwise false.</returns>
+        public bool MoveFile(string fileLocation, string destinationFileLocation)
+        {
+            var destContainer = GetContainerName(destinationFileLocation);
+            if (Directory.Exists(destContainer))
+            {
+                var destDir = Path.GetDirectoryName(destinationFileLocation);
+                Directory.CreateDirectory(destDir);
+            }
+
+            var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             var destinationPath = Path.Combine(DebugConfig.LocalStoragePath, destinationFileLocation);
             var fileInfo = new FileInfo(sourcePath);
             if (fileInfo.Exists)
@@ -53,7 +74,7 @@ namespace CerebelloWebRole.Code
             return false;
         }
 
-        public Stream OpenRead(string fileLocation)
+        public Stream OpenFileForReading(string fileLocation)
         {
             var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             var fileInfo = new FileInfo(sourcePath);
@@ -68,7 +89,7 @@ namespace CerebelloWebRole.Code
         /// Directories will not be left empty.
         /// </summary>
         /// <param name="fileLocation">The location of the blob to delete.</param>
-        public void DeleteBlob(string fileLocation)
+        public void DeleteFileIfExists(string fileLocation)
         {
             var containerName = GetContainerName(fileLocation);
             var pathContainer = Path.Combine(DebugConfig.LocalStoragePath, containerName) + '\\';
@@ -109,9 +130,9 @@ namespace CerebelloWebRole.Code
         /// Saves the data in a stream in the storage, at the given location, 
         /// replacing any already existing file.
         /// </summary>
-        /// <param name="stream">The stream to save to the storage location.</param>
         /// <param name="fileLocation">Location in the storage to save the file to.</param>
-        public void SaveFile(Stream stream, string fileLocation)
+        /// <param name="stream">The stream to save to the storage location.</param>
+        public void CreateOrOverwriteFile(string fileLocation, Stream stream)
         {
             if (!fileLocation.Contains('\\'))
                 throw new Exception("All files must be saved inside a container.");
@@ -130,7 +151,7 @@ namespace CerebelloWebRole.Code
                 stream.CopyTo(fs);
         }
 
-        public void AppendToFile(Stream stream, string fileLocation)
+        public void CreateOrAppendToFile(string fileLocation, Stream stream)
         {
             var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             var fileInfo = new FileInfo(sourcePath);
@@ -146,7 +167,7 @@ namespace CerebelloWebRole.Code
             }
         }
 
-        public bool Exists(string fileLocation)
+        public bool FileExists(string fileLocation)
         {
             var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation);
             return File.Exists(sourcePath);

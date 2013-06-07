@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 
 namespace CerebelloWebRole.Code
 {
@@ -101,20 +100,27 @@ namespace CerebelloWebRole.Code
             string sourceFullStorageFileName,
             string thumbFullStorageFileName,
             bool loadFromCache,
-            IStorageService storage,
+            IBlobStorageManager storage,
             IFileMetadataProvider fileMetadataProvider)
         {
-            if (loadFromCache && !string.IsNullOrEmpty(thumbFullStorageFileName) && storage.Exists(thumbFullStorageFileName))
+            var srcBlobLocation = new BlobLocation(sourceFullStorageFileName);
+            var thumbBlobLocation = new BlobLocation(thumbFullStorageFileName);
+
+            if (loadFromCache && !string.IsNullOrEmpty(thumbFullStorageFileName))
             {
-                using (var srcStream = storage.OpenRead(thumbFullStorageFileName))
-                using (var stream = new MemoryStream((int)srcStream.Length))
+                var thumbStream = storage.DownloadFileFromStorage(thumbBlobLocation);
+                if (thumbStream != null)
                 {
-                    srcStream.CopyTo(stream);
+                    using (thumbStream)
+                    using (var stream = new MemoryStream((int)thumbStream.Length))
                     {
-                        return new CreateThumbResult(
-                            CreateThumbStatus.Ok,
-                            stream.ToArray(),
-                            MimeTypesHelper.GetContentType(Path.GetExtension(thumbFullStorageFileName)));
+                        thumbStream.CopyTo(stream);
+                        {
+                            return new CreateThumbResult(
+                                CreateThumbStatus.Ok,
+                                stream.ToArray(),
+                                MimeTypesHelper.GetContentType(Path.GetExtension(thumbFullStorageFileName)));
+                        }
                     }
                 }
             }
@@ -122,12 +128,14 @@ namespace CerebelloWebRole.Code
             if (!StringHelper.IsImageFileName(sourceFullStorageFileName))
                 return new CreateThumbResult(CreateThumbStatus.SourceIsNotImage, null, null);
 
-            if (!storage.Exists(sourceFullStorageFileName))
+            var srcStream = storage.DownloadFileFromStorage(srcBlobLocation);
+
+            if (srcStream == null)
                 return new CreateThumbResult(CreateThumbStatus.SourceFileNotFound, null, null);
 
             string contentType;
             byte[] array;
-            using (var srcStream = storage.OpenRead(sourceFullStorageFileName))
+            using (srcStream)
             using (var srcImage = Image.FromStream(srcStream))
             {
                 var imageSizeMegabytes = srcImage.Width * srcImage.Height * 4 / 1024000.0;
@@ -161,16 +169,18 @@ namespace CerebelloWebRole.Code
                     if (loadFromCache && newImage != null && !string.IsNullOrEmpty(thumbFullStorageFileName))
                     {
                         // saving thumbnail image file metadata
-                        var containerName = thumbFullStorageFileName.Split("\\".ToCharArray(), 2).FirstOrDefault();
-                        var sourceFileName = Path.GetFileName(thumbFullStorageFileName ?? "") ?? "";
-                        var blobName = thumbFullStorageFileName.Split("\\".ToCharArray(), 2).Skip(1).FirstOrDefault();
                         var relationType = string.Format("thumb-{0}x{1}", maxWidth, maxHeight);
                         var metadata = fileMetadataProvider.CreateRelated(
-                            originalMetadataId, relationType, containerName, sourceFileName, blobName, null);
+                            originalMetadataId,
+                            relationType,
+                            thumbBlobLocation.ContainerName,
+                            thumbBlobLocation.FileName,
+                            thumbBlobLocation.BlobName,
+                            null);
 
                         fileMetadataProvider.SaveChanges();
 
-                        storage.SaveFile(new MemoryStream(array), thumbFullStorageFileName);
+                        storage.UploadFileToStorage(new MemoryStream(array), thumbBlobLocation);
                     }
                 }
             }

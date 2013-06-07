@@ -139,7 +139,7 @@ namespace CerebelloWebRole.Code
         /// <returns>The ActionResult containing the thumbnail image.</returns>
         protected ActionResult GetOrCreateThumb(
             FileMetadata originalMetadata,
-            IStorageService storage,
+            IBlobStorageManager storage,
             IDateTimeService dateTimeService,
             int maxWidth,
             int maxHeight,
