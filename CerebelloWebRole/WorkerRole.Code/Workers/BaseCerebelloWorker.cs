@@ -2,7 +2,6 @@ using System;
 using System.Net.Mail;
 using System.Web.Mvc;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers

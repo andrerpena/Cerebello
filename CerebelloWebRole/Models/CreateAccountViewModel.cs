@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
-using CerebelloWebRole.Code.Validation;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Models
 {
@@ -42,7 +42,7 @@ namespace CerebelloWebRole.Models
         public String Password { get; set; }
 
         [Display(Name = "Confirmação da Senha")]
-        [System.Web.Mvc.Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
+        [Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
@@ -52,7 +52,7 @@ namespace CerebelloWebRole.Models
         /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Nome de usuário")]
-        [UserNameAttribute]
+        [UserName]
         public string UserName { get; set; }
 
         /// <summary>

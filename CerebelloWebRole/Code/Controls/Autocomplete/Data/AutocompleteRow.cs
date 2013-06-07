@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CerebelloWebRole.Code.Controls
+﻿namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Representa uma linha do autocomplete

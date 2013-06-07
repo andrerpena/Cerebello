@@ -1,6 +1,5 @@
 ﻿@model DoctorHomeViewModel
 @using Cerebello.Model
-@using CerebelloWebRole.Code.Helpers
 @{
     var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);

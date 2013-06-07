@@ -7,7 +7,7 @@ using System.Linq;
 using Cerebello.Model;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Access
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// ObjectContext wrapper with global rules of access to objects stored in the database.
@@ -138,9 +138,9 @@ namespace CerebelloWebRole.Code.Access
             get { return new FilteredObjectSetWrapper<CFG_Schedule>(this.innerDb.CFG_Schedule, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
-        public FilteredObjectSetWrapper<ChatMessage> ChatMessages
+        public FilteredObjectSetWrapper<Cerebello.Model.ChatMessage> ChatMessages
         {
-            get { return new FilteredObjectSetWrapper<ChatMessage>(this.innerDb.ChatMessages, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<Cerebello.Model.ChatMessage>(this.innerDb.ChatMessages, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public FilteredObjectSetWrapper<Diagnosis> Diagnoses

@@ -1,6 +1,5 @@
-﻿@using CerebelloWebRole.Code.Notifications
-@{
-    var userInfo = this.ViewBag.UserInfo as CerebelloWebRole.Code.Data.UserInfo;
+﻿@{
+    var userInfo = this.ViewBag.UserInfo as UserInfo;
     if (userInfo == null)
     {
         throw new Exception("Application layout cannot load. User info is not available");

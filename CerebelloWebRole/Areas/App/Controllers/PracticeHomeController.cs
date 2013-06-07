@@ -6,8 +6,6 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Filters;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -23,7 +21,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var address = this.DbPractice.Address ?? new Address();
 
-            var viewModel = new Models.PracticeHomeControllerViewModel
+            var viewModel = new PracticeHomeControllerViewModel
                 {
                     Address = new AddressViewModel
                         {

@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using System.Globalization;
-using System.Web.Mvc;
 
-namespace CerebelloWebRole.Code.Mvc
+namespace CerebelloWebRole.Code
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple  = false)]
     public class EmailAddressAttribute : DataTypeAttribute
@@ -24,7 +19,7 @@ namespace CerebelloWebRole.Code.Mvc
             if (value == null)
                 return true;
 
-            Match match = regex.Match((string) value);
+            Match match = this.regex.Match((string) value);
             return match.Success;
         }
 

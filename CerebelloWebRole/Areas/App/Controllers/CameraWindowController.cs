@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Web.Mvc;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.WindowsAzure;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {

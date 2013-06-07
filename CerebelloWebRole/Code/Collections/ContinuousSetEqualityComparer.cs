@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CerebelloWebRole.Code.Collections
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Equality comparer capable of comparing continuous sets.

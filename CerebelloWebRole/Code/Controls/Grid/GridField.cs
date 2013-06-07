@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public class GridField<TModel, TValue> : GridFieldBase
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Script.Serialization;
 
-namespace CerebelloWebRole.Code.Security
+namespace CerebelloWebRole.Code
 {
     public static class SecurityTokenHelper
     {

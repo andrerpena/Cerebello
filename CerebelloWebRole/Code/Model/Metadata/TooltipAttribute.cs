@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Model.Metadata
+namespace CerebelloWebRole.Code
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class TooltipAttribute : Attribute
@@ -16,7 +13,7 @@ namespace CerebelloWebRole.Code.Model.Metadata
 
         public TooltipAttribute([NotNull] string helpMessage)
         {
-            HelpMessage = helpMessage;
+            this.HelpMessage = helpMessage;
             if (helpMessage == null) throw new ArgumentNullException("helpMessage");
         }
     }

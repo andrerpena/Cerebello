@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CerebelloWebRole.Code.Validation
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Specifies that a property is an user-name that can be used to login.

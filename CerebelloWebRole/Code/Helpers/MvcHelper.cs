@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Class containing ASP.NET MVC utilities, to help with rendering views to strings,

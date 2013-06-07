@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CerebelloWebRole.Code.Mvc
+namespace CerebelloWebRole.Code
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public class DateOfBirthAttribute : DataTypeAttribute

@@ -8,9 +8,6 @@ using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Json;
-using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -243,7 +240,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 if (config == null)
                 {
-                    config = new Cerebello.Model.CFG_Schedule { PracticeId = this.DbUser.PracticeId, };
+                    config = new CFG_Schedule { PracticeId = this.DbUser.PracticeId, };
                     this.Doctor.CFG_Schedule = config;
                 }
 

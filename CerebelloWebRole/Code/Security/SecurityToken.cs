@@ -1,6 +1,4 @@
-using CerebelloWebRole.Code.Security.Principals;
-
-namespace CerebelloWebRole.Code.Security
+namespace CerebelloWebRole.Code
 {
     public class SecurityToken
     {

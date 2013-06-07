@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 
-namespace CerebelloWebRole.Code.WindowsAzure
+namespace CerebelloWebRole.Code
 {
     public static class WindowsAzureLogHelper
     {

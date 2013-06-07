@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Chat;
-using CerebelloWebRole.Code.Security;
 using JetBrains.Annotations;
 using Microsoft.AspNet.SignalR.Hubs;
-using ChatMessage = CerebelloWebRole.Code.Chat.ChatMessage;
 
-namespace CerebelloWebRole.Code.Hubs
+namespace CerebelloWebRole.Code
 {
     public class ChatHub : CerebelloHub, IChatHub
     {
@@ -24,7 +21,7 @@ namespace CerebelloWebRole.Code.Hubs
         public ChatUser GetUserInfo(int userId)
         {
             var user = this.db.Users.FirstOrDefault(u => u.Id == userId);
-            return user == null ? null : GetChatUserFromUser(user);
+            return user == null ? null : this.GetChatUserFromUser(user);
         }
 
         private ChatUser GetChatUserFromUser([NotNull] User user)

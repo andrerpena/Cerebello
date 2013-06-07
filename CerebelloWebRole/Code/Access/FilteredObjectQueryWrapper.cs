@@ -5,7 +5,7 @@ using System.Data.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace CerebelloWebRole.Code.Access
+namespace CerebelloWebRole.Code
 {
     public class FilteredObjectQueryWrapper<TEntity> : IQueryable<TEntity>, IEnumerable<TEntity>, IQueryable, IEnumerable where TEntity : class
     {

@@ -5,14 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Notifications;
-using CerebelloWebRole.Code.Notifications.Data;
-using CerebelloWebRole.Code.Security;
 using JetBrains.Annotations;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
-namespace CerebelloWebRole.Code.Hubs
+namespace CerebelloWebRole.Code
 {
     public class NotificationsHub : CerebelloHub
     {

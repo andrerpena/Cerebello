@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public class CardViewField<TModel, TValue> : CardViewFieldBase
     {

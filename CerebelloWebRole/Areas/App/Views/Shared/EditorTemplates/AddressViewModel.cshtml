@@ -1,4 +1,5 @@
-﻿@model AddressViewModel
+﻿
+@model AddressViewModel
 @{
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.CEP, @<text> @Html.EditorFor(model => model.CEP)
@@ -46,7 +47,7 @@
     editPanel.AddField(m => m.City);
     editPanel.AddField(m => m.Neighborhood);
     editPanel.AddField(m => m.Street);
-    editPanel.AddField(m => m.Complement, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.Complement, EditPanelFieldSize.Small);
     
 }
 @editPanel.GetHtml()

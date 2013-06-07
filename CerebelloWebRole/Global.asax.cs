@@ -4,15 +4,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Notifications;
-using CerebelloWebRole.Code.Services;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SimpleInjector;
-using SimpleInjector.Extensions;
-using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
 
 namespace CerebelloWebRole

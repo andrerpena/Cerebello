@@ -5,9 +5,6 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -20,7 +17,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Gets all health insurances of the current doctor.
         /// </summary>
         /// <returns>ActionResult containing all health insurances.</returns>
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         [CanAlternateUser]
         public ActionResult Index()
         {
@@ -50,7 +47,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// <param name="isParticular"> Whether the new insurance is particular or a real health insurance. </param>
         /// <returns> ActionResult containing initial information to create a new insurance. </returns>
         [HttpGet]
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Create(bool isParticular)
         {
             return this.Edit((int?)null, isParticular);
@@ -66,14 +63,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Otherwise, the process is restarted, with already inserted data so that it can be corrected.
         /// </remarks>
         [HttpPost]
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Create(HealthInsuranceViewModel viewModel)
         {
             return this.Edit(viewModel);
         }
 
         [HttpGet]
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Edit(int? id, bool isParticular = false)
         {
             var viewModel = new HealthInsuranceViewModel
@@ -104,7 +101,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Edit(HealthInsuranceViewModel formModel)
         {
             if (this.ModelState.IsValid)
@@ -135,7 +132,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.View("Edit", formModel);
         }
 
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public ActionResult Details(int id)
         {
             var hi = this.db.HealthInsurances.Single(h => h.Id == id);
@@ -154,7 +151,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.View(viewModel);
         }
 
-        [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+        [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
         public JsonResult Delete(int id)
         {
             try

@@ -8,11 +8,6 @@ using System.Web.Script.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Google;
-using CerebelloWebRole.Code.Google.Data;
-using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Code.Notifications;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace CerebelloWebRole.Code.Services
+namespace CerebelloWebRole.Code
 {
     public interface IStorageService
     {

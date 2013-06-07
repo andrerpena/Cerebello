@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Chat
+﻿namespace CerebelloWebRole.Code
 {
     public class ChatUser
     {

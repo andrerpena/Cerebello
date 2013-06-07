@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data.Objects;
 using System.Linq;
 
-namespace CerebelloWebRole.Code.Access
+namespace CerebelloWebRole.Code
 {
     public class FilteredObjectSetWrapper<TEntity> : FilteredObjectQueryWrapper<TEntity>, IObjectSet<TEntity>, IQueryable<TEntity>, IEnumerable<TEntity>, IQueryable, IEnumerable where TEntity : class
     {

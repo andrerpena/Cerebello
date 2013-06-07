@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Data
+﻿namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// This is user information that is present in all application Controllers and in all Views

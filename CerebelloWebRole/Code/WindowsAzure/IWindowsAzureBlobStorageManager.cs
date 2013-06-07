@@ -1,7 +1,7 @@
 using System.IO;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.WindowsAzure
+namespace CerebelloWebRole.Code
 {
     public interface IWindowsAzureBlobStorageManager
     {

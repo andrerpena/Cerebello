@@ -6,7 +6,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading;
 using Cerebello.Model;
-using CerebelloWebRole.Code.WindowsAzure;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {

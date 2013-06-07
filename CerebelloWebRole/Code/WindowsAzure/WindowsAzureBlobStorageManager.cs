@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage.Blob;
 using CloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount;
 
-namespace CerebelloWebRole.Code.WindowsAzure
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Helper class for working with the Windows Azure Storage.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using CerebelloWebRole.App_GlobalResources;
-using CerebelloWebRole.Code.Model.Metadata;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Models
 {

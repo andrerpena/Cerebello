@@ -12,11 +12,9 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Extensions
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Extensions for the HtmlHelper class.

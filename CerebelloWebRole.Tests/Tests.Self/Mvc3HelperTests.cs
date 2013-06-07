@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests.Self

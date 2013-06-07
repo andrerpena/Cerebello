@@ -5,16 +5,13 @@ using System.IO;
 using System.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
-using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Google;
-using CerebelloWebRole.Code.WindowsAzure;
 using Google.Apis.Drive.v2;
 using Google.Apis.Drive.v2.Data;
 using Ionic.Zip;
 using JetBrains.Annotations;
 using File = Google.Apis.Drive.v2.Data.File;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     public static class BackupHelper
     {
@@ -145,7 +142,7 @@ namespace CerebelloWebRole.Code.Helpers
                             {
                                 try
                                 {
-                                    var patientBackup = BackupHelper.GeneratePatientBackup(dbWrapper, patient);
+                                    var patientBackup = GeneratePatientBackup(dbWrapper, patient);
                                     var fileName = string.Format("{0} (id:{1})", patient.Person.FullName, patient.Id) + ".zip";
                                     var fileDescription = string.Format(
                                         "Arquivo de backup do(a) paciente {0} (id:{1})", patient.Person.FullName, patient.Id);

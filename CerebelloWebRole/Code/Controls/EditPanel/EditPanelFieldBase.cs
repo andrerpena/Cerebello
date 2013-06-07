@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public class EditPanelFieldBase
     {

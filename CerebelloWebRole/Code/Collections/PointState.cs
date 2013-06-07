@@ -1,4 +1,4 @@
-namespace CerebelloWebRole.Code.Collections
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Represents the three possible states of a point in an interval composed of two points.

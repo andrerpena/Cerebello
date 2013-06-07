@@ -3,8 +3,7 @@ using System.Linq;
 using Cerebello.Firestarter;
 using CerebelloWebRole.Areas.App.Controllers;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Json;
+using CerebelloWebRole.Code;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests

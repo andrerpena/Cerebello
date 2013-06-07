@@ -1,11 +1,10 @@
-﻿@using CerebelloWebRole.Areas.App.Models
-@model SearchViewModel<CerebelloWebRole.Areas.App.Models.MedicineLaboratoryViewModel>
+﻿@model SearchViewModel<MedicineLaboratoryViewModel>
 @{
     var title = "Pesquisa de laboratórios";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     ViewBag.Watermark = "Pesquisar pelo nome do laboratório";
 
-    var grid = this.Html.CreateGrid(this.Model.Objects, CerebelloWebRole.Code.Constants.GRID_PAGE_SIZE, this.Model.Count);
+    var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
     grid.AddEditField("Edit", "Laboratories", model => new { model.Id });
 }
@@ -22,7 +21,7 @@
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
-    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+    @Html.Partial("SearchBox", new SearchModel())
 }
 <div class="search-result">
     <h2>Resultado da pesquisa

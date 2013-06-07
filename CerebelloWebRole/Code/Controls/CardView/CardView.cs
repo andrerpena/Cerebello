@@ -6,7 +6,7 @@ using System.Web.Mvc.Html;
 using System.Linq.Expressions;
 using System.Web.Routing;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public class CardViewResponsive<TModel>
     {

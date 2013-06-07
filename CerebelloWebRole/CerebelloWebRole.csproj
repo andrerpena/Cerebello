@@ -14,7 +14,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -546,7 +546,6 @@
     <Compile Include="Code\Security\SecurityToken.cs" />
     <Compile Include="Code\Security\SecurityTokenHelper.cs" />
     <Compile Include="Code\TokenId.cs" />
-    <Compile Include="Code\Validation\EmailAddressAttribute.cs" />
     <Compile Include="Code\Validation\UrlAttribute.cs" />
     <Compile Include="Code\Validation\UserNameAttribute.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />

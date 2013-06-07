@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace CerebelloWebRole.Code.Services
+namespace CerebelloWebRole.Code
 {
     public class LocalStorageService : IStorageService
     {

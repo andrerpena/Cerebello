@@ -3,7 +3,7 @@ using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [Code.Filters.SelfOrUserRolePermission(Code.Filters.UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class ConfigController : DoctorController
     {
         //

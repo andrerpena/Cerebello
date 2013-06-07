@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CerebelloWebRole.Tests.Tests.Other

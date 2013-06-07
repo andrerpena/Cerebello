@@ -7,9 +7,6 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Collections;
-using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Code.WindowsAzure;
 using CerebelloWebRole.Models;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     public static class EnumHelper
     {
@@ -46,7 +47,7 @@ namespace CerebelloWebRole.Code.Helpers
             if (!enumType.IsEnum)
                 throw new ArgumentException("passed object must be an enum");
 
-            return EnumHelper.GetText(Enum.ToObject(enumType, enumValue));
+            return GetText(Enum.ToObject(enumType, enumValue));
         }
 
         public static Dictionary<int, String> GetValueDisplayDictionary(Type aEnumType)
@@ -71,7 +72,7 @@ namespace CerebelloWebRole.Code.Helpers
             var result = new List<SelectListItem>();
 
             foreach (var vEnumValue in Enum.GetValues(enumType))
-                result.Add(new SelectListItem() { Value = ((int)vEnumValue).ToString(), Text = EnumHelper.GetText(vEnumValue) });
+                result.Add(new SelectListItem() { Value = ((int)vEnumValue).ToString(CultureInfo.InvariantCulture), Text = GetText(vEnumValue) });
 
             return result;
         }
@@ -91,7 +92,7 @@ namespace CerebelloWebRole.Code.Helpers
                      .Select(ev => new SelectListItem()
                          {
                              Value = ((int)ev).ToString(),
-                             Text = EnumHelper.GetText(ev),
+                             Text = GetText(ev),
                              // To set the "Selected" property here won't take any effect
                          })).ToList();
             return new SelectList(selectListItems, "Value", "Text", selectedValue != null ? selectedValue.ToString() : null);

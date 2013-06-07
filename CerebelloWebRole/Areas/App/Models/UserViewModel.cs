@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Validation;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -13,7 +12,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         [Display(Name = "Nome identificador")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [UserNameAttribute]
+        [UserName]
         public string UserName { get; set; }
 
         public string ImageUrl { get; set; }

@@ -7,9 +7,6 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Controls;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Json;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {

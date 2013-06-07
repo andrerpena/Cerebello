@@ -1,7 +1,4 @@
-﻿using System.Web.Mvc;
-using Cerebello.Model;
-
-namespace CerebelloWebRole.Code.Filters
+﻿namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Specifies that only the owner of the clinic has access to this resource.

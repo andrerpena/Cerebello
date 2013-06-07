@@ -1,8 +1,7 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using CerebelloWebRole.Code.Security;
 
-namespace CerebelloWebRole.Code.Filters
+namespace CerebelloWebRole.Code
 {
     // todo: this should be an IActionFilter instead of an IAuthorizationFilter
     public class FirstAccessFilter : IAuthorizationFilter

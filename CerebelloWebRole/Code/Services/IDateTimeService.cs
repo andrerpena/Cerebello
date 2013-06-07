@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CerebelloWebRole.Code.Services
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Interface representing the ability to get the current UTC date and time.

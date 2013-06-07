@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public abstract class CardViewFieldBase
     {

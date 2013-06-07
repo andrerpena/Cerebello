@@ -1,6 +1,6 @@
--- 
+--
 -- PRACTICE CREATION COUNT PER WEEK (NOT COUNTING THE CANCELED ACCOUNTS)
--- 
+--
 declare @Interval int = 7;
 declare @WeekOffset int = 0;
 WITH cSequence AS

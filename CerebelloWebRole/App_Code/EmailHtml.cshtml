@@ -113,11 +113,11 @@
                 @if (attrEnum != null)
                 {
                     var value = Enum.ToObject(attrEnum.EnumType, pi.GetValue(obj, null));
-                    <td>@EmailHtml.InlineCode(value.ToString())</td>
+                    <td>@InlineCode(value.ToString())</td>
                 }
                 else
                 {
-                    <td>@EmailHtml.InlineCode(pi.GetValue(obj, null).ToString())</td>
+                    <td>@InlineCode(pi.GetValue(obj, null).ToString())</td>
                 }
             </tr>
         }
@@ -125,21 +125,21 @@
         {
             <tr>
                 <td>@pi.Name</td>
-                <td>@EmailHtml.InlineCode('"' + (string)pi.GetValue(obj, null) + '"')</td>
+                <td>@InlineCode('"' + (string)pi.GetValue(obj, null) + '"')</td>
             </tr>
         }
         else if (pi.GetValue(obj, null) == null)
         {
             <tr>
                 <td>@pi.Name</td>
-                <td>@EmailHtml.InlineCode("null")</td>
+                <td>@InlineCode("null")</td>
             </tr>
         }
         else
         {
             <tr>
                 <td>@pi.Name</td>
-                <td>@EmailHtml.InlineCode(pi.GetValue(obj, null))</td>
+                <td>@InlineCode(pi.GetValue(obj, null))</td>
             </tr>
         }
     }

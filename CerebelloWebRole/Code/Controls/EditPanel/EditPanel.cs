@@ -8,10 +8,8 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
-using CerebelloWebRole.Code.Extensions;
-using CerebelloWebRole.Code.Model.Metadata;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public enum EditPanelFieldSize
     {

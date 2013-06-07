@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     public static class TraceHelper
     {

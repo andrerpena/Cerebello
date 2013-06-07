@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Notifications.Data
+﻿namespace CerebelloWebRole.Code
 {
     public class NewUserCreatedNotificationData
     {

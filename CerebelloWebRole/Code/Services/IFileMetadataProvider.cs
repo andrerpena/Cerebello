@@ -1,7 +1,7 @@
 ﻿using System;
 using Cerebello.Model;
 
-namespace CerebelloWebRole.Code.Services
+namespace CerebelloWebRole.Code
 {
     public interface IFileMetadataProvider
     {

@@ -1,4 +1,4 @@
-namespace CerebelloWebRole.Code.Collections
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Possible redundancy types for items in a continuous set.

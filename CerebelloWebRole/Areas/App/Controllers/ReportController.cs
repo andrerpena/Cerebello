@@ -10,9 +10,6 @@ using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Helpers;
 using Telerik.Reporting.Processing;
 using Telerik.Reporting.XmlSerialization;
 using Report = Telerik.Reporting.Report;
@@ -105,7 +102,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 report = (Report)xmlSerializer.Deserialize(xmlReader);
             }
 
-            var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
+            var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
             foreach (var eachSubReport in subReports)
             {
                 var resourceNameSub = Path.Combine(Path.GetDirectoryName(resourceName), String.Format("{0}.trdx", eachSubReport.Name));
@@ -128,7 +125,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 report = (Report)xmlSerializer.Deserialize(xmlReader);
             }
 
-            var subReports = report.Items.Find(typeof(Telerik.Reporting.SubReport), true).OfType<SubReport>();
+            var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
             foreach (var eachSubReport in subReports)
             {
                 var resourceNameSub = Path.Combine(Path.GetDirectoryName(fileName), String.Format("{0}.trdx", eachSubReport.Name));

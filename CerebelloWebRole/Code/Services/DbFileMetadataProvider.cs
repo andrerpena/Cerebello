@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Access;
 using System.Linq;
 
-namespace CerebelloWebRole.Code.Services
+namespace CerebelloWebRole.Code
 {
     public class DbFileMetadataProvider : IFileMetadataProvider
     {

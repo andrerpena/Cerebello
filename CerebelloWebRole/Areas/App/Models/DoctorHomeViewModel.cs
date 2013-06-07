@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Cerebello.Model;
-using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Areas.App.Models
 {

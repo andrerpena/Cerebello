@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace CerebelloWebRole.Code.Collections
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Represents an interval of values between a starting point and an ending point.

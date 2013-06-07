@@ -2,8 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
-using CerebelloWebRole.Code.Mvc;
-using CerebelloWebRole.Models;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Models
 {
@@ -53,7 +52,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String PatientName { get; set; }
 
         [Display(Name = "E-mail")]
-        [Code.Mvc.EmailAddress]
+        [EmailAddress]
         public string PatientEmail { get; set; }
 
         [Display(Name = "Sexo")]

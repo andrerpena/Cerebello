@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Representa o retorno JSON de uma chamada Ajax para popular o Lookup

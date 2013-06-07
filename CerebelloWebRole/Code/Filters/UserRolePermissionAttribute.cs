@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CerebelloWebRole.Code.Filters
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Specifies that an user with any of the roles specified in the clinic has access to this resource.

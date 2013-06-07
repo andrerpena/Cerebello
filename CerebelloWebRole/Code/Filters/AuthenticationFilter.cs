@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Security;
-using CerebelloWebRole.Code.Security;
 
-namespace CerebelloWebRole.Code.Filters
+namespace CerebelloWebRole.Code
 {
     public class AuthenticationFilter : IAuthorizationFilter
     {

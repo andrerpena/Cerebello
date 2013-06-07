@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Filters
+﻿namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Specifies that only the owner of the informations can access them.

@@ -9,7 +9,7 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     public class Grid<TModel>
     {
@@ -84,7 +84,7 @@ namespace CerebelloWebRole.Code.Controls
             [JetBrains.Annotations.AspMvcController] string controllerName,
             Func<TModel, object> routeValuesFunc)
         {
-            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+            var urlHelper = new UrlHelper(this.htmlHelper.ViewContext.RequestContext);
 
             this.AddField<object>(
                 null,

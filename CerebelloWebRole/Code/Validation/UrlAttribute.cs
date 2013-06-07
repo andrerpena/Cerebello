@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CerebelloWebRole.Code.Validation
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Url attribute for validating URLs

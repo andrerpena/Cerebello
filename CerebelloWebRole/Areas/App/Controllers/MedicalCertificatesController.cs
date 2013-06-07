@@ -7,9 +7,6 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.iText;
-using CerebelloWebRole.Code.Json;
-using CerebelloWebRole.Code.Mvc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 

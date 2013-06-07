@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Data;
-using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Code.Security;
-using CerebelloWebRole.Code.Services;
 
 namespace CerebelloWebRole.Code
 {
@@ -49,7 +40,7 @@ namespace CerebelloWebRole.Code
             if (this.DbUser != null)
             {
                 // this ViewBag will carry user information to the View
-                this.ViewBag.UserInfo = CerebelloController.GetUserInfo(this.DbUser);
+                this.ViewBag.UserInfo = GetUserInfo(this.DbUser);
             }
         }
 

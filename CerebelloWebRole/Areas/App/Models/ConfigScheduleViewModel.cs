@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Cerebello.Model;
-using CerebelloWebRole.Models;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
-using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Areas.App.Models
 {

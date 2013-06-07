@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace CerebelloWebRole.Code.Business
+namespace CerebelloWebRole.Code
 {
     public class DropDownListHelper
     {

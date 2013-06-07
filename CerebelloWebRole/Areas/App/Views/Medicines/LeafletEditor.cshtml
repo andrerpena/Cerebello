@@ -1,11 +1,12 @@
-﻿@model MedicineLeafletViewModel
+﻿
+@model MedicineLeafletViewModel
 @{
     Layout = null;
     var editPanel = this.Html.CreateEditPanel(null);
     editPanel.AddField(m => m.Description);
     editPanel.AddField(m => m.Url);
 }
-@using (Html.BeginCollectionItem("Leaflets"))
+@using (HtmlExtensions.BeginCollectionItem(this.Html, "Leaflets"))
 {
     @Html.HiddenFor(model => model.Id)
     @editPanel.GetHtml()

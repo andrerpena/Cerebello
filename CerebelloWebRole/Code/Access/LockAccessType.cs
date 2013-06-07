@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CerebelloWebRole.Code.Access
+namespace CerebelloWebRole.Code
 {
     [Flags]
     public enum LockAccessType

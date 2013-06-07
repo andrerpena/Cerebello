@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
-namespace CerebelloWebRole.Code.Mvc
+namespace CerebelloWebRole.Code
 {
     public static class CollectionEditingHtmlExtensions
     {
@@ -91,13 +90,13 @@ namespace CerebelloWebRole.Code.Mvc
             {
                 this._templateInfo = templateInfo;
 
-                _previousPrefix = templateInfo.HtmlFieldPrefix;
+                this._previousPrefix = templateInfo.HtmlFieldPrefix;
                 templateInfo.HtmlFieldPrefix = collectionItemName;
             }
 
             public void Dispose()
             {
-                _templateInfo.HtmlFieldPrefix = _previousPrefix;
+                this._templateInfo.HtmlFieldPrefix = this._previousPrefix;
             }
         }
     }

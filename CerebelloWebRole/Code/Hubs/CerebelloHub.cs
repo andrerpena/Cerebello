@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 
-namespace CerebelloWebRole.Code.Hubs
+namespace CerebelloWebRole.Code
 {
     public class CerebelloHub : Hub
     {

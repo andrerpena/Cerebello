@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Notifications
+﻿namespace CerebelloWebRole.Code
 {
     public static class NotificationConstants
     {

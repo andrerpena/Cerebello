@@ -11,9 +11,6 @@ using System.Web.Routing;
 using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Code.Security;
-using CerebelloWebRole.Code.Security.Principals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

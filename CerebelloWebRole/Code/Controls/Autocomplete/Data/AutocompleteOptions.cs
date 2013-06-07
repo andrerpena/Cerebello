@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CerebelloWebRole.Code.Controls
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Modelo das opções do plug-in do jQuery

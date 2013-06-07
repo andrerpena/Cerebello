@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using iTextSharp.text.pdf;
+﻿using iTextSharp.text.pdf;
 using iTextSharp.text;
-using iTextSharp.text.pdf.draw;
 using Cerebello.Model;
 
-namespace CerebelloWebRole.Code.iText
+namespace CerebelloWebRole.Code
 {
     public class PdfHeaderFooter : PdfPageEventHelper
     {
@@ -33,7 +28,7 @@ namespace CerebelloWebRole.Code.iText
             base.OnStartPage(writer, document);
         }
 
-        public override void OnEndPage(PdfWriter writer, iTextSharp.text.Document document)
+        public override void OnEndPage(PdfWriter writer, Document document)
         {
             var art = writer.GetBoxSize("art");
 

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers

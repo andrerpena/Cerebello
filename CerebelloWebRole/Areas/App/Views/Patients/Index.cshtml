@@ -56,7 +56,7 @@ Prontuário
     }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
-    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+    @Html.Partial("SearchBox", new SearchModel())
 }
 <div class="widget">
     <h2>Últimos pacientes cadastrados

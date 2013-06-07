@@ -9,8 +9,6 @@ using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.Models;
 using PayPal.Version940;
 

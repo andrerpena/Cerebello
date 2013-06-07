@@ -4,13 +4,11 @@ using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Controls.Autocomplete.Data;
-using CerebelloWebRole.Code.Filters;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
-    [SelfOrUserRolePermissionAttribute(UserRoleFlags.Administrator)]
+    [SelfOrUserRolePermission(UserRoleFlags.Administrator)]
     public class LaboratoriesController : DoctorController
     {
         public MedicineLaboratoryViewModel GetViewModel(Laboratory laboratory, int? page = null)

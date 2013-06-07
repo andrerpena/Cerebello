@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Helps with Mime Types

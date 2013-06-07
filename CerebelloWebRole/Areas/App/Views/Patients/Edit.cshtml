@@ -1,5 +1,5 @@
 ﻿@model PatientViewModel
-@using CerebelloWebRole.Code.Extensions
+
 @{
     
     if (this.Model != null && this.Model.Id.HasValue)
@@ -12,17 +12,17 @@
     }
 
     var editPanel = this.Html.CreateEditPanel();
-    editPanel.AddField(m => m.FullName, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
-    editPanel.AddField(m => m.DateOfBirth, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.MaritalStatus, @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
     editPanel.AddField(m => m.BirthPlace);
     editPanel.AddField(m => m.Cpf);
     editPanel.AddField(m => m.Profissao);
     editPanel.AddField(m => m.Email, wholeRow: true);
-    editPanel.AddField(m => m.PhoneLand, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.PhoneCell, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.Observations, CerebelloWebRole.Code.Controls.EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>, wholeRow: true);
+    editPanel.AddField(m => m.PhoneLand, EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.PhoneCell, EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>, wholeRow: true);
 }
 @section Styles {
     <link rel="Stylesheet" type="text/css" href="/content/styles/app/patients_edit.css" />

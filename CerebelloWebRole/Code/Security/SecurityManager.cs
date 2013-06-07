@@ -4,8 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Security;
-using CerebelloWebRole.Code.Security.Principals;
 using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Code

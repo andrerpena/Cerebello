@@ -12,7 +12,7 @@ using System.Web.WebPages;
 using CerebelloWebRole.Controllers;
 using Microsoft.CSharp;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Helps rendering razor web pages, outside of the web environment,
@@ -139,8 +139,6 @@ namespace CerebelloWebRole.Code.Helpers
             host.NamespaceImports.Add("System.Web.Mvc.Html");
             host.NamespaceImports.Add("System.Web.Routing");
             host.NamespaceImports.Add("CerebelloWebRole.Code");
-            host.NamespaceImports.Add("CerebelloWebRole.Code.Extensions");
-            host.NamespaceImports.Add("CerebelloWebRole.Code.Access");
             host.NamespaceImports.Add("CerebelloWebRole.Models");
             var engine = new RazorTemplateEngine(host);
 

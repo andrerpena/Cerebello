@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Google.Data
+﻿namespace CerebelloWebRole.Code
 {
     public class AccountInfoJsonResult
     {

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Drawing;
-using CerebelloWebRole.Code.Helpers;
-using CerebelloWebRole.Code.Services;
 
 namespace CerebelloWebRole.Code
 {
@@ -16,8 +12,8 @@ namespace CerebelloWebRole.Code
         public static Image EnsureMaximumDimensions(Image image, int maxWidth, int maxHeight)
         {
             // Prevent using images internal thumbnail
-            image.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
-            image.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
+            image.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            image.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
             var aspectRatio = ((double)image.Width) / image.Height; //AR = L/A;
 
@@ -138,7 +134,7 @@ namespace CerebelloWebRole.Code
                 if (imageSizeMegabytes > 40.0)
                     return new CreateThumbResult(CreateThumbStatus.SourceImageTooLarge, null, null);
 
-                using (var newImage = ImageHelper.ResizeImage(srcImage, maxWidth, maxHeight, keepAspect: true, canGrow: false))
+                using (var newImage = ResizeImage(srcImage, maxWidth, maxHeight, keepAspect: true, canGrow: false))
                 using (var newStream = new MemoryStream())
                 {
                     if (newImage == null)

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Helps with creating and sending e-mails.

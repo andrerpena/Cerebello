@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Cerebello;
 
-namespace CerebelloWebRole.Code.Helpers
+namespace CerebelloWebRole.Code
 {
     public static class RouteHelper
     {
@@ -29,7 +27,7 @@ namespace CerebelloWebRole.Code.Helpers
             {
                 get
                 {
-                    return mockHttpRequestBase;
+                    return this.mockHttpRequestBase;
                 }
             }
 
@@ -44,7 +42,7 @@ namespace CerebelloWebRole.Code.Helpers
 
                 public override string AppRelativeCurrentExecutionFilePath
                 {
-                    get { return appRelativeUrl; }
+                    get { return this.appRelativeUrl; }
                 }
 
                 public override string PathInfo

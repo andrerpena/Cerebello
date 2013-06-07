@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CerebelloWebRole.Code.Exceptions
+﻿namespace CerebelloWebRole.Code
 {
     public class ObjectNotFoundException
     {

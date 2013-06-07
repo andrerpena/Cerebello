@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.WorkerRole.Code.Workers
 {

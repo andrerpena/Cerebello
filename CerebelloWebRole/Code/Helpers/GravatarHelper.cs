@@ -50,7 +50,7 @@ namespace CerebelloWebRole.Code
                     return path;
             }
 
-            return "https://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + GravatarHelper.Ampersand + "d=identicon" + GravatarHelper.Ampersand + "r=PG&d=mm";
+            return "https://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + Ampersand + "d=identicon" + Ampersand + "r=PG&d=mm";
         }
 
         // Create an md5 sum string of this string
@@ -89,7 +89,7 @@ namespace CerebelloWebRole.Code
 
         public static void DownloadGravatar(string gravatarID, int size, string targetFilePath)
         {
-            string gravatarPath = String.Format("http://www.gravatar.com/avatar.php?gravatar_id={0}" + GravatarHelper.Ampersand + "size={1}", gravatarID, size);
+            string gravatarPath = String.Format("http://www.gravatar.com/avatar.php?gravatar_id={0}" + Ampersand + "size={1}", gravatarID, size);
 
             if (!File.Exists(targetFilePath)) //TODO: GJ: there is a possible race condition here
                 HttpHelper.DownloadFile(gravatarPath, targetFilePath);
@@ -98,7 +98,7 @@ namespace CerebelloWebRole.Code
             { //Delete copy as we now have a fresh copy
                 File.Delete(targetFilePath.Replace(".jpg", ".copy.jpg"));
             }
-            catch (System.IO.IOException) { }
+            catch (IOException) { }
 
         }
 

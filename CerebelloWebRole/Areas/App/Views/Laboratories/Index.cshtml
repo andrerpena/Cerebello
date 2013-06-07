@@ -1,5 +1,4 @@
-﻿@using CerebelloWebRole.Areas.App.Models
-@model LaboratoriesIndexViewModel
+﻿@model LaboratoriesIndexViewModel
 @{
     var title = "Labotarórios";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -24,7 +23,7 @@
 
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
-    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+    @Html.Partial("SearchBox", new SearchModel())
 }
 
 <div class="widget">

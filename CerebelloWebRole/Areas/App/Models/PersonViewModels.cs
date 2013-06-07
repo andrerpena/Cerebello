@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.App_GlobalResources;
-using CerebelloWebRole.Code.Mvc;
+using CerebelloWebRole.Code;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Areas.App.Models
@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)] // TODO: This will make MVC 4 use HTML 5 <input type="email" />
-        [Code.Mvc.EmailAddress]
+        [EmailAddress]
         public String Email { get; set; }
 
         [Display(Name = "Telefone fixo")]

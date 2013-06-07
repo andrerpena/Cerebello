@@ -1,5 +1,5 @@
-﻿@model CerebelloWebRole.Areas.App.Models.SearchViewModel<CerebelloWebRole.Areas.App.Models.PatientViewModel>
-@using CerebelloWebRole.Code
+﻿@model SearchViewModel<PatientViewModel>
+
 @{
     var title = "Pesquisa de pacientes";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
@@ -22,7 +22,7 @@
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
-    @Html.Partial("SearchBox", new CerebelloWebRole.Areas.App.Models.SearchModel())
+    @Html.Partial("SearchBox", new SearchModel())
 }
 <div class="search-result">
     <h2>Resultado da pesquisa

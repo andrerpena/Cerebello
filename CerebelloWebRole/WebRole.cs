@@ -2,9 +2,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Helpers;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.WindowsAzure.ServiceRuntime;
 

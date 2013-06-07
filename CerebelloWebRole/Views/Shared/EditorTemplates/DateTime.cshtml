@@ -1,4 +1,4 @@
-﻿@model Nullable<System.DateTime>
+﻿@model DateTime?
 @{
     var formattedValue = this.Model.HasValue ? this.Model.Value.ToString(System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern) : null;
 }

@@ -1,6 +1,6 @@
 ﻿@model ReceiptMedicineViewModel
 @using System.Linq.Expressions
-@using CerebelloWebRole.Code.Controls
+
 @{
     if (!string.IsNullOrWhiteSpace(this.Request["HtmlFieldPrefix"]))
     {
@@ -29,7 +29,7 @@
     editPanel.AddField(m => m.Observations, this.Html.TextAreaFor, EditPanelFieldSize.Large);
 }
 
-@using (this.Html.BeginCollectionItem("ReceiptMedicines"))
+@using (HtmlExtensions.BeginCollectionItem(this.Html, "ReceiptMedicines"))
 {
     @this.Html.HiddenFor(model => model.Id);
     <div class="edit-list-item-wrapper">

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CerebelloWebRole.Code.Json
+namespace CerebelloWebRole.Code
 {
     public class JsonDeleteMessage
     {

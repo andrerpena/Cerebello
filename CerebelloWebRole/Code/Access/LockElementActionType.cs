@@ -1,4 +1,4 @@
-﻿namespace CerebelloWebRole.Code.Access
+﻿namespace CerebelloWebRole.Code
 {
     public enum LockElementActionType
     {

@@ -3,11 +3,9 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Helpers;
 using JetBrains.Annotations;
 
-namespace CerebelloWebRole.Code.Extensions
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Extension methods to the view page that allows changin the view

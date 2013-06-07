@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace CerebelloWebRole.Code.Extensions
+namespace CerebelloWebRole.Code
 {
     public static class MyLabelExtensions
     {

@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Web.Mvc;
 
-namespace CerebelloWebRole.Code.Filters
+namespace CerebelloWebRole.Code
 {
     public class CanonicalUrlHttpsFilter : IActionFilter
     {

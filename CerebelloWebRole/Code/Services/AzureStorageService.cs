@@ -12,7 +12,7 @@ using CloudBlobContainer = Microsoft.WindowsAzure.Storage.Blob.CloudBlobContaine
 using CloudBlockBlob = Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob;
 using CloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount;
 
-namespace CerebelloWebRole.Code.Services
+namespace CerebelloWebRole.Code
 {
     public class AzureStorageService : IStorageService
     {
@@ -52,24 +52,24 @@ namespace CerebelloWebRole.Code.Services
             Container container = null;
             Blob blob;
 
-            if (!blobsMap.TryGetValue(fileLocation, out blob))
+            if (!this.blobsMap.TryGetValue(fileLocation, out blob))
             {
                 // Gets the object representing the container.
                 var containerName = GetContainerName(fileLocation);
 
-                if (!containersMap.TryGetValue(containerName, out container))
+                if (!this.containersMap.TryGetValue(containerName, out container))
                 {
                     var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
                     var blobClient = storageAccount.CreateCloudBlobClient();
                     var containerRef = blobClient.GetContainerReference(containerName);
-                    containersMap[containerName]
+                    this.containersMap[containerName]
                         = container
                         = new Container { CloudBlobContainer = containerRef };
                 }
 
                 var blobName = GetBlobName(fileLocation);
                 var blobRef = container.CloudBlobContainer.GetBlockBlobReference(blobName);
-                blobsMap[fileLocation]
+                this.blobsMap[fileLocation]
                     = blob
                     = new Blob { CloudBlockBlob = blobRef, Container = container, };
             }

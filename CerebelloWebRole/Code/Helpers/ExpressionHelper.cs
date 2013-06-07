@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using CerebelloWebRole.Code.Helpers;
 
 namespace CerebelloWebRole.Code
 {
@@ -36,9 +35,9 @@ namespace CerebelloWebRole.Code
             Expression memberBodyExpression = null;
 
             if (expression.Body.NodeType == ExpressionType.Convert)
-                memberBodyExpression = ((System.Linq.Expressions.UnaryExpression)expression.Body).Operand;
+                memberBodyExpression = ((UnaryExpression)expression.Body).Operand;
             else
-                memberBodyExpression = (MemberExpression)expression.Body;
+                memberBodyExpression = expression.Body;
 
             return (PropertyInfo)((MemberExpression)memberBodyExpression).Member;
         }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace CerebelloWebRole.Code.Security.Principals
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// User information that is stored in the Authentication cookie.

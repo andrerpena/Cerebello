@@ -1,6 +1,5 @@
 using System;
 using System.Security.Principal;
-using CerebelloWebRole.Code.Security.Principals;
 
 namespace CerebelloWebRole.Code
 {

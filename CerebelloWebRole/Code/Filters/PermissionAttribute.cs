@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Web.Mvc;
 using Cerebello.Model;
 
-namespace CerebelloWebRole.Code.Filters
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Base authorization filter used to allow or deny a loged user to access a specific protected resource.

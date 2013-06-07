@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Data.Objects.DataClasses;
-using System.Linq.Expressions;
-using System.Reflection;
 
-namespace CerebelloWebRole.Code.Mvc
+namespace CerebelloWebRole.Code
 {
     public static class EntityObjectExtensions
     {
@@ -60,7 +57,7 @@ namespace CerebelloWebRole.Code.Mvc
                                 var oldValue = property.GetValue(modelObject, null);
                                 var newValue = property.GetValue(templateModelObject, null);
 
-                                if (!Object.Equals(oldValue, newValue))
+                                if (!Equals(oldValue, newValue))
                                     property.SetValue(modelObject, newValue, null);
                             }
                         }

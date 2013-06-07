@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code;
 using CerebelloWebRole.WorkerRole.Code.Workers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

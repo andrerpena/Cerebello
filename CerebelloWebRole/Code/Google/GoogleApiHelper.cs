@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.ServiceModel.Description;
-using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
-using CerebelloWebRole.Code.Google.Data;
 using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OAuth2;
 using Google.Apis.Authentication;
@@ -19,7 +15,7 @@ using Google.Apis.Drive.v2.Data;
 using JetBrains.Annotations;
 using File = Google.Apis.Drive.v2.Data.File;
 
-namespace CerebelloWebRole.Code.Google
+namespace CerebelloWebRole.Code
 {
     public static class GoogleApiHelper
     {

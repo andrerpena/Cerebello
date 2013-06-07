@@ -4,12 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.App_GlobalResources;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using CerebelloWebRole.Code.Access;
-using CerebelloWebRole.Code.Filters;
-using CerebelloWebRole.Code.Mvc;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {

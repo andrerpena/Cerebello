@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CerebelloWebRole.Code.Collections
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Interface of a set operator helper,

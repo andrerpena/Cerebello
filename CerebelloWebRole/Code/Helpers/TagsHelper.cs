@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CerebelloWebRole.Code
@@ -18,7 +17,7 @@ namespace CerebelloWebRole.Code
             if (String.IsNullOrEmpty(tagsText))
                 return false;
 
-            List<string> distilledTags = TagsHelper.DistillTagFormattedInput(tagsText);
+            List<string> distilledTags = DistillTagFormattedInput(tagsText);
             if (distilledTags.Count > 5 || distilledTags.Count < 1)
                 return false;
 

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using CerebelloWebRole.Code.Chat;
 
-namespace CerebelloWebRole.Code.Hubs
+namespace CerebelloWebRole.Code
 {
     public interface IChatHub
     {

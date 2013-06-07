@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CerebelloWebRole.Code.Notifications
+﻿namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Class for notifications coming from the DB therefore I don't need to know their

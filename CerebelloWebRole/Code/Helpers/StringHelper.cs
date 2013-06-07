@@ -292,7 +292,7 @@ namespace CerebelloWebRole.Code
 
         public static object NormalizeFileName(string fileName)
         {
-            return Regex.Replace(StringHelper.RemoveDiacritics(fileName.ToLowerInvariant()), @"\s+", "-");
+            return Regex.Replace(RemoveDiacritics(fileName.ToLowerInvariant()), @"\s+", "-");
         }
     }
 }

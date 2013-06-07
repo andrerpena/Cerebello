@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello;
-using CerebelloWebRole.Code.Helpers;
+using CerebelloWebRole.Code;
 
 namespace CerebelloWebRole.Tests
 {
