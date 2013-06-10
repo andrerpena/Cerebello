@@ -355,6 +355,26 @@
     <Content Include="CerebelloWebRole.Dll.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\Images\Docs\Lightbox\bg-checker.png" />
+    <Content Include="Content\Images\Docs\Lightbox\box.png" />
+    <Content Include="Content\Images\Docs\Lightbox\bullet.gif" />
+    <Content Include="Content\Images\Docs\Lightbox\close.png" />
+    <Content Include="Content\Images\Docs\Lightbox\donate.png" />
+    <Content Include="Content\Images\Docs\Lightbox\favicon.gif" />
+    <Content Include="Content\Images\Docs\Lightbox\loading.gif" />
+    <Content Include="Content\Images\Docs\Lightbox\next.png" />
+    <Content Include="Content\Images\Docs\Lightbox\prev.png" />
+    <Content Include="Content\Images\Docs\Lightbox\speech-bubbles.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount.png" />
     <Content Include="Content\Images\Site\mail.png" />
     <Content Include="Content\Images\Site\phone.png" />
     <Content Include="Content\Images\Site\backup.png" />
@@ -394,6 +414,8 @@
     <Compile Include="Models\IdentityViewModel.cs" />
     <EmbeddedResource Include="Resources\Female-Default-Profile.jpg" />
     <EmbeddedResource Include="Resources\Male-Default-Profile.jpg" />
+    <Content Include="Content\Styles\Docs\Lightbox\lightbox.css" />
+    <Content Include="Content\Styles\Docs\Lightbox\screen.css" />
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-files-edit.js" />
@@ -793,6 +815,8 @@
     <Content Include="Scripts\Controls\jquery.chatjs.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.signalradapter.js" />
     <Content Include="Scripts\date.format.js" />
+    <Content Include="Scripts\Docs\jquery.smooth-scroll.min.js" />
+    <Content Include="Scripts\Docs\lightbox.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Content\Sounds\chat.ogg" />
     <Content Include="Areas\App\Views\Shared\CameraWindow.cshtml" />

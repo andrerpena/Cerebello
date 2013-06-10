@@ -552,8 +552,8 @@ fieldset {
         }
 
             #app-header .title .top-actions-bar-wrapper input[type=text] {
+                max-width: 260px;
                 width: 100%;
-                max-width: 300px;
             }
 
         #app-header .title .logo-wrapper {
