@@ -36,5 +36,14 @@ namespace CerebelloWebRole.Code
         /// <param name="containerName">Name of the container where the blob to delete is.</param>
         /// <param name="blobName">Name of the blob to delete.</param>
         void DeleteFileFromStorage([NotNull] string containerName, [NotNull] string blobName);
+
+        /// <summary>
+        /// Copies a file stored in Windows Azure Storage to another blob.
+        /// </summary>
+        /// <param name="sourceContainerName">Name of the container where the source blob resides.</param>
+        /// <param name="sourceBlobName">Name of the blob to copy data from.</param>
+        /// <param name="destinationContainerName">Name of the container where the destination blob will be.</param>
+        /// <param name="destinationBlobName">Name of the blob to copy data to.</param>
+        void CopyStoredFile([NotNull] string sourceContainerName, [NotNull] string sourceBlobName, [NotNull] string destinationContainerName, [NotNull] string destinationBlobName);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using JetBrains.Annotations;
 
@@ -47,6 +48,17 @@ namespace CerebelloWebRole.Code
         public static void UploadFileToStorage(this IBlobStorageManager @this, [NotNull] Stream stream, BlobLocation location)
         {
             @this.UploadFileToStorage(stream, location.ContainerName, location.BlobName);
+        }
+
+        /// <summary>
+        /// Copies a file stored in Windows Azure Storage to another blob.
+        /// </summary>
+        /// <param name="this">Blob storage manager to use.</param>
+        /// <param name="sourceLocation"> Source location of the file to copy data from. </param>
+        /// <param name="destinationLocation"> Destination location to copy the file data to. </param>
+        public static void CopyStoredFile(this IBlobStorageManager @this, BlobLocation sourceLocation, BlobLocation destinationLocation)
+        {
+            @this.CopyStoredFile(sourceLocation.ContainerName, sourceLocation.BlobName, destinationLocation.ContainerName, destinationLocation.BlobName);
         }
     }
 }

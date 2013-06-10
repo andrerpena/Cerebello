@@ -290,6 +290,19 @@ namespace CerebelloWebRole.Code
             return strings.FirstOrDefault(s => !string.IsNullOrEmpty(s));
         }
 
+        /// <summary>
+        /// Gets the first non-empty string from the list.
+        /// </summary>
+        /// <param name="strings">Array of string getters used to get the first non-empty entry from.</param>
+        /// <returns>The first non-empty string or null if none exists.</returns>
+        public static string FirstNonEmpty(params Func<string>[] strings)
+        {
+            if (strings == null)
+                return null;
+
+            return strings.Select(s => s()).FirstOrDefault(s => !string.IsNullOrEmpty(s));
+        }
+
         public static object NormalizeFileName(string fileName)
         {
             return Regex.Replace(RemoveDiacritics(fileName.ToLowerInvariant()), @"\s+", "-");

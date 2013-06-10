@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.StorageClient;
 using BlobContainerPermissions = Microsoft.WindowsAzure.Storage.Blob.BlobContainerPermissions;
 using BlobContainerPublicAccessType = Microsoft.WindowsAzure.Storage.Blob.BlobContainerPublicAccessType;
@@ -53,6 +58,9 @@ namespace CerebelloWebRole.Code
             Container container = null;
             Blob blob;
 
+            if (DebugConfig.IsDebug && !containerName.EndsWith("-debug"))
+                containerName += "-debug";
+
             string fullPath = Path.Combine(containerName, blobName);
 
             if (!this.blobsMap.TryGetValue(fullPath, out blob))
@@ -60,7 +68,15 @@ namespace CerebelloWebRole.Code
                 // Gets the object representing the container.
                 if (!this.containersMap.TryGetValue(containerName, out container))
                 {
-                    var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                    var storageAccountStr = StringHelper.FirstNonEmpty(
+                        () => CloudConfigurationManager.GetSetting("StorageConnectionString"),
+                        () => ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString,
+                        () => ConfigurationManager.AppSettings["StorageConnectionString"],
+                        () => { throw new Exception("No storage connection string found."); });
+
+                    storageAccountStr = Regex.Replace(storageAccountStr, @"\s+", m => m.Value.Contains("\n") ? "" : m.Value);
+
+                    var storageAccount = CloudStorageAccount.Parse(storageAccountStr);
                     var blobClient = storageAccount.CreateCloudBlobClient();
                     var containerRef = blobClient.GetContainerReference(containerName);
                     this.containersMap[containerName]
@@ -99,10 +115,20 @@ namespace CerebelloWebRole.Code
                     blob.CloudBlockBlob.FetchAttributes();
                     ok = true;
                 }
-                catch (StorageClientException e)
+                catch (StorageException e)
                 {
                     if (e.ErrorCode != StorageErrorCode.ResourceNotFound)
                         throw;
+                }
+                catch (Microsoft.WindowsAzure.Storage.StorageException e)
+                {
+                    var webEx = e.InnerException as WebException;
+                    if (webEx != null)
+                    {
+                        var httpWebResponse = webEx.Response as HttpWebResponse;
+                        if (httpWebResponse != null && httpWebResponse.StatusCode != HttpStatusCode.NotFound)
+                            throw;
+                    }
                 }
 
                 blob.Exists = ok;
@@ -159,8 +185,12 @@ namespace CerebelloWebRole.Code
 
             var blob = this.GetCloudBlockBlob(containerName, blobName);
             var stream = blob.CloudBlockBlob.OpenRead();
-            blob.Exists = true;
-            return stream;
+
+            bool ok = blob.CloudBlockBlob.Exists();
+
+            blob.Exists = ok;
+
+            return ok ? stream : null;
         }
 
         /// <summary>
@@ -176,6 +206,62 @@ namespace CerebelloWebRole.Code
             var blob = this.GetCloudBlockBlob(containerName, blobName);
             blob.CloudBlockBlob.DeleteIfExists();
             blob.Exists = false;
+        }
+
+        /// <summary>
+        /// Copies a blob to another place.
+        /// </summary>
+        /// <param name="blobSrc">Source blob.</param>
+        /// <param name="blobDst">Destination blob.</param>
+        /// <returns>Returns true if the copy succeded; otherwise false.</returns>
+        private static bool InternalCopyBlob(Blob blobSrc, Blob blobDst)
+        {
+            blobDst.CloudBlockBlob.StartCopyFromBlob(blobSrc.CloudBlockBlob);
+
+            // requesting operation status
+            // todo: measure copy speed, and fetch attributes with less frequency based on avg speed
+            while (true)
+            {
+                blobDst.CloudBlockBlob.FetchAttributes();
+                if (blobDst.CloudBlockBlob.CopyState.Status != CopyStatus.Pending)
+                    break;
+
+                // sleeping 1 second per remaining 50-megabytes (this is the rate of a commong hard drive)
+                var sleep = (blobDst.CloudBlockBlob.CopyState.TotalBytes ?? 0 - blobDst.CloudBlockBlob.CopyState.BytesCopied ?? 0) /
+                    (50 * 1024000.0);
+                if (sleep > 60)
+                    Thread.Sleep(TimeSpan.FromSeconds(60));
+                else if (sleep > 0.1)
+                    Thread.Sleep(TimeSpan.FromSeconds(sleep));
+            }
+
+            var isCopyOk = blobDst.CloudBlockBlob.CopyState.Status == CopyStatus.Success;
+
+            return isCopyOk;
+        }
+
+        /// <summary>
+        /// Copies a file stored in Windows Azure Storage to another blob.
+        /// </summary>
+        /// <param name="sourceContainerName">Name of the container where the source blob resides.</param>
+        /// <param name="sourceBlobName">Name of the blob to copy data from.</param>
+        /// <param name="destinationContainerName">Name of the container where the destination blob will be.</param>
+        /// <param name="destinationBlobName">Name of the blob to copy data to.</param>
+        public void CopyStoredFile(
+            [NotNull] string sourceContainerName,
+            [NotNull] string sourceBlobName,
+            [NotNull] string destinationContainerName,
+            [NotNull] string destinationBlobName)
+        {
+            if (sourceContainerName == null) throw new ArgumentNullException("sourceContainerName");
+            if (sourceBlobName == null) throw new ArgumentNullException("sourceBlobName");
+            if (destinationContainerName == null) throw new ArgumentNullException("destinationContainerName");
+            if (destinationBlobName == null) throw new ArgumentNullException("destinationBlobName");
+
+            var srcBlob = this.GetCloudBlockBlob(sourceContainerName, sourceBlobName);
+            var dstBlob = this.GetCloudBlockBlob(destinationContainerName, destinationBlobName, createContainer: true);
+
+            InternalCopyBlob(srcBlob, dstBlob);
         }
     }
 }

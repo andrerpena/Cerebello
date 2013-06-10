@@ -38,12 +38,10 @@ namespace CerebelloWebRole.Code
 
             // if container already exists, just create the directories inside
             var filePath = Path.Combine(DebugConfig.LocalStoragePath, containerName, blobName);
-            if (Directory.Exists(Path.Combine(DebugConfig.LocalStoragePath, filePath)))
-            {
-                var destDir = Path.GetDirectoryName(filePath);
-                if (destDir != null)
-                    Directory.CreateDirectory(destDir);
-            }
+
+            var destDir = Path.GetDirectoryName(filePath);
+            if (destDir != null && !Directory.Exists(destDir))
+                Directory.CreateDirectory(destDir);
 
             using (var fs = File.Open(filePath, FileMode.Create, FileAccess.Write))
                 stream.CopyTo(fs);
@@ -104,6 +102,46 @@ namespace CerebelloWebRole.Code
                 if (dirInfo.Exists && Directory.EnumerateFileSystemEntries(dirInfo.FullName).Any())
                     break;
             }
+        }
+
+        public bool InternalCopyFile(BlobLocation fileLocation, BlobLocation destinationFileLocation)
+        {
+            var sourcePath = Path.Combine(DebugConfig.LocalStoragePath, fileLocation.FullName);
+            var destinationPath = Path.Combine(DebugConfig.LocalStoragePath, destinationFileLocation.FullName);
+
+            var destDir = Path.GetDirectoryName(destinationPath);
+            if (!Directory.Exists(destDir))
+                Directory.CreateDirectory(destDir);
+
+            var result = File.Exists(sourcePath);
+            if (result)
+                File.Copy(sourcePath, destinationPath);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Copies a file stored in Windows Azure Storage to another blob.
+        /// </summary>
+        /// <param name="sourceContainerName">Name of the container where the source blob resides.</param>
+        /// <param name="sourceBlobName">Name of the blob to copy data from.</param>
+        /// <param name="destinationContainerName">Name of the container where the destination blob will be.</param>
+        /// <param name="destinationBlobName">Name of the blob to copy data to.</param>
+        public void CopyStoredFile(
+            [NotNull] string sourceContainerName,
+            [NotNull] string sourceBlobName,
+            [NotNull] string destinationContainerName,
+            [NotNull] string destinationBlobName)
+        {
+            if (sourceContainerName == null) throw new ArgumentNullException("sourceContainerName");
+            if (sourceBlobName == null) throw new ArgumentNullException("sourceBlobName");
+            if (destinationContainerName == null) throw new ArgumentNullException("destinationContainerName");
+            if (destinationBlobName == null) throw new ArgumentNullException("destinationBlobName");
+
+            var srcLocation = new BlobLocation(sourceContainerName, sourceBlobName);
+            var dstLocation = new BlobLocation(destinationContainerName, destinationBlobName);
+
+            InternalCopyFile(srcLocation, dstLocation);
         }
     }
 }

@@ -882,5 +882,27 @@ namespace CerebelloWebRole.Code
                 return false;
             }
         }
+
+        public static bool UseLocalStorage
+        {
+            get
+            {
+#if DEBUG
+                lock (locker)
+                    if (inst != null)
+                        if (inst.setting != null
+                            && inst.setting.SaveFilesTo != null
+                            && inst.setting.SaveFilesTo.Enabled
+                            && !string.IsNullOrWhiteSpace(inst.setting.SaveFilesTo.Use))
+                        {
+                            var storage = inst.config.Debug.Storages.Items.SingleOrDefault(item => item.Name == inst.setting.SaveFilesTo.Use);
+
+                            if (storage != null)
+                                return storage.Type != "azure";
+                        }
+#endif
+                return false;
+            }
+        }
     }
 }

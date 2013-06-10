@@ -77,7 +77,7 @@ namespace CerebelloWebRole
             // 2. Configure the container (register)
             container.Register(() => new DateTimeService() as IDateTimeService);
             container.Register(() => 
-                //DebugConfig.IsDebug ? new LocalBlobStorageManager() :
+                DebugConfig.UseLocalStorage ? new LocalBlobStorageManager() :
                 new WindowsAzureBlobStorageManager() as IBlobStorageManager);
 
             // 3. Optionally verify the container's configuration.

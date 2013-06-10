@@ -88,22 +88,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
             try
             {
                 var person = this.db.Persons.First(p => p.Id == personId);
+                var profilePictureBlobName = "profile_picture_" + personId;
+
+                var sourceLocation = new BlobLocation(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempFileName);
+                var destinationLocation = new BlobLocation(Constants.PERSON_PROFILE_PICTURE_CONTAINER_NAME, profilePictureBlobName);
 
                 // download temp file
                 var storageManager = new WindowsAzureBlobStorageManager();
-                var tempFile = storageManager.DownloadFileFromStorage(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempFileName);
-
-                // delete temp file
-                storageManager.DeleteFileFromStorage(Constants.AZURE_STORAGE_TEMP_FILES_CONTAINER_NAME, tempFileName);
+                //var tempFile = storageManager.DownloadFileFromStorage(sourceLocation);
 
                 // if person has a profile picture already, delete it
                 if (person.PictureBlobName != null)
-                    storageManager.DeleteFileFromStorage(Constants.PERSON_PROFILE_PICTURE_CONTAINER_NAME, person.PictureBlobName);
+                    storageManager.DeleteFileFromStorage(destinationLocation);
+
+                storageManager.CopyStoredFile(sourceLocation, destinationLocation);
 
                 // upload downloaded temp file to person profile
-                var profilePictureBlobName = "profile_picture_" + personId;
-                storageManager.UploadFileToStorage(tempFile, Constants.PERSON_PROFILE_PICTURE_CONTAINER_NAME, profilePictureBlobName);
+                //storageManager.UploadFileToStorage(tempFile, Constants.PERSON_PROFILE_PICTURE_CONTAINER_NAME, profilePictureBlobName);
                 person.PictureBlobName = profilePictureBlobName;
+
+                // delete temp file
+                storageManager.DeleteFileFromStorage(sourceLocation);
 
                 // this controller shouldn't know about patients but.. it's the easiest way to do this now
                 if (person.Patients.Any())

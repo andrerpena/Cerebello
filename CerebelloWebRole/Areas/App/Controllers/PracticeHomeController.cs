@@ -154,11 +154,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (this.DbUser.DoctorId != null)
                 {
                     var doctor = this.DbUser.Doctor.UrlIdentifier;
-                    return this.RedirectToAction("Index", "DoctorHome", new { practice, doctor, area = "App" });
+                    var url = this.Url.Action("Index", "DoctorHome", new { practice, doctor, area = "App" });
+                    return this.Redirect(url);
                 }
                 else
                 {
-                    return this.RedirectToAction("Index", "PracticeHome", new { practice, area = "App" });
+                    var url = this.Url.Action("Index", "PracticeHome", new { practice, area = "App" });
+                    return this.Redirect(url);
                 }
             }
 
