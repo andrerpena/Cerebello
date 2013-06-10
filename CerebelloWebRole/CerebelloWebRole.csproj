@@ -369,6 +369,10 @@
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments2-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount.png" />
     <Content Include="Content\Images\Site\mail.png" />
