@@ -42,25 +42,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         /// <summary>
-        /// Downloads the specified file
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        [SelfPermission]
-        public ActionResult DownloadFile([NotNull] string fileName)
-        {
-            if (fileName == null) throw new ArgumentNullException("fileName");
-
-            var storageManager = new WindowsAzureBlobStorageManager();
-            var fileStream = storageManager.DownloadFileFromStorage(Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, fileName);
-            fileStream.Seek(0, SeekOrigin.Begin);
-            var fileExtension = Path.GetExtension(fileName);
-            var mimeType = MimeTypesHelper.GetContentType(fileExtension);
-
-            return this.File(fileStream, mimeType, fileName);
-        }
-
-        /// <summary>
         /// Downloads a zip file with all patient files
         /// </summary>
         /// <param name="patientId"></param>
@@ -80,7 +61,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 foreach (var patientFile in patientFiles)
                 {
                     var fileStream = storageManager.DownloadFileFromStorage(
-                        Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.SourceFileName);
+                        patientFile.FileMetadata.ContainerName, patientFile.FileMetadata.BlobName);
 
                     zip.AddEntry(patientFile.FileMetadata.SourceFileName, fileStream);
                 }
@@ -124,18 +105,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             try
                             {
                                 var fileStream = storageManager.DownloadFileFromStorage(
-                                    Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.SourceFileName);
+                                    patientFile.FileMetadata.ContainerName, patientFile.FileMetadata.BlobName);
 
                                 innerZip.AddEntry(patientFile.FileMetadata.SourceFileName, fileStream);
                             }
                             catch (Exception ex)
                             {
                                 // in this case the file exists in the database but does not exist in the storage.
-                                // LOG HERE
+                                Trace.TraceError(ex.Message);
                             }
                         }
+
                         innerZip.Save(innerZipMemoryStream);
                     }
+
                     innerZipMemoryStream.Seek(0, SeekOrigin.Begin);
                     outerZip.AddEntry(patient.Person.FullName + ".zip", innerZipMemoryStream);
                 }

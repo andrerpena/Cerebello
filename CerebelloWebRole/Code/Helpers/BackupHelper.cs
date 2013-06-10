@@ -47,7 +47,7 @@ namespace CerebelloWebRole.Code
                         foreach (var patientFile in patientFiles)
                         {
                             var fileStream = storageManager.DownloadFileFromStorage(
-                                Constants.AZURE_STORAGE_PATIENT_FILES_CONTAINER_NAME, patientFile.FileMetadata.SourceFileName);
+                                patientFile.FileMetadata.ContainerName, patientFile.FileMetadata.BlobName);
                             var fileName = patientFile.FileMetadata.SourceFileName;
                             for (var i = 2;; i++)
                             {
@@ -55,7 +55,6 @@ namespace CerebelloWebRole.Code
                                 {
                                     fileName = Path.GetFileNameWithoutExtension(fileName) + " " + i + Path.GetExtension(fileName);
                                 }
-                                    
                                 else
                                 {
                                     break;
