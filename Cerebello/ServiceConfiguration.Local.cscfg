@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceConfiguration serviceName="Cerebello" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*" schemaVersion="2012-10.1.8">
+<ServiceConfiguration serviceName="Cerebello" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2012-10.1.8">
   <Role name="CerebelloWebRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebellohq;AccountKey=166josSwlpbPYh05OdB1o8jWDvqTq94nlHXwm593OBOCUIZOvgbwXJqQO7DB/MO2+WHYfrCexrLza/06l7x23w==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebello2;AccountKey=DW8oW7HSDj2jQ+uz4p+elMpC6B6/v/WVoJ918PPZiCMOwALIVOIY/AKLd/WvMGdWFi7vlarPvri1eS6KduowKA==" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="cerebello" />
-      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCECE7BiwOlZ27Qa2EL9OiMJwwDQYJKoZIhvcNAQEBBQAEggEAaiJCzd58vSFBfc6v3YxoQPrQfZCu+akIsWPVx9aAscxRmfI/RYAmiMREcIVWFZp67Vsxe95R6FZCR0dpuFNKyffPxtlQ8AA7M6J5NqqxUiknOQfAhuzeLNekFG/Qp0F7yg0UxQT9cvowFiVhJN13gsQ1yCL94S1yMp4YF8pEPpdrvEL2Yv7FKH6k4g8g2CBZedAgXGg06j83Xzs9SRrOBT2MX4tcHgsQzlTD13YBcH5AujHf22oygsA0kSD4WADCvuSPodGcj5DNqrXZFOLc8ek9FbvHS1wzA5KVIwPlfBpWnyRmyl71RJ38VNNayQIdjXU5k9c82zBmAjoIvmVDkzAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECDOje35iNdfsgBBXIYdBcvYfHIZfQuaDPCEY" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCECtOFGeFZp6PS6iIkpwa2TEwDQYJKoZIhvcNAQEBBQAEggEAAO0c8Nn20yA7GijvxKP5DeODzI3a6lVGB8i7iV4W/DwKt7AHAvAY8oshkzYAUKWWOYbaMvOSEoXrJ4dQ5xDDfySJANmmso0C8iFpIgdQcLMvNSGVWEFkSykOM9x5MGlMIfO45ZBdrakp6eKqurHWADZiLrhZfbzukrBIoNyYlznWSWtY2sc2pld8MljYhVpecgWgCbcXEFiO/3cveY5d0l8FZOPivZDZfiDOjaJlstntIFx0KPHCRbMPugEj4a42m+1kq+A8RfFafL9G8Jf4pLsay+EOUcATOZwbSgxI8wRhzyHt31EY072XTCr2V+VRLtJEUPZplTRFM8LTjMVpNjAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECDx6yTw+LdOTgBD4pt+ZX4xHnw/4TYXl4j+a" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2014-01-03T23:59:59.0000000-02:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
-      <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebellohq;AccountKey=166josSwlpbPYh05OdB1o8jWDvqTq94nlHXwm593OBOCUIZOvgbwXJqQO7DB/MO2+WHYfrCexrLza/06l7x23w==" />
+      <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cerebello2;AccountKey=DW8oW7HSDj2jQ+uz4p+elMpC6B6/v/WVoJ918PPZiCMOwALIVOIY/AKLd/WvMGdWFi7vlarPvri1eS6KduowKA==" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="9A582A21E4809CC000CE33FE03A6581D660C4884" thumbprintAlgorithm="sha1" />
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="3132D096BDC363D495F97809ADFBB26AFADFF6A7" thumbprintAlgorithm="sha1" />
       <Certificate name="GoDaddy" thumbprint="4BD9730EB7A792B26F01DF5D05376031B1A76286" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
