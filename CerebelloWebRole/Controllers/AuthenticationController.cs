@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -175,6 +176,17 @@ namespace CerebelloWebRole.Controllers
         [HttpPost]
         public ActionResult CreateAccount(CreateAccountViewModel registrationData)
         {
+            // If the user being edited is a medic, then we must check the fields that are required for medics.
+            if (!registrationData.IsDoctor)
+            {
+                // Removing validation error of medic properties, because this user is not a medic.
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicCRM);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityId);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialtyId);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialtyName);
+                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityJurisdiction);
+            }
+
             if (this.ModelState.Remove(e => e.ErrorMessage.Contains("requerido")))
                 this.ModelState.AddModelError("MultipleItems", "É necessário preencher todos os campos.");
 
@@ -219,17 +231,6 @@ namespace CerebelloWebRole.Controllers
                     + "Note que nomes de usuário diferenciados por acentos, "
                     + "maiúsculas/minúsculas ou por '.', '-' ou '_' não são permitidos."
                     + "(Não é possível cadastrar 'MiguelAngelo' e 'miguel.angelo' no mesmo consultório.");
-            }
-
-            // If the user being edited is a medic, then we must check the fields that are required for medics.
-            if (!registrationData.IsDoctor)
-            {
-                // Removing validation error of medic properties, because this user is not a medic.
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicCRM);
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityId);
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialtyId);
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalSpecialtyName);
-                this.ModelState.ClearPropertyErrors(() => registrationData.MedicalEntityJurisdiction);
             }
 
             if (user != null)
@@ -329,19 +330,24 @@ namespace CerebelloWebRole.Controllers
 
                     // sending e-mail to cerebello@cerebello.com.br
                     // to tell us the good news
-                    var emailViewModel2 = new InternalCreateAccountEmailViewModel(user, registrationData);
-                    var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FullName);
-                    var mailMessage2 = this.CreateEmailMessagePartial("InternalCreateAccountEmail", toAddress2, emailViewModel2);
-                    this.SendEmailAsync(mailMessage2).ContinueWith(t =>
+                    // lots of try catch... this is an internal thing, and should never fail to the client, event if it fails
+                    try
+                    {
+                        var emailViewModel2 = new InternalCreateAccountEmailViewModel(user, registrationData);
+                        var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FullName);
+                        var mailMessage2 = this.CreateEmailMessagePartial("InternalCreateAccountEmail", toAddress2, emailViewModel2);
+                        this.SendEmailAsync(mailMessage2).ContinueWith(t =>
                         {
+                            // send e-mail again is not an option, SendEmailAsync already tries a lot of times
                             // observing exception so that it is not raised
                             var ex = t.Exception;
-
-                            // todo: should do something when e-mail is not sent
-                            // 1) use a schedule table to save a serialized e-mail, and then send it later
-                            // 2) log a warning message somewhere stating that this e-mail was not sent
-                            // send e-mail again is not an option, SendEmailAsync already tries a lot of times
+                            Trace.TraceError(string.Format("AuthenticationController.CreateAccount(CreateAccountViewModel): exception when sending internal e-mail: {0}", TraceHelper.GetExceptionMessage(ex)));
                         });
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError(string.Format("AuthenticationController.CreateAccount(CreateAccountViewModel): exception when sending internal e-mail: {0}", TraceHelper.GetExceptionMessage(ex)));
+                    }
 
                     // If the ModelState is still valid, then save objects to the database,
                     // and send confirmation email message to the user.
