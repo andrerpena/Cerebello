@@ -245,6 +245,7 @@ namespace CerebelloWebRole.Controllers
                     CreatedOn = utcNow,
                     WindowsTimeZoneId = timeZoneId,
                     Province = registrationData.PracticeProvince,
+                    PhoneMain = registrationData.PracticePhone,
                 };
 
                 // Setting the BirthDate of the user as a person.
