@@ -154,8 +154,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 try
                 {
                     var fullStoragePath = string.Format("{0}\\{1}", containerName, metadata.BlobName);
-                    var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, 80, 80);
-                    var thumbResult = ImageHelper.TryGetOrCreateThumb(metadata.Id, 80, 80, fullStoragePath, thumbName, true, this.storage, metadataProvider);
+                    var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, metadata.Id, normalFileName, 120, 120);
+                    var thumbResult = ImageHelper.TryGetOrCreateThumb(metadata.Id, 120, 120, fullStoragePath, thumbName, true, this.storage, metadataProvider);
                     if (thumbResult.Status == CreateThumbStatus.Ok)
                     {
                         fileStatus.ThumbnailUrl = @"data:" + thumbResult.ContentType + ";base64," + Convert.ToBase64String(thumbResult.Data);

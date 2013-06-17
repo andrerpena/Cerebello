@@ -10,6 +10,8 @@
             url: args.FileUploadUrl,
             autoUpload: true,
             maxFileSize: 2048000000, // 2GB
+            previewMaxWidth: 120,
+            previewMaxHeight: 120,
             //resizeMaxWidth: 1920,
             //resizeMaxHeight: 1200,
             dropZone: $fileupload,

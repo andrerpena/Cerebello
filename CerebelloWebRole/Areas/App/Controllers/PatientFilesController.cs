@@ -218,8 +218,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             bool imageThumbOk = false;
             try
             {
-                var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, fileModel.MetadataId, normalFileName, 80, 80);
-                var thumbResult = ImageHelper.TryGetOrCreateThumb(fileModel.MetadataId, 80, 80, fullStoragePath, thumbName, true, storage, fileMetadataProvider);
+                var thumbName = string.Format("{0}\\{1}file-{2}-thumb-{4}x{5}-{3}", containerName, fileNamePrefix, fileModel.MetadataId, normalFileName, 120, 120);
+                var thumbResult = ImageHelper.TryGetOrCreateThumb(fileModel.MetadataId, 120, 120, fullStoragePath, thumbName, true, storage, fileMetadataProvider);
                 if (thumbResult.Status == CreateThumbStatus.Ok)
                 {
                     fileStatus.ThumbnailUrl = @"data:" + thumbResult.ContentType + ";base64," + Convert.ToBase64String(thumbResult.Data);

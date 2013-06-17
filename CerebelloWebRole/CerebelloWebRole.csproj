@@ -394,8 +394,7 @@
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.tooltip.css" />
-    <Content Include="Content\Styles\App\bootstrap-image-gallery.min.css" />
-    <Content Include="Content\Styles\App\bootstrap-modals-only.css" />
+    <Content Include="Content\Styles\App\image-gallery.css" />
     <Content Include="Content\Styles\App\bootstrap-responsive.min.css" />
     <Content Include="Content\Styles\App\FileIcons.css" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
@@ -798,8 +797,7 @@
     <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="Scripts\App\Pages\practice.js" />
     <Content Include="Scripts\App\schedule.js" />
-    <Content Include="Scripts\bootstrap-image-gallery.min.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap-image-gallery-2.10-isolated.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\Controls\jquery.camera.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.file.form.js" />
@@ -814,6 +812,7 @@
     <Content Include="Scripts\cerebello.pt-BR.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.signalradapter.js" />
+    <Content Include="Scripts\bootstrap-modal-2.2.2-isolated.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\Docs\jquery.smooth-scroll.min.js" />
     <Content Include="Scripts\Docs\lightbox.js" />
