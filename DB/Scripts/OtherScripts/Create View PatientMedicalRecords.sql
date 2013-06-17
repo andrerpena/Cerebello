@@ -21,8 +21,8 @@ AS
     SELECT     'MedicalCertificate' as [Type], PracticeId,PatientId,CreatedOn, IssuanceDate as [Date], NULL as ReceiveDate
     FROM         MedicalCertificate
     UNION
-    SELECT     'PatientFile' as [Type], PracticeId,PatientId,ReceiveDate AS CreatedOn, FileDate as [Date], ReceiveDate
-    FROM         PatientFile
+    SELECT     'PatientFileGroup' as [Type], PracticeId,PatientId,ReceiveDate AS CreatedOn, FileGroupDate as [Date], ReceiveDate
+    FROM         PatientFileGroup
     UNION
     SELECT     'PhysicalExamination' as [Type], PracticeId,PatientId,CreatedOn, MedicalRecordDate as [Date], NULL as ReceiveDate
     FROM         PhysicalExamination

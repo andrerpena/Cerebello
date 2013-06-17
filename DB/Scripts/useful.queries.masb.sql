@@ -38,7 +38,8 @@ select
     (select count(*) from Patient as PAT where PR.Id = PAT.PracticeId) as PatientCount,
     DATEDIFF(day, PR.CreatedOn, GETDATE()) as ElapsedTime,
     (select count(*) from PatientMedicalRecords as PMR where PR.Id = PMR.PracticeId) as MedicalRecordsCount,
-    PER.Email
+    PER.Email,
+    PR.PhoneMain
   from practice PR
   join [user] U on PR.OwnerId = U.Id
   join Person PER on U.PersonId = PER.Id
