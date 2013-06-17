@@ -12,16 +12,16 @@ using Microsoft.CSharp.RuntimeBinder;
 namespace CerebelloWebRole.Code
 {
     /// <summary>
-    /// ASP.NET MVC Default Dictionary Binder
+    /// ASP.NET MVC Default Binder with dictionary support.
     /// </summary>
-    public class DefaultDictionaryBinder : DefaultModelBinder
+    public class CerebelloDefaultBinder : DefaultModelBinder
     {
         private readonly IModelBinder nextBinder;
 
         /// <summary>
         /// Create an instance of DefaultDictionaryBinder.
         /// </summary>
-        public DefaultDictionaryBinder()
+        public CerebelloDefaultBinder()
             : this(null)
         {
         }
@@ -30,7 +30,7 @@ namespace CerebelloWebRole.Code
         /// Create an instance of DefaultDictionaryBinder.
         /// </summary>
         /// <param name="nextBinder">The next model binder to chain call. If null, by default, the DefaultModelBinder is called.</param>
-        public DefaultDictionaryBinder(IModelBinder nextBinder)
+        public CerebelloDefaultBinder(IModelBinder nextBinder)
         {
             this.nextBinder = nextBinder;
         }
@@ -152,119 +152,117 @@ namespace CerebelloWebRole.Code
             bool isOldCollection = metaData.listType != null
                 && bindingContext.ValueProvider.GetValue(bindingContext.ModelName + ".Index") != null;
 
-            if (modelType.Name.StartsWith("Dictionary`") && metaData.dictType != null && !isOldCollection)
+            if (!modelType.Name.StartsWith("Dictionary`") || metaData.dictType == null || isOldCollection)
             {
-                dynamic result = null;
-                HashSet<string> dictionaryKeys = new HashSet<string>();
+                return
+                    this.nextBinder != null
+                    ? this.nextBinder.BindModel(controllerContext, bindingContext)
+                    : base.BindModel(controllerContext, bindingContext);
+            }
 
-                foreach (var genericArgs in metaData.listDictionaryGenericArgs)
-                {
-                    Type keyType = genericArgs[0];
-                    Type valueType = genericArgs[1];
-                    TypePair typePair = new TypePair(keyType, valueType);
-                    IModelBinder valueBinder = this.Binders.GetBinder(valueType);
-                    MetaData keyTypeMetaData = keyTypeToMetadata.GetOrAdd(keyType, t => new MetaData());
+            dynamic result = null;
+            HashSet<string> dictionaryKeys = new HashSet<string>();
+
+            foreach (var genericArgs in metaData.listDictionaryGenericArgs)
+            {
+                Type keyType = genericArgs[0];
+                Type valueType = genericArgs[1];
+                TypePair typePair = new TypePair(keyType, valueType);
+                IModelBinder valueBinder = this.Binders.GetBinder(valueType);
+                MetaData keyTypeMetaData = keyTypeToMetadata.GetOrAdd(keyType, t => new MetaData());
 
 #if !ASPNETMVC1
-                    foreach (string key in this.GetValueProviderKeys(controllerContext))
+                foreach (string key in this.GetValueProviderKeys(controllerContext))
 #else
                 foreach (string key in this.GetValueProviderKeys(bindingContext))
 #endif
+                {
+                    if (key.StartsWith(bindingContext.ModelName + "[", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (key.StartsWith(bindingContext.ModelName + "[", StringComparison.InvariantCultureIgnoreCase))
+                        int endbracket = key.IndexOf("]", bindingContext.ModelName.Length + 1, StringComparison.Ordinal);
+                        if (endbracket == -1)
+                            continue;
+
+                        // if type conversion ever throws a NotSupportedException, it will never be done again
+                        if (keyTypeMetaData.typeConverterThrewNotSupportedException)
+                            continue;
+
+                        lock (metaData.dictMethodCallThrewException)
+                            if (metaData.dictMethodCallThrewException.Contains(typePair))
+                                continue;
+
+                        dynamic dictKey;
+                        string dictKeyStr = key.Substring(
+                            bindingContext.ModelName.Length + 1, endbracket - bindingContext.ModelName.Length - 1);
+
+                        try
                         {
-                            int endbracket = key.IndexOf("]", bindingContext.ModelName.Length + 1, StringComparison.Ordinal);
-                            if (endbracket == -1)
-                                continue;
+                            dictKey = this.ConvertType(dictKeyStr, keyType);
+                        }
+                        catch (NotSupportedException)
+                        {
+                            keyTypeMetaData.typeConverterThrewNotSupportedException = true;
+                            continue;
+                        }
 
-                            // if type conversion ever throws a NotSupportedException, it will never be done again
-                            if (keyTypeMetaData.typeConverterThrewNotSupportedException)
-                                continue;
+                        if (dictionaryKeys.Contains(dictKeyStr))
+                        {
+                            continue;
+                        }
 
-                            lock (metaData.dictMethodCallThrewException)
-                                if (metaData.dictMethodCallThrewException.Contains(typePair))
-                                    continue;
+                        dictionaryKeys.Add(dictKeyStr);
 
-                            dynamic dictKey;
-                            string dictKeyStr = key.Substring(
-                                bindingContext.ModelName.Length + 1, endbracket - bindingContext.ModelName.Length - 1);
-
-                            try
+                        ModelBindingContext innerBindingContext = new ModelBindingContext()
                             {
-                                dictKey = this.ConvertType(dictKeyStr, keyType);
-                            }
-                            catch (NotSupportedException)
-                            {
-                                keyTypeMetaData.typeConverterThrewNotSupportedException = true;
-                                continue;
-                            }
-
-                            if (dictionaryKeys.Contains(dictKeyStr))
-                            {
-                                continue;
-                            }
-
-                            dictionaryKeys.Add(dictKeyStr);
-
-                            ModelBindingContext innerBindingContext = new ModelBindingContext()
-                                {
 #if ASPNETMVC1
-                            Model = null,
-                            ModelType = valueType,
+                                Model = null,
+                                ModelType = valueType,
 #else
-                                    ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => null, valueType),
+                                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => null, valueType),
 #endif
-                                    ModelName = key.Substring(0, endbracket + 1),
-                                    ModelState = bindingContext.ModelState,
-                                    PropertyFilter = bindingContext.PropertyFilter,
-                                    ValueProvider = bindingContext.ValueProvider
-                                };
-                            dynamic newPropertyValue = valueBinder.BindModel(controllerContext, innerBindingContext);
+                                ModelName = key.Substring(0, endbracket + 1),
+                                ModelState = bindingContext.ModelState,
+                                PropertyFilter = bindingContext.PropertyFilter,
+                                ValueProvider = bindingContext.ValueProvider
+                            };
+                        dynamic newPropertyValue = valueBinder.BindModel(controllerContext, innerBindingContext);
 
-                            result = this.CreateModel(controllerContext, bindingContext, metaData.dictType);
+                        result = this.CreateModel(controllerContext, bindingContext, metaData.dictType);
 
-                            try
-                            {
-                                if ((bool)result.ContainsKey(dictKey))
-                                    result[dictKey] = newPropertyValue;
-                                else
-                                    result.Add(dictKey, newPropertyValue);
-                            }
-                            catch (RuntimeBinderException)
-                            {
-                                lock (metaData.dictMethodCallThrewException)
-                                    metaData.dictMethodCallThrewException.Add(typePair);
-                            }
+                        try
+                        {
+                            if ((bool)result.ContainsKey(dictKey))
+                                result[dictKey] = newPropertyValue;
+                            else
+                                result.Add(dictKey, newPropertyValue);
+                        }
+                        catch (RuntimeBinderException)
+                        {
+                            lock (metaData.dictMethodCallThrewException)
+                                metaData.dictMethodCallThrewException.Add(typePair);
                         }
                     }
                 }
-
-                if (result == null)
-                    return null;
-
-                if (metaData.listType != null)
-                {
-                    // Here is where we convert back to a list.
-                    IEnumerable collectionResult = (IEnumerable)result.Values;
-                    dynamic listObject = Activator.CreateInstance(metaData.listType);
-                    foreach (dynamic item in collectionResult)
-                        listObject.Add(item);
-
-                    if (metaData.toArray)
-                        return listObject.ToArray();
-
-                    return listObject;
-                }
-
-                return result;
             }
 
-            if (this.nextBinder != null)
+            if (result == null)
+                return null;
+
+            if (metaData.listType != null)
             {
-                return this.nextBinder.BindModel(controllerContext, bindingContext);
+                // Here is where we convert back to a list.
+                IEnumerable collectionResult = (IEnumerable)result.Values;
+                dynamic listObject = Activator.CreateInstance(metaData.listType);
+                foreach (dynamic item in collectionResult)
+                    listObject.Add(item);
+
+                if (metaData.toArray)
+                    return listObject.ToArray();
+
+                return listObject;
             }
 
-            return base.BindModel(controllerContext, bindingContext);
+            return result;
         }
 
         /// <summary>

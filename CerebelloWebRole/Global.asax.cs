@@ -60,7 +60,7 @@ namespace CerebelloWebRole
             RouteTable.Routes.MapHubs();
             RegisterRoutes(RouteTable.Routes);
 
-            ModelBinders.Binders.DefaultBinder = new DefaultDictionaryBinder();
+            ModelBinders.Binders.DefaultBinder = new CerebelloDefaultBinder();
             DefaultModelBinder.ResourceClassKey = "ModelStrings";
 
             // Will create a thread to send notifications
@@ -76,7 +76,7 @@ namespace CerebelloWebRole
 
             // 2. Configure the container (register)
             container.Register(() => new DateTimeService() as IDateTimeService);
-            container.Register(() => 
+            container.Register(() =>
                 DebugConfig.UseLocalStorage ? new LocalBlobStorageManager() :
                 new WindowsAzureBlobStorageManager() as IBlobStorageManager);
 

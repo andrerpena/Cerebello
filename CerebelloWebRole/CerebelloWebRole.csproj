@@ -331,7 +331,7 @@
     <Compile Include="Code\Hubs\ChatHub.cs" />
     <Compile Include="Code\Hubs\CerebelloHub.cs" />
     <Compile Include="Code\Hubs\NotificationsHub.cs" />
-    <Compile Include="Code\Mvc\DefaultDictionaryBinder.cs" />
+    <Compile Include="Code\Mvc\CerebelloDefaultBinder.cs" />
     <Compile Include="Code\Notifications\Data\CompletePracticeInfoNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\NewUserCreatedNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\CompleteUserInfoNotificationData.cs" />
