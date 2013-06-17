@@ -89,7 +89,6 @@
                 <li class="@(this.IsAction("Index", "Home") ? "active" : "")"><a href="@Url.Action("Index", "Home", new { area = "" })">Home</a></li>
                 <li class="@(this.IsAction("PricesAndPlans", "Home") ? "active" : "")"><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Preços e Planos</a></li>
                 <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentação</a></li>
-                <li><a href="http://blog.cerebello.com.br">Blog</a></li>
                 <li><a href="https://cerebello.uservoice.com">Central de ideias</a></li>
                 @if (this.User is AuthenticatedPrincipal)
                 {

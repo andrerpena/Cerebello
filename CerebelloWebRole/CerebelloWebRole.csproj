@@ -365,6 +365,8 @@
     <Content Include="Content\Images\Docs\Lightbox\next.png" />
     <Content Include="Content\Images\Docs\Lightbox\prev.png" />
     <Content Include="Content\Images\Docs\Lightbox\speech-bubbles.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringBackup-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringBackup.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments2-thumb.png" />
@@ -373,8 +375,32 @@
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule2.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount.png" />
+    <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ReferenceFields-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ReferenceFields.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringHealthInsurances-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringHealthInsurances.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments3-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments3.png" />
     <Content Include="Content\Images\Site\mail.png" />
     <Content Include="Content\Images\Site\phone.png" />
     <Content Include="Content\Images\Site\backup.png" />
@@ -883,7 +909,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Uncommited.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>

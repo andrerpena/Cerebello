@@ -152,7 +152,7 @@ namespace CerebelloWebRole.Code
             bool isOldCollection = metaData.listType != null
                 && bindingContext.ValueProvider.GetValue(bindingContext.ModelName + ".Index") != null;
 
-            if (metaData.dictType != null && !isOldCollection)
+            if (modelType.Name.StartsWith("Dictionary`") && metaData.dictType != null && !isOldCollection)
             {
                 dynamic result = null;
                 HashSet<string> dictionaryKeys = new HashSet<string>();

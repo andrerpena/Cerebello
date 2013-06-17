@@ -103,11 +103,7 @@
             </div>
             <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-515f18b97fe90110"></script>
             <!-- AddThis Button END -->
-        </div>
-        <div class="span9">
             @RenderBody()
-        </div>
-        <div class="span9">
             <div class="fb-comments" data-href="@(string.Format("{0}{1}{2}", "https://www.cerebello.com.br", this.Request.Url.PathAndQuery, DebugConfig.IsDebug ? "?isDebug=true" : ""))" data-width="600" data-num-posts="10"></div>
         </div>
     </div>

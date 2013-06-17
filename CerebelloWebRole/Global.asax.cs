@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
@@ -60,7 +61,6 @@ namespace CerebelloWebRole
             RegisterRoutes(RouteTable.Routes);
 
             ModelBinders.Binders.DefaultBinder = new DefaultDictionaryBinder();
-
             DefaultModelBinder.ResourceClassKey = "ModelStrings";
 
             // Will create a thread to send notifications
