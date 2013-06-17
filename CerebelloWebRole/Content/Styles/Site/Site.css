@@ -329,6 +329,9 @@ body {
     list-style: none outside none;
     padding-left: 21px;
     margin: 3px 0;
+    color: #0088CC;
+    font-size: 17px;
+    font-weight: bold;
 }
 
 .contact-email-li {
@@ -339,4 +342,9 @@ body {
     list-style: none outside none;
     padding-left: 21px;
     margin: 3px 0;
+}
+
+.contact-ul {
+    margin: 0 0 10px;
+    padding: 0;
 }

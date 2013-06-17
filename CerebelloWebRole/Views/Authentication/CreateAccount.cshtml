@@ -68,7 +68,7 @@
                             @Html.LabelFor(model => model.PracticeName)
                             <div class="controls">
                                 @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge", maxlength = 50 })
-                                <div class="alert alert-info">Até 50 caracteres.</div>
+                                <div class="alert alert-info">Um identificador único será gerado a partir deste nome. Este identificador é utilizada no login. É recomendável escolher um nome pequeno.</div>
                             </div>
                         </div>
                         <div class="control-group">
