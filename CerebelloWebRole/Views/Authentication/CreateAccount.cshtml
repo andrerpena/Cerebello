@@ -77,6 +77,15 @@
                                 @Html.EnumDropdownListFor(model => model.PracticeProvince)
                             </div>
                         </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PracticePhone)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.PracticePhone)
+                            </div>
+                            <script type="text/javascript">
+                                $("#PracticePhone").mask("(99) 99999999?9");
+                            </script>
+                        </div>
                     </div>
 
                     @*Properties of the user as a person and as a doctor*@
