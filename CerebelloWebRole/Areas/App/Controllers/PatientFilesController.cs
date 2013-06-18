@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Mvc;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
@@ -504,7 +505,26 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [SelfPermission]
         public ActionResult Image(int id, int w, int h)
         {
-            var dbPatientFile = this.db.PatientFiles.Include("FileMetadata").First(m => m.Id == id);
+            var dbPatientFile = this.db.PatientFiles.Include("FileMetadata").FirstOrDefault(m => m.Id == id);
+
+            DateTime modifiedSince;
+            bool hasModifiedSince = DateTime.TryParse(this.Request.Headers.Get("If-Modified-Since"), out modifiedSince);
+
+            // Images in the database never change after they are uploaded.
+            // They can be deleted though.
+            if (dbPatientFile == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound);
+
+            // If the request suggests that the client has any previous version of the file,
+            // then just indicate it hasn't changed, since these images never change.
+            if (hasModifiedSince)
+                return new StatusCodeResult(HttpStatusCode.NotModified);
+
+            // Caching image forever.
+            this.HttpContext.Response.Cache.SetCacheability(HttpCacheability.Public);
+            this.HttpContext.Response.Cache.SetMaxAge(DebugConfig.IsDebug ? TimeSpan.FromMinutes(1) : TimeSpan.MaxValue);
+            this.HttpContext.Response.Cache.SetLastModified(this.datetimeService.UtcNow);
+
             var metadata = dbPatientFile.FileMetadata;
 
             ActionResult result;
@@ -544,6 +564,25 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult File(int id)
         {
             var dbPatientFile = this.db.PatientFiles.Include("FileMetadata").First(m => m.Id == id);
+
+            DateTime modifiedSince;
+            bool hasModifiedSince = DateTime.TryParse(this.Request.Headers.Get("If-Modified-Since"), out modifiedSince);
+
+            // File in the database never change after they are uploaded.
+            // They can be deleted though.
+            if (dbPatientFile == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound);
+
+            // If the request suggests that the client has any previous version of the file,
+            // then just indicate it hasn't changed, since these images never change.
+            if (hasModifiedSince)
+                return new StatusCodeResult(HttpStatusCode.NotModified);
+
+            // Caching file forever.
+            this.HttpContext.Response.Cache.SetCacheability(HttpCacheability.Public);
+            this.HttpContext.Response.Cache.SetMaxAge(DebugConfig.IsDebug ? TimeSpan.FromMinutes(1) : TimeSpan.MaxValue);
+            this.HttpContext.Response.Cache.SetLastModified(this.datetimeService.UtcNow);
+
             var metadata = dbPatientFile.FileMetadata;
 
             if (metadata != null)
