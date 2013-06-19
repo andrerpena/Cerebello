@@ -44,7 +44,7 @@
 }
 
     .dropzone.in {
-        background: palegreen;
+        background: #b1cbe9;
         min-height: 5em;
     }
 
@@ -57,7 +57,7 @@
             }
 
     .dropzone.hover {
-        background: lawngreen;
+        background: #599fff;
     }
 
     .dropzone.fade {
