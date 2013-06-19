@@ -98,7 +98,7 @@ EXEC sp_rename 'FileMetadata.FileName', 'BlobName', 'COLUMN'
 ALTER TABLE dbo.FileMetadata ADD
 	SourceFileName nvarchar(250) NULL
 GO
-update dbo.FileMetadata set SourceFileName = BlobName
+-- update dbo.FileMetadata set SourceFileName = BlobName
 GO
 ALTER TABLE dbo.FileMetadata ALTER COLUMN
 	SourceFileName nvarchar(250) NOT NULL

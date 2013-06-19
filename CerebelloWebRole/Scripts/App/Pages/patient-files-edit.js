@@ -1,4 +1,5 @@
-﻿function PatientFilesEdit(args) {
+﻿// This method should be called after importing this script in a page.
+function PatientFilesEdit(args) {
     $(function () {
         'use strict';
 
