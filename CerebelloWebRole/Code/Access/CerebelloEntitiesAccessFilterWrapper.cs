@@ -59,24 +59,6 @@ namespace CerebelloWebRole.Code
                         if ((int)dyn.PracticeId != this.practice.Id)
                             throw new Exception("Invalid value for 'PracticeId' property.");
                     }
-
-                    // checking DateTime properties (they must all be UTC)
-                    if (DebugConfig.IsDebug)
-                    {
-                        var changedProperties = objectStateEntry.GetModifiedProperties();
-
-                        foreach (var changedProperty in changedProperties)
-                        {
-                            var newValue = objectStateEntry.CurrentValues[changedProperty];
-
-                            if (newValue is DateTime)
-                            {
-                                var value = (DateTime)newValue;
-                                if (value.Kind != DateTimeKind.Utc)
-                                    throw new Exception("Invalid value for 'DateTime' property: " + changedProperty + ".");
-                            }
-                        }
-                    }
                 }
             }
 

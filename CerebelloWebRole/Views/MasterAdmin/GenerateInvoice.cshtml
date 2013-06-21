@@ -6,30 +6,28 @@
 }
 <style type="text/css">
     .invoice {
-        border: 1px solid black;
         margin: 5px 0 15px;
-        padding: 5px;
+        padding: 10px;
         border-radius: 4px;
         display: inline-block;
         cursor: pointer;
     }
 
-    .invoice:hover {
-        background-color: #DDF;
+    .invoice.is-saved {
+        background-color: #DDD;
     }
 
-    .invoice.selected {
-        background-color: #AAC;
+    .invoice.not-saved {
+        background-color: #FDD;
     }
-
 </style>
 <script type="text/javascript">
     $(function() {
-        $(".invoice").click(function(e) {
-            var $this = $(this);
-            $this.toggleClass("selected");
-            $this.siblings(".invoice.selected").removeClass("selected");
-        });
+        //$(".invoice").click(function(e) {
+        //    var $this = $(this);
+        //    $this.toggleClass("selected");
+        //    $this.siblings(".invoice.selected").removeClass("selected");
+        //});
     })
 </script>
 @this.Html.ValidationSummary(false)
@@ -39,10 +37,25 @@
         <input type="hidden" name="Step" value="@step" />
         @if (step == 2)
         {
-            @:Cobrança configurada com sucesso.
+            <div>Cobrança configurada com sucesso.</div>
             if (this.ViewBag.IsPayPalInvoice == true)
             {
-            @:Agora basta mandar a fatura do PayPal.
+                <div>Agora basta mandar a fatura do PayPal, com os seguintes dados:</div>
+                foreach (var eachPi in this.Model.PayPalInvoice.GetType().GetProperties()
+                                                .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+                {
+                    <div>@EmailHtml.PrintProperty(this.Model.PayPalInvoice, eachPi, false)</div>
+                }
+
+                foreach (var eachItem in this.Model.PayPalInvoice.Items)
+                {
+                    <div>Item @eachItem.NameId</div>
+                    foreach (var eachPi in eachItem.GetType().GetProperties()
+                                                    .Where(pi => pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)))
+                    {
+                        <div style="margin-left: 2em;">@EmailHtml.PrintProperty(eachItem, eachPi, false)</div>
+                    }
+                }
             }
         }
         else if (step == 1)
@@ -55,48 +68,41 @@
                 </div>
             </div>
 
-            foreach (var eachInvoice in this.Model.MissingInvoices)
+            foreach (var eachInvoice in this.Model.Invoices)
             {
-                <div class="invoice" data-duedate="@eachInvoice.DueDate.ToString("yyyy'-'MM'-'dd")" data-amount="@eachInvoice.TotalValue.ToString(CultureInfo.InvariantCulture)">
-                    <div>Start: <strong>@eachInvoice.Start.ToString("yyyy'-'MM'-'dd")</strong></div>
+                <div class="invoice @(eachInvoice.IsSaved ? "is-saved" : "not-saved")">
+                    <div>Início: <strong>@eachInvoice.Start.ToString("yyyy'-'MM'-'dd HH'-'mm'-'ss")</strong></div>
                     @if (eachInvoice.End != null)
                     {
-                        <div>End: <strong>@eachInvoice.End.Value.ToString("yyyy'-'MM'-'dd")</strong></div>
+                        <div>Fim: <strong>@eachInvoice.End.Value.ToString("yyyy'-'MM'-'dd HH'-'mm'-'ss")</strong></div>
                     }
                     else
                     {
-                        <div>End: <strong>N/A</strong></div>
+                        <div>Fim: <strong>N/A</strong></div>
                     }
-                    <div>Due date: <strong>@eachInvoice.DueDate.ToString("yyyy'-'MM'-'dd")</strong></div>
-                    <div>Items:</div>
+                    <div>Vencimento: <strong>@eachInvoice.DueDate.ToString("yyyy'-'MM'-'dd HH'-'mm'-'ss")</strong></div>
+                    <div>Itens:</div>
                     @foreach (var item in eachInvoice.Items)
                     {
-                        <div>Contract: <strong>@item.ContractType</strong>; Value: <strong>@item.Value</strong></div>
+                        <div style="margin-left: 1em; font-size: 0.8em;">Contrato: <strong>@item.ContractType</strong>; Valor: <strong>@StringHelper.FormatMoney(item.Amount)</strong>; Desconto: <strong>@StringHelper.FormatMoney(item.DiscountAmount)</strong></div>
                     }
-                    <div>Total: <strong>@eachInvoice.TotalValue</strong></div>
+                    <div style="font-size: 0.8em;">Valor total: <strong>@StringHelper.FormatMoney(eachInvoice.TotalAmount)</strong></div>
+                    <div style="font-size: 0.8em;">Desconto total: <strong>@StringHelper.FormatMoney(eachInvoice.TotalDiscount)</strong></div>
+                    <div style="font-size: 1.2em;">Valor final: <strong>@StringHelper.FormatMoney(eachInvoice.TotalAmount - eachInvoice.TotalDiscount)</strong></div>
+                    <div>
+                        <div style="float: right">
+                            @if (!eachInvoice.IsSaved)
+                            {
+                                <a href="@this.Url.Action("GenerateInvoice", new { this.Model.PracticeIdentifier, InvoiceName = eachInvoice.NameId })">Criar fatura</a>
+                            }
+                            else
+                            {
+                                <a href="@this.Url.Action("GenerateInvoice", new { this.Model.PracticeIdentifier, InvoiceName = eachInvoice.NameId })">Visualizar fatura</a>
+                            }
+                        </div>
+                    </div>
                 </div>
             }
-            
-            <div class="control-group">
-                @Html.LabelFor(model => model.DueDate)
-                <div class="controls">
-                    @Html.TextBoxFor(model => model.DueDate, new { @class = "input-xlarge" })
-                </div>
-                <script type="text/javascript">
-                    $("#DueDate").mask("99/99/9999");
-                </script>
-            </div>
-
-            <div class="control-group">
-                @Html.LabelFor(model => model.Amount)
-                <div class="controls">
-                    @Html.TextBoxFor(model => model.Amount, new { @class = "input-xlarge" })
-                </div>
-            </div>
-            <div class="form-actions" style="margin: 0">
-                <button class="btn btn-primary btn-large" type="submit">
-                    Gerar fatura</button>
-            </div>
         }
         else if (step == 0)
         {

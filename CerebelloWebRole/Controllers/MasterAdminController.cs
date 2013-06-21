@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,10 +42,19 @@ namespace CerebelloWebRole.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult GenerateInvoice(GenerateInvoiceViewModel viewModel)
         {
-            if (viewModel.Step == null && string.IsNullOrEmpty(viewModel.PracticeIdentifier))
+            if (viewModel.Step == null)
             {
-                this.ModelState.Clear();
-                return this.View();
+                if (string.IsNullOrEmpty(viewModel.PracticeIdentifier))
+                {
+                    this.ModelState.Clear();
+                    viewModel.Step = 0;
+                    return this.View();
+                }
+
+                viewModel.Step =
+                    string.IsNullOrEmpty(viewModel.InvoiceName)
+                    ? 1
+                    : 2;
             }
 
             var step = viewModel.Step ?? 0;
@@ -57,25 +67,27 @@ namespace CerebelloWebRole.Controllers
                 {
                     practice = db.Practices
                         .SingleOrDefault(p => p.UrlIdentifier == viewModel.PracticeIdentifier);
+                }
 
+                if (practice == null
+                    || practice.ActiveAccountContractId == null
+                    || practice.AccountContract.IsTrial
+                    || this.ModelState.HasPropertyErrors(() => viewModel.PracticeIdentifier))
+                {
                     if (practice == null)
                         this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório inexistente.");
 
+                    if (practice != null && practice.ActiveAccountContractId == null)
+                        this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório não possui uma conta ativa.");
+
                     if (practice != null && practice.AccountContract.IsTrial)
                         this.ModelState.AddModelError(() => viewModel.PracticeIdentifier, "Consultório possui conta trial.");
-                }
-
-                if (practice == null || this.ModelState.HasPropertyErrors(() => viewModel.PracticeIdentifier))
-                {
-                    // the current step failed
-                    this.ModelState.ClearPropertyErrors(() => viewModel.Amount);
-                    this.ModelState.ClearPropertyErrors(() => viewModel.DueDate);
 
                     return this.View(viewModel);
                 }
 
                 var utcNow = this.GetUtcNow();
-                viewModel.MissingInvoices = GetAccountMissingInvoices(practice, utcNow);
+                viewModel.Invoices = GetAccountInvoices(practice, utcNow);
 
                 if (step == 0)
                 {
@@ -84,109 +96,122 @@ namespace CerebelloWebRole.Controllers
 
                     // going to the next step
                     this.ModelState.Clear();
-
                     viewModel.Step = 1;
                     return this.View(viewModel);
                 }
 
                 var localNow = PracticeController.ConvertToLocalDateTime(practice, utcNow);
 
-                if (viewModel.DueDate != null)
+                if (step == 1)
                 {
-                    if (practice.AccountContract.BillingDueDay != viewModel.DueDate.Value.Day)
-                    {
-                        this.ModelState.AddModelError(
-                              () => viewModel.DueDate,
-                              "Dia da data de vencimento deve ser {0}",
-                              practice.AccountContract.BillingDueDay);
-                    }
-
-                    if (viewModel.DueDate < localNow.Date)
-                    {
-                        this.ModelState.AddModelError(
-                            () => viewModel.DueDate,
-                            "Data de vencimento está no passado");
-                    }
-                    else if (viewModel.DueDate < localNow.Date.AddDays(10))
-                    {
-                        this.ModelState.AddModelError(
-                          () => viewModel.DueDate,
-                          "Data de vencimento não pode estar nos próximos 10 dias");
-                    }
-                }
-
-                if (this.Request.HttpMethod == "POST"
-                    && (viewModel.DueDate == null || this.ModelState.HasPropertyErrors(() => viewModel.DueDate)))
-                {
-                    // the current step failed
-                    this.ModelState.ClearPropertyErrors(() => viewModel.PracticeIdentifier);
-
+                    this.ModelState.Clear();
+                    viewModel.Step = 1;
                     return this.View(viewModel);
                 }
 
-                if (this.Request.HttpMethod == "POST" && step == 1)
-                {
-                    // going to the next step
-                    this.ModelState.Clear();
+                var selectedInvoiceInfo = viewModel.Invoices.SingleOrDefault(bi => bi.NameId == viewModel.InvoiceName);
 
-                    viewModel.Step = 2;
+                if (selectedInvoiceInfo == null)
+                {
+                    this.ModelState.AddModelError(() => viewModel.InvoiceName, "Nome de invoice não encontrado.");
+                    viewModel.Step = 1;
                     return this.View(viewModel);
                 }
 
                 Billing billing = null;
-                if (viewModel.DueDate != null)
-                {
-                    var idSet = string.Format(
-                        "CEREB.{1}{2}.{0}",
-                        localNow.Year,
-                        practice.AccountContract.BillingPeriodSize,
-                        practice.AccountContract.BillingPeriodType);
+                var idSet = string.Format(
+                    "CEREB.{1}{2}.{0}",
+                    localNow.Year,
+                    practice.AccountContract.BillingPeriodSize,
+                    practice.AccountContract.BillingPeriodType);
 
+                var invoiceStartUtc = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.Start);
+                billing = db.Billings.SingleOrDefault(b => b.PracticeId == practice.Id
+                    && b.MainAccountContractId == practice.ActiveAccountContractId
+                    && b.ReferenceDate == invoiceStartUtc);
+
+                if (billing == null)
+                {
                     billing = new Billing
-                        {
-                            PracticeId = practice.Id,
-                            AfterDueMonthlyTax = 1.00m, // 1%
-                            AfterDueTax = 2.00m, // 2%
-                            IssuanceDate = utcNow,
-                            MainAmount = viewModel.Amount ?? 0m,
-                            DueDate = PracticeController.ConvertToUtcDateTime(practice, viewModel.DueDate.Value),
-                            IdentitySetName = idSet,
-                            IdentitySetNumber = db.Billings.Count(b => b.PracticeId == practice.Id && b.IdentitySetName == idSet) + 1,
-                            //ReferenceDate = 
-                        };
+                       {
+                           PracticeId = practice.Id,
+                           AfterDueMonthlyTax = 1.00m, // 1%
+                           AfterDueTax = 2.00m, // 2%
+                           IssuanceDate = utcNow,
+                           MainAmount = selectedInvoiceInfo.TotalAmount,
+                           MainDiscount = selectedInvoiceInfo.TotalDiscount,
+                           DueDate = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.DueDate),
+                           IdentitySetName = idSet,
+                           IdentitySetNumber = db.Billings.Count(b => b.PracticeId == practice.Id && b.IdentitySetName == idSet) + 1,
+                           ReferenceDate = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.Start),
+                           ReferenceDateEnd = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.End),
+                           MainAccountContractId = practice.ActiveAccountContractId.Value,
+                       };
+
+                    db.Billings.AddObject(billing);
                 }
 
                 if (practice.AccountContract.BillingPaymentMethod == "PayPal Invoice")
                     this.ViewBag.IsPayPalInvoice = true;
 
-                if (this.ModelState.IsValid && billing != null && viewModel.DueDate != null && viewModel.Amount != null)
+                if (this.ModelState.IsValid)
                 {
-                    db.Billings.AddObject(billing);
                     db.SaveChanges();
 
                     // adding PayPal invoice info
-                    viewModel.Invoice = new GenerateInvoiceViewModel.PayPalInvoiceInfo
+                    viewModel.PayPalInvoice = new GenerateInvoiceViewModel.PayPalInvoiceInfo
                         {
                             UserEmail = practice.Owner.Person.Email,
                             IssuanceDate = localNow.ToString("dd-MM-yyyy"),
                             Currency = "BRL - Reais",
                             Number = string.Format("{0}.{1}", billing.IdentitySetName, billing.IdentitySetNumber),
-                            DuaDate = viewModel.DueDate.Value.ToString("dd-MM-yyyy"),
+                            DuaDate = selectedInvoiceInfo.DueDate.ToString("dd-MM-yyyy"),
                             Terms = "Vencimento na data especificada",
-                            Items = new List<GenerateInvoiceViewModel.PayPalInvoiceItem>
-                                {
-                                    new GenerateInvoiceViewModel.PayPalInvoiceItem
-                                        {
-                                            NameId = "Assinatura Cerebello",
-                                            Date = "",
-                                            Quantity = 1,
-                                            UnitPrice = viewModel.Amount.Value.ToString("0.00"),
-                                            Description = string.Format("Assinatura do plano profissional do Cerebello (01/01/2013 até 01/04/2013)")
-                                        }
-                                }
+                            Items = new List<GenerateInvoiceViewModel.PayPalInvoiceItem>(),
                         };
 
-                    viewModel.Step = 3;
+                    var dataInicioFim = selectedInvoiceInfo.End != null
+                        ? string.Format(
+                            "{0} até {1}",
+                            selectedInvoiceInfo.Start.ToString("yyyy'-'MM'-'dd"),
+                            selectedInvoiceInfo.End.Value.ToString("yyyy'-'MM'-'dd"))
+                        : string.Format(
+                            "Assinatura do plano profissional do Cerebello ({0})",
+                            selectedInvoiceInfo.Start.ToString("yyyy'-'MM'-'dd"));
+
+                    viewModel.PayPalInvoice.Items.Add(
+                        new GenerateInvoiceViewModel.PayPalInvoiceItem
+                            {
+                                NameId = "Assinatura Cerebello",
+                                Date = "",
+                                Quantity = 1,
+                                UnitPrice = selectedInvoiceInfo.TotalAmount.ToString("0.00", CultureInfo.InvariantCulture),
+                                Description = string.Format("Assinatura do plano profissional do Cerebello ({0})", dataInicioFim),
+                            });
+
+                    var periodType = practice.AccountContract.BillingPeriodType;
+                    var periodSize = practice.AccountContract.BillingPeriodSize;
+                    var discountReason =
+                        periodType == "M" && periodSize == 1 ? "mensal" :
+                        periodType == "M" && periodSize == 3 ? "trimestral" :
+                        periodType == "M" && periodSize == 6 ? "semestral" :
+                        periodType == "M" && periodSize == 12 || periodType == "Y" && periodSize == 1 ? "anual" :
+                        "";
+
+                    if (selectedInvoiceInfo.TotalDiscount > 0)
+                    {
+                        viewModel.PayPalInvoice.Items.Add(
+                            new GenerateInvoiceViewModel.PayPalInvoiceItem
+                                {
+                                    NameId = "Desconto da Assinatura Cerebello",
+                                    Date = "",
+                                    Quantity = 1,
+                                    UnitPrice = selectedInvoiceInfo.TotalDiscount.ToString("'-'0.00", CultureInfo.InvariantCulture),
+                                    Description = string.Format("Desconto na Assinatura (condições especiais para pagamento {0})", discountReason)
+                                });
+                    }
+
+                    viewModel.Step = 2;
                     return this.View(viewModel);
                 }
             }
@@ -194,7 +219,7 @@ namespace CerebelloWebRole.Controllers
             return this.View(viewModel);
         }
 
-        private static List<BillingInfo> GetAccountMissingInvoices(Practice practice, DateTime utcNow)
+        private static List<InvoiceInfo> GetAccountInvoices(Practice practice, DateTime utcNow)
         {
             // getting info about the services that are being used, that is all active AccountContracts
             var activeAccountContracts = new[] { practice.AccountContract }
@@ -216,39 +241,76 @@ namespace CerebelloWebRole.Controllers
                 dateSetBillingCycles.AddInterval(dateTimeInterval.Start, true, dateTimeInterval.End, false);
             dateSetBillingCycles.Flatten(mergeRedundantTrues: false);
 
-            var billingsDic = new Dictionary<DateTime, BillingInfo>();
+            var billingsDic = new Dictionary<DateTime, InvoiceInfo>();
             foreach (var activeAccountContract in activeAccountContracts)
             {
+                var accountStart = PracticeController.ConvertToLocalDateTime(practice, activeAccountContract.StartDate);
+                var accountEnd = PracticeController.ConvertToLocalDateTime(practice, activeAccountContract.EndDate);
+
+                var currentContractInterval = new ContinuousSet<DateTime>();
+                currentContractInterval.AddPoint(accountStart, false, true, true);
+                if (accountEnd.HasValue)
+                    currentContractInterval.AddPoint(accountEnd.Value, true, false, false);
+
                 // Getting intervals that already have invoices.
                 var dateSetBillings = new ContinuousSet<DateTime>();
                 foreach (var eachBilling in activeAccountContract.Billings)
                 {
-                    if (eachBilling.ReferenceDateEnd.HasValue)
-                        dateSetBillings.AddInterval(eachBilling.ReferenceDate, true, eachBilling.ReferenceDateEnd.Value, false);
+                    var billingRefStart = PracticeController.ConvertToLocalDateTime(practice, eachBilling.ReferenceDate);
+                    var billingRefEnd = PracticeController.ConvertToLocalDateTime(practice, eachBilling.ReferenceDateEnd);
+
+                    if (billingRefEnd.HasValue)
+                        dateSetBillings.AddInterval(billingRefStart, true, billingRefEnd.Value, false);
                     else
-                        dateSetBillings.AddPoint(eachBilling.ReferenceDate, false, true, true);
+                        dateSetBillings.AddPoint(billingRefStart, false, true, true);
+
+                    InvoiceInfo billingInfo;
+                    if (!billingsDic.TryGetValue(billingRefStart, out billingInfo))
+                        billingsDic[billingRefStart] = billingInfo = new InvoiceInfo
+                            {
+                                IsSaved = true,
+                                Start = billingRefStart,
+                                End = billingRefEnd,
+                                DueDate = PracticeController.ConvertToLocalDateTime(practice, eachBilling.DueDate),
+                            };
+
+                    billingInfo.Items.Add(
+                        new InvoiceInfo.Item
+                        {
+                            Amount = activeAccountContract.BillingAmount ?? 0,
+                            DiscountAmount = activeAccountContract.BillingDiscountAmount ?? 0,
+                            ContractType = (ContractTypes)activeAccountContract.ContractTypeId,
+                        });
                 }
 
                 dateSetBillings.Flatten();
 
                 // Merging date sets, to see where there are holes without any invoice.
-                var dateSetResult = !dateSetBillings & dateSetBillingCycles;
+                var dateSetResult = !dateSetBillings & dateSetBillingCycles & currentContractInterval;
 
                 // Getting the intervals that represents missing invoices.
                 foreach (var eachMissingInterval in dateSetResult.PositiveIntervals)
                 {
-                    BillingInfo billingInfo;
-                    if (!billingsDic.TryGetValue(eachMissingInterval.Start, out billingInfo))
-                        billingsDic[eachMissingInterval.Start] = billingInfo = new BillingInfo();
+                    Debug.Assert(practice.AccountContract.BillingDueDay != null, "practice.AccountContract.BillingDueDay != null");
+                    var dueDay = practice.AccountContract.BillingDueDay.Value;
+                    var dueDate = DateTimeHelper.FindDayOfMonthOrNearest(eachMissingInterval.Start, dueDay);
+                    if (dueDate >= eachMissingInterval.Start.AddDays(10))
+                        dueDate = dueDate.AddMonths(1, dueDay);
 
-                    billingInfo.Start = eachMissingInterval.Start;
-                    billingInfo.End = eachMissingInterval.End;
-                    billingInfo.DueDate = DateTimeHelper.Range(billingInfo.Start.AddDays(10), 31, d => d.AddDays(1))
-                        .Single(d => d.Day == practice.AccountContract.BillingDueDay);
-                    billingInfo.Items.Add(
-                        new BillingInfo.Item
+                    InvoiceInfo billingInfo;
+                    if (!billingsDic.TryGetValue(eachMissingInterval.Start, out billingInfo))
+                        billingsDic[eachMissingInterval.Start] = billingInfo = new InvoiceInfo
                             {
-                                Value = activeAccountContract.BillingAmount ?? 0 - activeAccountContract.BillingDiscountAmount ?? 0,
+                                Start = eachMissingInterval.Start,
+                                End = eachMissingInterval.End,
+                                DueDate = dueDate,
+                            };
+
+                    billingInfo.Items.Add(
+                        new InvoiceInfo.Item
+                            {
+                                Amount = activeAccountContract.BillingAmount ?? 0,
+                                DiscountAmount = activeAccountContract.BillingDiscountAmount ?? 0,
                                 ContractType = (ContractTypes)activeAccountContract.ContractTypeId,
                             });
                 }
@@ -260,7 +322,7 @@ namespace CerebelloWebRole.Controllers
 
         private static IEnumerable<DateTimeInterval> GetAccountContractBillingCycles(AccountContract accountContract)
         {
-            var start = accountContract.StartDate;
+            var start = PracticeController.ConvertToLocalDateTime(accountContract.Practice, accountContract.StartDate);
             var periodType = accountContract.BillingPeriodType;
             var periodSize = accountContract.BillingPeriodSize ?? 1;
             var periodCount = accountContract.BillingPeriodCount ?? 7305; // = 365.25 * 20

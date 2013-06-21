@@ -57,7 +57,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         CycleStart = this.ConvertToLocalDateTime(b.ReferenceDate),
                         CycleEnd = this.ConvertToLocalDateTime(b.ReferenceDateEnd),
                         DueDate = this.ConvertToLocalDateTime(b.DueDate),
-                        Value = b.MainAmount,
+                        Value = b.MainAmount - b.MainDiscount,
                         IsPaid = b.IsPayd,
                         EffectiveValue = b.PaydAmount,
                         CanPay = b.ReferenceDate < nowPlus30Days && nowLess30Days < b.DueDate,

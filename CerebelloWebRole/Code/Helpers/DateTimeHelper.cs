@@ -36,6 +36,11 @@ namespace CerebelloWebRole.Code
                 yield return d;
         }
 
+        public static IEnumerable<DateTime> RangeIndexed(DateTime start, int count, Func<DateTime, int, DateTime> itemGetter)
+        {
+            return Enumerable.Range(0, count).Select(n => itemGetter(start, n));
+        }
+
         public static IEnumerable<DateTime> Range(DateTime start, DateTime end, Func<DateTime, DateTime> nextGetter)
         {
             DateTime d = start;
@@ -43,20 +48,24 @@ namespace CerebelloWebRole.Code
                 yield return d;
         }
 
-        public static DateTime AddMonths(this DateTime @this, int months, int keepAtDay)
+        public static DateTime AddMonths(this DateTime @this, int months, int keepAtNearestDay)
         {
-            var result = @this.AddMonths(months);
+            var result = @this.AddMonths(months).FindDayOfMonthOrNearest(keepAtNearestDay);
+            return result;
+        }
 
-            var currentDay = result.Day;
+        public static DateTime FindDayOfMonthOrNearest(this DateTime @this, int day)
+        {
+            var currentDay = @this.Day;
 
-            if (currentDay != keepAtDay)
+            if (currentDay != day)
             {
-                var lastDay = DateTime.DaysInMonth(result.Year, result.Month);
-                if (currentDay < lastDay)
-                    result = result.AddDays(keepAtDay - currentDay);
+                var dayToGo = day <= 28 ? day : Math.Min(day, DateTime.DaysInMonth(@this.Year, @this.Month));
+                if (currentDay != dayToGo)
+                    @this = @this.AddDays(dayToGo - currentDay);
             }
 
-            return result;
+            return @this;
         }
 
         /// <summary>Gets the first week day following a date.</summary>
@@ -424,6 +433,7 @@ namespace CerebelloWebRole.Code
                 while (date.Month != transition.Month)
                     date = date.AddDays(-7);
             }
+
             date = date + transition.TimeOfDay.TimeOfDay;
             return date;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,23 +20,27 @@ namespace CerebelloWebRole.Areas.App.Models
             /// <summary>
             /// Gets or sets the due date of the billing.
             /// </summary>
+            [Display(Name = "Data de vencimento")]
             public DateTime DueDate { get; set; }
 
             /// <summary>
             /// Gets or sets the value of the billing.
             /// </summary>
+            [Display(Name = "Valor")]
             public decimal Value { get; set; }
 
             /// <summary>
             /// Gets or sets the effective date of the payment.
             /// When not paid, this value is null.
             /// </summary>
+            [Display(Name = "Data efetiva do pagamento")]
             public DateTime? EffectiveDate { get; set; }
 
             /// <summary>
             /// Gets or sets the effective value of the payment.
             /// When not paid, this value is null.
             /// </summary>
+            [Display(Name = "Valor efetivo do pagamento")]
             public decimal? EffectiveValue { get; set; }
 
             /// <summary>

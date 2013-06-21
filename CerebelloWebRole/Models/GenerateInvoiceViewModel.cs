@@ -13,16 +13,8 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Identificador do consultório")]
         public String PracticeIdentifier { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Data de vencimento")]
-        public DateTime? DueDate { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Valor")]
-        public decimal? Amount { get; set; }
-
         // PayPal invoice form informations
-        public PayPalInvoiceInfo Invoice { get; set; }
+        public PayPalInvoiceInfo PayPalInvoice { get; set; }
 
         public class PayPalInvoiceInfo
         {
@@ -65,6 +57,8 @@ namespace CerebelloWebRole.Models
             public string Description { get; set; }
         }
 
-        public List<Code.BillingInfo> MissingInvoices { get; set; }
+        public List<Code.InvoiceInfo> Invoices { get; set; }
+
+        public string InvoiceName { get; set; }
     }
 }

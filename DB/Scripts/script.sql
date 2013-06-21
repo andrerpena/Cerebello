@@ -5,6 +5,10 @@ CREATE USER [IIS APPPOOL\ASP.NET V4.0 Integrated] FOR LOGIN [IIS APPPOOL\ASP.NET
 GO
 /****** End Object:  User [IIS APPPOOL\ASP.NET V4.0 Integrated] ******/
 
+/****** Begin Object:  User [AUTORIDADE NT\SERVIÇO DE REDE] ******/
+CREATE USER [AUTORIDADE NT\SERVIÇO DE REDE] FOR LOGIN [AUTORIDADE NT\SERVIÇO DE REDE] WITH DEFAULT_SCHEMA=[dbo]
+GO
+/****** End Object:  User [AUTORIDADE NT\SERVIÇO DE REDE] ******/
 
 /****** Begin Object:  User [NT AUTHORITY\NETWORK SERVICE] ******/
 CREATE USER [NT AUTHORITY\NETWORK SERVICE] FOR LOGIN [NT AUTHORITY\NETWORK SERVICE] WITH DEFAULT_SCHEMA=[dbo]
@@ -21,9 +25,9 @@ CREATE TABLE [dbo].[AccountContract](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ContractTypeId] [int] NOT NULL,
 	[PracticeId] [int] NOT NULL,
-	[IssuanceDate] [date] NOT NULL,
-	[StartDate] [date] NOT NULL,
-	[EndDate] [date] NULL,
+	[IssuanceDate] [datetime] NOT NULL,
+	[StartDate] [datetime] NOT NULL,
+	[EndDate] [datetime] NULL,
 	[BillingAmount] [numeric](18, 2) NULL,
 	[BillingPeriodType] [varchar](10) NULL,
 	[BillingPeriodSize] [int] NULL,
@@ -155,20 +159,20 @@ GO
 CREATE TABLE [dbo].[Billing](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PracticeId] [int] NOT NULL,
-	[IssuanceDate] [date] NOT NULL,
+	[IssuanceDate] [datetime] NOT NULL,
 	[MainAmount] [numeric](18, 2) NOT NULL,
 	[MainDiscount] [numeric](18, 2) NOT NULL,
 	[MainAccountContractId] [int] NOT NULL,
-	[DueDate] [date] NOT NULL,
+	[DueDate] [datetime] NOT NULL,
 	[AfterDueTax] [numeric](4, 2) NOT NULL,
 	[AfterDueMonthlyTax] [numeric](4, 2) NOT NULL,
 	[IdentitySetName] [varchar](50) NOT NULL,
 	[IdentitySetNumber] [int] NOT NULL,
-	[ReferenceDate] [date] NOT NULL,
-	[ReferenceDateEnd] [date] NULL,
+	[ReferenceDate] [datetime] NOT NULL,
+	[ReferenceDateEnd] [datetime] NULL,
 	[IsPayd] [bit] NOT NULL,
 	[PaydAmount] [numeric](18, 2) NULL,
-	[PaymentDate] [date] NULL,
+	[PaymentDate] [datetime] NULL,
  CONSTRAINT [PK_Billing] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

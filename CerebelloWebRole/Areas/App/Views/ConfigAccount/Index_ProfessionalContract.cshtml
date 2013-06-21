@@ -30,7 +30,7 @@
         @{
             var gridBillings = this.Html.CreateGrid(this.Model.BillingYears.SelectMany(by => by.Cycles).OrderByDescending(bc => bc.CycleStart));
             gridBillings.AddField(model => model.DueDate);
-            gridBillings.AddField(model => model.Value);
+            gridBillings.AddField(model => model.Value, @<text>@StringHelper.FormatMoney(item.Value)</text>);
             gridBillings.AddField(model => model.EffectiveDate);
             gridBillings.AddField(model => model.EffectiveValue);
         }
