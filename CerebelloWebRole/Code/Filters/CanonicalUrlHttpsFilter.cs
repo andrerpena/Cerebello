@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Mvc;
+using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace CerebelloWebRole.Code
 {
@@ -39,7 +40,9 @@ namespace CerebelloWebRole.Code
                     {
                         isRedirectNeeded = true;
                         uriBuilder.Scheme = "https";
-                        uriBuilder.Port = 443;
+                        uriBuilder.Port = RoleEnvironment.IsAvailable
+                            ? RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["HttpsIn"].IPEndpoint.Port
+                            : 443;
                     }
 
                     // WebDev server does not support HTTPS... no redirects to HTTPS will happen.
@@ -63,7 +66,9 @@ namespace CerebelloWebRole.Code
                 {
                     isRedirectNeeded = true;
                     uriBuilder.Scheme = "http";
-                    uriBuilder.Port = 80;
+                    uriBuilder.Port = RoleEnvironment.IsAvailable
+                        ? RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["HttpIn"].IPEndpoint.Port
+                        : 80;
                 }
             }
 #endif
