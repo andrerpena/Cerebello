@@ -58,6 +58,10 @@
     });
 
     $(document).bind('dragover', function (e) {
+        // If File API is not supported, then drag-drop is useless to this plugin.
+        if (window.FormData === undefined)
+            return;
+
         var dropZone = $('.dropzone'),
             timeout = window.dropZoneTimeout;
 

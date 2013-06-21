@@ -103,71 +103,73 @@
 @helper PrintProperty(object obj, PropertyInfo pi, bool isText)
 {
     var attrEnum = pi.GetCustomAttributes(typeof(EnumDataTypeAttribute), true).Cast<EnumDataTypeAttribute>().SingleOrDefault();
+
+    var propValue = pi.GetValue(obj, null);
     
     if (!isText)
     {
-        if (pi.PropertyType.IsEnum || attrEnum != null)
-        {
-            <tr>
-                <td>@pi.Name</td>
-                @if (attrEnum != null)
-                {
-                    var value = Enum.ToObject(attrEnum.EnumType, pi.GetValue(obj, null));
-                    <td>@InlineCode(value.ToString())</td>
-                }
-                else
-                {
-                    <td>@InlineCode(pi.GetValue(obj, null).ToString())</td>
-                }
-            </tr>
-        }
-        else if (pi.PropertyType == typeof(string) && pi.GetValue(obj, null) != null)
-        {
-            <tr>
-                <td>@pi.Name</td>
-                <td>@InlineCode('"' + (string)pi.GetValue(obj, null) + '"')</td>
-            </tr>
-        }
-        else if (pi.GetValue(obj, null) == null)
+        if (propValue == null)
         {
             <tr>
                 <td>@pi.Name</td>
                 <td>@InlineCode("null")</td>
             </tr>
         }
+        else if (pi.PropertyType.IsEnum || attrEnum != null)
+        {
+            <tr>
+                <td>@pi.Name</td>
+                @if (attrEnum != null)
+                {
+                    var value = Enum.ToObject(attrEnum.EnumType, propValue);
+                    <td>@InlineCode(value.ToString())</td>
+                }
+                else
+                {
+                    <td>@InlineCode(propValue.ToString())</td>
+                }
+            </tr>
+        }
+        else if (pi.PropertyType == typeof(string) && propValue != null)
+        {
+            <tr>
+                <td>@pi.Name</td>
+                <td>@InlineCode('"' + (string)propValue + '"')</td>
+            </tr>
+        }
         else
         {
             <tr>
                 <td>@pi.Name</td>
-                <td>@InlineCode(pi.GetValue(obj, null))</td>
+                <td>@InlineCode(propValue)</td>
             </tr>
         }
     }
     else
     {
-        if (pi.PropertyType.IsEnum || attrEnum != null)
+        if (propValue == null)
+        {
+            <text>    @pi.Name = null</text>
+        }
+        else if (pi.PropertyType.IsEnum || attrEnum != null)
         {
             if (attrEnum != null)
             {
-                var value = Enum.ToObject(attrEnum.EnumType, pi.GetValue(obj, null));
+                var value = Enum.ToObject(attrEnum.EnumType, propValue);
                 <text>    @pi.Name = @value.ToString()</text>
             }
             else
             {
-                <text>    @pi.Name = @pi.GetValue(obj, null).ToString()</text>
+                <text>    @pi.Name = @propValue.ToString()</text>
             }
         }
-        else if (pi.PropertyType == typeof(string) && pi.GetValue(obj, null) != null)
+        else if (pi.PropertyType == typeof(string) && propValue != null)
         {
-            <text>    @pi.Name = "@pi.GetValue(obj, null)"</text>
-        }
-        else if (pi.GetValue(obj, null) == null)
-        {
-            <text>    @pi.Name = null</text>
+            <text>    @pi.Name = "@propValue"</text>
         }
         else
         {
-            <text>    @pi.Name = @pi.GetValue(obj, null)</text>
+            <text>    @pi.Name = @propValue</text>
         }
     }
 }

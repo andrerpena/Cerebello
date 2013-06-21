@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
+using Telerik.Reporting;
 using Telerik.Reporting.Processing;
 using Telerik.Reporting.XmlSerialization;
 using Report = Telerik.Reporting.Report;
@@ -69,6 +70,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             using (telerikReport)
             {
                 telerikReport.DataSource = new[] { reportDataSource };
+
+                // setting up the report parameters
+                telerikReport.ReportParameters["Header1"].Value = doctor.CFG_Documents.Header1;
+                telerikReport.ReportParameters["Header2"].Value = doctor.CFG_Documents.Header2;
+                telerikReport.ReportParameters["FooterLeft1"].Value = doctor.CFG_Documents.FooterLeft1;
+                telerikReport.ReportParameters["FooterLeft2"].Value = doctor.CFG_Documents.FooterLeft2;
+                telerikReport.ReportParameters["FooterRight1"].Value = doctor.CFG_Documents.FooterRight1;
+                telerikReport.ReportParameters["FooterRight2"].Value = doctor.CFG_Documents.FooterRight2;
 
                 // Exporting PDF from report.
                 var reportProcessor = new ReportProcessor();

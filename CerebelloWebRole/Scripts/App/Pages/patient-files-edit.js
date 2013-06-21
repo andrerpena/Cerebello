@@ -1,4 +1,5 @@
-﻿function PatientFilesEdit(args) {
+﻿// This method should be called after importing this script in a page.
+function PatientFilesEdit(args) {
     $(function () {
         'use strict';
 
@@ -10,6 +11,8 @@
             url: args.FileUploadUrl,
             autoUpload: true,
             maxFileSize: 2048000000, // 2GB
+            previewMaxWidth: 120,
+            previewMaxHeight: 120,
             //resizeMaxWidth: 1920,
             //resizeMaxHeight: 1200,
             dropZone: $fileupload,

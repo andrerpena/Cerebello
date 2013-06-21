@@ -68,7 +68,7 @@
                             @Html.LabelFor(model => model.PracticeName)
                             <div class="controls">
                                 @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge", maxlength = 50 })
-                                <div class="alert alert-info">Até 50 caracteres.</div>
+                                <div class="alert alert-info">Um identificador único será gerado a partir deste nome. Este identificador é utilizada no login. É recomendável escolher um nome pequeno.</div>
                             </div>
                         </div>
                         <div class="control-group">
@@ -76,6 +76,15 @@
                             <div class="controls">
                                 @Html.EnumDropdownListFor(model => model.PracticeProvince)
                             </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PracticePhone)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.PracticePhone)
+                            </div>
+                            <script type="text/javascript">
+                                $("#PracticePhone").mask("(99) 99999999?9");
+                            </script>
                         </div>
                     </div>
 

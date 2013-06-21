@@ -11,6 +11,8 @@
     .thumb .description {
         display: inline-block;
         font-size: 0.8em;
+        line-height: 1.2em;
+        margin-top: 5px;
     }
 
     .thumb.right {

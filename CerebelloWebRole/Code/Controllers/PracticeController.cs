@@ -148,6 +148,19 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
+        /// Converts the specified nullable UTC date and time for the location of the current practice.
+        /// </summary>
+        /// <param name="utcDateTime"></param>
+        /// <returns></returns>
+        public DateTime? ConvertToLocalDateTime(DateTime? utcDateTime)
+        {
+            if (utcDateTime.HasValue)
+                return this.ConvertToLocalDateTime(utcDateTime.Value);
+
+            return null;
+        }
+
+        /// <summary>
         /// Converts the specified date and time at the location of the current practice to UTC.
         /// </summary>
         /// <param name="practice"> </param>

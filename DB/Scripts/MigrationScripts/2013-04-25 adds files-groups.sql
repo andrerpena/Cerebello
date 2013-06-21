@@ -19,8 +19,6 @@ ALTER TABLE dbo.PatientFileGroup ADD CONSTRAINT
 	)
 
 GO
-ALTER TABLE dbo.PatientFileGroup SET (LOCK_ESCALATION = TABLE)
-GO
 
 
 
@@ -35,9 +33,6 @@ ALTER TABLE dbo.PatientFileGroup ADD CONSTRAINT
 	) ON UPDATE  NO ACTION 
 	 ON DELETE  NO ACTION 
 GO
-
-
-
 
 ALTER TABLE dbo.PatientFile ADD
 	Title nvarchar(100) NULL,
@@ -103,7 +98,7 @@ EXEC sp_rename 'FileMetadata.FileName', 'BlobName', 'COLUMN'
 ALTER TABLE dbo.FileMetadata ADD
 	SourceFileName nvarchar(250) NULL
 GO
-update dbo.FileMetadata set SourceFileName = BlobName
+-- update dbo.FileMetadata set SourceFileName = BlobName
 GO
 ALTER TABLE dbo.FileMetadata ALTER COLUMN
 	SourceFileName nvarchar(250) NOT NULL

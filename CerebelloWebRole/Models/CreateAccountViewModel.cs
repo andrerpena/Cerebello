@@ -70,6 +70,11 @@ namespace CerebelloWebRole.Models
         [Display(Name = "Estado do consultório")]
         public int? PracticeProvince { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Display(Name = "Telefone do consultório")]
+        [UIHint("Phone")]
+        public string PracticePhone { get; set; }
+
         [Display(Name = "Sou médico neste consultório")]
         public bool IsDoctor { get; set; }
 

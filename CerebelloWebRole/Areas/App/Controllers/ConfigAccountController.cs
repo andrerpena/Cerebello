@@ -17,6 +17,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
     [UserRolePermission(UserRoleFlags.Owner)]
     public class ConfigAccountController : PracticeController
     {
+        private readonly IDateTimeService dateTimeService;
+
+        public ConfigAccountController(IDateTimeService dateTimeService)
+        {
+            this.dateTimeService = dateTimeService;
+        }
+
         public ActionResult Index()
         {
             // Getting the plan contract (that is the main contract)
@@ -34,7 +41,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                // todo: fill in the billings
                 var viewModel = new ConfigAccountViewModel
                     {
                         CurrentContract = new ConfigAccountViewModel.Contract
@@ -42,6 +48,32 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 DoctorsLimit = this.DbPractice.AccountContract.DoctorsLimit,
                             }
                     };
+
+                var nowPlus30Days = this.dateTimeService.UtcNow.AddDays(30);
+                var nowLess30Days = this.dateTimeService.UtcNow.AddDays(-30);
+
+                var billings = mainContract.Billings.Select(b => new ConfigAccountViewModel.BillingCycle
+                    {
+                        CycleStart = this.ConvertToLocalDateTime(b.ReferenceDate),
+                        CycleEnd = this.ConvertToLocalDateTime(b.ReferenceDateEnd),
+                        DueDate = this.ConvertToLocalDateTime(b.DueDate),
+                        Value = b.MainAmount,
+                        IsPaid = b.IsPayd,
+                        EffectiveValue = b.PaydAmount,
+                        CanPay = b.ReferenceDate < nowPlus30Days && nowLess30Days < b.DueDate,
+                    });
+
+                var billingYears = billings
+                    .GroupBy(b => b.CycleStart.Year)
+                    .Select(
+                        g => new ConfigAccountViewModel.BillingYear
+                            {
+                                Year = g.Key,
+                                Cycles = g.ToList(),
+                            })
+                    .ToList();
+
+                viewModel.BillingYears = billingYears;
 
                 return this.View(viewModel);
             }

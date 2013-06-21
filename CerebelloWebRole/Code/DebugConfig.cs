@@ -414,7 +414,20 @@ namespace CerebelloWebRole.Code
                         var now = DateTime.Now;
 
                         TimeSpan offset;
-                        TimeSpan.TryParse(dt.Relative, out offset);
+                        List<Match> matchesOffset = null;
+                        if (!TimeSpan.TryParse(dt.Relative, out offset))
+                        {
+                            matchesOffset = Regex.Matches(dt.Relative ?? "", @"
+(?<SIGNAL>\-|\+)?
+(?:    (?<YEARS>\d+)      (?:[Yy][Ee][Aa][Rr][Ss]|[Yy]?)                         )?
+(?:    (?<MONTHS>\d+)     (?:[Mm][Oo][Nn][Tt][Hh][Ss]|[Mm]?)                     )?
+(?:    (?<DAYS>\d+)       (?:[Dd][Aa][Yy][Ss]|[Dd]?)                             )?
+(?:    (?<HOURS>\d+)      (?:[Hh][Oo][Uu][Rr][Ss]|[Hh]?)                         )?
+(?:    (?<MINUTES>\d+)    (?:[Mm][Ii][Nn][Uu][Tt][Ee][Ss]|[Mm][Ii][Nn]|[Mm]|'?)  )?
+(?:    (?<SECONDS>\d+)    (?:[Ss][Ee][Cc][Oo][Nn][Dd][Ss]|[Ss][Ee][Cc]|[Ss]|""?) )?
+", RegexOptions.IgnorePatternWhitespace)
+                                .Cast<Match>().ToList();
+                        }
 
                         DateTime absolute;
                         if (!DateTime.TryParse(dt.Absolute, out absolute))
@@ -422,6 +435,34 @@ namespace CerebelloWebRole.Code
 
                         var parts = (dt.Set ?? "").Split(';');
                         var newDate = MergeDates(now, absolute, parts) + offset;
+
+                        if (matchesOffset != null && matchesOffset.Any())
+                        {
+                            foreach (var eachMatch in matchesOffset)
+                            {
+                                int years, months, days, hours, minutes, seconds;
+
+                                int mul = int.Parse(eachMatch.Groups["SIGNAL"].Value + "1");
+
+                                if (int.TryParse(eachMatch.Groups["YEARS"].Value, out years))
+                                    newDate = newDate.AddYears(mul * years);
+
+                                if (int.TryParse(eachMatch.Groups["MONTHS"].Value, out months))
+                                    newDate = newDate.AddMonths(mul * months);
+
+                                if (int.TryParse(eachMatch.Groups["DAYS"].Value, out days))
+                                    newDate = newDate.AddDays(mul * days);
+
+                                if (int.TryParse(eachMatch.Groups["HOURS"].Value, out hours))
+                                    newDate = newDate.AddHours(mul * hours);
+
+                                if (int.TryParse(eachMatch.Groups["MINUTES"].Value, out minutes))
+                                    newDate = newDate.AddMinutes(mul * minutes);
+
+                                if (int.TryParse(eachMatch.Groups["SECONDS"].Value, out seconds))
+                                    newDate = newDate.AddSeconds(mul * seconds);
+                            }
+                        }
 
                         currentTimeOffset = newDate - now;
                     }

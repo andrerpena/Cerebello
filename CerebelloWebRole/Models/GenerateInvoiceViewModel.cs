@@ -7,6 +7,8 @@ namespace CerebelloWebRole.Models
 {
     public class GenerateInvoiceViewModel
     {
+        public int? Step { get; set; }
+
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Display(Name = "Identificador do consultório")]
         public String PracticeIdentifier { get; set; }
@@ -62,5 +64,7 @@ namespace CerebelloWebRole.Models
             [Display(Name = "Descrição")]
             public string Description { get; set; }
         }
+
+        public List<Code.BillingInfo> MissingInvoices { get; set; }
     }
 }

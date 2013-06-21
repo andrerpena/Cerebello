@@ -331,7 +331,7 @@
     <Compile Include="Code\Hubs\ChatHub.cs" />
     <Compile Include="Code\Hubs\CerebelloHub.cs" />
     <Compile Include="Code\Hubs\NotificationsHub.cs" />
-    <Compile Include="Code\Mvc\DefaultDictionaryBinder.cs" />
+    <Compile Include="Code\Mvc\CerebelloDefaultBinder.cs" />
     <Compile Include="Code\Notifications\Data\CompletePracticeInfoNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\NewUserCreatedNotificationData.cs" />
     <Compile Include="Code\Notifications\Data\CompleteUserInfoNotificationData.cs" />
@@ -355,6 +355,13 @@
     <Content Include="CerebelloWebRole.Dll.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\Images\App\FileIcons\document-outline-120.png" />
+    <Content Include="Content\Images\App\FileIcons\document-outline-80.png" />
+    <Content Include="Content\Images\App\FileIcons\error-outline-120.png" />
+    <Content Include="Content\Images\App\FileIcons\error-outline-80.png" />
+    <Content Include="Content\Images\App\FileIcons\generic-160.png" />
+    <Content Include="Content\Images\App\FileIcons\generic-outline-120.png" />
+    <Content Include="Content\Images\App\FileIcons\generic-outline-160.png" />
     <Content Include="Content\Images\Docs\Lightbox\bg-checker.png" />
     <Content Include="Content\Images\Docs\Lightbox\box.png" />
     <Content Include="Content\Images\Docs\Lightbox\bullet.gif" />
@@ -365,6 +372,8 @@
     <Content Include="Content\Images\Docs\Lightbox\next.png" />
     <Content Include="Content\Images\Docs\Lightbox\prev.png" />
     <Content Include="Content\Images\Docs\Lightbox\speech-bubbles.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringBackup-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConfiguringBackup.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringDocuments2-thumb.png" />
@@ -373,8 +382,33 @@
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\ConfiguringTheSchedule2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule2.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount.png" />
+    <Content Include="Content\Images\Site\exemplo-login.png" />
+    <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ReferenceFields-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\ReferenceFields.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringHealthInsurances-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringHealthInsurances.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicalCertificates2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringMedicines2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments2-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments2.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments3-thumb.png" />
+    <Content Include="Content\Images\Docs\Screenshots\RegisteringNewAppointments3.png" />
     <Content Include="Content\Images\Site\mail.png" />
     <Content Include="Content\Images\Site\phone.png" />
     <Content Include="Content\Images\Site\backup.png" />
@@ -385,8 +419,6 @@
     <Content Include="Content\Images\App\Icons\medicalcertificate-off.png" />
     <Content Include="Content\Images\App\FileIcons\generic-80.png" />
     <Content Include="Content\Images\App\FileIcons\generic-outline-80.png" />
-    <Content Include="Content\Images\App\FileIcons\generic-outline.png" />
-    <Content Include="Content\Images\App\FileIcons\generic.png" />
     <Content Include="Content\Images\App\generalFile.png" />
     <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
@@ -394,8 +426,7 @@
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.tooltip.css" />
-    <Content Include="Content\Styles\App\bootstrap-image-gallery.min.css" />
-    <Content Include="Content\Styles\App\bootstrap-modals-only.css" />
+    <Content Include="Content\Styles\App\image-gallery.css" />
     <Content Include="Content\Styles\App\bootstrap-responsive.min.css" />
     <Content Include="Content\Styles\App\FileIcons.css" />
     <Content Include="Content\Styles\App\introjs-ie.min.css" />
@@ -798,8 +829,7 @@
     <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="Scripts\App\Pages\practice.js" />
     <Content Include="Scripts\App\schedule.js" />
-    <Content Include="Scripts\bootstrap-image-gallery.min.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap-image-gallery-2.10-isolated.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\Controls\jquery.camera.window.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.ajax.file.form.js" />
@@ -814,6 +844,7 @@
     <Content Include="Scripts\cerebello.pt-BR.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.signalradapter.js" />
+    <Content Include="Scripts\bootstrap-modal-2.2.2-isolated.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\Docs\jquery.smooth-scroll.min.js" />
     <Content Include="Scripts\Docs\lightbox.js" />
@@ -884,7 +915,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Uncommited.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>

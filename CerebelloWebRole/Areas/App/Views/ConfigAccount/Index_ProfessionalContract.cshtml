@@ -27,11 +27,14 @@
 <div class="text-section">
     <h2>Faturas</h2>
     <div>
-        A visualização de faturas não está disponível neste momento.
-        <br />
-        Em breve será possível visualizar todas as suas faturas aqui.
-        <br />
-        Desculpe-nos pelo inconveniente.
+        @{
+            var gridBillings = this.Html.CreateGrid(this.Model.BillingYears.SelectMany(by => by.Cycles).OrderByDescending(bc => bc.CycleStart));
+            gridBillings.AddField(model => model.DueDate);
+            gridBillings.AddField(model => model.Value);
+            gridBillings.AddField(model => model.EffectiveDate);
+            gridBillings.AddField(model => model.EffectiveValue);
+        }
+        @gridBillings.GetHtml()
     </div>
 </div>
 <div class="text-section">
