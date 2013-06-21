@@ -38,18 +38,20 @@ namespace CerebelloWebRole.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult GenerateInvoice()
-        {
-            this.ViewBag.OnlyPractice = true;
-            return this.View();
-        }
-
-        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult GenerateInvoice(GenerateInvoiceViewModel viewModel)
         {
+            if (viewModel.Step == null && string.IsNullOrEmpty(viewModel.PracticeIdentifier))
+            {
+                this.ModelState.Clear();
+                return this.View();
+            }
+
+            var step = viewModel.Step ?? 0;
+
             using (var db = this.CreateNewCerebelloEntities())
             {
+                // Getting the practice indicated in the view-model.
                 Practice practice = null;
                 if (!string.IsNullOrWhiteSpace(viewModel.PracticeIdentifier))
                 {
@@ -65,25 +67,29 @@ namespace CerebelloWebRole.Controllers
 
                 if (practice == null || this.ModelState.HasPropertyErrors(() => viewModel.PracticeIdentifier))
                 {
+                    // the current step failed
                     this.ModelState.ClearPropertyErrors(() => viewModel.Amount);
                     this.ModelState.ClearPropertyErrors(() => viewModel.DueDate);
 
-                    this.ViewBag.OnlyPractice = true;
                     return this.View(viewModel);
                 }
 
                 var utcNow = this.GetUtcNow();
-                var localNow = PracticeController.ConvertToLocalDateTime(practice, utcNow);
+                viewModel.MissingInvoices = GetAccountMissingInvoices(practice, utcNow);
 
-                var fillFields = this.Request.Params["FillFields"] == "true";
-
-                if (fillFields)
+                if (step == 0)
                 {
+                    if (this.Request.HttpMethod == "POST")
+                        return this.RedirectToAction("GenerateInvoice", new { viewModel.PracticeIdentifier });
+
+                    // going to the next step
                     this.ModelState.Clear();
 
-                    viewModel.Amount = practice.AccountContract.BillingAmount;
-                    viewModel.DueDate = PracticeController.ConvertToLocalDateTime(practice, utcNow).Date;
+                    viewModel.Step = 1;
+                    return this.View(viewModel);
                 }
+
+                var localNow = PracticeController.ConvertToLocalDateTime(practice, utcNow);
 
                 if (viewModel.DueDate != null)
                 {
@@ -109,74 +115,27 @@ namespace CerebelloWebRole.Controllers
                     }
                 }
 
+                if (this.Request.HttpMethod == "POST"
+                    && (viewModel.DueDate == null || this.ModelState.HasPropertyErrors(() => viewModel.DueDate)))
+                {
+                    // the current step failed
+                    this.ModelState.ClearPropertyErrors(() => viewModel.PracticeIdentifier);
+
+                    return this.View(viewModel);
+                }
+
+                if (this.Request.HttpMethod == "POST" && step == 1)
+                {
+                    // going to the next step
+                    this.ModelState.Clear();
+
+                    viewModel.Step = 2;
+                    return this.View(viewModel);
+                }
+
                 Billing billing = null;
                 if (viewModel.DueDate != null)
                 {
-                    // getting info about the services that are being used, that is all active AccountContracts
-                    var activeAccountContracts = new[] { practice.AccountContract }
-                        .Concat(practice.AccountContracts
-                            .Where(ac => ac.EndDate == null || ac.EndDate >= utcNow)
-                            .Where(ac => ac.Id != practice.AccountContract.Id))
-                        .ToList();
-
-                    // The main account contract dictates the billing periods of subcontracts,
-                    // unless otherwise stated in the specific subcontract.
-                    // We must see what products (active account contracts) don't have
-                    // billing items in any period.
-                    var mainIntervals = GetAccountContractBillingCycles(practice.AccountContract)
-                        .TakeWhile(it => it.Start < utcNow)
-                        .ToList();
-
-                    var partialBillings = new List<PartialBillingInfo>(100);
-                    foreach (var activeAccountContract in activeAccountContracts)
-                    {
-                        // Getting billing cycles of the current contract.
-                        // A billing cycle is just time window, used to create a billing.
-                        var currentIntervals = mainIntervals;
-                        if (activeAccountContract.Id != practice.AccountContract.Id && activeAccountContract.BillingPeriodType != "P")
-                        {
-                            currentIntervals = GetAccountContractBillingCycles(activeAccountContract)
-                                .TakeWhile(it => it.Start < utcNow)
-                                .ToList();
-                        }
-
-                        var dateSetBillingCycles = new ContinuousSet<DateTime>(currentIntervals.Count * 2);
-                        foreach (var dateTimeInterval in currentIntervals)
-                            dateSetBillingCycles.AddInterval(dateTimeInterval.Start, true, dateTimeInterval.End, false);
-                        dateSetBillingCycles.Flatten();
-
-                        // Getting intervals that already have invoices.
-                        var dateSetBillings = new ContinuousSet<DateTime>();
-                        foreach (var eachBilling in activeAccountContract.Billings)
-                            dateSetBillings.AddInterval(eachBilling.ReferenceDate, true, eachBilling.ReferenceDateEnd.Value, false);
-                        dateSetBillings.Flatten();
-
-                        // Merging both sets, to see where there are holes without any invoice.
-                        var dateSetResult = !dateSetBillings & dateSetBillingCycles;
-
-                        // Getting the intervals that represents missing invoices.
-                        foreach (var eachMissingInterval in dateSetResult.PositiveIntervals)
-                        {
-
-                        }
-
-                        foreach (var dateTimeInterval in currentIntervals)
-                        {
-                            var dueDate = GetBillingDueDate(utcNow, dateTimeInterval.Start, activeAccountContract);
-
-                            partialBillings.Add(new PartialBillingInfo
-                                {
-                                    ContractId = activeAccountContract.Id,
-                                    Start = dateTimeInterval.Start,
-                                    End = dateTimeInterval.End,
-                                    DueDate = dueDate,
-                                    Value = activeAccountContract.BillingAmount ?? 0,
-                                });
-                        }
-                    }
-
-
-
                     var idSet = string.Format(
                         "CEREB.{1}{2}.{0}",
                         localNow.Year,
@@ -188,7 +147,7 @@ namespace CerebelloWebRole.Controllers
                             PracticeId = practice.Id,
                             AfterDueMonthlyTax = 1.00m, // 1%
                             AfterDueTax = 2.00m, // 2%
-                            IssuanceDate = this.GetUtcNow(),
+                            IssuanceDate = utcNow,
                             MainAmount = viewModel.Amount ?? 0m,
                             DueDate = PracticeController.ConvertToUtcDateTime(practice, viewModel.DueDate.Value),
                             IdentitySetName = idSet,
@@ -200,7 +159,7 @@ namespace CerebelloWebRole.Controllers
                 if (practice.AccountContract.BillingPaymentMethod == "PayPal Invoice")
                     this.ViewBag.IsPayPalInvoice = true;
 
-                if (this.ModelState.IsValid && !fillFields && billing != null && viewModel.DueDate != null && viewModel.Amount != null)
+                if (this.ModelState.IsValid && billing != null && viewModel.DueDate != null && viewModel.Amount != null)
                 {
                     db.Billings.AddObject(billing);
                     db.SaveChanges();
@@ -227,12 +186,76 @@ namespace CerebelloWebRole.Controllers
                                 }
                         };
 
-                    this.ViewBag.BillingOk = true;
+                    viewModel.Step = 3;
                     return this.View(viewModel);
                 }
             }
 
             return this.View(viewModel);
+        }
+
+        private static List<BillingInfo> GetAccountMissingInvoices(Practice practice, DateTime utcNow)
+        {
+            // getting info about the services that are being used, that is all active AccountContracts
+            var activeAccountContracts = new[] { practice.AccountContract }
+                .Concat(
+                    practice.AccountContracts
+                        .Where(ac => ac.EndDate == null || ac.EndDate >= utcNow)
+                        .Where(ac => ac.Id != practice.AccountContract.Id))
+                .ToList();
+
+            // The main account contract dictates the billing periods of subcontracts.
+            // We must see what products (active account contracts) don't have
+            // billing items in any period.
+            var mainIntervals = GetAccountContractBillingCycles(practice.AccountContract)
+                .TakeWhile(it => it.Start < utcNow)
+                .ToList();
+
+            var dateSetBillingCycles = new ContinuousSet<DateTime>(mainIntervals.Count * 2);
+            foreach (var dateTimeInterval in mainIntervals)
+                dateSetBillingCycles.AddInterval(dateTimeInterval.Start, true, dateTimeInterval.End, false);
+            dateSetBillingCycles.Flatten(mergeRedundantTrues: false);
+
+            var billingsDic = new Dictionary<DateTime, BillingInfo>();
+            foreach (var activeAccountContract in activeAccountContracts)
+            {
+                // Getting intervals that already have invoices.
+                var dateSetBillings = new ContinuousSet<DateTime>();
+                foreach (var eachBilling in activeAccountContract.Billings)
+                {
+                    if (eachBilling.ReferenceDateEnd.HasValue)
+                        dateSetBillings.AddInterval(eachBilling.ReferenceDate, true, eachBilling.ReferenceDateEnd.Value, false);
+                    else
+                        dateSetBillings.AddPoint(eachBilling.ReferenceDate, false, true, true);
+                }
+
+                dateSetBillings.Flatten();
+
+                // Merging date sets, to see where there are holes without any invoice.
+                var dateSetResult = !dateSetBillings & dateSetBillingCycles;
+
+                // Getting the intervals that represents missing invoices.
+                foreach (var eachMissingInterval in dateSetResult.PositiveIntervals)
+                {
+                    BillingInfo billingInfo;
+                    if (!billingsDic.TryGetValue(eachMissingInterval.Start, out billingInfo))
+                        billingsDic[eachMissingInterval.Start] = billingInfo = new BillingInfo();
+
+                    billingInfo.Start = eachMissingInterval.Start;
+                    billingInfo.End = eachMissingInterval.End;
+                    billingInfo.DueDate = DateTimeHelper.Range(billingInfo.Start.AddDays(10), 31, d => d.AddDays(1))
+                        .Single(d => d.Day == practice.AccountContract.BillingDueDay);
+                    billingInfo.Items.Add(
+                        new BillingInfo.Item
+                            {
+                                Value = activeAccountContract.BillingAmount ?? 0 - activeAccountContract.BillingDiscountAmount ?? 0,
+                                ContractType = (ContractTypes)activeAccountContract.ContractTypeId,
+                            });
+                }
+            }
+
+            var result = billingsDic.Values.OrderBy(bi => bi.Start).ToList();
+            return result;
         }
 
         private static IEnumerable<DateTimeInterval> GetAccountContractBillingCycles(AccountContract accountContract)

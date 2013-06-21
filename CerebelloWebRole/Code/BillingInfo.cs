@@ -7,6 +7,11 @@ namespace CerebelloWebRole.Code
 {
     public class BillingInfo
     {
+        public BillingInfo()
+        {
+            this.Items = new List<Item>();
+        }
+
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
 
@@ -15,21 +20,14 @@ namespace CerebelloWebRole.Code
             get { return this.Items.Sum(item => item.Value); }
         }
 
-        public List<Item> Items { get; set; }
+        public List<Item> Items { get; private set; }
 
         public class Item
         {
             public decimal Value { get; set; }
             public ContractTypes ContractType { get; set; }
         }
-    }
 
-    public class PartialBillingInfo
-    {
-        public DateTime Start { get; set; }
-        public DateTime? End { get; set; }
         public DateTime DueDate { get; set; }
-        public decimal Value { get; set; }
-        public int ContractId { get; set; }
     }
 }

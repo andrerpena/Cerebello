@@ -17,67 +17,99 @@ namespace CerebelloWebRole.Areas.App.Models
         public class BillingCycle
         {
             /// <summary>
-            /// Planned date of the billing.
+            /// Gets or sets the due date of the billing.
             /// </summary>
-            public DateTime PlannedDate { get; set; }
+            public DateTime DueDate { get; set; }
 
             /// <summary>
-            /// Effective date of the payment.
+            /// Gets or sets the value of the billing.
             /// </summary>
-            public DateTime EffectiveDate { get; set; }
+            public decimal Value { get; set; }
 
             /// <summary>
-            /// Planned value of the billing.
+            /// Gets or sets the effective date of the payment.
+            /// When not paid, this value is null.
             /// </summary>
-            public decimal PlannedValue { get; set; }
+            public DateTime? EffectiveDate { get; set; }
 
             /// <summary>
-            /// Effective value of the payment.
+            /// Gets or sets the effective value of the payment.
+            /// When not paid, this value is null.
             /// </summary>
-            public decimal EffectiveValue { get; set; }
+            public decimal? EffectiveValue { get; set; }
 
             /// <summary>
-            /// Currency of the billing.
+            /// Gets or sets the starting date of this billing cycle.
+            /// This date is inclusive.
+            /// </summary>
+            public DateTime CycleStart { get; set; }
+
+            /// <summary>
+            /// Gets or sets the ending date of this billing cycle.
+            /// This date is exclusive. When null, indicates that the cycle lasts forever.
+            /// </summary>
+            public DateTime? CycleEnd { get; set; }
+
+            /// <summary>
+            /// Gets or sets the currency of the billing.
             /// </summary>
             public string Currency { get; set; }
 
             /// <summary>
-            /// Indicates whether this is paid already.
+            /// Gets or sets a value indicating whether this is paid already.
             /// </summary>
             public bool IsPaid { get; set; }
 
             /// <summary>
-            /// Whether this billing cycle is in the past, present or future.
+            /// Gets or sets a value indicating whether this billing can be paid at this moment.
+            /// Far future/past billings may not be payable without special negotiation.
+            /// </summary>
+            public bool CanPay { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether this billing cycle is in the past, present or future.
             /// </summary>
             public CycleType CycleType { get; set; }
         }
 
+        /// <summary>
+        /// Represents a group of billings that were/are planned to this year.
+        /// </summary>
         public class BillingYear
         {
             /// <summary>
-            /// The year of this billing group.
+            /// Gets or sets the year of this billing group.
             /// </summary>
             public int Year { get; set; }
 
             /// <summary>
-            /// List of billing cycles of this year in reverse date order.
+            /// Gets or sets a list of billing cycles of this year in reverse order of dates.
             /// </summary>
             public List<BillingCycle> Cycles { get; set; }
 
             /// <summary>
-            /// Whether this year contains the present billing cycle.
+            /// Gets a value indicating whether this year contains the present billing cycle.
             /// </summary>
-            public bool IsPresent { get { return this.Cycles.Any(cy => cy.CycleType == CycleType.Present); } }
+            public bool IsPresent
+            {
+                get { return this.Cycles.Any(cy => cy.CycleType == CycleType.Present); }
+            }
 
             /// <summary>
-            /// Whether this year contains only future billing cycles.
+            /// Gets a value indicating whether this year contains only future billing cycles.
             /// </summary>
-            public bool IsFuture { get { return this.Cycles.All(cy => cy.CycleType == CycleType.Future); } }
+            public bool IsFuture
+            {
+                get { return this.Cycles.All(cy => cy.CycleType == CycleType.Future); }
+            }
 
             /// <summary>
-            /// Whether this year contains only past billing cycles.
+            /// Gets a value indicating whether this year contains only past billing cycles.
             /// </summary>
-            public bool IsPast { get { return this.Cycles.All(cy => cy.CycleType == CycleType.Past); } }
+            public bool IsPast
+            {
+                get { return this.Cycles.All(cy => cy.CycleType == CycleType.Past); }
+            }
         }
 
         public enum ContractStatus
@@ -175,7 +207,7 @@ namespace CerebelloWebRole.Areas.App.Models
         }
 
         /// <summary>
-        /// List of billing informations, grouped by year, and then by billing cycles.
+        /// Gets or sets a list of billing informations, grouped by year, and then by billing cycles.
         /// </summary>
         public List<BillingYear> BillingYears { get; set; }
 

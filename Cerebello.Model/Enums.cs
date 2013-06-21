@@ -6,6 +6,7 @@ namespace Cerebello.Model
     /// <summary>
     /// Enumeration of all Cerebello usage contract types.
     /// Each contract type allow very little variation.
+    /// The values in this enum must match the Ids of the contract types in the database.
     /// </summary>
     public enum ContractTypes
     {
@@ -486,5 +487,13 @@ namespace Cerebello.Model
 
         [Display(Name = "Sub-cutâneo")]
         Subcutaneo
+    }
+
+    public static class BillingPeriodTypes
+    {
+        public static readonly string Inherit = "P";
+        public static readonly string Month = "M";
+        public static readonly string Year = "y";
+        public static readonly string Day = "d";
     }
 }

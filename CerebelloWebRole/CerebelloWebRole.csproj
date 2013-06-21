@@ -388,6 +388,7 @@
     <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule2.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount.png" />
+    <Content Include="Content\Images\Site\exemplo-login.png" />
     <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment.png" />
     <Content Include="Content\Images\Docs\Screenshots\ReferenceFields-thumb.png" />

@@ -1,12 +1,43 @@
-﻿@model GenerateInvoiceViewModel
+﻿@using System.Globalization
+@model GenerateInvoiceViewModel
 @{
     this.ViewBag.Title = "Gerar fatura";
+    var step = this.Model == null ? 0 : this.Model.Step ?? 0;
 }
+<style type="text/css">
+    .invoice {
+        border: 1px solid black;
+        margin: 5px 0 15px;
+        padding: 5px;
+        border-radius: 4px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .invoice:hover {
+        background-color: #DDF;
+    }
+
+    .invoice.selected {
+        background-color: #AAC;
+    }
+
+</style>
+<script type="text/javascript">
+    $(function() {
+        $(".invoice").click(function(e) {
+            var $this = $(this);
+            $this.toggleClass("selected");
+            $this.siblings(".invoice.selected").removeClass("selected");
+        });
+    })
+</script>
 @this.Html.ValidationSummary(false)
 @using (this.Html.BeginForm())
 {
     <fieldset>
-        @if (this.ViewBag.BillingOk == true)
+        <input type="hidden" name="Step" value="@step" />
+        @if (step == 2)
         {
             @:Cobrança configurada com sucesso.
             if (this.ViewBag.IsPayPalInvoice == true)
@@ -14,32 +45,40 @@
             @:Agora basta mandar a fatura do PayPal.
             }
         }
-        else if (this.ViewBag.OnlyPractice == true)
+        else if (step == 1)
         {
             <div class="control-group">
-                @Html.LabelForRequired(model => model.PracticeIdentifier)
-                <div class="controls">
-                    @Html.TextBoxFor(model => model.PracticeIdentifier, new { @class = "input-xlarge" })
-                </div>
-            </div>
-            <input type="hidden" name="FillFields" value="true" />
-            <div class="form-actions" style="margin: 0">
-                <button class="btn btn-primary btn-large" type="submit">
-                    Continuar</button>
-            </div>
-        }
-        else
-        {
-            <div class="control-group">
-                @Html.LabelForRequired(model => model.PracticeIdentifier)
+                @Html.LabelFor(model => model.PracticeIdentifier)
                 <div class="controls">
                     @this.Model.PracticeIdentifier
                     @this.Html.HiddenFor(model => model.PracticeIdentifier)
                 </div>
             </div>
 
+            foreach (var eachInvoice in this.Model.MissingInvoices)
+            {
+                <div class="invoice" data-duedate="@eachInvoice.DueDate.ToString("yyyy'-'MM'-'dd")" data-amount="@eachInvoice.TotalValue.ToString(CultureInfo.InvariantCulture)">
+                    <div>Start: <strong>@eachInvoice.Start.ToString("yyyy'-'MM'-'dd")</strong></div>
+                    @if (eachInvoice.End != null)
+                    {
+                        <div>End: <strong>@eachInvoice.End.Value.ToString("yyyy'-'MM'-'dd")</strong></div>
+                    }
+                    else
+                    {
+                        <div>End: <strong>N/A</strong></div>
+                    }
+                    <div>Due date: <strong>@eachInvoice.DueDate.ToString("yyyy'-'MM'-'dd")</strong></div>
+                    <div>Items:</div>
+                    @foreach (var item in eachInvoice.Items)
+                    {
+                        <div>Contract: <strong>@item.ContractType</strong>; Value: <strong>@item.Value</strong></div>
+                    }
+                    <div>Total: <strong>@eachInvoice.TotalValue</strong></div>
+                </div>
+            }
+            
             <div class="control-group">
-                @Html.LabelForRequired(model => model.DueDate)
+                @Html.LabelFor(model => model.DueDate)
                 <div class="controls">
                     @Html.TextBoxFor(model => model.DueDate, new { @class = "input-xlarge" })
                 </div>
@@ -49,7 +88,7 @@
             </div>
 
             <div class="control-group">
-                @Html.LabelForRequired(model => model.Amount)
+                @Html.LabelFor(model => model.Amount)
                 <div class="controls">
                     @Html.TextBoxFor(model => model.Amount, new { @class = "input-xlarge" })
                 </div>
@@ -57,6 +96,20 @@
             <div class="form-actions" style="margin: 0">
                 <button class="btn btn-primary btn-large" type="submit">
                     Gerar fatura</button>
+            </div>
+        }
+        else if (step == 0)
+        {
+            <div class="control-group">
+                @Html.LabelFor(model => model.PracticeIdentifier)
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.PracticeIdentifier, new { @class = "input-xlarge" })
+                </div>
+            </div>
+            <input type="hidden" name="NoValidation" value="true" />
+            <div class="form-actions" style="margin: 0">
+                <button class="btn btn-primary btn-large" type="submit">
+                    Continuar</button>
             </div>
         }
     </fieldset>

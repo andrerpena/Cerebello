@@ -34,7 +34,7 @@ select
     U.UserName,
     PR.CreatedOn,
     DATEDIFF(day, LastActiveOn, GETDATE()) as InactiveDays,
-    (select CAST(Id as varchar(max))+'-'+Value from GLB_Token where Name = 'Practice='+PR.UrlIdentifier+'&UserName='+U.UserName) as ActivationToken,
+    (select top 1 CAST(Id as varchar(max))+'-'+Value from GLB_Token where Name = 'Practice='+PR.UrlIdentifier+'&UserName='+U.UserName) as ActivationToken,
     (select count(*) from Patient as PAT where PR.Id = PAT.PracticeId) as PatientCount,
     DATEDIFF(day, PR.CreatedOn, GETDATE()) as ElapsedTime,
     (select count(*) from PatientMedicalRecords as PMR where PR.Id = PMR.PracticeId) as MedicalRecordsCount,
