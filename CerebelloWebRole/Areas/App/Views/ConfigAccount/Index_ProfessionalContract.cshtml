@@ -29,10 +29,10 @@
     <div>
         @{
             var gridBillings = this.Html.CreateGrid(this.Model.BillingYears.SelectMany(by => by.Cycles).OrderByDescending(bc => bc.CycleStart));
-            gridBillings.AddField(model => model.DueDate);
+            gridBillings.AddField(model => model.DueDate, @<text>@item.DueDate.ToString("dd/MM/yyyy")</text>);
             gridBillings.AddField(model => model.Value, @<text>@StringHelper.FormatMoney(item.Value)</text>);
-            gridBillings.AddField(model => model.EffectiveDate);
-            gridBillings.AddField(model => model.EffectiveValue);
+            gridBillings.AddField(model => model.EffectiveDate, @<text>@(item.EffectiveDate == null ? "" : item.EffectiveDate.Value.ToString("dd/MM/yyyy"))</text>);
+            gridBillings.AddField(model => model.EffectiveValue, @<text>@(item.EffectiveValue == null ? "" : StringHelper.FormatMoney(item.EffectiveValue.Value))</text>);
         }
         @gridBillings.GetHtml()
     </div>

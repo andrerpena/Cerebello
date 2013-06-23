@@ -181,6 +181,18 @@ namespace Cerebello.Firestarter
                         continue;
                     }
 
+                    // commented code: code to correct when DB TYPE was changed from DATE to DATETIME
+                    //using (var db = this.CreateCerebelloEntities())
+                    //{
+                    //    foreach (var accountContract in db.AccountContracts)
+                    //    {
+                    //        accountContract.StartDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.StartDate);
+                    //        accountContract.EndDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.EndDate);
+                    //        accountContract.IssuanceDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.IssuanceDate);
+                    //    }
+                    //    db.SaveChanges();
+                    //}
+
                     try
                     {
                         isTestDb = this.connName.ToUpper().Contains("TEST");
