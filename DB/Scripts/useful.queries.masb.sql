@@ -59,7 +59,8 @@ select
     PS.*,
     PR.UrlIdentifier,
     DATEDIFF(day, LastActiveOn, GETDATE()) as InactiveDays,
-    CASE PS.ElapsedTime WHEN 0 THEN 0.0 ELSE PS.PatientCount * 1.0 / PS.ElapsedTime END as PatientsPerDay
+    CASE PS.ElapsedTime WHEN 0 THEN 0.0 ELSE PS.PatientCount * 1.0 / PS.ElapsedTime END as PatientsPerDay,
+    PER.email
   from (
       select
           PR.Id,
@@ -70,6 +71,7 @@ select
     ) PS
     join Practice PR on PS.Id = PR.Id
     join [user] U on PR.OwnerId = U.Id
+    join Person PER on U.PersonId = PER.Id
   where PR.AccountDisabled <> 1 and
     PR.UrlIdentifier not like 'consultorioplus%' and PR.UrlIdentifier <> 'consultoriodrhouse' and
     U.UserName <> 'andrerpena'

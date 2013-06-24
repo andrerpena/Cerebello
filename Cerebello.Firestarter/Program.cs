@@ -1185,7 +1185,13 @@ namespace Cerebello.Firestarter
                     using (var db = this.CreateCerebelloEntities())
                     {
                         // collecting e-mails and objects
-                        var emailData = db.Users.Include("Person").AsEnumerable()
+                        var emailData = db.Users.Include("Person")
+                            .Where(u => u.IsOwner)
+                            .Where(u => !u.Practice.AccountDisabled)
+                            .Where(u => !u.Practice.UrlIdentifier.StartsWith("consultorioplus"))
+                            .Where(u => !u.Practice.UrlIdentifier.StartsWith("consultoriodrhouse"))
+                            .Where(u => u.UserName != "andrerpena")
+                            .AsEnumerable()
                             .Select(u => new FormSendEmail.EmailData(db, u)).ToArray();
 
                         var form = new FormSendEmail(this.configData.FormSendEmail, emailData);

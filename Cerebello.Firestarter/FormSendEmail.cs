@@ -30,7 +30,7 @@ namespace Cerebello.Firestarter
             {
                 this.db = db;
                 this.ObjectData = u;
-                this.EmailAddress = u.Person.Email;
+                this.EmailAddress = StringHelper.FirstNonEmpty(u.Person.Email, u.Practice.Email);
             }
 
             public string EmailAddress { get; set; }
@@ -282,7 +282,8 @@ namespace Cerebello.Firestarter
                             EmailHelper.SendEmail(emailMessage);
 
                             emailsSent++;
-                            this.checkedListBoxClients.SetItemChecked(checkedItemIndex, false);
+                            if (!this.toolStripButtonDEBUG.Checked)
+                                this.checkedListBoxClients.SetItemChecked(checkedItemIndex, false);
                         }
                     }
                 }
