@@ -50,8 +50,10 @@ div.option {
 
 table.prices {
     color: black;
-    margin: 1em;
+    margin: 1em auto;
     width: 100%;
+    overflow: hidden;
+    display: table;
 }
 
     table.prices tbody tr.enabled {
@@ -102,7 +104,7 @@ table.prices {
 
 table.doctors {
     margin: 1em auto;
-    width: auto;
+    /*width: auto;*/
 }
 
     table.doctors th.expand {
@@ -127,7 +129,7 @@ ul.summary li {
 
 
 table.days-of-month {
-    margin: 0 auto;
+    margin: 0 auto 10px;
     width: 100%;
 }
 
@@ -193,7 +195,7 @@ table.days-of-month {
     }
 
     .billing-calendar-wrapper .billing-calendar-description {
-        margin-right: 270px;
+        /*margin-right: 270px;*/
     }
 
 
@@ -223,6 +225,30 @@ table.days-of-month {
 .item-label{}
 .equiv-month{}
 
+h2 {
+    font-size: 24px;
+    margin: 1.4em 0 0;
+}
+
+div:first-child > h2 {
+    margin: 0 0 0;
+}
+
+.required {
+    display: none;
+}
 #AcceptedByUser {
     margin: 0 1em 0;
+}
+.trivial {
+    /*display: none;*/
+}
+.equiv-month {
+    /*display: none;*/
+}
+.saved-amount {
+    display: none;
+}
+table.prices th {
+    padding-left: 0px;
 }

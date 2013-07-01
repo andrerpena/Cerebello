@@ -12,7 +12,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Descrição")]
         public String Description { get; set; }
 
-        [Url]
+        [Code.Url]
         [Display(Name = "URL")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Url { get; set; }

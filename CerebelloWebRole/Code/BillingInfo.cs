@@ -12,7 +12,14 @@ namespace CerebelloWebRole.Code
             this.Items = new List<Item>();
         }
 
+        /// <summary>
+        /// Gets or sets a local date and time of the invoice coverage beginning.
+        /// </summary>
         public DateTime Start { get; set; }
+
+        /// <summary>
+        /// Gets or sets a local date and time of the invoice coverage ending.
+        /// </summary>
         public DateTime? End { get; set; }
 
         public decimal TotalAmount
@@ -34,8 +41,14 @@ namespace CerebelloWebRole.Code
             public ContractTypes ContractType { get; set; }
         }
 
+        /// <summary>
+        /// Gets or sets a local date and time indicating when this invoice expires, and can no longer be payd.
+        /// </summary>
         public DateTime DueDate { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indcating whether this invoice is already saved to the database or not.
+        /// </summary>
         public bool IsSaved { get; set; }
 
         public string NameId

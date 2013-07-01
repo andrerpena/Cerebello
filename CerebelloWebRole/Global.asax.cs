@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
@@ -7,6 +6,7 @@ using System.Web.Routing;
 using CerebelloWebRole.Code;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using PayPal.Version940;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 
@@ -25,8 +25,8 @@ namespace CerebelloWebRole
         {
             filters.Add(new CanonicalUrlHttpsFilter());
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new AuthenticationFilter());
-            filters.Add(new FirstAccessFilter());
+            filters.Add(new AreaAuthenticationFilter("App"));
+            filters.Add(new AccessAreaWithDefaultPasswordFilter("App", "Users", "ChangePassword"));
             filters.Add(new ValidateInputAttribute(false));
         }
 
@@ -79,6 +79,9 @@ namespace CerebelloWebRole
             container.Register(() =>
                 DebugConfig.UseLocalStorage ? new LocalBlobStorageManager() :
                 new WindowsAzureBlobStorageManager() as IBlobStorageManager);
+
+            container.Register(() =>
+                DebugConfig.IsDebug ? new PayPalApiSettingsDebug() : new PayPalApiSettingsFromConfigurationManager() as IPayPalApiSettings);
 
             // 3. Optionally verify the container's configuration.
             container.Verify();

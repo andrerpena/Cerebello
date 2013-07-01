@@ -150,7 +150,7 @@
         </div>
         <div class="title">
             <div class="logo-wrapper">
-                <a href="@Url.RouteUrl("Practice", new { action = "Index", controller = "practicehome" })">
+                <a href="@Url.RouteUrl("Practice", new { action = "Index", controller = "PracticeHome" })">
                     <img src="/content/images/top-logo.png" />
                 </a>
             </div>
@@ -222,7 +222,7 @@
                 <ul>
                     <li class="first"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })" target="_blank">Documentação</a></li>
                     <li><a href="http://cerebello.uservoice.com" target="_blank">Dê sua opinião</a></li>
-                    <li><a href="mailto:cerebello@cerebello.com.br">Fale Conosco</a></li>
+                    <li><a href="mailto:@Constants.EMAIL_CEREBELLO">Fale Conosco</a></li>
                 </ul>
             </div>
         </div>

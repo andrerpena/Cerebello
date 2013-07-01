@@ -1,0 +1,98 @@
+﻿@model ChangeContractViewModel
+@{
+    var planTitles = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "ProfessionalPlan", "Assinatura do plano profissional" }
+        };
+
+    var title = planTitles[this.Model.ContractUrlId];
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.Layout = "~/Views/Shared/_AuthenticationLayout.cshtml";
+}
+@section Title
+{
+    @title @*@LockIcon.Icon()*@
+}
+@section Scripts
+{
+    @*@LockIcon.Script(LockAccessType.Owner)*@
+    <script type="text/javascript">
+        $(function () {
+            var equivMonth = $(".equiv-month");
+            var savedAmount = $(".saved-amount");
+
+            savedAmount.filter("th")
+                .attr("title", "Clique para visualizar economia mensal")
+                .click(function (e) {
+                    savedAmount.hide();
+                    equivMonth.show();
+                });
+
+            equivMonth.filter("th")
+                .attr("title", "Clique para visualizar economia")
+                .click(function (e) {
+                    equivMonth.hide();
+                    savedAmount.show();
+                });
+        });
+    </script>
+}
+@section Styles
+{
+    <link href="@Url.Content("~/Content/Styles/Site/PlanPage.css")" rel="Stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/App/jquery-ui-overrides.css")" rel="Stylesheet" type="text/css" />
+    <style type="text/css">
+        th.equiv-month, th.saved-amount {
+            cursor: pointer;
+        }
+    </style>
+}
+@using (this.Html.BeginForm(null, null, FormMethod.Post, new { id = "contractForm", style = "margin:0" }))
+{
+    <div class="controls-wrapper">
+        @Bootstrap.Validation(this.ViewData)
+
+        @this.Html.HiddenFor(vm => vm.ContractUrlId)
+
+        <div id="userAgreement">
+            @switch (Bus.CorrectPlanCase[this.Model.ContractUrlId])
+            {
+                case "ProfessionalPlan":
+@:@Html.Partial("Upgrade_ProfessionalPlan", this.Model)
+                    break;
+            }
+        </div>
+    
+        <script type="text/javascript">
+            $(function () {
+                $('#submitButton').click(function () {
+
+                    // maybe disable the submit button once clicked?
+                    $(this).attr('disabled', true);
+
+                    @*note: this is a copy of the html seen by the user*@
+                    @* http://stackoverflow.com/questions/5550633/append-html-to-jquery-element-without-running-scripts-inside-the-html *@
+                    @* innerHTML supported browsers: http://www.quirksmode.org/dom/w3c_html.html *@
+                    var wrapper = document.createElement('div');
+                    wrapper.innerHTML = $("#userAgreement").html(); // setting innerHTML won't run script tags
+                    $(wrapper).find('script').remove();
+
+                    $("#@this.Html.FieldName(vm => vm.WholeUserAgreement)").val($(wrapper).html());
+
+                    // now submit the form
+                    $('#contractForm').submit();
+
+                    return false;
+                });
+            });
+        </script>
+    
+        <input type="hidden" id="@this.Html.FieldName(vm => vm.WholeUserAgreement)" name="@this.Html.FieldName(vm => vm.WholeUserAgreement)" value=""/>
+    </div>
+    
+    <div class="form-actions" style="margin: 0">
+        <input class="btn btn-primary btn-large" id="submitButton" type="submit" value="concluir" />
+        <span class="separator" style="padding: 0 1em;">ou</span>
+        @this.Html.ActionLink("cancelar conta", "CancelPartialAccount")
+    </div>
+}

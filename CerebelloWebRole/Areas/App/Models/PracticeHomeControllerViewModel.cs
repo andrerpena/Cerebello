@@ -39,7 +39,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress]
+        [Code.EmailAddress]
         public string Email { get; set; }
 
         [Display(Name = "Site")]

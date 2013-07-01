@@ -42,7 +42,7 @@ namespace CerebelloWebRole.Models
         public String Password { get; set; }
 
         [Display(Name = "Confirmação da Senha")]
-        [Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "Confirmação da senha não bate")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
@@ -100,6 +100,18 @@ namespace CerebelloWebRole.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeEstadoBrasileiro))]
         public int? MedicalEntityJurisdiction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of subscription to create.
+        /// This can be 1M, 3M, 6M or 12M.
+        /// </summary>
+        public string Subscription { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a trial account should be created,
+        /// regardless of the value of the Subscription property.
+        /// </summary>
+        public bool? AsTrial { get; set; }
 
         public CreateAccountViewModel Clone()
         {

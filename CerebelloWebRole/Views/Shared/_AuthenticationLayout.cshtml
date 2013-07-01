@@ -1,13 +1,26 @@
 ﻿@{
     this.Layout = "_EmptyLayout.cshtml";
 }
-@section Header
+@section Styles
 {
     <link rel="stylesheet" type="text/css" href="/Content/Styles/Site/Login.css" />
-    @RenderSection("Header", false)
+    @this.RenderSection("Styles", false)
 }
 @section Scripts
 {
-    @RenderSection("Scripts", false)
+    @this.RenderSection("Scripts", false)
 }
-@RenderBody()
+<div class="authentication-container">
+    <div class="authentication-container-wrapper">
+        <div class="header">
+            <h2>@this.RenderSection("Title")</h2>
+            @if (this.IsSectionDefined("TitleButtons"))
+            {
+                <div class="buttons-wrapper">
+                    @this.RenderSection("TitleButtons")
+                </div>
+            }
+        </div>
+        @this.RenderBody()
+    </div>
+</div>

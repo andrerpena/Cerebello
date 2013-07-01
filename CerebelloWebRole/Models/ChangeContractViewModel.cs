@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CerebelloWebRole.App_GlobalResources;
 
-namespace CerebelloWebRole.Areas.App.Models
+namespace CerebelloWebRole.Models
 {
     /// <summary>
     /// The change contract view model.
@@ -12,7 +12,6 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Gets or sets a value indicating whether user accepted the contract or not.
         /// </summary>
         [Display(Name = "Li e aceito os termos do contrato")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public bool AcceptedByUser { get; set; }
 
         /// <summary>

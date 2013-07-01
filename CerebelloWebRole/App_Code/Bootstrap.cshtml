@@ -1,0 +1,16 @@
+﻿@using System.Web.Mvc
+@using CerebelloWebRole.Code
+
+@helper Validation(ViewDataDictionary viewData)
+{
+    if (viewData.ModelState.GetAllErrors().Any())
+    {
+        <div class="alert alert-block alert-error fade in">
+            <button data-dismiss="alert" class="close" type="button">×</button>
+            @foreach (var eachModelError in viewData.ModelState.GetAllErrors())
+            {
+                <p>@eachModelError.Item2.ErrorMessage</p>
+            }
+        </div>
+    }
+}

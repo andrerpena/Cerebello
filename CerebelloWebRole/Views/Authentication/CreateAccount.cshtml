@@ -1,12 +1,16 @@
 ﻿@using System.Linq.Expressions
 @using CerebelloWebRole.Areas.App.Models
-
 @model CreateAccountViewModel
 @{
     this.Layout = "../Shared/_AuthenticationLayout.cshtml";
 
-    ViewBag.Title = "Login";
+    this.ViewBag.Title = "Login";
 
+    if (this.Model == null)
+    {
+        throw new Exception("Pass a model to this view.");
+    }
+    
     // These objects must be filled, otherwise obscure exceptions may happen.
     // - ViewBag.MedicalSpecialtyOptions
     // - ViewBag.MedicalEntityOptions
@@ -17,6 +21,12 @@
     if (!(this.ViewBag.MedicalSpecialtyOptions is IEnumerable<SelectListItem>))
     {
         throw new Exception("ViewBag.MedicalEntityOptions is not of type 'IEnumerable<SelectListItem>'.");
+    }
+
+    string subscription = "trial";
+    if (this.Model != null && !string.IsNullOrEmpty(this.Model.Subscription) )
+    {
+        subscription = this.Model.Subscription;
     }
 }
 @section Scripts {
@@ -34,166 +44,181 @@
         });
     </script>
 }
-@section Header
+@section Styles
 {
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.autocomplete.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.paginator.css")" rel="stylesheet" type="text/css" />
 }
-<div class="authentication-container">
-    <div class="authentication-container-wrapper">
-        <div class="header">
-            <h2>Criar uma conta <span class="optional">no Cerebello</span></h2>
-            <div class="buttons-wrapper">
-                <a class="btn btn-small" href="@Url.Action("Login")" class="link">Voltar</a>
+@section Title
+{
+    Criar uma conta <span class="optional">no Cerebello</span>
+}
+@section TitleButtons
+{
+    <a class="btn btn-small" href="@Url.Action("Login")" class="link">Voltar</a>
+}
+@{
+    object routeValues = string.Equals("trial", subscription)
+        ? new object()
+        : new { Subscription = subscription };
+}
+@using (Html.BeginForm(null, null, routeValues, FormMethod.Post, new { style = "margin:0" }))
+{
+    <fieldset>
+        <div class="controls-wrapper">
+            @Bootstrap.Validation(this.ViewData)
+
+            @*Properties of the practice*@
+            <div class="practice-properties">
+                <div class="control-group">
+                    @Html.LabelFor(model => model.PracticeName)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge", maxlength = 50 })
+                        <div class="alert alert-info">Um identificador único será gerado a partir deste nome. Este identificador é utilizado no login. É recomendável escolher um nome pequeno.</div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.PracticeProvince)
+                    <div class="controls">
+                        @Html.EnumDropdownListFor(model => model.PracticeProvince)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.PracticePhone)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.PracticePhone)
+                    </div>
+                    <script type="text/javascript">
+                        $("#PracticePhone").mask("(99) 99999999?9");
+                    </script>
+                </div>
+            </div>
+
+            @*Properties of the user as a person and as a doctor*@
+            <div class="person-properties">
+                <hr />
+                <div class="control-group">
+                    @Html.LabelFor(model => model.FullName)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.FullName, new { @class = "input-xlarge" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.Gender)
+                    <div class="controls">
+                        @Html.EnumDropdownListFor(model => model.Gender)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.DateOfBirth)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.DateOfBirth)
+                    </div>
+                    <script type="text/javascript">
+                        $("#DateOfBirth").mask("99/99/9999");
+                    </script>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.IsDoctor)
+                    <div class="controls">
+                        @Html.CheckBoxFor(model => model.IsDoctor)
+                    </div>
+                </div>
+                <div class="control-group doctor-info" style="@(!this.Model.IsDoctor ? "display: none" : "")" >
+                    @Html.LabelFor(model => model.MedicalSpecialtyId)
+                    <div class="controls">
+                        @(Html.AutocompleteGridFor(
+                                m => m.MedicalSpecialtyId,
+                                m => m.MedicalSpecialtyName,
+                                Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
+                                pm => pm.Id,
+                                pm => pm.Name,
+                                new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code },
+                                htmlAttributesForInput: new { @class = "input-xlarge" }
+                                ))
+                    </div>
+                </div>
+                <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                    @Html.LabelFor(model => model.MedicalEntityId)
+                    <div class="controls">
+                        @Html.DropDownListFor(
+                            m => m.MedicalEntityId,
+                            (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
+                            "",
+                            new { @class = "input-xlarge" })
+                    </div>
+                </div>
+                <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                    @Html.LabelFor(model => model.MedicalEntityJurisdiction)
+                    <div class="controls">
+                        @Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)
+                    </div>
+                </div>
+                <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
+                    @Html.LabelFor(model => model.MedicCRM)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.MedicCRM)
+                        <div class="alert alert-info">Digite apenas o número. Sem a sigla do conselho médico nem do estado.</div>
+                    </div>
+                </div>
+            </div>
+
+            @* Properties of the user as an user *@
+            <div class="user-properties">
+                <hr />
+                <div class="control-group">
+                    @Html.LabelFor(model => model.UserName)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.UserName, new { @class = "input-xlarge" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.EMail)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.EMail, new { @class = "input-xlarge" })
+                        <div class="alert alert-info">Será enviada uma mensagem para validar o seu endereço de e-mail.</div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.Password)
+                    <div class="controls">
+                        @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
+                        <div class="alert alert-info">Use 6 ou mais caracteres, hífen, sublinhado, acentuação, números, letras maiúsculas e minúsculas e outros sinais e símbolos como @("@, #, $, %, &, *, +, etc.").</div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.ConfirmPassword)
+                    <div class="controls">
+                        @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "input-xlarge" })
+                    </div>
+                </div>
             </div>
         </div>
-        @using (Html.BeginForm(null, null, FormMethod.Post, new { style = "margin:0" }))
-        {
-            <fieldset>
-                <div class="controls-wrapper">
-                    @if (this.ViewData.ModelState.GetAllErrors().Any())
-                    {
-                        <div class="alert alert-block alert-error fade in">
-                            <button data-dismiss="alert" class="close" type="button">×</button>
-                            @foreach (var eachModelError in this.ViewData.ModelState.GetAllErrors())
-                            {
-                                <p>@eachModelError.Item2.ErrorMessage</p>
-                            }
-                        </div>
-                    }
-
-                    @*Properties of the practice*@
-                    <div class="practice-properties">
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.PracticeName)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.PracticeName, new { @class = "input-xlarge", maxlength = 50 })
-                                <div class="alert alert-info">Um identificador único será gerado a partir deste nome. Este identificador é utilizada no login. É recomendável escolher um nome pequeno.</div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.PracticeProvince)
-                            <div class="controls">
-                                @Html.EnumDropdownListFor(model => model.PracticeProvince)
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.PracticePhone)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.PracticePhone)
-                            </div>
-                            <script type="text/javascript">
-                                $("#PracticePhone").mask("(99) 99999999?9");
-                            </script>
-                        </div>
-                    </div>
-
-                    @*Properties of the user as a person and as a doctor*@
-                    <div class="person-properties">
-                        <hr />
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.FullName)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.FullName, new { @class = "input-xlarge" })
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.Gender)
-                            <div class="controls">
-                                @Html.EnumDropdownListFor(model => model.Gender)
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.DateOfBirth)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.DateOfBirth)
-                            </div>
-                            <script type="text/javascript">
-                                $("#DateOfBirth").mask("99/99/9999");
-                            </script>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.IsDoctor)
-                            <div class="controls">
-                                @Html.CheckBoxFor(model => model.IsDoctor)
-                            </div>
-                        </div>
-                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                            @Html.LabelFor(model => model.MedicalSpecialtyId)
-                            <div class="controls">
-                                @(Html.AutocompleteGridFor(
-                                      m => m.MedicalSpecialtyId,
-                                      m => m.MedicalSpecialtyName,
-                                      Url.Action("LookupMedicalSpecialties", "MedicalSpecialties"),
-                                      pm => pm.Id,
-                                      pm => pm.Name,
-                                      new Expression<Func<MedicalSpecialtiesLookupGridModel, object>>[] { pm => pm.Code },
-                                      htmlAttributesForInput: new { @class = "input-xlarge" }
-                                      ))
-                            </div>
-                        </div>
-                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                            @Html.LabelFor(model => model.MedicalEntityId)
-                            <div class="controls">
-                                @Html.DropDownListFor(
-                                    m => m.MedicalEntityId,
-                                    (IEnumerable<SelectListItem>)this.ViewBag.MedicalEntityOptions,
-                                    "",
-                                    new { @class = "input-xlarge" })
-                            </div>
-                        </div>
-                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                            @Html.LabelFor(model => model.MedicalEntityJurisdiction)
-                            <div class="controls">
-                                @Html.EnumDropdownListFor(model => model.MedicalEntityJurisdiction)
-                            </div>
-                        </div>
-                        <div class="control-group doctor-info" style="@(this.Model == null || !this.Model.IsDoctor ? "display: none" : "")" >
-                            @Html.LabelFor(model => model.MedicCRM)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.MedicCRM)
-                                <div class="alert alert-info">Digite apenas o número. Sem a sigla do conselho médico nem do estado.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @* Properties of the user as an user *@
-                    <div class="user-properties">
-                        <hr />
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.UserName)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.UserName, new { @class = "input-xlarge" })
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.EMail)
-                            <div class="controls">
-                                @Html.TextBoxFor(model => model.EMail, new { @class = "input-xlarge" })
-                                <div class="alert alert-info">Será enviada uma mensagem para validar o seu endereço de e-mail.</div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.Password)
-                            <div class="controls">
-                                @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge" })
-                                <div class="alert alert-info">Use 6 ou mais caracteres, hífen, sublinhado, acentuação, números, letras maiúsculas e minúsculas e outros sinais e símbolos como @("@, #, $, %, &, *, +, etc.").</div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            @Html.LabelFor(model => model.ConfirmPassword)
-                            <div class="controls">
-                                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "input-xlarge" })
-                                <div class="alert alert-info">Repita a senha.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-actions" style="margin: 0">
-                    <button class="btn btn-primary btn-large" type="submit">
-                        Criar conta</button>
-                </div>
-            </fieldset>
-        }
-    </div>
-</div>
+        <div class="form-actions" style="margin: 0">
+            @if (string.Equals("trial", subscription, StringComparison.InvariantCultureIgnoreCase))
+            {
+                <button class="btn btn-primary btn-large" type="submit">
+                    Criar conta
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-primary btn-large" type="submit" title="continuar para a forma de pagamento">
+                    forma de pagamento
+                </button>
+                <span class="separator" style="padding: 0 1em;">ou</span>
+                <a id="CreateAsTestAccountLink" href="#">Criar como avaliação</a>
+                <script type="text/javascript">
+                    $("#CreateAsTestAccountLink").click(function(e) {
+                        e.preventDefault();
+                        var $form = $(this).closest("form");
+                        var $input = $("<input>").attr("type", "hidden").attr("name", "@this.Html.FieldName(m => m.AsTrial)").val("true");
+                        $form.append($input);
+                        $form.submit();
+                        $input.remove();
+                    });
+                </script>
+            }
+        </div>
+    </fieldset>
+}

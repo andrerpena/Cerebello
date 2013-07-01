@@ -336,7 +336,7 @@
           <Property Name="ContractTypeId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="IssuanceDate" Type="datetime" Nullable="false" />
-          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
           <Property Name="BillingAmount" Type="numeric" Scale="2" />
           <Property Name="BillingPeriodType" Type="varchar" MaxLength="10" />
@@ -353,6 +353,7 @@
           <Property Name="EndReturnAmount" Type="numeric" Scale="2" />
           <Property Name="EndReturnTax" Type="numeric" Precision="4" Scale="2" />
           <Property Name="BillingPeriodIndex" Type="int" />
+          <Property Name="IsPartialBillingInfo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -428,7 +429,7 @@
           <Property Name="AfterDueMonthlyTax" Type="numeric" Nullable="false" Precision="4" Scale="2" />
           <Property Name="IdentitySetName" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="IdentitySetNumber" Type="int" Nullable="false" />
-          <Property Name="ReferenceDate" Type="datetime" Nullable="false" />
+          <Property Name="ReferenceDate" Type="datetime" />
           <Property Name="ReferenceDateEnd" Type="datetime" />
           <Property Name="IsPayd" Type="bit" Nullable="false" />
           <Property Name="PaydAmount" Type="numeric" Scale="2" />
@@ -869,6 +870,8 @@
           <Property Name="AccountDisabled" Type="bit" Nullable="false" />
           <Property Name="AccountCancelRequest" Type="bit" Nullable="false" />
           <Property Name="Province" Type="int" />
+          <Property Name="VerificationMethod" Type="varchar" MaxLength="10" />
+          <Property Name="AccountExpiryDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -2305,6 +2308,8 @@
           <NavigationProperty Name="GoogleDrivePracticeInfoes" Relationship="Cerebello.Model.FK_GoogleDrivePracticeInfo_Practice" FromRole="Practice" ToRole="GoogleDrivePracticeInfo" />
           <NavigationProperty Name="GoogleUserAccoutInfoes" Relationship="Cerebello.Model.FK_GoogleAccoutInfo_Practice1" FromRole="Practice" ToRole="GoogleUserAccoutInfo" />
           <NavigationProperty Name="Doctors" Relationship="Cerebello.Model.FK_Doctor_Practice" FromRole="Practice" ToRole="Doctor" />
+          <Property Type="String" Name="VerificationMethod" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="AccountExpiryDate" Precision="3" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -3034,7 +3039,7 @@
           <Property Type="Int32" Name="ContractTypeId" Nullable="false" />
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <Property Type="DateTime" Name="IssuanceDate" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_AccountContract_Practice" FromRole="AccountContract" ToRole="Practice" />
           <NavigationProperty Name="SYS_ContractType" Relationship="Cerebello.Model.FK_AccountContract_SYS_ContractType" FromRole="AccountContract" ToRole="SYS_ContractType" />
@@ -3056,6 +3061,7 @@
           <Property Type="Decimal" Name="EndReturnAmount" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="EndReturnTax" Precision="4" Scale="2" />
           <Property Type="Int32" Name="BillingPeriodIndex" />
+          <Property Type="Boolean" Name="IsPartialBillingInfo" Nullable="false" />
         </EntityType>
         <EntityType Name="SYS_ContractType">
           <Key>
@@ -3388,7 +3394,7 @@
           <Property Type="DateTime" Name="PaymentDate" Precision="3" />
           <Property Type="String" Name="IdentitySetName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="IdentitySetNumber" Nullable="false" />
-          <Property Type="DateTime" Name="ReferenceDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="ReferenceDate" Precision="3" />
           <Property Type="DateTime" Name="ReferenceDateEnd" Precision="3" />
           <Property Type="Decimal" Name="MainAmount" Nullable="false" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="MainDiscount" Nullable="false" Precision="18" Scale="2" />
@@ -3777,6 +3783,8 @@
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Practices"><EntityTypeMapping TypeName="Cerebello.Model.Practice"><MappingFragment StoreEntitySet="Practice">
+                <ScalarProperty Name="AccountExpiryDate" ColumnName="AccountExpiryDate" />
+                <ScalarProperty Name="VerificationMethod" ColumnName="VerificationMethod" />
                 <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="AccountCancelRequest" ColumnName="AccountCancelRequest" />
                 <ScalarProperty Name="AccountDisabled" ColumnName="AccountDisabled" />
@@ -4144,6 +4152,7 @@
           <EntitySetMapping Name="AccountContracts">
             <EntityTypeMapping TypeName="Cerebello.Model.AccountContract">
               <MappingFragment StoreEntitySet="AccountContract">
+                <ScalarProperty Name="IsPartialBillingInfo" ColumnName="IsPartialBillingInfo" />
                 <ScalarProperty Name="BillingPeriodIndex" ColumnName="BillingPeriodIndex" />
                 <ScalarProperty Name="EndReturnTax" ColumnName="EndReturnTax" />
                 <ScalarProperty Name="EndReturnAmount" ColumnName="EndReturnAmount" />

@@ -520,14 +520,14 @@
             <param name="nvc">NameValueCollection to enumerate name/value pairs.</param>
             <returns>Enumerable that can enumerate all name/value pairs of the collection.</returns>
         </member>
-        <member name="M:PayPal.Version940.PayPalMvcExtensions.SetupExpressCheckoutUrls(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutOperation,System.String,System.String)">
+        <member name="M:PayPal.Version940.PayPalMvcExtensions.SetupExpressCheckoutUrls(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutOperation,System.String,System.String,System.Object)">
             <summary>
             Changes the express checkout operation
             </summary>
             <param name="controller"></param>
             <param name="request"></param>
         </member>
-        <member name="M:PayPal.Version940.PayPalMvcExtensions.SetExpressCheckout(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutOperation,System.String,System.String)">
+        <member name="M:PayPal.Version940.PayPalMvcExtensions.SetExpressCheckout(System.Web.Mvc.Controller,PayPal.Version940.PayPalSetExpressCheckoutOperation,System.String,System.String,System.Object)">
             <summary>
             Set express checkout 
             </summary>

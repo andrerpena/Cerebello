@@ -1,10 +1,11 @@
 ﻿@{
-    this.Layout = "/Views/Shared/_EmptyLayout.cshtml";
-    ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
+    this.Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+    this.ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
 }
 
-@section Header {
-    <link rel="stylesheet" type="text/css" href="/Content/Styles/Site/Cancel.css" />
+@section Styles
+{
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/Site/Cancel.css")" />
 }
 
 <div class="box-page-container">
@@ -20,8 +21,10 @@
                 Como foi solicitado, sua conta foi cancelada.
             </p>
             <p>
-                Caso haja alguma coisa que possamos fazer tê-lo de volta, por favor, envie um e-mail para <a href="mailto:cerebello@cerebello.com.br">cerebello@Cerebello.com.br</a>.
-        Caso você tenha alguma sugestão sobre como tornar o Cerebello melhor, por favor, acesse a nossa <a href="https://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello">central de ideias</a>.
+                Caso haja alguma coisa que possamos fazer tê-lo de volta, por favor, envie um e-mail para
+                <a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a>.
+                Caso você tenha alguma sugestão sobre como tornar o Cerebello melhor, por favor, acesse a nossa
+                <a href="https://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello">central de ideias</a>.
             </p>
             <p>
                 Nós sentimos muito a sua partida e esperamos que um dia possamos fazer parte do seu consultório novamente.

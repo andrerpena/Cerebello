@@ -170,13 +170,13 @@ namespace CerebelloWebRole.Controllers
                             Items = new List<GenerateInvoiceViewModel.PayPalInvoiceItem>(),
                         };
 
-                    var dataInicioFim = selectedInvoiceInfo.End != null
+                    var strStartToEnd = selectedInvoiceInfo.End != null
                         ? string.Format(
                             "{0} até {1}",
                             selectedInvoiceInfo.Start.ToString("yyyy'-'MM'-'dd"),
                             selectedInvoiceInfo.End.Value.ToString("yyyy'-'MM'-'dd"))
                         : string.Format(
-                            "Assinatura do plano profissional do Cerebello ({0})",
+                            "{0}",
                             selectedInvoiceInfo.Start.ToString("yyyy'-'MM'-'dd"));
 
                     viewModel.PayPalInvoice.Items.Add(
@@ -185,8 +185,8 @@ namespace CerebelloWebRole.Controllers
                                 NameId = "Assinatura Cerebello",
                                 Date = "",
                                 Quantity = 1,
-                                UnitPrice = selectedInvoiceInfo.TotalAmount.ToString("0.00", CultureInfo.InvariantCulture),
-                                Description = string.Format("Assinatura do plano profissional do Cerebello ({0})", dataInicioFim),
+                                UnitPrice = selectedInvoiceInfo.TotalAmount.ToString("0.00", CultureInfo.InvariantCulture).Replace('.', ','),
+                                Description = string.Format("Assinatura do plano profissional do Cerebello ({0})", strStartToEnd),
                             });
 
                     var periodType = practice.AccountContract.BillingPeriodType;
@@ -206,7 +206,7 @@ namespace CerebelloWebRole.Controllers
                                     NameId = "Desconto da Assinatura Cerebello",
                                     Date = "",
                                     Quantity = 1,
-                                    UnitPrice = selectedInvoiceInfo.TotalDiscount.ToString("'-'0.00", CultureInfo.InvariantCulture),
+                                    UnitPrice = selectedInvoiceInfo.TotalDiscount.ToString("'-'0.00", CultureInfo.InvariantCulture).Replace('.', ','),
                                     Description = string.Format("Desconto na Assinatura (condições especiais para pagamento {0})", discountReason)
                                 });
                     }
@@ -248,7 +248,8 @@ namespace CerebelloWebRole.Controllers
                 var accountEnd = PracticeController.ConvertToLocalDateTime(practice, activeAccountContract.EndDate);
 
                 var currentContractInterval = new ContinuousSet<DateTime>();
-                currentContractInterval.AddPoint(accountStart, false, true, true);
+                if (accountStart.HasValue)
+                    currentContractInterval.AddPoint(accountStart.Value, false, true, true);
                 if (accountEnd.HasValue)
                     currentContractInterval.AddPoint(accountEnd.Value, true, false, false);
 
@@ -256,7 +257,10 @@ namespace CerebelloWebRole.Controllers
                 var dateSetBillings = new ContinuousSet<DateTime>();
                 foreach (var eachBilling in activeAccountContract.Billings)
                 {
-                    var billingRefStart = PracticeController.ConvertToLocalDateTime(practice, eachBilling.ReferenceDate);
+                    if (eachBilling.ReferenceDate == null)
+                        continue;
+
+                    var billingRefStart = PracticeController.ConvertToLocalDateTime(practice, (DateTime)eachBilling.ReferenceDate);
                     var billingRefEnd = PracticeController.ConvertToLocalDateTime(practice, eachBilling.ReferenceDateEnd);
 
                     if (billingRefEnd.HasValue)
@@ -323,16 +327,21 @@ namespace CerebelloWebRole.Controllers
         private static IEnumerable<DateTimeInterval> GetAccountContractBillingCycles(AccountContract accountContract)
         {
             var start = PracticeController.ConvertToLocalDateTime(accountContract.Practice, accountContract.StartDate);
+
+            if (start == null)
+                return Enumerable.Empty<DateTimeInterval>();
+
+            var startValue = start.Value;
             var periodType = accountContract.BillingPeriodType;
             var periodSize = accountContract.BillingPeriodSize ?? 1;
             var periodCount = accountContract.BillingPeriodCount ?? 7305; // = 365.25 * 20
 
             var mainIntervals = DateTimeHelper.IntervalRange(
-                start,
+                startValue,
                 periodCount,
                 d =>
                 {
-                    if (periodType == "M") return d.AddMonths(periodSize, start.Day);
+                    if (periodType == "M") return d.AddMonths(periodSize, startValue.Day);
                     if (periodType == "d") return d.AddDays(periodSize);
                     if (periodType == "y") return d.AddYears(periodSize);
                     throw new Exception("Unknown period type.");

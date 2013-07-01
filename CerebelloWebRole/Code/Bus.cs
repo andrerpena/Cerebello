@@ -20,6 +20,12 @@ namespace CerebelloWebRole.Code
             { "ProfessionalContract", "ProfessionalContract" },
         };
 
+        public static readonly Dictionary<string, string> ContractToPlan = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "TrialContract", "TrialPlan" },
+            { "ProfessionalContract", "ProfessionalPlan" },
+        };
+
         /// <summary>
         /// Trial plan constants.
         /// </summary>
@@ -63,6 +69,8 @@ namespace CerebelloWebRole.Code
 
             /// <summary> Equals 29 </summary>
             public const int DOCTOR_PRICE = (int)(PRICE_MONTH / 2);
+
+            public const int MAX_DAYS_TO_PAY_BILLING = 30;
         }
     }
 }

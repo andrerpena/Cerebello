@@ -1,5 +1,7 @@
 ﻿using System.Web.Mvc;
 using CerebelloWebRole.Code;
+using System.Linq;
+using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Controllers
 {
@@ -15,7 +17,13 @@ namespace CerebelloWebRole.Controllers
 
         public ActionResult Welcome(string practice)
         {
-            return this.View();
+            this.InitDb();
+            var viewModel = new WelcomeViewModel();
+            var dbPractice = this.db.Practices.SingleOrDefault(p => p.UrlIdentifier == practice);
+            this.InitDbUser(this.ControllerContext.RequestContext);
+            if (dbPractice != null && this.DbUser.PracticeId == dbPractice.Id)
+                viewModel.IsTrial = dbPractice.AccountContract.IsTrial;
+            return this.View(viewModel);
         }
 
         public ActionResult PricesAndPlans()

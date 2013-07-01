@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="createdUser">Output paramater that returns the new user.</param>
         /// <param name="registrationData">Object containing informations about the user to be created.</param>
-        /// <param name="db">Storage object context used to add the new user. It won't be saved, just changed.</param>
+        /// <param name="dbUserSet">Storage object context used to add the new user. It won't be saved, just changed.</param>
         /// <param name="utcNow"> </param>
         /// <param name="practiceId">The id of the practice that the new user belongs to.</param>
         /// <returns>An enumerated value indicating what has happened.</returns>
@@ -61,24 +61,24 @@ namespace CerebelloWebRole.Code
 
             // Creating user.
             createdUser = new User
+            {
+                Person = new Person
                 {
-                    Person = new Person
-                        {
-                            // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
-                            // The caller of this method must set the property.
-                            Gender = registrationData.Gender ?? 0,
-                            FullName = registrationData.FullName,
-                            CreatedOn = utcNow,
-                            Email = registrationData.EMail,
-                            EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail),
-                        },
-                    UserName = registrationData.UserName,
-                    UserNameNormalized = normalizedUserName,
-                    PasswordSalt = passwordSalt,
-                    Password = passwordHash,
-                    SYS_PasswordAlt = null,
-                    LastActiveOn = utcNow,
-                };
+                    // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
+                    // The caller of this method must set the property.
+                    Gender = registrationData.Gender ?? 0,
+                    FullName = registrationData.FullName,
+                    CreatedOn = utcNow,
+                    Email = registrationData.EMail,
+                    EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail),
+                },
+                UserName = registrationData.UserName,
+                UserNameNormalized = normalizedUserName,
+                PasswordSalt = passwordSalt,
+                Password = passwordHash,
+                SYS_PasswordAlt = null,
+                LastActiveOn = utcNow,
+            };
 
             if (practiceId != null)
             {
@@ -87,6 +87,62 @@ namespace CerebelloWebRole.Code
             }
 
             dbUserSet.AddObject(createdUser);
+
+            return CreateUserResult.Ok;
+        }
+
+        /// <summary>
+        /// Creates a new user and adds it to the storage object context.
+        /// </summary>
+        /// <param name="userToUpdate">User object to update the data.</param>
+        /// <param name="registrationData">Object containing informations about the user to be created.</param>
+        /// <param name="dbUserSet">Storage object context used to add the new user. It won't be saved, just changed.</param>
+        /// <param name="utcNow"> </param>
+        /// <returns>An enumerated value indicating what has happened.</returns>
+        public static CreateUserResult UpdateUser(User userToUpdate, CreateAccountViewModel registrationData, IObjectSet<User> dbUserSet, DateTime utcNow)
+        {
+            // Password cannot be null, nor empty.
+            if (string.IsNullOrEmpty(registrationData.Password))
+                return CreateUserResult.InvalidUserNameOrPassword;
+
+            // User-name cannot be null, nor empty.
+            if (string.IsNullOrEmpty(registrationData.UserName))
+                return CreateUserResult.InvalidUserNameOrPassword;
+
+            // Password salt and hash.
+            string passwordSalt = CipherHelper.GenerateSalt();
+            var passwordHash = CipherHelper.Hash(registrationData.Password, passwordSalt);
+
+            // Normalizing user name.
+            // The normalized user-name will be used to discover if another user with the same user-name already exists.
+            // This is a security measure. This makes it very difficult to guess what a person's user name may be.
+            // You can only login with the exact user name that you provided the first timestamp,
+            // but if someone tries to register a similar user name just to know if that one is the one you used...
+            // the attacker won't be sure... because it could be any other variation.
+            // e.g. I register user-name "Miguel.Angelo"... the attacker tries to register "miguelangelo", he'll be denied...
+            // but that doesn't mean the exact user-name "miguelangelo" is the one I used, in fact it is not.
+            var normalizedUserName = StringHelper.NormalizeUserName(registrationData.UserName);
+
+            var isUserNameAlreadyInUse = dbUserSet.Any(u => u.UserNameNormalized == normalizedUserName
+                && u.PracticeId == userToUpdate.PracticeId
+                && u.Id != userToUpdate.Id);
+
+            if (isUserNameAlreadyInUse)
+                return CreateUserResult.UserNameAlreadyInUse;
+
+            // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
+            // The caller of this method must set the property.
+            userToUpdate.Person.Gender = registrationData.Gender ?? 0;
+            userToUpdate.Person.FullName = registrationData.FullName;
+            userToUpdate.Person.CreatedOn = utcNow;
+            userToUpdate.Person.Email = registrationData.EMail;
+            userToUpdate.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail);
+            userToUpdate.UserName = registrationData.UserName;
+            userToUpdate.UserNameNormalized = normalizedUserName;
+            userToUpdate.PasswordSalt = passwordSalt;
+            userToUpdate.Password = passwordHash;
+            userToUpdate.SYS_PasswordAlt = null;
+            userToUpdate.LastActiveOn = utcNow;
 
             return CreateUserResult.Ok;
         }

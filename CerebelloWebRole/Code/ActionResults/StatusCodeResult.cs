@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Code
             if (request.IsAjaxRequest())
             {
                 // todo: check for json request: Request.AcceptTypes.Contains("application/json")
-                // todo: json requests are being made without setting the content-type to "application/json"
+                // todo: json requests are being made without setting the content-type to "application/json" throughout the application
                 // todo: Xhr requests made without "application/json" are meant to be XML, not JSON.
 
                 if (JsonRequestBehavior == JsonRequestBehavior.DenyGet &&

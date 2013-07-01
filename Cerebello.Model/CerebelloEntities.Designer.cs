@@ -1436,17 +1436,17 @@ namespace Cerebello.Model
         /// <param name="contractTypeId">Initial value of the ContractTypeId property.</param>
         /// <param name="practiceId">Initial value of the PracticeId property.</param>
         /// <param name="issuanceDate">Initial value of the IssuanceDate property.</param>
-        /// <param name="startDate">Initial value of the StartDate property.</param>
         /// <param name="isTrial">Initial value of the IsTrial property.</param>
-        public static AccountContract CreateAccountContract(global::System.Int32 id, global::System.Int32 contractTypeId, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime startDate, global::System.Boolean isTrial)
+        /// <param name="isPartialBillingInfo">Initial value of the IsPartialBillingInfo property.</param>
+        public static AccountContract CreateAccountContract(global::System.Int32 id, global::System.Int32 contractTypeId, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.Boolean isTrial, global::System.Boolean isPartialBillingInfo)
         {
             AccountContract accountContract = new AccountContract();
             accountContract.Id = id;
             accountContract.ContractTypeId = contractTypeId;
             accountContract.PracticeId = practiceId;
             accountContract.IssuanceDate = issuanceDate;
-            accountContract.StartDate = startDate;
             accountContract.IsTrial = isTrial;
+            accountContract.IsPartialBillingInfo = isPartialBillingInfo;
             return accountContract;
         }
 
@@ -1556,9 +1556,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.DateTime StartDate
+        public Nullable<global::System.DateTime> StartDate
         {
             get
             {
@@ -1573,8 +1573,8 @@ namespace Cerebello.Model
                 OnStartDateChanged();
             }
         }
-        private global::System.DateTime _StartDate;
-        partial void OnStartDateChanging(global::System.DateTime value);
+        private Nullable<global::System.DateTime> _StartDate;
+        partial void OnStartDateChanging(Nullable<global::System.DateTime> value);
         partial void OnStartDateChanged();
     
         /// <summary>
@@ -1960,6 +1960,30 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _BillingPeriodIndex;
         partial void OnBillingPeriodIndexChanging(Nullable<global::System.Int32> value);
         partial void OnBillingPeriodIndexChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsPartialBillingInfo
+        {
+            get
+            {
+                return _IsPartialBillingInfo;
+            }
+            set
+            {
+                OnIsPartialBillingInfoChanging(value);
+                ReportPropertyChanging("IsPartialBillingInfo");
+                _IsPartialBillingInfo = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsPartialBillingInfo");
+                OnIsPartialBillingInfoChanged();
+            }
+        }
+        private global::System.Boolean _IsPartialBillingInfo;
+        partial void OnIsPartialBillingInfoChanging(global::System.Boolean value);
+        partial void OnIsPartialBillingInfoChanged();
 
         #endregion
 
@@ -3546,11 +3570,10 @@ namespace Cerebello.Model
         /// <param name="isPayd">Initial value of the IsPayd property.</param>
         /// <param name="identitySetName">Initial value of the IdentitySetName property.</param>
         /// <param name="identitySetNumber">Initial value of the IdentitySetNumber property.</param>
-        /// <param name="referenceDate">Initial value of the ReferenceDate property.</param>
         /// <param name="mainAmount">Initial value of the MainAmount property.</param>
         /// <param name="mainDiscount">Initial value of the MainDiscount property.</param>
         /// <param name="mainAccountContractId">Initial value of the MainAccountContractId property.</param>
-        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.String identitySetName, global::System.Int32 identitySetNumber, global::System.DateTime referenceDate, global::System.Decimal mainAmount, global::System.Decimal mainDiscount, global::System.Int32 mainAccountContractId)
+        public static Billing CreateBilling(global::System.Int32 id, global::System.Int32 practiceId, global::System.DateTime issuanceDate, global::System.DateTime dueDate, global::System.Decimal afterDueTax, global::System.Decimal afterDueMonthlyTax, global::System.Boolean isPayd, global::System.String identitySetName, global::System.Int32 identitySetNumber, global::System.Decimal mainAmount, global::System.Decimal mainDiscount, global::System.Int32 mainAccountContractId)
         {
             Billing billing = new Billing();
             billing.Id = id;
@@ -3562,7 +3585,6 @@ namespace Cerebello.Model
             billing.IsPayd = isPayd;
             billing.IdentitySetName = identitySetName;
             billing.IdentitySetNumber = identitySetNumber;
-            billing.ReferenceDate = referenceDate;
             billing.MainAmount = mainAmount;
             billing.MainDiscount = mainDiscount;
             billing.MainAccountContractId = mainAccountContractId;
@@ -3843,9 +3865,9 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.DateTime ReferenceDate
+        public Nullable<global::System.DateTime> ReferenceDate
         {
             get
             {
@@ -3860,8 +3882,8 @@ namespace Cerebello.Model
                 OnReferenceDateChanged();
             }
         }
-        private global::System.DateTime _ReferenceDate;
-        partial void OnReferenceDateChanging(global::System.DateTime value);
+        private Nullable<global::System.DateTime> _ReferenceDate;
+        partial void OnReferenceDateChanging(Nullable<global::System.DateTime> value);
         partial void OnReferenceDateChanged();
     
         /// <summary>
@@ -14141,6 +14163,54 @@ namespace Cerebello.Model
         private Nullable<global::System.Int32> _Province;
         partial void OnProvinceChanging(Nullable<global::System.Int32> value);
         partial void OnProvinceChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String VerificationMethod
+        {
+            get
+            {
+                return _VerificationMethod;
+            }
+            set
+            {
+                OnVerificationMethodChanging(value);
+                ReportPropertyChanging("VerificationMethod");
+                _VerificationMethod = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("VerificationMethod");
+                OnVerificationMethodChanged();
+            }
+        }
+        private global::System.String _VerificationMethod;
+        partial void OnVerificationMethodChanging(global::System.String value);
+        partial void OnVerificationMethodChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> AccountExpiryDate
+        {
+            get
+            {
+                return _AccountExpiryDate;
+            }
+            set
+            {
+                OnAccountExpiryDateChanging(value);
+                ReportPropertyChanging("AccountExpiryDate");
+                _AccountExpiryDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AccountExpiryDate");
+                OnAccountExpiryDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _AccountExpiryDate;
+        partial void OnAccountExpiryDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnAccountExpiryDateChanged();
 
         #endregion
 

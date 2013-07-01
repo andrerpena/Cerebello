@@ -5,20 +5,18 @@
     this.ViewBag.Title = "Cerebello: Confirme a criação de sua conta";
     this.ViewBag.ShortTitle = "Confirmação de e-mail";
 
-    var urlWithData = this.Url.Action(
+    var urlWithData = this.Url.ActionAbsolute(
         "VerifyPracticeAndEmail",
         "Authentication",
-        new VerifyPracticeAndEmailViewModel { Token = Model.Token, PracticeIdentifier = this.Model.PracticeIdentifier },
-        "https");
+        new VerifyPracticeAndEmailViewModel { Token = Model.Token, PracticeIdentifier = this.Model.PracticeIdentifier });
 
-    var urlWithoutData = this.Url.Action(
+    var urlWithoutData = this.Url.ActionAbsolute(
         "VerifyPracticeAndEmail",
         "Authentication",
-        new VerifyPracticeAndEmailViewModel { },
-        "https");
+        new VerifyPracticeAndEmailViewModel { });
 
-    var urlLogin = this.Url.Action("Index", "PracticeHome",
-        new { area = "App", practice = this.Model.PracticeIdentifier }, "https");
+    var urlLogin = this.Url.ActionAbsolute("Index", "PracticeHome",
+        new { area = "App", practice = this.Model.PracticeIdentifier });
 }
 @if (this.ViewBag.IsBodyHtml == true)
 {
@@ -27,18 +25,32 @@
     </p>
     <p>
         Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
-        nova conta no @EmailHtml.Link(this.Url.Action("Index", "Home", new { }, "https"), "Cerebello"),
+        nova conta no @EmailHtml.Link(this.Url.Action("Index", "Home", new { }), "Cerebello"),
         o seu software de gerenciamento de consultório.
     </p>
     
     @EmailHtml.SectionHeader("Concluindo a criação da conta")
-    <p>
-        Para completar a criação de sua conta você deve confirmar o recebimento desta mensagem.
-        Isso pode ser feito visitando o seguinte link:
-    </p>
-    <p>
-        @EmailHtml.Link(urlWithData, "Confirmar meu e-mail e ativar a minha conta")
-    </p>
+    if (this.Model.IsTrial)
+    {
+        <p>
+            Para completar a criação de sua conta você deve confirmar o recebimento desta mensagem.
+            Isso pode ser feito visitando o seguinte link:
+        </p>
+        <p>
+            @EmailHtml.Link(urlWithData, "Confirmar meu e-mail e ativar a minha conta")
+        </p>
+    }
+    else
+    {
+        <p>
+            Por favor, confirme o recebimento desta mensagem,
+            para podermos estabelecer um meio de comunicação com você.
+            Isso pode ser feito visitando o seguinte link:
+        </p>
+        <p>
+            @EmailHtml.Link(urlWithData, "Confirmar meu e-mail")
+        </p>
+    }
     
     @EmailHtml.SectionHeader("Suas credenciais")
     <p>
@@ -50,16 +62,27 @@
     </p>
     <p>
         Você pode entrar informando suas credenciais na página de
-        @EmailHtml.Link(this.Url.Action("Login", "Authentication", new { }, "https"), "Login"),
+        @EmailHtml.Link(this.Url.Action("Login", "Authentication", new { }), "Login"),
         ou acessando diretamente a url
         @EmailHtml.Link(urlLogin, urlLogin)
     </p>
 
     @EmailHtml.SectionHeader("Esqueci o nome de usuário ou a senha")
     <p>
-        Se você esquecer essas informações, entre em contato conosco.
-        Só assim será possível recomeçar o cadastro de sua conta.
+        Se você esquecer essas informações, entre em contato conosco,
+        por um dos seguintes meios:
     </p>
+    <ul>
+        <li>e-mail: <strong>@Constants.EMAIL_CEREBELLO</strong></li>
+        <li>tel: <strong>@Constants.TELEPHONE_NUMBER</strong></li>
+        <li>chat direto no site: <strong>@Constants.SITE_CEREBELLO</strong></li>
+    </ul>
+    if (this.Model.IsTrial)
+    {
+        <p>
+            Só assim será possível recomeçar o cadastro de sua conta.
+        </p>
+    }
     
     @EmailHtml.SectionHeader("Observações")
     <p>
@@ -67,13 +90,16 @@
         @(EmailHtml.Link(urlWithoutData, "entrar com o token de confirmação manualmente")).
         O seu token é: @EmailHtml.InlineCode(this.Model.Token)
     </p>
-    @EmailHtml.BootstrapAlert(@<text>
-    <p>
-        <span style="color: DarkRed">ATENÇÃO: </span>Se a verificação não ocorrer em até 30
-        dias, o processo de cadastro será cancelado. Você pode fazer o cadastro novamente
-        caso isso aconteça.
-    </p>
-    </text>)
+    if (this.Model.IsTrial)
+    {
+        @EmailHtml.BootstrapAlert(@<text>
+        <p>
+            <span style="color: DarkRed">ATENÇÃO: </span>Se a verificação não ocorrer em até @Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT
+            horas, o processo de cadastro será cancelado. Você pode fazer o cadastro novamente
+            caso isso aconteça.
+        </p>
+        </text>)
+    }
     <p>
         Se você não requisitou a criação de uma
         conta, ignore este e-mail e nos desculpe pela
@@ -99,9 +125,16 @@ consultório.
 Concluindo a criação da conta
 -----------------------------
 
+@if (!(this.Model.IsTrial)) { goto ELSE_IsTrial1; }
 Para completar a criação de sua conta você deve
 confirmar o recebimento desta mensagem.
 Isso pode ser feito visitando o seguinte link:
+@{goto ENDIF_IsTrial1;
+ELSE_IsTrial1:}
+Por favor, confirme o recebimento desta mensagem,
+para podermos estabelecer um meio de comunicação com você.
+Isso pode ser feito visitando o seguinte link:
+@{ENDIF_IsTrial1:}
 
 @Html.Raw(urlWithData)
 
@@ -118,9 +151,22 @@ sistema.
 
 Você pode entrar informando suas credenciais
 na página de Login
-@(this.Url.Action("Login", "Authentication", new { }, "https")),
+@(this.Url.Action("Login", "Authentication", new { })),
 ou acessando diretamente a url
 @Html.Raw(urlLogin)
+
+Esqueci o nome de usuário ou a senha
+====================================
+
+Se você esquecer essas informações, entre em contato conosco,
+por um dos seguintes meios:
+- e-mail: @Constants.EMAIL_CEREBELLO
+- tel: @Constants.TELEPHONE_NUMBER
+- chat direto no site: @Constants.SITE_CEREBELLO
+
+@if (!(this.Model.IsTrial)) { goto ELSE_IsTrial2; }
+Só assim será possível recomeçar o cadastro de sua conta.
+@{ELSE_IsTrial2:}
 
 Observações
 -----------
@@ -131,8 +177,11 @@ entrar com o token de confirmação manualmente em:
 com o token: "@this.Model.Token"
 (sem as aspas duplas).
 
-**ATENÇÃO:** Se a verificação não ocorrer em até 30
-dias, o processo de cadastro será cancelado.
+@if (!(this.Model.IsTrial)) { goto ELSE_IsTrial3; }
+**ATENÇÃO:** Se a verificação não ocorrer em até @Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT
+horas, o processo de cadastro será cancelado.
+Você pode fazer o cadastro novamente caso isso aconteça.
+@{ELSE_IsTrial3:}
 
 Se você não requisitou a criação de uma
 conta, ignore este e-mail e nos desculpe pela

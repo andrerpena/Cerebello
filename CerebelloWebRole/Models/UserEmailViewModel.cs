@@ -6,9 +6,16 @@ namespace CerebelloWebRole.Models
     {
         public UserEmailViewModel(User user)
         {
-            this.PersonName = user.Person.FullName;
             this.UserName = user.UserName;
-            this.PracticeIdentifier = user.Practice.UrlIdentifier;
+
+            if (user.Person != null)
+                this.PersonName = user.Person.FullName;
+
+            if (user.Practice != null)
+                this.PracticeIdentifier = user.Practice.UrlIdentifier;
+
+            if (user.Practice != null && user.Practice.AccountContract != null)
+                this.IsTrial = user.Practice.AccountContract.IsTrial;
         }
 
         public string PersonName { get; set; }
@@ -21,5 +28,7 @@ namespace CerebelloWebRole.Models
         public string Token { get; set; }
 
         public string PracticeIdentifier { get; set; }
+
+        public bool IsTrial { get; set; }
     }
 }

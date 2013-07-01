@@ -1,4 +1,6 @@
-﻿namespace CerebelloWebRole.Code
+﻿using System;
+
+namespace CerebelloWebRole.Code
 {
     /// <summary>
     /// Constants
@@ -64,6 +66,15 @@
         public const string DOMAIN = "www.cerebello.com.br";
 #endif
 
-        public const string EMAIL_POWEREDBY = "www.cerebello.com.br";
+        public const string SITE_CEREBELLO = "www.cerebello.com.br";
+        public const string SITE_CEREBELLO_FULL = "https://www.cerebello.com.br";
+        public const string EMAIL_POWEREDBY = SITE_CEREBELLO;
+
+        public const string TELEPHONE_NUMBER = "(11) 3280-0995";
+        public const string EMAIL_CEREBELLO = "cerebello@cerebello.com.br";
+
+        public static readonly int MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT = 24;
+        public static readonly TimeSpan MaxTimeToVerifyProfessionalAccount = TimeSpan.FromMinutes(30 + 15);
+        public static readonly int MAX_DAYS_TO_RESET_PASSWORD = 30;
     }
 }

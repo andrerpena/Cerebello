@@ -52,7 +52,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public String PatientName { get; set; }
 
         [Display(Name = "E-mail")]
-        [EmailAddress]
+        [Code.EmailAddress]
         public string PatientEmail { get; set; }
 
         [Display(Name = "Sexo")]

@@ -26,7 +26,7 @@ CREATE TABLE [dbo].[AccountContract](
 	[ContractTypeId] [int] NOT NULL,
 	[PracticeId] [int] NOT NULL,
 	[IssuanceDate] [datetime] NOT NULL,
-	[StartDate] [datetime] NOT NULL,
+	[StartDate] [datetime] NULL,
 	[EndDate] [datetime] NULL,
 	[BillingAmount] [numeric](18, 2) NULL,
 	[BillingPeriodType] [varchar](10) NULL,
@@ -43,6 +43,7 @@ CREATE TABLE [dbo].[AccountContract](
 	[EndReturnAmount] [numeric](18, 2) NULL,
 	[EndReturnTax] [numeric](4, 2) NULL,
 	[BillingPeriodIndex] [int] NULL,
+	[IsPartialBillingInfo] [bit] NOT NULL,
  CONSTRAINT [PK_AccountContract] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -168,7 +169,7 @@ CREATE TABLE [dbo].[Billing](
 	[AfterDueMonthlyTax] [numeric](4, 2) NOT NULL,
 	[IdentitySetName] [varchar](50) NOT NULL,
 	[IdentitySetNumber] [int] NOT NULL,
-	[ReferenceDate] [datetime] NOT NULL,
+	[ReferenceDate] [datetime] NULL,
 	[ReferenceDateEnd] [datetime] NULL,
 	[IsPayd] [bit] NOT NULL,
 	[PaydAmount] [numeric](18, 2) NULL,
@@ -954,6 +955,8 @@ CREATE TABLE [dbo].[Practice](
 	[AccountDisabled] [bit] NOT NULL,
 	[AccountCancelRequest] [bit] NOT NULL,
 	[Province] [int] NULL,
+	[VerificationMethod] [varchar](10) NULL,
+	[AccountExpiryDate] [datetime] NULL,
  CONSTRAINT [PK_Practice] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

@@ -53,6 +53,11 @@ Conta oficial:
     Configurar solução de pagamento para Digital Goods:
         https://www.sandbox.paypal.com/br/cgi-bin/webscr?cmd=_accountsetup-ppbasics
 
+Configurar Digital Goods em conta Empresarial:
+
+    Crie a conta e depois acesse o link abaixo para ativar a opção de digital goods.
+        https://www.paypal.com/br/cgi-bin/webscr?cmd=_product-go&product=additional_payment&signup_profile=dg
+
 ██ Sandbox owner ██
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
     mig.ang.san.bic@gmail.com ..gimasb
@@ -70,6 +75,24 @@ Conta oficial:
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
     email:      usuario_teste_1@gmail.com  Confirmed
     pwd:        0)o9(i8*u7&
+
+    name:       Usuário  Teste
+    type:       Premier  Verified
+    country:    Brazil
+    cpf:        274.409.883-37 (27440988337)
+    cep:        20260-160
+    province:   Rio de Janeiro
+    addr:       Rua dos testes
+    city:       Teste Cidade
+    tel-num:    (21)1234-9876
+    card:       VISA  4024 0071 8216 4128  08/2018  123
+    type:       Personal  Unverified
+    q&a:        xxx
+
+██ Sandbox user - UsuarioTeste ██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    email:      usuario_teste_2@gmail.com  Confirmed
+    pwd:        26uj27oP
 
     name:       Usuário  Teste
     type:       Premier  Verified

@@ -1,7 +1,20 @@
 ﻿@{
     this.Layout = "_EmptyLayout.cshtml";
 }
-@section Header{@RenderSection("Header", false)}
+@section Styles{
+    @* When the footer of the page is not low enought in the page,
+        a gap can appear below the footer. To avoid this, in pages that
+        use this layout, the background color of the 'html' will be set
+        to the same as the footer. The 'body' element must have a
+        background color so that not everything gets the footer color. *@
+    <style type="text/css">
+        html
+        {
+            background-color: #252525;
+        }
+    </style>
+    @RenderSection("Styles", false)
+}
 @section Scripts
 {
     <script type="text/javascript">
@@ -107,16 +120,15 @@
                             </span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
-                            <li><a href="@Url.Action("LogoutLogin", "Authentication", new { area = "" })">Trocar usuário</a></li>
-                            <li><a href="@Url.Action("Logout", "Authentication", new { area = "" })">Sair</a></li>
+                            <li><a href="@this.Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
+                            <li><a href="@this.Url.Action("LogoutLogin", "Authentication", new { area = "" })">Trocar usuário</a></li>
+                            <li><a href="@this.Url.Action("Logout", "Authentication", new { area = "" })">Sair</a></li>
                         </ul>
                     </li>
-                    
                 }
                 else
                 {
-                    <li><a href="@Url.Action("Login", "Authentication", new { area = "" })">Login</a></li>
+                    <li><a href="@this.Url.Action("Login", "Authentication", new { area = "" })">Login</a></li>
                 }
             </ul>
         </div>
@@ -139,7 +151,7 @@
                 </ul>
             </div>
             <div class="span12">
-                <p style="margin: 0; padding: 0">Telefone: (11) 3280-0995. E-mail: <a href="mailto:cerebello@cerebello.com.br">cerebello@cerebello.com.br</a></p>
+                <p style="margin: 0; padding: 0">Telefone: @Constants.TELEPHONE_NUMBER. E-mail: <a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a></p>
             </div>
             <div class="span12">
                 <a class="twitter-link" href="https://twitter.com/cerebellohq" target="_blank">Siga o Cerebello no Twitter</a>

@@ -18,7 +18,7 @@
 </div>
 
 <div class="text-section">
-    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.PaymentMethod)</h2>
+    <h2>@Html.FieldLabelText(m => m.PaymentMethod)</h2>
     <div class="text-description">
         <input type="hidden" name="@Html.FieldName(vm => vm.PaymentMethod)" value="EMAIL"/>
 
@@ -38,7 +38,7 @@
 }
 
 <div class="text-section">
-    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.PaymentModelName)</h2>
+    <h2>@Html.FieldLabelText(m => m.PaymentModelName)</h2>
     <div class="text-description">
         <p>
             A assinatura será cobrada com a frequência selecionada abaixo,
@@ -53,7 +53,7 @@
 
                     var rate = 1 - parseFloat($(this).attr("discount")) / 100;
                     var mul = parseFloat($(this).attr("months"));
-                    $("table.doctors > tbody > tr > td.price").each(function (index) {
+                    $("table.doctors > tbody > tr > td.price").each(function () {
                         $(this).text("R$ " + (rate * parseFloat($(this).attr("price")) * mul).toFixed(2).replace('.', ','));
                     });
                     $("table.doctors > tbody > tr input:radio").attr("discount", false);
@@ -74,60 +74,56 @@
                     <th>Desconto</th>
                     <th class="expand">Valor</th>
                     <th class="expand">Frequência</th>
-                    <th class="expand irrelevant">Equivalente mensal</th>
-                    <th class="expand">Economia</th>
+                    <th class="expand equiv-month">Equivalente mensal</th>
+                    <th class="expand saved-amount">Economia</th>
                 </tr>
             </thead>
             <tr model-name="MONTH" class="enabled @(csii(this.Model.PaymentModelName, "MONTH") ? "selected" : "")" discount="0" months="1" price="@(Bus.Pro.PRICE_MONTH.ToString("0.00", invariant))">
-                <td>
-                    <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="MONTH" @(csii(this.Model.PaymentModelName, "MONTH") ? "checked='checked'" : "")/></td>
-                <td class="irrelevant">0%</td>
+                <td><input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="MONTH" @(csii(this.Model.PaymentModelName, "MONTH") ? "checked='checked'" : "")/></td>
+                <td class="trivial">0%</td>
                 <td>@(Bus.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr))</td>
                 <td>mensal</td>
-                <td class="irrelevant">@(Bus.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr))</td>
-                <td class="irrelevant">R$ 0,00</td>
+                <td class="trivial equiv-month">@(Bus.Pro.PRICE_MONTH.ToString("R$ 0.00", ptBr))</td>
+                <td class="trivial saved-amount">R$ 0,00</td>
             </tr>
 
             <tr model-name="3-MONTHS" class="enabled @(csii(this.Model.PaymentModelName, "3-MONTHS") ? "selected" : "")" discount="@(Bus.Pro.DISCOUNT_QUARTER)" months="3" price="@(Bus.Pro.PRICE_QUARTER.ToString("0.00", invariant))">
-                <td>
-                    <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="3-MONTHS" @(csii(this.Model.PaymentModelName, "3-MONTHS") ? "checked='checked'" : "")/></td>
+                <td><input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="3-MONTHS" @(csii(this.Model.PaymentModelName, "3-MONTHS") ? "checked='checked'" : "")/></td>
                 <td>@(Bus.Pro.DISCOUNT_QUARTER)%</td>
                 <td>@(Bus.Pro.PRICE_QUARTER.ToString("R$ 0.00", ptBr))</td>
                 <td>trimestral</td>
-                <td class="irrelevant">@((Bus.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</td>
-                <td>@((Bus.Pro.PRICE_MONTH * 3 - Bus.Pro.PRICE_QUARTER).ToString("R$ 0.00", ptBr))</td>
+                <td class="equiv-month">@((Bus.Pro.PRICE_QUARTER / 3).ToString("R$ 0.00", ptBr))</td>
+                <td class="saved-amount">@((Bus.Pro.PRICE_MONTH * 3 - Bus.Pro.PRICE_QUARTER).ToString("R$ 0.00", ptBr))</td>
             </tr>
 
             <tr model-name="6-MONTHS" class="enabled @(csii(this.Model.PaymentModelName, "6-MONTHS") ? "selected" : "")" discount="@(Bus.Pro.DISCOUNT_SEMESTER)" months="6" price="@(Bus.Pro.PRICE_SEMESTER.ToString("0.00", invariant))">
-                <td>
-                    <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="6-MONTHS" @(csii(this.Model.PaymentModelName, "6-MONTHS") ? "checked='checked'" : "")/></td>
+                <td><input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="6-MONTHS" @(csii(this.Model.PaymentModelName, "6-MONTHS") ? "checked='checked'" : "")/></td>
                 <td>@(Bus.Pro.DISCOUNT_SEMESTER)%</td>
                 <td>@(Bus.Pro.PRICE_SEMESTER.ToString("R$ 0.00", ptBr))</td>
                 <td>semestral</td>
-                <td class="irrelevant">@((Bus.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</td>
-                <td>@((Bus.Pro.PRICE_MONTH * 6 - Bus.Pro.PRICE_SEMESTER).ToString("R$ 0.00", ptBr))</td>
+                <td class="equiv-month">@((Bus.Pro.PRICE_SEMESTER / 6).ToString("R$ 0.00", ptBr))</td>
+                <td class="saved-amount">@((Bus.Pro.PRICE_MONTH * 6 - Bus.Pro.PRICE_SEMESTER).ToString("R$ 0.00", ptBr))</td>
             </tr>
 
             <tr model-name="12-MONTHS" class="important enabled @(csii(this.Model.PaymentModelName, "12-MONTHS") ? "selected" : "")" discount="@(Bus.Pro.DISCOUNT_YEAR)" months="12" price="@(Bus.Pro.PRICE_YEAR.ToString("0.00", invariant))">
-                <td>
-                    <input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="12-MONTHS" @(csii(this.Model.PaymentModelName, "12-MONTHS") ? "checked='checked'" : "")/></td>
+                <td><input type="radio" name="@Html.FieldName(vm => vm.PaymentModelName)" value="12-MONTHS" @(csii(this.Model.PaymentModelName, "12-MONTHS") ? "checked='checked'" : "")/></td>
                 <td>@(Bus.Pro.DISCOUNT_YEAR)%</td>
                 <td>@(Bus.Pro.PRICE_YEAR.ToString("R$ 0.00", ptBr))</td>
                 <td>anual</td>
-                <td class="irrelevant">@((Bus.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</td>
-                <td>@((Bus.Pro.PRICE_MONTH * 12 - Bus.Pro.PRICE_YEAR).ToString("R$ 0.00", ptBr))</td>
+                <td class="equiv-month">@((Bus.Pro.PRICE_YEAR / 12).ToString("R$ 0.00", ptBr))</td>
+                <td class="saved-amount">@((Bus.Pro.PRICE_MONTH * 12 - Bus.Pro.PRICE_YEAR).ToString("R$ 0.00", ptBr))</td>
             </tr>
         </table>
     </div>
 </div>
 
 <div class="text-section">
-    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.DoctorCount)</h2>
+    <h2>@Html.FieldLabelText(m => m.DoctorCount)</h2>
     <div class="text-description">
         <p>
             O preço do plano profissional varia de acordo com o tamanho de seu consultório ou clínica.
                 Por esta razão, você deve indicar quantos médicos serão cadastrados.
-                O desconto dado no item anterior se aplica aos valores mostrados na tabela abaixo.
+                O desconto dado no item anterior já estão aplicados aos valores mostrados na tabela abaixo.
                 @if (this.Model.CurrentDoctorsCount == 0)
                 {
                     @:Atualmente <strong class="info">não existem médicos</strong> cadastrado em sua conta.
@@ -177,17 +173,17 @@
             @{
                 var unitPrice = Bus.Pro.DOCTOR_PRICE;
                 Func<double, double, double> integ = (x, n) => Math.Pow(n, x) / Math.Log(n);
-                Func<double, double, double> integ0to = (x, n) => (integ(x, n) - integ(0, n));
-                Func<double, double> priceFactor = x => x * (1.0 - 0.1 * integ0to((x - 1) / 3.0, 0.75));
-                Func<double, double> price = (extraDoctors) => Math.Round(priceFactor(extraDoctors) * unitPrice * 100) / 100;
+                Func<double, double, double> integ0To = (x, n) => (integ(x, n) - integ(0, n));
+                Func<double, double> priceFactor = x => x * (1.0 - 0.1 * integ0To((x - 1) / 3.0, 0.75));
+                Func<double, double> price = extraDoctors => Math.Round(priceFactor(extraDoctors) * unitPrice * 100) / 100;
 
                 var sizes = new[] { 2, 3, 4, 6, 8, 10, 12, 15 };
             }
             <tr value="1" class="@(this.Model.CurrentDoctorsCount <= 1 ? "enabled" : "disabled") @(this.Model.DoctorCount == 1 ? "selected" : "")">
                 <td>
                     <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="1" @(this.Model.DoctorCount == 1 ? "checked='checked'" : "")/></td>
-                <td class="label">somente 1 médico</td>
-                <td class="irrelevant price" price="0">R$ 0,00</td>
+                <td class="item-label">somente 1 médico</td>
+                <td class="trivial price" price="0">R$ 0,00</td>
             </tr>
             @{ int prev = 1; }
             @foreach (var size in sizes)
@@ -195,7 +191,7 @@
                 <tr value="@size" class="@(this.Model.CurrentDoctorsCount <= size ? "enabled" : "disabled") @(this.Model.DoctorCount == size ? "selected" : "")">
                     <td>
                         <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="@size" @(this.Model.DoctorCount == size ? "checked='checked'" : "")/></td>
-                    <td class="label">@(prev < size - 1 ? "até " : "")@size médicos</td>
+                    <td class="item-label">@(prev < size - 1 ? "até " : "")@size médicos</td>
                     <td class="price" price="@(price(size - 1).ToString("0"))">R$ @(price(size - 1).ToString("0")),00</td>
                 </tr>
                 prev = size;
@@ -209,7 +205,7 @@
 </div>
 
 <div class="text-section billing-calendar-wrapper">
-    <h2 style="margin-bottom: 1em;">@Html.FieldLabelText(m => m.InvoceDueDayOfMonth)</h2>
+    <h2>@Html.FieldLabelText(m => m.InvoceDueDayOfMonth)</h2>
     <div class="text-description">
         <div class="billing-calendar">
             <script type="text/javascript">
@@ -251,10 +247,13 @@
         </div>
         <div class="billing-calendar-description">
             <p>
+                O vencimento da primeira fatura será para daqui a dez dias.
+            </p>
+            <p>
                 A assinatura será cobrada com vencimento no dia indicado do mês.
-                    Assim você pode escolher o melhor dia para pagar sua fatura.
-                    A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
-                    dando o tempo necessário para o pagamento ser efetuado.
+                Assim você pode escolher o melhor dia para pagar suas próximas faturas.
+                A fatura será emitida com antecedência em relação ao vencimento, de no mínimo 10 dias,
+                dando o tempo necessário para o pagamento ser efetuado.
             </p>
             <p>
                 Nota: se o mês não possuir o dia selecionado, então será usado o último dia deste mês.
@@ -265,7 +264,7 @@
 </div>
 
 <div class="text-section">
-    <h2 style="margin-bottom: 1em;">Resumo</h2>
+    <h2>Resumo</h2>
     <div class="text-description">
         <script type="text/javascript">
             function UpdateSummary() {
@@ -299,7 +298,7 @@
                     $(".summary-discount").text($base.attr("discount") + "%");
                     $(".summary-frequency").text({ "1": "mensal", "3": "trimestral", "6": "semestral", "12": "anual" }["" + months]);
 
-                    $(".summary-doctors-label").text($("td.label", $doctors).text());
+                    $(".summary-doctors-label").text($("td.item-label", $doctors).text());
                     $(".summary-doctors-count").text($doctors.attr("value") == "1" ? "apenas 1" : "até " + $doctors.attr("value"));
 
                     $("#summary-invoice-due-day").text("dia " + invoiceDueDay);
@@ -342,26 +341,26 @@
                     <tr>
                         <th>Item</th>
                         <th>Valor com desconto</th>
-                        <th class="irrelevant">Equivalente mensal</th>
+                        <th class="trivial">Equivalente mensal</th>
                         <th>Economia (<span class="summary-discount">?%</span>)</th>
                     </tr>
                 </thead>
                 <tr class="enabled selected">
                     <td style="background: white; color: black;">Plano Profissional</td>
                     <td id="summary-base-price">R$ -</td>
-                    <td id="summary-base-price-month" class="irrelevant">R$ -</td>
+                    <td id="summary-base-price-month" class="trivial">R$ -</td>
                     <td id="summary-base-saved">R$ -</td>
                 </tr>
                 <tr class="enabled selected">
                     <td style="background: white; color: black;">Médicos (<span class="summary-doctors-count">?%</span>)</td>
                     <td id="summary-doctors-price">R$ -</td>
-                    <td id="summary-doctors-price-month" class="irrelevant">R$ -</td>
+                    <td id="summary-doctors-price-month" class="trivial">R$ -</td>
                     <td id="summary-doctors-saved">R$ -</td>
                 </tr>
                 <tr class="enabled selected important">
                     <td style="background: white; color: black;">Total</td>
                     <td class="important summary-total-price">R$ -</td>
-                    <td id="summary-total-price-month" class="irrelevant">R$ -</td>
+                    <td id="summary-total-price-month" class="trivial">R$ -</td>
                     <td id="summary-total-saved">R$ -</td>
                 </tr>
                 <tr>

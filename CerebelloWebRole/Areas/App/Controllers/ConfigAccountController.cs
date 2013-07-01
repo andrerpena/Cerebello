@@ -49,18 +49,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             }
                     };
 
-                var nowPlus30Days = this.dateTimeService.UtcNow.AddDays(30);
-                var nowLess30Days = this.dateTimeService.UtcNow.AddDays(-30);
+                var nowPlusXDays = this.dateTimeService.UtcNow.AddDays(Bus.Pro.MAX_DAYS_TO_PAY_BILLING);
+                var nowLessXDays = this.dateTimeService.UtcNow.AddDays(-Bus.Pro.MAX_DAYS_TO_PAY_BILLING);
 
-                var billings = mainContract.Billings.Select(b => new ConfigAccountViewModel.BillingCycle
+                var billings = mainContract.Billings
+                    .Where(b => b.ReferenceDate != null)
+                    .Select(b => new ConfigAccountViewModel.BillingCycle
                     {
-                        CycleStart = this.ConvertToLocalDateTime(b.ReferenceDate),
+                        // ReSharper disable PossibleInvalidOperationException
+                        CycleStart = (DateTime)this.ConvertToLocalDateTime(b.ReferenceDate),
+                        // ReSharper restore PossibleInvalidOperationException
                         CycleEnd = this.ConvertToLocalDateTime(b.ReferenceDateEnd),
                         DueDate = this.ConvertToLocalDateTime(b.DueDate),
                         Value = b.MainAmount - b.MainDiscount,
                         IsPaid = b.IsPayd,
                         EffectiveValue = b.PaydAmount,
-                        CanPay = b.ReferenceDate < nowPlus30Days && nowLess30Days < b.DueDate,
+                        CanPay = b.ReferenceDate < nowPlusXDays && nowLessXDays < b.DueDate,
                     });
 
                 var billingYears = billings
@@ -102,18 +106,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Cancel(CancelAccountViewModel viewModel)
         {
-            // Payd accounts are canceled manually.
-            if (!this.DbPractice.AccountContract.SYS_ContractType.IsTrial)
-            {
-                this.DbPractice.AccountCancelRequest = true;
-
-                this.db.SaveChanges();
-
-                this.ViewBag.CancelRequested = true;
-
-                return this.View(viewModel);
-            }
-
             if (!viewModel.Confirm)
             {
                 var mainContract = this.DbPractice.AccountContract;
@@ -127,6 +119,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 };
 
                 this.ModelState.AddModelError(() => viewModel.Confirm, "A caixa de checagem de confirmação precisa ser marcada para prosseguir.");
+
+                return this.View(viewModel);
+            }
+
+            // Payd accounts are canceled manually.
+            if (!this.DbPractice.AccountContract.SYS_ContractType.IsTrial)
+            {
+                this.DbPractice.AccountCancelRequest = true;
+
+                this.db.SaveChanges();
+
+                this.ViewBag.CancelRequested = true;
 
                 return this.View(viewModel);
             }
@@ -344,7 +348,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         public ActionResult PayPalCheckout()
         {
             var operation = new PayPalSetExpressCheckoutOperation();
-            FillOperationDetails(operation, null);
+            FillOperationDetails(operation, null, null, null);
 
             // Validating the request object.
             // TODO: handle the invalid object if it has errors.
@@ -355,7 +359,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 validationResults,
                 validateAllProperties: true);
 
-            var opResult = this.SetExpressCheckout(operation);
+            var opResult = this.SetExpressCheckout(operation, "PayPalConfirm", "PayPalCancel");
 
             return this.RedirectToCheckout(opResult);
         }
@@ -372,33 +376,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 PayerId = data.PayerId,
                 Token = data.Token,
             };
-            this.FillOperationDetails(operation, null);
+            FillOperationDetails(operation, null, null, null);
 
             this.DoExpressCheckoutPayment(operation);
 
             return this.RedirectToAction("PaymentConfirmed");
         }
 
-        private void FillOperationDetails<T1>(T1 operation, object contractInfo)
-            where T1 : PayPalExpressCheckoutOperation, new()
+        public static void FillOperationDetails(PayPalExpressCheckoutOperation operation, Practice practice, AccountContract contractInfo, Billing billing)
         {
-            bool discountFirst100 = !this.db.Practices
-                .Where(p => !p.AccountContract.SYS_ContractType.IsTrial)
-                .OrderBy(p => p.Id)
-                .Skip(99).Any();
-
             operation.DefaultCurrencyCode = CurrencyCode.Brazilian_Real;
             operation.PaymentRequests = new PayPalList<PayPalPaymentRequest>
             {
                 new PayPalPaymentRequest
                 {
-                    Description = "Cerebello - Pacote profissional",
-
+                    BillingAgreementDescription = "O Cerebello é um software de gerênciamento de consultórios e clínicas médicas.",
+                    //BillingType = BillingCode.RecurringPayments,
+                    Description = "Cerebello - Plano profissional",
+                    InvoiceNum = string.Format("{3}{2}:{0}.{1}", billing.IdentitySetName, billing.IdentitySetNumber, practice.Id, DebugConfig.PayPal.InvoiceIdPrefix),
                     Items = new PayPalList<PayPalPaymentRequestItem>
                     {
                         new PayPalPaymentRequestItem
                         {
-                            Amount = 150.00m,
+                            Amount = contractInfo.BillingAmount,
                             Name = "Cerebello SaaS",
                             Description = "Software de gerenciamento de consultório médico.",
                             Category = ItemCategory.Digital,
@@ -407,16 +407,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 },
             };
 
-            // Discount for the first 100 practices.
-            if (discountFirst100)
+            if (contractInfo.BillingDiscountAmount > 0)
             {
                 operation.PaymentRequests[0].Items.Add(new PayPalPaymentRequestItem
-                {
-                    Amount = -30.00m,
-                    Name = "Desconto lançamento! (20%)",
-                    Description = "Desconto para os 100 primeiros clientes.",
-                    Category = ItemCategory.Digital,
-                });
+                    {
+                        Amount = -contractInfo.BillingDiscountAmount,
+                        Name = "Desconto",
+                        Category = ItemCategory.Digital,
+                    });
             }
         }
 

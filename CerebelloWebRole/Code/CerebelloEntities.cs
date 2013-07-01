@@ -43,7 +43,9 @@ namespace CerebelloWebRole.Code
                             {
                                 var value = (DateTime)newValue;
                                 if (value.Kind != DateTimeKind.Utc)
-                                    throw new Exception("Invalid value for 'DateTime' property: " + changedProperty + ".");
+                                    throw new Exception("Invalid value for 'DateTime' property: " + changedProperty + ". Must be UTC.");
+                                if (value.Year < 1800)
+                                    throw new Exception("Invalid value for 'DateTime' property: " + changedProperty + ". Must be greater than year 1800.");
                             }
                         }
                     }

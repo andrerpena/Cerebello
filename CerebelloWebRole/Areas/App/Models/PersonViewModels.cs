@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)] // TODO: This will make MVC 4 use HTML 5 <input type="email" />
-        [EmailAddress]
+        [Code.EmailAddress]
         public String Email { get; set; }
 
         [Display(Name = "Telefone fixo")]

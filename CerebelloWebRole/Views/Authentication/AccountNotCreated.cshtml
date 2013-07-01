@@ -1,0 +1,27 @@
+﻿@model IdentityViewModel
+@{
+    this.Layout = "../Shared/_AuthenticationLayout.cshtml";
+    ViewBag.Title = "Criação de conta cancelada";
+}
+@section Title
+{
+    @ViewBag.Title
+}
+@section TitleButtons
+{
+    <a class="btn btn-small" href="@Url.Action("Index", "Home")" class="link">Voltar ao Cerebello</a>
+}
+<div class="controls-wrapper">
+    <p>A criação da conta foi cancelada.</p>
+    <p>
+        Nota: isso libera o nome do consultório para criação de outras contas.
+        Se desejar, você pode voltar depois e criar a conta novamente.
+    </p>
+    <p>
+        É possível também criar uma conta de testes gratuita, sem compromisso,
+        e depois fazer a migração para o plano profissional, após ter avaliado.
+    </p>
+    <p>
+        <a href="@this.Url.Action("CreateAccount")">Criar conta de testes agora</a>
+    </p>
+</div>

@@ -1,4 +1,4 @@
-﻿@model ChangeContractViewModel
+﻿@model CerebelloWebRole.Models.ChangeContractViewModel
 @{
     var planTitles = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
@@ -7,7 +7,7 @@
 
     var title = planTitles[this.Model.ContractUrlId];
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
-    Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
+    this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 }
 @section Title {
     @title @LockIcon.Icon()
@@ -19,11 +19,11 @@
 {
     <link href="@Url.Content("~/Content/Styles/App/PlanPage.css")" rel="Stylesheet" type="text/css" />
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "contractForm" }))
+@using (this.Html.BeginForm(null, null, FormMethod.Post, new { id = "contractForm" }))
 {
-    @Html.ValidationSummary(false)
+    @this.Html.ValidationSummary(false)
 
-    @Html.HiddenFor(vm => vm.ContractUrlId)
+    @this.Html.HiddenFor(vm => vm.ContractUrlId)
 
     <div id="userAgreement">
         @switch (Bus.CorrectPlanCase[this.Model.ContractUrlId])
@@ -48,7 +48,7 @@
                 wrapper.innerHTML = $("#userAgreement").html(); // setting innerHTML won't run script tags
                 $(wrapper).find('script').remove();
 
-                $("#@Html.FieldName(vm => vm.WholeUserAgreement)").val($(wrapper).html());
+                $("#@this.Html.FieldName(vm => vm.WholeUserAgreement)").val($(wrapper).html());
 
                 // now submit the form
                 $('#contractForm').submit();
@@ -58,11 +58,11 @@
         });
     </script>
     
-    <input type="hidden" id="@Html.FieldName(vm => vm.WholeUserAgreement)" name="@Html.FieldName(vm => vm.WholeUserAgreement)" value=""/>
+    <input type="hidden" id="@this.Html.FieldName(vm => vm.WholeUserAgreement)" name="@this.Html.FieldName(vm => vm.WholeUserAgreement)" value=""/>
 
     <div class="submit-bar">
         <input id="submitButton" type="submit" value="concluir" />
         <span class="separator">ou</span>
-        @Html.ActionLink("cancelar", "Index")
+        @this.Html.ActionLink("cancelar", "Index")
     </div>
 }

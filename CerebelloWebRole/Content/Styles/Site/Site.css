@@ -1,4 +1,5 @@
 body {
+    background-color: white;
 }
 
 label {
@@ -281,14 +282,19 @@ body {
     vertical-align: bottom;
 }
 
-.prices th {
+.prices thead {
     background-color: #006DB3;
-    border-bottom: 4px solid #00619F;
     color: white;
 }
+.prices th {
+    border-bottom: 4px solid #00619F;
+}
 
-.prices td {
+.prices tbody > tr
+{
     background-color: #FCFCFC;
+}
+.prices td {
     border-left: 1px dashed #DDDDDD;
     border-top: 0 none;
 }

@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
+﻿@model WelcomeViewModel
+@{
+    this.ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
 }
 <style type="text/css">
     .xpto {
@@ -29,13 +30,15 @@
         @if (this.User.Identity.IsAuthenticated)
         {
             <p>
-                Obrigado por fazer parte da família Cerebello. Esperamos que você tenha uma ótima experiência com o software. Para começar a utilizar o Cerebello, basta clicar no botão <span class="xpto">Entrar</span> no topo da página.
+                Obrigado por fazer parte da família Cerebello. Esperamos que você tenha uma ótima experiência com o software.
+                Para começar a utilizar o Cerebello, basta clicar no botão <span class="xpto">Entrar</span> no topo da página.
             </p>
         }
         else
         {
             <p>
-                Obrigado por fazer parte da família Cerebello. Esperamos que você tenha uma ótima experiência com o software. Para começar a usar o Cerebello, você deve informar suas credenciais 
+                Obrigado por fazer parte da família Cerebello. Esperamos que você tenha uma ótima experiência com o software.
+                Para começar a usar o Cerebello, você deve informar suas credenciais 
                 clicando no botão <span class="xpto">Login</span> no topo da página.
             </p>
         }
@@ -48,27 +51,51 @@
         
         <h3>Sua opinião é muito importante para nós</h3>
         <p>
-            Caso haja algum recurso que seja importante para você mas que não esteja presente no software, por favor acesse a 
-            <a href="https://cerebello.uservoice.com">Central de ideias do Cerebello</a> e faça sugestões. Todas as sugestões enviadas são cuidadosamente 
-            analisadas. Nosso trabalho é tornar o Cerebello um software melhor para todos, facilitando o cotidiano do seu consultório. Alternativamente, 
-            é possível enviar sugestões ou críticas para o nosso e-mail <a href="mailto:cerebello@cerebello.com.br">cerebello@cerebello.com.br</a> ou
+            Caso haja algum recurso que seja importante para você mas que não esteja presente no software,
+            por favor acesse a <a href="https://cerebello.uservoice.com">Central de ideias do Cerebello</a> e faça sugestões.
+            Todas as sugestões enviadas são cuidadosamente analisadas.
+            Nosso trabalho é tornar o Cerebello um software melhor para todos,
+            facilitando o cotidiano do seu consultório. Alternativamente, 
+            é possível enviar sugestões ou críticas para o nosso e-mail
+            <a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a> ou
             através do chat disponível logo abaixo nesta página.
         </p>
-
-        <h3>Plano Profissional</h3>
-        <p>
-            Neste momento a sua conta está configurada para o <span class="xpto">Plano de avaliação</span>.
-            Você pode usar este plano o tempo que desejar, entretanto, com o limite de 50 pacientes.
-        </p>
-        <p>
-            Para atendê-lo melhor, recomendamos que faça upgrade para o <span class="xpto">Plano profissional</span>.
-            Neste plano não existe limitação de pacientes, além de suporte prioritário. Para fazer upgrade a qualquer momento, após efetuar login, acesse o link na barra do topo
-            da página ou acesse as configurações da sua conta.
-        </p>
-        @if (this.User.Identity.IsAuthenticated)
+        @if (this.Model.IsTrial == true)
         {
+            <h3>Plano Profissional</h3>
             <p>
-                Ou, <a href="@Url.Action("Upgrade", "ConfigAccount", new { area = "App", id = "ProfessionalPlan", practice = this.Request["practice"] })">faça o upgrade para a conta profissional</a> agora mesmo.
+                Neste momento a sua conta está configurada para o <span class="xpto">Plano de avaliação</span>.
+                Você pode usar este plano o tempo que desejar, entretanto, com o limite de 50 pacientes.
+            </p>
+            <p>
+                Para atendê-lo melhor, recomendamos que faça upgrade para o <span class="xpto">Plano profissional</span>.
+                Neste plano não existe limitação de pacientes, além de suporte prioritário. Para fazer upgrade a qualquer momento,
+                após efetuar login, acesse o link na barra do topo
+                da página ou acesse as configurações da sua conta.
+            </p>
+            if (this.User.Identity.IsAuthenticated)
+            {
+                <p>
+                    Ou, <a href="@this.Url.Action("Upgrade", "ConfigAccount",
+                        new { area = "App", id = "ProfessionalPlan", practice = this.Request["practice"] })"
+                        >faça o upgrade para a conta profissional</a> agora mesmo.
+                </p>
+            }
+        }
+        else if (this.Model.IsTrial == false)
+        {
+            <h3>Plano Profissional</h3>
+            <p>
+                Este é o plano de que você é assinante a partir de agora, com direito a suporte prioritário
+                além de não ter limite de pacientes.
+            </p>
+        }
+        else if (this.Model.IsTrial == null)
+        {
+            <h3>Plano Profissional</h3>
+            <p>
+                Se você não é assinante do plano profissional do Cerebello, não perca esta chance. Faça Login e faça upgrade
+                para o plano profissional, e tenha todos os benefícios como suporte prioritário, e sem o limite de 50 pacientes.
             </p>
         }
     </div>

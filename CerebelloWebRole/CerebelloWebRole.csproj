@@ -136,7 +136,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="PayPal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="PayPal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\PayPal-API\PayPal.dll</HintPath>
     </Reference>
@@ -149,9 +149,7 @@
     <Reference Include="SimpleInjector.Integration.Web.Mvc">
       <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.2.2.3\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity">
       <Private>True</Private>
     </Reference>
@@ -173,9 +171,7 @@
     <Reference Include="System.ServiceModel">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Extensions">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -245,9 +241,7 @@
     <Reference Include="System.EnterpriseServices">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Telerik.Reporting, Version=6.2.12.1017, Culture=neutral, PublicKeyToken=a9d7983dfcc261be">
       <Private>True</Private>
     </Reference>
@@ -265,6 +259,7 @@
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
     <Compile Include="Areas\App\Models\FileViewModel.cs" />
     <Compile Include="Code\Controllers\CerebelloSiteController.cs" />
+    <Compile Include="Code\Extensions\UrlExtensions.cs" />
     <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
     <Compile Include="Code\Google\Data\UploadJsonResult.cs" />
@@ -274,6 +269,7 @@
     <Compile Include="Code\Helpers\TraceHelper.cs" />
     <Compile Include="Code\Hubs\IChatHub.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
+    <Compile Include="Code\PayPalApiSettingsDebug.cs" />
     <Compile Include="Code\Services\DbFileMetadataProvider.cs" />
     <Compile Include="Code\Services\IFileMetadataProvider.cs" />
     <Compile Include="Code\Services\DateTimeService.cs" />
@@ -291,7 +287,7 @@
     <Compile Include="Areas\App\Controllers\TempFileController.cs" />
     <Compile Include="Areas\App\Models\CameraWindowViewModel.cs" />
     <Compile Include="Areas\App\Models\CancelAccountViewModel.cs" />
-    <Compile Include="Areas\App\Models\ChangeContractViewModel.cs" />
+    <Compile Include="Models\ChangeContractViewModel.cs" />
     <Compile Include="Areas\App\Models\PatientFilesGroupViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigBackupViewModel.cs" />
     <Compile Include="Code\CerebelloEntities.cs" />
@@ -388,6 +384,7 @@
     <Content Include="Content\Images\Docs\Screenshots\ConsultingTheSchedule2.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\CreatingAnAccount.png" />
+    <Content Include="Content\Images\pp-logo.png" />
     <Content Include="Content\Images\Site\exemplo-login.png" />
     <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment-thumb.png" />
     <Content Include="Content\Images\Docs\Screenshots\PerformingAnAppointment.png" />
@@ -447,10 +444,12 @@
     <EmbeddedResource Include="Resources\Male-Default-Profile.jpg" />
     <Content Include="Content\Styles\Docs\Lightbox\lightbox.css" />
     <Content Include="Content\Styles\Docs\Lightbox\screen.css" />
+    <Content Include="Content\Styles\Site\PlanPage.css" />
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
     <Content Include="Scripts\App\Pages\patient-files-edit.js" />
     <Content Include="Scripts\App\Pages\patient-details.js" />
+    <Compile Include="Models\WelcomeViewModel.cs" />
     <Compile Include="WorkerRole.Code\Workers\TestWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\GoogleDriveSynchronizerWorker.cs" />
     <Compile Include="WorkerRole.Code\Workers\PatientEmailModel.cs" />
@@ -555,10 +554,10 @@
     <Compile Include="Code\Extensions\HtmlExtensions.cs" />
     <Compile Include="Code\Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Code\Extensions\LabelExtensions.cs" />
-    <Compile Include="Code\Filters\AuthenticationFilter.cs" />
+    <Compile Include="Code\Filters\AreaAuthenticationFilter.cs" />
     <Compile Include="Code\Filters\UserRolePermissionAttribute.cs" />
     <Compile Include="Code\Filters\IsOwnerPermissionAttribute.cs" />
-    <Compile Include="Code\Filters\FirstAccessFilter.cs" />
+    <Compile Include="Code\Filters\AccessAreaWithDefaultPasswordFilter.cs" />
     <Compile Include="Code\Filters\PermissionAttribute.cs" />
     <Compile Include="Code\Helpers\AddressHelper.cs" />
     <Compile Include="Code\Helpers\AsyncHelper.cs" />
@@ -869,6 +868,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Code\Bootstrap.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -938,6 +938,8 @@
     <Content Include="Views\Authentication\InternalCreateAccountEmail.cshtml" />
     <Content Include="Views\MasterAdmin\Log.cshtml" />
     <EmbeddedResource Include="Views\TestWorker\TestEmail.cshtml" />
+    <Content Include="Views\Authentication\SetAccountPaymentInfo.cshtml" />
+    <Content Include="Views\Authentication\AccountNotCreated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
@@ -1087,7 +1089,7 @@
     <Content Include="Areas\App\Views\ConfigAccount\AccountDataEmail.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\Index_TrialContract.cshtml" />
     <Content Include="Areas\App\Views\ConfigAccount\UpgradeDone.cshtml" />
-    <Content Include="Areas\App\Views\ConfigAccount\Upgrade_ProfessionalPlan.cshtml" />
+    <Content Include="Views\Shared\Upgrade_ProfessionalPlan.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Details.cshtml" />
     <Content Include="Areas\App\Views\PhysicalExamination\Edit.cshtml" />
     <Content Include="Areas\App\Views\PatientFiles\Details.cshtml" />

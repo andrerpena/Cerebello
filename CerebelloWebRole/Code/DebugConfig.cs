@@ -34,9 +34,23 @@ namespace CerebelloWebRole.Code
                 [XmlElement("storages")]
                 public StoragesList Storages { get; set; }
 
+                [XmlElement("paypal")]
+                public PayPalItem PayPal { get; set; }
+
                 public override string ToString()
                 {
                     return string.Format(@"<debug>");
+                }
+
+                public class PayPalItem
+                {
+                    [XmlAttribute("invoice-id-prefix")]
+                    public string InvoiceIdPrefix { get; set; }
+
+                    public override string ToString()
+                    {
+                        return string.Format(@"<PayPalItem invoice-id-prefix=""{0}"">", this.InvoiceIdPrefix);
+                    }
                 }
 
                 public class SettingsList
@@ -544,6 +558,19 @@ namespace CerebelloWebRole.Code
         private readonly ConfigurationItem config;
         [CanBeNull]
         private readonly ConfigurationItem.DebugItem.SettingItem setting;
+
+        private static readonly ConfigurationItem.DebugItem.PayPalItem defaultPayPal = new ConfigurationItem.DebugItem.PayPalItem();
+
+        public static ConfigurationItem.DebugItem.PayPalItem PayPal
+        {
+            get
+            {
+                if (inst != null && inst.config != null && inst.config.Debug != null)
+                    return inst.config.Debug.PayPal ?? defaultPayPal;
+
+                return defaultPayPal;
+            }
+        }
 
         public static string LocalStoragePath
         {
