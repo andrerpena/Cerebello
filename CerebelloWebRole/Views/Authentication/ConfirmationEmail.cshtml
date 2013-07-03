@@ -25,7 +25,7 @@
     </p>
     <p>
         Este e-mail está sendo enviado para confirmar sua solicitação de criação de uma
-        nova conta no @EmailHtml.Link(this.Url.Action("Index", "Home", new { }), "Cerebello"),
+        nova conta no @EmailHtml.Link(this.Url.ActionAbsolute("Index", "Home", new { }), "Cerebello"),
         o seu software de gerenciamento de consultório.
     </p>
     
@@ -62,7 +62,7 @@
     </p>
     <p>
         Você pode entrar informando suas credenciais na página de
-        @EmailHtml.Link(this.Url.Action("Login", "Authentication", new { }), "Login"),
+        @EmailHtml.Link(this.Url.ActionAbsolute("Login", "Authentication", new { }), "Login"),
         ou acessando diretamente a url
         @EmailHtml.Link(urlLogin, urlLogin)
     </p>
@@ -151,7 +151,7 @@ sistema.
 
 Você pode entrar informando suas credenciais
 na página de Login
-@(this.Url.Action("Login", "Authentication", new { })),
+@(this.Url.ActionAbsolute("Login", "Authentication", new { })),
 ou acessando diretamente a url
 @Html.Raw(urlLogin)
 
