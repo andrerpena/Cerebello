@@ -437,6 +437,13 @@ namespace CerebelloWebRole.Code
             date = date + transition.TimeOfDay.TimeOfDay;
             return date;
         }
+
+        public static DateTime? CreateDate(int? y, int? m, int? d)
+        {
+            if (y != null && m != null && d != null)
+                return new DateTime(y.Value, m.Value, d.Value);
+            return null;
+        }
     }
 
 

@@ -11,7 +11,7 @@
             url: window.getDatesWithAppointmentsUrl,
             data: { year: year, month: month },
             success: function (result) {
-                window.datesWithAppointments = result
+                window.datesWithAppointments = result;
                 $(".datepicker").datepicker("refresh");
             }
         });
@@ -25,11 +25,10 @@
             $('#calendar').fullCalendar('gotoDate', parseInt(match[3], 10), parseInt(match[2], 10) - 1, parseInt(match[1], 10));
         },
         beforeShowDay: function (date) {
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
-            var year = date.getFullYear();
             return [
+                // indicates that the date is selectable
                 true,
+                // sets a css class to this date item
                 jQuery.inArray(
                     $.datepicker.formatDate("'d'dd_mm_yy", date),
                     window.datesWithAppointments

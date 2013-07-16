@@ -17,11 +17,11 @@
             editPanel.AddField(model => model.ModelId,
                 EditPanelFieldSize.Large,
                 @<text>@this.Html.AutocompleteFor(model => model.ModelId, model => model.ModelName, this.Url.Action("AutocompleteModelMedicalCertificates", "ModelMedicalCertificates"))</text>);
-            editPanel.AddField(model => model.IssuanceDate, this.Html.EditorFor, EditPanelFieldSize.Large);
 
             @this.Html.ValidationSummary(false)
             @this.Html.HiddenFor(model => model.PatientId)
             @this.Html.HiddenFor(model => model.Id)
+            @this.Html.HiddenFor(model => model.IssuanceDate)
 
             @editPanel.GetHtml()
 

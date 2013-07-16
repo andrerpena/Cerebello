@@ -7,6 +7,11 @@ namespace CerebelloWebRole.Code
         private readonly DateTime start;
         private readonly DateTime end;
 
+        public static DateTimeInterval FromDateAndDays(DateTime date, double days)
+        {
+            return new DateTimeInterval(date, date.AddDays(days));
+        }
+
         public DateTimeInterval(DateTime start, DateTime end)
         {
             this.start = start;

@@ -13,6 +13,7 @@
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
         @this.Html.HiddenFor(model => model.Id)
+        @this.Html.HiddenFor(model => model.IssuanceDate)
 
         <ul class="edit-list medicines-list">
             @if (this.Model != null && this.Model.ReceiptMedicines.Count > 0)
@@ -29,7 +30,6 @@
         </ul>
 
         var editPanel = this.Html.CreateEditPanel();
-        editPanel.AddField(model => model.IssuanceDate, this.Html.EditorFor, EditPanelFieldSize.Large);
         @editPanel.GetHtml()
 
         <div class="inline-link-bar">

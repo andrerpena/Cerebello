@@ -29,5 +29,8 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [XmlIgnore]
         public int PersonId { get; set; }
+
+        [XmlIgnore]
+        public int PatientId { get; set; }
     }
 }

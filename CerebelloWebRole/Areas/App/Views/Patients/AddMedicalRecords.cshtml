@@ -1,0 +1,94 @@
+﻿@model PatientViewModel
+@{
+    var title = "Consultas de " + this.Model.FullName;
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+}
+@section Title {
+    @title @LockIcon.Icon()
+}
+@section SideBar {
+    <div class="datepicker">
+    </div>
+    <ul>
+        <li><a href="@this.Url.Action("Details", new { id = this.Model.Id })" class="icon-link icon-link-home">Detalhes do paciente</a></li>
+        <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
+    </ul>
+}
+@section Scripts
+{
+    @LockIcon.Script(LockAccessType.Self, "médico")
+
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/App/Pages/patient-details.js")"></script>
+
+    <script type="text/javascript" src="@this.Url.Content("~/Scripts/fullcalendar.min.js")"></script>
+
+    <script type="text/javascript" src="@this.Url.Content("~/scripts/app/pages/addMedicalRecords.js")"></script>
+    <script type="text/javascript">
+        AddMedicalRecords({
+            // these are parameters being passed to the file included: "/scripts/app/addMedicalRecords.js"
+            url: "@Url.Action("AddMedicalRecords", new { id = this.Model.PatientId })",
+            getDatesWithMedicalRecordsUrl: "@Url.Action("GetDatesWithMedicalRecords", new { patientId = this.Model.PatientId })"
+        });
+    </script>
+    @{
+        int y, m, d;
+        var recordDate = (DateTime)this.ViewBag.RecordDate;
+        if (!int.TryParse(Request["y"], out y)) { y = recordDate.Year; }
+        if (!int.TryParse(Request["m"], out m)) { m = recordDate.Month; }
+        if (!int.TryParse(Request["d"], out d)) { d = recordDate.Day; }
+        //if (int.TryParse(Request["y"], out y) && int.TryParse(Request["m"], out m) && int.TryParse(Request["d"], out d))
+        {
+            if (y > 2000 && m >= 1 && m <= 12 && d >= 1 && d <= 31)
+            {
+        <script type="text/javascript">
+            $(function(e) {
+                var date = new Date("@string.Format("{0:0000}-{1:00}-{2:00}", y, m, d)T12:00:00");
+                //$('#calendar').fullCalendar('gotoDate', date);
+                $('.datepicker').datepicker('setDate', date);
+            });
+        </script>
+            }
+        }
+    }
+
+    @this.Html.Resources("js")
+}
+
+@section Styles
+{
+    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/Pages/camera_window.css")" />
+    <link rel="Stylesheet" type="text/css" href="@this.Url.Content("~/content/styles/app/fullcalendar.css")" />
+
+    @this.Html.Resources("css")
+}
+
+<!-- modal-gallery is the modal dialog used for the image gallery -->
+<div id="modal-gallery" class="modal modal-gallery hide" tabindex="-1" style="" data-constratio="4 / 3">
+    <div class="modal-header">
+        <div class="modal-close" data-dismiss="modal"></div>
+        <div class="modal-title"></div>
+    </div>
+    <div class="modal-body"><div class="modal-image"></div></div>
+    <div class="modal-footer">
+        <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i>Anterior</a>
+        <a class="btn btn-primary modal-next">Próximo<i class="icon-arrow-right icon-white"></i></a>
+        @*<a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="icon-play icon-white"></i>Slideshow</a>*@
+        <a class="btn modal-download" target="_blank"><i class="icon-download"></i>Download</a>
+    </div>
+</div>
+
+@if (this.ViewBag.CanAccessMedicalRecords == true)
+{
+    <div class="medical-appointments-panel">
+        @*<h2>Registros médicos deste dia</h2>*@
+        @this.Html.Partial("MedicalRecordsViewPartial", this.Model,
+            new ViewDataDictionary(this.ViewData)
+                {
+                    { "NoMedicalRecordsMessage", "Não há registros médicos neste dia." },
+                })
+
+        @*<h2>Adicionar novos registros neste dia</h2>*@
+        @this.Html.Partial("MedicalRecordsInsertPartial")
+    </div>
+}

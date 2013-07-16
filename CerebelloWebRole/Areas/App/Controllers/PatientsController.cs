@@ -22,7 +22,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public DateTime LocalDate { get; set; }
         }
 
-        protected static PatientViewModel GetViewModel(PracticeController controller, [NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments)
+        protected static PatientViewModel GetViewModel(PracticeController controller, [NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments, bool includeAddressData = true)
         {
             if (patient == null) throw new ArgumentNullException("patient");
 
@@ -32,11 +32,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
             FillPersonViewModel(controller.DbPractice, patient.Person, viewModel);
 
             viewModel.Id = patient.Id;
-            viewModel.Observations = patient.Person.Observations;
+            viewModel.PatientId = patient.Id;
             viewModel.PersonId = patient.Person.Id;
+            viewModel.Observations = patient.Person.Observations;
 
-            var address = patient.Person.Addresses.SingleOrDefault();
-            viewModel.Address = address != null ? GetAddressViewModel(address) : new AddressViewModel();
+            if (includeAddressData)
+            {
+                var address = patient.Person.Addresses.SingleOrDefault();
+                viewModel.Address = address != null ? GetAddressViewModel(address) : new AddressViewModel();
+            }
 
             // Other (more complex) properties.
 
@@ -78,7 +82,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (includeSessions)
             {
-                var sessions = GetSessionViewModels(controller.DbPractice, patient);
+                var sessions = GetSessionViewModels(controller.DbPractice, patient, null);
 
                 viewModel.Sessions = sessions;
             }
@@ -117,14 +121,20 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.PhoneLand = person.PhoneLand;
         }
 
-        public static List<SessionViewModel> GetSessionViewModels(Practice practice, Patient patient)
+        public static List<SessionViewModel> GetSessionViewModels(Practice practice, Patient patient, DateTimeInterval? filterUtcInterval)
         {
             var eventDates = new List<DateTime>();
 
+            var utcDateFilterStart = filterUtcInterval.HasValue ? filterUtcInterval.Value.Start : (DateTime?)null;
+            var utcDateFilterEnd = filterUtcInterval.HasValue ? filterUtcInterval.Value.End : (DateTime?)null;
+
             // anamneses
+            var anamneses = filterUtcInterval.HasValue
+                ? patient.Anamneses.Where(x => x.MedicalRecordDate >= utcDateFilterStart && x.MedicalRecordDate < utcDateFilterEnd)
+                : patient.Anamneses;
             var anamnesesByDate =
                 (from avm in
-                     (from r in patient.Anamneses
+                     (from r in anamneses
                       select new SessionEvent
                                  {
                                      LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
@@ -137,9 +147,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(anamnesesByDate.Keys);
 
             // physical examinations
+            var physicalExaminations = filterUtcInterval.HasValue
+                ? patient.PhysicalExaminations.Where(x => x.MedicalRecordDate >= utcDateFilterStart && x.MedicalRecordDate < utcDateFilterEnd)
+                : patient.PhysicalExaminations;
             var physicalExaminationsByDate =
                 (from pe in
-                     (from r in patient.PhysicalExaminations
+                     (from r in physicalExaminations
                       select new SessionEvent
                       {
                           LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
@@ -152,9 +165,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(physicalExaminationsByDate.Keys);
 
             // diagnostic hipotheses
+            var diagnosticHypotheses = filterUtcInterval.HasValue
+                ? patient.DiagnosticHypotheses.Where(x => x.MedicalRecordDate >= utcDateFilterStart && x.MedicalRecordDate < utcDateFilterEnd)
+                : patient.DiagnosticHypotheses;
             var diagnosticHypothesesByDate =
                 (from pe in
-                     (from r in patient.DiagnosticHypotheses
+                     (from r in diagnosticHypotheses
                       select new SessionEvent
                       {
                           LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
@@ -167,9 +183,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(diagnosticHypothesesByDate.Keys);
 
             // receipts
+            var receipts = filterUtcInterval.HasValue
+                ? patient.Receipts.Where(x => x.IssuanceDate >= utcDateFilterStart && x.IssuanceDate < utcDateFilterEnd)
+                : patient.Receipts;
             var receiptsByDate =
                 (from rvm in
-                     (from r in patient.Receipts
+                     (from r in receipts
                       select new SessionEvent
                                  {
                                      LocalDate = ConvertToLocalDateTime(practice, r.IssuanceDate),
@@ -182,9 +201,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(receiptsByDate.Keys);
 
             // certificates
+            var certificates = filterUtcInterval.HasValue
+                ? patient.MedicalCertificates.Where(x => x.IssuanceDate >= utcDateFilterStart && x.IssuanceDate < utcDateFilterEnd)
+                : patient.MedicalCertificates;
             var certificatesByDate =
                 (from cvm in
-                     (from c in patient.MedicalCertificates
+                     (from c in certificates
                       select new SessionEvent
                                  {
                                      LocalDate = ConvertToLocalDateTime(practice, c.IssuanceDate),
@@ -197,9 +219,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(certificatesByDate.Keys);
 
             // exam requests
+            var examRequests = filterUtcInterval.HasValue
+                ? patient.ExaminationRequests.Where(x => x.RequestDate >= utcDateFilterStart && x.RequestDate < utcDateFilterEnd)
+                : patient.ExaminationRequests;
             var examRequestsByDate =
                 (from ervm in
-                     (from c in patient.ExaminationRequests
+                     (from c in examRequests
                       select new SessionEvent
                                  {
                                      LocalDate = ConvertToLocalDateTime(practice, c.RequestDate),
@@ -212,9 +237,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(examRequestsByDate.Keys);
 
             // exam results
+            var examResults = filterUtcInterval.HasValue
+                ? patient.ExaminationResults.Where(x => x.ReceiveDate >= utcDateFilterStart && x.ReceiveDate < utcDateFilterEnd)
+                : patient.ExaminationResults;
             var examResultsByDate =
                 (from ervm in
-                     (from c in patient.ExaminationResults
+                     (from c in examResults
                       select new SessionEvent
                                  {
                                      LocalDate = ConvertToLocalDateTime(practice, c.ReceiveDate),
@@ -227,9 +255,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(examResultsByDate.Keys);
 
             // diagnosis
+            var diagnosis = filterUtcInterval.HasValue
+                ? patient.Diagnoses.Where(x => x.MedicalRecordDate >= utcDateFilterStart && x.MedicalRecordDate < utcDateFilterEnd)
+                : patient.Diagnoses;
             var diagnosisByDate =
                 (from dvm in
-                     (from d in patient.Diagnoses
+                     (from d in diagnosis
                       select new SessionEvent
                                  {
                                      LocalDate = ConvertToLocalDateTime(practice, d.MedicalRecordDate),
@@ -242,9 +273,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
             eventDates.AddRange(diagnosisByDate.Keys);
 
             // patientFiles
+            var patientFiles = filterUtcInterval.HasValue
+                ? patient.PatientFileGroups.Where(x => x.ReceiveDate >= utcDateFilterStart && x.ReceiveDate < utcDateFilterEnd)
+                : patient.PatientFileGroups;
             var patientFilesByDate =
                 (from dvm in
-                     (from d in patient.PatientFileGroups
+                     (from d in patientFiles
                       select new SessionEvent
                       {
                           LocalDate = ConvertToLocalDateTime(practice, d.ReceiveDate),
@@ -352,6 +386,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Creating the view-model object.
             var model = GetViewModel(this, patient, canAccessMedicalRecords, true);
+
+            this.ViewBag.RecordDate = this.GetPracticeLocalNow().Date;
 
             return this.View(model);
         }
@@ -683,7 +719,52 @@ namespace CerebelloWebRole.Areas.App.Controllers
             foreach (var eachPatientViewModel in model.Objects)
                 eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
 
-            return View(model);
+            return this.View(model);
+        }
+
+        [SelfPermission]
+        public ActionResult AddMedicalRecords(int id, int? y, int? m, int? d)
+        {
+            var patient = this.db.Patients.SingleOrDefault(p => p.Id == id && p.DoctorId == this.Doctor.Id);
+
+            if (patient == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound, "Patient not found");
+
+            // Only the doctor and the patient can see the medical records.
+            var canAccessMedicalRecords = this.DbUser.Id == patient.Doctor.Users.Single().Id;
+            this.ViewBag.CanAccessMedicalRecords = canAccessMedicalRecords;
+
+            var localDateFilter = DateTimeHelper.CreateDate(y, m, d) ?? this.GetPracticeLocalNow().Date;
+            var utcDateFilter = ConvertToUtcDateTime(this.DbPractice, localDateFilter);
+
+            // Creating the view-model object.
+            var model = GetViewModel(this, patient, false, false, false);
+            model.Sessions = GetSessionViewModels(this.DbPractice, patient, DateTimeInterval.FromDateAndDays(utcDateFilter, 1));
+
+            this.ViewBag.RecordDate = localDateFilter;
+
+            return this.View(model);
+        }
+
+        [HttpGet]
+        public ActionResult GetDatesWithMedicalRecords(int patientId, int year, int month)
+        {
+            var localFirst = new DateTime(year, month, 1);
+            var localLast = localFirst.AddMonths(1);
+
+            var patient = this.db.Patients.SingleOrDefault(p => p.Id == patientId);
+
+            if (patient == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound);
+
+            var utcFirst = ConvertToUtcDateTime(this.DbPractice, localFirst);
+            var utcLast = ConvertToUtcDateTime(this.DbPractice, localLast);
+
+            var result = GetSessionViewModels(this.DbPractice, patient, new DateTimeInterval(utcFirst, utcLast))
+                .Select(s => s.Date.ToString("'d'dd_MM_yyyy"))
+                .Distinct().ToArray();
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

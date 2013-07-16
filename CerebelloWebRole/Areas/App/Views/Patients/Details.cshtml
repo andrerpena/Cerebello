@@ -2,8 +2,8 @@
 @using Cerebello.Model
 @{
     var title = "Paciente: " + this.Model.FullName;
-    ViewBag.Title = string.Format("{0} · Cerebello", title);
-    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+    this.ViewBag.Title = string.Format("{0} · Cerebello", title);
+    this.ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
@@ -32,123 +32,44 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" class="icon-link icon-link-edit">Editar paciente</a></li>
+        <li><a href="@this.Url.Action("Edit", new { id = this.Model.Id })" class="icon-link icon-link-edit">Editar paciente</a></li>
+        @if (this.CanAccessAction("AddMedicalRecords"))
+        {
+            <li><a href="@this.Url.Action("AddMedicalRecords", new { id = this.Model.Id })" class="icon-link icon-link-edit">Editar consultas</a> </li>
+        }
         <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" data-deleteRedirect="@this.Url.Action("Index")" data-deleteUrl="@this.Url.Action("Delete", new { id = this.Model.Id })" data-objectName="@this.Model.FullName" class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a></li>
         <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
-            <li><a href="@Url.Action("ExportPatientsPdf", "Report", new { patientId = this.Model.Id })" target="_blank" class="icon-link icon-link-import">Exportar PDF</a> </li>
+            <li><a href="@this.Url.Action("ExportPatientsPdf", "Report", new { patientId = this.Model.Id })" target="_blank" class="icon-link icon-link-import">Exportar PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadZipFile", "PatientFiles"))
         {
-            <li><a href="@Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
+            <li><a href="@this.Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
         }
         @if (this.CanAccessAction("DownloadBackup", "PatientFiles"))
         {
-            <li><a href="@Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar backup em Zip</a> </li>
+            <li><a href="@this.Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar backup em Zip</a> </li>
         }
     </ul>
 }
 @section Scripts
 {
     @LockIcon.Script(LockAccessType.You, elementAction: LockElementActionType.Section, cssClass: "lock-hist")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/App/Pages/patient-details.js")"></script>
+
     <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.webcam.js")"></script>
     <script type="text/javascript" src="@this.Url.Content("~/Scripts/Controls/jquery.camera.window.js")"></script>
     <script type="text/javascript" src="@this.Url.Content("~/Scripts/App/Pages/camera-window.js")"></script>
 
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/tmpl.min.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/canvas-to-blob.min.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/load-image.min.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.iframe-transport.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload-fp.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload-ui.js")"></script>
-
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/bootstrap-modal-2.2.2-isolated.js")"></script>
-    <script type="text/javascript" src="@this.Url.Content("~/Scripts/bootstrap-image-gallery-2.10-isolated.js")"></script>
-
-    <script type="text/javascript" src="@Url.Content("~/Scripts/App/Pages/patient-details.js")"></script>
-
-<!-- The template to display files available for upload -->
-<script id="template-upload" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
-    <div class="template-upload fade filebox">
-        <div class="preview"><span class="fade"></span></div>
-        <div class="name"><span>{%=file.name%}</span></div>
-        <div class="size"><span>{%=o.formatFileSize(file.size)%}</span></div>
-        {% if (file.error) { %}
-            <div class="error" colspan="2"><span class="label label-important">{%=cerebello.res.fileupload.error%}</span> {%=cerebello.res.fileupload.errors[file.error] || file.error%}</div>
-        {% } else if (o.files.valid && !i) { %}
-            <div>
-                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
-            </div>
-            <div>{% if (!o.options.autoUpload) { %}
-                <button class="btn btn-primary start">
-                    <i class="icon-upload icon-white"></i>
-                    <span>{%=cerebello.res.fileupload.start%}</span>
-                </button>
-            {% } %}</div>
-        {% } else { %}
-            <div colspan="2"></div>
-        {% } %}
-        <div>{% if (!i) { %}
-            <button class="btn btn-warning cancel">
-                <i class="icon-ban-circle icon-white"></i>
-                <span>{%=cerebello.res.fileupload.cancel%}</span>
-            </button>
-        {% } %}</div>
-    </div>
-{% } %}
-</script>
-<!-- The template to display files available for download -->
-<script id="template-download" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
-    <div class="template-download fade filebox">
-        <input type="checkbox" name="delete" value="1" class="toggle">
-        {% if (file.Error) { %}
-            <div class="preview"><span>ERRO!</span></div>
-            <div class="name"><span>{%=file.Name%}</span></div>
-            <div class="size"><span>{%=o.formatFileSize(file.Size)%}</span></div>
-            <div class="error" colspan="2"><span class="label label-important">{%=cerebello.res.fileupload.error%}</span> {%=cerebello.res.fileupload.errors[file.Error] || file.Error%}</div>
-        {% } else { %}
-            <div class="preview">{% if (file.ThumbnailUrl) { %}
-                {% if (file.IsInGallery) { %}
-                <a href="{%=file.UrlLarge%}" title="{%=file.Name%}" data-gallery="gallery" data-download="{%=file.UrlFull%}"><img src="{%=file.ThumbnailUrl%}"></a>
-                {% } else { %}
-                <a href="{%=file.UrlFull%}" title="{%=file.Name%}" target="_blank"><img src="{%=file.ThumbnailUrl%}"></a>
-                {% } %}
-            {% } else if (file.IconClass) { %}
-                <a href="{%=file.UrlFull%}" title="{%=file.Name%}" target="_blank" class="{%=file.IconClass%}"></a>
-            {% } %}</div>
-            <div class="name">
-                <a href="{%=file.UrlFull%}" title="{%=file.Name%}">{%=file.Name%}</a>
-            </div>
-            <div class="size"><span>{%=o.formatFileSize(file.Size)%}</span></div>
-            <div colspan="2"></div>
-        {% } %}
-        <div>
-            <input type="hidden" name="{%=file.IndexFieldName%}" value="{%=file.Index%}" autocomplete="off" />
-            <input type="hidden" name="{%=file.FieldNamePrefix + '.Id'%}" value="{%=file.PatientFileId%}" autocomplete="off" />
-            <input type="hidden" name="{%=file.FieldNamePrefix + '.MetadataId'%}" value="{%=file.MetadataId%}" autocomplete="off" />
-            <input type="hidden" name="{%=file.FieldNamePrefix + '.FileName'%}" value="{%=file.FileName%}" autocomplete="off" />
-            <input type="text" name="{%=file.FieldNamePrefix + '.FileTitle'%}" value="{%=file.FileTitle%}" />
-            <a href="#" class="delete btn btn-danger" data-type="DELETE" data-url="{%=file.DeleteUrl%}" data-async="true" data-xhr-fields='{"withCredentials":true}'>
-                {%=cerebello.res.fileupload.destroy%}@*=Excluir*@
-            </a>
-        </div>
-    </div>
-{% } %}
-</script>
+    @this.Html.Resources("js")
 }
 
 @section Styles
 {
-    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/Pages/patients.css")" />
-    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/FileIcons.css")" />
     <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/Pages/camera_window.css")" />
 
-    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/jquery.fileupload-ui.css")" />
-    <link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/image-gallery.css")" />
+    @this.Html.Resources("css")
 }
 
 <!-- modal-gallery is the modal dialog used for the image gallery -->
@@ -186,188 +107,15 @@
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
-    <h2>Histórico do paciente @LockIcon.Icon("lock-hist")</h2>
-
     <div class="medical-appointments-panel">
-        @if (this.Model.Sessions.Any())
-        {
-            foreach (var session in this.Model.Sessions)
-            {
-                var relativeSessionDate = DateTimeHelper.ConvertToRelative(
-                    session.Date,
-                    localNow,
-                    DateTimeHelper.RelativeDateOptions.IncludePrefixes
-                    | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
-                    | DateTimeHelper.RelativeDateOptions.ReplaceToday
-                    | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+        <h2>Histórico do paciente @LockIcon.Icon("lock-hist")</h2>
+        @this.Html.Partial("MedicalRecordsViewPartial", this.Model)
 
-            <div class="medical-appointment-panel">
-                <h3>Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)
-                </h3>
-                <div class="medical-appointment-details">
-                    @if (session.AnamneseIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Anamneses
-                        </p>
-                        foreach (var anamneseId in session.AnamneseIds)
-                        {
-                        @Html.Action("Details", "Anamneses", new { id = anamneseId })
-                        }
-                    }
-                    @if (session.PhysicalExaminationIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Exames físicos
-                        </p>
-                        foreach (var physicalExamination in session.PhysicalExaminationIds)
-                        {
-                        @Html.Action("Details", "PhysicalExamination", new { id = physicalExamination })
-                        }
-                    }
-                    @if (session.DiagnosticHipothesesId.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Hipóteses diagnósticas
-                        </p>
-                        foreach (var diagnosticHypothesis in session.DiagnosticHipothesesId)
-                        {
-                        @Html.Action("Details", "DiagnosticHypotheses", new { id = diagnosticHypothesis })
-                        }
-                    }
-                    @if (session.ReceiptIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Receitas
-                        </p>
-                        foreach (var receiptId in session.ReceiptIds)
-                        {
-                        @Html.Action("Details", "Receipts", new { id = receiptId })
-                        }
-                    }
-                    @if (session.ExaminationRequestIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Solicitações de exames
-                        </p>
-                        foreach (var receiptId in session.ExaminationRequestIds)
-                        {
-                        @Html.Action("Details", "Exams", new { id = receiptId })
-                        }
-                    }
-                    @if (session.ExaminationResultIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Resultados de exames
-                        </p>
-                        foreach (var examResultId in session.ExaminationResultIds)
-                        {
-                        @Html.Action("Details", "ExamResults", new { id = examResultId })
-                        }
-                    }
-
-                    @if (session.DiagnosisIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Diagnósticos
-                        </p>
-                        foreach (var diagnosisId in session.DiagnosisIds)
-                        {
-                        @Html.Action("Details", "Diagnosis", new { id = diagnosisId })
-                        }
-                    }
-
-                    @if (session.MedicalCertificateIds.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Atestados médicos
-                        </p>
-                        foreach (var certificateId in session.MedicalCertificateIds)
-                        {
-                        @Html.Action("Details", "MedicalCertificates", new { id = certificateId })
-                        }
-                    }
-
-                    @if (session.PatientFiles.Count > 0)
-                    {
-                        <p class="subtitle">
-                            Arquivos
-                        </p>
-                        foreach (var patientFileId in session.PatientFiles)
-                        {
-                        @Html.Action("Details", "PatientFiles", new { id = patientFileId })
-                        }
-                    }
-                </div>
-            </div>
-            }
-        }
-        else
-        {
-            @Html.Message("O paciente não possui histórico")
-        }
         <h2>Nova consulta @LockIcon.Icon("lock-hist")</h2>
-        <div class="new-medical-appointment-panel-wrapper">
-            <div class="new-medical-appointment-panel">
-                <!-- anamnese -->
-                <div>
-                    <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Anamneses", new { patientId = Model.Id })">Nova anamnese</a>
-                    <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- physical examination -->
-                <div>
-                    <a id="new-physicalExamination" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PhysicalExamination", new { patientId = Model.Id })">Novo exame físico</a>
-                    <div id="new-physicalExamination-wrapper" class="appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- diagnostic hypotheses -->
-                <div>
-                    <a id="new-diagnostic-hipothesis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "DiagnosticHypotheses", new { patientId = Model.Id })">Nova hipótese diagnóstica</a>
-                    <div id="new-diagnostic-hipothesis-wrapper" class="appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- receipt -->
-                <div>
-                    <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Receipts", new { patientId = Model.Id })">Nova receita</a>
-                    <div id="new-receipt-wrapper" class="appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- exam requirement -->
-                <div>
-                    <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Exams", new { patientId = Model.Id })">Nova solicitação de exame ou procedimento</a>
-                    <div class="new-exams-wrapper appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- exam result -->
-                <div>
-                    <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "ExamResults", new { patientId = Model.Id })">Novo resultado de exame ou procedimento</a>
-                    <div class="new-exam-result-wrapper appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- diagnosis -->
-                <div>
-                    <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Diagnosis", new { patientId = Model.Id })">Novo diagnóstico</a>
-                    <div class="new-diagnosis-wrapper appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- medical certificate -->
-                <div>
-                    <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "MedicalCertificates", new { patientId = Model.Id })">Novo atestado médico</a>
-                    <div class="medical-certificate-wrapper appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- patient files -->
-                <div>
-                    <a id="new-patientFile" class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PatientFiles", new { patientId = Model.Id })">Enviar arquivos</a>
-                    <div class="medical-certificate-wrapper appointment-panel-wrapper">
-                    </div>
-                </div>
-                <!-- schedule return -->
-                <div>
-                    <a href="@this.Url.Action("Create", "Schedule", new { area = "App", findNextAvailable = true, patientId = this.Model.Id, date = retornoDateStr, start = "", end = "", doctorId = "" })" class="icon-link icon-link-reload" id="schedule-appointment">Marcar retorno</a>
-                </div>
-            </div>
+        @this.Html.Partial("MedicalRecordsInsertPartial")
+        <!-- schedule return -->
+        <div>
+            <a href="@this.Url.Action("Create", "Schedule", new { area = "App", findNextAvailable = true, patientId = this.Model.Id, date = retornoDateStr, start = "", end = "", doctorId = "" })" class="icon-link icon-link-reload" id="schedule-appointment">Marcar retorno</a>
         </div>
     </div>
 }

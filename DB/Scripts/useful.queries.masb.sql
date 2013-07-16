@@ -48,6 +48,7 @@ select
     UrlIdentifier not like 'consultorioplus%' and UrlIdentifier <> 'consultoriodrhouse' and
     U.UserName <> 'andrerpena'
     --and UrlIdentifier like '%clin%'
+    --and PER.Email = 'cristianormoraes@gmail.com'
   --order by LastActiveOn desc
   order by PR.CreatedOn desc
 

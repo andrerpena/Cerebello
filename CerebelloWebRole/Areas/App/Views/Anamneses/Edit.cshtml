@@ -13,6 +13,7 @@
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
         @this.Html.HiddenFor(model => model.Id)
+        @this.Html.HiddenFor(model => model.MedicalRecordDate)
 
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(model => model.ChiefComplaint, EditPanelFieldSize.Large);
@@ -25,7 +26,6 @@
             editPanel.AddField(model => model.RegularAndAcuteMedications, this.Html.TextAreaFor, EditPanelFieldSize.Large);
             editPanel.AddField(model => model.SexualHistory, EditPanelFieldSize.Large);
             editPanel.AddField(model => model.Conclusion, this.Html.TextAreaFor, EditPanelFieldSize.Large);
-            editPanel.AddField(model => model.MedicalRecordDate, this.Html.EditorFor, EditPanelFieldSize.Large);
         
         @editPanel.GetHtml()
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,6 +12,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
+using System.Web.WebPages;
 using CerebelloWebRole.Areas.App.Models;
 using JetBrains.Annotations;
 
@@ -21,50 +23,38 @@ namespace CerebelloWebRole.Code
     /// </summary>
     public static class HtmlExtensions
     {
-        /// <summary>
-        /// Renders a file upload input box for a field.
-        /// </summary>
-        /// <typeparam name="TModel">Type of the model object.</typeparam>
-        /// <typeparam name="TValue">Type of the model property.</typeparam>
-        /// <param name="html">The HtmlHelper used to get context information.</param>
-        /// <param name="expression">Expression that indicates the model property to render the file upload input box for.</param>
-        /// <returns>Returns an MvcHtmlString containing the rendered file upload input box.</returns>
-        public static MvcHtmlString FileUploadFor<TModel, TValue>(
-            this HtmlHelper<TModel> html,
-            Expression<Func<TModel, TValue>> expression)
+        #region Field metadata
+        public static IHtmlString FieldName<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
         {
-            return FileUploadFor(html, expression, null);
+            return html.Raw(ExpressionHelper.GetPropertyInfoFromMemberExpression(expression).Name);
+        }
+
+        public static string FieldLabelText<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
+        {
+            var propInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
+            var displayAttr = propInfo
+                .GetCustomAttributes(true).OfType<DisplayAttribute>()
+                .SingleOrDefault();
+            return displayAttr != null ? displayAttr.Name : propInfo.Name;
         }
 
         /// <summary>
-        /// Renders a file upload input box for a field.
+        /// Returns a component name based on an expression
         /// </summary>
-        /// <typeparam name="TModel">Type of the model object.</typeparam>
-        /// <typeparam name="TValue">Type of the model property.</typeparam>
-        /// <param name="html">The HtmlHelper used to get context information.</param>
-        /// <param name="expression">Expression that indicates the model property to render the file upload input box for.</param>
-        /// <param name="htmlAttributes">Attributes to add to the input field.</param>
-        /// <returns>Returns an MvcHtmlString containing the rendered file upload input box.</returns>
-        public static MvcHtmlString FileUploadFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes)
+        public static string GetComponentNameFor<TModel>([NotNull] this HtmlHelper<TModel> html,
+                                                  [NotNull] Expression<Func<TModel, object>> expression)
         {
-            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            if (html == null) throw new ArgumentNullException("html");
+            if (expression == null) throw new ArgumentNullException("expression");
 
-            if (!typeof(HttpPostedFileBase).IsAssignableFrom(metadata.ModelType))
-                throw new Exception(
-                    string.Format(
-                        "Cannot create an input of type='File' for the model property, "
-                            + "because it does not inherit from 'HttpPostedFileBase'. Property: '{0}'",
-                        metadata.PropertyName));
+            var prefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
+            var expressionText = ExpressionHelper.GetExpressionText(expression);
 
-            var tagBuilder = new TagBuilder("input");
-            tagBuilder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
-            tagBuilder.Attributes["type"] = "File";
-            tagBuilder.Attributes["id"] = html.ViewData.TemplateInfo.GetFullHtmlFieldId(metadata.PropertyName);
-            tagBuilder.Attributes["name"] = html.ViewData.TemplateInfo.GetFullHtmlFieldName(metadata.PropertyName);
-            var result = new MvcHtmlString(tagBuilder.ToString(TagRenderMode.SelfClosing));
-            return result;
+            return !string.IsNullOrEmpty(prefix) ? (prefix + "." + expressionText) : expressionText;
         }
+        #endregion
 
+        #region LabelForRequired, DisplayName
         public static MvcHtmlString LabelForRequired<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText = null)
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
@@ -113,31 +103,54 @@ namespace CerebelloWebRole.Code
             tag.SetInnerText(resolvedLabelText);
             return new MvcHtmlString(tag.ToString(TagRenderMode.Normal));
         }
+        #endregion
+
+        #region Controls: FileUpload
+        /// <summary>
+        /// Renders a file upload input box for a field.
+        /// </summary>
+        /// <typeparam name="TModel">Type of the model object.</typeparam>
+        /// <typeparam name="TValue">Type of the model property.</typeparam>
+        /// <param name="html">The HtmlHelper used to get context information.</param>
+        /// <param name="expression">Expression that indicates the model property to render the file upload input box for.</param>
+        /// <returns>Returns an MvcHtmlString containing the rendered file upload input box.</returns>
+        public static MvcHtmlString FileUploadFor<TModel, TValue>(
+            this HtmlHelper<TModel> html,
+            Expression<Func<TModel, TValue>> expression)
+        {
+            return FileUploadFor(html, expression, null);
+        }
 
         /// <summary>
-        /// Ids não podem possuir caracteres "especiais". É preciso removê-los do "Name".
+        /// Renders a file upload input box for a field.
         /// </summary>
-        /// <param name="original"></param>
-        /// <returns></returns>
-        private static string Encode(string original)
+        /// <typeparam name="TModel">Type of the model object.</typeparam>
+        /// <typeparam name="TValue">Type of the model property.</typeparam>
+        /// <param name="html">The HtmlHelper used to get context information.</param>
+        /// <param name="expression">Expression that indicates the model property to render the file upload input box for.</param>
+        /// <param name="htmlAttributes">Attributes to add to the input field.</param>
+        /// <returns>Returns an MvcHtmlString containing the rendered file upload input box.</returns>
+        public static MvcHtmlString FileUploadFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes)
         {
-            return original.Replace('[', '_').Replace(']', '_').Replace('.', '_');
-        }
+            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 
-        public static IHtmlString FieldName<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
-        {
-            return html.Raw(ExpressionHelper.GetPropertyInfoFromMemberExpression(expression).Name);
-        }
+            if (!typeof(HttpPostedFileBase).IsAssignableFrom(metadata.ModelType))
+                throw new Exception(
+                    string.Format(
+                        "Cannot create an input of type='File' for the model property, "
+                            + "because it does not inherit from 'HttpPostedFileBase'. Property: '{0}'",
+                        metadata.PropertyName));
 
-        public static string FieldLabelText<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, object>> expression)
-        {
-            var propInfo = ExpressionHelper.GetPropertyInfoFromMemberExpression(expression);
-            var displayAttr = propInfo
-                .GetCustomAttributes(true).OfType<DisplayAttribute>()
-                .SingleOrDefault();
-            return displayAttr != null ? displayAttr.Name : propInfo.Name;
+            var tagBuilder = new TagBuilder("input");
+            tagBuilder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            tagBuilder.Attributes["type"] = "File";
+            tagBuilder.Attributes["id"] = html.ViewData.TemplateInfo.GetFullHtmlFieldId(metadata.PropertyName);
+            tagBuilder.Attributes["name"] = html.ViewData.TemplateInfo.GetFullHtmlFieldName(metadata.PropertyName);
+            var result = new MvcHtmlString(tagBuilder.ToString(TagRenderMode.SelfClosing));
+            return result;
         }
-
+        #endregion
+        #region Controls: CheckBox
         [Obsolete("This method is not in use since 2013-04")]
         public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
         {
@@ -160,12 +173,14 @@ namespace CerebelloWebRole.Code
 
             return new MvcHtmlString(tagBuilder.ToString());
         }
-
+        #endregion
+        #region Controls: CardView
         public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html, bool suppressEmptyCells = false)
         {
             return new CardViewResponsive<TModel>(html, suppressEmptyCells: suppressEmptyCells);
         }
-
+        #endregion
+        #region Controls: EditPanel
         public static EditPanel<TModel> CreateEditPanel<TModel>(this HtmlHelper<TModel> html, object htmlAttributes = null, bool isChildPanel = false, int fieldsPerRow = 1)
         {
             return new EditPanel<TModel>(html, null, isChildPanel: isChildPanel, fieldsPerRow: fieldsPerRow);
@@ -175,7 +190,8 @@ namespace CerebelloWebRole.Code
         {
             return new EditPanel<TModel>(html, title);
         }
-
+        #endregion
+        #region Controls: Grid
         /// <summary>
         /// Creates a grid considering the current view Model as a type identifier
         /// </summary>
@@ -191,41 +207,14 @@ namespace CerebelloWebRole.Code
         {
             return new Grid<TModel>(htmlHelper, model);
         }
-
-
-        /// <summary>
-        /// Displays an inline message-box, containing arbitrary text.
-        /// The text will be html encoded.
-        /// </summary>
-        public static MvcHtmlString Message(this HtmlHelper htmlHelper, string text)
-        {
-            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", htmlHelper.Encode(text)));
-        }
-
-        /// <summary>
-        /// Displays an inline message-box, containing arbitrary text.
-        /// The text will be html encoded.
-        /// </summary>
-        public static MvcHtmlString Message(this HtmlHelper htmlHelper, Func<dynamic, object> format)
-        {
-            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", format(null)));
-        }
-
-        /// <summary>
-        /// Displays an inline message-box for help.
-        /// This should be called in the side-boxes
-        /// </summary>
-        public static MvcHtmlString MessageHelp(this HtmlHelper htmlHelper, string text)
-        {
-            var encodedText = HttpUtility.HtmlEncode(text);
-            return new MvcHtmlString(String.Format(@"<div class=""message-help"">{0}</div>", encodedText));
-        }
-
+        #endregion
+        #region Controls: ButtonLink
         public static MvcHtmlString ButtonLink(this HtmlHelper htmlHelper, string aText, string aUrl)
         {
             return new MvcHtmlString(String.Format("<input type=\"button\" class=\"button-link\" value=\"{0}\" href=\"{1}\" onclick=\"javascript:window.location.href=($(this).attr('href'))\" />", aText, aUrl));
         }
-
+        #endregion
+        #region Controls: DisplayEnum, EnumDropdownList
         public static MvcHtmlString DisplayEnumFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
         {
             return DisplayEnumFor(html, expression, "");
@@ -260,7 +249,7 @@ namespace CerebelloWebRole.Code
         {
             var propertyInfo = MemberExpressionHelper.GetPropertyInfo(expression);
 
-            Type enumType = null;
+            Type enumType;
 
             if (propertyInfo.PropertyType.IsEnum)
             {
@@ -315,7 +304,8 @@ namespace CerebelloWebRole.Code
             var valueDisplayDictionary = EnumHelper.GetSelectList(EnumHelper.GetEnumDataTypeFromExpression(expression), selection);
             return htmlHelper.DropDownListFor(expression, valueDisplayDictionary, optionLabel);
         }
-
+        #endregion
+        #region Controls: Autocomplete
         /// <summary>
         /// Lookup
         /// </summary>
@@ -360,7 +350,7 @@ namespace CerebelloWebRole.Code
             var inputTextId = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : Encode(htmlPrefix + "." + textPropertyInfo.Name);
             var inputTextName = string.IsNullOrEmpty(htmlPrefix) ? textPropertyInfo.Name : (htmlPrefix + "." + textPropertyInfo.Name);
 
-            var options = new AutocompleteOptions()
+            var options = new AutocompleteOptions
             {
                 contentUrl = actionUrl,
                 inputHiddenId = inputHiddenId,
@@ -432,20 +422,16 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
-        /// Returns a component name based on an expression
+        /// Ids não podem possuir caracteres "especiais". É preciso removê-los do "Name".
         /// </summary>
-        public static string GetComponentNameFor<TModel>([NotNull] this HtmlHelper<TModel> html,
-                                                  [NotNull] Expression<Func<TModel, object>> expression)
+        /// <param name="original"></param>
+        /// <returns></returns>
+        private static string Encode(string original)
         {
-            if (html == null) throw new ArgumentNullException("html");
-            if (expression == null) throw new ArgumentNullException("expression");
-
-            var prefix = html.ViewData.TemplateInfo.HtmlFieldPrefix;
-            var expressionText = ExpressionHelper.GetExpressionText((expression));
-
-            return !string.IsNullOrEmpty(prefix) ? (prefix + "." + expressionText) : expressionText;
+            return original.Replace('[', '_').Replace(']', '_').Replace('.', '_');
         }
-
+        #endregion
+        #region Controls: CollectionEditor
         /// <summary>
         /// Creates a collection editor for an N-Property
         /// </summary>
@@ -458,7 +444,7 @@ namespace CerebelloWebRole.Code
             var addAnotherLinkId = "add-another-to-" + propertyInfo.Name.ToLower();
             var listCustomClass = propertyInfo.Name.ToLower() + "-list";
 
-            var viewModel = new CollectionEditorViewModel()
+            var viewModel = new CollectionEditorViewModel
             {
                 ListParialViewName = collectionItemEditor,
                 AddAnotherLinkId = addAnotherLinkId,
@@ -487,10 +473,114 @@ namespace CerebelloWebRole.Code
         {
             return CollectionEditorFor(html, expression, "edit-list-single-line", collectionItemEditor, addAnotherText);
         }
+        #endregion
+
+        #region Message, MessageHelp
+        /// <summary>
+        /// Displays an inline message-box, containing arbitrary text.
+        /// The text will be html encoded.
+        /// </summary>
+        public static MvcHtmlString Message(this HtmlHelper htmlHelper, string text)
+        {
+            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", htmlHelper.Encode(text)));
+        }
+
+        /// <summary>
+        /// Displays an inline message-box, containing arbitrary text.
+        /// The text will be html encoded.
+        /// </summary>
+        public static MvcHtmlString Message(this HtmlHelper htmlHelper, Func<dynamic, object> format)
+        {
+            return new MvcHtmlString(String.Format(@"<div class=""message-warning"">{0}</div>", format(null)));
+        }
+
+        /// <summary>
+        /// Displays an inline message-box for help.
+        /// This should be called in the side-boxes
+        /// </summary>
+        public static MvcHtmlString MessageHelp(this HtmlHelper htmlHelper, string text)
+        {
+            var encodedText = HttpUtility.HtmlEncode(text);
+            return new MvcHtmlString(String.Format(@"<div class=""message-help"">{0}</div>", encodedText));
+        }
+        #endregion
+
+        #region Resources
+        private static TemplatesList GetResourceList(HtmlHelper htmlHelper, string resourceType)
+        {
+            var key = string.Format(@"Resources[{0}]", resourceType);
+            object obj;
+            htmlHelper.ViewContext.TempData.TryGetValue(key, out obj);
+            var tl = obj as TemplatesList;
+            if (tl == null)
+                htmlHelper.ViewContext.TempData[key] = tl = new TemplatesList();
+            return tl;
+        }
+
+        public static MvcHtmlString ResourceInclude([NotNull] this HtmlHelper htmlHelper, [NotNull] string resourceType, [NotNull] string resourceName, [NotNull] Func<object, HelperResult> template)
+        {
+            if (htmlHelper == null) throw new ArgumentNullException("htmlHelper");
+            if (resourceType == null) throw new ArgumentNullException("resourceType");
+            if (resourceName == null) throw new ArgumentNullException("resourceName");
+            if (template == null) throw new ArgumentNullException("template");
+            var tl = GetResourceList(htmlHelper, resourceType);
+            tl.Add(resourceName, template);
+            return MvcHtmlString.Empty;
+        }
+
+        public static MvcHtmlString RenderResources([NotNull] this HtmlHelper htmlHelper, [NotNull] string resourceType)
+        {
+            if (htmlHelper == null) throw new ArgumentNullException("htmlHelper");
+            if (resourceType == null) throw new ArgumentNullException("resourceType");
+            var tl = GetResourceList(htmlHelper, resourceType);
+
+            foreach (var template in tl.Templates)
+                htmlHelper.ViewContext.Writer.WriteLine(template(null));
+
+            return MvcHtmlString.Empty;
+        }
+
+        public static MvcHtmlString Resources([NotNull] this HtmlHelper htmlHelper, [NotNull] string resourceType)
+        {
+            if (htmlHelper == null) throw new ArgumentNullException("htmlHelper");
+            if (resourceType == null) throw new ArgumentNullException("resourceType");
+            var tl = GetResourceList(htmlHelper, resourceType);
+            var builder = new StringBuilder();
+
+            using (var writer = new StringWriter(builder))
+                foreach (Func<object, HelperResult> template in tl.Templates)
+                    writer.WriteLine(template(null));
+
+            return new MvcHtmlString(builder.ToString());
+        }
+
+        class TemplatesList
+        {
+            private readonly Dictionary<string, Func<object, HelperResult>> set = new Dictionary<string, Func<object, HelperResult>>();
+            private readonly List<Func<object, HelperResult>> templates = new List<Func<object, HelperResult>>();
+
+            public IEnumerable<Func<object, HelperResult>> Templates
+            {
+                get { return this.templates.AsReadOnly(); }
+            }
+
+            public void Add(string itemName, Func<object, HelperResult> template)
+            {
+                if (!this.set.ContainsKey(itemName))
+                {
+                    this.set.Add(itemName, template);
+                    this.templates.Add(template);
+                }
+            }
+        }
+        #endregion
+
+        #region Scopes
 
         /// <summary>
         /// Begins a collection item by inserting either a previously used .Index hidden field value for it or a new one.
         /// </summary>
+        /// <param name="html"> </param>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
         public static IDisposable BeginCollectionItem<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
@@ -503,6 +593,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Begins a scope by inserting either a previously used .Index hidden field value for it or a new one.
         /// </summary>
+        /// <param name="html"> </param>
         /// <param name="collectionName">The name of the scope from the Model that owns this item.</param>
         public static IDisposable BeginScope<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
@@ -515,6 +606,7 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Begins a collection item by inserting either a previously used .Index hidden field value for it or a new one.
         /// </summary>
+        /// <param name="html"> </param>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
         public static IDisposable BeginCollectionItemInline<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
@@ -529,6 +621,7 @@ namespace CerebelloWebRole.Code
         /// across requests. If none are left returns a new one.
         /// </summary>
         /// <param name="collectionIndexFieldName"></param>
+        /// <param name="httpContext"> </param>
         /// <returns>a GUID string</returns>
         private static string GetCollectionItemIndex(string collectionIndexFieldName, HttpContextBase httpContext)
         {
@@ -655,5 +748,6 @@ namespace CerebelloWebRole.Code
                 html.ViewContext.Writer.WriteLine("</li>");
             }
         }
+        #endregion
     }
 }

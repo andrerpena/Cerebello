@@ -43,9 +43,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(int patientId, string newKey)
+        public ActionResult Create(int patientId, string newKey, int? y, int? m, int? d)
         {
-            return this.Edit(null, patientId);
+            return this.Edit(null, patientId, y, m, d);
         }
 
         [HttpPost]
@@ -64,7 +64,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         ///     
         /// </remarks>
         [HttpGet]
-        public ActionResult Edit(int? id, int? patientId)
+        public ActionResult Edit(int? id, int? patientId, int? y, int? m, int? d)
         {
             MedicalCertificateViewModel viewModel = null;
 
@@ -91,11 +91,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
-                viewModel = new MedicalCertificateViewModel()
+                viewModel = new MedicalCertificateViewModel
                 {
                     Id = id,
                     PatientId = patientId,
-                    IssuanceDate = this.GetPracticeLocalNow(),
+                    IssuanceDate = DateTimeHelper.CreateDate(y, m, d) ?? this.GetPracticeLocalNow(),
                 };
             }
 

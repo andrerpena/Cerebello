@@ -12,7 +12,6 @@ Agenda
 @section Scripts {
     <script type="text/javascript" src="@this.Url.Content("~/Scripts/fullcalendar.min.js")"></script>
     <script type="text/javascript">
-
         // these are parameters being passed to the file included: "/scripts/app/schedule.js"
         window.createUrl = "@Url.Action("Create")";
         window.editUrl = "@Url.Action("Edit")";
@@ -25,7 +24,7 @@ Agenda
         window.maxTime = "@Model.MaxTime";
         window.weekends = @(Model.Weekends ? "true" : "false");
     </script>
-    <script type="text/javascript" src="/scripts/app/schedule.js"></script>
+    <script type="text/javascript" src="@this.Url.Content("~/scripts/app/pages/schedule.js")"></script>
     @{
         int y, m, d;
         if (int.TryParse(Request["y"], out y) && int.TryParse(Request["m"], out m) && int.TryParse(Request["d"], out d))

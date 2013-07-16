@@ -14,6 +14,7 @@
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
         @this.Html.HiddenFor(model => model.Id)
+            @this.Html.HiddenFor(model => model.ReceiveDate)
 
             var editPanel = this.Html.CreateEditPanel();
 
@@ -38,7 +39,6 @@
                 @<text>@this.Html.TextAreaFor(model => model.Text, new { rows = 5 })</text>);
 
             editPanel.AddField(model => model.ExaminationDate, this.Html.EditorFor, EditPanelFieldSize.Large);
-            editPanel.AddField(model => model.ReceiveDate, this.Html.EditorFor, EditPanelFieldSize.Large);
 
         @editPanel.GetHtml()
 

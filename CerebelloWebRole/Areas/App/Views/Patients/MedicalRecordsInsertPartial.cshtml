@@ -1,0 +1,164 @@
+﻿@this.Html.ResourceInclude("js", "tmpl", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/tmpl.min.js")"></script>)
+@this.Html.ResourceInclude("js", "canvas-to-blob", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/canvas-to-blob.min.js")"></script>)
+@this.Html.ResourceInclude("js", "load-image", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/load-image.min.js")"></script>)
+@this.Html.ResourceInclude("js", "jquery.iframe-transport", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.iframe-transport.js")"></script>)
+@this.Html.ResourceInclude("js", "jquery.fileupload", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload.js")"></script>)
+@this.Html.ResourceInclude("js", "jquery.fileupload-fp", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload-fp.js")"></script>)
+@this.Html.ResourceInclude("js", "jquery.fileupload-ui", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/jquery.fileupload-ui.js")"></script>)
+
+@this.Html.ResourceInclude("js", "bootstrap-modal-isolated", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/bootstrap-modal-2.2.2-isolated.js")"></script>)
+@this.Html.ResourceInclude("js", "bootstrap-image-gallery-isolated", @<script type="text/javascript" src="@this.Url.Content("~/Scripts/bootstrap-image-gallery-2.10-isolated.js")"></script>)
+
+@this.Html.ResourceInclude("js", "upload-templates",
+@<text>
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-upload fade filebox">
+        <div class="preview"><span class="fade"></span></div>
+        <div class="name"><span>{%=file.name%}</span></div>
+        <div class="size"><span>{%=o.formatFileSize(file.size)%}</span></div>
+        {% if (file.error) { %}
+            <div class="error" colspan="2"><span class="label label-important">{%=cerebello.res.fileupload.error%}</span> {%=cerebello.res.fileupload.errors[file.error] || file.error%}</div>
+        {% } else if (o.files.valid && !i) { %}
+            <div>
+                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+            </div>
+            <div>{% if (!o.options.autoUpload) { %}
+                <button class="btn btn-primary start">
+                    <i class="icon-upload icon-white"></i>
+                    <span>{%=cerebello.res.fileupload.start%}</span>
+                </button>
+            {% } %}</div>
+        {% } else { %}
+            <div colspan="2"></div>
+        {% } %}
+        <div>{% if (!i) { %}
+            <button class="btn btn-warning cancel">
+                <i class="icon-ban-circle icon-white"></i>
+                <span>{%=cerebello.res.fileupload.cancel%}</span>
+            </button>
+        {% } %}</div>
+    </div>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-download fade filebox">
+        <input type="checkbox" name="delete" value="1" class="toggle">
+        {% if (file.Error) { %}
+            <div class="preview"><span>ERRO!</span></div>
+            <div class="name"><span>{%=file.Name%}</span></div>
+            <div class="size"><span>{%=o.formatFileSize(file.Size)%}</span></div>
+            <div class="error" colspan="2"><span class="label label-important">{%=cerebello.res.fileupload.error%}</span> {%=cerebello.res.fileupload.errors[file.Error] || file.Error%}</div>
+        {% } else { %}
+            <div class="preview">{% if (file.ThumbnailUrl) { %}
+                {% if (file.IsInGallery) { %}
+                <a href="{%=file.UrlLarge%}" title="{%=file.Name%}" data-gallery="gallery" data-download="{%=file.UrlFull%}"><img src="{%=file.ThumbnailUrl%}"></a>
+                {% } else { %}
+                <a href="{%=file.UrlFull%}" title="{%=file.Name%}" target="_blank"><img src="{%=file.ThumbnailUrl%}"></a>
+                {% } %}
+            {% } else if (file.IconClass) { %}
+                <a href="{%=file.UrlFull%}" title="{%=file.Name%}" target="_blank" class="{%=file.IconClass%}"></a>
+            {% } %}</div>
+            <div class="name">
+                <a href="{%=file.UrlFull%}" title="{%=file.Name%}">{%=file.Name%}</a>
+            </div>
+            <div class="size"><span>{%=o.formatFileSize(file.Size)%}</span></div>
+            <div colspan="2"></div>
+        {% } %}
+        <div>
+            <input type="hidden" name="{%=file.IndexFieldName%}" value="{%=file.Index%}" autocomplete="off" />
+            <input type="hidden" name="{%=file.FieldNamePrefix + '.Id'%}" value="{%=file.PatientFileId%}" autocomplete="off" />
+            <input type="hidden" name="{%=file.FieldNamePrefix + '.MetadataId'%}" value="{%=file.MetadataId%}" autocomplete="off" />
+            <input type="hidden" name="{%=file.FieldNamePrefix + '.FileName'%}" value="{%=file.FileName%}" autocomplete="off" />
+            <input type="text" name="{%=file.FieldNamePrefix + '.FileTitle'%}" value="{%=file.FileTitle%}" />
+            <a href="#" class="delete btn btn-danger" data-type="DELETE" data-url="{%=file.DeleteUrl%}" data-async="true" data-xhr-fields='{"withCredentials":true}'>
+                {%=cerebello.res.fileupload.destroy%}@*=Excluir*@
+            </a>
+        </div>
+    </div>
+{% } %}
+</script>
+</text>)
+
+@this.Html.ResourceInclude("css", "patients", @<link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/Pages/patients.css")" />)
+@this.Html.ResourceInclude("css", "FileIcons", @<link rel="stylesheet" type="text/css" href="@this.Url.Content("~/content/Styles/App/FileIcons.css")" />)
+
+@this.Html.ResourceInclude("css", "jquery.fileupload-ui", @<link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/jquery.fileupload-ui.css")" />)
+@this.Html.ResourceInclude("css", "image-gallery", @<link rel="stylesheet" type="text/css" href="@this.Url.Content("~/Content/Styles/App/image-gallery.css")" />)
+
+@{
+    var recordDate = (DateTime)this.ViewBag.RecordDate;
+    var y = recordDate.Year;
+    var m = recordDate.Month;
+    var d = recordDate.Day;
+}
+<div class="new-medical-appointment-panel-wrapper">
+    <div class="new-medical-appointment-panel">
+        <!-- anamnese -->
+        <div>
+            <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Anamneses", new { patientId = Model.Id, y, m, d })">Nova anamnese</a>
+            <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- physical examination -->
+        <div>
+            <a id="new-physicalExamination" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "PhysicalExamination", new { patientId = Model.Id, y, m, d })">Novo exame físico</a>
+            <div id="new-physicalExamination-wrapper" class="appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- diagnostic hypotheses -->
+        <div>
+            <a id="new-diagnostic-hipothesis" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "DiagnosticHypotheses", new { patientId = Model.Id, y, m, d })">Nova hipótese diagnóstica</a>
+            <div id="new-diagnostic-hipothesis-wrapper" class="appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- receipt -->
+        <div>
+            <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Receipts", new { patientId = Model.Id, y, m, d })">Nova receita</a>
+            <div id="new-receipt-wrapper" class="appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- exam requirement -->
+        <div>
+            <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Exams", new { patientId = Model.Id, y, m, d })">Nova solicitação de exame ou procedimento</a>
+            <div class="new-exams-wrapper appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- exam result -->
+        <div>
+            <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "ExamResults", new { patientId = Model.Id, y, m, d })">Novo resultado de exame ou procedimento</a>
+            <div class="new-exam-result-wrapper appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- diagnosis -->
+        <div>
+            <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Diagnosis", new { patientId = Model.Id, y, m, d })">Novo diagnóstico</a>
+            <div class="new-diagnosis-wrapper appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- medical certificate -->
+        <div>
+            <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "MedicalCertificates", new { patientId = Model.Id, y, m, d })">Novo atestado médico</a>
+            <div class="medical-certificate-wrapper appointment-panel-wrapper">
+            </div>
+        </div>
+        <!-- patient files -->
+        <div>
+            <a id="new-patientFile" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "PatientFiles", new { patientId = Model.Id, y, m, d })">Enviar arquivos</a>
+            <div class="medical-certificate-wrapper appointment-panel-wrapper">
+            </div>
+        </div>
+    </div>
+</div>

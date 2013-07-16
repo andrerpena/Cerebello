@@ -30,9 +30,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(int patientId)
+        public ActionResult Create(int patientId, int? y, int? m, int? d)
         {
-            return this.Edit(null, patientId);
+            return this.Edit(null, patientId, y, m, d);
         }
 
         [HttpPost]
@@ -43,7 +43,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
 
         [HttpGet]
-        public ActionResult Edit(int? id, int? patientId)
+        public ActionResult Edit(int? id, int? patientId, int? y, int? m, int? d)
         {
             DiagnosticHypothesisViewModel viewModel = null;
 
@@ -56,7 +56,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Id = null,
                     PatientId = patientId,
-                    MedicalRecordDate = this.GetPracticeLocalNow(),
+                    MedicalRecordDate = DateTimeHelper.CreateDate(y, m, d) ?? this.GetPracticeLocalNow(),
                 };
 
             return this.View("Edit", viewModel);

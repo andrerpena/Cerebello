@@ -222,7 +222,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private List<SessionData> GetAllSessionsData(Patient patient)
         {
-            var sessions = PatientsController.GetSessionViewModels(this.practice, patient)
+            var sessions = PatientsController.GetSessionViewModels(this.practice, patient, null)
                                              .Select(this.GetSessionData)
                                              .ToList();
 

@@ -1,0 +1,121 @@
+﻿@model PatientViewModel
+@{
+    var localNow = (DateTime)this.ViewBag.LocalNow;
+}
+@if (this.Model.Sessions.Any())
+{
+    foreach (var session in this.Model.Sessions)
+    {
+        var relativeSessionDate = DateTimeHelper.ConvertToRelative(
+            session.Date,
+            localNow,
+            DateTimeHelper.RelativeDateOptions.IncludePrefixes
+            | DateTimeHelper.RelativeDateOptions.IncludeSuffixes
+            | DateTimeHelper.RelativeDateOptions.ReplaceToday
+            | DateTimeHelper.RelativeDateOptions.ReplaceYesterdayAndTomorrow);
+
+    <div class="medical-appointment-panel">
+        <h3>Consulta do dia @session.Date.ToString("dd/MM/yyyy") (@relativeSessionDate)</h3>
+        <div class="medical-appointment-details">
+            @if (session.AnamneseIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Anamneses
+                </p>
+                foreach (var anamneseId in session.AnamneseIds)
+                {
+                @this.Html.Action("Details", "Anamneses", new { id = anamneseId })
+                }
+            }
+            @if (session.PhysicalExaminationIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Exames físicos
+                </p>
+                foreach (var physicalExamination in session.PhysicalExaminationIds)
+                {
+                @this.Html.Action("Details", "PhysicalExamination", new { id = physicalExamination })
+                }
+            }
+            @if (session.DiagnosticHipothesesId.Count > 0)
+            {
+                <p class="subtitle">
+                    Hipóteses diagnósticas
+                </p>
+                foreach (var diagnosticHypothesis in session.DiagnosticHipothesesId)
+                {
+                @Html.Action("Details", "DiagnosticHypotheses", new { id = diagnosticHypothesis })
+                }
+            }
+            @if (session.ReceiptIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Receitas
+                </p>
+                foreach (var receiptId in session.ReceiptIds)
+                {
+                @Html.Action("Details", "Receipts", new { id = receiptId })
+                }
+            }
+            @if (session.ExaminationRequestIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Solicitações de exames
+                </p>
+                foreach (var receiptId in session.ExaminationRequestIds)
+                {
+                @Html.Action("Details", "Exams", new { id = receiptId })
+                }
+            }
+            @if (session.ExaminationResultIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Resultados de exames
+                </p>
+                foreach (var examResultId in session.ExaminationResultIds)
+                {
+                @Html.Action("Details", "ExamResults", new { id = examResultId })
+                }
+            }
+
+            @if (session.DiagnosisIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Diagnósticos
+                </p>
+                foreach (var diagnosisId in session.DiagnosisIds)
+                {
+                @Html.Action("Details", "Diagnosis", new { id = diagnosisId })
+                }
+            }
+
+            @if (session.MedicalCertificateIds.Count > 0)
+            {
+                <p class="subtitle">
+                    Atestados médicos
+                </p>
+                foreach (var certificateId in session.MedicalCertificateIds)
+                {
+                @Html.Action("Details", "MedicalCertificates", new { id = certificateId })
+                }
+            }
+
+            @if (session.PatientFiles.Count > 0)
+            {
+                <p class="subtitle">
+                    Arquivos
+                </p>
+                foreach (var patientFileId in session.PatientFiles)
+                {
+                @Html.Action("Details", "PatientFiles", new { id = patientFileId })
+                }
+            }
+        </div>
+    </div>
+    }
+}
+else
+{
+    @this.Html.Message(((string)this.ViewBag.NoMedicalRecordsMessage) ?? "O paciente não possui histórico")
+}
+        

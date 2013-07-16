@@ -32,12 +32,12 @@
             @this.Html.ValidationSummary(false)
             @this.Html.HiddenFor(model => model.PatientId)
             @this.Html.HiddenFor(model => model.Id)
+            @this.Html.HiddenFor(model => model.ReceiveDate)
 
             var editPanel = this.Html.CreateEditPanel();
             editPanel.AddField(m => m.Title, EditPanelFieldSize.Large);
             editPanel.AddField(m => m.Notes, this.Html.TextAreaFor, EditPanelFieldSize.Large);
             editPanel.AddField(m => m.FileGroupDate, EditPanelFieldSize.Large);
-            editPanel.AddField(m => m.ReceiveDate, EditPanelFieldSize.Large);
             @:@editPanel.GetHtml()
             
             if (this.Model.Id == null)
