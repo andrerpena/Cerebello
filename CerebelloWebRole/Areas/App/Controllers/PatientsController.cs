@@ -639,6 +639,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     patientFiles.Remove(patientFile);
                 }
 
+                // delete file groups manually
+                var patientFileGroups = patient.PatientFileGroups.ToList();
+                while (patientFileGroups.Any())
+                {
+                    var patientFileGroup = patientFileGroups.First();
+                    this.db.PatientFileGroups.DeleteObject(patientFileGroup);
+                    patientFileGroups.Remove(patientFileGroup);
+                }
+
                 this.db.Patients.DeleteObject(patient);
                 this.db.SaveChanges();
                 return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
