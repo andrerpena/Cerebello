@@ -100,9 +100,9 @@
             </div>
             <ul id="top_menu" class="nav nav-pills">
                 <li class="@(this.IsAction("Index", "Home") ? "active" : "")"><a href="@Url.Action("Index", "Home", new { area = "" })">Home</a></li>
-                <li class="@(this.IsAction("PricesAndPlans", "Home") ? "active" : "")"><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Preços e Planos</a></li>
-                <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentação</a></li>
-                <li><a href="https://cerebello.uservoice.com">Central de ideias</a></li>
+                <li class="@(this.IsAction("PricesAndPlans", "Home") ? "active" : "")"><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Pricing</a></li>
+                <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentation</a></li>
+                <li><a href="https://cerebello.uservoice.com">Feedback</a></li>
                 @if (this.User is AuthenticatedPrincipal)
                 {
                     var userData = (this.User as AuthenticatedPrincipal).Profile;
@@ -120,15 +120,15 @@
                             </span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="@this.Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Entrar</a></li>
-                            <li><a href="@this.Url.Action("LogoutLogin", "Authentication", new { area = "" })">Trocar usuário</a></li>
-                            <li><a href="@this.Url.Action("Logout", "Authentication", new { area = "" })">Sair</a></li>
+                            <li><a href="@this.Url.Action("RedirectToDoctorHome", "PracticeHome", new { practice = userData.PracticeIdentifier, area = "App" })">Sign in</a></li>
+                            <li><a href="@this.Url.Action("LogoutLogin", "Authentication", new { area = "" })">Change user</a></li>
+                            <li><a href="@this.Url.Action("Logout", "Authentication", new { area = "" })">Sign out</a></li>
                         </ul>
                     </li>
                 }
                 else
                 {
-                    <li><a href="@this.Url.Action("Login", "Authentication", new { area = "" })">Login</a></li>
+                    <li><a href="@this.Url.Action("Login", "Authentication", new { area = "" })">Sign in</a></li>
                 }
             </ul>
         </div>
@@ -138,23 +138,22 @@
 <div class="footer">
     <div class="container">
         <img src="/Content/Images/Site/logo_transp.png" />
-        <p>Nossa missão é fazer do trabalho cotidiano dos nossos clientes uma experiência mais simples e agradável.</p>
+        <p>Our mission is to provide to our customers a more pleasant work experience.</p>
         <div class="row links-horizontal">
             <div class="span12">
                 <ul>
-                    <li><a href="@Url.Action("Index", "Home", new { area = "" })">Produto</a></li>
-                    <li><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Preços e Planos</a></li>
-                    <li><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentação</a></li>
-                    <li><a href="http://blog.cerebello.com.br">Blog</a></li>
-                    <li><a href="https://cerebello.uservoice.com">Central de ideias</a></li>
-                    <li><a href="mailto:cerebello@cerebello.com.br">Fale Conosco</a></li>
+                    <li><a href="@Url.Action("Index", "Home", new { area = "" })">Product</a></li>
+                    <li><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Pricing</a></li>
+                    <li><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentation</a></li>
+                    <li><a href="https://cerebello.uservoice.com">Feedback</a></li>
+                    <li><a href="mailto:cerebello@cerebello.com">Contact us</a></li>
                 </ul>
             </div>
             <div class="span12">
-                <p style="margin: 0; padding: 0">Telefone: @Constants.TELEPHONE_NUMBER. E-mail: <a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a></p>
+                <p style="margin: 0; padding: 0">E-mail: <a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a></p>
             </div>
             <div class="span12">
-                <a class="twitter-link" href="https://twitter.com/cerebellohq" target="_blank">Siga o Cerebello no Twitter</a>
+                <a class="twitter-link" href="https://twitter.com/cerebellohq" target="_blank">Follow Cerebello at twitter</a>
             </div>
         </div>
     </div>

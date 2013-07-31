@@ -131,6 +131,7 @@ ul.link-list li {
 
 .hero h1 {
     letter-spacing: -1px;
+    margin-bottom: 25px;
 }
 
 .hero .create-account-wrapper {
@@ -286,14 +287,15 @@ body {
     background-color: #006DB3;
     color: white;
 }
+
 .prices th {
     border-bottom: 4px solid #00619F;
 }
 
-.prices tbody > tr
-{
+.prices tbody > tr {
     background-color: #FCFCFC;
 }
+
 .prices td {
     border-left: 1px dashed #DDDDDD;
     border-top: 0 none;
@@ -303,9 +305,9 @@ body {
     text-align: center;
 }
 
-.prices td:first-child {
-    border-left: medium none;
-}
+    .prices td:first-child {
+        border-left: medium none;
+    }
 
 .prices h6 {
     color: #999999;
@@ -353,4 +355,15 @@ body {
 .contact-ul {
     margin: 0 0 10px;
     padding: 0;
+}
+
+.container .header {
+    line-height: 1.2em;
+}
+
+.container .container-header h3 {
+    color: #A6A6A6;
+    letter-spacing: 1px;
+    line-height: 1.1em;
+    margin: 20px 0;
 }
