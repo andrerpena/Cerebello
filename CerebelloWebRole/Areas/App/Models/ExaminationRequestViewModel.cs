@@ -23,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Id of the medical procedure.
         /// </summary>
-        [Display(Name = "Exame / Procedimento")]
+        [Display(Name = "Exam / Proceeding")]
         [Tooltip("Exame ou procedimento sendo solicidado. É possível cadastrar exames da tabela CBHPM ou texto livre. Ao começar a digitar, o sistema irá sugerir exames da tabela CBHPM. Caso um seja selecionado, esta solicitação será associada à tabela CBHPM")]
         public int? MedicalProcedureId { get; set; }
 
@@ -43,10 +43,10 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Notes for the examination request.
         /// </summary>
-        [Display(Name = "Notas")]
+        [Display(Name = "Notes")]
         public string Notes { get; set; }
 
-        [Display(Name = "Data da solicitação")]
+        [Display(Name = "Record date")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("Data em que o exame foi solicitado")]
         public DateTime? RequestDate { get; set; }

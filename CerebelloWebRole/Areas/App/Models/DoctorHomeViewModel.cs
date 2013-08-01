@@ -15,7 +15,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Doctor's name
         /// </summary>
-        [Display(Name = "Nome do médico")]
+        [Display(Name = "Doctor name")]
         public string DoctorName { get; set; }
 
         /// <summary>
@@ -38,19 +38,19 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "CRM")]
         public string MedicCrm { get; set; }
 
-        [Display(Name = "Especialidade")]
+        [Display(Name = "Specialty")]
         public int? MedicalSpecialtyId { get; set; }
 
-        [Display(Name = "Especialidade")]
+        [Display(Name = "Specialty")]
         public string MedicalSpecialtyName { get; set; }
 
-        [Display(Name = "Conselho médico")]
+        [Display(Name = "Medical entity")]
         public int? MedicalEntityId { get; set; }
 
-        [Display(Name = "Conselho médico")]
+        [Display(Name = "Medical entity")]
         public string MedicalEntityName { get; set; }
 
-        [Display(Name = "Estado do conselho")]
+        [Display(Name = "Medical entity state")]
         public int MedicalEntityJurisdiction { get; set; }
 
         public int NextGenericAppointmentsCount { get; set; }

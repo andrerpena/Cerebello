@@ -12,16 +12,16 @@ namespace CerebelloWebRole.Areas.App.Models
             public string Name { get; set; }
             public bool IsBusinessDay { get; set; }
             [TimeDataType]
-            [Display(Name="Horário de início de expediente")]
+            [Display(Name="Business start")]
             public string WorkdayStartTime { get; set; }
             [TimeDataType]
-            [Display(Name = "Horário de fim de expediente")]
+            [Display(Name = "Business end")]
             public string WorkdayEndTime { get; set; }
             [TimeDataType]
-            [Display(Name = "Horário de início do intervalo")]
+            [Display(Name = "Interval start")]
             public string LunchStartTime { get; set; }
             [TimeDataType]
-            [Display(Name = "Horário de fim do intervalo")]
+            [Display(Name = "Interval end")]
             public string LunchEndTime { get; set; }
         }
 
@@ -30,7 +30,7 @@ namespace CerebelloWebRole.Areas.App.Models
             this.DaysOfWeek = new List<DayOfWeek>();
         }
 
-        [Display(Name="Duração da consulta")]
+        [Display(Name="Appointment duration")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeAppointmentDuration))]
         public int AppointmentDuration { get; set; }

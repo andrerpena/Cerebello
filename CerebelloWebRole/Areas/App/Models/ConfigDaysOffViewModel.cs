@@ -23,16 +23,16 @@ namespace CerebelloWebRole.Areas.App.Models
         public List<DayOff> DaysOff { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Início")]
+        [Display(Name = "Start")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Start { get; set; }
 
-        [Display(Name = "Fim")]
+        [Display(Name = "End")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? End { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Descrição")]
+        [Display(Name = "Description")]
         public string Description { get; set; }
     }
 }

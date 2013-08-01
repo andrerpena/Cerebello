@@ -21,43 +21,43 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required]
         public int? PatientId { get; set; }
 
-        [Display(Name = "Queixa principal (QP)")]
+        [Display(Name = "Chief complaint")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string ChiefComplaint { get; set; }
 
-        [Display(Name = "História da doença atual (HDA)")]
+        [Display(Name = "History of the present illness")]
         public string HistoryOfThePresentIllness { get; set; }
 
-        [Display(Name = "História médica/patológica pregressa (HMP ou HPP)")]
+        [Display(Name = "Past medical history")]
         public string PastMedicalHistory { get; set; }
 
-        [Display(Name = "Revisão de sistemas")]
+        [Display(Name = "Review of systems")]
         public string ReviewOfSystems { get; set; }
 
-        [Display(Name = "Histórico familiar (HF)")]
+        [Display(Name = "Family deseases")]
         public string FamilyDeseases { get; set; }
 
-        [Display(Name = "História pessoal (fisiológica) e história social")]
+        [Display(Name = "Social history")]
         public string SocialHistory { get; set; }
 
-        [Display(Name = "Medicações de uso regular")]
+        [Display(Name = "Regular and acute medications")]
         public string RegularAndAcuteMedications { get; set; }
 
-        [Display(Name = "Alergias")]
+        [Display(Name = "Allergies")]
         public string Allergies { get; set; }
 
-        [Display(Name = "Histórico Sexual")]
+        [Display(Name = "Sexual histry")]
         public string SexualHistory { get; set; }
 
-        [Display(Name = "Conclusão e fechamento")]
+        [Display(Name = "Conclusion")]
         public string Conclusion { get; set; }
 
-        [Display(Name = "Sintomas")]
+        [Display(Name = "Symptoms")]
         public List<DiagnosticHypothesisViewModel> DiagnosticHypotheses { get; set; }
 
-        [Display(Name = "Data de registro")]
+        [Display(Name = "Record date")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("Data em que a anamnese foi registrada")]
+        [Tooltip("This is mainly used for registering past records")]
         public DateTime? MedicalRecordDate { get; set; }
     }
 }

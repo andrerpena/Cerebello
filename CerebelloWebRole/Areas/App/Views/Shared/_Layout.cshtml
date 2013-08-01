@@ -138,8 +138,8 @@
     {
         <div class="top-bar">
             <div class="top-bar-inner">
-                <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Assine agora o Cerebello.
-                    <span class="small">Ilimitado, com suporte prioritário, e sem esta barra.</span>
+                <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Upgrate to Pro version.
+                    <span class="small">Illimited patient files and doctors.</span>
                 </a>
             </div>
 
@@ -154,7 +154,7 @@
                     <img src="/content/images/top-logo.png" />
                 </a>
             </div>
-            <div class="user-menu-wrapper" data-intro="Este é o seu usuário. Neste menu é possível visualizar as informações do seu usuário e sair" data-step="1">
+            <div class="user-menu-wrapper">
                 <div class="picture">
                     <img src="@Html.Raw(GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, GravatarHelper.Size.s24))"/>
                 </div>
@@ -169,8 +169,7 @@
                 <div class="configurations">
                     <div class="text">
                         <span>
-                            <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
-                                @*@LockIcon.Icon("lock-account-config")*@
+                            <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Account settings
                             </a>
                         </span>
                     </div>
@@ -190,10 +189,10 @@
             items: [
                 @if (userInfo.DoctorId.HasValue)
                 {
-                    @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
+                    @:{ id: "doctorProfile", text: "Doctor profile", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
                 }
-                { id: "profile", text: "Perfil do usuário", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
-                { id: "logout", text: "Sair", href: "@Url.Action("Logout", "Authentication", new { area = "" })" }
+                { id: "profile", text: "User profile", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
+                { id: "logout", text: "Sign out", href: "@Url.Action("Logout", "Authentication", new { area = "" })" }
             ]
         });
     </script>
@@ -220,9 +219,9 @@
             </div>
             <div class="footer">
                 <ul>
-                    <li class="first"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })" target="_blank">Documentação</a></li>
-                    <li><a href="http://cerebello.uservoice.com" target="_blank">Dê sua opinião</a></li>
-                    <li><a href="mailto:@Constants.EMAIL_CEREBELLO">Fale Conosco</a></li>
+                    <li class="first"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })" target="_blank">Documentation</a></li>
+                    <li><a href="http://cerebello.uservoice.com" target="_blank">Feedback</a></li>
+                    <li><a href="mailto:@Constants.EMAIL_CEREBELLO">Contact us</a></li>
                 </ul>
             </div>
         </div>
