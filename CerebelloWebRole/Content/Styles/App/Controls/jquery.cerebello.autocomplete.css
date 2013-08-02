@@ -4,7 +4,7 @@
 
 input.autocomplete {
     background-image: url("/content/images/app/icons16/search.png");
-    background-position: 0 -3px;
+    background-position: 0 -2px;
     background-repeat: no-repeat;
     padding-left: 25px !important;
     padding-right: 25px;
@@ -121,7 +121,7 @@ input.autocomplete {
         display: block;
         height: 16px;
         position: absolute;
-        top: -2px;
+        top: -3px;
         width: 16px;
         z-index: 1;
     }

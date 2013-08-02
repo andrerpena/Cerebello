@@ -19,7 +19,7 @@
 }
 
 .tooltip-dropdown {
-    background-color: #5387BE ;
+    background-color: #50B7DC;
     color: white;
     display: none;
     font-size: 11px;
@@ -31,6 +31,6 @@
 }
 
 .tooltip-button.selected {
-    background-color: #5387BE;
+    background-color: #50B7DC;
     color: white;
 }

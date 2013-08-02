@@ -30,7 +30,6 @@ table {
 }
 
 h2 {
-    border-bottom: 1px solid #D7D7D7;
     font-weight: bold;
     margin-bottom: 8px;
     padding: 2px 0;
@@ -89,8 +88,8 @@ html {
 body {
     font-family: Arial, Helvetica;
     font-size: 12px;
-    color: #333333;
-    background-color: #FBFBFB;
+    color: #626262;
+    background-color: #F6F5F2;
     min-width: 980px;
 }
 
@@ -254,11 +253,10 @@ input, textarea {
         -ms-box-sizing: border-box;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
-        font-family: Arial, Helvetica;
         border: 1px solid #CCCCCC;
         font-family: Arial,Helvetica;
         font-size: 13px;
-        padding: 4px;
+        padding: 5px;
     }
 
 .menu-column hr {
@@ -377,7 +375,6 @@ input, textarea {
 }
 
     .document .document-header {
-        background: none repeat scroll 0 0 #EEEEEE;
         border-bottom: 1px solid #D7D7D7;
         margin: 0;
         padding: 10px 15px;
@@ -397,6 +394,7 @@ input, textarea {
 
     .document .document-body .document-main-column {
         border-right: 1px solid #D7D7D7;
+        box-shadow: 2px 3px 10px -8px rgba(0, 0, 0, 0.5) inset;
         margin-right: 220px;
         min-height: 600px;
         padding: 15px;
@@ -484,8 +482,9 @@ fieldset {
 }
 
 #app-header {
-    background: none repeat scroll 0 0 #EEEEEE;
-    border-bottom: 1px solid #D7D7D7;
+    background: none repeat scroll 0 0 #50B7DC;
+    border-bottom: 1px solid #2693BA;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.3);
     color: white;
     margin-bottom: 15px;
     padding: 0 10px;
@@ -539,9 +538,8 @@ fieldset {
         }
 
             #app-header .title .top-actions-bar input[type=text] {
-                border: 1px solid #CCCCCC;
+                border: medium none;
                 font-size: 12px;
-                opacity: 0.9;
                 padding: 4px 10px 4px 24px;
                 width: 500px;
             }
@@ -561,6 +559,11 @@ fieldset {
             width: 200px;
         }
 
+        #app-header .title .logo-wrapper a {
+            margin: 3px 5px;
+            display: block;
+        }
+
     #app-header .configurations {
         color: #333333;
         cursor: pointer;
@@ -575,14 +578,12 @@ fieldset {
         }
 
             #app-header .configurations .text a {
-                display: block;
-                margin-right: 0;
-                padding: 10px 0 8px 34px;
-                text-decoration: none;
-                text-shadow: 0 1px 1px #FFFFFF;
-                background-repeat: no-repeat;
-                background-position: 4px 50%;
-                color: #333333;
+            background-position: 4px 50%;
+            background-repeat: no-repeat;
+            display: block;
+            margin-right: 0;
+            padding: 10px 0 8px 34px;
+            text-decoration: none;
             }
 
                 #app-header .configurations .text a.config-icon {
@@ -601,6 +602,7 @@ fieldset {
         }
 
         #app-header .user-menu-wrapper .user-menu {
+            color: white;
             margin: 6px 0 0 30px;
         }
 
@@ -631,7 +633,7 @@ fieldset {
         }
 
         .tabNav li.youarehere a {
-            background-color: #F2F2F2;
+            background-color: white;
             color: #DD390D;
             font-weight: bold;
         }

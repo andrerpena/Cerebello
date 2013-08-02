@@ -19,7 +19,7 @@ table.edit-panel > tbody > tr > th
 {
     background: none repeat scroll 0 0 transparent;
     color: #333333;
-    padding: 12px 10px 0 16px;
+    padding: 13px 10px 0 16px;
     text-align: right;
     vertical-align: top;
     width: 1px;
@@ -38,7 +38,7 @@ table.edit-panel > tbody > tr > th
 .edit-panel > tbody > tr > td 
 {
     margin: 0;
-    padding: 5px 0;
+    padding: 6px 0;
     text-align: left;
     vertical-align: top;
 }

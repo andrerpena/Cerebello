@@ -419,6 +419,7 @@
     <Content Include="Content\Images\App\generalFile.png" />
     <Content Include="Content\Images\Site\bright_squares.png" />
     <Content Include="Content\Images\Site\tile.jpg" />
+    <Content Include="Content\Images\top-logo-new.png" />
     <Content Include="Content\Sounds\chat.mp3" />
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
