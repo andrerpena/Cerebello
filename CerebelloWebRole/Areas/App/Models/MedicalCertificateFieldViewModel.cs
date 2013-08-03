@@ -10,13 +10,13 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Field name. This is going to be a hidden field. It's just a REFERENCE 
         /// </summary>
-        [Display(Name = "Nome")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Field value
         /// </summary>
-        [Display(Name = "Valor")]
+        [Display(Name = "Value")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [StringLength(50, ErrorMessageResourceName = "MaxLengthValidationMessage")]
         public string Value { get; set; }

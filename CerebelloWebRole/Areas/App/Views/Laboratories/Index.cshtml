@@ -1,8 +1,8 @@
 ﻿@model LaboratoriesIndexViewModel
 @{
-    var title = "Labotarórios";
+    var title = "Laboratories";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
-    ViewBag.Watermark = "Pesquisar pelo nome do laboratório";
+    ViewBag.Watermark = "Search by the laboratory name";
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredLaboratories);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
@@ -16,8 +16,8 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo laboratório</a> </li>
-        <li><a href="@Url.Action("Index", "Medicines")" class="icon-link icon-link-home">Resumo de medicamentos</a></li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">New laboratory</a> </li>
+        <li><a href="@Url.Action("Index", "Medicines")" class="icon-link icon-link-home">Laboratories home</a></li>
     </ul>
 }
 
@@ -27,7 +27,7 @@
 }
 
 <div class="widget">
-    <h2>Últimos laboratórios cadastrados
+    <h2>Last registered laboratories
     </h2>
     @grid.GetHtml()
 </div>

@@ -23,9 +23,9 @@ namespace CerebelloWebRole.Areas.App.Models
 
         public List<ReceiptMedicineViewModel> ReceiptMedicines { get; set; }
 
-        [Display(Name = "Data de emissão")]
+        [Display(Name = "Date of issue")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("Data em que a receita foi registrada")]
+        [Tooltip("Date this prescription has been issue")]
         public DateTime? IssuanceDate { get; set; }
     }
 }

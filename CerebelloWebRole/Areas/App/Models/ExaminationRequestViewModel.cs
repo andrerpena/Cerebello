@@ -30,14 +30,14 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Name of the medical procedure.
         /// </summary>
-        [Display(Name = "Exame / Procedimento")]
+        [Display(Name = "Exam / Proceeding")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalProcedureName { get; set; }
 
         /// <summary>
         /// Code of the medical procedure.
         /// </summary>
-        [Display(Name = "Código CBHPM")]
+        [Display(Name = "CBHPM code")]
         public string MedicalProcedureCode { get; set; }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Record date")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("Data em que o exame foi solicitado")]
+        [Tooltip("Date the exam / proceeding has been requested")]
         public DateTime? RequestDate { get; set; }
     }
 }

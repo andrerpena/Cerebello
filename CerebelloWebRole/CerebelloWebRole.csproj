@@ -506,8 +506,6 @@
     <Compile Include="Areas\App\Models\ModelMedicalCertificatesIndexViewModel.cs" />
     <Compile Include="Areas\App\Models\ModelMedicalCertificateViewModel.cs" />
     <Compile Include="Areas\App\Models\ScheduleEventViewModel.cs" />
-    <Compile Include="Areas\App\Models\AppointmentViewModels.cs" />
-    <Compile Include="Areas\App\Models\AutocompleteViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigScheduleViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicineConcentrationViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicinesIndexViewModel.cs" />

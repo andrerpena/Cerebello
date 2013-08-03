@@ -74,7 +74,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             Relevance = 1
                         }));
 
-            // somente os médicos podem pesquisar por algumas informações
+            // only doctors can search for some information
             if (this.DbUser.Doctor != null || this.DbUser.Administrator != null)
             {
                 var medicinesQuery = this.db.Medicines.Where(p => p.DoctorId == this.Doctor.Id);

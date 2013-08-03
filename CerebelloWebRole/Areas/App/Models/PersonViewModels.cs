@@ -23,39 +23,39 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Nome completo")]
+        [Display(Name = "Full name")]
         [CanBeNull]
         public String FullName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Sexo")]
+        [Display(Name = "Gender")]
         [EnumDataType(typeof(TypeGender))]
         [XmlIgnore]
         public int Gender { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Data de Nascimento")]
+        [Display(Name = "Date of birth")]
         [DateOfBirth]
         // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
         public DateTime DateOfBirth { get; set; }
 
         [EnumDataType(typeof(TypeMaritalStatus))]
-        [Display(Name = "Estado Civil")]
+        [Display(Name = "Marital status")]
         [XmlIgnore]
         public short? MaritalStatus { get; set; }
 
-        [Display(Name = "Naturalidade")]
+        [Display(Name = "Naturality")]
         public String BirthPlace { get; set; }
 
-        [Display(Name = "CPF")]
+        [Display(Name = "Social Security Number")]
         public String Cpf { get; set; }
 
-        [Display(Name = "Proprietário do CPF")]
+        [Display(Name = "Social Security Number owner")]
         [EnumDataType(typeof(TypeCpfOwner))]
         [XmlIgnore]
         public short? CpfOwner { get; set; }
 
-        [Display(Name = "Profissão")]
+        [Display(Name = "Profession")]
         public String Profissao { get; set; }
 
         [Display(Name = "E-mail")]
@@ -63,15 +63,15 @@ namespace CerebelloWebRole.Areas.App.Models
         [Code.EmailAddress]
         public String Email { get; set; }
 
-        [Display(Name = "Telefone fixo")]
+        [Display(Name = "Land line")]
         [UIHint("Phone")]
         public String PhoneLand { get; set; }
 
-        [Display(Name = "Telefone celular")]
+        [Display(Name = "Cell phone")]
         [UIHint("Phone")]
         public String PhoneCell { get; set; }
 
-        [Display(Name = "Endereço")]
+        [Display(Name = "Address")]
         public AddressViewModel Address { get; set; }
     }
 

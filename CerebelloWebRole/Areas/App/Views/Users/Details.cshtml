@@ -1,9 +1,9 @@
 ﻿@model UserViewModel
 @using Cerebello.Model
 @{
-    var title = "Usuário: " + this.Model.FullName;
+    var title = "User: " + this.Model.FullName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
-    this.ViewBag.Watermark = "Pesquisar pelo nome do usuário";
+    this.ViewBag.Watermark = "Search by the user name";
     this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;

@@ -23,38 +23,38 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Id of the medical procedure.
         /// </summary>
-        [Display(Name = "Exame / Procedimento")]
+        [Display(Name = "Exam / Proceeding")]
         [Tooltip("Exame ou procedimento relativo a este resultado. É possível cadastrar exames da tabela CBHPM ou texto livre. Ao começar a digitar, o sistema irá sugerir exames da tabela CBHPM. Caso um seja selecionado, este resultado será associada à tabela CBHPM")]
         public int? MedicalProcedureId { get; set; }
 
         /// <summary>
         /// Name of the medical procedure.
         /// </summary>
-        [Display(Name = "Exame / Procedimento")]
+        [Display(Name = "Exam / Proceeding")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalProcedureName { get; set; }
 
         /// <summary>
         /// Code of the medical procedure.
         /// </summary>
-        [Display(Name = "Código CBHPM")]
+        [Display(Name = "CBHPM code")]
         public string MedicalProcedureCode { get; set; }
 
         /// <summary>
         /// Text of the examination request.
         /// </summary>
-        [Display(Name = "Resultado")]
+        [Display(Name = "Result")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Text { get; set; }
 
-        [Display(Name = "Data do exame")]
+        [Display(Name = "Exam / Proceeding date")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("Data em que o exame foi realizado")]
+        [Tooltip("Date the exam / proceeding has been done")]
         public DateTime? ExaminationDate { get; set; }
 
-        [Display(Name = "Data de recebimento")]
+        [Display(Name = "Receiving date")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("Data em que o resultado foi cadastrado")]
+        [Tooltip("Date the exam / proceeding has been registered")]
         public DateTime? ReceiveDate { get; set; }
     }
 }

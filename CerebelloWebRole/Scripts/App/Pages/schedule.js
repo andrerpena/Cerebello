@@ -51,7 +51,6 @@
         selectable: true,
         defaultView: 'agendaDay',
         // translation
-        dayNames: ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado'],
         columnFormat: {
             month: 'ddd',    // Mon
             week: 'ddd d/M', // Mon 9/7
@@ -62,14 +61,7 @@
             next: '&nbsp;&#9658;&nbsp;',  // right triangle
             prevYear: '&nbsp;&lt;&lt;&nbsp;', // <<
             nextYear: '&nbsp;&gt;&gt;&nbsp;', // >>
-            today: 'hoje',
-            month: 'mês',
-            week: 'semana',
-            day: 'dia'
         },
-        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
         allDaySlot: false,
         axisFormat: "HH:mm",
         timeFormat: "HH:mm{ - HH:mm}",

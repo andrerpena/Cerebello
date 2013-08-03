@@ -95,26 +95,26 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
-        /// Retorna o dia da semana como string. Ex: segunda-feira
+        /// Returns the day of the week
         /// </summary>
-        public static string GetDayOfWeekAsString(DayOfWeek dayOfWeek)
+        internal static string GetDayOfWeekAsString(DayOfWeek dayOfWeek)
         {
             switch (dayOfWeek)
             {
                 case DayOfWeek.Friday:
-                    return "sexta-feira";
+                    return "Friday";
                 case DayOfWeek.Monday:
-                    return "segunda-feira";
+                    return "Monday";
                 case DayOfWeek.Saturday:
-                    return "sábado";
+                    return "Saturday";
                 case DayOfWeek.Sunday:
-                    return "domingo";
+                    return "Sunday";
                 case DayOfWeek.Thursday:
-                    return "quinta-feira";
+                    return "Thursday";
                 case DayOfWeek.Tuesday:
-                    return "terça-feira";
+                    return "Tuesday";
                 case DayOfWeek.Wednesday:
-                    return "quarta-feira";
+                    return "Wednesday";
                 default:
                     throw new NotImplementedException();
             }

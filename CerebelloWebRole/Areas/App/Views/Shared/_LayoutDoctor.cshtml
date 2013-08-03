@@ -131,7 +131,7 @@
 }
 
 @section TopActions {
-    <input type="text" id="global-search" name="global-search" class="autocomplete" data-intro="Use esta caixa para pesquisar por informações no Cerebello, como pacientes por exemplo. Ao começar a digitar, o sistema vai automaticamente sugerir registros que batem com a pesquisa" data-step="6" />
+    <input type="text" id="global-search" name="global-search" class="autocomplete" />
     <input type="hidden" id="global-search-hidden" name="global-search-hidden" class="autocomplete" />
     <script type="text/javascript">
         $("#global-search").autocomplete({
@@ -148,7 +148,7 @@
             columnHeaders: ["Nome", "Tipo"],
             columns: ["Value", "Description"]
         });
-        $("#global-search").watermark({ text: "Pesquisar no Cerebello" });
+        $("#global-search").watermark({ text: "Search in Cerebello" });
     </script>
 
     <a id="global-add-new" class="top-bar-menu-button add-new-button" href="#">New</a>

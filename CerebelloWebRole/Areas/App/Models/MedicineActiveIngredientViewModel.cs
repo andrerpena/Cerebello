@@ -5,11 +5,11 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class MedicineActiveIngredientViewModel
     {
-        [Display(Name = "Princípio Ativo")]
+        [Display(Name = "Active principle")]
         public int? Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Princípio Ativo")]
+        [Display(Name = "Active principle")]
         public string Name { get; set; }
     }
 }

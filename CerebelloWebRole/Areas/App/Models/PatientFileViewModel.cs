@@ -16,7 +16,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Gets or sets the title given to the file by the user.
         /// </summary>
-        [Display(Name = "Título do arquivo")]
+        [Display(Name = "File title")]
         public string FileTitle { get; set; }
     }
 }

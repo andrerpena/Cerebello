@@ -3,11 +3,11 @@
 @{
     var title =
         this.ViewBag.IsFiltered == true
-            ? "Busca por modelos de atestados médicos"
-            : "Modelos de atestados médicos";
+            ? "Medical certificate models search"
+            : "Medical certificate models";
 
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
-    this.ViewBag.Watermark = "Pesquisar pelo nome do atestado";
+    this.ViewBag.Watermark = "Search by the medical certificate name";
 
     var grid = this.Html.CreateGrid(this.Model.Objects);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
@@ -21,13 +21,13 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo modelo de atestado médico</a> </li>
-        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">New medical certificate model</a> </li>
+        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Settings home</a></li>
     </ul>
 }
 
 <div class="widget">
-    <h2>Modelos de atestado médico
+    <h2>Medical certificate models
     </h2>
     @grid.GetHtml()
 </div>

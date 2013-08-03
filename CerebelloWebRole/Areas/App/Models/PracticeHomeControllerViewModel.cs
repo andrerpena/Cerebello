@@ -15,21 +15,21 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeTimeZone))]
-        [Display(Name = "Fuso-horário do consultório")]
+        [Display(Name = "Practice time-zone")]
         public short PracticeTimeZone { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [RegularExpression(@"^\s*[\w\p{P}\d]+(\s+[\w\p{P}\d]+)*\s*$",
             ErrorMessage = "Nome de consultório precisa conter letras, números, ou alguma pontuação.")]
-        [Display(Name = "Nome do consultório")]
+        [Display(Name = "Practice name")]
         public string PracticeName { get; set; }
 
-        [Display(Name = "Telefone principal")]
+        [Display(Name = "Land line")]
         [UIHint("Phone")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string PhoneMain { get; set; }
 
-        [Display(Name = "Telefone alternativo")]
+        [Display(Name = "Land line (alternative)")]
         [UIHint("Phone")]
         public string PhoneAlt { get; set; }
 
@@ -45,7 +45,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Site")]
         public string SiteUrl { get; set; }
 
-        [Display(Name = "Endereço")]
+        [Display(Name = "Address")]
         public AddressViewModel Address { get; set; }
 
         public List<DoctorViewModel> Doctors { get; set; }

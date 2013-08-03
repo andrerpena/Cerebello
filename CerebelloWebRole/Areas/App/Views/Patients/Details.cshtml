@@ -1,9 +1,9 @@
 ﻿@model PatientViewModel
 @using Cerebello.Model
 @{
-    var title = "Paciente: " + this.Model.FullName;
+    var title = "Patient: " + this.Model.FullName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
-    this.ViewBag.Watermark = "Pesquisar pelo nome do paciente";
+    this.ViewBag.Watermark = "Search by the patients name";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
@@ -37,19 +37,19 @@
         {
             <li><a href="@this.Url.Action("AddMedicalRecords", new { id = this.Model.Id })" class="icon-link icon-link-edit">Editar consultas</a> </li>
         }
-        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" data-deleteRedirect="@this.Url.Action("Index")" data-deleteUrl="@this.Url.Action("Delete", new { id = this.Model.Id })" data-objectName="@this.Model.FullName" class="icon-link icon-link-delete" id="delete-patient-link">Excluir paciente</a></li>
-        <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
+        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" data-deleteRedirect="@this.Url.Action("Index")" data-deleteUrl="@this.Url.Action("Delete", new { id = this.Model.Id })" data-objectName="@this.Model.FullName" class="icon-link icon-link-delete" id="delete-patient-link">Delete patient</a></li>
+        <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Patients home</a></li>
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
-            <li><a href="@this.Url.Action("ExportPatientsPdf", "Report", new { patientId = this.Model.Id })" target="_blank" class="icon-link icon-link-import">Exportar PDF</a> </li>
+            <li><a href="@this.Url.Action("ExportPatientsPdf", "Report", new { patientId = this.Model.Id })" target="_blank" class="icon-link icon-link-import">Export PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadZipFile", "PatientFiles"))
         {
-            <li><a href="@this.Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar arquivos em Zip</a> </li>
+            <li><a href="@this.Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Export files in Zip</a> </li>
         }
         @if (this.CanAccessAction("DownloadBackup", "PatientFiles"))
         {
-            <li><a href="@this.Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Exportar backup em Zip</a> </li>
+            <li><a href="@this.Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Export backup in Zip</a> </li>
         }
     </ul>
 }
@@ -90,8 +90,8 @@
 <div class="patient-info-wrapper">
     <div class="patient-info-picture">
         <img id="patient-picture" src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" data-val-original-src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" />
-        <a href="#" id="alter-picture" data-UrlTransferPicture="@this.Url.Action("TransferPersonPictureFromTempContainer", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Capturar foto</a>
-        | <a href="#" id="remove-picture" data-UrlDeletePicture="@this.Url.Action("DeleteProfilePicture", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Remover foto</a>
+        <a href="#" id="alter-picture" data-UrlTransferPicture="@this.Url.Action("TransferPersonPictureFromTempContainer", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Capture</a>
+        | <a href="#" id="remove-picture" data-UrlDeletePicture="@this.Url.Action("DeleteProfilePicture", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Delete picture</a>
     </div>
     <div class="patient-info-content">
         @cardView.GetHtml()
@@ -100,7 +100,7 @@
 <h2>@Html.LabelFor(model => model.Address)</h2>
 @Html.DisplayFor(model => model.Address)
 
-<h2>Consultas agendadas para o futuro</h2>
+<h2>Consultations scheduled for the future</h2>
 <div style="margin-bottom: 10px">
     @futureAppointmentsGrid.GetHtml()
 </div>
@@ -108,14 +108,14 @@
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
     <div class="medical-appointments-panel">
-        <h2>Histórico do paciente @LockIcon.Icon("lock-hist")</h2>
+        <h2>Patient history @LockIcon.Icon("lock-hist")</h2>
         @this.Html.Partial("MedicalRecordsViewPartial", this.Model)
 
-        <h2>Nova consulta @LockIcon.Icon("lock-hist")</h2>
+        <h2>New consultation @LockIcon.Icon("lock-hist")</h2>
         @this.Html.Partial("MedicalRecordsInsertPartial")
         <!-- schedule return -->
         <div>
-            <a href="@this.Url.Action("Create", "Schedule", new { area = "App", findNextAvailable = true, patientId = this.Model.Id, date = retornoDateStr, start = "", end = "", doctorId = "" })" class="icon-link icon-link-reload" id="schedule-appointment">Marcar retorno</a>
+            <a href="@this.Url.Action("Create", "Schedule", new { area = "App", findNextAvailable = true, patientId = this.Model.Id, date = retornoDateStr, start = "", end = "", doctorId = "" })" class="icon-link icon-link-reload" id="schedule-appointment">Schedule return</a>
         </div>
     </div>
 }

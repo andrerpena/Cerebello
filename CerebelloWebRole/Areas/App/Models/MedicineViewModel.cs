@@ -21,44 +21,44 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         public bool IsImporting { get; set; }
 
-        [Display(Name = "Medicamento")]
+        [Display(Name = "Medicine")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? AnvisaId { get; set; }
 
-        [Display(Name = "Medicamento")]
+        [Display(Name = "Medicine")]
         public string AnvisaText { get; set; }
 
-        [Display(Name = "Nome personalizado")]
+        [Display(Name = "Custom name")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string AnvisaCustomText { get; set; }
 
-        [Display(Name = "Nome")]
+        [Display(Name = "Name")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceName = "MaxLengthValidationMessage")]
         public string Name { get; set; }
 
         public int? LaboratoryId { get; set; }
 
-        [Display(Name="Laboratório")]
+        [Display(Name="Laboratory")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "MaxLengthValidationMessage")]
         public string LaboratoryName { get; set; }
 
-        [Display(Name = "Princípios ativos")]
+        [Display(Name = "Active principles")]
         public List<MedicineActiveIngredientViewModel> ActiveIngredients { get; set; }
         
-        [Display(Name = "Bulas")]
+        [Display(Name = "Leaflets")]
         public List<MedicineLeafletViewModel> Leaflets { get; set; }
 
-        [Display(Name = "Uso")]
+        [Display(Name = "Usage")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataType(typeof(TypeUsage))]
         public int Usage { get; set; }
 
-        [Display(Name = "Prescrições")]
+        [Display(Name = "Prescriptions")]
         public SearchViewModel<PrescriptionViewModel> Prescriptions { get; set; }
 
-        [Display(Name = "Observações")]
+        [Display(Name = "Observations")]
         public string Observations { get; set; }
     }
 }
