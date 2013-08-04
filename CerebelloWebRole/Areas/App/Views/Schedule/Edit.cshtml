@@ -9,7 +9,7 @@
     bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
     bool isSubsequentAppointment = !isGenericAppointment && !isFirstAppointment;
 
-    string saveButtonText = isGenericAppointment ? "salvar compromisso" : "salvar consulta";
+    string saveButtonText = isGenericAppointment ? "save appointment" : "save consultation";
 
     Func<bool, string> funcDisplay = b => b ? "table-row" : "none";
 }
@@ -218,7 +218,7 @@
                 }
             },
             error: function (e) {
-                alert("Não foi possível salvar a consulta. Erro inesperado.");
+                alert("Could not save appintment. Unexpected error.");
             }
         });
 
@@ -245,7 +245,7 @@
             $(".subsequent-appointments-only").show();
             $("#IsGenericAppointment").val(false);
             $("#PatientNameLookup").focus();
-            $("#save-button").val("salvar consulta");
+            $("#save-button").val("save consultation");
             $(this).trigger("modal-resize");
         });
 
@@ -261,7 +261,7 @@
             $(".generic-appointment-only").show();
             $("#IsGenericAppointment").val(true);
             $("#Description").focus();
-            $("#save-button").val("salvar compromisso");
+            $("#save-button").val("save appointment");
             $(this).trigger("modal-resize");
         });
 

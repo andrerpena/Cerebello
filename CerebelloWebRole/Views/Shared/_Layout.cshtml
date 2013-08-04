@@ -103,6 +103,7 @@
                 <li class="@(this.IsAction("PricesAndPlans", "Home") ? "active" : "")"><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Pricing</a></li>
                 <li class="@(this.IsAction("Index", "HomeDocs") ? "active" : "")"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentation</a></li>
                 <li><a href="https://cerebello.uservoice.com">Feedback</a></li>
+                <li><a href="#">Consulting</a></li>
                 @if (this.User is AuthenticatedPrincipal)
                 {
                     var userData = (this.User as AuthenticatedPrincipal).Profile;
@@ -146,6 +147,7 @@
                     <li><a href="@Url.Action("PricesAndPlans", "Home", new { area = "" })">Pricing</a></li>
                     <li><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })">Documentation</a></li>
                     <li><a href="https://cerebello.uservoice.com">Feedback</a></li>
+                    <li><a href="#">Consulting</a></li>
                     <li><a href="mailto:cerebello@cerebello.com">Contact us</a></li>
                 </ul>
             </div>

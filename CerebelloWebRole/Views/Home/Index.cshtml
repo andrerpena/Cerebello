@@ -27,32 +27,38 @@
             <div class="span6">
                 <h3>How does it work?</h3>
                 <p>
-                    Cerebello is available in two different models: You are able to download and install it at your own servers for free. Alternatively, you can choose the hosted solution, in which you
-                    only have to create an account and start using it now. Cerebello hosted solution is free for practices with one doctor, with a limited 2GB of patients file.
+                    Cerebello is available at two different models:
+                </p>
+                <p>
+                    <b>Self hosted solution:</b> You download Cerebello and install it at your own servers for free. You are responsible 
+                    for the infrastructure and upgrade management. If you need assistance, please refer to the <a href="#">Cerebello installation guide</a>.
                 </p>
 
-                <h3>Cerebello hosted solution highlights:</h3>
+                <div style="height: 1px; background-color: #DCDCDC; text-align: center; margin: 15px 0">
+                    <span style="background-color: white; position: relative; top: -9px; font-style: italic; padding: 10px; color: rgb(147, 147, 147)">Or
+                    </span>
+                </div>
+                
+                <p>
+                    <b>Cerebello hosted solution:</b> 
+                    You <a href="#">create an account</a> and we take care of your installation and data. Cerebello hosted solution is free for practices with a single doctor, with a limited 2GB of patients file.
+                    Hosted solution highlights:
+                </p>
 
                 <ul class="green-checks">
-                    <li>Have access to your information from any device: PC, tables or smartphones.</li>
                     <li>You don't have to care about installations, servers, security and backup. We take care of the infrastructure while you take care of what really matters: Your patients.</li>
                     <li>Your patients data are secure and highly available at the <a href="http://www.windowsazure.com/pt-br/">Microsoft Servers</a>. 
                         Additionally, you have extra security and offline data availability through the <a href="http://drive.google.com/" target="_blank">Google Drive</a> automatic backups.
                         All information transits with 128 bits criptography.</li>
-                    <li>Cerebello is always improving. All updates are available at no extra fee. Additionally, we are always open to your <a href="http://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello" target="_blank">improvements suggestion</a>.</li>
+                    <li>Cerebello is always improving. All upgrades and data migration are available at no extra fee. Additionally, we are always open to your <a href="http://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello" target="_blank">improvements suggestion</a>.</li>
                     <li>We have a free account. Professional accounts start at <code>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR / 12) /month</code>.
                         <a href="@Url.Action("PricesAndPlans")">Pricing details.</a>
                     </li>
                 </ul>
 
-                <p>You can start using Cerebello now and see for yourself. No bureaucracy and no credit card information required:</p>
+                <p>You can start using Cerebello right now and see it for yourself. No bureaucracy and no credit card information required.</p>
 
-                <a class="btn btn-warning btn-large" href="@Url.Action("CreateAccount", "Authentication")">Start using Cerebello</a>
-
-                <h3 style="margin-top: 20px">Contact us:</h3>
-                <ul class="contact-ul">
-                    <li class="contact-email-li"><a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a></li>
-                </ul>
+                <a class="btn btn-warning btn-large" href="@Url.Action("CreateAccount", "Authentication")">Start using Cerebello hosted solution</a>
             </div>
             <div class="span6">
                 <div class="row">

@@ -549,7 +549,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     return this.Json((dynamic)new
                     {
                         status = "error",
-                        text = "Não foi possível salvar a consulta. Erro inexperado",
+                        text = "Could not save appointment. Unexpected error",
                         details = ex.Message
                     }, JsonRequestBehavior.AllowGet);
                 }
