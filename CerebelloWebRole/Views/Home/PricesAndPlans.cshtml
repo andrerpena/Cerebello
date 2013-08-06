@@ -5,103 +5,79 @@
 <header id="header">
     <div class="showcase">
         <div class="container">
-            <h1>Preço acessível. Ilimitado. Seus dados seguros nas nuvens.</h1>
-            <h2>Experimente o Cerebello gratuitamente pelo tempo que desejar com o limite de 50 pacientes.</h2>
+            <h1>Free on-premise or Cloud</h1>
+            <h2>Cerebello is the most cost effective Eletronic Health Records software for small practices</h2>
         </div>
     </div>
 </header>
 <div class="container">
+    <p>
+        Cerebello is open-source and can be installed for free at your own servers. If you need assistance, please refer to the <a href="#">Cerebello installation guide</a>. Alternatively, you can count 
+        on Cerebello experts to help set up your environment and possibly customize it to better fit your needs. This service is offered through consulting. For more information, please refer to 
+        the <a href="#">Cerebello consulting guide</a>.
+    </p>
+    <h3>Cerebello Cloud solution</h3>
     <div class="well">
         <p>
-            O Cerebello é um <a href="http://pt.wikipedia.org/wiki/Software_como_servi%C3%A7o" target="blank">SaaS</a>, isto é,
-            ele é oferecido como um serviço prestado em que nós nos responsabilizamos por toda a infraestrutura, segurança,
-            hospedagem, backup dos dados e atualizações de software, além de oferecermos documentação, suporte e interação com o cliente.
-            O Plano Profissional possui todos os esses recursos disponíveis e todos ilimitados.
-            Confira as opções e condições de pagamento, e os descontos para pagamentos com periodicidade maior que a mensal:
+            Cerebello Cloud is a <a href="http://pt.wikipedia.org/wiki/Software_como_servi%C3%A7o" target="blank">SaaS</a> solution. It's offered as a service in which we take care of all your infrastructure, security, hosting, backup, upgrade management and support.
+            See our options:
         </p>
         <table class="table table-outer-bordered prices">
             <thead>
                 <tr>
-                    <th>Pagamento Mensal</th>
-                    <th>Pagamento Trimestral</th>
-                    <th>Pagamento Semestral</th>
-                    <th>Pagamento Anual</th>
+                    <th>Free account</th>
+                    <th>Professional account</th>
+                    <th>Unlimited account</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <h6>&nbsp;</h6>
-                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_MONTH)</h2>
-                        <h6>mensais
-                            <br />
-                            <br />
-                        </h6>
+                        <h2>Free</h2>
+                        <h6 style="visibility: hidden">free</h6>
                         <p>
-                            <span class="text-error">Sem desconto</span>
+                            <small>Ilimited patients</small>
                             <br />
-                            <small>Pacientes ilimitados</small>
+                            <small>1 doctor + ilimited other users</small>
                             <br />
-                            <small>1 médico + outros usuários ilimitados</small>
+                            <small>2GB patients files limit</small>
+                            <br />
+                            <small class="text-error">No priority support</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "1M" })" class="btn btn-success">
-                                Assinar
-                            </a>
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "1M" })" class="btn btn-success">Sign up</a>
                         </p>
                     </td>
                     <td>
-                        <h6>equivalente a</h6>
-                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_QUARTER / 3)</h2>
-                        <h6>mensais</h6>
-                        <h6>@StringHelper.FormatMoney(Bus.Pro.PRICE_QUARTER) a cada 3 meses</h6>
+                        <h2>$30.00</h2>
+                        <h6>per month / per doctor</h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_QUARTER%</strong></span>
+                            <small>Ilimited patients</small>
                             <br />
-                            <small>Pacientes ilimitados</small>
+                            <small>1 or more doctors + ilimited other users</small>
                             <br />
-                            <small>1 médico + outros usuários ilimitados</small>
+                            <small>Ilimited patients files limit</small>
+                            <br />
+                            <small class="text-success">*Priority support</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "3M" })" class="btn btn-success">
-                                Assinar
-                            </a>
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "3M" })" class="btn btn-success">Sign up</a>
                         </p>
                     </td>
                     <td>
-                        <h6>equivalente a</h6>
-                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_SEMESTER / 6)</h2>
-                        <h6>mensais</h6>
-                        <h6>@StringHelper.FormatMoney(Bus.Pro.PRICE_SEMESTER) a cada 6 meses</h6>
+                        <h2>$1,200.00</h2>
+                        <h6><b>per year</b></h6>
                         <p>
-                            <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_SEMESTER%</strong></span>
+                            <small>Ilimited patients</small>
                             <br />
-                            <small>Pacientes ilimitados</small>
+                            <small>Ilimited doctors and other users</small>
                             <br />
-                            <small>1 médico + outros usuários ilimitados</small>
+                            <small>Ilimited patients files limit</small>
+                            <br />
+                            <small class="text-success">*Priority support</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "6M" })" class="btn btn-success">
-                                Assinar
-                            </a>
-                        </p>
-                    </td>
-                    <td>
-                        <h6>equivalente a</h6>
-                        <h2>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR / 12)</h2>
-                        <h6>mensais</h6>
-                        <h6>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR) a cada 12 meses</h6>
-                        <p>
-                            <span class="text-success">Desconto de <strong>@Bus.Pro.DISCOUNT_YEAR%</strong></span>
-                            <br />
-                            <small>Pacientes ilimitados</small>
-                            <br />
-                            <small>1 médico + outros usuários ilimitados</small>
-                        </p>
-                        <p>
-                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "12M" })" class="btn btn-success">
-                                Assinar
-                            </a>
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "3M" })" class="btn btn-success">Sign up</a>
                         </p>
                     </td>
                 </tr>
@@ -110,19 +86,17 @@
         <div style="clear: both"></div>
         <div class="row-fluid">
             <div class="span6">
-                <h4>Todas as opções incluem:</h4>
+                <h4>All options include:</h4>
                 <ul>
-                    <li>Criptografia e certificação SSL (a mesma utilizada em bancos).</li>
-                    <li>Número ilimitado de pacientes, medicamentos e consultas.</li>
-                    <li>100GB em arquivos enviados.</li>
-                    <li>Backup automático e disponibilidade off-line dos dados com o <a href="http://drive.google.com/" target="_blank">Google Drive</a>.</li>
-                    <li>Suporte ao cliente por e-mail.</li>
-                    <li>Exportação dos dados para XML ou PDF.</li>
-                    <li>Atualizações constantes. O Cerebello estará melhor a cada dia.</li>
+                    <li>SSL certificate.</li>
+                    <li>Ilimited patients, medicines and consultations.</li>
+                    <li>Automatic updates and data migration.</li>
+                    <li>Backup and offline data availability with <a href="http://drive.google.com/" target="_blank">Google Drive</a>.</li>
+                    <li>Data export to XML and PDF.</li>
                 </ul>
             </div>
             <div class="span6">
-                <p style="text-align: right; margin: 0">Experimente o Cerebello gratuitamente pelo tempo que desejar. <a href="@Url.Action("CreateAccount", "Authentication")" style="white-space: nowrap">Começar →</a></p>
+                <p style="text-align: right; margin: 0"><small><span class="text-success">*Priority support</span>: All support e-mails are answered within 24 hours. All confirmed issues are resolved within 72 hours. User environment must comply with the <a href="#">minimum system requirements</a>.</small></p>
             </div>
         </div>
     </div>
