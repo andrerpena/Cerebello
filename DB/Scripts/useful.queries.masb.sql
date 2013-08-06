@@ -53,6 +53,32 @@ select
   order by PR.CreatedOn desc
 
 --
+-- CONTACT
+-- depends on view PatientMedicalRecords (select * from PatientMedicalRecords)
+--
+select
+    PER.FullName,
+    PER.Email,
+    PR.PhoneMain,
+    PR.UrlIdentifier,
+    LastActiveOn,
+    PR.CreatedOn,
+    DATEDIFF(day, LastActiveOn, GETDATE()) as InactiveDays,
+    (select count(*) from Patient as PAT where PR.Id = PAT.PracticeId) as PatientCount,
+    DATEDIFF(day, PR.CreatedOn, GETDATE()) as ElapsedTime,
+    (select count(*) from PatientMedicalRecords as PMR where PR.Id = PMR.PracticeId) as MedicalRecordsCount
+  from practice PR
+  join [user] U on PR.OwnerId = U.Id
+  join Person PER on U.PersonId = PER.Id
+  where
+    PR.AccountDisabled <> 1 and
+    UrlIdentifier not like 'consultorioplus%' and UrlIdentifier <> 'consultoriodrhouse' and
+    U.UserName <> 'andrerpena'
+    --and UrlIdentifier like '%clin%'
+  --order by LastActiveOn desc
+  order by PR.CreatedOn desc
+
+--
 -- PATIENTS STATS FOR A PRACTICE
 -- depends on view PatientMedicalRecords (select * from PatientMedicalRecords)
 --

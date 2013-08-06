@@ -44,10 +44,42 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Professional plan constants.
         /// </summary>
-        public static class Pro
+        public static class ProPtBr
         {
             /// <summary> Equals 58.70m </summary>
             public const decimal PRICE_MONTH = 58.70m;
+
+            /// <summary> Equals 253.65m </summary>
+            public const decimal PRICE_QUARTER = (int)(PRICE_MONTH * (100 - DISCOUNT_QUARTER) / 10) / 10m * 3;
+
+            /// <summary> Equals 496.80m </summary>
+            public const decimal PRICE_SEMESTER = (int)(PRICE_MONTH * (100 - DISCOUNT_SEMESTER) / 10) / 10m * 6;
+
+            /// <summary> Equals 938.40m </summary>
+            public const decimal PRICE_YEAR = (int)(PRICE_MONTH * (100 - DISCOUNT_YEAR) / 10) / 10m * 12;
+
+            /// <summary> Equals 5 </summary>
+            public const int DISCOUNT_QUARTER = 5;
+
+            /// <summary> Equals 10 </summary>
+            public const int DISCOUNT_SEMESTER = 10;
+
+            /// <summary> Equals 15 </summary>
+            public const int DISCOUNT_YEAR = 15;
+
+            /// <summary> Equals 29 </summary>
+            public const int DOCTOR_PRICE = (int)(PRICE_MONTH / 2);
+
+            public const int MAX_DAYS_TO_PAY_BILLING = 30;
+        }
+
+        /// <summary>
+        /// Professional plan constants.
+        /// </summary>
+        public static class Pro
+        {
+            /// <summary> Equals 20.00m </summary>
+            public const decimal PRICE_MONTH = 20.00m;
 
             /// <summary> Equals 253.65m </summary>
             public const decimal PRICE_QUARTER = (int)(PRICE_MONTH * (100 - DISCOUNT_QUARTER) / 10) / 10m * 3;
