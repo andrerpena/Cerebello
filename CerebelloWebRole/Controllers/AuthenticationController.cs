@@ -171,13 +171,24 @@ namespace CerebelloWebRole.Controllers
         #endregion
 
         #region CreateAccount
-        static readonly HashSet<string> validSubscriptions = new HashSet<string>(new[] { "trial", "1M", "3M", "6M", "12M" }, StringComparer.InvariantCultureIgnoreCase);
+
+        public static string defaultSubscription = "free";
+        private static readonly HashSet<string> validSubscriptions = new HashSet<string>(new[]
+            {
+                //"trial",
+                "1M",
+                //"3M",
+                "6M",
+                "12M",
+                "free",
+                //"unlimited",
+            }, StringComparer.InvariantCultureIgnoreCase);
 
         public ActionResult CreateAccount(string subscription)
         {
-            subscription = StringHelper.FirstNonEmpty(subscription, "trial");
+            subscription = StringHelper.FirstNonEmpty(subscription, defaultSubscription);
             if (!validSubscriptions.Contains(subscription))
-                subscription = "trial";
+                subscription = defaultSubscription;
 
             this.ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
@@ -225,9 +236,9 @@ namespace CerebelloWebRole.Controllers
 
             var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
 
-            var subscription = StringHelper.FirstNonEmpty(registrationData.Subscription, "trial");
+            var subscription = StringHelper.FirstNonEmpty(registrationData.Subscription, defaultSubscription);
             if (!validSubscriptions.Contains(subscription) || registrationData.AsTrial == true)
-                subscription = "trial";
+                subscription = defaultSubscription;
 
             // Note: Url identifier for the name of the user, don't need any verification.
             // The name of the user must be unique inside a practice, not the entire database.
@@ -374,7 +385,7 @@ namespace CerebelloWebRole.Controllers
                 if (this.ModelState.IsValid)
                 {
                     MailMessage emailMessageToUser = null;
-                    if (subscription == "trial")
+                    if (subscription == "trial" || subscription == "free")
                     {
                         // Creating confirmation email, with a token.
                         emailMessageToUser = this.EmailMessageToUser(user, utcNow, subscription == "trial");
@@ -414,6 +425,70 @@ namespace CerebelloWebRole.Controllers
                             contract.BillingPeriodSize = null;
                             contract.BillingPeriodType = null;
                             contract.BillingDiscountAmount = null;
+
+                            user.Practice.AccountExpiryDate = utcNow.AddHours(Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT);
+                            user.Practice.AccountContract = contract;
+
+                            if (practiceToReuse == null)
+                                this.db.AccountContracts.AddObject(contract);
+                        }
+                        else if (subscription == "free")
+                        {
+                            // Creating a new free account contract.
+                            var contract = user.Practice.AccountContract ?? new AccountContract();
+                            contract.Practice = user.Practice;
+
+                            contract.ContractTypeId = (int)ContractTypes.FreeContract;
+                            contract.IsTrial = false;
+                            contract.IssuanceDate = utcNow;
+                            contract.StartDate = utcNow;
+                            contract.EndDate = null; // indeterminated
+                            contract.CustomText = null;
+
+                            contract.DoctorsLimit = 1;
+                            contract.PatientsLimit = null; // fixed limit for trial account
+
+                            // no billings
+                            contract.BillingAmount = null;
+                            contract.BillingDueDay = null;
+                            contract.BillingPaymentMethod = null;
+                            contract.BillingPeriodCount = null;
+                            contract.BillingPeriodSize = null;
+                            contract.BillingPeriodType = null;
+                            contract.BillingDiscountAmount = null;
+
+                            user.Practice.AccountExpiryDate = utcNow.AddHours(Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT);
+                            user.Practice.AccountContract = contract;
+
+                            if (practiceToReuse == null)
+                                this.db.AccountContracts.AddObject(contract);
+                        }
+                        else if (subscription == "unlimited")
+                        {
+                            // Creating a new unlimited account contract.
+                            var contract = user.Practice.AccountContract ?? new AccountContract();
+                            contract.Practice = user.Practice;
+
+                            contract.ContractTypeId = (int)ContractTypes.UnlimitedContract;
+                            contract.IsTrial = false;
+                            contract.IssuanceDate = utcNow;
+                            contract.StartDate = utcNow;
+                            contract.EndDate = null; // indeterminated
+                            contract.CustomText = null;
+
+                            contract.DoctorsLimit = null;
+                            contract.PatientsLimit = null;
+
+                            // billings data can be redefined when the user fills payment info
+                            // for now these are the default values
+                            contract.IsPartialBillingInfo = true; // indicates that the billing info for this contract must be defined by the user
+                            contract.BillingAmount = Bus.Pro.UNLIMITED_PRICE;
+                            contract.BillingDueDay = null; // payment method has no default (will be defined in the payment-info step)
+                            contract.BillingPaymentMethod = null; // payment method has no default (will be defined in the payment-info step)
+                            contract.BillingPeriodCount = null;
+                            contract.BillingPeriodSize = 12; // unlimited accounts have always annual billings
+                            contract.BillingPeriodType = "M";
+                            contract.BillingDiscountAmount = (Bus.Pro.PRICE_YEAR * 12) - Bus.Pro.UNLIMITED_PRICE;
 
                             user.Practice.AccountExpiryDate = utcNow.AddHours(Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT);
                             user.Practice.AccountContract = contract;
@@ -523,7 +598,7 @@ namespace CerebelloWebRole.Controllers
                             throw new Exception("Login cannot fail.");
                         }
 
-                        if (subscription == "trial")
+                        if (subscription == "trial" || subscription == "free")
                             return this.RedirectToAction("CreateAccountCompleted", new { practice = user.Practice.UrlIdentifier });
                         else
                             return this.RedirectToAction("SetAccountPaymentInfo", new { practice = user.Practice.UrlIdentifier });

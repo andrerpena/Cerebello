@@ -24,6 +24,11 @@ namespace Cerebello.Model
         /// The free contract: unlimited patients; limited to 1 doctor.
         /// </summary>
         FreeContract = 3,
+
+        /// <summary>
+        /// The unlimited contract: unlimited patients; unlimited doctors.
+        /// </summary>
+        UnlimitedContract = 4,
     }
 
     public enum TypeAppointmentStatus : int

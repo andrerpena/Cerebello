@@ -62,22 +62,24 @@
     var enUs = CultureInfo.GetCultureInfo("en-US");
     var ptBr = CultureInfo.GetCultureInfo("pt-BR");
     var ci = enUs;
-    var currencySymbol = "US$";
-    
+    var currencySymbol = ci.NumberFormat.CurrencySymbol;
+
     var invariant = CultureInfo.InvariantCulture;
     Func<string, string, bool> csii = (a, b) => StringComparer.InvariantCultureIgnoreCase.Compare(a, b) == 0;
 }
-
 
 @if (showPaymentModel)
 {
     <div class="text-section">
         <h2>@Html.FieldLabelText(m => m.PaymentModelName)</h2>
         <div class="text-description">
+            @if (!showCalculatorOnly)
+            {
             <p>
                 A assinatura será cobrada com a frequência selecionada abaixo,
                 sempre de forma adiantada. Existem descontos para pagamento trimestral, semestral ou anual, como indicado na tabela abaixo.
             </p>
+            }
             <script type="text/javascript">
                 $(function() {
                     $("table.frequency > tbody > tr").click(function() {
@@ -217,18 +219,20 @@
                     var sizes = new List<int> { 1, 2, 4, 8, 15, 30, 60, 120, 250, 500 };
                 }
                 @{ int prev = 0; }
+                @{ decimal maxPrice = Bus.Pro.UNLIMITED_PRICE - Bus.Pro.PRICE_YEAR; }
                 @foreach (var size in sizes)
                 {
+                    var priceCurrent = (decimal)price(size - 1);
                     <tr value="@size" class="@(this.Model.CurrentDoctorsCount <= size ? "enabled" : "disabled") @(this.Model.DoctorCount == size ? "selected" : "")">
                         <td>
                             <input type="radio" name="@Html.FieldName(vm => vm.DoctorCount)" value="@size" @(this.Model.DoctorCount == size ? "checked='checked'" : "")/></td>
                         @{ var add = size - (this.Model == null ? 0 : this.Model.CurrentDoctorsCount); }
                         <td class="item-label">
-                            @(prev < size - 1 ? "até" : "") @(size) @(size > 1 ? "médicos" : "médico")                                
+                            @(prev < size - 1 ? "até" : "") @(size) @(size > 1 ? "médicos" : "médico")
                         </td>
-                        <td class="@(size == 1 ? "trivial" : "") price" price="@(price(size - 1).ToString("0"))">@(price(size - 1).ToString(currencySymbol + " 0.00", ci))</td>
+                        <td class="@(size == 1 ? "trivial" : "") price" price="@(priceCurrent.ToString("0"))">@(priceCurrent.ToString(currencySymbol + " 0.00", ci))</td>
                     </tr>
-                    prev = size;
+                           prev = size;
                 }
             </table>
             <p>
@@ -354,7 +358,7 @@
                         $("#summary-doctors-saved").text("@(currencySymbol) " + doctorsSaved.toFixed(2).replace('.', ','));
 
                         $(".summary-total-price").text("@(currencySymbol) " + totalPrice.toFixed(2).replace('.', ','));
-                        @*note: this value must have comma as decimal separator because web.config culture is set as 'pt-BR'*@
+                                                @*note: this value must have comma as decimal separator because web.config culture is set as 'pt-BR'*@
                         $("#@Html.FieldName(vm => vm.FinalValue)").val(totalPrice.toFixed(2).replace('.', ','));
                         $("#summary-total-price-month").text("@(currencySymbol) " + totalPriceMonthDisc.toFixed(2).replace('.', ','));
                         $("#summary-total-saved").text("@(currencySymbol) " + totalSaved.toFixed(2).replace('.', ','));
@@ -380,8 +384,6 @@
                     </ul>
                 }
                 <table class="prices summary">
-                    @if (!showCalculatorOnly)
-                    {
                         <thead>
                             <tr>
                                 <th>Item</th>
@@ -408,7 +410,6 @@
                             <td id="summary-total-price-month" class="trivial">US$ -</td>
                             <td id="summary-total-saved">US$ -</td>
                         </tr>
-                    }
                     <tr>
                         <td colspan="4">
                             <div style="text-align: right">

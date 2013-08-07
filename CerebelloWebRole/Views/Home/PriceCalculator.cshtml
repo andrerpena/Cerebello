@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/Styles/Site/PriceCalculatorPage.css")" rel="Stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/App/jquery-ui-overrides.css")" rel="Stylesheet" type="text/css" />
+}
+
+<header id="header">
+    <div class="showcase">
+        <div class="container">
+            <h1>Price calculator</h1>
+            <h2>Cerebello is the most cost effective Eletronic Health Records in the cloud, tweak it to your needs below and see for yourself</h2>
+        </div>
+    </div>
+</header>
+<div class="container">
+    @{
+        var vb = new ViewDataDictionary(this.ViewData);
+        vb.Model = new ChangeContractViewModel
+            {
+                DoctorCount = 1,
+                PaymentModelName = "MONTH",
+            };
+        vb.Add("ShowCalculatorOnly", true);
+    }
+    @Html.Partial("Upgrade_ProfessionalPlan", vb)
+</div>

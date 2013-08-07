@@ -1,0 +1,253 @@
+﻿/* Plan main page */
+
+strong.info {
+    color: #DD390D;
+    display: inline-block;
+    padding: 0 0.5em;
+    text-align: center;
+    white-space: nowrap;
+}
+
+strong.price {
+    white-space: nowrap;
+}
+
+.button-wrapper {
+    padding: 10px 0;
+    text-align: right;
+}
+
+div.option {
+    vertical-align: middle;
+    margin: 15px auto;
+    overflow: hidden;
+    line-height: 1.5em;
+    word-spacing: 0.2em;
+    text-align: justify;
+    color: black;
+}
+
+    div.option .option-text {
+        margin-left: 25px;
+    }
+
+.option-upgrade a.link-button {
+    color: #145B14;
+}
+
+.option-cancel a.link-button {
+    color: #8C1414;
+}
+
+
+
+.option-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* Upgrade page */
+
+table.prices {
+    color: black;
+    margin: 1em auto;
+    overflow: hidden;
+    display: table;
+}
+
+    table.prices tbody tr.enabled {
+        cursor: pointer;
+        font-size: 0.9em;
+    }
+
+        table.prices tbody tr.enabled:hover {
+            background: #F0F3F5;
+        }
+
+        table.prices tbody tr.enabled.selected {
+            background-color: #F0F3F5;
+            color: #DD390D;
+            font-weight: bold;
+        }
+
+            table.prices tbody tr.enabled.selected:hover {
+                color: #DD390D;
+            }
+
+    table.prices td, table.prices th {
+        padding: 0.5em 1em;
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: 100%;
+        vertical-align: middle;
+    }
+
+        table.prices th.expand {
+            width: 20%;
+        }
+
+    table.prices .trivial, table.prices .disabled td {
+        opacity: 0.5;
+    }
+
+    table.prices tr.important td {
+    }
+
+    table.prices * {
+        text-align: center;
+    }
+
+    table.prices th {
+        font-weight: bold;
+    }
+
+table.doctors {
+    margin: 1em auto;
+    /*width: auto;*/
+}
+
+    table.doctors th.expand {
+        width: 150px;
+    }
+
+table.summary {
+    width: auto;
+}
+
+    table.summary tbody tr.enabled {
+        cursor: inherit;
+    }
+
+    table.summary tbody td, table.summary tbody th {
+        width: 1px;
+    }
+
+ul.summary li {
+    list-style: disc inside;
+}
+
+
+table.days-of-month {
+    margin: 0 auto 10px;
+    width: 100%;
+}
+
+    table.days-of-month td {
+        width: 32px;
+        text-align: center;
+        vertical-align: central;
+        line-height: 24px;
+        color: #1c94c4;
+    }
+
+        table.days-of-month td.enabled {
+            background: transparent;
+            cursor: pointer;
+        }
+
+        table.days-of-month td.disabled {
+            background: white;
+        }
+
+        table.days-of-month td.selected {
+            background: #D6DDEF;
+            color: #DD390D;
+            font-weight: bold;
+        }
+
+        table.days-of-month td.enabled:hover {
+            color: #C77405;
+            background: #D6DDEF;
+            font-weight: bold;
+        }
+
+        table.days-of-month td.selected:hover {
+            color: #DD390D;
+        }
+
+.contract-container {
+    color: black;
+}
+
+    .contract-container p {
+        margin: 0 0.5em 0.5em 0;
+    }
+
+    .contract-container .simple {
+        font-family: 'Open Sans Condensed',sans-serif;
+        font-size: 1.5em;
+        width: 270px;
+    }
+
+        .contract-container .simple p {
+            line-height: 1.2em;
+            margin: 0.5em 0 0.5em 0.5em;
+        }
+
+.billing-calendar-wrapper {
+    overflow: hidden;
+}
+
+    .billing-calendar-wrapper .billing-calendar {
+        width: 250px;
+        float: right;
+    }
+
+    .billing-calendar-wrapper .billing-calendar-description {
+        /*margin-right: 270px;*/
+    }
+
+
+.upgrade-icon {
+    background-color: green;
+    float: left;
+    height: 15px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.cancel-icon {
+    background-color: red;
+    float: left;
+    height: 15px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.frequency{}
+.summary-toggle{}
+.summary-frequency{}
+.summary-discount{}
+.summary-doctors-label{}
+.summary-total-price{}
+.summary-doctors-count{}
+.item-label{}
+.equiv-month{}
+
+h2 {
+    font-size: 24px;
+    margin: 1.4em 0 0;
+}
+
+div:first-child > h2 {
+    margin: 0 0 0;
+}
+
+.required {
+    display: none;
+}
+#AcceptedByUser {
+    margin: 0 1em 0;
+}
+.trivial {
+    /*display: none;*/
+}
+.equiv-month {
+    /*display: none;*/
+}
+.saved-amount {
+    display: none;
+}
+table.prices th {
+    padding-left: 0px;
+}

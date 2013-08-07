@@ -24,7 +24,8 @@ namespace CerebelloWebRole.Code
             var dataTokens = filterContext.RouteData.DataTokens;
             var httpContext = filterContext.HttpContext;
 
-            if (!dataTokens.ContainsKey("area") || string.Equals("" + dataTokens["area"], this.areaName, StringComparison.InvariantCultureIgnoreCase))
+            var currentArea = "" + dataTokens["area"];
+            if (!dataTokens.ContainsKey("area") || !string.Equals(currentArea, this.areaName, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
             // forcing all controller in the target area to inherit from CerebelloController...

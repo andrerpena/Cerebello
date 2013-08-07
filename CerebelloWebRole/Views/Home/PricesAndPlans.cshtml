@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewBag.Title = "Cerebello - Gerenciador de Consultórios Médicos / Prontuário eletrônico";
 }
 
@@ -45,16 +46,17 @@
                             <small class="text-error">No priority support</small>
                         </p>
                         <p>
-                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "trial" })" class="btn btn-success">Sign up</a>
+                            <a title="Start your free trial" href="@Url.Action("CreateAccount", "Authentication", new { Subscription = "free" })" class="btn btn-success">Sign up</a>
                         </p>
                     </td>
                     <td>
-                        <h2>$30.00</h2>
-                        <h6>per month / per doctor</h6>
+                        <h2>@string.Format(CultureInfo.GetCultureInfo("en-US"), "{0:c}", Bus.Pro.PRICE_MONTH)</h2>
+                        <h6>per month, + @string.Format(CultureInfo.GetCultureInfo("en-US"), "{0:c}", Bus.Pro.DOCTOR_PRICE) per doctor</h6>
+                        <h6><a href="@this.Url.Action("PriceCalculator")">Calculator</a></h6>
                         <p>
-                            <small>Ilimited patients</small>
+                            <small>Unlimited patients</small>
                             <br />
-                            <small>1 or more doctors + ilimited other users</small>
+                            <small>1 or more doctors + unlimited other users</small>
                             <br />
                             <small>Ilimited patients files limit</small>
                             <br />

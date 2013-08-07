@@ -445,6 +445,7 @@
     <EmbeddedResource Include="Resources\Male-Default-Profile.jpg" />
     <Content Include="Content\Styles\Docs\Lightbox\lightbox.css" />
     <Content Include="Content\Styles\Docs\Lightbox\screen.css" />
+    <Content Include="Content\Styles\Site\PriceCalculatorPage.css" />
     <Content Include="Content\Styles\Site\PlanPage.css" />
     <Content Include="Scripts\App\kendo.grid.min.js" />
     <Content Include="Scripts\App\Pages\camera-window.js" />
@@ -943,6 +944,7 @@
     <EmbeddedResource Include="Views\TestWorker\TestEmail.cshtml" />
     <Content Include="Views\Authentication\SetAccountPaymentInfo.cshtml" />
     <Content Include="Views\Authentication\AccountNotCreated.cshtml" />
+    <Content Include="Views\Home\PriceCalculator.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />

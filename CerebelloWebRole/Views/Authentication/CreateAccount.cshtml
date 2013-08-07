@@ -23,7 +23,7 @@
         throw new Exception("ViewBag.MedicalEntityOptions is not of type 'IEnumerable<SelectListItem>'.");
     }
 
-    string subscription = "trial";
+    string subscription = CerebelloWebRole.Controllers.AuthenticationController.defaultSubscription;
     if (this.Model != null && !string.IsNullOrEmpty(this.Model.Subscription) )
     {
         subscription = this.Model.Subscription;
@@ -58,7 +58,7 @@
     <a class="btn btn-small" href="@Url.Action("Login")" class="link">Voltar</a>
 }
 @{
-    object routeValues = string.Equals("trial", subscription)
+    object routeValues = string.Equals(CerebelloWebRole.Controllers.AuthenticationController.defaultSubscription, subscription)
         ? new object()
         : new { Subscription = subscription };
 }
@@ -195,7 +195,8 @@
             </div>
         </div>
         <div class="form-actions" style="margin: 0">
-            @if (string.Equals("trial", subscription, StringComparison.InvariantCultureIgnoreCase))
+            @if (string.Equals("trial", subscription, StringComparison.InvariantCultureIgnoreCase)
+                || string.Equals("free", subscription, StringComparison.InvariantCultureIgnoreCase))
             {
                 <button class="btn btn-primary btn-large" type="submit">
                     Criar conta

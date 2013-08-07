@@ -850,13 +850,33 @@ namespace Cerebello.Firestarter
 
             db.SYS_ContractType.AddObject(
                 new SYS_ContractType
-                    {
-                        Id = (int)ContractTypes.ProfessionalContract,
-                        CreatedOn = new DateTime(2012, 09, 18),
-                        IsTrial = false,
-                        Name = "Contrato de assinatura do plano Profissional Básico",
-                        UrlIdentifier = ContractTypes.ProfessionalContract.ToString(),
-                    });
+                {
+                    Id = (int)ContractTypes.ProfessionalContract,
+                    CreatedOn = new DateTime(2012, 09, 18),
+                    IsTrial = false,
+                    Name = "Contrato de assinatura do plano Profissional Básico",
+                    UrlIdentifier = ContractTypes.ProfessionalContract.ToString(),
+                });
+
+            db.SYS_ContractType.AddObject(
+                new SYS_ContractType
+                {
+                    Id = (int)ContractTypes.FreeContract,
+                    CreatedOn = new DateTime(2013, 08, 06),
+                    IsTrial = false,
+                    Name = "Contrato of the free plan",
+                    UrlIdentifier = ContractTypes.FreeContract.ToString(),
+                });
+
+            db.SYS_ContractType.AddObject(
+                new SYS_ContractType
+                {
+                    Id = (int)ContractTypes.UnlimitedContract,
+                    CreatedOn = new DateTime(2013, 08, 06),
+                    IsTrial = false,
+                    Name = "Contrato of the unlimited plan",
+                    UrlIdentifier = ContractTypes.UnlimitedContract.ToString(),
+                });
 
             db.SaveChanges();
         }
