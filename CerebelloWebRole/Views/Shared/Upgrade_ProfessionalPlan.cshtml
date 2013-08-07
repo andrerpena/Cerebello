@@ -159,8 +159,10 @@
     <div class="text-section">
         <h2>@Html.FieldLabelText(m => m.DoctorCount)</h2>
         <div class="text-description">
-            <p>
-                O preço do plano profissional varia de acordo com o tamanho de seu consultório ou clínica.
+            @if (!showCalculatorOnly)
+            {
+                <p>
+                    O preço do plano profissional varia de acordo com o tamanho de seu consultório ou clínica.
                     Por esta razão, você deve indicar quantos médicos serão cadastrados.
                     O desconto dado no item anterior já estão aplicados aos valores mostrados na tabela abaixo.
                     @if (this.Model.CurrentDoctorsCount == 0)
@@ -175,7 +177,8 @@
                     {
                         @:Atualmente existem <strong class="info">@Model.CurrentDoctorsCount médicos</strong> cadastrados em sua conta.
                     }
-            </p>
+                </p>
+            }
             <script type="text/javascript">
                 $(function () {
                     $("table.doctors > tbody > tr.disabled input:radio").attr("disabled", true);

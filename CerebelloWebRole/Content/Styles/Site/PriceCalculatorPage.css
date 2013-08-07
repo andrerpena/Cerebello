@@ -50,7 +50,7 @@ div.option {
 
 table.prices {
     color: black;
-    margin: 1em auto;
+    margin: 1em 0;
     overflow: hidden;
     display: table;
 }
@@ -102,7 +102,7 @@ table.prices {
     }
 
 table.doctors {
-    margin: 1em auto;
+    margin: 1em 0;
     /*width: auto;*/
 }
 
@@ -225,8 +225,8 @@ table.days-of-month {
 .equiv-month{}
 
 h2 {
-    font-size: 24px;
-    margin: 1.4em 0 0;
+    font-size: 16px;
+    line-height: 16px;
 }
 
 div:first-child > h2 {
