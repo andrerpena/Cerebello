@@ -32,13 +32,7 @@ namespace CerebelloWebRole.Code
         /// </summary>
         public static PropertyInfo GetPropertyInfoFromMemberExpression<TModel, TProperty>(Expression<Func<TModel, TProperty>> expression)
         {
-            Expression memberBodyExpression = null;
-
-            if (expression.Body.NodeType == ExpressionType.Convert)
-                memberBodyExpression = ((UnaryExpression)expression.Body).Operand;
-            else
-                memberBodyExpression = expression.Body;
-
+            var memberBodyExpression = expression.Body.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression.Body).Operand : expression.Body;
             return (PropertyInfo)((MemberExpression)memberBodyExpression).Member;
         }
 

@@ -56,7 +56,7 @@ namespace CerebelloWebRole.Areas.App.Models
         public short? CpfOwner { get; set; }
 
         [Display(Name = "Profession")]
-        public String Profissao { get; set; }
+        public String Profession { get; set; }
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)] // TODO: This will make MVC 4 use HTML 5 <input type="email" />

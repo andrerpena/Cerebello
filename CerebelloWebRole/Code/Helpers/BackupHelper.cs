@@ -28,7 +28,7 @@ namespace CerebelloWebRole.Code
 
                 // add the patient history as pdf
                 var pdf = ReportController.ExportPatientsPdf(patient.Id, db, patient.Practice, patient.Doctor);
-                patientZip.AddEntry(string.Format("{0} - Histórico.pdf", patient.Person.FullName), pdf.DocumentBytes);
+                patientZip.AddEntry(string.Format("{0} - Histórico.pdf", patient.Person.FullName), pdf);
 
                 // if the person has a picture, add it to the backup
                 if (patient.Person.PictureBlobName != null)

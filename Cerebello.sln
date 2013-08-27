@@ -1,15 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8A758F7D-C82A-4010-9E99-621949FCC440}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A012C95-90A6-42E5-A510-1163A86E47B2}"
-	ProjectSection(SolutionItems) = preProject
-		Cerebello.vsmdi = Cerebello.vsmdi
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
-EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Cerebello", "Cerebello\Cerebello.ccproj", "{E05B78A9-A9C6-4AE0-8D91-31211E643B19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Model", "Cerebello.Model\Cerebello.Model.csproj", "{D5F1D306-C581-42FD-935B-72F71B18775D}"
@@ -18,13 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole", "Cerebel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Firestarter", "Cerebello.Firestarter\Cerebello.Firestarter.csproj", "{910ADA48-2A68-4783-B70B-314D9BAA1428}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerebelloWebRole.Tests", "CerebelloWebRole.Tests\CerebelloWebRole.Tests.csproj", "{6EE63206-FF20-496B-83F1-232944BE6E97}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{A28BCBB0-C7EE-4D6B-B4FD-38BEA2766486}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.SolutionSetup", "Cerebello.SolutionSetup\Cerebello.SolutionSetup.csproj", "{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Manager", "Cerebello.Manager\Cerebello.Manager.csproj", "{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartRecords", "..\..\ReportGenerator\ReportGenerator\SmartRecords.csproj", "{43F84061-CA70-43F3-A0DE-C0052026EFE6}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -81,15 +72,6 @@ Global
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Release|Mixed Platforms.Build.0 = Release|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Release|x86.ActiveCfg = Release|x86
 		{910ADA48-2A68-4783-B70B-314D9BAA1428}.Release|x86.Build.0 = Release|x86
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6EE63206-FF20-496B-83F1-232944BE6E97}.Release|x86.ActiveCfg = Release|Any CPU
 		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -108,14 +90,23 @@ Global
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}.Release|x86.ActiveCfg = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4A012C95-90A6-42E5-A510-1163A86E47B2} = {8A758F7D-C82A-4010-9E99-621949FCC440}
-		{6EE63206-FF20-496B-83F1-232944BE6E97} = {8A758F7D-C82A-4010-9E99-621949FCC440}
 		{227A5AA6-F67E-46D8-8A3C-DFBDFA93B5C7} = {A28BCBB0-C7EE-4D6B-B4FD-38BEA2766486}
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945} = {A28BCBB0-C7EE-4D6B-B4FD-38BEA2766486}
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6} = {A28BCBB0-C7EE-4D6B-B4FD-38BEA2766486}
 	EndGlobalSection
 EndGlobal

@@ -15,7 +15,7 @@
     cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.ToShortDateString())
     (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
-    cardView.AddField(m => m.Profissao);
+    cardView.AddField(m => m.Profession);
     cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.Cpf);
     cardView.AddField(m => m.CpfOwner, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeCpfOwner))</text>);

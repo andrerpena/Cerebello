@@ -114,7 +114,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.MaritalStatus = person.MaritalStatus;
             viewModel.CpfOwner = person.CPFOwner;
             viewModel.DateOfBirth = ConvertToLocalDateTime(practice, person.DateOfBirth);
-            viewModel.Profissao = person.Profession;
+            viewModel.Profession = person.Profession;
             viewModel.Cpf = person.CPF;
             viewModel.Email = person.Email;
             viewModel.PhoneCell = person.PhoneCell;
@@ -490,7 +490,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Person.Gender = (short)formModel.Gender;
                 patient.Person.MaritalStatus = formModel.MaritalStatus;
                 patient.Person.Observations = formModel.Observations;
-                patient.Person.Profession = formModel.Profissao;
+                patient.Person.Profession = formModel.Profession;
                 patient.Person.Email = !string.IsNullOrEmpty(formModel.Email) ? formModel.Email.ToLower() : null;
                 patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
                 patient.Person.PhoneLand = formModel.PhoneLand;

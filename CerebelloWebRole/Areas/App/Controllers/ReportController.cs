@@ -10,11 +10,9 @@ using System.Xml.Serialization;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using Telerik.Reporting;
-using Telerik.Reporting.Processing;
-using Telerik.Reporting.XmlSerialization;
-using Report = Telerik.Reporting.Report;
-using SubReport = Telerik.Reporting.SubReport;
+using SmartRecords;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -44,108 +42,74 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return stringBuilder.ToString();
         }
 
-        internal static RenderingResult ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
+        internal static MemoryStream ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
         {
             var reportDataSource = new ReportData(db, practice).GetReportDataSourceForPdf(doctor, patientId);
-            Report telerikReport;
 
-            if (DebugConfig.IsDebug && DebugConfig.UseLocalResourcesOnly)
+            var document = new Document(PageSize.A4, 36, 36, 80, 80);
+            var art = new Rectangle(50, 50, 545, 792);
+            var documentStream = new MemoryStream();
+            var writer = PdfWriter.GetInstance(document, documentStream);
+            writer.SetBoxSize("art", art);
+            writer.PageEvent = new ReportWatermark(
+                new ReportWatermarkData()
+                    {
+                        Header1 = doctor.CFG_Documents.Header1,
+                        Header2 = doctor.CFG_Documents.Header2,
+                        FooterLeft1 = doctor.CFG_Documents.FooterLeft1,
+                        FooterLeft2 = doctor.CFG_Documents.FooterLeft2,
+                        FooterRight1 = doctor.CFG_Documents.FooterRight1,
+                        FooterRight2 = doctor.CFG_Documents.FooterRight2
+                    });
+
+            var report = new Report<ReportData.PdfPatientData>();
+            foreach (var patient in reportDataSource.Patients)
             {
-                // Getting file name of the report model.
-                var resourcePath = String.Format("C:\\Cerebello\\CerebelloWebRole\\Content\\Reports\\PatientsList\\Doctor.trdx");
+                report.AddTitle(ReportTitleSize.H1, m => "Patient: " + m.FullName);
+                
+                var patientCard = report.AddCard();
+                patientCard.AddField(m => m.FullName, true);
+                patientCard.AddField(m => m.Gender);
+                patientCard.AddField(m => m.DateOfBirth);
+                patientCard.AddField(m => m.Profession);
+                patientCard.AddField(m => m.MaritalStatus);
+                patientCard.AddField(m => m.Cpf);
+                patientCard.AddField(m => m.CpfOwner);
+                patientCard.AddField(m => m.PhoneLand);
+                patientCard.AddField(m => m.PhoneCell);
+                patientCard.AddField(m => m.Email, true);
 
-                // Creating the report and exporting PDF.
-                telerikReport = CreateReportFromFile(resourcePath);
+                report.AddTitle(ReportTitleSize.H2, "Address");
+
+                var patientAddressCard = report.AddCard(m => m.Address);
+                patientAddressCard.AddField(m => m.Street, true);
+                patientAddressCard.AddField(m => m.Complement);
+                patientAddressCard.AddField(m => m.Neighborhood);
+                patientAddressCard.AddField(m => m.StateProvince);
+                patientAddressCard.AddField(m => m.City);
+                patientAddressCard.AddField(m => m.CEP);
             }
-            else
-            {
-                // Getting resource name of the report model.
-                var resourcePath = String.Format("Content\\Reports\\PatientsList\\Doctor.trdx");
 
-                // Creating the report and exporting PDF.
-                telerikReport = CreateReportFromResource(resourcePath);
-            }
+            writer.CloseStream = false;
 
-            // Creating the report and exporting PDF.
-            using (telerikReport)
-            {
-                telerikReport.DataSource = new[] { reportDataSource };
+            document.Open();
 
-                // setting up the report parameters
-                telerikReport.ReportParameters["Header1"].Value = doctor.CFG_Documents.Header1;
-                telerikReport.ReportParameters["Header2"].Value = doctor.CFG_Documents.Header2;
-                telerikReport.ReportParameters["FooterLeft1"].Value = doctor.CFG_Documents.FooterLeft1;
-                telerikReport.ReportParameters["FooterLeft2"].Value = doctor.CFG_Documents.FooterLeft2;
-                telerikReport.ReportParameters["FooterRight1"].Value = doctor.CFG_Documents.FooterRight1;
-                telerikReport.ReportParameters["FooterRight2"].Value = doctor.CFG_Documents.FooterRight2;
+            document.Close();
+            documentStream.Position = 0;
 
-                // Exporting PDF from report.
-                var reportProcessor = new ReportProcessor();
-                var pdf = reportProcessor.RenderReport("PDF", telerikReport, null);
-                return pdf;
-            }
+            return documentStream;
         }
 
         [SelfPermission]
-        public FileContentResult ExportPatientsPdf(int? patientId)
+        public FileStreamResult ExportPatientsPdf(int? patientId)
         {
             var pdf = ExportPatientsPdf(patientId, this.db, this.DbPractice, this.Doctor);
 
             // Returning the generated PDF as a file.
-            return this.File(pdf.DocumentBytes, pdf.MimeType);
-        }
-
-        private static Report CreateReportFromResource(string resourceName)
-        {
-            var asm = typeof(ReportController).Assembly;
-            var asmName = asm.GetName().Name;
-
-            var resName = Path.Combine(asmName, resourceName)
-                .Replace("\\", ".");
-
-            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
-            Report report;
-            using (var xmlReader = XmlReader.Create(asm.GetManifestResourceStream(resName), settings))
-            {
-                var xmlSerializer = new ReportXmlSerializer();
-                report = (Report)xmlSerializer.Deserialize(xmlReader);
-            }
-
-            var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
-            foreach (var eachSubReport in subReports)
-            {
-                var resourceNameSub = Path.Combine(Path.GetDirectoryName(resourceName), String.Format("{0}.trdx", eachSubReport.Name));
-                var reportSub = CreateReportFromResource(resourceNameSub);
-                report.Disposed += (s, e) => reportSub.Dispose();
-                eachSubReport.ReportSource = reportSub;
-            }
-
-            return report;
-        }
-
-        private static Report CreateReportFromFile(string fileName)
-        {
-            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
-            Report report;
-            using (var fileStream = System.IO.File.Open(fileName, FileMode.Open))
-            using (var xmlReader = XmlReader.Create(fileStream, settings))
-            {
-                var xmlSerializer = new ReportXmlSerializer();
-                report = (Report)xmlSerializer.Deserialize(xmlReader);
-            }
-
-            var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
-            foreach (var eachSubReport in subReports)
-            {
-                var resourceNameSub = Path.Combine(Path.GetDirectoryName(fileName), String.Format("{0}.trdx", eachSubReport.Name));
-                var reportSub = CreateReportFromFile(resourceNameSub);
-                report.Disposed += (s, e) => reportSub.Dispose();
-                eachSubReport.ReportSource = reportSub;
-            }
-
-            return report;
+            return this.File(pdf, MimeTypesHelper.GetContentType(".pdf"));
         }
     }
+
 
     public class ReportData
     {
@@ -301,9 +265,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 get
                 {
-                    if (base.MaritalStatus.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeMaritalStatus))[(int)base.MaritalStatus.Value];
-                    return null;
+                    return base.MaritalStatus.HasValue ? EnumHelper.GetValueDisplayDictionary(typeof(TypeMaritalStatus))[(int)base.MaritalStatus.Value] : null;
                 }
             }
 
@@ -311,9 +273,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 get
                 {
-                    if (base.CpfOwner.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value];
-                    return null;
+                    return base.CpfOwner.HasValue ? EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value] : null;
                 }
             }
 
@@ -321,9 +281,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 get
                 {
-                    if (base.MedicalEntityJurisdiction.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeEstadoBrasileiro))[(int)base.MedicalEntityJurisdiction.Value];
-                    return null;
+                    return base.MedicalEntityJurisdiction.HasValue ? EnumHelper.GetValueDisplayDictionary(typeof(TypeEstadoBrasileiro))[(int)base.MedicalEntityJurisdiction.Value] : null;
                 }
             }
 

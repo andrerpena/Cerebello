@@ -1,0 +1,22 @@
+Aug 18 - Aug 24:
+Understand iText and make examples of different functionalities
+
+Aug 25 - Aug 31:
+Implement the Report Generator, including 1xN associations
+
+Sep 01 - Sep 07:
+Integrate the Report Generator into Cerebello
+
+-- Cerebello should compile here
+
+Sep 08 - Sep 14:
+Integrate MergeField technology into Cerebello.
+Change Medical Certificates in Cerebello to template documents,
+including database and interface
+
+Sep 15 - Sep 21:
+Make medical certificates to output word documents
+
+Sep 22 - Oct 05:
+Change Prescriptions in Cerebello to template documents, including database
+and interface

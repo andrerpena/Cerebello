@@ -120,7 +120,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.MaritalStatus = user.Person.MaritalStatus;
             viewModel.BirthPlace = user.Person.BirthPlace;
             viewModel.Cpf = user.Person.CPF;
-            viewModel.Profissao = user.Person.Profession;
+            viewModel.Profession = user.Person.Profession;
             viewModel.Email = user.Person.Email;
 
             viewModel.IsAdministrador = user.AdministratorId != null;
@@ -329,7 +329,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 user.Person.CPFOwner = formModel.CpfOwner;
                 user.Person.CreatedOn = this.GetUtcNow();
                 user.Person.MaritalStatus = formModel.MaritalStatus;
-                user.Person.Profession = formModel.Profissao;
+                user.Person.Profession = formModel.Profession;
                 user.Person.Email = formModel.Email;
                 user.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
 
