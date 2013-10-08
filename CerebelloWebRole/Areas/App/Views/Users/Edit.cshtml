@@ -4,7 +4,7 @@
     string title;
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        title = "Editando usuário: " + this.Model.FullName;
+        title = "Editando usuário: " + this.Model.FirstName;
     }
     else
     {
@@ -33,13 +33,10 @@
         throw new Exception("'ViewBag.IsEditingOrCreating' must be either 'E' or 'C'.");
     }
 
-    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.FirstName, EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, this.Html.EnumDropdownListFor);
     editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.MaritalStatus, this.Html.EnumDropdownListFor);
-    editPanel.AddField(m => m.BirthPlace);
-    editPanel.AddField(m => m.Cpf);
-    editPanel.AddField(m => m.Profession);
+    editPanel.AddField(m => m.SSN);
 
     var editPanelRoles = this.Html.CreateEditPanel();
     editPanelRoles.AddField(m => m.IsAdministrador);
@@ -84,8 +81,8 @@
 
     var editPanelContact = this.Html.CreateEditPanel();
     editPanelContact.AddField(m => m.Email);
-    editPanelContact.AddField(m => m.PhoneCell);
-    editPanelContact.AddField(m => m.PhoneLand);
+    editPanelContact.AddField(m => m.PhoneMobile);
+    editPanelContact.AddField(m => m.PhoneHome);
 }
 
 @section Title {

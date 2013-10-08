@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CerebelloWebRole.Areas.App;
 using CerebelloWebRole.Code;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
@@ -65,6 +66,9 @@ namespace CerebelloWebRole
 
             // Will create a thread to send notifications
             NotificationsHelper.CreateNotificationsJob();
+
+            // create model maps
+            ModelMappings.CreateMaps();
 
             SetupDependencyInjector();
         }

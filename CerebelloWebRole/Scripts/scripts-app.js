@@ -1,7 +1,7 @@
 ﻿// setting datepickers to act like brazillian
 $.datepicker.setDefaults($.datepicker.regional["pt-BR"]);
 
-// gets the cep
+// gets the Zip
 function getGetInfo(url, cep, opts) {
     if (!cep)
         throw "O CEP precisa estar preenchido";

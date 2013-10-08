@@ -14,7 +14,7 @@ namespace CerebelloWebRole.Code
         /// </summary>
         public bool WholeRow { get; set; }
 
-        public abstract MvcHtmlString Label(HtmlHelper htmlHelper);
-        public abstract MvcHtmlString Display(HtmlHelper htmlHelper);
+        public abstract MvcHtmlString GetLabelText(HtmlHelper htmlHelper);
+        public abstract MvcHtmlString GetDisplayText(HtmlHelper htmlHelper);
     }
 }

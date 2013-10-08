@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using AutoMapper;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using JetBrains.Annotations;
@@ -28,18 +30,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // Person, address, and patient basic properties.
             var viewModel = new PatientViewModel();
-
-            FillPersonViewModel(controller.DbPractice, patient.Person, viewModel);
+            Mapper.Map(patient.Person, viewModel);
 
             viewModel.Id = patient.Id;
             viewModel.PatientId = patient.Id;
             viewModel.PersonId = patient.Person.Id;
-            viewModel.Observations = patient.Person.Observations;
+            viewModel.Notes = patient.Person.Notes;
 
             if (includeAddressData)
             {
-                var address = patient.Person.Addresses.SingleOrDefault();
-                viewModel.Address = address != null ? GetAddressViewModel(address) : new AddressViewModel();
+                var address = patient.Person.Address;
+                if (address != null)
+                    Mapper.Map(address, viewModel.Address);
             }
 
             // Other (more complex) properties.
@@ -74,9 +76,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                                 select new AppointmentViewModel
                                                 {
                                                     PatientId = a.PatientId,
-                                                    PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
-                                                    LocalDateTime = ConvertToLocalDateTime(controller.DbPractice, a.Start),
-                                                    LocalDateTimeSpelled = getRelativeDate(ConvertToLocalDateTime(controller.DbPractice, a.Start))
+                                                    PatientFullName = a.PatientId != default(int) ? PersonHelper.GetFullName(a.Patient.Person) : null,
+                                                    LocalDateTime = ModelDateTimeHelper.ConvertToLocalDateTime(controller.DbPractice, a.Start),
+                                                    LocalDateTimeSpelled = getRelativeDate(ModelDateTimeHelper.ConvertToLocalDateTime(controller.DbPractice, a.Start))
                                                 }).ToList();
             }
 
@@ -90,37 +92,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return viewModel;
         }
 
-        public static AddressViewModel GetAddressViewModel(Address address)
-        {
-            if (address == null)
-                return null;
-
-            return new AddressViewModel
-                       {
-                           CEP = address.CEP,
-                           City = address.City,
-                           Complement = address.Complement,
-                           Neighborhood = address.Neighborhood,
-                           StateProvince = address.StateProvince,
-                           Street = address.Street,
-                       };
-        }
-
-        public static void FillPersonViewModel(Practice practice, Person person, PersonViewModel viewModel)
-        {
-            viewModel.BirthPlace = person.BirthPlace;
-            viewModel.FullName = person.FullName;
-            viewModel.Gender = person.Gender;
-            viewModel.MaritalStatus = person.MaritalStatus;
-            viewModel.CpfOwner = person.CPFOwner;
-            viewModel.DateOfBirth = ConvertToLocalDateTime(practice, person.DateOfBirth);
-            viewModel.Profession = person.Profession;
-            viewModel.Cpf = person.CPF;
-            viewModel.Email = person.Email;
-            viewModel.PhoneCell = person.PhoneCell;
-            viewModel.PhoneLand = person.PhoneLand;
-        }
-
         public static List<SessionViewModel> GetSessionViewModels(Practice practice, Patient patient, DateTimeInterval? filterUtcInterval)
         {
             var eventDates = new List<DateTime>();
@@ -130,14 +101,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             // anamneses
             var anamneses = filterUtcInterval.HasValue
-                ? patient.Anamneses.Where(x => x.MedicalRecordDate >= utcDateFilterStart && x.MedicalRecordDate < utcDateFilterEnd)
-                : patient.Anamneses;
+                ? patient.PastMedicalHistories.Where(x => x.MedicalRecordDate >= utcDateFilterStart && x.MedicalRecordDate < utcDateFilterEnd)
+                : patient.PastMedicalHistories;
             var anamnesesByDate =
                 (from avm in
                      (from r in anamneses
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
+                                     LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, r.MedicalRecordDate),
                                      Id = r.Id
                                  })
                  group avm by avm.LocalDate.Date
@@ -155,7 +126,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in physicalExaminations
                       select new SessionEvent
                       {
-                          LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
+                          LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, r.MedicalRecordDate),
                           Id = r.Id
                       })
                  group pe by pe.LocalDate.Date
@@ -173,7 +144,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in diagnosticHypotheses
                       select new SessionEvent
                       {
-                          LocalDate = ConvertToLocalDateTime(practice, r.MedicalRecordDate),
+                          LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, r.MedicalRecordDate),
                           Id = r.Id
                       })
                  group pe by pe.LocalDate.Date
@@ -191,7 +162,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from r in receipts
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, r.IssuanceDate),
+                                     LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, r.IssuanceDate),
                                      Id = r.Id
                                  })
                  group rvm by rvm.LocalDate.Date
@@ -209,7 +180,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from c in certificates
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, c.IssuanceDate),
+                                     LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, c.IssuanceDate),
                                      Id = c.Id
                                  })
                  group cvm by cvm.LocalDate.Date
@@ -227,7 +198,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from c in examRequests
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, c.RequestDate),
+                                     LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, c.RequestDate),
                                      Id = c.Id
                                  })
                  group ervm by ervm.LocalDate.Date
@@ -245,7 +216,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from c in examResults
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, c.ReceiveDate),
+                                     LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, c.ReceiveDate),
                                      Id = c.Id
                                  })
                  group ervm by ervm.LocalDate.Date
@@ -263,7 +234,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from d in diagnosis
                       select new SessionEvent
                                  {
-                                     LocalDate = ConvertToLocalDateTime(practice, d.MedicalRecordDate),
+                                     LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, d.MedicalRecordDate),
                                      Id = d.Id
                                  })
                  group dvm by dvm.LocalDate.Date
@@ -281,7 +252,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                      (from d in patientFiles
                       select new SessionEvent
                       {
-                          LocalDate = ConvertToLocalDateTime(practice, d.ReceiveDate),
+                          LocalDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, d.ReceiveDate),
                           Id = d.Id
                       })
                  group dvm by dvm.LocalDate.Date
@@ -359,9 +330,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                  new PatientViewModel
                                      {
                                          Id = p.Id,
-                                         DateOfBirth =
-                                             ConvertToLocalDateTime(this.DbPractice, p.Person.DateOfBirth),
-                                         FullName = p.Person.FullName
+                                         LastName = p.Person.LastName,
+                                         FirstName = p.Person.FirstName,
+                                         Gender = p.Person.Gender,
+                                         DateOfBirth = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, p.Person.DateOfBirth),
+                                         RecordNumber = p.RecordNumber
                                      }).ToList(),
                         TotalPatientsCount = this.db.Patients.Count(p => p.DoctorId == this.Doctor.Id)
                     };
@@ -415,26 +388,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var patient = this.db.Patients.First(p => p.Id == id);
                 viewModel = GetViewModel(this, patient, false, false);
 
-                ViewBag.Title = "Alterando paciente: " + viewModel.FullName;
+                ViewBag.Title = "Editing patient: " + PersonHelper.GetFullName(viewModel.FirstName, viewModel.MiddleName, viewModel.LastName);
             }
             else
             {
-                // if this account has a patient limit, then we should tell the user
-                var patientLimit = this.DbPractice.AccountContract.PatientsLimit;
-
-                if (patientLimit != null)
-                {
-                    var patientCount = this.db.Patients.Count(p => p.PracticeId == this.DbPractice.Id);
-                    if (patientCount + 1 > patientLimit)
-                    {
-                        this.ModelState.Clear();
-                        this.ModelState.AddModelError(
-                            "PatientsLimit",
-                            "Não é possível adicionar mais pacientes, pois já foi atingido o limite de {0} pacientes de sua conta.",
-                            patientLimit);
-                    }
-                }
-
                 // adding new patient
                 this.ViewBag.Title = "Novo paciente";
             }
@@ -445,72 +402,39 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(PatientViewModel formModel)
         {
-            // if this account has a patient limit, then we should tell the user if he/she blows up the limit
-            var patientLimit = this.DbPractice.AccountContract.PatientsLimit;
-
-            if (patientLimit != null)
-            {
-                var patientCount = this.db.Patients.Count(p => p.PracticeId == this.DbPractice.Id);
-                if (patientCount + 1 > patientLimit)
-                {
-                    this.ModelState.Clear();
-                    this.ModelState.AddModelError(
-                        "PatientsLimit",
-                        "Não é possível adicionar mais pacientes, pois já foi atingido o limite de {0} pacientes de sua conta.",
-                        patientLimit);
-                }
-            }
-
             if (ModelState.IsValid)
             {
-                var isEditing = formModel.Id != null;
-
                 Patient patient;
-                if (isEditing)
+                if (formModel.Id != null)
                     patient = this.db.Patients.First(p => p.Id == formModel.Id);
                 else
                 {
                     patient = new Patient
                                   {
-                                      Person = new Person { PracticeId = this.DbUser.PracticeId, },
+                                      Person = new Person { PracticeId = this.DbUser.PracticeId, CreatedOn = this.GetUtcNow() },
                                       PracticeId = this.DbUser.PracticeId,
+                                      Doctor = this.Doctor
                                   };
                     this.db.Patients.AddObject(patient);
                 }
 
-                patient.Doctor = this.Doctor;
-
+                // copies all properties from the formModel to the model
+                Mapper.Map(formModel, patient.Person);
                 patient.IsBackedUp = false;
-                patient.Person.BirthPlace = formModel.BirthPlace;
-                patient.Person.CPF = formModel.Cpf;
-                patient.Person.CPFOwner = formModel.CpfOwner;
-                patient.Person.CreatedOn = this.GetUtcNow();
-                patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
-                patient.Person.FullName = formModel.FullName;
-                patient.Person.Gender = (short)formModel.Gender;
-                patient.Person.MaritalStatus = formModel.MaritalStatus;
-                patient.Person.Observations = formModel.Observations;
-                patient.Person.Profession = formModel.Profession;
-                patient.Person.Email = !string.IsNullOrEmpty(formModel.Email) ? formModel.Email.ToLower() : null;
-                patient.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
-                patient.Person.PhoneLand = formModel.PhoneLand;
-                patient.Person.PhoneCell = formModel.PhoneCell;
 
                 // handle patient address
-                if (!patient.Person.Addresses.Any())
+                var patientAddress = patient.Person.Address;
+                if (patientAddress == null)
                 {
-                    patient.Person.Addresses.Add(
-                        new Address
-                            {
-                                PracticeId = this.DbUser.PracticeId,
-                                CEP = formModel.Address.CEP,
-                                City = formModel.Address.City,
-                                Complement = formModel.Address.Complement,
-                                Neighborhood = formModel.Address.Neighborhood,
-                                StateProvince = formModel.Address.StateProvince,
-                                Street = formModel.Address.Street,
-                            });
+                    patientAddress = new Address
+                        {
+                            PracticeId = this.DbUser.PracticeId
+                        };
+                    patient.Person.Address = patientAddress;
                 }
+
+                // copies all properties from the formModel to the model (now for the address)
+                Mapper.Map(formModel.Address, patientAddress);
 
                 this.db.SaveChanges();
                 return this.RedirectToAction("Details", new { id = patient.Id });
@@ -535,11 +459,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var patient = this.db.Patients.First(m => m.Id == id);
 
                 // delete anamneses manually
-                var anamneses = patient.Anamneses.ToList();
+                var anamneses = patient.PastMedicalHistories.ToList();
                 while (anamneses.Any())
                 {
                     var anamnese = anamneses.First();
-                    this.db.Anamnese.DeleteObject(anamnese);
+                    this.db.PastMedicalHistories.DeleteObject(anamnese);
                     anamneses.Remove(anamnese);
                 }
 
@@ -665,13 +589,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var baseQuery = this.db.Patients.Include("Person").Where(l => l.DoctorId == this.Doctor.Id);
             if (!string.IsNullOrEmpty(term))
-                baseQuery = baseQuery.Where(l => l.Person.FullName.Contains(term));
+                baseQuery = baseQuery.Where(l => l.Person.FirstName.Contains(term) || l.Person.MiddleName.Contains(term) || l.Person.LastName.Contains(term));
 
-            var rows = (from p in baseQuery.OrderBy(p => p.Person.FullName).Skip((pageIndex.Value - 1) * pageSize).Take(pageSize).ToList()
+            var rows = (from p in baseQuery.OrderBy(p => p.Person.LastName).ThenBy(p => p.Person.FirstName).Skip((pageIndex.Value - 1) * pageSize).Take(pageSize).ToList()
                         select new
                         {
                             Id = p.Id,
-                            Value = p.Person.FullName,
+                            Value = PersonHelper.GetFullName(p.Person),
                             InsuranceId = p.LastUsedHealthInsuranceId,
                             InsuranceName = this.db.HealthInsurances.Where(hi => hi.Id == p.LastUsedHealthInsuranceId).Select(hi => hi.Name),
                         }).ToList();
@@ -704,29 +628,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         select patient;
 
             if (!string.IsNullOrEmpty(searchModel.Term))
-                query = from patient in query where patient.Person.FullName.Contains(searchModel.Term) select patient;
+                query = from patient in query
+                        where patient.Person.FirstName.Contains(searchModel.Term)
+                            || patient.Person.MiddleName.Contains(searchModel.Term)
+                            || patient.Person.LastName.Contains(searchModel.Term)
+
+                        select patient;
 
             // 1-based page index
             var pageIndex = searchModel.Page;
-            var pageSize = Constants.GRID_PAGE_SIZE;
+            const int pageSize = Constants.GRID_PAGE_SIZE;
 
             model.Count = query.Count();
-            model.Objects = (from p in query
+            model.Objects = (from p in query.ToList()
                              select new PatientViewModel()
                              {
                                  Id = p.Id,
                                  // Note: this date is coming from the DB in Utc format, and must be converted to local time.
                                  DateOfBirth = p.Person.DateOfBirth,
-                                 FullName = p.Person.FullName
+                                 FirstName = p.Person.FirstName,
+                                 LastName = p.Person.LastName
                              })
-                             .OrderBy(p => p.FullName)
+                             .OrderBy(p => p.LastName)
+                             .ThenBy(p => p.FirstName)
                              .Skip((pageIndex - 1) * pageSize)
                              .Take(pageSize)
                              .ToList();
 
             // Converting all dates from Utc to local practice time-zone.
             foreach (var eachPatientViewModel in model.Objects)
-                eachPatientViewModel.DateOfBirth = ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
+                eachPatientViewModel.DateOfBirth = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, eachPatientViewModel.DateOfBirth);
 
             return this.View(model);
         }
@@ -744,7 +675,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             this.ViewBag.CanAccessMedicalRecords = canAccessMedicalRecords;
 
             var localDateFilter = DateTimeHelper.CreateDate(y, m, d) ?? this.GetPracticeLocalNow().Date;
-            var utcDateFilter = ConvertToUtcDateTime(this.DbPractice, localDateFilter);
+            var utcDateFilter = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, localDateFilter);
 
             // Creating the view-model object.
             var model = GetViewModel(this, patient, false, false, false);
@@ -766,14 +697,52 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (patient == null)
                 return new StatusCodeResult(HttpStatusCode.NotFound);
 
-            var utcFirst = ConvertToUtcDateTime(this.DbPractice, localFirst);
-            var utcLast = ConvertToUtcDateTime(this.DbPractice, localLast);
+            var utcFirst = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, localFirst);
+            var utcLast = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, localLast);
 
             var result = GetSessionViewModels(this.DbPractice, patient, new DateTimeInterval(utcFirst, utcLast))
                 .Select(s => s.Date.ToString("'d'dd_MM_yyyy"))
                 .Distinct().ToArray();
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DetailsBasicInformation(int id)
+        {
+            var patient = this.db.Patients.SingleOrDefault(p => p.Id == id);
+            if (patient == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound);
+            var viewModel = Mapper.Map<PatientBasicInformationViewModel>(patient);
+            return this.View(viewModel);
+        }
+
+        [HttpGet]
+        public ActionResult EditBasicInformation(int id)
+        {
+            var patient = this.db.Patients.SingleOrDefault(p => p.Id == id);
+            if (patient == null)
+                return new StatusCodeResult(HttpStatusCode.NotFound);
+            var viewModel = Mapper.Map<PatientBasicInformationViewModel>(patient);
+            return this.View(viewModel);
+        }
+
+        public ActionResult EditBasicInformation(PatientBasicInformationViewModel formModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var patient = this.db.Patients.FirstOrDefault(p => p.Id == formModel.Id);
+                if (patient == null)
+                    return new StatusCodeResult(HttpStatusCode.NotFound);
+
+                // copies all properties from the formModel to the model
+                Mapper.Map(formModel, patient);
+                patient.IsBackedUp = false;
+
+                this.db.SaveChanges();
+                return this.View("DetailsBasicInformation", formModel);
+            }
+
+            return this.View(formModel);
         }
     }
 }

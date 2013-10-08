@@ -61,7 +61,7 @@ namespace CerebelloWebRole.App_GlobalResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O campo &apos;{0}&apos; deve ter no máximo &apos;{1}&apos; caracteres.
+        ///   Looks up a localized string similar to The field &apos;{0}&apos; cannot have more than &apos;{1}&apos; characters.
         /// </summary>
         internal static string MaxLengthValidationMessage {
             get {
@@ -70,7 +70,7 @@ namespace CerebelloWebRole.App_GlobalResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O valor &apos;{0}&apos; não é válido para o campo &apos;{1}&apos;.
+        ///   Looks up a localized string similar to The value &apos;{0}&apos; is not valid for the field &apos;{1}&apos;.
         /// </summary>
         internal static string PropertyValueInvalid {
             get {
@@ -79,7 +79,7 @@ namespace CerebelloWebRole.App_GlobalResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O campo &apos;{0}&apos; não possui o formato esperado.
+        ///   Looks up a localized string similar to The field &apos;{0}&apos; does not have a valid format.
         /// </summary>
         internal static string RegularExpressionValidationMessage {
             get {
@@ -88,7 +88,7 @@ namespace CerebelloWebRole.App_GlobalResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O campo &apos;{0}&apos; é requerido.
+        ///   Looks up a localized string similar to The field &apos;{0}&apos; is required.
         /// </summary>
         internal static string RequiredValidationMessage {
             get {

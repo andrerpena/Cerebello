@@ -7,13 +7,12 @@
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients);
-    grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
-    grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
+    grid.AddLinkField(m => m.LastName, "Details", m => new { id = m.Id });
+    grid.AddLinkField(m => m.FirstName, "Details", m => new { id = m.Id });
+    grid.AddField(m => m.Gender);
+    grid.AddField(m => m.DateOfBirth, header: "DOB");
+    grid.AddField(m => m.RecordNumber);
     grid.AddEditField("Edit", "Patients", model => new { model.Id });
-
-    var patientsLimit = (int?)this.ViewBag.PatientsLimit;
-    var patientsRemaining = patientsLimit - this.ViewBag.PatientsCount;
-    var canCreateMorePatients = patientsRemaining == null || patientsRemaining > patientsLimit;
 }
 @section Title {
 Prontuário
@@ -36,24 +35,10 @@ Prontuário
         }
         @if (this.CanAccessAction("DownloadAllPatientsZipFile", "PatientFiles"))
         {
-            <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Export all patients files in Zip</a> </li>
+            <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Export all patients files in ZipCode</a> </li>
         }
     </ul>
 }
-@if (!canCreateMorePatients)
-{
-    @:@this.Html.Message(
-    @<text>Your account only allows you to register @patientsLimit patients.
-             @if (patientsRemaining > 0)
-             {
-@:You have @patientsRemaining until the limit.
-             }
-             else
-             {
-                 @:You cannot register more patients.
-             }
-    </text>)
-    }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
     @Html.Partial("SearchBox", new SearchModel())

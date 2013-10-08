@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Web.Script.Serialization;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code
@@ -84,12 +85,12 @@ namespace CerebelloWebRole.Code
                 var medicalAppointmentData = new MedicalAppointmentNotificationData
                 {
                     PatientId = appointment.PatientId.Value,
-                    PatientName = appointment.Patient.Person.FullName,
-                    DoctorName = appointment.Patient.Doctor.Users.First().Person.FullName,
+                    PatientFullName = PersonHelper.GetFullName(appointment.Patient.Person),
+                    DoctorFullName = PersonHelper.GetFullName(appointment.Patient.Doctor.Users.First().Person),
                     DoctorId = appointment.Patient.DoctorId,
                     AppointmentId = appointment.Id,
                     Time = DateTimeHelper.GetFormattedTime(
-                        PracticeController.ConvertToLocalDateTime(appointment.Practice, appointment.Start)),
+                        ModelDateTimeHelper.ConvertToLocalDateTime(appointment.Practice, appointment.Start)),
                     PracticeIdentifier = appointment.Practice.UrlIdentifier,
                     DoctorIdentifier = appointment.Doctor.UrlIdentifier
                 };
@@ -149,7 +150,7 @@ namespace CerebelloWebRole.Code
                 {
                     Text = appointment.Description,
                     Time = DateTimeHelper.GetFormattedTime(
-                        PracticeController.ConvertToLocalDateTime(appointment.Practice, appointment.Start))
+                        ModelDateTimeHelper.ConvertToLocalDateTime(appointment.Practice, appointment.Start))
                 };
 
                 var genericAppointmentDataString = new JavaScriptSerializer().Serialize(genericAppointmentData);

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
+using CerebelloWebRole.Areas.App.Helpers;
 using Google.Apis.Drive.v2;
 using Google.Apis.Drive.v2.Data;
 using Ionic.Zip;
@@ -28,13 +29,13 @@ namespace CerebelloWebRole.Code
 
                 // add the patient history as pdf
                 var pdf = ReportController.ExportPatientsPdf(patient.Id, db, patient.Practice, patient.Doctor);
-                patientZip.AddEntry(string.Format("{0} - Histórico.pdf", patient.Person.FullName), pdf);
+                patientZip.AddEntry(string.Format("{0} - Histórico.pdf", PersonHelper.GetFullName(patient.Person)), pdf);
 
                 // if the person has a picture, add it to the backup
                 if (patient.Person.PictureBlobName != null)
                 {
                     var picture = storageManager.DownloadFileFromStorage(Constants.PERSON_PROFILE_PICTURE_CONTAINER_NAME, patient.Person.PictureBlobName);
-                    patientZip.AddEntry(string.Format("{0} - Perfil.png", patient.Person.FullName), picture);
+                    patientZip.AddEntry(string.Format("{0} - Perfil.png", PersonHelper.GetFullName(patient.Person)), picture);
                 }
 
                 // if the person has files, add them to the backup
@@ -65,7 +66,7 @@ namespace CerebelloWebRole.Code
 
                         patientFilesZip.Save(patientFilesZipMemoryStream);
                         patientFilesZipMemoryStream.Seek(0, SeekOrigin.Begin);
-                        patientZip.AddEntry(string.Format("{0} - Arquivos.zip", patient.Person.FullName), patientFilesZipMemoryStream);
+                        patientZip.AddEntry(string.Format("{0} - Arquivos.zip", PersonHelper.GetFullName(patient.Person)), patientFilesZipMemoryStream);
                     }
                 }
 
@@ -142,9 +143,9 @@ namespace CerebelloWebRole.Code
                                 try
                                 {
                                     var patientBackup = GeneratePatientBackup(dbWrapper, patient);
-                                    var fileName = string.Format("{0} (id:{1})", patient.Person.FullName, patient.Id) + ".zip";
+                                    var fileName = string.Format("{0} (id:{1})", PersonHelper.GetFullName(patient.Person), patient.Id) + ".zip";
                                     var fileDescription = string.Format(
-                                        "Arquivo de backup do(a) paciente {0} (id:{1})", patient.Person.FullName, patient.Id);
+                                        "Arquivo de backup do(a) paciente {0} (id:{1})", PersonHelper.GetFullName(patient.Person), patient.Id);
 
                                     // check if the file exists already
                                     var patientGoogleDriveFile = patient.GoogleDrivePatientInfoes.FirstOrDefault();

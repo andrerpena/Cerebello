@@ -21,7 +21,7 @@
         $(".edit-receipt", $("div[data-val-id='receipt-@Model.Id']")).click(function (e) {
             e.preventDefault();
             $.ajax({
-                url: "@Url.Action("edit", "receipts", new { id = Model.Id })",
+                url: "@Url.Action("edit", "Prescriptions", new { id = Model.Id })",
                 success: function(result) {
                     $("div[data-val-id='receipt-@Model.Id']").replaceWith(result);
                 }

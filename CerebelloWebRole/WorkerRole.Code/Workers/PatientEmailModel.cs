@@ -8,13 +8,17 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
     {
         public DateTime AppointmentDate;
 
-        public string PatientName { get; set; }
+        public string PatientFirstName { get; set; }
+
+        public string PatientLastName { get; set; }
 
         public string PracticeUrlId { get; set; }
 
         public string PracticeName { get; set; }
 
-        public string DoctorName { get; set; }
+        public string DoctorFirstName { get; set; }
+
+        public string DoctorLastName { get; set; }
 
         public string PatientEmail { get; set; }
 

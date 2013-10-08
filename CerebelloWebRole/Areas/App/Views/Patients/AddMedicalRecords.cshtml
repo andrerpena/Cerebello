@@ -1,6 +1,6 @@
 ﻿@model PatientViewModel
 @{
-    var title = "Consultations for " + this.Model.FullName;
+    var title = "Consultations for " + this.Model.FirstName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.Watermark = "Search by patient name";
 }

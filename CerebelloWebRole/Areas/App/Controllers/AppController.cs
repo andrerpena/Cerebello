@@ -62,15 +62,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var patientsQuery = this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id);
             if (!string.IsNullOrEmpty(term))
-                patientsQuery = patientsQuery.Where(p => p.Person.FullName.Contains(term));
+                patientsQuery = patientsQuery.Where(p => p.Person.FirstName.Contains(term) || p.Person.MiddleName.Contains(term) ||  p.Person.LastName.Contains(term) );
 
             queries.Add(patientsQuery.Select(p =>
                         new GlobalSearchIntermediateResult()
                         {
                             Id = p.Id,
-                            Text = p.Person.FullName,
+                            Text = p.Person.FirstName + " " + p.Person.LastName,
                             Type = "patient",
-                            TypeDescription = "Paciente",
+                            TypeDescription = "Patient",
                             Relevance = 1
                         }));
 

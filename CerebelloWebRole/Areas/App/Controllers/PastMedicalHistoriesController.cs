@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using AutoMapper;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
@@ -12,37 +13,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
     /// <summary>
     /// Controller of anamneses.
     /// </summary>
-    public class AnamnesesController : DoctorController
+    public class PastMedicalHistoriesController : DoctorController
     {
-        /// <summary>
-        /// Constructs a view-model for an anamnesis, given the DB object representing it.
-        /// </summary>
-        /// <param name="anamnese">The DB object representing the anamnesis.</param>
-        /// <returns>The view-model that contains data about the anamnesis.</returns>
-        public static AnamneseViewModel GetViewModel(Anamnese anamnese, Func<DateTime, DateTime> toLocal)
+        public static PastMedicalHistoryViewModel GetViewModel(PastMedicalHistory model)
         {
-            return new AnamneseViewModel
-            {
-                Id = anamnese.Id,
-                PatientId = anamnese.PatientId,
-                Allergies = anamnese.Allergies,
-                ChiefComplaint = anamnese.ChiefComplaint,
-                Conclusion = anamnese.Conclusion,
-                FamilyDeseases = anamnese.FamilyDiseases,
-                HistoryOfThePresentIllness = anamnese.HistoryOfThePresentIllness,
-                PastMedicalHistory = anamnese.PastMedicalHistory,
-                RegularAndAcuteMedications = anamnese.RegularAndAcuteMedications,
-                ReviewOfSystems = anamnese.ReviewOfSystems,
-                SexualHistory = anamnese.SexualHistory,
-                SocialHistory = anamnese.SocialDiseases,
-                MedicalRecordDate = toLocal(anamnese.MedicalRecordDate),
-            };
+            return Mapper.Map<PastMedicalHistoryViewModel>(model);
         }
 
         public ActionResult Details(int id)
         {
-            var anamnese = this.db.Anamnese.First(a => a.Id == id);
-            return this.View(GetViewModel(anamnese, this.GetToLocalDateTimeConverter()));
+            var model = this.db.PastMedicalHistories.First(a => a.Id == id);
+            var viewModel = Mapper.Map<PastMedicalHistoryViewModel>(model);
+            return this.View(viewModel);
         }
 
         [HttpGet]
@@ -52,23 +34,21 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(AnamneseViewModel[] anamneses)
+        public ActionResult Create(PastMedicalHistoryViewModel[] pastMedicalHistories)
         {
-            return this.Edit(anamneses);
+            return this.Edit(pastMedicalHistories);
         }
 
         [HttpGet]
         public ActionResult Edit(int? id, int? patientId, int? y, int? m, int? d)
         {
-            AnamneseViewModel viewModel = null;
+            PastMedicalHistoryViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel(
-                    (from a in this.db.Anamnese where a.Id == id select a).First(),
-                    this.GetToLocalDateTimeConverter());
+                viewModel = Mapper.Map<PastMedicalHistoryViewModel>(this.db.PastMedicalHistories.First(_m => _m.Id == id));
             else
             {
-                viewModel = new AnamneseViewModel
+                viewModel = new PastMedicalHistoryViewModel
                 {
                     Id = null,
                     PatientId = patientId,
@@ -83,51 +63,39 @@ namespace CerebelloWebRole.Areas.App.Controllers
         /// Requirements:
         ///    - The list of diagnoses passed in must be synchronized with the server
         /// </summary>
-        /// <param name="anamneses">View model with data to edit/create an anamnese.</param>
+        /// <param name="pastMedicalHistories">View model with data to edit/create an anamnese.</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(AnamneseViewModel[] anamneses)
+        public ActionResult Edit(PastMedicalHistoryViewModel[] pastMedicalHistories)
         {
-            var formModel = anamneses.Single();
+            var viewModel = pastMedicalHistories.Single();
 
-            Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
+            Debug.Assert(viewModel.PatientId != null, "formModel.PatientId != null");
             if (this.ModelState.IsValid)
             {
-                Anamnese anamnese = null;
-                if (formModel.Id == null)
+                PastMedicalHistory model;
+                if (viewModel.Id == null)
                 {
-
-                    anamnese = new Anamnese
+                    model = new PastMedicalHistory
                     {
                         CreatedOn = this.GetUtcNow(),
-                        PatientId = formModel.PatientId.Value,
+                        PatientId = viewModel.PatientId.Value,
                         PracticeId = this.DbUser.PracticeId,
                     };
-                    this.db.Anamnese.AddObject(anamnese);
+                    this.db.PastMedicalHistories.AddObject(model);
                 }
                 else
-                    anamnese = this.db.Anamnese.First(a => a.Id == formModel.Id);
+                    model = this.db.PastMedicalHistories.First(a => a.Id == viewModel.Id);
 
-                anamnese.Patient.IsBackedUp = false;
-                anamnese.Allergies = formModel.Allergies;
-                anamnese.ChiefComplaint = formModel.ChiefComplaint;
-                anamnese.Conclusion = formModel.Conclusion;
-                anamnese.FamilyDiseases = formModel.FamilyDeseases;
-                anamnese.HistoryOfThePresentIllness = formModel.HistoryOfThePresentIllness;
-                anamnese.PastMedicalHistory = formModel.PastMedicalHistory;
-                anamnese.RegularAndAcuteMedications = formModel.RegularAndAcuteMedications;
-                anamnese.ReviewOfSystems = formModel.ReviewOfSystems;
-                anamnese.SexualHistory = formModel.SexualHistory;
-                anamnese.SocialDiseases = formModel.SocialHistory;
-                anamnese.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
+                Mapper.Map(viewModel, model);
 
                 this.db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return this.View("Details", GetViewModel(anamnese, this.GetToLocalDateTimeConverter()));
+                return this.View("Details", viewModel);
             }
 
-            return this.View("Edit", formModel);
+            return this.View("Edit", viewModel);
         }
 
         /// <summary>
@@ -179,9 +147,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             try
             {
-                var anamnese = this.db.Anamnese.First(m => m.Id == id);
-
-                this.db.Anamnese.DeleteObject(anamnese);
+                var anamnese = this.db.PastMedicalHistories.First(m => m.Id == id);
+                this.db.PastMedicalHistories.DeleteObject(anamnese);
                 this.db.SaveChanges();
                 return this.Json(new JsonDeleteMessage { success = true }, JsonRequestBehavior.AllowGet);
             }

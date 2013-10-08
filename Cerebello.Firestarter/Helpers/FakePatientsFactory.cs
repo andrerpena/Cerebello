@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter.Helpers
@@ -23,96 +24,75 @@ namespace Cerebello.Firestarter.Helpers
         {
             var maleFirstNames = new[]
                 {
-                    "André",
-                    "Anderson",
-                    "Alan",
-                    "Artur",
-                    "Bruno",
-                    "Carlos",
+                    "Jacob",
+                    "Mason",
+                    "Ethan",
+                    "Noah",
+                    "William",
+                    "Liam",
+                    "Jayden",
+                    "Michael",
+                    "Alexander",
+                    "Aiden",
                     "Daniel",
-                    "Danilo",
-                    "Ernani",
-                    "Fabiano",
-                    "Fábio",
-                    "Guilherme",
-                    "Hélcio",
-                    "Jorge",
-                    "Leonardo",
-                    "Marcelo",
-                    "Miguel", // po cara! eu tb! // blz! haha
-                    "Nelson",
-                    "Osvaldo",
-                    "Patrício",
-                    "Roberto",
-                    "Ronan",
-                    "Thiago"
+                    "Matthew",
+                    "Elijah",
+                    "James",
+                    "Anthony",
+                    "Benjamin",
+                    "Joshua",
+                    "Andrew",
+                    "David",
+                    "Joseph"
                 };
 
             var femaleFirstNames = new[]
                 {
-                    "Alice",
-                    "Aline",
-                    "Bianca",
-                    "Bruna",
-                    "Carla",
-                    "Daniela",
-                    "Elaine",
-                    "Fabíola",
-                    "Fabiana",
-                    "Giovana",
-                    "Íngridi",
-                    "Jaqueline",
-                    "Larissa",
-                    "Marcela",
-                    "Natália",
-                    "Paula",
-                    "Quelen",
-                    "Renata",
-                    "Silvana",
-                    "Tatiana",
-                    "Valquíria",
-                    "Zilá"
+                    "Sophia",
+                    "Emma",
+                    "Isabella",
+                    "Olivia",
+                    "Ava",
+                    "Emily",
+                    "Abigail",
+                    "Mia",
+                    "Madison",
+                    "Elizabeth",
+                    "Chloe",
+                    "Ella",
+                    "Avery",
+                    "Addison",
+                    "Aubrey",
+                    "Lily",
+                    "Natalie",
+                    "Sofia",
+                    "Zoey"
                 };
 
-            var middleNames = new[]
+            var surnames = new[]
                 {
-                    "Albuquerque",
-                    "Almeida",
-                    "Bastos",
-                    "Queiróz",
-                    "Teixeira",
-                    "Silva",
-                    "Rodrigues",
-                    "Santos",
-                    "Pena",
-                    "Bicudo",
-                    "Gonçalves",
-                    "Machado",
-                    "Vianna",
-                    "Souza",
-                    "Moreira",
-                    "Vieira",
-                    "Correia",
-                    "Reis",
-                    "Delgado"
+                    "Smith",
+                    "Johnson",
+                    "Williams",
+                    "Jones",
+                    "Brown",
+                    "Davis",
+                    "Miller",
+                    "Wilson",
+                    "Moore",
+                    "Taylor",
+                    "Anderson",
+                    "Thomas",
+                    "Jackson",
+                    "White",
+                    "Harris",
+                    "Martin",
+                    "Thompson",
+                    "Garcia",
+                    "Martinez",
+                    "Robinson"
                 };
-
-            var professions = new[]
-                {
-                    "Pedreiro(a)",
-                    "Arquiteto(a)",
-                    "Programador(a)",
-                    "Economista",
-                    "Engenheiro(a)",
-                    "Padeiro(a)",
-                    "Eletricista",
-                    "Vendedor(a)",
-                    "Consultor(a)",
-                    "Biólogo(a)",
-                    "Carpinteiro(a)",
-                    "Advogado(a)"
-                };
-
+            
             using (var rc = RandomContext.Create())
             {
                 var random = rc.Random;
@@ -127,10 +107,11 @@ namespace Cerebello.Firestarter.Helpers
                     var possibleFirstNames = gender == 0 ? maleFirstNames : femaleFirstNames;
                     var firstName = possibleFirstNames[random.Next(possibleFirstNames.Length)];
 
-                    // middle names
-                    var chosenMiddleNames = new string[random.Next(2, 4)];
-                    for (var j = 0; j < chosenMiddleNames.Length; j++)
-                        chosenMiddleNames[j] = middleNames[random.Next(middleNames.Length)];
+                    // middle name
+                    var middleName = surnames[random.Next(surnames.Length)];
+
+                    // last name
+                    var lastName = surnames[random.Next(surnames.Length)];
 
                     var birthDate = new DateTime(
                         random.Next(1950, 2000),
@@ -145,14 +126,13 @@ namespace Cerebello.Firestarter.Helpers
                         {
                             Person = new Person
                                 {
-                                    FullName = firstName + " " + string.Join(" ", chosenMiddleNames),
+                                    FirstName = firstName,
+                                    MiddleName = middleName,
+                                    LastName = lastName,
                                     Gender = (short)gender,
                                     DateOfBirth = birthDate,
                                     MaritalStatus = (short?)random.Next(0, 4),
-                                    BirthPlace = "Brasileiro(a)",
-                                    CPF = "87324128910",
-                                    CPFOwner = (int)TypeCpfOwner.PatientItself,
-                                    Profession = professions[random.Next(professions.Length)],
+                                    SSN = "87324128910",
                                     CreatedOn = Firestarter.UtcNow,
                                     PracticeId = doctor.PracticeId,
                                 },
@@ -162,21 +142,18 @@ namespace Cerebello.Firestarter.Helpers
                         };
 
                     // it's important do remove diacritics because StmpClient crashes on non-ascii characters
-                    patient.Person.Email =  StringHelper.RemoveDiacritics((firstName + string.Join("", chosenMiddleNames)).ToLower() + "@fakemail.com");
-                    Debug.Assert(!patient.Person.Addresses.Any());
-                    patient.Person.Addresses.Add(
+                    patient.Person.Email =  StringHelper.RemoveDiacritics((firstName + PersonHelper.GetFullName(firstName, middleName, lastName)).ToLower() + "@fakemail.com");
+                    Debug.Assert(patient.Person.Address == null);
+                    patient.Person.Address = 
                         new Address
                             {
-                                CEP = random.Next(36000000, 37000000).ToString(CultureInfo.InvariantCulture),
-                                StateProvince = "MG",
+                                AddressLine1 = "Rua " + surnames[random.Next(surnames.Length)] + " " + surnames[random.Next(surnames.Length)],
+                                AddressLine2 = "",
                                 City = "Juiz de Fora",
-                                Neighborhood = "Centro",
-                                Street =
-                                    "Rua " + middleNames[random.Next(middleNames.Length)] + " " +
-                                    middleNames[random.Next(middleNames.Length)],
-                                Complement = "",
-                                PracticeId = doctor.PracticeId,
-                            });
+                                StateProvince = "MG",
+                                ZipCode = random.Next(36000000, 37000000).ToString(CultureInfo.InvariantCulture),
+                                PracticeId = doctor.PracticeId
+                            };
 
                     result.Add(patient);
                     db.Patients.AddObject(patient);

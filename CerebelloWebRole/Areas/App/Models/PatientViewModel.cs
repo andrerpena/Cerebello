@@ -19,8 +19,11 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Health insurance")]
         public String HealthInsuranceText { get; set; }
 
-        [Display(Name = "Observations")]
-        public String Observations { get; set; }
+        [Display(Name = "Notes")]
+        public String Notes { get; set; }
+
+        [Display(Name = "Patient record #")]
+        public string RecordNumber { get; set; }
 
         [XmlIgnore]
         public List<SessionViewModel> Sessions { get; set; }

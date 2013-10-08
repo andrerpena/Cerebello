@@ -18,20 +18,32 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "Diagnosis")]
+        [Display(Name = "DX")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("É possível usar tando doenças/condições listadas no CID-10 quanto texto livre. Ao começar a digitar, o sistema irá sugerir itens da lista do CID-10. Caso um desses itens seja selecionado, o código CID-10 será associado a este diagnóstico.")]
-        public string Cid10Code { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "Diagnosis")]
+        [Display(Name = "DX")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public string Cid10Name { get; set; }
+        public string Name { get; set; }
 
-        [Display(Name = "Description")]
-        public string Text { get; set; }
+        [Display(Name = "Start time")]
+        public DateTime? StartTime { get; set; }
+
+        [Display(Name = "End time")]
+        public DateTime? EndTime { get; set; }
+
+        [Display(Name = "Acute")]
+        public bool Acute { get; set; }
+
+        [Display(Name = "Is terminal")]
+        public bool IsTerminal { get; set; }
+
+        [Display(Name = "Comments")]
+        public string Comments { get; set; }
 
         [Display(Name = "Record date")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

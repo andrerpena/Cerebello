@@ -8,7 +8,7 @@
 <div class="appointment-panel" data-val-id="receipt-@receiptId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (this.Html.BeginScope("Receipts"))
+        using (this.Html.BeginScope("Prescriptions"))
         {
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)

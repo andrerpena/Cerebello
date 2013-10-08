@@ -1,0 +1,13 @@
+﻿@model CerebelloWebRole.Code.Data.SubmitBarData
+<div class="submit-bar">
+    <input type="submit" value="@this.Model.SaveButtonText" />
+    <span class="separator">or</span>
+    @if (string.IsNullOrEmpty(this.Model.CancelSelector))
+    {
+        <a class="inline-link" href="@this.Model.CancelUrl" >cancel</a>
+    }
+    else
+    {
+        <span class="inline-link" onclick="ajaxLoad('@this.Model.CancelUrl', '@this.Model.CancelSelector')" >cancel</span>
+    }
+</div>

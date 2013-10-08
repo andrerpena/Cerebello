@@ -56,4 +56,21 @@
         return this;
     };
 
+    $(document).on("click", function (e) {
+        var prUrl = $(e.target).attr("data-pr-url");
+        if (!prUrl)
+            return;
+        var prTarget = $(e.target).attr("data-pr-target");
+        if (!prTarget)
+            throw "When data-pr-url is defined, data-pr-target must be defined too";
+        var $target = $(prTarget);
+        if (!$target.length)
+            return;
+        var prBehavior = $(e.target).attr("data-pr-behavior");
+        if (!prBehavior)
+            prBehavior = "replace";
+
+
+    });
+
 })(jQuery);

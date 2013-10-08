@@ -117,114 +117,10 @@ namespace CerebelloWebRole.Code
                 this.ViewBag.IsTrial = this.DbPractice.AccountContract.SYS_ContractType.IsTrial;
             }
         }
-
-        /// <summary>
-        /// Converts the specified UTC date and time for the location of the current practice.
-        /// </summary>
-        /// <param name="practice"> </param>
-        /// <param name="utcDateTime"></param>
-        /// <returns></returns>
-        public static DateTime ConvertToLocalDateTime(Practice practice, DateTime utcDateTime)
-        {
-            if (practice == null) throw new ArgumentNullException("practice");
-
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
-            var result = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, timeZoneInfo);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts the specified nullable UTC date and time for the location of the current practice.
-        /// </summary>
-        /// <param name="practice"> </param>
-        /// <param name="utcDateTime"></param>
-        /// <returns></returns>
-        public static DateTime? ConvertToLocalDateTime(Practice practice, DateTime? utcDateTime)
-        {
-            if (practice == null) throw new ArgumentNullException("practice");
-
-            if (utcDateTime == null)
-                return null;
-
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
-            var result = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime.Value, timeZoneInfo);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts the specified UTC date and time for the location of the current practice.
-        /// </summary>
-        /// <param name="utcDateTime"></param>
-        /// <returns></returns>
-        public DateTime ConvertToLocalDateTime(DateTime utcDateTime)
-        {
-            if (this.DbPractice == null) throw new Exception("'DbPractice' must not be null.");
-
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(this.DbPractice.WindowsTimeZoneId);
-            var result = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, timeZoneInfo);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts the specified nullable UTC date and time for the location of the current practice.
-        /// </summary>
-        /// <param name="utcDateTime"></param>
-        /// <returns></returns>
-        public DateTime? ConvertToLocalDateTime(DateTime? utcDateTime)
-        {
-            if (utcDateTime.HasValue)
-                return this.ConvertToLocalDateTime(utcDateTime.Value);
-
-            return null;
-        }
-
-        /// <summary>
-        /// Converts the specified date and time at the location of the current practice to UTC.
-        /// </summary>
-        /// <param name="practice"> </param>
-        /// <param name="practiceDateTime"></param>
-        /// <returns></returns>
-        public static DateTime ConvertToUtcDateTime(Practice practice, DateTime practiceDateTime)
-        {
-            if (practice == null) throw new ArgumentNullException("practice");
-
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
-            return DateTimeHelper.ConvertToUtcDateTime(practiceDateTime, timeZoneInfo);
-        }
-
-        /// <summary>
-        /// Converts the specified date and time at the location of the current practice to UTC.
-        /// </summary>
-        /// <param name="practice"> </param>
-        /// <param name="practiceDateTime"></param>
-        /// <returns></returns>
-        public static DateTime? ConvertToUtcDateTime(Practice practice, DateTime? practiceDateTime)
-        {
-            if (practice == null) throw new ArgumentNullException("practice");
-
-            if (practiceDateTime == null)
-                return null;
-
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(practice.WindowsTimeZoneId);
-            return DateTimeHelper.ConvertToUtcDateTime(practiceDateTime.Value, timeZoneInfo);
-        }
-
-        /// <summary>
-        /// Converts the specified date and time at the location of the current practice to UTC.
-        /// </summary>
-        /// <param name="practiceDateTime"></param>
-        /// <returns></returns>
-        public DateTime ConvertToUtcDateTime(DateTime practiceDateTime)
-        {
-            if (this.DbPractice == null) throw new Exception("'DbPractice' must not be null.");
-
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(this.DbPractice.WindowsTimeZoneId);
-            return DateTimeHelper.ConvertToUtcDateTime(practiceDateTime, timeZoneInfo);
-        }
-
+        
         public DateTime GetPracticeLocalNow()
         {
-            return ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
+            return ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, this.UtcNowGetter());
         }
 
         public virtual bool IsSelfUser(User user)
@@ -234,7 +130,17 @@ namespace CerebelloWebRole.Code
 
         protected Func<DateTime, DateTime> GetToLocalDateTimeConverter()
         {
-            return d => ConvertToLocalDateTime(this.DbPractice, d);
+            return d => ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, d);
+        }
+
+        protected DateTime ConvertToUtcDateTime(DateTime value)
+        {
+            return ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, value);
+        }
+
+        protected DateTime ConvertToLocalDateTime(DateTime issuanceDate)
+        {
+            return ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, issuanceDate);
         }
     }
 }

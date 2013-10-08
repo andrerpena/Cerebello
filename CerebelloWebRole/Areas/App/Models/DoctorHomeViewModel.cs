@@ -13,11 +13,11 @@ namespace CerebelloWebRole.Areas.App.Models
         }
 
         /// <summary>
-        /// Doctor's name
+        /// Doctor's first name
         /// </summary>
         [Display(Name = "Doctor name")]
-        public string DoctorName { get; set; }
-
+        public string DoctorFullName { get; set; }
+        
         /// <summary>
         /// Next appointments
         /// </summary>

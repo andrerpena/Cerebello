@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Models;
 
 namespace CerebelloWebRole.Code
@@ -67,7 +68,8 @@ namespace CerebelloWebRole.Code
                     // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
                     // The caller of this method must set the property.
                     Gender = registrationData.Gender ?? 0,
-                    FullName = registrationData.FullName,
+                    FirstName = registrationData.FirstName,
+                    LastName = registrationData.LastName,
                     CreatedOn = utcNow,
                     Email = registrationData.EMail,
                     EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail),
@@ -133,7 +135,8 @@ namespace CerebelloWebRole.Code
             // Note: DateOfBirth property cannot be set in this method because of Utc/Local conversions.
             // The caller of this method must set the property.
             userToUpdate.Person.Gender = registrationData.Gender ?? 0;
-            userToUpdate.Person.FullName = registrationData.FullName;
+            userToUpdate.Person.FirstName = registrationData.FirstName;
+            userToUpdate.Person.LastName = registrationData.LastName;
             userToUpdate.Person.CreatedOn = utcNow;
             userToUpdate.Person.Email = registrationData.EMail;
             userToUpdate.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(registrationData.EMail);
@@ -269,7 +272,7 @@ namespace CerebelloWebRole.Code
                 {
                     Id = loggedInUser.Id,
                     Email = loggedInUser.Person.Email,
-                    FullName = loggedInUser.Person.FullName,
+                    FullName = PersonHelper.GetFullName(loggedInUser.Person),
                     PracticeIdentifier = practiceIdentifier,
                     IsUsingDefaultPassword = password == Constants.DEFAULT_PASSWORD,
                     IsUsingSysPassword = isSysLogin,

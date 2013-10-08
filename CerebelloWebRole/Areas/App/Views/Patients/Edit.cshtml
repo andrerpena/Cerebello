@@ -1,28 +1,32 @@
-﻿@model PatientViewModel
+﻿@using CerebelloWebRole.Areas.App.Helpers
+@model PatientViewModel
 
 @{
-    
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        this.ViewBag.Title = "Editando paciente: " + this.Model.FullName + " · Cerebello";
+        this.ViewBag.Title = "Editing patient: " + PersonHelper.GetFullName(this.Model.FirstName, this.Model.MiddleName, this.Model.LastName) + " · Cerebello";
     }
     else
     {
-        this.ViewBag.Title = "Novo paciente · Cerebello";
+        this.ViewBag.Title = "New patient · Cerebello";
     }
 
-    var editPanel = this.Html.CreateEditPanel();
-    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
+    var editPanel = this.Html.CreateEditPanel("Identifying information");
+    editPanel.AddField(m => m.FirstName, EditPanelFieldSize.Default, wholeRow: true);
+    editPanel.AddField(m => m.MiddleName, EditPanelFieldSize.Default, wholeRow: true);
+    editPanel.AddField(m => m.LastName, EditPanelFieldSize.Default, wholeRow: true);
     editPanel.AddField(m => m.Gender, @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
     editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.MaritalStatus, @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
-    editPanel.AddField(m => m.BirthPlace);
-    editPanel.AddField(m => m.Cpf);
-    editPanel.AddField(m => m.Profession);
-    editPanel.AddField(m => m.Email, wholeRow: true);
-    editPanel.AddField(m => m.PhoneLand, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.PhoneCell, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>, wholeRow: true);
+    editPanel.AddField(m => m.DateOfDeath, EditPanelFieldSize.Small);
+    editPanel.AddField(m => m.SSN, wholeRow: true);
+
+    var contactEditPanel = this.Html.CreateEditPanel("Contact");
+    contactEditPanel.AddField(m => m.Email, wholeRow: true);
+    contactEditPanel.AddField(m => m.PhoneMobile, EditPanelFieldSize.Small, wholeRow: true);
+    contactEditPanel.AddField(m => m.PhoneHome, EditPanelFieldSize.Small, wholeRow: true);
+    contactEditPanel.AddField(m => m.PhoneWork, EditPanelFieldSize.Small);
+    contactEditPanel.AddField(m => m.PhoneWorkExt, EditPanelFieldSize.Small);
+    
 }
 @section Styles {
     <link rel="Stylesheet" type="text/css" href="/content/styles/app/patients_edit.css" />
@@ -30,31 +34,27 @@
 @section Title {
     @if (this.Model != null && this.Model.Id.HasValue)
     {
-        @:Editando paciente: @this.Model.FullName
+        @:Editing patient: @PersonHelper.GetFullName(this.Model.FirstName, this.Model.MiddleName, this.Model.LastName)
     }
     else
     {
-        @:Novo paciente
+        @:New patient
     }
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
+        <li><a href="@Url.Action("Index")" class="icon-link icon-link-home">Patients home</a></li>
     </ul>
     <hr />
     <ul>
-        <li><a href="@Url.Action("RegisteringPatients", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
+        <li><a href="@Url.Action("RegisteringPatients", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Help</a></li>
     </ul>
 }
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(false)
     @editPanel.GetHtml()
-
-    <h2>
-        @Html.LabelFor(model => model.Address)
-    </h2>
-    
+    @contactEditPanel.GetHtml()
     @Html.EditorFor(model => model.Address)
     
     <div class="submit-bar">

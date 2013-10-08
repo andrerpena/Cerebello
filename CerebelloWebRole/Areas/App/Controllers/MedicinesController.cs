@@ -53,7 +53,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                      select new PrescriptionViewModel()
                                          {
                                              PatientId = patient.Id,
-                                             PatientName = patient.Person.FullName,
+                                             PatientFirstName = patient.Person.FirstName,
+                                             PatientLastName = patient.Person.LastName,
                                              Prescription = receiptMedicine.Prescription,
                                              Quantity = receiptMedicine.Quantity,
                                              Date = receiptMedicine.Receipt.CreatedOn

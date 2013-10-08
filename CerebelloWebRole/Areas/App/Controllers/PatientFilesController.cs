@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using Ionic.Zip;
@@ -39,7 +40,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.File(
                 backup,
                 "application/zip",
-                patient.Person.FullName + " - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
+                PersonHelper.GetFullName(patient.Person) + " - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.File(
                 zipMemoryStream,
                 "application/zip",
-                patient.Person.FullName + " - Arquivos - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
+               PersonHelper.GetFullName(patient.Person) + " - Arquivos - " + this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     }
 
                     innerZipMemoryStream.Seek(0, SeekOrigin.Begin);
-                    outerZip.AddEntry(patient.Person.FullName + ".zip", innerZipMemoryStream);
+                    outerZip.AddEntry(PersonHelper.GetFullName(patient.Person) + ".zip", innerZipMemoryStream);
                 }
 
                 outerZip.Save(mainZipMemoryStream);
@@ -131,7 +132,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.File(
                 mainZipMemoryStream,
                 "application/zip",
-                this.Doctor.Users.ElementAt(0).Person.FullName + " - Arquivos dos pacientes - " +
+                PersonHelper.GetFullName(this.Doctor.Users.ElementAt(0).Person) + " - Patient files - " +
                     this.GetPracticeLocalNow().ToShortDateString() + ".zip");
         }
 

@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter
@@ -197,7 +198,9 @@ namespace Cerebello.Firestarter
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FullName = "Júlio Cezar Almeida",
+                    FirstName = "Júlio",
+                    MiddleName = "Almeida",
+                    LastName = "José",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "masbicudo@gmail.com",
@@ -254,7 +257,9 @@ namespace Cerebello.Firestarter
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
-                    FullName = "André Pena",
+                    FirstName = "André",
+                    MiddleName = "Rodrigues",
+                    LastName = "Pena",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "andrerpena@gmail.com",
@@ -318,10 +323,11 @@ namespace Cerebello.Firestarter
         public static Doctor CreateDoctor_MartaCura(
             CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
         {
-            Person person = new Person()
+            var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
-                    FullName = "Marta Cura",
+                    FirstName = "Marta",
+                    LastName = "Cura",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "martacura@fakemail.com",
@@ -381,7 +387,8 @@ namespace Cerebello.Firestarter
             var person = new Person
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
-                FullName = "Miguel Angelo Santos",
+                FirstName = "Miguel Angelo",
+                LastName = "Bicudo",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = Firestarter.UtcNow,
                 Email = "thomasgray@fakemail.com",
@@ -461,10 +468,11 @@ namespace Cerebello.Firestarter
             db.Users.AddObject(user);
 
             // Creating person.
-            Person person = new Person()
+            var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FullName = "Milena Santos",
+                    FirstName = "Milena",
+                    LastName = "Santos",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -475,7 +483,7 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             // Creating secretary.
-            Secretary secreatry = new Secretary
+            var secreatry = new Secretary
                 {
                     PracticeId = practice.Id,
                 };
@@ -514,10 +522,11 @@ namespace Cerebello.Firestarter
             db.Users.AddObject(user);
 
             // Creating person.
-            Person person = new Person()
+            var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
-                    FullName = "Maricleusa Souza",
+                    FirstName = "Maricleusa",
+                    LastName = "Souza",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -705,7 +714,7 @@ namespace Cerebello.Firestarter
 
             doctor.CFG_Documents = new CFG_Documents()
                 {
-                    Header1 = doctor.Users.First().Person.FullName,
+                    Header1 = PersonHelper.GetFullName(doctor.Users.First().Person),
                     Header2 = "[Especialidade Médica]",
                     FooterLeft1 = "[Endereço]",
                     FooterLeft2 = "[Telefones]",
@@ -1884,7 +1893,7 @@ GO
 
         public static User CreateUser(CerebelloEntities db, Practice practice, string username, string password, string name)
         {
-            var pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
+            const string pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
             var pwdHash = CipherHelper.Hash(password, pwdSalt);
             if (string.IsNullOrEmpty(password))
                 pwdHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, pwdSalt);
@@ -1907,7 +1916,7 @@ GO
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
-                    FullName = name,
+                    FirstName = name,
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -1999,8 +2008,8 @@ GO
         public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 300)
         {
             var practice = db.Practices.First(p => p.Id == doctor.PracticeId);
-            var startingTime = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
-            var practiceNow = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow);
+            var startingTime = ModelDateTimeHelper.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
+            var practiceNow = ModelDateTimeHelper.ConvertToLocalDateTime(practice, Firestarter.UtcNow);
             var user = doctor.Users.First();
             var dbWrapper = new CerebelloEntitiesAccessFilterWrapper(db);
             dbWrapper.SetCurrentUserById(user.Id);

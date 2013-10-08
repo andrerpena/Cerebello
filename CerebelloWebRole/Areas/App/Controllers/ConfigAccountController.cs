@@ -7,6 +7,7 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.Security;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
@@ -57,10 +58,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     .Select(b => new ConfigAccountViewModel.BillingCycle
                     {
                         // ReSharper disable PossibleInvalidOperationException
-                        CycleStart = (DateTime)this.ConvertToLocalDateTime(b.ReferenceDate),
+                        CycleStart = (DateTime)ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, b.ReferenceDate),
                         // ReSharper restore PossibleInvalidOperationException
-                        CycleEnd = this.ConvertToLocalDateTime(b.ReferenceDateEnd),
-                        DueDate = this.ConvertToLocalDateTime(b.DueDate),
+                        CycleEnd = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, b.ReferenceDateEnd),
+                        DueDate = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, b.DueDate),
                         Value = b.MainAmount - b.MainDiscount,
                         IsPaid = b.IsPayd,
                         EffectiveValue = b.PaydAmount,
@@ -142,7 +143,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(eachDoctorUser);
-                    var toAddress = new MailAddress(eachDoctorUser.Person.Email, eachDoctorUser.Person.FullName);
+                    var toAddress = new MailAddress(eachDoctorUser.Person.Email, PersonHelper.GetFullName(eachDoctorUser.Person));
                     var mailMessage = this.CreateEmailMessagePartial("AccountDataEmail", toAddress, emailViewModel);
 
                     // attaching pdf
@@ -288,7 +289,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         // sending e-mail to cerebello@cerebello.com.br
                         // to remember us to send the payment request
                         var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
-                        var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
+                        var toAddress = new MailAddress("cerebello@cerebello.com.br", PersonHelper.GetFullName(this.DbUser.Person));
                         var mailMessage = this.CreateEmailMessagePartial("InternalUpgradeEmail", toAddress, emailViewModel);
                         this.SendEmailAsync(mailMessage).ContinueWith(t =>
                             {

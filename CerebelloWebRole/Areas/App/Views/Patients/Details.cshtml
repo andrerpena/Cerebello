@@ -1,7 +1,8 @@
 ﻿@model PatientViewModel
 @using Cerebello.Model
+@using CerebelloWebRole.Areas.App.Helpers
 @{
-    var title = "Patient: " + this.Model.FullName;
+    var title = "Patient: " + PersonHelper.GetFullName(this.Model.FirstName, this.Model.MiddleName, this.Model.LastName);
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.Watermark = "Search by the patients name";
 
@@ -11,18 +12,13 @@
 
     // creating details CardView
     var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.FullName, wholeRow: true);
-    cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.ToShortDateString())
-    (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
-    cardView.AddField(m => m.Profession);
-    cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
-    cardView.AddField(m => m.Cpf);
-    cardView.AddField(m => m.CpfOwner, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeCpfOwner))</text>);
-    cardView.AddField(m => m.PhoneLand);
-    cardView.AddField(m => m.PhoneCell);
-    cardView.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);
-    cardView.AddField(m => m.Observations, wholeRow: true);
+    cardView.AddField(m => m.FirstName, wholeRow: true);
+    cardView.AddField(m => m.MiddleName, wholeRow: true);
+    cardView.AddField(m => m.LastName, wholeRow: true);
+    cardView.AddField(m => m.Gender, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth);
+    cardView.AddField(m => m.DateOfDeath);
+    cardView.AddField(m => m.SSN);
 
     var futureAppointmentsGrid = this.Html.CreateGrid(this.Model.FutureAppointments);
     futureAppointmentsGrid.AddLinkField(model => model.LocalDateTimeSpelled, "Index", "Schedule", a => new { y = a.LocalDateTime.Year, m = a.LocalDateTime.Month, d = a.LocalDateTime.Day });
@@ -37,7 +33,7 @@
         {
             <li><a href="@this.Url.Action("AddMedicalRecords", new { id = this.Model.Id })" class="icon-link icon-link-edit">Editar consultas</a> </li>
         }
-        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" data-deleteRedirect="@this.Url.Action("Index")" data-deleteUrl="@this.Url.Action("Delete", new { id = this.Model.Id })" data-objectName="@this.Model.FullName" class="icon-link icon-link-delete" id="delete-patient-link">Delete patient</a></li>
+        <li><a href="@this.Url.Action("Edit", new { id = Model.Id })" data-deleteRedirect="@this.Url.Action("Index")" data-deleteUrl="@this.Url.Action("Delete", new { id = this.Model.Id })" data-objectName="@this.Model.FirstName" class="icon-link icon-link-delete" id="delete-patient-link">Delete patient</a></li>
         <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Patients home</a></li>
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
@@ -45,11 +41,11 @@
         }
         @if (this.CanAccessAction("DownloadZipFile", "PatientFiles"))
         {
-            <li><a href="@this.Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Export files in Zip</a> </li>
+            <li><a href="@this.Url.Action("DownloadZipFile", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Export files in ZipCode</a> </li>
         }
         @if (this.CanAccessAction("DownloadBackup", "PatientFiles"))
         {
-            <li><a href="@this.Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Export backup in Zip</a> </li>
+            <li><a href="@this.Url.Action("DownloadBackup", "PatientFiles", new { patientId = this.Model.Id })" class="icon-link icon-link-import">Export backup in ZipCode</a> </li>
         }
     </ul>
 }
@@ -78,7 +74,9 @@
         <div class="modal-close" data-dismiss="modal"></div>
         <div class="modal-title"></div>
     </div>
-    <div class="modal-body"><div class="modal-image"></div></div>
+    <div class="modal-body">
+        <div class="modal-image"></div>
+    </div>
     <div class="modal-footer">
         <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i>Anterior</a>
         <a class="btn btn-primary modal-next">Próximo<i class="icon-arrow-right icon-white"></i></a>
@@ -91,14 +89,28 @@
     <div class="patient-info-picture">
         <img id="patient-picture" src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" data-val-original-src="@Url.Action("GetProfilePicture", "PersonFiles", new { personId = this.Model.PersonId })" />
         <a href="#" id="alter-picture" data-UrlTransferPicture="@this.Url.Action("TransferPersonPictureFromTempContainer", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Capture</a>
-        | <a href="#" id="remove-picture" data-UrlDeletePicture="@this.Url.Action("DeleteProfilePicture", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Delete picture</a>
+        |<a href="#" id="remove-picture" data-UrlDeletePicture="@this.Url.Action("DeleteProfilePicture", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Delete picture</a>
     </div>
     <div class="patient-info-content">
+        <h2>Identifying information</h2>
         @cardView.GetHtml()
     </div>
+
 </div>
-<h2>@Html.LabelFor(model => model.Address)</h2>
-@Html.DisplayFor(model => model.Address)
+
+<div class="tabs-wrapper">
+        
+</div>
+    
+<script type="text/javascript">
+    $(".tabs-wrapper").tabView({
+        name: "patientsTab",
+        items: [
+            { key: "basic", title: "Basic information", url: "@Url.Action("DetailsBasicInformation", new { id = this.Model.Id})" },
+            { key: "diagnoses", title: "Diagnoses", url: "#" }
+        ]  
+    });
+</script>
 
 <h2>Consultations scheduled for the future</h2>
 <div style="margin-bottom: 10px">
@@ -107,6 +119,8 @@
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
+
+    
     <div class="medical-appointments-panel">
         <h2>Patient history @LockIcon.Icon("lock-hist")</h2>
         @this.Html.Partial("MedicalRecordsViewPartial", this.Model)

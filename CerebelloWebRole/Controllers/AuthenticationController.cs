@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
@@ -231,8 +232,8 @@ namespace CerebelloWebRole.Controllers
             if (!string.IsNullOrEmpty(registrationData.PracticeName))
                 registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
 
-            if (!string.IsNullOrEmpty(registrationData.FullName))
-                registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
+            if (!string.IsNullOrEmpty(registrationData.FirstName))
+                registrationData.FirstName = Regex.Replace(registrationData.FirstName, @"\s+", " ").Trim();
 
             var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
 
@@ -321,7 +322,7 @@ namespace CerebelloWebRole.Controllers
                 user.Practice.PhoneMain = registrationData.PracticePhone;
 
                 // Setting the BirthDate of the user as a person.
-                user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth ?? new DateTime());
+                user.Person.DateOfBirth = ModelDateTimeHelper.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth ?? new DateTime());
 
                 user.IsOwner = true;
 
@@ -361,17 +362,7 @@ namespace CerebelloWebRole.Controllers
                     user.Doctor.MedicalEntityJurisdiction = ((TypeEstadoBrasileiro)registrationData.MedicalEntityJurisdiction).ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.
-                    // This is the first doctor, so there will be no conflicts.
-                    var urlId = UsersController.GetUniqueDoctorUrlId(this.db.Doctors, registrationData.FullName, null);
-                    if (urlId == null)
-                    {
-                        this.ModelState.AddModelError(
-                            () => registrationData.FullName,
-                            // Todo: this message is also used in the UserController.
-                            "Quantidade máxima de homônimos excedida.");
-                    }
-
-                    user.Doctor.UrlIdentifier = urlId;
+                    user.Doctor.UrlIdentifier = StringHelper.GenerateUrlIdentifier(PersonHelper.GetFullName(registrationData.FirstName, null, registrationData.LastName));
                 }
                 else
                 {
@@ -641,7 +632,7 @@ namespace CerebelloWebRole.Controllers
 
             // Rendering message bodies from partial view.
             var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), IsTrial = isTrial };
-            var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
+            var toAddress = new MailAddress(user.Person.Email, PersonHelper.GetFullName(user.Person));
             var emailMessageToUser = this.CreateEmailMessage("ConfirmationEmail", toAddress, emailViewModel);
 
             return emailMessageToUser;
@@ -655,7 +646,7 @@ namespace CerebelloWebRole.Controllers
             try
             {
                 var emailViewModel2 = new InternalCreateAccountEmailViewModel(user, registrationData);
-                var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FullName);
+                var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FirstName);
                 var mailMessage2 = this.CreateEmailMessagePartial("InternalCreateAccountEmail", toAddress2, emailViewModel2);
                 this.SendEmailAsync(mailMessage2).ContinueWith(
                     t =>
@@ -712,7 +703,7 @@ namespace CerebelloWebRole.Controllers
                     ContractUrlId = "ProfessionalPlan",
                     CurrentDoctorsCount = dbPractice.Users.Count(x => x.DoctorId != null),
                     DoctorCount = 1,
-                    InvoceDueDayOfMonth = PracticeController.ConvertToLocalDateTime(dbPractice, this.GetUtcNow()).Day,
+                    InvoceDueDayOfMonth = ModelDateTimeHelper.ConvertToLocalDateTime(dbPractice, this.GetUtcNow()).Day,
                     PaymentModelName = paymentModelName,
                 };
 
@@ -801,7 +792,7 @@ namespace CerebelloWebRole.Controllers
                         //// sending e-mail to cerebello@cerebello.com.br
                         //// to remember us to send the payment request
                         //var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
-                        //var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
+                        //var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FirstName);
                         //var mailMessage = this.CreateEmailMessagePartial("InternalUpgradeEmail", toAddress, emailViewModel);
                         //this.SendEmailAsync(mailMessage).ContinueWith(t =>
                         //{
@@ -832,7 +823,7 @@ namespace CerebelloWebRole.Controllers
 
                         // Creating the first billing
                         var utcNow = this.GetUtcNow();
-                        var localNow = PracticeController.ConvertToLocalDateTime(dbPractice, utcNow);
+                        var localNow = ModelDateTimeHelper.ConvertToLocalDateTime(dbPractice, utcNow);
 
                         Billing billing = null;
                         var idSet = string.Format(
@@ -855,11 +846,11 @@ namespace CerebelloWebRole.Controllers
                                 IssuanceDate = utcNow,
                                 MainAmount = (decimal)mainContract.BillingAmount,
                                 MainDiscount = (decimal)mainContract.BillingDiscountAmount,
-                                DueDate = PracticeController.ConvertToUtcDateTime(dbPractice, localNow.AddDays(10)),
+                                DueDate = ModelDateTimeHelper.ConvertToUtcDateTime(dbPractice, localNow.AddDays(10)),
                                 IdentitySetName = idSet,
                                 IdentitySetNumber = db.Billings.Count(b => b.PracticeId == dbPractice.Id && b.IdentitySetName == idSet) + 1,
-                                ReferenceDate = PracticeController.ConvertToUtcDateTime(dbPractice, null),
-                                ReferenceDateEnd = PracticeController.ConvertToUtcDateTime(dbPractice, null),
+                                ReferenceDate = ModelDateTimeHelper.ConvertToUtcDateTime(dbPractice, null),
+                                ReferenceDateEnd = ModelDateTimeHelper.ConvertToUtcDateTime(dbPractice, null),
                                 MainAccountContractId = dbPractice.ActiveAccountContractId.Value,
                             };
 
@@ -971,7 +962,8 @@ namespace CerebelloWebRole.Controllers
                         ConfirmPassword = "",
                         EMail = this.dbUser.Person.Email,
                         AsTrial = null,
-                        FullName = this.dbUser.Person.FullName,
+                        FirstName = this.dbUser.Person.FirstName,
+                        LastName = this.dbUser.Person.LastName,
                         Gender = this.dbUser.Person.Gender,
                         IsDoctor = this.dbUser.DoctorId.HasValue,
                         PracticeProvince = this.dbPractice.Province,
@@ -1248,7 +1240,7 @@ namespace CerebelloWebRole.Controllers
 
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), };
-                    var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
+                    var toAddress = new MailAddress(user.Person.Email, PersonHelper.GetFullName(user.Person));
                     message = this.CreateEmailMessagePartial("ResetPasswordEmail", toAddress, emailViewModel);
 
                     #endregion

@@ -130,4 +130,13 @@
             }
         });
     });
+
+    // event handlers
+    window.onCancelPanelEditing = function (isEditing, detailsUrl, containerSelector) {
+        if (isEditing)
+            window.ajaxLoad(detailsUrl, containerSelector);
+        else
+            $(containerSelector).remove();
+        return false;
+    };
 });

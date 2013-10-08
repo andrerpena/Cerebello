@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using AutoMapper;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
@@ -11,17 +12,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
     // todo: plural of diagnosis is diagnoses
     public class DiagnosisController : DoctorController
     {
-        public static DiagnosisViewModel GetViewModel(Diagnosis diagnosis, Func<DateTime, DateTime> toLocal)
+        public static DiagnosisViewModel GetViewModel(Diagnosis model)
         {
-            return new DiagnosisViewModel
-            {
-                Id = diagnosis.Id,
-                PatientId = diagnosis.PatientId,
-                Text = diagnosis.Observations,
-                Cid10Code = diagnosis.Cid10Code,
-                Cid10Name = diagnosis.Cid10Name,
-                MedicalRecordDate = toLocal(diagnosis.MedicalRecordDate),
-            };
+            return Mapper.Map<DiagnosisViewModel>(model);
+        }
+
+        public ActionResult Details(int id)
+        {
+            var model = this.db.Diagnoses.First(a => a.Id == id);
+            var viewModel = Mapper.Map<DiagnosisViewModel>(model);
+            return this.View(viewModel);
         }
 
         [HttpGet]
@@ -36,21 +36,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return this.Edit(diagnoses);
         }
 
-        public ActionResult Details(int id)
-        {
-            var diagnosis = this.db.Diagnoses.First(a => a.Id == id);
-            return this.View(GetViewModel(diagnosis, this.GetToLocalDateTimeConverter()));
-        }
-
         [HttpGet]
         public ActionResult Edit(int? id, int? patientId, int? y, int? m, int? d)
         {
             DiagnosisViewModel viewModel = null;
 
             if (id != null)
-                viewModel = GetViewModel(
-                    (from a in this.db.Diagnoses where a.Id == id select a).First(),
-                    this.GetToLocalDateTimeConverter());
+                viewModel = Mapper.Map<DiagnosisViewModel>(db.Diagnoses.First(_m => _m.Id == id));
             else
                 viewModel = new DiagnosisViewModel()
                 {
@@ -71,40 +63,33 @@ namespace CerebelloWebRole.Areas.App.Controllers
         [HttpPost]
         public ActionResult Edit(DiagnosisViewModel[] diagnoses)
         {
-            var formModel = diagnoses.Single();
-
-            if (string.IsNullOrEmpty(formModel.Text) && string.IsNullOrEmpty(formModel.Cid10Name))
-                this.ModelState.AddModelError("", "É necessário preencher um diagnóstico CID-10 ou as notas");
+            var viewModel = diagnoses.Single();
 
             if (this.ModelState.IsValid)
             {
-                Diagnosis dbObject;
-                if (formModel.Id == null)
+                Diagnosis model;
+                if (viewModel.Id == null)
                 {
-                    Debug.Assert(formModel.PatientId != null, "formModel.PatientId != null");
-                    dbObject = new Diagnosis()
+                    Debug.Assert(viewModel.PatientId != null, "formModel.PatientId != null");
+                    model = new Diagnosis()
                     {
                         CreatedOn = this.GetUtcNow(),
-                        PatientId = formModel.PatientId.Value,
+                        PatientId = viewModel.PatientId.Value,
                         PracticeId = this.DbUser.PracticeId,
                     };
-                    this.db.Diagnoses.AddObject(dbObject);
+                    this.db.Diagnoses.AddObject(model);
                 }
                 else
-                    dbObject = this.db.Diagnoses.First(a => a.Id == formModel.Id);
+                    model = this.db.Diagnoses.First(a => a.Id == viewModel.Id);
 
-                dbObject.Patient.IsBackedUp = false;
-                dbObject.Observations = formModel.Text;
-                dbObject.Cid10Code = formModel.Cid10Code;
-                dbObject.Cid10Name = formModel.Cid10Name;
-                dbObject.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
+                Mapper.Map(viewModel, model);
                 this.db.SaveChanges();
 
                 // todo: this shoud be a redirect... so that if user press F5 in browser, the object will no be saved again.
-                return this.View("Details", GetViewModel(dbObject, this.GetToLocalDateTimeConverter()));
+                return this.View("Details", viewModel);
             }
 
-            return this.View("Edit", formModel);
+            return this.View("Edit", viewModel);
         }
 
         /// <summary>

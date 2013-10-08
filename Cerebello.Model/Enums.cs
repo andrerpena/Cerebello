@@ -136,10 +136,10 @@ namespace Cerebello.Model
     /// </summary>
     public enum TypeGender
     {
-        [Display(Name = "Masculino")]
+        [Display(Name = "Male")]
         Male = 0,
 
-        [Display(Name = "Feminino")]
+        [Display(Name = "Female")]
         Female = 1
     }
 

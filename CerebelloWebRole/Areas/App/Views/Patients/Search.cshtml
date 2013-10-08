@@ -8,7 +8,7 @@
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
-    grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
+    grid.AddLinkField(m => m.FirstName, "Details", m => new { id = m.Id });
     grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
     grid.AddEditField("Edit", "Patients", model => new { model.Id});
 }

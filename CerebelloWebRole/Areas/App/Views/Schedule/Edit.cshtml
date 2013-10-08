@@ -56,14 +56,14 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="subsequent-appointments-only" style="display: @funcDisplay(isSubsequentAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientNameLookup)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientFullNameLookup)</th>
                     <td>
                         @Html.AutocompleteFor(
                             model => model.PatientId,
-                            model => model.PatientNameLookup,
+                            model => model.PatientFullNameLookup,
                             Url.Action("LookupPatients", "Patients"))
                         <script type="text/javascript">
-                            $("#PatientNameLookup").autocomplete({
+                            $("#PatientFullNameLookup").autocomplete({
                                 change: function (data) {
                                     if (data) {
                                         $("#HealthInsuranceId").val(data.InsuranceId);
@@ -85,9 +85,9 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientName)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientFullName)</th>
                     <td>
-                        @Html.EditorFor(model => model.PatientName)
+                        @Html.EditorFor(model => model.PatientFullName)
                         <a id="existing-user-link" href="#" class="block-little-link">O paciente já é cadastrado</a>
                     </td>
                 </tr>
@@ -130,13 +130,13 @@
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientPhoneLand)</th>
-                    <td>@Html.EditorFor(model => model.PatientPhoneLand)</td>
+                    <th>@Html.LabelForRequired(model => model.PatientPhoneHome)</th>
+                    <td>@Html.EditorFor(model => model.PatientPhoneHome)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientPhoneCell)</th>
-                    <td>@Html.EditorFor(model => model.PatientPhoneCell)</td>
+                    <th>@Html.LabelForRequired(model => model.PatientPhoneMobile)</th>
+                    <td>@Html.EditorFor(model => model.PatientPhoneMobile)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
@@ -244,7 +244,7 @@
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
             $("#IsGenericAppointment").val(false);
-            $("#PatientNameLookup").focus();
+            $("#PatientFullNameLookup").focus();
             $("#save-button").val("save consultation");
             $(this).trigger("modal-resize");
         });
@@ -270,7 +270,7 @@
             $(".subsequent-appointments-only").hide();
             $(".first-appointment-only").show();
             $("#PatientFirstAppointment").val(true);
-            $("#PatientName").focus();
+            $("#PatientFirstName").focus();
             $(this).trigger("modal-resize");
         });
 
@@ -279,7 +279,7 @@
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
             $("#PatientFirstAppointment").val(false);
-            $("#PatientNameLookup").focus();
+            $("#PatientFullNameLookup").focus();
             $(this).trigger("modal-resize");
         });
 
@@ -371,7 +371,7 @@
             }
         });
 
-        $("#PatientNameLookup").focus();
+        $("#PatientFullNameLookup").focus();
 
     </script>
 </div>

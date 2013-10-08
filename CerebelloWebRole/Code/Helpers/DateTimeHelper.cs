@@ -134,15 +134,15 @@ namespace CerebelloWebRole.Code
             localDateTime = localDateTime.Date;
             localNow = localNow.Date;
 
-            TimeSpan span = localNow - localDateTime;
+            var span = localNow - localDateTime;
 
-            bool isPast = span.TotalMinutes > 0;
-            double totalSeconds = Math.Abs(span.TotalSeconds);
+            var isPast = span.TotalMinutes > 0;
+            var totalSeconds = Math.Abs(span.TotalSeconds);
 
             // a representação textual do DateTime
             String spelledDate = null;
 
-            bool requiresPreposition = true;
+            var requiresPreposition = true;
 
             if ((flags & RelativeDateOptions.ReplaceToday) == RelativeDateOptions.ReplaceToday && localDateTime.Date == localNow.Date)
             {

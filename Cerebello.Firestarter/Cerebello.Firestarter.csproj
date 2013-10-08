@@ -147,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cerebello.Model\Cerebello.Model.csproj">
-      <Project>{D5F1D306-C581-42FD-935B-72F71B18775D}</Project>
+      <Project>{d5f1d306-c581-42fd-935b-72f71b18775d}</Project>
       <Name>Cerebello.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\CerebelloWebRole\CerebelloWebRole.csproj">

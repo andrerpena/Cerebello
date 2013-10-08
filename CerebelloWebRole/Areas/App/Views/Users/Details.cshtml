@@ -1,7 +1,7 @@
 ﻿@model UserViewModel
 @using Cerebello.Model
 @{
-    var title = "User: " + this.Model.FullName;
+    var title = "User: " + this.Model.FirstName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
     this.ViewBag.Watermark = "Search by the user name";
     this.Layout = "~/Areas/App/Views/Shared/_LayoutPractice.cshtml";
@@ -11,13 +11,10 @@
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.UserName);
-    cardView.AddField(m => m.FullName, wholeRow: true);
+    cardView.AddField(m => m.FirstName, wholeRow: true);
     cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
     cardView.AddField(m => m.DateOfBirth, @<text>  @(@item.DateOfBirth.ToShortDateString()) (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
-    cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
-    cardView.AddField(m => m.BirthPlace);
-    cardView.AddField(m => m.Cpf);
-    cardView.AddField(m => m.Profession);
+    cardView.AddField(m => m.SSN);
 
     // creating details CardView
     var cardViewRoles = Html.CreateCardView();
@@ -32,18 +29,17 @@
 
     // creating details CardView
     var cardViewAddress = Html.CreateCardView();
-    cardViewAddress.AddField(m => m.Address.CEP);
+    cardViewAddress.AddField(m => m.Address.ZipCode);
     cardViewAddress.AddField(m => m.Address.StateProvince);
     cardViewAddress.AddField(m => m.Address.City);
-    cardViewAddress.AddField(m => m.Address.Neighborhood);
-    cardViewAddress.AddField(m => m.Address.Street);
-    cardViewAddress.AddField(m => m.Address.Complement);
+    cardViewAddress.AddField(m => m.Address.AddressLine1);
+    cardViewAddress.AddField(m => m.Address.AddressLine2);
 
     // creating details CardView
     var cardViewContact = Html.CreateCardView();
     cardViewContact.AddField(m => m.Email);
-    cardViewContact.AddField(m => m.PhoneCell);
-    cardViewContact.AddField(m => m.PhoneLand);
+    cardViewContact.AddField(m => m.PhoneMobile);
+    cardViewContact.AddField(m => m.PhoneHome);
 }
 @section Title {
     @title
@@ -82,7 +78,7 @@
                 e.preventDefault();
                 $.confirmation(cerebello.res.deleteConfirmation, {
                     objectType: "usuário",
-                    objectName: "@this.Model.FullName",
+                    objectName: "@this.Model.FirstName",
                     url: "@Url.Action("Delete", new { id = this.Model.Id })",
                     success: function (data) {
                         window.location = "@Url.Action("Index", "PracticeHome")";
@@ -99,7 +95,7 @@
                 e.preventDefault();
                 $.confirmation(cerebello.res.resetPasswordConfirmation, {
                     objectType: "usuário",
-                    objectName: "@this.Model.FullName",
+                    objectName: "@this.Model.FirstName",
                     url: "@Url.Action("ResetPassword", new { id = this.Model.Id })",
                     success: function (data) {
                         window.location = "@Url.Action("Details", new { id = this.Model.Id })";

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using JetBrains.Annotations;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -31,7 +32,7 @@ namespace CerebelloWebRole.Code
             var notificationData = new PatientArrivedNotificationData()
                 {
                     PatientId = appointment.PatientId.Value,
-                    PatientName = appointment.Patient.Person.FullName,
+                    PatientName = PersonHelper.GetFullName(appointment.Patient.Person),
                     Time = time,
                     PracticeIdentifier = appointment.Practice.UrlIdentifier,
                     DoctorIdentifier = appointment.Doctor.UrlIdentifier

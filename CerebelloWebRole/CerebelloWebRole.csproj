@@ -14,7 +14,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -34,7 +34,7 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>3</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -49,6 +49,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="CipherLite">
       <HintPath>..\ThirdParty\CipherLite.dll</HintPath>
     </Reference>
@@ -146,6 +152,10 @@
     </Reference>
     <Reference Include="SimpleInjector.Integration.Web.Mvc">
       <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.2.2.3\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="SmartRecords, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\SmartRecords.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity">
@@ -246,14 +256,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
-    <Compile Include="Areas\App\Controllers\AnamnesesController.cs" />
+    <Compile Include="Areas\App\Controllers\PastMedicalHistoriesController.cs" />
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\CameraWindowController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
+    <Compile Include="Areas\App\Helpers\PersonHelper.cs" />
+    <Compile Include="Areas\App\ModelMappings.cs" />
     <Compile Include="Areas\App\Models\FileViewModel.cs" />
+    <None Include="Areas\App\Views\Patients\DetailsBasicInformation.cshtml" />
+    <None Include="Areas\App\Views\Patients\EditBasicInformation.cshtml" />
+    <None Include="Areas\App\Views\Shared\PanelTopMenu.cshtml" />
+    <Compile Include="Areas\App\Models\PatientBasicInformationViewModel.cs" />
     <Compile Include="Code\Controllers\CerebelloSiteController.cs" />
+    <Compile Include="Code\Controls\AjaxForm\AjaxForm.cs" />
+    <Compile Include="Code\Controls\EditPanel\EditPanelCustomField.cs" />
+    <Compile Include="Code\Data\PanelTopMenuData.cs" />
+    <Compile Include="Code\Data\SubmitBarData.cs" />
     <Compile Include="Code\Extensions\UrlExtensions.cs" />
     <Compile Include="Code\Google\Data\AccessTokenJsonResult.cs" />
     <Compile Include="Code\Google\Data\AccountInfoJsonResult.cs" />
@@ -261,6 +281,8 @@
     <Compile Include="Code\Google\GoogleApiHelper.cs" />
     <Compile Include="Code\Helpers\CreateThumbResult.cs" />
     <Compile Include="Code\Helpers\CreateThumbStatus.cs" />
+    <Compile Include="Code\Helpers\ModelDateTimeHelper.cs" />
+    <Compile Include="Code\Helpers\ReflectionHelper.cs" />
     <Compile Include="Code\Helpers\TraceHelper.cs" />
     <Compile Include="Code\Hubs\IChatHub.cs" />
     <Compile Include="Code\Model\Metadata\TooltipAttribute.cs" />
@@ -418,6 +440,7 @@
     <Content Include="Content\Sounds\chat.mp3" />
     <Content Include="Content\Sounds\chat.wav" />
     <Content Include="Content\Styles\App\bootstrap-ie6.min.css" />
+    <Content Include="Content\Styles\App\Controls\jquery.cerebello.tabview.css" />
     <Content Include="Content\Styles\App\Controls\jquery.cerebello.tooltip.css" />
     <Content Include="Content\Styles\App\image-gallery.css" />
     <Content Include="Content\Styles\App\bootstrap-responsive.min.css" />
@@ -493,7 +516,7 @@
     <Compile Include="Areas\App\Controllers\ReceiptsController.cs" />
     <Compile Include="Areas\App\Controllers\ScheduleController.cs" />
     <Compile Include="Areas\App\Models\DiagnosisViewModel.cs" />
-    <Compile Include="Areas\App\Models\AnamneseViewModel.cs" />
+    <Compile Include="Areas\App\Models\PastMedicalHistoryViewModel.cs" />
     <Compile Include="Areas\App\Models\ConfigDocumentsViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicalCertificateFieldViewModel.cs" />
     <Compile Include="Areas\App\Models\MedicalCertificateViewModel.cs" />
@@ -837,6 +860,7 @@
     <Content Include="Scripts\Controls\jquery.cerebello.autocomplete.js" />
     <Content Include="Scripts\Controls\jquery.cerebello.pager.js" />
     <Content Include="Scripts\cerebello.pt-BR.js" />
+    <Content Include="Scripts\Controls\jquery.cerebello.tabview.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.js" />
     <Content Include="Scripts\Controls\jquery.chatjs.signalradapter.js" />
     <Content Include="Scripts\bootstrap-modal-2.2.2-isolated.js" />
@@ -868,6 +892,7 @@
     <Content Include="Areas\App\Views\Patients\AddMedicalRecords.cshtml" />
     <Content Include="Areas\App\Views\Patients\MedicalRecordsInsertPartial.cshtml" />
     <Content Include="Areas\App\Views\Patients\MedicalRecordsViewPartial.cshtml" />
+    <Content Include="Areas\App\Views\Shared\SubmitBar.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
@@ -889,6 +914,7 @@
     <Content Include="Scripts\jquery.fileupload-fp.js" />
     <Content Include="Scripts\jquery.fileupload-ui.js" />
     <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.jqplot.min.js" />
     <Content Include="Scripts\jquery.maskedinput-1.3.min.js" />
@@ -1014,8 +1040,8 @@
     <Content Include="Areas\App\Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Areas\App\Views\Receipts\ReceiptMedicineDetails.cshtml" />
     <Content Include="Areas\App\Views\Receipts\Details.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\Details.cshtml" />
-    <Content Include="Areas\App\Views\Anamneses\Edit.cshtml" />
+    <Content Include="Areas\App\Views\PastMedicalHistories\Details.cshtml" />
+    <Content Include="Areas\App\Views\PastMedicalHistories\Edit.cshtml" />
     <Content Include="Areas\App\Views\Config\Index.cshtml" />
     <Content Include="Areas\App\Views\_ViewStart.cshtml" />
     <Content Include="Areas\App\Views\ConfigSchedule\Edit.cshtml" />
@@ -1151,10 +1177,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ReportGenerator\ReportGenerator\SmartRecords.csproj">
-      <Project>{43f84061-ca70-43f3-a0de-c0052026efe6}</Project>
-      <Name>SmartRecords</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cerebello.Model\Cerebello.Model.csproj">
       <Project>{D5F1D306-C581-42FD-935B-72F71B18775D}</Project>
       <Name>Cerebello.Model</Name>
@@ -1183,7 +1205,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>12621</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
@@ -1198,21 +1220,23 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>rmdir /s /q "$(ProjectDir)obj\Release\AspnetCompileMerge"
-rmdir /s /q "$(ProjectDir)obj\Debug\AspnetCompileMerge"
-rmdir /s /q "$(ProjectDir)obj\Release\Package"
-rmdir /s /q "$(ProjectDir)obj\Debug\Package"
-rmdir /s /q "$(ProjectDir)obj\Release\TransformWebConfig"
-rmdir /s /q "$(ProjectDir)obj\Debug\TransformWebConfig"
-rmdir /s /q "$(ProjectDir)obj\Release\ProfileTransformWebConfig"
-rmdir /s /q "$(ProjectDir)obj\Debug\ProfileTransformWebConfig"
-rmdir /s /q "$(ProjectDir)obj\Release\CSAutoParameterize"
-rmdir /s /q "$(ProjectDir)obj\Debug\CSAutoParameterize"
+    <PreBuildEvent>
+			rmdir /s /q "$(ProjectDir)obj\Release\AspnetCompileMerge"
+			rmdir /s /q "$(ProjectDir)obj\Debug\AspnetCompileMerge"
+			rmdir /s /q "$(ProjectDir)obj\Release\Package"
+			rmdir /s /q "$(ProjectDir)obj\Debug\Package"
+			rmdir /s /q "$(ProjectDir)obj\Release\TransformWebConfig"
+			rmdir /s /q "$(ProjectDir)obj\Debug\TransformWebConfig"
+			rmdir /s /q "$(ProjectDir)obj\Release\ProfileTransformWebConfig"
+			rmdir /s /q "$(ProjectDir)obj\Debug\ProfileTransformWebConfig"
+			rmdir /s /q "$(ProjectDir)obj\Release\CSAutoParameterize"
+			rmdir /s /q "$(ProjectDir)obj\Debug\CSAutoParameterize"
 
-del /s /f /q "%25userprofile%25\AppData\Local\Temp\Temporary ASP.NET Files\*.cs"
+			del /s /f /q "%25userprofile%25\AppData\Local\Temp\Temporary ASP.NET Files\*.cs"
 
-"$(ProjectDir)..\Cerebello.SolutionSetup.exe" \check
+			"$(ProjectDir)..\Cerebello.SolutionSetup.exe" \check
 
-exit 0</PreBuildEvent>
+			exit 0
+		</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 
 namespace CerebelloWebRole.Code
 {
@@ -49,7 +50,7 @@ namespace CerebelloWebRole.Code
             return new UserInfo
                 {
                     Id = dbUser.Id,
-                    DisplayName = dbUser.Person.FullName,
+                    DisplayName = PersonHelper.GetFullName(dbUser.Person),
                     GravatarEmailHash = dbUser.Person.EmailGravatarHash,
                     // the following properties will only be set if the current user is a doctor
                     DoctorId = dbUser.DoctorId,

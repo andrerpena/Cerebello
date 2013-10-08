@@ -1,4 +1,5 @@
 ﻿using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 
 namespace CerebelloWebRole.Models
 {
@@ -9,7 +10,7 @@ namespace CerebelloWebRole.Models
             this.UserName = user.UserName;
 
             if (user.Person != null)
-                this.PersonName = user.Person.FullName;
+                this.PersonName = PersonHelper.GetFullName(user.Person);
 
             if (user.Practice != null)
                 this.PracticeIdentifier = user.Practice.UrlIdentifier;

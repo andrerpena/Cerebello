@@ -90,9 +90,9 @@ namespace CerebelloWebRole.Code
         }
 
         // todo: rename table to Anamnesis, and plural is Anamneses (like Diagnosis and Diagnoses)
-        public FilteredObjectSetWrapper<Anamnese> Anamnese
+        public FilteredObjectSetWrapper<PastMedicalHistory> PastMedicalHistories
         {
-            get { return new FilteredObjectSetWrapper<Anamnese>(this.innerDb.Anamnese, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+            get { return new FilteredObjectSetWrapper<PastMedicalHistory>(this.innerDb.PastMedicalHistories, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
         public FilteredObjectSetWrapper<PhysicalExamination> PhysicalExaminations

@@ -11,7 +11,7 @@
 
     string scheduleDateStr = localNow.ToString("yyyy-MM-dd");
 
-    var allDoctors = ((List<DoctorViewModel>)this.ViewBag.AllDoctors).OrderBy(d => d.Name).ToList();
+    var allDoctors = ((List<DoctorViewModel>)this.ViewBag.AllDoctors).OrderBy(d => d.FirstName).ToList();
 }
 @section MainMenu {
     <div id="doctor-card" class="doctor-card">
@@ -19,7 +19,7 @@
             <img src="@doctor.ImageUrl" />
         </div>
         <div class="doctor-info">
-            <p class="name">@doctor.Name</p>
+            <p class="name">@doctor.FirstName</p>
             <p class="crm">@doctor.CRM (@doctor.MedicalEntity)</p>
         </div>
     </div>
@@ -62,7 +62,7 @@
                         if (href != null)
                         {
                             var itemTitle = string.Format("{0} ({1} {2})",
-                                                          allDoctors[itDoc].Name,
+                                                          allDoctors[itDoc].FirstName,
                                                           allDoctors[itDoc].CRM,
                                                           allDoctors[itDoc].MedicalEntity);
                             @:,{ id: "doctor-@(allDoctors[itDoc].Id)", text: "@this.Html.Raw(itemTitle)", href: "@href" }
@@ -76,7 +76,7 @@
     <ul class="tabNav">
         <li class="@(controllerName.Equals("doctorhome") ? "youarehere" : "")"><a href="@Url.Action("Index", "DoctorHome")" class="home-icon">Home</a> </li>
         <li class="@(controllerName.Equals("schedule") ? "youarehere" : "")"><a href="@Url.Action("Index", "Schedule")" class="schedule-icon">Schedule</a> </li>
-        <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "Patients")" class="contact-icon">Records</a> </li>
+        <li class="@(controllerName.Equals("patients") ? "youarehere" : "")"><a href="@Url.Action("Index", "Patients")" class="contact-icon">Charts</a> </li>
     </ul>
     <div style="margin-right: 10px; text-align: right;">
         <a class="block-little-link" href="@Url.RouteUrl("Practice", new { action = "Index", controller = "PracticeHome" })">Go to practice</a>

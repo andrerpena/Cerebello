@@ -58,7 +58,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Prescriptions")]
         public SearchViewModel<PrescriptionViewModel> Prescriptions { get; set; }
 
-        [Display(Name = "Observations")]
+        [Display(Name = "Notes")]
         public string Observations { get; set; }
     }
 }

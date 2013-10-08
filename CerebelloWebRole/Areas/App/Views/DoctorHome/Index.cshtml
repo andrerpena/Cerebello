@@ -1,12 +1,12 @@
 ﻿@model DoctorHomeViewModel
 @using Cerebello.Model
 @{
-    var title = "Doctor: " + this.Model.DoctorName;
+    var title = "Doctor: " + this.Model.DoctorFullName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutDoctor.cshtml";
 
     var cardView = this.Html.CreateCardView();
-    cardView.AddField(m => m.DoctorName, wholeRow: true);
+    cardView.AddField(m => m.DoctorFullName, wholeRow: true);
     cardView.AddField(m => m.MedicCrm);
     cardView.AddField(m => m.MedicalSpecialtyName);
     cardView.AddField(m => m.MedicalEntityName);
@@ -29,7 +29,7 @@
         };
 
     var todaysAppointmentGrid = this.Html.CreateGrid(this.Model.TodaysAppointments);
-    todaysAppointmentGrid.AddField(model => model.PatientName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new { id = item.PatientId })">@item.PatientName</a></span></text>);
+    todaysAppointmentGrid.AddField(model => model.PatientFullName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new { id = item.PatientId })">@item.PatientFullName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.LocalDateTimeSpelled, header: "Horário", format: @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new { y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day })">@item.LocalDateTimeSpelled</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.HealthInsuranceId, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "HealthInsurance", new { id = item.HealthInsuranceId })">@item.HealthInsuranceName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)">@item.StatusText</span></text>);

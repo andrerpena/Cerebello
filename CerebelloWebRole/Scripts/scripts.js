@@ -35,3 +35,26 @@ function generateGuid(separator) {
     };
     return (hunk() + hunk() + separator + hunk() + separator + hunk() + separator + hunk() + separator + hunk() + hunk() + hunk());
 }
+
+window.ajaxLoad = function(url, placeHolderSelector, behavior) {
+    if (!behavior)
+        behavior = "replace";
+
+    $.ajax({
+        url: url,
+        success: function (result) {
+            var $placeHolder = placeHolderSelector instanceof jQuery ? placeHolderSelector : $(placeHolderSelector);
+            switch (behavior) {
+                case "replace":
+                    $placeHolder.replaceWith(result);
+                    break;
+                case "fill":
+                    $placeHolder.html(result);
+                    break;
+                default:
+                    throw "unsupported behavior";
+            }
+        }
+    });
+    return false;
+}

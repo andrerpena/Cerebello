@@ -1,0 +1,36 @@
+﻿@model PastMedicalHistoryViewModel
+@using System.Diagnostics
+@{
+    this.Layout = null;
+    Debug.Assert(this.Model != null, "this.Model != null");
+    var anamneseId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
+}
+<div class="appointment-panel" data-val-id="anamnese-@anamneseId">
+    @using (this.Html.AjaxForm(null, null, string.Format("div[data-val-id='anamnese-{0}']", anamneseId), FormMethod.Post))
+    {
+        using (this.Html.BeginScope("PastMedicalHistories"))
+        {
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
+            @this.Html.HiddenFor(model => model.MedicalRecordDate)
+
+            var editPanel = Html.CreateEditPanel();
+            editPanel.AddField(model => model.MajorEvents, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.Allergies, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.OngoinMedicationProblems, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.FamilyMedicalHistory, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.PreventiveCare, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.SocialHistory, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.NutritionHistory, EditPanelFieldSize.Large);
+            editPanel.AddField(model => model.DevelopmentHistory, this.Html.TextAreaFor, EditPanelFieldSize.Large);
+        
+            @editPanel.GetHtml()
+
+            <div class="submit-bar">
+                <input type="submit" value="save anamnese" />
+                <span class="separator">or</span> <span class="inline-link" onclick="onCancelPanelEditing(@(Model.Id != null ? "true" : "false"), '@Url.Action("Details", "PastMedicalHistories", new { id = this.Model.Id })', 'div[data-val-id=anamnese-@anamneseId]')">cancel</span>
+            </div>
+        }
+    }
+</div>

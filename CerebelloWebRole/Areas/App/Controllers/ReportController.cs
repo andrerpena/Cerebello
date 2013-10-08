@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Web.Mvc;
-using System.Xml;
 using System.Xml.Serialization;
+using AutoMapper;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using SmartRecords;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -45,14 +44,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
         internal static MemoryStream ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
         {
             var reportDataSource = new ReportData(db, practice).GetReportDataSourceForPdf(doctor, patientId);
-
-            var document = new Document(PageSize.A4, 36, 36, 80, 80);
-            var art = new Rectangle(50, 50, 545, 792);
-            var documentStream = new MemoryStream();
-            var writer = PdfWriter.GetInstance(document, documentStream);
-            writer.SetBoxSize("art", art);
-            writer.PageEvent = new ReportWatermark(
-                new ReportWatermarkData()
+            var watermark = new ReportFrame(
+                new ReportFrameData()
                     {
                         Header1 = doctor.CFG_Documents.Header1,
                         Header2 = doctor.CFG_Documents.Header2,
@@ -62,42 +55,115 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         FooterRight2 = doctor.CFG_Documents.FooterRight2
                     });
 
-            var report = new Report<ReportData.PdfPatientData>();
+            var report = new Report(watermark);
             foreach (var patient in reportDataSource.Patients)
             {
-                report.AddTitle(ReportTitleSize.H1, m => "Patient: " + m.FullName);
-                
-                var patientCard = report.AddCard();
-                patientCard.AddField(m => m.FullName, true);
-                patientCard.AddField(m => m.Gender);
-                patientCard.AddField(m => m.DateOfBirth);
-                patientCard.AddField(m => m.Profession);
-                patientCard.AddField(m => m.MaritalStatus);
-                patientCard.AddField(m => m.Cpf);
-                patientCard.AddField(m => m.CpfOwner);
-                patientCard.AddField(m => m.PhoneLand);
-                patientCard.AddField(m => m.PhoneCell);
-                patientCard.AddField(m => m.Email, true);
+                using (var patientContext = report.AddDataContext(patient))
+                {
+                    patientContext.AddTitle(ReportTitleSize.H1, m => "Patient: " + PersonHelper.GetFullName(m.FirstName, m.MiddleName, m.LastName));
 
-                report.AddTitle(ReportTitleSize.H2, "Address");
+                    var patientCard = patientContext.AddCard();
+                    patientCard.AddField(m => m.FirstName);
+                    patientCard.AddField(m => m.MiddleName);
+                    patientCard.AddField(m => m.LastName);
+                    patientCard.AddField(m => m.Gender);
+                    patientCard.AddField(m => m.DateOfBirth);
+                    patientCard.AddField(m => m.SSN);
+                    patientCard.AddField(m => m.PhoneHome);
+                    patientCard.AddField(m => m.PhoneMobile);
+                    patientCard.AddField(m => m.Email, true);
 
-                var patientAddressCard = report.AddCard(m => m.Address);
-                patientAddressCard.AddField(m => m.Street, true);
-                patientAddressCard.AddField(m => m.Complement);
-                patientAddressCard.AddField(m => m.Neighborhood);
-                patientAddressCard.AddField(m => m.StateProvince);
-                patientAddressCard.AddField(m => m.City);
-                patientAddressCard.AddField(m => m.CEP);
+                    patientContext.AddTitle(ReportTitleSize.H2, "Address");
+
+                    var patientAddressCard = patientContext.AddCard(m => m.Address);
+                    patientAddressCard.AddField(m => m.AddressLine1, true);
+                    patientAddressCard.AddField(m => m.AddressLine2, true);
+                    patientAddressCard.AddField(m => m.City);
+                    patientAddressCard.AddField(m => m.County);
+                    patientAddressCard.AddField(m => m.StateProvince);
+                    patientAddressCard.AddField(m => m.ZipCode);
+
+                    patientContext.AddTitle(ReportTitleSize.H2, "History");
+
+                    foreach (var patientSession in patient.Sessions)
+                    {
+                        patientContext.AddTitle(ReportTitleSize.H2, "Consultation - " + patientSession.Date);
+
+                        // Anamneses
+                        if (patientSession.PastMedicalHistories.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H3, "Anamnese");
+                            foreach (var pastMedicalHistory in patientSession.PastMedicalHistories)
+                                using (var dataContext = report.AddDataContext(pastMedicalHistory))
+                                {
+                                    var anamneseCard = dataContext.AddCard();
+                                    anamneseCard.AddField(m => m.MajorEvents, true);
+                                    anamneseCard.AddField(m => m.Allergies, true);
+                                    anamneseCard.AddField(m => m.OngoinMedicationProblems, true);
+                                    anamneseCard.AddField(m => m.FamilyMedicalHistory, true);
+                                    anamneseCard.AddField(m => m.PreventiveCare, true);
+                                    anamneseCard.AddField(m => m.SocialHistory, true);
+                                    anamneseCard.AddField(m => m.NutritionHistory, true);
+                                    anamneseCard.AddField(m => m.DevelopmentHistory, true);
+                                }
+                        }
+
+                        // physical examinations
+                        if (patientSession.PhysicalExaminations.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H3, "Physical examination");
+                            foreach (var physicalExamination in patientSession.PhysicalExaminations)
+                                using (var dataContext = report.AddDataContext(physicalExamination))
+                                {
+                                    var card = dataContext.AddCard();
+                                    card.AddField(m => m.Notes, true);
+                                }
+                        }
+
+                        // diagostic hypotheses
+                        if (patientSession.DiagnosticHypotheses.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H3, "Diagnostic hypothesis");
+                            foreach (var physicalExamination in patientSession.PhysicalExaminations)
+                                using (var dataContext = report.AddDataContext(physicalExamination))
+                                {
+                                    var card = dataContext.AddCard();
+                                    card.AddField(m => m.Notes, true);
+                                }
+                        }
+
+                        // diagostic hypotheses
+                        if (patientSession.Prescriptions.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H3, "Prescription");
+                            foreach (var prescription in patientSession.Prescriptions)
+                                using (var dataContext = report.AddDataContext(prescription))
+                                {
+                                    var grid = dataContext.AddGrid(m => m.ReceiptMedicines);
+                                    grid.AddColumn(m => m.MedicineText);
+                                    grid.AddColumn(m => m.Quantity);
+                                    grid.AddColumn(m => m.Prescription);
+                                    grid.AddColumn(m => m.Observations);
+                                }
+                        }
+
+                        // diagostic hypotheses
+                        if (patientSession.DiagnosticHypotheses.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H3, "Examination or procedure requests");
+                            foreach (var examRequest in patientSession.ExaminationRequests)
+                                using (var dataContext = report.AddDataContext(examRequest))
+                                {
+                                    var card = dataContext.AddCard();
+                                    card.AddField(m => m.MedicalProcedureCode, true);
+                                    card.AddField(m => m.MedicalProcedureName, true);
+                                    card.AddField(m => m.Notes, true);
+                                }
+                        }
+                    }
+                }
             }
-
-            writer.CloseStream = false;
-
-            document.Open();
-
-            document.Close();
-            documentStream.Position = 0;
-
-            return documentStream;
+            return report.Stream;
         }
 
         [SelfPermission]
@@ -134,33 +200,36 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private XmlDoctorData GetReportDataSource(Doctor doctor, int? patientId, bool isPdf)
         {
-            var docUser = doctor.Users.Single();
-            var docPerson = docUser.Person;
+            var doctorDbUser = doctor.Users.Single();
+            var doctorDbPerson = doctorDbUser.Person;
 
             var medicalEntity = UsersController.GetDoctorEntity(this.db.SYS_MedicalEntity, doctor);
             var medicalSpecialty = UsersController.GetDoctorSpecialty(this.db.SYS_MedicalSpecialty, doctor);
 
-            // Getting all patients data.
+            // Copying properties from the model to the view model.
             var doctorData = isPdf ? new PdfDoctorData() : new XmlDoctorData();
-            PatientsController.FillPersonViewModel(this.practice, docPerson, doctorData);
-            UsersController.FillUserViewModel(docUser, this.practice, doctorData);
-            UsersController.FillDoctorViewModel(docUser, medicalEntity, medicalSpecialty, doctorData, doctor);
+            Mapper.Map(doctorDbPerson, doctorData);
+            Mapper.Map(doctorDbUser, doctorData);
+            if (doctorDbPerson.Address != null)
+                Mapper.Map(doctorDbPerson.Address, doctorData.Address);
 
-            doctorData.Address = PatientsController.GetAddressViewModel(docPerson.Addresses.SingleOrDefault());
+            UsersController.FillDoctorViewModel(doctorDbUser, medicalEntity, medicalSpecialty, doctorData, doctor);
 
             if (patientId != null)
             {
                 doctorData.Patients = doctor.Patients
                                             .Where(p => p.Id == patientId)
                                             .Select(p => this.GetPatientData(p, isPdf))
-                                            .OrderBy(x => x.FullName)
+                                            .OrderBy(x => x.LastName)
+                                            .ThenBy(x => x.FirstName)
                                             .ToList();
             }
             else
             {
                 doctorData.Patients = doctor.Patients
                                             .Select(p => this.GetPatientData(p, isPdf))
-                                            .OrderBy(x => x.FullName)
+                                            .OrderBy(x => x.LastName)
+                                            .ThenBy(x => x.FirstName)
                                             .ToList();
             }
 
@@ -171,16 +240,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             var result = isPdf ? new PdfPatientData() : new XmlPatientData();
 
-            PatientsController.FillPersonViewModel(this.practice, patient.Person, result);
+            Mapper.Map(patient.Person, result);
+            result.DateOfBirth = ModelDateTimeHelper.ConvertToLocalDateTime(practice, patient.Person.DateOfBirth);
 
-            result.Id = patient.Id;
-            result.Observations = patient.Person.Observations;
-
-            result.Address = PatientsController.GetAddressViewModel(patient.Person.Addresses.FirstOrDefault())
-                ?? new AddressViewModel();
+            Mapper.Map(patient.Person.Address, result.Address);
 
             result.Sessions = this.GetAllSessionsData(patient);
-
             return result;
         }
 
@@ -195,32 +260,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         private SessionData GetSessionData(SessionViewModel arg)
         {
-            var anamneseGetter = this.ViewModelGetter<Anamnese, AnamneseViewModel>(AnamnesesController.GetViewModel);
             var receiptGetter = this.ViewModelGetter<Receipt, ReceiptViewModel>(ReceiptsController.GetViewModel);
             var physicalExaminationGetter = this.ViewModelGetter<PhysicalExamination, PhysicalExaminationViewModel>(PhysicalExaminationController.GetViewModel);
             var diagnosticHypothesisGetter = this.ViewModelGetter<DiagnosticHypothesis, DiagnosticHypothesisViewModel>(DiagnosticHypothesesController.GetViewModel);
             var examsGetter = this.ViewModelGetter<ExaminationRequest, ExaminationRequestViewModel>(ExamsController.GetViewModel);
             var examResultsGetter = this.ViewModelGetter<ExaminationResult, ExaminationResultViewModel>(ExamResultsController.GetViewModel);
-            var diagnosisGetter = this.ViewModelGetter<Diagnosis, DiagnosisViewModel>(DiagnosisController.GetViewModel);
             var medicalCertificateGetter = this.ViewModelGetter<MedicalCertificate, MedicalCertificateViewModel>(MedicalCertificatesController.GetViewModel);
 
             var result = new SessionData
                 {
                     Date = arg.Date,
-                    Anamneses = this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
-                        .Select(anamneseGetter).ToList(),
-                    Receipts = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
+                    PastMedicalHistories = this.db.PastMedicalHistories.Where(x => arg.AnamneseIds.Contains(x.Id)).Select(Mapper.Map<PastMedicalHistoryViewModel>).ToList(),
+                    Prescriptions = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
                         .Select(receiptGetter).ToList(),
                     PhysicalExaminations = this.db.PhysicalExaminations.Where(x => arg.PhysicalExaminationIds.Contains(x.Id))
                         .Select(physicalExaminationGetter).ToList(),
-                    DiagnosticHipotheses = this.db.DiagnosticHypotheses.Where(x => arg.DiagnosticHipothesesId.Contains(x.Id))
+                    DiagnosticHypotheses = this.db.DiagnosticHypotheses.Where(x => arg.DiagnosticHipothesesId.Contains(x.Id))
                         .Select(diagnosticHypothesisGetter).ToList(),
                     ExaminationRequests = this.db.ExaminationRequests.Where(x => arg.ExaminationRequestIds.Contains(x.Id))
                         .Select(examsGetter).ToList(),
                     ExaminationResults = this.db.ExaminationResults.Where(x => arg.ExaminationResultIds.Contains(x.Id))
                         .Select(examResultsGetter).ToList(),
-                    Diagnosis = this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id))
-                        .Select(diagnosisGetter).ToList(),
+                    Diagnosis = this.db.Diagnoses.Where(x => arg.DiagnosisIds.Contains(x.Id)).Select(Mapper.Map<DiagnosisViewModel>).ToList(),
                     MedicalCertificates = this.db.MedicalCertificates.Where(x => arg.MedicalCertificateIds.Contains(x.Id))
                         .Select(medicalCertificateGetter).ToList()
                 };
@@ -261,22 +322,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 get { return EnumHelper.GetValueDisplayDictionary(typeof(TypeGender))[(int)base.Gender]; }
             }
 
-            public new string MaritalStatus
-            {
-                get
-                {
-                    return base.MaritalStatus.HasValue ? EnumHelper.GetValueDisplayDictionary(typeof(TypeMaritalStatus))[(int)base.MaritalStatus.Value] : null;
-                }
-            }
-
-            public new string CpfOwner
-            {
-                get
-                {
-                    return base.CpfOwner.HasValue ? EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value] : null;
-                }
-            }
-
             public new string MedicalEntityJurisdiction
             {
                 get
@@ -297,26 +342,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 get { return EnumHelper.GetValueDisplayDictionary(typeof(TypeGender))[(int)base.Gender]; }
             }
-
-            public new string MaritalStatus
-            {
-                get
-                {
-                    if (base.MaritalStatus.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeMaritalStatus))[(int)base.MaritalStatus.Value];
-                    return null;
-                }
-            }
-
-            public new string CpfOwner
-            {
-                get
-                {
-                    if (base.CpfOwner.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value];
-                    return null;
-                }
-            }
         }
 
 
@@ -328,18 +353,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 get { return (TypeGender)base.Gender; }
                 set { base.Gender = (int)value; }
-            }
-
-            public new TypeMaritalStatus? MaritalStatus
-            {
-                get { return (TypeMaritalStatus?)base.MaritalStatus; }
-                set { base.MaritalStatus = (short?)value; }
-            }
-
-            public new TypeCpfOwner? CpfOwner
-            {
-                get { return (TypeCpfOwner?)base.CpfOwner; }
-                set { base.CpfOwner = (short?)value; }
             }
 
             public new TypeEstadoBrasileiro? MedicalEntityJurisdiction
@@ -361,18 +374,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 set { base.Gender = (int)value; }
             }
 
-            public new TypeMaritalStatus? MaritalStatus
-            {
-                get { return (TypeMaritalStatus?)base.MaritalStatus; }
-                set { base.MaritalStatus = (short?)value; }
-            }
-
-            public new TypeCpfOwner? CpfOwner
-            {
-                get { return (TypeCpfOwner?)base.CpfOwner; }
-                set { base.CpfOwner = (short?)value; }
-            }
-
             public List<AppointmentViewModel> Appointments { get; set; }
 
             [XmlElement]
@@ -386,14 +387,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             public DateTime Date { get; set; }
 
-            public List<AnamneseViewModel> Anamneses { get; set; }
+            public List<PastMedicalHistoryViewModel> PastMedicalHistories { get; set; }
             public List<PhysicalExaminationViewModel> PhysicalExaminations { get; set; }
-            public List<ReceiptViewModel> Receipts { get; set; }
+            public List<ReceiptViewModel> Prescriptions { get; set; }
             public List<ExaminationRequestViewModel> ExaminationRequests { get; set; }
             public List<ExaminationResultViewModel> ExaminationResults { get; set; }
             public List<DiagnosisViewModel> Diagnosis { get; set; }
             public List<MedicalCertificateViewModel> MedicalCertificates { get; set; }
-            public List<DiagnosticHypothesisViewModel> DiagnosticHipotheses { get; set; }
+            public List<DiagnosticHypothesisViewModel> DiagnosticHypotheses { get; set; }
         }
     }
 }

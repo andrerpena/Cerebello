@@ -186,9 +186,9 @@ namespace Cerebello.Firestarter
                     //{
                     //    foreach (var accountContract in db.AccountContracts)
                     //    {
-                    //        accountContract.StartDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.StartDate);
-                    //        accountContract.EndDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.EndDate);
-                    //        accountContract.IssuanceDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.IssuanceDate);
+                    //        accountContract.StartDate = ModelDateTimeHelper.ConvertToUtcDateTime(accountContract.Practice, accountContract.StartDate);
+                    //        accountContract.EndDate = ModelDateTimeHelper.ConvertToUtcDateTime(accountContract.Practice, accountContract.EndDate);
+                    //        accountContract.IssuanceDate = ModelDateTimeHelper.ConvertToUtcDateTime(accountContract.Practice, accountContract.IssuanceDate);
                     //    }
                     //    db.SaveChanges();
                     //}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,10 +31,10 @@ namespace CerebelloWebRole.Code
         /// <returns>The PropertyInfo that the expression tree returns.</returns>
         public static PropertyInfo GetPropertyInfo(LambdaExpression expression)
         {
-            MemberExpression memberExpression = expression.Body as MemberExpression;
+            var memberExpression = expression.Body as MemberExpression;
             if (memberExpression == null)
             {
-                UnaryExpression unaryExpression = expression.Body as UnaryExpression;
+                var unaryExpression = expression.Body as UnaryExpression;
                 memberExpression = unaryExpression.Operand as MemberExpression;
             }
 

@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MaxLengthValidationMessage" xml:space="preserve">
-    <value>O campo '{0}' deve ter no máximo '{1}' caracteres</value>
+    <value>The field '{0}' cannot have more than '{1}' characters</value>
   </data>
   <data name="PropertyValueInvalid" xml:space="preserve">
-    <value>O valor '{0}' não é válido para o campo '{1}'</value>
+    <value>The value '{0}' is not valid for the field '{1}'</value>
   </data>
   <data name="RegularExpressionValidationMessage" xml:space="preserve">
-    <value>O campo '{0}' não possui o formato esperado</value>
+    <value>The field '{0}' does not have a valid format</value>
   </data>
   <data name="RequiredValidationMessage" xml:space="preserve">
-    <value>O campo '{0}' é requerido</value>
+    <value>The field '{0}' is required</value>
   </data>
 </root>

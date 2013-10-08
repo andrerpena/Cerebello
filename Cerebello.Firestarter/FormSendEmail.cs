@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Cerebello.Firestarter.Parser;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter
@@ -274,7 +275,7 @@ namespace Cerebello.Firestarter
                         var user = ((EmailData)checkedItem).ObjectData as User;
                         if (user != null)
                         {
-                            var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
+                            var toAddress = new MailAddress(user.Person.Email, PersonHelper.GetFullName(user.Person));
                             var subject = ProcessTemplate(model.Title, checkedItem, false);
                             var bodyText = ProcessTemplate(model.TextContent, checkedItem, false);
                             var bodyHtml = ProcessTemplate(model.HtmlContent, checkedItem, true);

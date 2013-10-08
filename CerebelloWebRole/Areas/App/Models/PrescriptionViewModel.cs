@@ -7,8 +7,10 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         [Display(Name = "Patient")]
         public int PatientId { get; set; }
-        [Display(Name = "Patient")]
-        public string PatientName { get; set; }
+        [Display(Name = "Patient first name")]
+        public string PatientFirstName { get; set; }
+        [Display(Name = "Patient last name")]
+        public string PatientLastName { get; set; }
         [Display(Name = "Prescription")]
         public string Prescription { get; set; }
         [Display(Name = "Date")]

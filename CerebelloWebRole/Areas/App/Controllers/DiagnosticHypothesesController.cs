@@ -88,7 +88,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 diagnosticHypothesis.Observations = formModel.Text;
                 diagnosticHypothesis.Cid10Code = formModel.Cid10Code;
                 diagnosticHypothesis.Cid10Name = formModel.Cid10Name;
-                diagnosticHypothesis.MedicalRecordDate = this.ConvertToUtcDateTime(formModel.MedicalRecordDate.Value);
+                diagnosticHypothesis.MedicalRecordDate = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, formModel.MedicalRecordDate.Value);
 
                 this.db.SaveChanges();
 

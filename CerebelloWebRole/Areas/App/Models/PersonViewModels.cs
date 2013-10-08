@@ -23,12 +23,21 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Full name")]
+        [Display(Name = "First name")]
         [CanBeNull]
-        public String FullName { get; set; }
+        public String FirstName { get; set; }
+
+        [Display(Name = "Middle name")]
+        [CanBeNull]
+        public String MiddleName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Gender")]
+        [Display(Name = "Last name")]
+        [CanBeNull]
+        public String LastName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        [Display(Name = "Sex")]
         [EnumDataType(typeof(TypeGender))]
         [XmlIgnore]
         public int Gender { get; set; }
@@ -39,37 +48,33 @@ namespace CerebelloWebRole.Areas.App.Models
         // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
         public DateTime DateOfBirth { get; set; }
 
-        [EnumDataType(typeof(TypeMaritalStatus))]
-        [Display(Name = "Marital status")]
-        [XmlIgnore]
-        public short? MaritalStatus { get; set; }
-
-        [Display(Name = "Naturality")]
-        public String BirthPlace { get; set; }
-
+        [Display(Name = "Date of death")]
+        // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
+        public DateTime? DateOfDeath { get; set; }
+        
         [Display(Name = "Social Security Number")]
-        public String Cpf { get; set; }
-
-        [Display(Name = "Social Security Number owner")]
-        [EnumDataType(typeof(TypeCpfOwner))]
-        [XmlIgnore]
-        public short? CpfOwner { get; set; }
-
-        [Display(Name = "Profession")]
-        public String Profession { get; set; }
+        public String SSN { get; set; }
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)] // TODO: This will make MVC 4 use HTML 5 <input type="email" />
         [Code.EmailAddress]
+        [Tooltip("Email is used for automatic appointment reminders and other notifications")]
         public String Email { get; set; }
 
-        [Display(Name = "Land line")]
+        [Display(Name = "Home phone")]
         [UIHint("Phone")]
-        public String PhoneLand { get; set; }
+        public String PhoneHome { get; set; }
 
-        [Display(Name = "Cell phone")]
+        [Display(Name = "Mobile phone")]
         [UIHint("Phone")]
-        public String PhoneCell { get; set; }
+        public String PhoneMobile { get; set; }
+
+        [Display(Name = "Work phone")]
+        [UIHint("Phone")]
+        public String PhoneWork { get; set; }
+
+        [Display(Name = "Work phone ext.")]
+        public String PhoneWorkExt { get; set; }
 
         [Display(Name = "Address")]
         public AddressViewModel Address { get; set; }

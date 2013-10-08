@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading;
 using Cerebello.Model;
+using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 
@@ -64,11 +65,13 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                                     EmailViewModel = new PatientEmailModel
                                         {
                                             PatientEmail = a.Person.Email,
-                                            PatientName = a.Person.FullName,
+                                            PatientFirstName = a.Person.FirstName,
+                                            PatientLastName = a.Person.LastName,
                                             PracticeUrlId = a.Practice.UrlIdentifier,
                                             PatientGender = (TypeGender)a.Person.Gender,
                                             PracticeName = a.Practice.Name,
-                                            DoctorName = a.DoctorPerson.FullName,
+                                            DoctorFirstName = a.DoctorPerson.FirstName,
+                                            DoctorLastName = a.DoctorPerson.LastName,
                                             DoctorGender = (TypeGender)a.DoctorPerson.Gender,
                                             AppointmentDate = a.Appointment.Start,
 
@@ -79,17 +82,17 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
                                             PracticePabx = a.Practice.PABX,
                                             PracticeAddress = new AddressViewModel
                                                 {
-                                                    StateProvince = a.Practice.Address.StateProvince,
+                                                    AddressLine1 = a.Practice.Address.AddressLine1,
+                                                    AddressLine2 = a.Practice.Address.AddressLine2,
                                                     City = a.Practice.Address.City,
-                                                    Neighborhood = a.Practice.Address.Neighborhood,
-                                                    Street = a.Practice.Address.Street,
-                                                    Complement = a.Practice.Address.Complement,
-                                                    CEP = a.Practice.Address.CEP,
+                                                    County = a.Practice.Address.County,
+                                                    StateProvince = a.Practice.Address.StateProvince,
+                                                    ZipCode = a.Practice.Address.ZipCode
                                                 },
 
                                             // todo: is it correct to send these informations to the patient
                                             // maybe this info is not suited to the outside world
-                                            DoctorPhone = a.DoctorPerson.PhoneCell ?? a.DoctorPerson.PhoneLand,
+                                            DoctorPhone = a.DoctorPerson.PhoneMobile ?? a.DoctorPerson.PhoneWork,
                                             DoctorEmail = a.DoctorPerson.Email,
                                         }
                                 })
@@ -108,7 +111,7 @@ namespace CerebelloWebRole.WorkerRole.Code.Workers
 
                         // Rendering message bodies from partial view.
                         var emailViewModel = eachItem.EmailViewModel;
-                        var toAddress = new MailAddress(emailViewModel.PatientEmail, emailViewModel.PatientName);
+                        var toAddress = new MailAddress(emailViewModel.PatientEmail, PersonHelper.GetFullName(emailViewModel.PatientFirstName, null, emailViewModel.PatientLastName));
                         var mailMessage = this.CreateEmailMessage("AppointmentReminderEmail", toAddress, emailViewModel);
 
                         if (!traceMessageCreated)

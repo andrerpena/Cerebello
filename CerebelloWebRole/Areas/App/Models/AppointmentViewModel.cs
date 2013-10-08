@@ -45,11 +45,11 @@ namespace CerebelloWebRole.Areas.App.Models
 
         [Display(Name = "Patient")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public String PatientNameLookup { get; set; }
+        public String PatientFullNameLookup { get; set; }
 
         [Display(Name = "Patient")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public String PatientName { get; set; }
+        public String PatientFullName { get; set; }
 
         [Display(Name = "E-mail")]
         [Code.EmailAddress]
@@ -104,13 +104,20 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Status")]
         public string StatusText { get; set; }
 
-        [Display(Name = "Land line")]
+        [Display(Name = "Mobile phone")]
         [UIHint("Phone")]
-        public String PatientPhoneCell { get; set; }
+        public String PatientPhoneMobile { get; set; }
 
-        [Display(Name = "Cell phone")]
+        [Display(Name = "Home phone")]
         [UIHint("Phone")]
-        public String PatientPhoneLand { get; set; }
+        public String PatientPhoneHome { get; set; }
+
+        [Display(Name = "Work phone")]
+        [UIHint("Phone")]
+        public String PatientPhoneWork { get; set; }
+
+        [Display(Name = "Work phone ext.")]
+        public String PatientPhoneWorkExt { get; set; }
 
         [Display(Name = "Health insurance")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

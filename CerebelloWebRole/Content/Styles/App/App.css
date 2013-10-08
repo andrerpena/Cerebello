@@ -55,12 +55,12 @@ blockquote, q {
 
 .validation-summary-errors {
     background-color: #FFFFE6;
-    border: 1px solid #F4F4DA;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: #DD390D;
     font-size: 12px;
     font-weight: normal;
     margin-bottom: 10px;
+    overflow: hidden;
     padding: 4px 10px;
 }
 
@@ -394,7 +394,6 @@ input, textarea {
 
     .document .document-body .document-main-column {
         border-right: 1px solid #D7D7D7;
-        box-shadow: 2px 3px 10px -8px rgba(0, 0, 0, 0.5) inset;
         margin-right: 220px;
         min-height: 600px;
         padding: 15px;
@@ -484,8 +483,7 @@ fieldset {
 #app-header {
     background: none repeat scroll 0 0 #50B7DC;
     border-bottom: 1px solid #2693BA;
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.3);
-    color: white;
+    color: #FFFFFF;
     margin-bottom: 15px;
     padding: 0 10px;
     position: relative;
@@ -559,10 +557,10 @@ fieldset {
             width: 200px;
         }
 
-        #app-header .title .logo-wrapper a {
-            margin: 3px 5px;
-            display: block;
-        }
+            #app-header .title .logo-wrapper a {
+                margin: 3px 5px;
+                display: block;
+            }
 
     #app-header .configurations {
         color: #333333;
@@ -578,12 +576,12 @@ fieldset {
         }
 
             #app-header .configurations .text a {
-            background-position: 4px 50%;
-            background-repeat: no-repeat;
-            display: block;
-            margin-right: 0;
-            padding: 10px 0 8px 34px;
-            text-decoration: none;
+                background-position: 4px 50%;
+                background-repeat: no-repeat;
+                display: block;
+                margin-right: 0;
+                padding: 10px 0 8px 34px;
+                text-decoration: none;
             }
 
                 #app-header .configurations .text a.config-icon {
@@ -1245,15 +1243,16 @@ a.loading {
     margin: 6px 0 0;
 }
 
-a.inline-link {
+.inline-link {
     color: #4A7099;
     display: inline-block;
-    font-size: 11px;
     margin: 0 10px 0 0;
 }
 
-    a.inline-link:hover {
+    .inline-link:hover {
         color: #336699;
+        cursor: pointer;
+        text-decoration: underline;
     }
 
 .inline-link-bar {
@@ -1559,4 +1558,22 @@ span.required {
     margin-left: 3px;
     color: Red;
     cursor: default;
+}
+
+.check-box-label-wrapper {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.check-box-label-wrapper input[type=checkbox] {
+    vertical-align: text-bottom;
+}
+
+.check-box-label-wrapper label {
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.panel-top-menu {
+    float: right;
 }

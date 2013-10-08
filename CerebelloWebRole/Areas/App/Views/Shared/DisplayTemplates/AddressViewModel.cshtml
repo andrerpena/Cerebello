@@ -1,11 +1,11 @@
 ﻿@model AddressViewModel
 @{
     var addressCardView = Html.CreateCardView();
-    addressCardView.AddField(model => model.Street, wholeRow: true);
-    addressCardView.AddField(model => model.Complement);
-    addressCardView.AddField(model => model.Neighborhood);
+    addressCardView.AddField(model => model.AddressLine1, wholeRow: true);
+    addressCardView.AddField(model => model.AddressLine2, wholeRow: true);
     addressCardView.AddField(model => model.City);
+    addressCardView.AddField(model => model.County);
     addressCardView.AddField(model => model.StateProvince);
-    addressCardView.AddField(model => model.CEP);
+    addressCardView.AddField(model => model.ZipCode);
 }
 @addressCardView.GetHtml()
