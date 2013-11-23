@@ -8,11 +8,11 @@ namespace CerebelloWebRole.Areas.App.Models
     /// </summary>
     public class AnvisaImportViewModel
     {
-        [Display(Name = "Medicine")]
+        [Display(Name = "Medicamento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? AnvisaId { get; set; }
 
-        [Display(Name = "Medicine")]
+        [Display(Name = "Medicamento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string AnvisaText { get; set; }
     }

@@ -186,9 +186,9 @@ namespace Cerebello.Firestarter
                     //{
                     //    foreach (var accountContract in db.AccountContracts)
                     //    {
-                    //        accountContract.StartDate = ModelDateTimeHelper.ConvertToUtcDateTime(accountContract.Practice, accountContract.StartDate);
-                    //        accountContract.EndDate = ModelDateTimeHelper.ConvertToUtcDateTime(accountContract.Practice, accountContract.EndDate);
-                    //        accountContract.IssuanceDate = ModelDateTimeHelper.ConvertToUtcDateTime(accountContract.Practice, accountContract.IssuanceDate);
+                    //        accountContract.StartDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.StartDate);
+                    //        accountContract.EndDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.EndDate);
+                    //        accountContract.IssuanceDate = PracticeController.ConvertToUtcDateTime(accountContract.Practice, accountContract.IssuanceDate);
                     //    }
                     //    db.SaveChanges();
                     //}
@@ -389,7 +389,7 @@ namespace Cerebello.Firestarter
                     case "bkr": if (!isAzureDb) this.OptBkr(); break;
 
                     case "r?": if (!isAzureDb) InfoR(); break;
-                    case "r": if (!isAzureDb) this.OptR(); continue;
+                    case "r": this.OptR(); continue;
 
                     case "eml?": InfoEml(); break;
                     case "eml": this.OptEml(); break;

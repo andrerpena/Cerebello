@@ -33,7 +33,7 @@ namespace CerebelloWebRole.Code
         public override string FormatErrorMessage(string name)
         {
             // ToDo: Make this validation message come from the RESX
-            return string.Format("The field '{0}' does not have a valid date of birth", name);
+            return string.Format("O campo '{0}' não possui uma data de nascimento válida", name);
         }
     }
 }

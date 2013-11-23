@@ -14,7 +14,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Nome do campo
         /// </summary>
-        [Display(Name = "Name")]
+        [Display(Name = "Nome")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceName = "MaxLengthValidationMessage")]
         public string Name { get; set; }

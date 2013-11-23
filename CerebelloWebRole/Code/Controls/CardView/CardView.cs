@@ -108,13 +108,13 @@ namespace CerebelloWebRole.Code
 
                 foreach (var field in row)
                 {
-                    var cellValueInnerHtml = field.GetDisplayText(this.HtmlHelper).ToString();
+                    var cellValueInnerHtml = field.Display(this.HtmlHelper).ToString();
 
                     // if this component is configured to supress empty cells, if this cell is empty,
                     // it must be suppressed. Oh really?
                     if (string.IsNullOrEmpty(cellValueInnerHtml) && this.suppressEmptyCells)
                         continue;
-                    var cellHeaderInnerHtml = field.GetLabelText(this.HtmlHelper).ToString();
+                    var cellHeaderInnerHtml = field.Label(this.HtmlHelper).ToString();
 
                     var divColumn = new TagBuilder("div");
                     divColumn.AddCssClass("span" + (field.WholeRow ? 1 : this.FieldsPerRow));

@@ -23,60 +23,55 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "First name")]
+        [Display(Name = "Nome completo")]
         [CanBeNull]
-        public String FirstName { get; set; }
-
-        [Display(Name = "Middle name")]
-        [CanBeNull]
-        public String MiddleName { get; set; }
+        public String FullName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Last name")]
-        [CanBeNull]
-        public String LastName { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Sex")]
+        [Display(Name = "Sexo")]
         [EnumDataType(typeof(TypeGender))]
         [XmlIgnore]
         public int Gender { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Date of birth")]
+        [Display(Name = "Data de Nascimento")]
         [DateOfBirth]
         // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
         public DateTime DateOfBirth { get; set; }
 
-        [Display(Name = "Date of death")]
-        // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
-        public DateTime? DateOfDeath { get; set; }
-        
-        [Display(Name = "Social Security Number")]
-        public String SSN { get; set; }
+        [EnumDataType(typeof(TypeMaritalStatus))]
+        [Display(Name = "Estado Civil")]
+        [XmlIgnore]
+        public short? MaritalStatus { get; set; }
+
+        [Display(Name = "Naturalidade")]
+        public String BirthPlace { get; set; }
+
+        [Display(Name = "CPF")]
+        public String Cpf { get; set; }
+
+        [Display(Name = "Proprietário do CPF")]
+        [EnumDataType(typeof(TypeCpfOwner))]
+        [XmlIgnore]
+        public short? CpfOwner { get; set; }
+
+        [Display(Name = "Profissão")]
+        public String Profissao { get; set; }
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)] // TODO: This will make MVC 4 use HTML 5 <input type="email" />
         [Code.EmailAddress]
-        [Tooltip("Email is used for automatic appointment reminders and other notifications")]
         public String Email { get; set; }
 
-        [Display(Name = "Home phone")]
+        [Display(Name = "Telefone fixo")]
         [UIHint("Phone")]
-        public String PhoneHome { get; set; }
+        public String PhoneLand { get; set; }
 
-        [Display(Name = "Mobile phone")]
+        [Display(Name = "Telefone celular")]
         [UIHint("Phone")]
-        public String PhoneMobile { get; set; }
+        public String PhoneCell { get; set; }
 
-        [Display(Name = "Work phone")]
-        [UIHint("Phone")]
-        public String PhoneWork { get; set; }
-
-        [Display(Name = "Work phone ext.")]
-        public String PhoneWorkExt { get; set; }
-
-        [Display(Name = "Address")]
+        [Display(Name = "Endereço")]
         public AddressViewModel Address { get; set; }
     }
 

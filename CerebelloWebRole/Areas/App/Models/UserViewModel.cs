@@ -10,20 +10,20 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class UserViewModel : PersonViewModel
     {
-        [Display(Name = "User name")]
+        [Display(Name = "Nome identificador")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [UserName]
         public string UserName { get; set; }
 
         public string ImageUrl { get; set; }
 
-        [Display(Name = "Manager")]
+        [Display(Name = "Administrador(a)")]
         public bool IsAdministrador { get; set; }
 
-        [Display(Name = "Desk")]
+        [Display(Name = "Secretário(a)")]
         public bool IsSecretary { get; set; }
 
-        [Display(Name = "Doctor")]
+        [Display(Name = "Médico(a)")]
         public bool IsDoctor { get; set; }
 
         public bool IsOwner { get; set; }
@@ -32,29 +32,29 @@ namespace CerebelloWebRole.Areas.App.Models
         // If IsDoctor is false, these properties have no meaning.
 
         // todo: CRM não é válido para outros conselhos, deveria ser "Número no conselho"
-        [Display(Name = "Medical entity ID")]
+        [Display(Name = "Número no conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicCRM { get; set; }
 
-        [Display(Name = "Medical entity state")]
+        [Display(Name = "Estado do conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [EnumDataTypeAttribute(typeof(TypeEstadoBrasileiro))]
         [XmlIgnore]
         public int? MedicalEntityJurisdiction { get; set; }
 
-        [Display(Name = "Specialty")]
+        [Display(Name = "Especialidade")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalSpecialtyId { get; set; }
 
-        [Display(Name = "Specialty")]
+        [Display(Name = "Especialidade")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicalSpecialtyName { get; set; }
 
-        [Display(Name = "Specialty profissional")]
+        [Display(Name = "Conselho profissional")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? MedicalEntityId { get; set; }
 
-        [Display(Name = "Medical entity")]
+        [Display(Name = "Conselho profissional")]
         public string MedicalEntityName { get; set; }
 
         [Localizable(true)]
@@ -69,7 +69,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Localizable(true)]
         private const string Owner = "proprietário da conta";
 
-        [Display(Name = "Roles")]
+        [Display(Name = "Funções")]
         public string UserRoles
         {
             get

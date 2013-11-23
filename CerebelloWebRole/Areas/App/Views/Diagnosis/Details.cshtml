@@ -2,21 +2,42 @@
 @{
     Layout = null;
 }
-<div class="medical-appointment-details-panel" data-val-id="diagnosis-@Model.Id">
+<div class="diagnosis-details medical-appointment-details-panel" data-val-id="diagnosis-@Model.Id">
     @if (Model != null)
     {
         var cardView = this.Html.CreateCardView(true);
-        cardView.AddField(model => model.Code, header: "Code", wholeRow: true);
-        cardView.AddField(model => model.Name, header: "Diagnosis", wholeRow: true);
-        cardView.AddField(model => model.StartTime, wholeRow: true);
-        cardView.AddField(model => model.EndTime, wholeRow: true);
-        cardView.AddField(model => model.Acute, wholeRow: true);
-        cardView.AddField(model => model.IsTerminal, wholeRow: true);
-        cardView.AddField(model => model.Comments, wholeRow: true);
+        cardView.AddField(model => model.Cid10Name, wholeRow: true);
+        cardView.AddField(model => model.Cid10Code, header: "Código CID-10", wholeRow: true);
+        cardView.AddField(model => model.Text, wholeRow: true);
+
         @cardView.GetHtml()
     }
     <div class="inline-link-bar">
-        <span class="inline-link" onclick="ajaxLoad('@Url.Action("Edit", "Diagnosis", new { id = Model.Id })', 'div[data-val-id=diagnosis-@Model.Id]');">Edit diagnosis</span>
-        <span class="inline-link" onclick="deleteConfirmation('diagnosis', '@Url.Action("Delete", "Diagnosis", new { id = Model.Id })');">Remove diagnosis</span>
+        <a href="#" class="edit-diagnosis inline-link" >Editar diagnóstico</a>
+        <a href="#" class="delete-diagnosis inline-link" >Excluir diagnóstico</a>
     </div>
+    <script type="text/javascript">
+        $(".edit-diagnosis", $("div[data-val-id='diagnosis-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "@Url.Action("Edit", "Diagnosis", new { id = Model.Id })",
+                success: function(result) {
+                    $("div[data-val-id='diagnosis-@Model.Id']").replaceWith(result);
+                }
+            });
+        });
+        
+        $(".delete-diagnosis", $("div[data-val-id='diagnosis-@Model.Id']")).click(function (e) {
+            e.preventDefault();
+            $.deleteConfirmation({
+                objectType: "diagnóstico",
+                url: "@Url.Action("delete", "diagnosis", new { id = this.Model.Id })",
+                success: function (data) {
+                    alert("Esta diagnóstico foi excluído");
+                    window.location = "@Url.Action("details", "patients", new { id = this.Model.PatientId })";
+                }
+            });
+        });
+
+    </script>
 </div>

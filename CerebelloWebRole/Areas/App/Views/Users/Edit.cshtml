@@ -4,7 +4,7 @@
     string title;
     if (this.Model != null && this.Model.Id.HasValue)
     {
-        title = "Editando usuário: " + this.Model.FirstName;
+        title = "Editando usuário: " + this.Model.FullName;
     }
     else
     {
@@ -33,10 +33,13 @@
         throw new Exception("'ViewBag.IsEditingOrCreating' must be either 'E' or 'C'.");
     }
 
-    editPanel.AddField(m => m.FirstName, EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
     editPanel.AddField(m => m.Gender, this.Html.EnumDropdownListFor);
     editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.SSN);
+    editPanel.AddField(m => m.MaritalStatus, this.Html.EnumDropdownListFor);
+    editPanel.AddField(m => m.BirthPlace);
+    editPanel.AddField(m => m.Cpf);
+    editPanel.AddField(m => m.Profissao);
 
     var editPanelRoles = this.Html.CreateEditPanel();
     editPanelRoles.AddField(m => m.IsAdministrador);
@@ -81,8 +84,8 @@
 
     var editPanelContact = this.Html.CreateEditPanel();
     editPanelContact.AddField(m => m.Email);
-    editPanelContact.AddField(m => m.PhoneMobile);
-    editPanelContact.AddField(m => m.PhoneHome);
+    editPanelContact.AddField(m => m.PhoneCell);
+    editPanelContact.AddField(m => m.PhoneLand);
 }
 
 @section Title {
@@ -163,8 +166,8 @@
     @editPanelContact.GetHtml()
 
     <div class="submit-bar">
-        <input type="submit" value="save user" />
-        <span class="separator">or</span>
-        @this.Html.ActionLink("cancel", "Index", "PracticeHome")
+        <input type="submit" value="salvar usuário" />
+        <span class="separator">ou</span>
+        @this.Html.ActionLink("cancelar", "Index", "PracticeHome")
     </div>
 }

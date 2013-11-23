@@ -9,7 +9,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public int? Id { get; set; }
 
-        [Display(Name = "Description")]
+        [Display(Name = "Descrição")]
         public String Description { get; set; }
 
         [Code.Url]

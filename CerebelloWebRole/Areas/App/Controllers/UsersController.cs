@@ -7,9 +7,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using AutoMapper;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
@@ -85,20 +83,22 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (user == null) throw new ArgumentNullException("user");
             if (practice == null) throw new ArgumentNullException("practice");
 
-            var address = user.Person.Address;
+            var address = user.Person.Addresses.SingleOrDefault();
+
             var viewModel = new UserViewModel();
-            Mapper.Map(user, viewModel);
+
+            FillUserViewModel(user, practice, viewModel);
 
             viewModel.Address = address == null
                                     ? new AddressViewModel()
                                     : new AddressViewModel
                                           {
-                                              AddressLine1 = address.AddressLine1,
-                                              AddressLine2 = address.AddressLine2,
+                                              CEP = address.CEP,
                                               City = address.City,
-                                              County = address.County,
+                                              Complement = address.Complement,
+                                              Neighborhood = address.Neighborhood,
                                               StateProvince = address.StateProvince,
-                                              ZipCode = address.ZipCode
+                                              Street = address.Street
                                           };
 
             var userDoctor = user.Doctor;
@@ -106,6 +106,27 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 FillDoctorViewModel(user, medicalEntity, medicalSpecialty, viewModel, userDoctor);
 
             return viewModel;
+        }
+
+        internal static void FillUserViewModel(User user, Practice practice, UserViewModel viewModel)
+        {
+            viewModel.Id = user.Id;
+            viewModel.UserName = user.UserName;
+
+            viewModel.FullName = user.Person.FullName;
+            viewModel.ImageUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s16);
+            viewModel.Gender = user.Person.Gender;
+            viewModel.DateOfBirth = ConvertToLocalDateTime(practice, user.Person.DateOfBirth);
+            viewModel.MaritalStatus = user.Person.MaritalStatus;
+            viewModel.BirthPlace = user.Person.BirthPlace;
+            viewModel.Cpf = user.Person.CPF;
+            viewModel.Profissao = user.Person.Profession;
+            viewModel.Email = user.Person.Email;
+
+            viewModel.IsAdministrador = user.AdministratorId != null;
+            viewModel.IsDoctor = user.DoctorId != null;
+            viewModel.IsSecretary = user.SecretaryId != null;
+            viewModel.IsOwner = user.IsOwner;
         }
 
         internal static void FillDoctorViewModel(User user, SYS_MedicalEntity medicalEntity, SYS_MedicalSpecialty medicalSpecialty, UserViewModel viewModel, Doctor doctor)
@@ -144,10 +165,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 model = GetViewModel(user, this.DbPractice, medicalEntity, medicalSpecialty);
 
-                ViewBag.Title = "Editing user: " + PersonHelper.GetFullName(model.FirstName, model.MiddleName, model.LastName);
+                ViewBag.Title = "Alterando usuário: " + model.FullName;
             }
             else
-                ViewBag.Title = "New user";
+                ViewBag.Title = "Novo usuário";
 
             this.ViewBag.IsEditingOrCreating = id != null ? 'E' : 'C';
 
@@ -201,14 +222,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             User user;
 
             // Normalizing the name of the person.
-            if (!string.IsNullOrEmpty(formModel.FirstName))
-                formModel.FirstName = Regex.Replace(formModel.FirstName, @"\s+", " ").Trim();
-
-            if (!string.IsNullOrEmpty(formModel.MiddleName))
-                formModel.MiddleName = Regex.Replace(formModel.MiddleName, @"\s+", " ").Trim();
-
-            if (!string.IsNullOrEmpty(formModel.LastName))
-                formModel.LastName = Regex.Replace(formModel.LastName, @"\s+", " ").Trim();
+            if (!string.IsNullOrEmpty(formModel.FullName))
+                formModel.FullName = Regex.Replace(formModel.FullName, @"\s+", " ").Trim();
 
             if (isEditingOrCreating == 'E')
             {
@@ -217,14 +232,11 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 user = this.db.Users.First(p => p.Id == formModel.Id);
 
-                if (!string.IsNullOrWhiteSpace(formModel.FirstName))
-                    user.Person.FirstName = formModel.FirstName;
-
-                if (!string.IsNullOrWhiteSpace(formModel.MiddleName))
-                    user.Person.MiddleName = formModel.MiddleName;
-
-                if (!string.IsNullOrWhiteSpace(formModel.LastName))
-                    user.Person.LastName = formModel.LastName;
+                // TODO: suggest that r# use the attribute EdmScalarPropertyAttribute(IsNullable=false)
+                // as a way to determine if a property can ever receive a null value or not
+                // there was a bug in the line inside the following if, that could be detected by r# if it did consider that attribute.
+                if (!string.IsNullOrWhiteSpace(formModel.FullName))
+                    user.Person.FullName = formModel.FullName;
 
                 user.Person.Gender = (short)formModel.Gender;
 
@@ -273,8 +285,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Password = Constants.DEFAULT_PASSWORD,
                     ConfirmPassword = Constants.DEFAULT_PASSWORD,
                     EMail = formModel.Email,
-                    FirstName = formModel.FirstName,
-                    LastName = formModel.LastName,
+                    FullName = formModel.FullName,
                     Gender = (short)formModel.Gender,
                 };
 
@@ -312,25 +323,29 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (user != null)
             {
-                user.Person.DateOfBirth = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
-                user.Person.SSN = formModel.SSN;
+                user.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
+                user.Person.BirthPlace = formModel.BirthPlace;
+                user.Person.CPF = formModel.Cpf;
+                user.Person.CPFOwner = formModel.CpfOwner;
                 user.Person.CreatedOn = this.GetUtcNow();
+                user.Person.MaritalStatus = formModel.MaritalStatus;
+                user.Person.Profession = formModel.Profissao;
                 user.Person.Email = formModel.Email;
                 user.Person.EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.Email);
 
                 // handle address
-                if (user.Person.Address == null)
-                    user.Person.Address = 
+                if (!user.Person.Addresses.Any())
+                    user.Person.Addresses.Add(
                         new Address
                             {
                                 PracticeId = this.DbUser.PracticeId,
-                                AddressLine1 = formModel.Address.AddressLine1,
-                                AddressLine2 = formModel.Address.AddressLine2,
+                                CEP = formModel.Address.CEP,
                                 City = formModel.Address.City,
-                                County = formModel.Address.County,
+                                Complement = formModel.Address.Complement,
+                                Neighborhood = formModel.Address.Neighborhood,
                                 StateProvince = formModel.Address.StateProvince,
-                                ZipCode = formModel.Address.ZipCode
-                            };
+                                Street = formModel.Address.Street,
+                            });
 
                 // when the user is a doctor, we need to fill the properties of the doctor
                 if (formModel.IsDoctor)
@@ -370,7 +385,18 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             ((TypeEstadoBrasileiro)formModel.MedicalEntityJurisdiction.Value).ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.
-                    user.Doctor.UrlIdentifier = StringHelper.GenerateUrlIdentifier(PersonHelper.GetFullName(user.Person));
+                    // This does not consider UrlIdentifier's used by other kinds of objects.
+                    string urlId = GetUniqueDoctorUrlId(this.db.Doctors, formModel.FullName, this.DbPractice.Id);
+                    if (urlId == null && !string.IsNullOrWhiteSpace(formModel.FullName))
+                    {
+                        this.ModelState.AddModelError(
+                            () => formModel.FullName,
+                            // Todo: this message is also used in the AuthenticationController.
+                            string.Format("Quantidade máxima de homônimos excedida para esta conta: {0}.", this.DbPractice.UrlIdentifier));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(urlId))
+                        user.Doctor.UrlIdentifier = urlId;
                 }
                 else
                 {
@@ -477,6 +503,28 @@ namespace CerebelloWebRole.Areas.App.Controllers
             this.ModelState.RemoveDuplicates();
 
             return this.View("Edit", formModel);
+        }
+
+        public static string GetUniqueDoctorUrlId(IObjectSet<Doctor> dbDoctorsSet, string fullName, int? practiceId)
+        {
+            // todo: this piece of code is very similar to SetPatientUniqueUrlIdentifier.
+
+            var urlIdSrc = StringHelper.GenerateUrlIdentifier(fullName);
+            var urlId = urlIdSrc;
+
+            // todo: there is a concurrency problem here.
+            int cnt = 2;
+            while (dbDoctorsSet.Any(d => d.UrlIdentifier == urlId
+                                       && d.Users.FirstOrDefault().PracticeId == practiceId
+                                       && d.Users.FirstOrDefault().Person.FullName != fullName))
+            {
+                urlId = string.Format("{0}_{1}", urlIdSrc, cnt++);
+
+                if (cnt > 20)
+                    return null;
+            }
+
+            return urlId;
         }
 
         // TODO: add permission attribute ProfileAccessPermission

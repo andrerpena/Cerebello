@@ -62,19 +62,19 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var patientsQuery = this.db.Patients.Where(p => p.DoctorId == this.Doctor.Id);
             if (!string.IsNullOrEmpty(term))
-                patientsQuery = patientsQuery.Where(p => p.Person.FirstName.Contains(term) || p.Person.MiddleName.Contains(term) ||  p.Person.LastName.Contains(term) );
+                patientsQuery = patientsQuery.Where(p => p.Person.FullName.Contains(term));
 
             queries.Add(patientsQuery.Select(p =>
                         new GlobalSearchIntermediateResult()
                         {
                             Id = p.Id,
-                            Text = p.Person.FirstName + " " + p.Person.LastName,
+                            Text = p.Person.FullName,
                             Type = "patient",
-                            TypeDescription = "Patient",
+                            TypeDescription = "Paciente",
                             Relevance = 1
                         }));
 
-            // only doctors can search for some information
+            // somente os médicos podem pesquisar por algumas informações
             if (this.DbUser.Doctor != null || this.DbUser.Administrator != null)
             {
                 var medicinesQuery = this.db.Medicines.Where(p => p.DoctorId == this.Doctor.Id);

@@ -14,7 +14,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Local time converted date
         /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Record date")]
+        [Display(Name = "Data da consulta")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime LocalDateTime { get; set; }
 
@@ -22,7 +22,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Local time converted start
         /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Start")]
+        [Display(Name = "Início")]
         [TimeDataType]
         public string Start { get; set; }
 
@@ -30,38 +30,38 @@ namespace CerebelloWebRole.Areas.App.Models
         /// Local time converted end
         /// </summary>
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "End")]
+        [Display(Name = "Fim")]
         [TimeDataType]
         public string End { get; set; }
 
-        [Display(Name = "Record date")]
+        [Display(Name = "Data da consulta")]
         public String LocalDateTimeSpelled { get; set; }
 
         public bool PatientFirstAppointment { get; set; }
         
-        [Display(Name = "Patient")]
+        [Display(Name = "Paciente")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? PatientId { get; set; }
 
-        [Display(Name = "Patient")]
+        [Display(Name = "Paciente")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public String PatientFullNameLookup { get; set; }
+        public String PatientNameLookup { get; set; }
 
-        [Display(Name = "Patient")]
+        [Display(Name = "Paciente")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        public String PatientFullName { get; set; }
+        public String PatientName { get; set; }
 
         [Display(Name = "E-mail")]
         [Code.EmailAddress]
         public string PatientEmail { get; set; }
 
-        [Display(Name = "Gender")]
+        [Display(Name = "Sexo")]
         [EnumDataType(typeof(TypeGender))]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? PatientGender { get; set; }
 
         // todo: this property is never being set.
-        [Display(Name = "Date of birth")]
+        [Display(Name = "Data de nascimento")]
         [DateOfBirth]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public DateTime? PatientDateOfBirth { get; set; }
@@ -82,7 +82,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Appointment description, when it is a generic appointment, instead of a medical appointment.
         /// </summary>
-        [Display(Name = "Description")]
+        [Display(Name = "Descrição")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Description { get; set; }
 
@@ -104,29 +104,22 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Status")]
         public string StatusText { get; set; }
 
-        [Display(Name = "Mobile phone")]
+        [Display(Name = "Telefone fixo")]
         [UIHint("Phone")]
-        public String PatientPhoneMobile { get; set; }
+        public String PatientPhoneCell { get; set; }
 
-        [Display(Name = "Home phone")]
+        [Display(Name = "Telefone celular")]
         [UIHint("Phone")]
-        public String PatientPhoneHome { get; set; }
+        public String PatientPhoneLand { get; set; }
 
-        [Display(Name = "Work phone")]
-        [UIHint("Phone")]
-        public String PatientPhoneWork { get; set; }
-
-        [Display(Name = "Work phone ext.")]
-        public String PatientPhoneWorkExt { get; set; }
-
-        [Display(Name = "Health insurance")]
+        [Display(Name = "Convênio")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public int? HealthInsuranceId { get; set; }
 
         /// <summary>
         /// The health insurance textual represention. This is used only in viewing
         /// </summary>
-        [Display(Name = "Health insurance")]
+        [Display(Name = "Convênio/Forma de atendimento")]
         public string HealthInsuranceName { get; set; }
 
         /// <summary>

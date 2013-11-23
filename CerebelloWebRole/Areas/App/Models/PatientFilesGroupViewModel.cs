@@ -39,20 +39,20 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Gets or sets the title of the files group.
         /// </summary>
-        [Display(Name = "Title")]
+        [Display(Name = "Título")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets additional notes about this files group.
         /// </summary>
-        [Display(Name = "Notes")]
+        [Display(Name = "Notas")]
         public string Notes { get; set; }
 
         /// <summary>
         /// Gets or sets the date these files were originated, that is, when they were first created.
         /// </summary>
-        [Display(Name = "Files date")]
+        [Display(Name = "Data dos arquivos")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("Data relacionado ao conteúdo dos arquivos. Por exemplo, se forem imagems, indica a data em que estas foram produzidas.")]
         public DateTime? FileGroupDate { get; set; }
@@ -60,7 +60,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Gets or sets the date these files were received, that is, when the doctor got them.
         /// </summary>
-        [Display(Name = "Receive date")]
+        [Display(Name = "Data de recebimento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("Data de recebimento dos arquivos. Indica quando estes foram anexados ao prontuário do paciente.")]
         public DateTime? ReceiveDate { get; set; }

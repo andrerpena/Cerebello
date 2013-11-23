@@ -14,12 +14,12 @@ namespace CerebelloWebRole.Areas.App.Models
         public int? Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Type")]
+        [Display(Name = "Tipo")]
         [EnumDataType(typeof(TypePhone))]
         public int Type { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Display(Name = "Full name")]
+        [Display(Name = "Nome completo")]
         public String Number { get; set; }
     }
 }

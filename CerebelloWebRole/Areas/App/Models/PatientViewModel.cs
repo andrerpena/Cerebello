@@ -13,17 +13,14 @@ namespace CerebelloWebRole.Areas.App.Models
             this.FutureAppointments = new List<AppointmentViewModel>();
         }
 
-        [Display(Name = "Health insurance")]
+        [Display(Name = "Convênio")]
         public int? HealthInsuranceId { get; set; }
 
-        [Display(Name = "Health insurance")]
+        [Display(Name = "Convênio")]
         public String HealthInsuranceText { get; set; }
 
-        [Display(Name = "Notes")]
-        public String Notes { get; set; }
-
-        [Display(Name = "Patient record #")]
-        public string RecordNumber { get; set; }
+        [Display(Name = "Observações")]
+        public String Observations { get; set; }
 
         [XmlIgnore]
         public List<SessionViewModel> Sessions { get; set; }

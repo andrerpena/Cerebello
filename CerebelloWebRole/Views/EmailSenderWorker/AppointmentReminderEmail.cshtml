@@ -7,7 +7,7 @@
     
     var dr = this.Model.DoctorGender == TypeGender.Male ? "Dr." : "Dra.";
     var o_dr = this.Model.DoctorGender == TypeGender.Male ? "o Dr." : "a Dra.";
-    var contactDoctor = string.Format("{0} {1}", dr, this.Model.DoctorFirstName);
+    var contactDoctor = string.Format("{0} {1}", dr, this.Model.DoctorName);
     var contactPractice = string.Format("{0}", this.Model.PracticeName);
 
     var hasDoctorContact = new[] { this.Model.DoctorPhone, this.Model.DoctorEmail }.AnyFilled();
@@ -35,12 +35,12 @@
     </head>
     <body style="font-family: arial, sans-serif; color: #222; background: white;">
         <p>
-            @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientFirstName,
+            @(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
         </p>
         <br />
         <p>
             Estamos entrando em contato para lhe lembrar de sua consulta, com
-            @o_dr @Model.DoctorFirstName, na seguinte data:
+            @o_dr @Model.DoctorName, na seguinte data:
             <strong>@Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))</strong>.
         </p>
         <br />
@@ -78,22 +78,22 @@
                 <li>@Model.PracticeSiteUrl</li>
             </ul>
             }
-            if (new[] { this.Model.PracticeAddress.ZipCode, this.Model.PracticeAddress.AddressLine1 }.AnyFilled())
+            if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
             {
             <h3>Endereço</h3>
             <ul>
-                @if (new[] { this.Model.PracticeAddress.ZipCode }.AnyFilled())
+                @if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
             {
-                    <li><b>ZipCode:</b> @Model.PracticeAddress.ZipCode</li>
+                    <li><b>CEP:</b> @Model.PracticeAddress.CEP</li>
             }
-                @if (new[] { this.Model.PracticeAddress.AddressLine1 }.AnyFilled())
+                @if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
             {
                     <li>Rua/Av @(string.Join(",\r\n    ", new[] {
-                     Model.PracticeAddress.AddressLine1,
-                     Model.PracticeAddress.AddressLine2,
+                     Model.PracticeAddress.Street,
+                     Model.PracticeAddress.Neighborhood,
                      Model.PracticeAddress.City,
                      Model.PracticeAddress.StateProvince,
-                     Model.PracticeAddress.AddressLine2 }
+                     Model.PracticeAddress.Complement }
                      .Where(s => !string.IsNullOrWhiteSpace(s))))
                     </li>
             }
@@ -115,7 +115,7 @@
         }
         <br />
         <p>Atenciosamente,</p>
-        <p style="padding-left: 2em; color: darkslategray">@Model.DoctorFirstName</p>
+        <p style="padding-left: 2em; color: darkslategray">@Model.DoctorName</p>
         <br />
 
         @*
@@ -130,11 +130,11 @@
     </html>
     return;
 }
-@(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientFirstName,
+@(Model.PatientGender == TypeGender.Male ? "Prezado" : "Prezada") @Model.PatientName,
 
     Estamos entrando em contato para
 lhe lembrar de sua consulta, com @o_dr
-@Model.DoctorFirstName,
+@Model.DoctorName,
 na seguinte data:
 
 @Model.AppointmentDate.ToString(CultureInfo.CreateSpecificCulture("pt-BR"))
@@ -166,22 +166,22 @@ Qualquer dúvida, entre em contato conosco.
     @:Site
     @:  @Model.PracticeSiteUrl
         }
-        if (new[] { this.Model.PracticeAddress.ZipCode, this.Model.PracticeAddress.AddressLine1 }.AnyFilled())
+        if (new[] { this.Model.PracticeAddress.CEP, this.Model.PracticeAddress.Street }.AnyFilled())
         {
     @:
     @:Endereço
-        if (new[] { this.Model.PracticeAddress.ZipCode }.AnyFilled())
+        if (new[] { this.Model.PracticeAddress.CEP }.AnyFilled())
         {
-    @:  ZipCode: @Model.PracticeAddress.ZipCode
+    @:  CEP: @Model.PracticeAddress.CEP
         }
-        if (new[] { this.Model.PracticeAddress.AddressLine1 }.AnyFilled())
+        if (new[] { this.Model.PracticeAddress.Street }.AnyFilled())
         {
     @:  Rua/Av @(string.Join(",\r\n    ", new[] {
-                 Model.PracticeAddress.AddressLine1,
-                 Model.PracticeAddress.AddressLine2,
+                 Model.PracticeAddress.Street,
+                 Model.PracticeAddress.Neighborhood,
                  Model.PracticeAddress.City,
                  Model.PracticeAddress.StateProvince,
-                 Model.PracticeAddress.AddressLine2 }
+                 Model.PracticeAddress.Complement }
                  .Where(s => !string.IsNullOrWhiteSpace(s))))
         }
         }
@@ -202,7 +202,7 @@ else
 *@
 
 Atenciosamente,
-    @Model.DoctorFirstName
+    @Model.DoctorName
 
 
 @(">> Powered by cerebello <<")

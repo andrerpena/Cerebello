@@ -1,18 +1,19 @@
 ﻿@model PatientsIndexViewModel
 @{
-    ViewBag.Title = "Patient records · Cerebello";
+    ViewBag.Title = "Prontuário · Cerebello";
 
-    ViewBag.Watermark = "Search by the patient name";
+    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     var grid = this.Html.CreateGrid(this.Model.LastRegisteredPatients);
-    grid.AddLinkField(m => m.LastName, "Details", m => new { id = m.Id });
-    grid.AddLinkField(m => m.FirstName, "Details", m => new { id = m.Id });
-    grid.AddField(m => m.Gender);
-    grid.AddField(m => m.DateOfBirth, header: "DOB");
-    grid.AddField(m => m.RecordNumber);
+    grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
+    grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
     grid.AddEditField("Edit", "Patients", model => new { model.Id });
+
+    var patientsLimit = (int?)this.ViewBag.PatientsLimit;
+    var patientsRemaining = patientsLimit - this.ViewBag.PatientsCount;
+    var canCreateMorePatients = patientsRemaining == null || patientsRemaining > patientsLimit;
 }
 @section Title {
 Prontuário
@@ -23,28 +24,42 @@ Prontuário
 @section SideBar {
     <ul>
         <li>
-            <a href="@Url.Action("Create", "Patients")" class="icon-link icon-link-plus">New patient</a>
+            <a href="@Url.Action("Create", "Patients")" class="icon-link icon-link-plus">Novo paciente</a>
         </li>
         @if (this.CanAccessAction("ExportDoctorXml", "Report"))
         {
-            <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Export XML</a> </li>
+            <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Exportar XML</a> </li>
         }
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
-            <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Export records in PDF</a> </li>
+            <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Exportar prontuários em PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadAllPatientsZipFile", "PatientFiles"))
         {
-            <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Export all patients files in ZipCode</a> </li>
+            <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Exportar os arquivos de todos os pacientes em Zip</a> </li>
         }
     </ul>
 }
+@if (!canCreateMorePatients)
+{
+    @:@this.Html.Message(
+    @<text>Sua conta permite cadastrar até @patientsLimit pacientes.
+             @if (patientsRemaining > 0)
+             {
+@:Faltam @patientsRemaining para atingir o limite.
+             }
+             else
+             {
+                 @:Não é possível cadastrar mais pacientes.
+             }
+    </text>)
+    }
 @using (Html.BeginForm("search", null, FormMethod.Get))
 {
     @Html.Partial("SearchBox", new SearchModel())
 }
 <div class="widget">
-    <h2>Last registered patients
+    <h2>Últimos pacientes cadastrados
     </h2>
     @grid.GetHtml()
 </div>

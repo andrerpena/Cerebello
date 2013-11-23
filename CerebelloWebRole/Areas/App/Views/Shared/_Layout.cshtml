@@ -31,7 +31,6 @@
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.paginator.css")" rel="Stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/App/Controls/jquery.cerebello.autocomplete.css")" rel="Stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/styles/app/Controls/jquery.cerebello.dropdown.menu.css")" rel="Stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/styles/app/Controls/jquery.cerebello.tabview.css")" rel="Stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/styles/app/jquery.arp.modal.css")" rel="Stylesheet" type="text/css" />
     @RenderSection("Styles", false)
 
@@ -80,7 +79,6 @@
     <script src="@Url.Content("~/Scripts/json2.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.signalR-1.1.0.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.ba-bbq.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.history.js")" type="text/javascript"></script>
 
     <script src="@Url.Content("~/signalr/hubs")" type="text/javascript"></script>
     
@@ -101,7 +99,6 @@
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.pager.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.autocomplete.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.dropdown.menu.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Controls/jquery.cerebello.tabview.js")" type="text/javascript"></script>
 
     @RenderSection("Scripts", false)
 
@@ -141,8 +138,8 @@
     {
         <div class="top-bar">
             <div class="top-bar-inner">
-                <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Upgrate to Pro version.
-                    <span class="small">Unlimited patient files and doctors.</span>
+                <a href="@Url.Action("Upgrade", "ConfigAccount", new { id = "ProfessionalPlan" })">Assine agora o Cerebello.
+                    <span class="small">Ilimitado, com suporte prioritário, e sem esta barra.</span>
                 </a>
             </div>
 
@@ -157,7 +154,7 @@
                     <img src="/content/images/top-logo-new.png" />
                 </a>
             </div>
-            <div class="user-menu-wrapper">
+            <div class="user-menu-wrapper" data-intro="Este é o seu usuário. Neste menu é possível visualizar as informações do seu usuário e sair" data-step="1">
                 <div class="picture">
                     <img src="@Html.Raw(GravatarHelper.GetGravatarUrl(userInfo.GravatarEmailHash, GravatarHelper.Size.s24))"/>
                 </div>
@@ -172,7 +169,8 @@
                 <div class="configurations">
                     <div class="text">
                         <span>
-                            <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Account settings
+                            <a href="@Url.Action("Index", "ConfigAccount")" class="config-icon">Configurações da conta
+                                @*@LockIcon.Icon("lock-account-config")*@
                             </a>
                         </span>
                     </div>
@@ -192,10 +190,10 @@
             items: [
                 @if (userInfo.DoctorId.HasValue)
                 {
-                    @:{ id: "doctorProfile", text: "Doctor profile", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
+                    @:{ id: "doctorProfile", text: "Perfil do médico", href: "@Url.Action("Index", "DoctorHome", new { doctor = userInfo.DoctorUrlIdentifier })" },
                 }
-                { id: "profile", text: "User profile", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
-                { id: "logout", text: "Sign out", href: "@Url.Action("Logout", "Authentication", new { area = "" })" }
+                { id: "profile", text: "Perfil do usuário", href: "@Url.Action("Details", "Users", new { id = userInfo.Id })" },
+                { id: "logout", text: "Sair", href: "@Url.Action("Logout", "Authentication", new { area = "" })" }
             ]
         });
     </script>
@@ -222,9 +220,9 @@
             </div>
             <div class="footer">
                 <ul>
-                    <li class="first"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })" target="_blank">Documentation</a></li>
-                    <li><a href="http://cerebello.uservoice.com" target="_blank">Feedback</a></li>
-                    <li><a href="mailto:@Constants.EMAIL_CEREBELLO">Contact us</a></li>
+                    <li class="first"><a href="@Url.Action("Index", "HomeDocs", new { area = "Docs" })" target="_blank">Documentação</a></li>
+                    <li><a href="http://cerebello.uservoice.com" target="_blank">Dê sua opinião</a></li>
+                    <li><a href="mailto:@Constants.EMAIL_CEREBELLO">Fale Conosco</a></li>
                 </ul>
             </div>
         </div>

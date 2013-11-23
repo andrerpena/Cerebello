@@ -12,7 +12,6 @@ using System.Web.Script.Serialization;
 using System.Web.Security;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
@@ -172,24 +171,13 @@ namespace CerebelloWebRole.Controllers
         #endregion
 
         #region CreateAccount
-
-        public static string defaultSubscription = "free";
-        private static readonly HashSet<string> validSubscriptions = new HashSet<string>(new[]
-            {
-                //"trial",
-                "1M",
-                //"3M",
-                "6M",
-                "12M",
-                "free",
-                //"unlimited",
-            }, StringComparer.InvariantCultureIgnoreCase);
+        static readonly HashSet<string> validSubscriptions = new HashSet<string>(new[] { "trial", "1M", "3M", "6M", "12M" }, StringComparer.InvariantCultureIgnoreCase);
 
         public ActionResult CreateAccount(string subscription)
         {
-            subscription = StringHelper.FirstNonEmpty(subscription, defaultSubscription);
+            subscription = StringHelper.FirstNonEmpty(subscription, "trial");
             if (!validSubscriptions.Contains(subscription))
-                subscription = defaultSubscription;
+                subscription = "trial";
 
             this.ViewBag.MedicalSpecialtyOptions =
                 this.db.SYS_MedicalSpecialty
@@ -232,14 +220,14 @@ namespace CerebelloWebRole.Controllers
             if (!string.IsNullOrEmpty(registrationData.PracticeName))
                 registrationData.PracticeName = Regex.Replace(registrationData.PracticeName, @"\s+", " ").Trim();
 
-            if (!string.IsNullOrEmpty(registrationData.FirstName))
-                registrationData.FirstName = Regex.Replace(registrationData.FirstName, @"\s+", " ").Trim();
+            if (!string.IsNullOrEmpty(registrationData.FullName))
+                registrationData.FullName = Regex.Replace(registrationData.FullName, @"\s+", " ").Trim();
 
             var urlPracticeId = StringHelper.GenerateUrlIdentifier(registrationData.PracticeName);
 
-            var subscription = StringHelper.FirstNonEmpty(registrationData.Subscription, defaultSubscription);
+            var subscription = StringHelper.FirstNonEmpty(registrationData.Subscription, "trial");
             if (!validSubscriptions.Contains(subscription) || registrationData.AsTrial == true)
-                subscription = defaultSubscription;
+                subscription = "trial";
 
             // Note: Url identifier for the name of the user, don't need any verification.
             // The name of the user must be unique inside a practice, not the entire database.
@@ -322,7 +310,7 @@ namespace CerebelloWebRole.Controllers
                 user.Practice.PhoneMain = registrationData.PracticePhone;
 
                 // Setting the BirthDate of the user as a person.
-                user.Person.DateOfBirth = ModelDateTimeHelper.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth ?? new DateTime());
+                user.Person.DateOfBirth = PracticeController.ConvertToUtcDateTime(user.Practice, registrationData.DateOfBirth ?? new DateTime());
 
                 user.IsOwner = true;
 
@@ -362,7 +350,17 @@ namespace CerebelloWebRole.Controllers
                     user.Doctor.MedicalEntityJurisdiction = ((TypeEstadoBrasileiro)registrationData.MedicalEntityJurisdiction).ToString();
 
                     // Creating an unique UrlIdentifier for this doctor.
-                    user.Doctor.UrlIdentifier = StringHelper.GenerateUrlIdentifier(PersonHelper.GetFullName(registrationData.FirstName, null, registrationData.LastName));
+                    // This is the first doctor, so there will be no conflicts.
+                    var urlId = UsersController.GetUniqueDoctorUrlId(this.db.Doctors, registrationData.FullName, null);
+                    if (urlId == null)
+                    {
+                        this.ModelState.AddModelError(
+                            () => registrationData.FullName,
+                            // Todo: this message is also used in the UserController.
+                            "Quantidade máxima de homônimos excedida.");
+                    }
+
+                    user.Doctor.UrlIdentifier = urlId;
                 }
                 else
                 {
@@ -376,7 +374,7 @@ namespace CerebelloWebRole.Controllers
                 if (this.ModelState.IsValid)
                 {
                     MailMessage emailMessageToUser = null;
-                    if (subscription == "trial" || subscription == "free")
+                    if (subscription == "trial")
                     {
                         // Creating confirmation email, with a token.
                         emailMessageToUser = this.EmailMessageToUser(user, utcNow, subscription == "trial");
@@ -416,70 +414,6 @@ namespace CerebelloWebRole.Controllers
                             contract.BillingPeriodSize = null;
                             contract.BillingPeriodType = null;
                             contract.BillingDiscountAmount = null;
-
-                            user.Practice.AccountExpiryDate = utcNow.AddHours(Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT);
-                            user.Practice.AccountContract = contract;
-
-                            if (practiceToReuse == null)
-                                this.db.AccountContracts.AddObject(contract);
-                        }
-                        else if (subscription == "free")
-                        {
-                            // Creating a new free account contract.
-                            var contract = user.Practice.AccountContract ?? new AccountContract();
-                            contract.Practice = user.Practice;
-
-                            contract.ContractTypeId = (int)ContractTypes.FreeContract;
-                            contract.IsTrial = false;
-                            contract.IssuanceDate = utcNow;
-                            contract.StartDate = utcNow;
-                            contract.EndDate = null; // indeterminated
-                            contract.CustomText = null;
-
-                            contract.DoctorsLimit = 1;
-                            contract.PatientsLimit = null; // fixed limit for trial account
-
-                            // no billings
-                            contract.BillingAmount = null;
-                            contract.BillingDueDay = null;
-                            contract.BillingPaymentMethod = null;
-                            contract.BillingPeriodCount = null;
-                            contract.BillingPeriodSize = null;
-                            contract.BillingPeriodType = null;
-                            contract.BillingDiscountAmount = null;
-
-                            user.Practice.AccountExpiryDate = utcNow.AddHours(Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT);
-                            user.Practice.AccountContract = contract;
-
-                            if (practiceToReuse == null)
-                                this.db.AccountContracts.AddObject(contract);
-                        }
-                        else if (subscription == "unlimited")
-                        {
-                            // Creating a new unlimited account contract.
-                            var contract = user.Practice.AccountContract ?? new AccountContract();
-                            contract.Practice = user.Practice;
-
-                            contract.ContractTypeId = (int)ContractTypes.UnlimitedContract;
-                            contract.IsTrial = false;
-                            contract.IssuanceDate = utcNow;
-                            contract.StartDate = utcNow;
-                            contract.EndDate = null; // indeterminated
-                            contract.CustomText = null;
-
-                            contract.DoctorsLimit = null;
-                            contract.PatientsLimit = null;
-
-                            // billings data can be redefined when the user fills payment info
-                            // for now these are the default values
-                            contract.IsPartialBillingInfo = true; // indicates that the billing info for this contract must be defined by the user
-                            contract.BillingAmount = Bus.Pro.UNLIMITED_PRICE;
-                            contract.BillingDueDay = null; // payment method has no default (will be defined in the payment-info step)
-                            contract.BillingPaymentMethod = null; // payment method has no default (will be defined in the payment-info step)
-                            contract.BillingPeriodCount = null;
-                            contract.BillingPeriodSize = 12; // unlimited accounts have always annual billings
-                            contract.BillingPeriodType = "M";
-                            contract.BillingDiscountAmount = (Bus.Pro.PRICE_YEAR * 12) - Bus.Pro.UNLIMITED_PRICE;
 
                             user.Practice.AccountExpiryDate = utcNow.AddHours(Constants.MAX_HOURS_TO_VERIFY_TRIAL_ACCOUNT);
                             user.Practice.AccountContract = contract;
@@ -589,7 +523,7 @@ namespace CerebelloWebRole.Controllers
                             throw new Exception("Login cannot fail.");
                         }
 
-                        if (subscription == "trial" || subscription == "free")
+                        if (subscription == "trial")
                             return this.RedirectToAction("CreateAccountCompleted", new { practice = user.Practice.UrlIdentifier });
                         else
                             return this.RedirectToAction("SetAccountPaymentInfo", new { practice = user.Practice.UrlIdentifier });
@@ -632,7 +566,7 @@ namespace CerebelloWebRole.Controllers
 
             // Rendering message bodies from partial view.
             var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), IsTrial = isTrial };
-            var toAddress = new MailAddress(user.Person.Email, PersonHelper.GetFullName(user.Person));
+            var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
             var emailMessageToUser = this.CreateEmailMessage("ConfirmationEmail", toAddress, emailViewModel);
 
             return emailMessageToUser;
@@ -646,7 +580,7 @@ namespace CerebelloWebRole.Controllers
             try
             {
                 var emailViewModel2 = new InternalCreateAccountEmailViewModel(user, registrationData);
-                var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FirstName);
+                var toAddress2 = new MailAddress("cerebello@cerebello.com.br", registrationData.FullName);
                 var mailMessage2 = this.CreateEmailMessagePartial("InternalCreateAccountEmail", toAddress2, emailViewModel2);
                 this.SendEmailAsync(mailMessage2).ContinueWith(
                     t =>
@@ -703,7 +637,7 @@ namespace CerebelloWebRole.Controllers
                     ContractUrlId = "ProfessionalPlan",
                     CurrentDoctorsCount = dbPractice.Users.Count(x => x.DoctorId != null),
                     DoctorCount = 1,
-                    InvoceDueDayOfMonth = ModelDateTimeHelper.ConvertToLocalDateTime(dbPractice, this.GetUtcNow()).Day,
+                    InvoceDueDayOfMonth = PracticeController.ConvertToLocalDateTime(dbPractice, this.GetUtcNow()).Day,
                     PaymentModelName = paymentModelName,
                 };
 
@@ -792,7 +726,7 @@ namespace CerebelloWebRole.Controllers
                         //// sending e-mail to cerebello@cerebello.com.br
                         //// to remember us to send the payment request
                         //var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
-                        //var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FirstName);
+                        //var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
                         //var mailMessage = this.CreateEmailMessagePartial("InternalUpgradeEmail", toAddress, emailViewModel);
                         //this.SendEmailAsync(mailMessage).ContinueWith(t =>
                         //{
@@ -823,7 +757,7 @@ namespace CerebelloWebRole.Controllers
 
                         // Creating the first billing
                         var utcNow = this.GetUtcNow();
-                        var localNow = ModelDateTimeHelper.ConvertToLocalDateTime(dbPractice, utcNow);
+                        var localNow = PracticeController.ConvertToLocalDateTime(dbPractice, utcNow);
 
                         Billing billing = null;
                         var idSet = string.Format(
@@ -846,11 +780,11 @@ namespace CerebelloWebRole.Controllers
                                 IssuanceDate = utcNow,
                                 MainAmount = (decimal)mainContract.BillingAmount,
                                 MainDiscount = (decimal)mainContract.BillingDiscountAmount,
-                                DueDate = ModelDateTimeHelper.ConvertToUtcDateTime(dbPractice, localNow.AddDays(10)),
+                                DueDate = PracticeController.ConvertToUtcDateTime(dbPractice, localNow.AddDays(10)),
                                 IdentitySetName = idSet,
                                 IdentitySetNumber = db.Billings.Count(b => b.PracticeId == dbPractice.Id && b.IdentitySetName == idSet) + 1,
-                                ReferenceDate = ModelDateTimeHelper.ConvertToUtcDateTime(dbPractice, null),
-                                ReferenceDateEnd = ModelDateTimeHelper.ConvertToUtcDateTime(dbPractice, null),
+                                ReferenceDate = PracticeController.ConvertToUtcDateTime(dbPractice, null),
+                                ReferenceDateEnd = PracticeController.ConvertToUtcDateTime(dbPractice, null),
                                 MainAccountContractId = dbPractice.ActiveAccountContractId.Value,
                             };
 
@@ -962,8 +896,7 @@ namespace CerebelloWebRole.Controllers
                         ConfirmPassword = "",
                         EMail = this.dbUser.Person.Email,
                         AsTrial = null,
-                        FirstName = this.dbUser.Person.FirstName,
-                        LastName = this.dbUser.Person.LastName,
+                        FullName = this.dbUser.Person.FullName,
                         Gender = this.dbUser.Person.Gender,
                         IsDoctor = this.dbUser.DoctorId.HasValue,
                         PracticeProvince = this.dbPractice.Province,
@@ -1240,7 +1173,7 @@ namespace CerebelloWebRole.Controllers
 
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(user) { Token = tokenId.ToString(), };
-                    var toAddress = new MailAddress(user.Person.Email, PersonHelper.GetFullName(user.Person));
+                    var toAddress = new MailAddress(user.Person.Email, user.Person.FullName);
                     message = this.CreateEmailMessagePartial("ResetPasswordEmail", toAddress, emailViewModel);
 
                     #endregion

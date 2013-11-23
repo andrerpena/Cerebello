@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using Cerebello.Firestarter.Helpers;
 using Cerebello.Model;
 using CerebelloWebRole.Areas.App.Controllers;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Code;
 
 namespace Cerebello.Firestarter
@@ -198,9 +197,7 @@ namespace Cerebello.Firestarter
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FirstName = "Júlio",
-                    MiddleName = "Almeida",
-                    LastName = "José",
+                    FullName = "Júlio Cezar Almeida",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "masbicudo@gmail.com",
@@ -257,9 +254,7 @@ namespace Cerebello.Firestarter
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 08, 12)),
-                    FirstName = "André",
-                    MiddleName = "Rodrigues",
-                    LastName = "Pena",
+                    FullName = "André Pena",
                     Gender = (int)TypeGender.Male,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "andrerpena@gmail.com",
@@ -323,11 +318,10 @@ namespace Cerebello.Firestarter
         public static Doctor CreateDoctor_MartaCura(
             CerebelloEntities db, SYS_MedicalEntity entity, SYS_MedicalSpecialty specialty, Practice practice)
         {
-            var person = new Person()
+            Person person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
-                    FirstName = "Marta",
-                    LastName = "Cura",
+                    FullName = "Marta Cura",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     Email = "martacura@fakemail.com",
@@ -387,8 +381,7 @@ namespace Cerebello.Firestarter
             var person = new Person
             {
                 DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1967, 04, 20)),
-                FirstName = "Miguel Angelo",
-                LastName = "Bicudo",
+                FullName = "Miguel Angelo Santos",
                 Gender = (int)TypeGender.Male,
                 CreatedOn = Firestarter.UtcNow,
                 Email = "thomasgray@fakemail.com",
@@ -468,11 +461,10 @@ namespace Cerebello.Firestarter
             db.Users.AddObject(user);
 
             // Creating person.
-            var person = new Person()
+            Person person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1984, 05, 04)),
-                    FirstName = "Milena",
-                    LastName = "Santos",
+                    FullName = "Milena Santos",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -483,7 +475,7 @@ namespace Cerebello.Firestarter
             db.SaveChanges();
 
             // Creating secretary.
-            var secreatry = new Secretary
+            Secretary secreatry = new Secretary
                 {
                     PracticeId = practice.Id,
                 };
@@ -522,11 +514,10 @@ namespace Cerebello.Firestarter
             db.Users.AddObject(user);
 
             // Creating person.
-            var person = new Person()
+            Person person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
-                    FirstName = "Maricleusa",
-                    LastName = "Souza",
+                    FullName = "Maricleusa Souza",
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -714,7 +705,7 @@ namespace Cerebello.Firestarter
 
             doctor.CFG_Documents = new CFG_Documents()
                 {
-                    Header1 = PersonHelper.GetFullName(doctor.Users.First().Person),
+                    Header1 = doctor.Users.First().Person.FullName,
                     Header2 = "[Especialidade Médica]",
                     FooterLeft1 = "[Endereço]",
                     FooterLeft2 = "[Telefones]",
@@ -859,33 +850,13 @@ namespace Cerebello.Firestarter
 
             db.SYS_ContractType.AddObject(
                 new SYS_ContractType
-                {
-                    Id = (int)ContractTypes.ProfessionalContract,
-                    CreatedOn = new DateTime(2012, 09, 18),
-                    IsTrial = false,
-                    Name = "Contrato de assinatura do plano Profissional Básico",
-                    UrlIdentifier = ContractTypes.ProfessionalContract.ToString(),
-                });
-
-            db.SYS_ContractType.AddObject(
-                new SYS_ContractType
-                {
-                    Id = (int)ContractTypes.FreeContract,
-                    CreatedOn = new DateTime(2013, 08, 06),
-                    IsTrial = false,
-                    Name = "Contrato of the free plan",
-                    UrlIdentifier = ContractTypes.FreeContract.ToString(),
-                });
-
-            db.SYS_ContractType.AddObject(
-                new SYS_ContractType
-                {
-                    Id = (int)ContractTypes.UnlimitedContract,
-                    CreatedOn = new DateTime(2013, 08, 06),
-                    IsTrial = false,
-                    Name = "Contrato of the unlimited plan",
-                    UrlIdentifier = ContractTypes.UnlimitedContract.ToString(),
-                });
+                    {
+                        Id = (int)ContractTypes.ProfessionalContract,
+                        CreatedOn = new DateTime(2012, 09, 18),
+                        IsTrial = false,
+                        Name = "Contrato de assinatura do plano Profissional Básico",
+                        UrlIdentifier = ContractTypes.ProfessionalContract.ToString(),
+                    });
 
             db.SaveChanges();
         }
@@ -1893,7 +1864,7 @@ GO
 
         public static User CreateUser(CerebelloEntities db, Practice practice, string username, string password, string name)
         {
-            const string pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
+            var pwdSalt = "C2p4NIf+1JYZmNHdKMgpop==";
             var pwdHash = CipherHelper.Hash(password, pwdSalt);
             if (string.IsNullOrEmpty(password))
                 pwdHash = CipherHelper.Hash(Constants.DEFAULT_PASSWORD, pwdSalt);
@@ -1916,7 +1887,7 @@ GO
             var person = new Person()
                 {
                     DateOfBirth = ConvertFromDefaultToUtc(new DateTime(1974, 10, 12)),
-                    FirstName = name,
+                    FullName = name,
                     Gender = (int)TypeGender.Female,
                     CreatedOn = Firestarter.UtcNow,
                     PracticeId = practice.Id,
@@ -2008,8 +1979,8 @@ GO
         public static void CreateFakeAppointments(CerebelloEntities db, Doctor doctor, int seed, int count = 300)
         {
             var practice = db.Practices.First(p => p.Id == doctor.PracticeId);
-            var startingTime = ModelDateTimeHelper.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
-            var practiceNow = ModelDateTimeHelper.ConvertToLocalDateTime(practice, Firestarter.UtcNow);
+            var startingTime = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow.AddDays(-20));
+            var practiceNow = PracticeController.ConvertToLocalDateTime(practice, Firestarter.UtcNow);
             var user = doctor.Users.First();
             var dbWrapper = new CerebelloEntitiesAccessFilterWrapper(db);
             dbWrapper.SetCurrentUserById(user.Id);

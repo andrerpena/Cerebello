@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -119,8 +121,38 @@ namespace CerebelloWebRole.Code
 
                 foreach (var field in this.Fields)
                 {
-                    var columnHeader = field.GetColumnHeader();
-                    var cellContentFunction = field.GetDisplayTextFunction(this.htmlHelper);
+                    PropertyInfo propertyInfo = null;
+                    var expressionPropertyValue = ((dynamic)field).Expression;
+                    if (expressionPropertyValue != null)
+                        propertyInfo = (PropertyInfo)((MemberExpression)((LambdaExpression)expressionPropertyValue).Body).Member;
+                    else
+                    {
+                        if (field.Format == null)
+                            throw new Exception("When the format is not specified, the field expression cannot be null");
+                    }
+
+                    string columnHeader;
+                    if (field.Header != null)
+                        columnHeader = field.Header;
+                    else
+                    {
+                        var displayAttribute = propertyInfo != null
+                                                   ? propertyInfo.GetCustomAttributes(true)
+                                                                 .OfType<DisplayAttribute>()
+                                                                 .FirstOrDefault()
+                                                   : null;
+
+                        if (displayAttribute != null)
+                        {
+                            columnHeader = displayAttribute.Name;
+                            if (string.IsNullOrEmpty(columnHeader))
+                                columnHeader = propertyInfo.Name;
+                        }
+                        else
+                            columnHeader = propertyInfo != null ? propertyInfo.Name : "";
+                    }
+
+                    var format = field.Format ?? (x => propertyInfo.GetValue(((WebGridRow)x).Value, null));
 
                     var cssClasses = new List<string>();
                     if (field.WordWrap)
@@ -132,7 +164,7 @@ namespace CerebelloWebRole.Code
                         webGrid.Column(
                             style: string.Join(" ", cssClasses),
                             header: columnHeader,
-                            format: cellContentFunction,
+                            format: format,
                             canSort: field.CanSort));
                 }
 
@@ -148,7 +180,7 @@ namespace CerebelloWebRole.Code
 
             var noRecords = new TagBuilder("div");
             noRecords.AddCssClass("message-warning");
-            noRecords.SetInnerText("No data");
+            noRecords.SetInnerText("Não existem registros a serem exibidos");
 
             return new MvcHtmlString(noRecords.ToString());
         }

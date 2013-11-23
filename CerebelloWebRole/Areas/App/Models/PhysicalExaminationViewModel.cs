@@ -10,7 +10,7 @@ namespace CerebelloWebRole.Areas.App.Models
     [XmlType("PhysicalExamination")]
     public class PhysicalExaminationViewModel
     {
-        [Display(Name = "Physical exam")]
+        [Display(Name = "Exame físico")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Notes { get; set; }
 
@@ -18,7 +18,7 @@ namespace CerebelloWebRole.Areas.App.Models
 
         public int? Id { get; set; }
 
-        [Display(Name = "Registry date")]
+        [Display(Name = "Data de registro")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("Data em que o exame físico foi registrado")]
         public DateTime? MedicalRecordDate { get; set; }

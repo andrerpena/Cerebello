@@ -7,21 +7,17 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "First name")]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last name")]
-        public string LastName { get; set; }
-
+        [Display(Name = "Nome completo")]
+        public string Name { get; set; }
         public string UrlIdentifier { get; set; }
 
         [Display(Name = "CRM")]
         public string CRM { get; set; }
 
-        [Display(Name = "Specialty")]
+        [Display(Name = "Especialidade")]
         public string MedicalSpecialty { get; set; }
 
-        [Display(Name = "Medical entity")]
+        [Display(Name = "Conselho")]
         public string MedicalEntity { get; set; }
         public string ImageUrl { get; set; }
 

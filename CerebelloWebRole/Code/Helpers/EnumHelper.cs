@@ -32,7 +32,9 @@ namespace CerebelloWebRole.Code
 
             // pego os atributes do FieldInfo do enum
             var customAttributes = enumField.GetCustomAttributes(typeof(DisplayAttribute), true);
-            return customAttributes.Length == 0 ? enumValueString : ((DisplayAttribute)customAttributes[0]).Name;
+            if (customAttributes.Length == 0)
+                return enumValueString;
+            return ((DisplayAttribute)customAttributes[0]).Name;
         }
 
         ///<exception cref="System.ArgumentNullException">If enumType is null</exception>

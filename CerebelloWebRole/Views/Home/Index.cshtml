@@ -5,9 +5,9 @@
     <div class="container">
         <div class="hero-wrapper">
             <div class="create-account-wrapper">
-                <h1>Eletronic Health Records made simple.</h1>
-                <a class="btn huge btn-success btn-large" href="@Url.Action("CreateAccount", "Authentication")">Create your free Cloud account</a>
-                <p style="margin-top: 10px;">... and start using Cerebello in <b style="font-size: 1.2em;">5 minutes</b>.</p>
+                <h1>Gerencie seu consultório médico online com o Cerebello</h1>
+                <a class="btn huge btn-success btn-large" href="@Url.Action("CreateAccount", "Authentication")">Crie sua conta gratuitamente</a>
+                <p style="margin-top: 10px;">... e comece a utilizar o software em <b style="font-size: 1.2em;">5 minutos</b>.</p>
             </div>
             <div class="screenshot-wrapper">
                 <img src="/Content/Images/Site/screenshot1.png" />
@@ -17,50 +17,46 @@
 </div>
 <div class="container">
 
-    <div class="container-header">
-        <h3 style="text-align: center">Cerebello is an open-source online EMR/EHR solution for small medical practices
-            <br />
-            It's amazingly simple and makes it easier to keep track of your patients data
-        </h3>
-    </div>
+    <h3 style="line-height: 1.1em;">O Cerebello é um software de gerenciamento online de consultórios médicos.
+        É fácil de usar e simplifica o trabalho no seu consultório.
+        <span style="color: #999999">Veja o vídeo de apresentação.</span>
+    </h3>
+
+    <img src="/Content/Images/Site/arrow.png" style="margin-left: -60px; margin-top: -25px; position: absolute;" />
+    <hr />
 
     <div class="container features">
         <div class="row">
             <div class="span6">
-                <h3>How does it work?</h3>
-                <p>
-                    Cerebello is available at two different models:
-                </p>
-                <p>
-                    <b>On-premise solution:</b> You download Cerebello and install it at your own servers for free. You are responsible 
-                    for the infrastructure and upgrade management. If you need assistance, please refer to the <a href="#">Cerebello installation guide</a>.
-                </p>
+                <center>
+                    <iframe width="100%" height="350px" src="https://www.youtube.com/embed/lD3nrs9mXjE" frameborder="0" allowfullscreen></iframe>
+                </center>
 
-                <div style="height: 1px; background-color: #DCDCDC; text-align: center; margin: 15px 0">
-                    <span style="background-color: white; position: relative; top: -9px; font-style: italic; padding: 10px; color: rgb(147, 147, 147)">Or
-                    </span>
-                </div>
-
-                <p>
-                    <b>Cloud solution:</b>
-                    You <a href="#">create an account</a> and we take care of your installation and data. Cloud solution is free for practices with a single doctor, with a limited 2GB of patients file.
-                    Cloud highlights:
-                </p>
+                <h3>Vantagens de usar o Cerebello:</h3>
 
                 <ul class="green-checks">
-                    <li>You don't have to care about installations, servers, security and backup. We take care of the infrastructure while you take care of what really matters: Your patients.</li>
-                    <li>Your patients data are secure and highly available at the <a href="http://www.windowsazure.com/pt-br/">Microsoft Servers</a>. 
-                        Additionally, you have extra security and offline data availability through the <a href="http://drive.google.com/" target="_blank">Google Drive</a> automatic backups.
-                        All information transits with 128 bits criptography.</li>
-                    <li>Cerebello is always improving. All upgrades and data migration are available at no extra fee. Additionally, we are always open to your <a href="http://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello" target="_blank">improvements suggestion</a>.</li>
-                    <li>We have a free account. Professional accounts start at <code>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR / 12) /month</code>.
-                        <a href="@Url.Action("PricesAndPlans")">Pricing details.</a>
+                    <li>Tenha acesso às suas informações de qualquer lugar: PC, tablets ou smartphones.</li>
+                    <li>Não se preocupe com instalações, servidores, segurança ou backup. Nós cuidamos da infraestrutura enquanto você cuida do que é mais importante: Seus pacientes.</li>
+                    <li>Seus dados e arquivos estão seguros e com alta disponibilidade nos <a href="http://www.windowsazure.com/pt-br/">servidores da Microsoft</a>. 
+                        Além disso, você possui a segurança do backup automático e disponibilidade off-line dos dados através da sincronia automática com o <a href="http://drive.google.com/" target="_blank">Google Drive</a>.
+                        Todas as informações inseridas circulam com criptografia 128 bits.</li>
+                    <li>O Cerebello passa por atualizações constantes e está sempre melhorando. Todas as atualizações estão incluídas no pacote sem custo adicional. Além disso, nós estamos sempre abertos às suas <a href="http://cerebello.uservoice.com/forums/189691-central-de-id%C3%A9ias-do-cerebello" target="_blank">sugestões de melhorias</a>.</li>
+                    <li>Experimente gratuitamente todos os recursos pelo tempo que desejar com um
+                        limite de 50 pacientes. A qualquer momento você pode atualizar para uma conta
+                        profissional, com custo a partir de <code>@StringHelper.FormatMoney(Bus.Pro.PRICE_YEAR / 12)</code> mensais na assinatura anual.
+                        <a href="@Url.Action("PricesAndPlans")">Veja os preços e planos.</a>
                     </li>
                 </ul>
 
-                <p>You can start using Cerebello right now and see it for yourself. No bureaucracy and no credit card information required.</p>
+                <p>Você pode começar a utilizar o software agora e ver por você mesmo. Sem burocracia, sem informar dados de cartão de crédito e só demora 5 minutos:</p>
 
-                <a class="btn btn-warning btn-large" href="@Url.Action("CreateAccount", "Authentication")">Start using Cerebello Cloud solution</a>
+                <a class="btn btn-warning btn-large" href="@Url.Action("CreateAccount", "Authentication")">Comece a usar o Cerebello</a>
+                
+                <h3 style="margin-top: 20px">Fale conosco:</h3>
+                <ul class="contact-ul">
+                    <li class="contact-phone-li">@Constants.TELEPHONE_NUMBER</li>
+                    <li class="contact-email-li"><a href="mailto:@Constants.EMAIL_CEREBELLO">@Constants.EMAIL_CEREBELLO</a></li>
+                </ul>
             </div>
             <div class="span6">
                 <div class="row">
@@ -68,14 +64,15 @@
                         <img src="/Content/Images/Site/prontuario.png" class="features-icon" />
                     </div>
                     <div class="span5">
-                        <h3>Eletronic Health Record</h3>
+                        <h3>Prontuário eletrônico</h3>
                         <p>
-                            Organize and keep track of your patients data:
-                            Anamneses, prescriptions, exams, diagnosis, medical certificates e etc. Cerebello offers unlimited file storage
-                            for your patients files, like images and documents.
+                            Organize e mantenha o histórico das informações completas sobre seus pacientes:
+                            Anamneses, receitas, solicitações de exames, diagnósticos, atestados e etc. O Cerebello 
+                            oferece armazenamento ilimitado para os arquivos dos seus pacientes, como imagens e documentos.
                         </p>
                         <p>
-                            Your patients data, including the files, can be exported to PDF, XML and ZIP files.
+                            Todos os dados dos pacientes podem ser exportados para PDF ou XML a qualquer momento. 
+                            Assim como os arquivos dos pacientes podem ser exportados para ZIP.
                         </p>
                     </div>
                 </div>
@@ -84,12 +81,13 @@
                         <img src="/Content/Images/Site/agenda.png" class="features-icon" />
                     </div>
                     <div class="span5">
-                        <h3>Schedule</h3>
+                        <h3>Agenda</h3>
                         <p>
-                            Keep track of your schedule: Appointments, scheduling and free time slots.
+                            Veja o panorama completo da sua agenda de forma prática: Consultas, compromissos, fila de atendimento, próximos horários livres e etc.
                         </p>
                         <p>
-                            E-Mails are automatically sent to patients to warn them about upcomming appointments.
+                            E-Mails são automaticamente enviados aos os pacientes para lembrá-los das consultas,
+                            diminuindo assim, a incidência de faltas por esquecimento.
                         </p>
                     </div>
                 </div>
@@ -98,8 +96,11 @@
                         <img src="/Content/Images/Site/medicamentos.png" class="features-icon" />
                     </div>
                     <div class="span5">
-                        <h3>Medications</h3>
-                        <p>Register, write notes and keep track of medicine usages.</p>
+                        <h3>Medicamentos</h3>
+                        <p>Cadastre, faça anotações, mantenha controle de quais pacientes estão usando quais medicamentos.</p>
+                        <p>
+                            Importe informações sobre medicamentos e bulas diretamente do site da <a href="http://www.anvisa.gov.br">Anvisa</a> de forma bem simplificada.
+                        </p>
                     </div>
                 </div>
                 <div class="row">
@@ -107,8 +108,8 @@
                         <img src="/Content/Images/Site/documentos.png" class="features-icon" />
                     </div>
                     <div class="span5">
-                        <h3>Prescriptions and medical certificates</h3>
-                        <p>Create customizable certificate models and export prescriptions and medical certificates to PDF so they can printed or stored</p>
+                        <h3>Receitas e atestados</h3>
+                        <p>Crie modelos customizados de atestados e exporte receitas e atestados facilmente para PDF para que possam ser impressos ou armazenados</p>
                     </div>
                 </div>
                 <div class="row">
@@ -116,9 +117,9 @@
                         <img src="/Content/Images/Site/usuarios.png" class="features-icon" />
                     </div>
                     <div class="span5">
-                        <h3>Multi-user support</h3>
-                        <p>Work together with desks and other doctors in your practice.</p>
-                        <p>Cerebello offers tools for improving the colaboration within your practice, like notifications and chat.</p>
+                        <h3>Múltiplos usuários</h3>
+                        <p>Trabalhe com secretárias e outros médicos no mesmo consultório.</p>
+                        <p>O Cerebello possui ferramentas para facilitar a colaboração entre usuários como notificações e chat.</p>
                     </div>
                 </div>
                 <div class="row">
@@ -126,11 +127,12 @@
                         <img src="/Content/Images/Site/backup.png" class="features-icon" />
                     </div>
                     <div class="span5">
-                        <h3>Automatic backup</h3>
+                        <h3>Backup automático</h3>
                         <p>
-                            All your patients data are automatically synchronized with your <a href="http://drive.google.com/" target="_blank">Google Drive</a> account,
-                            including clinical data, profile pictures and uploaded files.
-                            You can access this information off-line at your PC at any moment, or online through your smartphone or tablet.
+                            Todos os dados dos seus pacientes são automaticamente sincronizados com a sua conta no <a href="http://drive.google.com/" target="_blank">Google Drive</a>,
+                            incluindo dados clínicos, fotos de perfil e arquivos do paciente.
+                            Você possui acesso a essas informações off-line no seu computador a qualquer momento, ou online através do seu smarphone ou tablet.
+                            Mais segurança para você. A sincroniza é feita a cada 60 minutos.
                         </p>
                     </div>
                 </div>

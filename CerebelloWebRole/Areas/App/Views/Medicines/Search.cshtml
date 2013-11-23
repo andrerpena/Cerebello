@@ -1,8 +1,8 @@
 ﻿@model SearchViewModel<MedicineViewModel>
 @{
-    const string title = "Medicines search";
+    var title = "Pesquisa de medicamentos";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
-    ViewBag.Watermark = "Search by the medicine name";
+    ViewBag.Watermark = "Pesquisar pelo nome do medicamento";
 
     var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
     grid.AddLinkField(m => m.Name, "Details", m => new { id = m.Id });
@@ -17,7 +17,7 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">New medicine</a> </li>
+        <li><a href="@Url.Action("Create")" class="icon-link icon-link-plus">Novo medicamento</a> </li>
     </ul>
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))
@@ -26,7 +26,7 @@
 }
 <div class="search-result">
     <h2>
-        Search result
+        Resultado da pesquisa
     </h2>
     @grid.GetHtml()
 </div>

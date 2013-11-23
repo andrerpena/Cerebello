@@ -11,24 +11,14 @@ namespace Cerebello.Model
     public enum ContractTypes
     {
         /// <summary>
-        /// The trial contract: limited patients; unlimited doctors.
+        /// The trial contract.
         /// </summary>
         TrialContract = 1,
 
         /// <summary>
-        /// The professional contract: unlimited patients; limited doctors depending on configuration.
+        /// The professional contract.
         /// </summary>
         ProfessionalContract = 2,
-
-        /// <summary>
-        /// The free contract: unlimited patients; limited to 1 doctor.
-        /// </summary>
-        FreeContract = 3,
-
-        /// <summary>
-        /// The unlimited contract: unlimited patients; unlimited doctors.
-        /// </summary>
-        UnlimitedContract = 4,
     }
 
     public enum TypeAppointmentStatus : int
@@ -136,10 +126,10 @@ namespace Cerebello.Model
     /// </summary>
     public enum TypeGender
     {
-        [Display(Name = "Male")]
+        [Display(Name = "Masculino")]
         Male = 0,
 
-        [Display(Name = "Female")]
+        [Display(Name = "Feminino")]
         Female = 1
     }
 

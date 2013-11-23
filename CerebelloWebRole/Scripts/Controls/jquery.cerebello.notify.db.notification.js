@@ -2,9 +2,9 @@
     /// <summary>notify the SECRETARY about a patient that should have come</summary>
     /// <param name="id" type="Number">notification id</param>
     /// <param name="patientId" type="patient id">patient id</param>
-    /// <param name="PatientFirstName" type="String">patient name</param>
+    /// <param name="patientName" type="String">patient name</param>
     /// <param name="doctorId" type="id">doctor id</param>
-    /// <param name="DoctorFullName" type="string">doctor name</param>
+    /// <param name="doctorName" type="string">doctor name</param>
     /// <param name="appointmentId" type="string">appointmentId</param>
     /// <param name="time" type="string">appointment time spelled</param>
 
@@ -72,7 +72,7 @@ function notifyPatientArrived(id, patientId, patientName, time, practiceIdentifi
     /// <summary>notify the DOCTOR the patient has arrived</summary>
     /// <param name="id" type="Number">notification id</param>
     /// <param name="patientId" type="Number">patient id</param>
-    /// <param name="PatientFirstName" type="String">patient name</param>
+    /// <param name="patientName" type="String">patient name</param>
     /// <param name="time" type="String">appointment time spelled</param>
 
     var patientUrl = "/p/" + practiceIdentifier + "/d/" + doctorIdentifier + "/Patients/Details/" + patientId;

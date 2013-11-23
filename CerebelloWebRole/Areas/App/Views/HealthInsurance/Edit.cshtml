@@ -66,8 +66,8 @@
     </table>
 
     <div class="submit-bar">
-        <input type="submit" value="save health insurance" />
-        <span class="separator">or</span>
-        @Html.ActionLink("cancel", "Index")
+        <input type="submit" value="@(this.Model.IsParticular ? "salvar forma de atendimento" : "salvar convênio")" />
+        <span class="separator">ou</span>
+        @Html.ActionLink("cancelar", "Index")
     </div>
 }

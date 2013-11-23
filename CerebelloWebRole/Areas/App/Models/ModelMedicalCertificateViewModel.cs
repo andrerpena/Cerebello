@@ -14,7 +14,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Nome do modelo de receita médica
         /// </summary>
-        [Display(Name = "Name")]
+        [Display(Name = "Nome")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceName="MaxLengthValidationMessage")]
         public string Name { get; set; }
@@ -22,7 +22,7 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Texto da receita
         /// </summary>
-        [Display(Name = "Text")]
+        [Display(Name = "Texto")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Text { get; set; }
     }

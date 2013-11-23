@@ -5,7 +5,7 @@
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
-    grid.AddLinkField(model => model.PatientFirstName, "Details", "Patients", model => new {id = model.PatientId});
+    grid.AddLinkField(model => model.PatientName, "Details", "Patients", model => new {id = model.PatientId});
     grid.AddField(model => model.Prescription);
     grid.AddField(model => model.Quantity);
     grid.AddField(model => model.Date, @<text>@item.Date.ToShortDateString()</text>);

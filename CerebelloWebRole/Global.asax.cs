@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using CerebelloWebRole.Areas.App;
 using CerebelloWebRole.Code;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
@@ -26,7 +25,7 @@ namespace CerebelloWebRole
         {
             filters.Add(new CanonicalUrlHttpsFilter());
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new AreaAuthenticationFilter("App"));
+            filters.Add(new AppAreaAuthenticationFilter());
             filters.Add(new AccessAreaWithDefaultPasswordFilter("App", "Users", "ChangePassword"));
             filters.Add(new ValidateInputAttribute(false));
         }
@@ -66,9 +65,6 @@ namespace CerebelloWebRole
 
             // Will create a thread to send notifications
             NotificationsHelper.CreateNotificationsJob();
-
-            // create model maps
-            ModelMappings.CreateMaps();
 
             SetupDependencyInjector();
         }

@@ -5,18 +5,18 @@ namespace CerebelloWebRole.Areas.App.Models
     public class PasswordViewModel
     {
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Please type in your current password")]
-        [Display(Name = "Current password")]
+        [Required(ErrorMessage = "Informe a sua senha atual.")]
+        [Display(Name = "Senha atual")]
         public string OldPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Please type a valid password")]
-        [Display(Name = "New password")]
+        [Required(ErrorMessage = "Informe uma senha válida.")]
+        [Display(Name = "Senha desejada")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "The new password must be confirmed")]
-        [Display(Name = "Confirm new password")]
+        [Required(ErrorMessage = "A senha desejada deve ser repetida.")]
+        [Display(Name = "Repita a senha desejada")]
         public string RepeatPassword { get; set; }
     }
 }

@@ -1,12 +1,12 @@
 ﻿@model DoctorHomeViewModel
 @using Cerebello.Model
 @{
-    var title = "Doctor: " + this.Model.DoctorFullName;
+    var title = (this.Model.Gender == TypeGender.Male ? "Médico: " : "Médica: ") + this.Model.DoctorName;
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     Layout = "~/Areas/App/Views/Shared/_LayoutDoctor.cshtml";
 
     var cardView = this.Html.CreateCardView();
-    cardView.AddField(m => m.DoctorFullName, wholeRow: true);
+    cardView.AddField(m => m.DoctorName, wholeRow: true);
     cardView.AddField(m => m.MedicCrm);
     cardView.AddField(m => m.MedicalSpecialtyName);
     cardView.AddField(m => m.MedicalEntityName);
@@ -29,7 +29,7 @@
         };
 
     var todaysAppointmentGrid = this.Html.CreateGrid(this.Model.TodaysAppointments);
-    todaysAppointmentGrid.AddField(model => model.PatientFullName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new { id = item.PatientId })">@item.PatientFullName</a></span></text>);
+    todaysAppointmentGrid.AddField(model => model.PatientName, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "Patients", new { id = item.PatientId })">@item.PatientName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.LocalDateTimeSpelled, header: "Horário", format: @<text><span class="@getCssClass(item)"><a href="@Url.Action("Index", "Schedule", new { y = item.LocalDateTime.Year, m = item.LocalDateTime.Month, d = item.LocalDateTime.Day })">@item.LocalDateTimeSpelled</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.HealthInsuranceId, @<text><span class="@getCssClass(item)"><a href="@Url.Action("Details", "HealthInsurance", new { id = item.HealthInsuranceId })">@item.HealthInsuranceName</a></span></text>);
     todaysAppointmentGrid.AddField(model => model.StatusText, @<text><span class="@getCssClass(item)">@item.StatusText</span></text>);
@@ -51,17 +51,17 @@
         @if (this.CanAccessAction("ExportDoctorXml", "Report"))
         {
             itemCount++;
-            <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Export XML</a> </li>
+            <li><a href="@Url.Action("ExportDoctorXml", "Report")" target="_blank" class="icon-link icon-link-import">Exportar XML</a> </li>
         }
         @if (this.CanAccessAction("ExportPatientsPdf", "Report"))
         {
             itemCount++;
-            <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Export records as PDF</a> </li>
+            <li><a href="@Url.Action("ExportPatientsPdf", "Report")" target="_blank" class="icon-link icon-link-import">Exportar prontuários em PDF</a> </li>
         }
         @if (this.CanAccessAction("DownloadAllPatientsZipFile", "PatientFiles"))
         {
             itemCount++;
-            <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Exportar all patients files as ZIP</a> </li>
+            <li><a href="@Url.Action("DownloadAllPatientsZipFile", "PatientFiles")" class="icon-link icon-link-import">Exportar os arquivos de todos os pacientes em Zip</a> </li>
         }
     </ul>
     @if (itemCount > 0)
@@ -70,7 +70,7 @@
     }
     <ul>
         @*<li><a href="#" class="icon-link icon-link-help" onclick="introJs().start(); return false;">Introdução interativa</a></li>*@
-        <li><a href="@Url.Action("TheAppointmentLine", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Help</a></li>
+        <li><a href="@Url.Action("TheAppointmentLine", "HomeDocs", new { area = "Docs" })" class="icon-link icon-link-help" target="_blank">Ajuda</a></li>
     </ul>
 }
 
@@ -108,7 +108,7 @@
 @cardView.GetHtml()
 
 <div class="widget">
-    <h2>Today's medical appointments (@this.ViewBag.PracticeLocalDate)
+    <h2>Consultas agendadas para hoje (@this.ViewBag.PracticeLocalDate)
     </h2>
     @todaysAppointmentGrid.GetHtml()
 </div>
@@ -124,6 +124,6 @@
                 this.Model.NextGenericAppointmentsCount);
         }
     }
-    <h2>Today's generic appointments @nextGenericAppointmentsNotes</h2>
+    <h2>Próximos compromissos @nextGenericAppointmentsNotes</h2>
     @nextGenericAppointments.GetHtml()
 </div>

@@ -1,10 +1,13 @@
-﻿@model AddressViewModel
+﻿
+@model AddressViewModel
 @{
-    var editPanel = this.Html.CreateEditPanel("Address");
-    editPanel.AddField(m => m.AddressLine1, EditPanelFieldSize.Large, wholeRow: true);
-    editPanel.AddField(m => m.AddressLine2, EditPanelFieldSize.Large, wholeRow: true);
-    editPanel.AddField(m => m.City, EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.County, EditPanelFieldSize.Large);
+    var editPanel = this.Html.CreateEditPanel();
+    editPanel.AddField(m => m.CEP, @<text> @Html.EditorFor(model => model.CEP)
+    <div>
+        <a class="getCepInfo block-little-link" href="#" style="display: inline-block">Obter endereço</a>
+        <img class="getCepInfoActivityIndicator" src="/content/images/progress.gif" style="display: none" />
+    </div>
+    </text>);
     editPanel.AddField(m => m.StateProvince,
     @<text> @* there seems to be a BUG regarding DropdownListFors inside editor templates
          and possibly inside collection-editors. This is a workaraound (I'm forcingly
@@ -12,58 +15,73 @@
          If we go into this more often we can investigate a more elegant solution.*@
     @Html.DropDownListFor(model => model.StateProvince, new SelectList(new List<SelectListItem>()
                         {
-                             new SelectListItem() { Text = "Alabama", Value="AL"},
-                             new SelectListItem() { Text = "Alaska", Value="AK"},
-                             new SelectListItem() { Text = "Arizona", Value="AZ"},
-                             new SelectListItem() { Text = "Arkansas", Value="AR"},
-                             new SelectListItem() { Text = "California", Value="CA"},
-                             new SelectListItem() { Text = "Colorado", Value="CO"},
-                             new SelectListItem() { Text = "Connecticut", Value="CT"},
-                             new SelectListItem() { Text = "Delaware", Value="DE"},
-                             new SelectListItem() { Text = "Florida", Value="FL"},
-                             new SelectListItem() { Text = "Georgia", Value="GA"},
-                             new SelectListItem() { Text = "Hawaii", Value="HI"},
-                             new SelectListItem() { Text = "Idaho", Value="ID"},
-                             new SelectListItem() { Text = "Illinois", Value="IL"},
-                             new SelectListItem() { Text = "Indiana", Value="IN"},
-                             new SelectListItem() { Text = "Iowa", Value="IA"},
-                             new SelectListItem() { Text = "Kansas", Value="KS"},
-                             new SelectListItem() { Text = "Kentucky", Value="KY"},
-                             new SelectListItem() { Text = "Louisiana", Value="LA"},
-                             new SelectListItem() { Text = "Maine", Value="ME"},
-                             new SelectListItem() { Text = "Maryland", Value="MD"},
-                             new SelectListItem() { Text = "Massachusetts[D]", Value="MA"},
-                             new SelectListItem() { Text = "Michigan", Value="MI"},
-                             new SelectListItem() { Text = "Minnesota", Value="MN"},
-                             new SelectListItem() { Text = "Mississippi", Value="MS"},
-                             new SelectListItem() { Text = "Missouri", Value="MO"},
-                             new SelectListItem() { Text = "Montana", Value="MT"},
-                             new SelectListItem() { Text = "Nebraska", Value="NE"},
-                             new SelectListItem() { Text = "Nevada", Value="NV"},
-                             new SelectListItem() { Text = "New Hampshire", Value="NH"},
-                             new SelectListItem() { Text = "New Jersey", Value="NJ"},
-                             new SelectListItem() { Text = "New Mexico", Value="NM"},
-                             new SelectListItem() { Text = "New York", Value="NY"},
-                             new SelectListItem() { Text = "North Carolina", Value="NC"},
-                             new SelectListItem() { Text = "North Dakota", Value="ND"},
-                             new SelectListItem() { Text = "Ohio", Value="OH"},
-                             new SelectListItem() { Text = "Oklahoma", Value="OK"},
-                             new SelectListItem() { Text = "Oregon", Value="OR"},
-                             new SelectListItem() { Text = "Pennsylvania", Value="PA"},
-                             new SelectListItem() { Text = "Rhode Island", Value="RI"},
-                             new SelectListItem() { Text = "South Carolina", Value="SC"},
-                             new SelectListItem() { Text = "South Dakota", Value="SD"},
-                             new SelectListItem() { Text = "Tennessee", Value="TN"},
-                             new SelectListItem() { Text = "Texas", Value="TX"},
-                             new SelectListItem() { Text = "Utah", Value="UT"},
-                             new SelectListItem() { Text = "Vermont", Value="VT"},
-                             new SelectListItem() { Text = "Virginia", Value="VA"},
-                             new SelectListItem() { Text = "Washington", Value="WA"},
-                             new SelectListItem() { Text = "West Virginia", Value="WV"},
-                             new SelectListItem() { Text = "Wisconsin", Value="WI"},
-                             new SelectListItem() { Text = "Wyoming", Value="WY"},
+                            new SelectListItem() { Text = "Acre", Value="AC"},
+                            new SelectListItem() { Text = "Alagoas", Value="AL"},
+                            new SelectListItem() { Text = "Amapá", Value="AP"},
+                            new SelectListItem() { Text = "Amazonas", Value="AM"},
+                            new SelectListItem() { Text = "Bahia", Value="BA"},
+                            new SelectListItem() { Text = "Ceará", Value="CE"},
+                            new SelectListItem() { Text = "Distrito Federal", Value="DF"},
+                            new SelectListItem() { Text = "Espírito Santo", Value="ES"},
+                            new SelectListItem() { Text = "Goiás", Value="GO"},
+                            new SelectListItem() { Text = "Maranhão", Value="MA"},
+                            new SelectListItem() { Text = "Mato Grosso", Value="MT"},
+                            new SelectListItem() { Text = "Mato Grosso do Sul", Value="MS"},
+                            new SelectListItem() { Text = "Minas Gerais", Value="MG"},
+                            new SelectListItem() { Text = "Pará", Value="PA"},
+                            new SelectListItem() { Text = "Paraiba", Value="PB"},
+                            new SelectListItem() { Text = "Paraná", Value="PR"},
+                            new SelectListItem() { Text = "Pernambuco", Value="PE"},
+                            new SelectListItem() { Text = "Piauí", Value="PI"},
+                            new SelectListItem() { Text = "Rio de Janeiro", Value="RJ"},
+                            new SelectListItem() { Text = "Rio Grande do Norte", Value="RN"},
+                            new SelectListItem() { Text = "Rio Grande do Sul", Value="RS"},
+                            new SelectListItem() { Text = "Rondônia", Value="RO"},
+                            new SelectListItem() { Text = "Roraima", Value="RR"},
+                            new SelectListItem() { Text = "Santa Catarina", Value="SC"},
+                            new SelectListItem() { Text = "São Paulo", Value="SP"},
+                            new SelectListItem() { Text = "Sergipe", Value="SE"},
+                            new SelectListItem() { Text = "Tocantins", Value="TO"}
                         }, "Value", "Text", this.Model != null ? this.Model.StateProvince : null), "")
     </text>);
-    editPanel.AddField(m => m.ZipCode);
+    editPanel.AddField(m => m.City);
+    editPanel.AddField(m => m.Neighborhood);
+    editPanel.AddField(m => m.Street);
+    editPanel.AddField(m => m.Complement, EditPanelFieldSize.Small);
+    
 }
 @editPanel.GetHtml()
+<script type="text/javascript">
+    (function () {
+
+        var $wrapper = $(".edit-panel-wrapper");
+        var $activityIndicator = $(".getCepInfoActivityIndicator", $wrapper);
+
+        // máscaras
+        var $cepInput = $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).CEP']", $wrapper);
+        $cepInput.mask("99999-999");
+
+        $("a.getCepInfo", $wrapper).bind("click", function (e) {
+            e.preventDefault();
+            if (!$cepInput.val())
+                alert("O CEP precisa estar preenchido");
+            else {
+                $activityIndicator.show();
+                getGetInfo("@Url.Action("GetCepInfo", "Correios")", $cepInput.val(), {
+                    success: function(cepInfo) {
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).City']", $wrapper).val(cepInfo.City);
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Neighborhood']", $wrapper).val(cepInfo.Neighborhood);
+                        $("select[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).StateProvince']", $wrapper).val(cepInfo.StateProvince);
+                        $("input[name='@(ViewData.TemplateInfo.HtmlFieldPrefix).Street']", $wrapper).val(cepInfo.Street);
+                        $activityIndicator.hide();
+                    },
+                    error: function() {
+                        $activityIndicator.hide();
+                    }
+                });
+            }
+        });
+
+    })();
+</script>

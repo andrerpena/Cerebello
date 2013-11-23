@@ -4,47 +4,67 @@
 @{
     this.Layout = null;
     Debug.Assert(this.Model != null, "this.Model != null");
-    var diagnosisId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
+    var examRequestId = this.Model.Id == null ? "new-" + Guid.NewGuid() : this.Model.Id.ToString();
 }
-<div class="appointment-panel" data-val-id="diagnosis-@diagnosisId">
-    @using (this.Html.AjaxForm(null, null, string.Format("div[data-val-id='diagnosis-{0}']", diagnosisId), FormMethod.Post))
+<div class="appointment-panel" data-val-id="diagnosis-@examRequestId">
+    @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
         using (this.Html.BeginScope("Diagnoses"))
         {
-        @this.Html.ValidationSummary(false)
-        @this.Html.HiddenFor(model => model.PatientId)
-        @this.Html.HiddenFor(model => model.Id)
-        @this.Html.HiddenFor(model => model.MedicalRecordDate)
+            @this.Html.ValidationSummary(false)
+            @this.Html.HiddenFor(model => model.PatientId)
+            @this.Html.HiddenFor(model => model.Id)
+            @this.Html.HiddenFor(model => model.MedicalRecordDate)
 
             var editPanel = Html.CreateEditPanel();
             editPanel.AddField(
-                m => m.Code,
-                EditPanelFieldSize.Large, 
-        @<text>@(Html.AutocompleteGridFor(
-                    m => m.Code,
-                    m => m.Name,
+                m => m.Cid10Code,
+                EditPanelFieldSize.Large,
+                @<text>@(Html.AutocompleteGridFor(
+                    m => m.Cid10Code,
+                    m => m.Cid10Name,
                     this.Url.Action("AutocompleteDiagnoses"),
                     gm => gm.Cid10Code,
                     gm => gm.Cid10Name,
                     new Expression<Func<CidAutocompleteGridModel, object>>[] { gm => gm.Cid10Code }))</text>);
 
-            editPanel.AddField(model => model.StartTime, EditPanelFieldSize.Small);
-            editPanel.AddField(model => model.EndTime, EditPanelFieldSize.Small);
-            
-            editPanel.AddCustomField(@<text> @Html.CheckBoxLabelFor(model => model.Acute) @Html.CheckBoxLabelFor(model => model.IsTerminal) </text>);
-            editPanel.AddField(
-                m => m.Comments,
-                EditPanelFieldSize.Large,
-        @<text>@Html.TextAreaFor(model => model.Comments, new { rows = 5 })</text>);
+                editPanel.AddField(
+                    m => m.Text,
+                    EditPanelFieldSize.Large,
+                    @<text>@Html.TextAreaFor(model => model.Text, new {rows = 5})</text>);
         
-            editPanel.AddField(model => model.MedicalRecordDate, EditPanelFieldSize.Small);
-        
-        @editPanel.GetHtml()
+            @editPanel.GetHtml()
 
-        <div class="submit-bar">
-            <input type="submit" value="save diagnosis" />
-            <span class="separator">or</span><span  onclick="onCancelPanelEditing(@(Model.Id != null ? "true" : "false"), '@Url.Action("Details", "Diagnosis", new { id = this.Model.Id })', 'div[data-val-id=diagnosis-@diagnosisId]')">cancel</span>
-        </div>
+            <div class="inline-link-bar">
+            </div>
+
+            <div class="submit-bar">
+                <input type="submit" value="salvar diagnóstico" />
+                <span class="separator">ou</span>
+                <a href="#" class="cancel">cancelar</a>
+            </div>
         }
+
+        <script type="text/javascript">
+            (function() {
+                var $container = $("div[data-val-id='diagnosis-@examRequestId']");
+                $('form', $container).ajaxForm({
+                    success: function(result) {
+                        $container.replaceWith(result);
+                    }
+                });
+                $('a.cancel', $container).click(function(e) {
+                    e.preventDefault();
+                    @if (this.Model.Id != null)
+                    {
+                        @:$.ajax({url: "@this.Url.Action("details", new { id = this.Model.Id })", success: function(result) { $container.replaceWith(result); }});   
+                    }
+                    else
+                    {
+                        @:$container.remove();
+                    }
+                });
+            })();
+        </script>
     }
 </div>

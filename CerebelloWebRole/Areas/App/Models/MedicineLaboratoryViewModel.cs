@@ -13,14 +13,14 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Laboratory Name
         /// </summary>
-        [Display(Name = "Name")]
+        [Display(Name = "Nome")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Name { get; set; }
 
-        [Display(Name = "Notes")]
+        [Display(Name = "Observações")]
         public string Observations { get; set; }
 
-        [Display(Name = "Medicines")]
+        [Display(Name = "Medicamentos")]
         public SearchViewModel<MedicineViewModel> Medicines { get; set; }
     }
 }

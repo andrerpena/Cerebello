@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 
@@ -24,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var todayEnd = todayStart.AddDays(1);
 
             // returns whether the appointment is in the past
-            Func<Appointment, bool> getIsInThePast = a => ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start) < localNow;
+            Func<Appointment, bool> getIsInThePast = a => ConvertToLocalDateTime(this.DbPractice, a.Start) < localNow;
 
             Func<Appointment, bool> getIsNow = a => a.Start <= utcNow && a.End > utcNow;
 
@@ -54,9 +53,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 Id = a.Id,
                                 Description = a.Description,
                                 PatientId = a.PatientId,
-                                PatientFullName = a.PatientId != default(int) ? PersonHelper.GetFullName(a.Patient.Person) : null,
-                                LocalDateTime = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start),
-                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.End)),
+                                PatientName = a.PatientId != default(int) ? a.Patient.Person.FullName : null,
+                                LocalDateTime = ConvertToLocalDateTime(this.DbPractice, a.Start),
+                                LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.End)),
                                 HealthInsuranceId = a.HealthInsuranceId,
                                 HealthInsuranceName = a.HealthInsurance.Name,
                                 IsInThePast = getIsInThePast(a),
@@ -81,8 +80,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         {
                             Id = a.Id,
                             Description = a.Description,
-                            LocalDateTime = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start),
-                            LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.End)),
+                            LocalDateTime = ConvertToLocalDateTime(this.DbPractice, a.Start),
+                            LocalDateTimeSpelled = DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.Start)) + " - " + DateTimeHelper.GetFormattedTime(ConvertToLocalDateTime(this.DbPractice, a.End)),
                             IsNow = getIsNow(a)
                         }).ToList();
 
@@ -94,7 +93,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var viewModel = new DoctorHomeViewModel()
                 {
-                    DoctorFullName = PersonHelper.GetFullName(this.Doctor.Users.First().Person),
+                    DoctorName = this.Doctor.Users.First().Person.FullName,
                     Gender = (TypeGender)this.Doctor.Users.First().Person.Gender,
                     // commented-code: NextFreeTime is not being used... it is a heavy thing to do, and to discard
                     //NextFreeTime = ScheduleController.FindNextFreeTimeInPracticeLocalTime(this.db, this.Doctor, localNow),

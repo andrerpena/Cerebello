@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using JetBrains.Annotations;
 using Microsoft.AspNet.SignalR.Hubs;
 
@@ -41,7 +40,7 @@ namespace CerebelloWebRole.Code
             return new ChatUser()
                 {
                     Id = user.Id,
-                    Name = PersonHelper.GetFullName(user.Person),
+                    Name = user.Person.FullName,
                     Status = userStatus,
                     ProfilePictureUrl = GravatarHelper.GetGravatarUrl(user.Person.EmailGravatarHash, GravatarHelper.Size.s32)
                 };
@@ -100,7 +99,7 @@ namespace CerebelloWebRole.Code
         {
             var myRoomId = this.GetMyRoomId();
             var practiceId = this.db.Practices.Where(p => p.UrlIdentifier == myRoomId).Select(p => p.Id).FirstOrDefault();
-            var roomUsers = this.db.Users.Where(u => u.PracticeId == practiceId).OrderBy(u => u.Person.LastName).ThenBy(u => u.Person.FirstName).ToList();
+            var roomUsers = this.db.Users.Where(u => u.PracticeId == practiceId).OrderBy(u => u.Person.FullName).ToList();
 
             // now we have to see the users who are online and those who are not
             return roomUsers.Select(this.GetChatUserFromUser).ToList();

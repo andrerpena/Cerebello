@@ -18,12 +18,12 @@
     cardView.AddField(m => m.SiteUrl, wholeRow: true);
 
     var doctorsGrid = this.Html.CreateGrid(this.Model.Doctors);
-    doctorsGrid.AddField(model => model.FirstName, @<text><a href="@Url.Action("Index", "DoctorHome", new { doctor = item.UrlIdentifier })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FirstName</a></text>, cssClass: "icon-link-td");
+    doctorsGrid.AddField(model => model.Name, @<text><a href="@Url.Action("Index", "DoctorHome", new { doctor = item.UrlIdentifier })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.Name</a></text>, cssClass: "icon-link-td");
     doctorsGrid.AddField(model => model.MedicalSpecialty);
     doctorsGrid.AddField(model => model.CRM, @<text>@item.CRM (@item.MedicalEntity)</text>);
 
     var usersGrid = this.Html.CreateGrid(this.Model.Users);
-    usersGrid.AddField(model => model.FirstName, @<text><a href="@Url.Action("Details", "Users", new { id = item.Id })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FirstName</a></text>, cssClass: "icon-link-td");
+    usersGrid.AddField(model => model.FullName, @<text><a href="@Url.Action("Details", "Users", new { id = item.Id })" class="cell-icon" style="background-image: url('@item.ImageUrl')">@item.FullName</a></text>, cssClass: "icon-link-td");
     usersGrid.AddField(model => model.UserRoles);
 }
 @section Title {

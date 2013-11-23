@@ -1,14 +1,14 @@
 ﻿@model SearchViewModel<PatientViewModel>
 
 @{
-    const string title = "Search patients";
+    var title = "Pesquisa de pacientes";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
-    ViewBag.Watermark = "Search by the patient name";
+    ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 
     var localNow = (DateTime)this.ViewBag.LocalNow;
 
     var grid = this.Html.CreateGrid(this.Model.Objects, Constants.GRID_PAGE_SIZE, this.Model.Count);
-    grid.AddLinkField(m => m.FirstName, "Details", m => new { id = m.Id });
+    grid.AddLinkField(m => m.FullName, "Details", m => new { id = m.Id });
     grid.AddField(m => m.DateOfBirth, item => DateTimeHelper.GetPersonAgeInWords(item.DateOfBirth, localNow, true), header: "Idade");
     grid.AddEditField("Edit", "Patients", model => new { model.Id});
 }
@@ -17,7 +17,7 @@
 }
 @section SideBar {
     <ul>
-        <li><a href="@Url.Action("create", "patients")">New patient</a></li>
+        <li><a href="@Url.Action("create", "patients")">Novo paciente</a></li>
     </ul>
 }
 @using (Html.BeginForm("search", null, FormMethod.Get))
@@ -25,7 +25,7 @@
     @Html.Partial("SearchBox", new SearchModel())
 }
 <div class="search-result">
-    <h2>Search results
+    <h2>Resultado da pesquisa
     </h2>
     @grid.GetHtml()
 </div>

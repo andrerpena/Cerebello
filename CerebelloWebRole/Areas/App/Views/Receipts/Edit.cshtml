@@ -8,7 +8,7 @@
 <div class="appointment-panel" data-val-id="receipt-@receiptId">
     @using (this.Html.BeginForm(null, null, FormMethod.Post))
     {
-        using (this.Html.BeginScope("Prescriptions"))
+        using (this.Html.BeginScope("Receipts"))
         {
         @this.Html.ValidationSummary(false)
         @this.Html.HiddenFor(model => model.PatientId)
@@ -38,9 +38,9 @@
         </div>
 
         <div class="submit-bar">
-            <input type="submit" value="save prescription" />
-            <span class="separator">or</span>
-            <a href="#" class="cancel">cancel</a>
+            <input type="submit" value="salvar receita" />
+            <span class="separator">ou</span>
+            <a href="#" class="cancel">cancelar</a>
         </div>
         }
     }

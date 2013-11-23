@@ -26,14 +26,14 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// ModelMedicalCertificate
         /// </summary>
-        [Display(Name="Medical certificate model")]
-        [Tooltip("It's necessary to choose a model. As you start typing, the system will suggest models. In case the modal is not yet registered, it's possible to register a new one clicking the 'Manage certificate models' below.")]
+        [Display(Name="Modelo de atestado")]
+        [Tooltip("É necessário escolher um entre os modelos de atestado cadastrados. Ao começar a digitar, o sistema irá sugerir modelos. Caso o modelo em questão não seja encontrado, é possível cadastrar um novo clicando no botão Gerenciar modelos de atestado abaixo.")]
         public int? ModelId { get; set; }
 
         /// <summary>
         /// Certificate model name
         /// </summary>
-        [Display(Name = "Medical certificate model")]
+        [Display(Name = "Modelo de atestado")]
         public string ModelName { get; set; }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace CerebelloWebRole.Areas.App.Models
         /// </summary>
         public List<SelectListItem> ModelOptions { get; set; }
 
-        [Display(Name = "Issue date")]
+        [Display(Name = "Data de emissão")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("Date this certificate has been issued")]
+        [Tooltip("Data em que o atestado foi registrado")]
         public DateTime? IssuanceDate { get; set; }
     }
 }

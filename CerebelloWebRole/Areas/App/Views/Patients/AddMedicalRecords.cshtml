@@ -1,8 +1,8 @@
 ﻿@model PatientViewModel
 @{
-    var title = "Consultations for " + this.Model.FirstName;
+    var title = "Consultas de " + this.Model.FullName;
     this.ViewBag.Title = string.Format("{0} · Cerebello", title);
-    this.ViewBag.Watermark = "Search by patient name";
+    this.ViewBag.Watermark = "Pesquisar pelo nome do paciente";
 }
 @section Title {
     @title @LockIcon.Icon()
@@ -11,8 +11,8 @@
     <div class="datepicker">
     </div>
     <ul>
-        <li><a href="@this.Url.Action("Details", new { id = this.Model.Id })" class="icon-link icon-link-home">Patient details</a></li>
-        <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Patients home</a></li>
+        <li><a href="@this.Url.Action("Details", new { id = this.Model.Id })" class="icon-link icon-link-home">Detalhes do paciente</a></li>
+        <li><a href="@this.Url.Action("Index")" class="icon-link icon-link-home">Resumo de pacientes</a></li>
     </ul>
 }
 @section Scripts
@@ -71,8 +71,8 @@
     </div>
     <div class="modal-body"><div class="modal-image"></div></div>
     <div class="modal-footer">
-        <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i>Previous</a>
-        <a class="btn btn-primary modal-next">Next<i class="icon-arrow-right icon-white"></i></a>
+        <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i>Anterior</a>
+        <a class="btn btn-primary modal-next">Próximo<i class="icon-arrow-right icon-white"></i></a>
         @*<a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="icon-play icon-white"></i>Slideshow</a>*@
         <a class="btn modal-download" target="_blank"><i class="icon-download"></i>Download</a>
     </div>
@@ -85,7 +85,7 @@
         @this.Html.Partial("MedicalRecordsViewPartial", this.Model,
             new ViewDataDictionary(this.ViewData)
                 {
-                    { "NoMedicalRecordsMessage", "No medical records for this day" },
+                    { "NoMedicalRecordsMessage", "Não há registros médicos neste dia." },
                 })
 
         @*<h2>Adicionar novos registros neste dia</h2>*@

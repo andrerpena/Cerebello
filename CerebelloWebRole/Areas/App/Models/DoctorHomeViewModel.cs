@@ -13,11 +13,11 @@ namespace CerebelloWebRole.Areas.App.Models
         }
 
         /// <summary>
-        /// Doctor's first name
+        /// Doctor's name
         /// </summary>
-        [Display(Name = "Doctor name")]
-        public string DoctorFullName { get; set; }
-        
+        [Display(Name = "Nome do médico")]
+        public string DoctorName { get; set; }
+
         /// <summary>
         /// Next appointments
         /// </summary>
@@ -38,19 +38,19 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "CRM")]
         public string MedicCrm { get; set; }
 
-        [Display(Name = "Specialty")]
+        [Display(Name = "Especialidade")]
         public int? MedicalSpecialtyId { get; set; }
 
-        [Display(Name = "Specialty")]
+        [Display(Name = "Especialidade")]
         public string MedicalSpecialtyName { get; set; }
 
-        [Display(Name = "Medical entity")]
+        [Display(Name = "Conselho médico")]
         public int? MedicalEntityId { get; set; }
 
-        [Display(Name = "Medical entity")]
+        [Display(Name = "Conselho médico")]
         public string MedicalEntityName { get; set; }
 
-        [Display(Name = "Medical entity state")]
+        [Display(Name = "Estado do conselho")]
         public int MedicalEntityJurisdiction { get; set; }
 
         public int NextGenericAppointmentsCount { get; set; }

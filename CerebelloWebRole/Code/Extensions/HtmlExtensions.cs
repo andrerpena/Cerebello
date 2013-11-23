@@ -14,7 +14,6 @@ using System.Web.Routing;
 using System.Web.Script.Serialization;
 using System.Web.WebPages;
 using CerebelloWebRole.Areas.App.Models;
-using CerebelloWebRole.Code.Data;
 using JetBrains.Annotations;
 
 namespace CerebelloWebRole.Code
@@ -152,14 +151,25 @@ namespace CerebelloWebRole.Code
         }
         #endregion
         #region Controls: CheckBox
+        [Obsolete("This method is not in use since 2013-04")]
         public static MvcHtmlString CheckBoxLabelFor<TModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
         {
             var tagBuilder = new TagBuilder("div");
             tagBuilder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            var tagBuilderStringBuilder = new StringBuilder();
             tagBuilder.AddCssClass("check-box-label-wrapper");
 
-            tagBuilder.InnerHtml += html.CheckBoxFor(expression).ToString();
-            tagBuilder.InnerHtml += html.LabelFor(expression).ToString();
+            var checkBoxTagBuilder = new TagBuilder("span");
+            checkBoxTagBuilder.AddCssClass("check-box-wrapper");
+            checkBoxTagBuilder.InnerHtml = html.CheckBoxFor(expression).ToString();
+            tagBuilderStringBuilder.Append(checkBoxTagBuilder);
+
+            var labelTagBuilder = new TagBuilder("span");
+            labelTagBuilder.AddCssClass("label-wrapper");
+            labelTagBuilder.InnerHtml = html.LabelFor(expression).ToString();
+            tagBuilderStringBuilder.Append(labelTagBuilder);
+
+            tagBuilder.InnerHtml = tagBuilderStringBuilder.ToString();
 
             return new MvcHtmlString(tagBuilder.ToString());
         }
@@ -465,36 +475,6 @@ namespace CerebelloWebRole.Code
         }
         #endregion
 
-
-        /// <summary>
-        /// Creates an Ajax Form
-        /// </summary>
-        public static AjaxForm AjaxForm<TModel>(this HtmlHelper<TModel> htmlHelper, [AspMvcAction] string actionName, [AspMvcController] string controllerName, [NotNull] string placeHolderSelector, FormMethod method, IDictionary<string, object> htmlAttributes = null)
-        {
-            return new AjaxForm(htmlHelper, actionName, controllerName, placeHolderSelector, method, htmlAttributes);
-        }
-
-        public static MvcHtmlString PanelTopMenu<TModel>(this HtmlHelper<TModel> htmlHelper, string editUrl, string panelSelector)
-        {
-            var model = new PanelTopMenuData
-                {
-                    EditUrl = editUrl,
-                    PanelSelector = panelSelector
-                };
-            return htmlHelper.Partial("PanelTopMenu", model);
-        }
-
-        public static MvcHtmlString SubmitBar<TModel>(this HtmlHelper<TModel> htmlHelper, string saveButtonText, string cancelUrl, string cancelSelector = null)
-        {
-            var model = new SubmitBarData()
-            {
-                SaveButtonText = saveButtonText,
-                CancelUrl = cancelUrl,
-                CancelSelector = cancelSelector
-            };
-            return htmlHelper.Partial("SubmitBar", model);
-        }
-
         #region Message, MessageHelp
         /// <summary>
         /// Displays an inline message-box, containing arbitrary text.
@@ -602,10 +582,11 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="html"> </param>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
-        public static IDisposable BeginCollectionItem<TModel>(this HtmlHelper<TModel> html,
-                                                                                         [NotNull] string collectionName)
+        public static IDisposable BeginCollectionItem<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
-            if (collectionName == null) throw new ArgumentNullException("collectionName");
+            if (String.IsNullOrEmpty(collectionName))
+                throw new ArgumentException("collectionName is null or empty.", "collectionName");
+
             return new CollectionItemScope<TModel>(html, collectionName);
         }
 
@@ -614,10 +595,11 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="html"> </param>
         /// <param name="collectionName">The name of the scope from the Model that owns this item.</param>
-        public static IDisposable BeginScope<TModel>(this HtmlHelper<TModel> html,
-                                                                                [NotNull] string collectionName)
+        public static IDisposable BeginScope<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
-            if (collectionName == null) throw new ArgumentNullException("collectionName");
+            if (String.IsNullOrEmpty(collectionName))
+                throw new ArgumentException("collectionName is null or empty.", "collectionName");
+
             return new ItemScope<TModel>(html, collectionName);
         }
 
@@ -626,10 +608,11 @@ namespace CerebelloWebRole.Code
         /// </summary>
         /// <param name="html"> </param>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
-        public static IDisposable BeginCollectionItemInline<TModel>(this HtmlHelper<TModel> html,
-                                                                                               [NotNull] string collectionName)
+        public static IDisposable BeginCollectionItemInline<TModel>(this HtmlHelper<TModel> html, string collectionName)
         {
-            if (collectionName == null) throw new ArgumentNullException("collectionName");
+            if (String.IsNullOrEmpty(collectionName))
+                throw new ArgumentException("collectionName is null or empty.", "collectionName");
+
             return new CollectionItemInlineScope<TModel>(html, collectionName);
         }
 

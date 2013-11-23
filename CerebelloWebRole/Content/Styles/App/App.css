@@ -55,12 +55,12 @@ blockquote, q {
 
 .validation-summary-errors {
     background-color: #FFFFE6;
+    border: 1px solid #F4F4DA;
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: #DD390D;
     font-size: 12px;
     font-weight: normal;
     margin-bottom: 10px;
-    overflow: hidden;
     padding: 4px 10px;
 }
 
@@ -397,6 +397,7 @@ input, textarea {
         margin-right: 220px;
         min-height: 600px;
         padding: 15px;
+        box-shadow: 2px 3px 10px -8px rgba(0, 0, 0, 0.5) inset;
     }
 
     .document .document-body .document-side-column {
@@ -483,7 +484,8 @@ fieldset {
 #app-header {
     background: none repeat scroll 0 0 #50B7DC;
     border-bottom: 1px solid #2693BA;
-    color: #FFFFFF;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.3);
+    color: white;
     margin-bottom: 15px;
     padding: 0 10px;
     position: relative;
@@ -538,6 +540,7 @@ fieldset {
             #app-header .title .top-actions-bar input[type=text] {
                 border: medium none;
                 font-size: 12px;
+                opacity: 0.9;
                 padding: 4px 10px 4px 24px;
                 width: 500px;
             }
@@ -1243,16 +1246,15 @@ a.loading {
     margin: 6px 0 0;
 }
 
-.inline-link {
+a.inline-link {
     color: #4A7099;
     display: inline-block;
+    font-size: 11px;
     margin: 0 10px 0 0;
 }
 
-    .inline-link:hover {
+    a.inline-link:hover {
         color: #336699;
-        cursor: pointer;
-        text-decoration: underline;
     }
 
 .inline-link-bar {
@@ -1558,22 +1560,4 @@ span.required {
     margin-left: 3px;
     color: Red;
     cursor: default;
-}
-
-.check-box-label-wrapper {
-    display: inline-block;
-    margin-right: 15px;
-}
-
-.check-box-label-wrapper input[type=checkbox] {
-    vertical-align: text-bottom;
-}
-
-.check-box-label-wrapper label {
-    margin-left: 6px;
-    vertical-align: middle;
-}
-
-.panel-top-menu {
-    float: right;
 }

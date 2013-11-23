@@ -14,13 +14,13 @@
 @section SideBar {
     <ul>
         <li><a href="@Url.Action("DaysOff", "ConfigSchedule", new { returnUrl = cancelUrl })" class="icon-link icon-link-config">
-                Day-off settings</a> </li>
-        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Settings</a></li>
+                Configurações de dias sem expediente</a> </li>
+        <li><a class="icon-link icon-link-home" href="@Url.Action("Index", "Config")">Resumo de configurações</a></li>
     </ul>
     <hr/>
     <ul>
         <li>
-            <a class="icon-link icon-link-help" href="@Url.Action("ConfiguringTheSchedule", "HomeDocs", new { area = "Docs" })" target="_blank">Help</a>
+            <a class="icon-link icon-link-help" href="@Url.Action("ConfiguringTheSchedule", "HomeDocs", new { area = "Docs" })" target="_blank">Ajuda</a>
         </li>
     </ul>
 }
@@ -42,7 +42,7 @@ if (ViewBag.ReturnUrl != null)
         </tr>
         <tr>
             <th>
-                Business hours
+                Horário de trabalho
             </th>
             <td>
                 <ul class="time-table">
@@ -118,7 +118,7 @@ if (ViewBag.ReturnUrl != null)
     </script>
     
     <div class="submit-bar">
-        <input type="submit" value="save schedule settings" />
-        <span class="separator">ou</span> <a href="@cancelUrl">cancel</a>
+        <input type="submit" value="salvar configurações de agenda" />
+        <span class="separator">ou</span> <a href="@cancelUrl">cancelar</a>
     </div>
 }

@@ -95,26 +95,26 @@ namespace CerebelloWebRole.Code
         }
 
         /// <summary>
-        /// Returns the day of the week
+        /// Retorna o dia da semana como string. Ex: segunda-feira
         /// </summary>
-        internal static string GetDayOfWeekAsString(DayOfWeek dayOfWeek)
+        public static string GetDayOfWeekAsString(DayOfWeek dayOfWeek)
         {
             switch (dayOfWeek)
             {
                 case DayOfWeek.Friday:
-                    return "Friday";
+                    return "sexta-feira";
                 case DayOfWeek.Monday:
-                    return "Monday";
+                    return "segunda-feira";
                 case DayOfWeek.Saturday:
-                    return "Saturday";
+                    return "sábado";
                 case DayOfWeek.Sunday:
-                    return "Sunday";
+                    return "domingo";
                 case DayOfWeek.Thursday:
-                    return "Thursday";
+                    return "quinta-feira";
                 case DayOfWeek.Tuesday:
-                    return "Tuesday";
+                    return "terça-feira";
                 case DayOfWeek.Wednesday:
-                    return "Wednesday";
+                    return "quarta-feira";
                 default:
                     throw new NotImplementedException();
             }
@@ -134,15 +134,15 @@ namespace CerebelloWebRole.Code
             localDateTime = localDateTime.Date;
             localNow = localNow.Date;
 
-            var span = localNow - localDateTime;
+            TimeSpan span = localNow - localDateTime;
 
-            var isPast = span.TotalMinutes > 0;
-            var totalSeconds = Math.Abs(span.TotalSeconds);
+            bool isPast = span.TotalMinutes > 0;
+            double totalSeconds = Math.Abs(span.TotalSeconds);
 
             // a representação textual do DateTime
             String spelledDate = null;
 
-            var requiresPreposition = true;
+            bool requiresPreposition = true;
 
             if ((flags & RelativeDateOptions.ReplaceToday) == RelativeDateOptions.ReplaceToday && localDateTime.Date == localNow.Date)
             {

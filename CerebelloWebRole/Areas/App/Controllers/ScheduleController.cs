@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 
@@ -30,8 +29,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                               select new ScheduleEventViewModel()
                               {
                                   id = a.Id,
-                                  start = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                                  end = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.End).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                                  start = ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                                  end = ConvertToLocalDateTime(this.DbPractice, a.End).ToString("yyyy-MM-ddTHH:mm:ssZ"),
                                   title = GetAppointmentText(a),
                                   className = GetAppointmentClass(a),
                               }).ToList(), JsonRequestBehavior.AllowGet);
@@ -46,7 +45,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     result = a.Description;
                     break;
                 case TypeAppointment.MedicalAppointment:
-                    result = PersonHelper.GetFullName(a.Patient.Person);
+                    result = a.Patient.Person.FullName;
                     break;
                 default:
                     throw new Exception("Unsupported appointment type.");
@@ -245,11 +244,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             int currentUserPracticeId = this.DbUser.PracticeId;
 
             var patient = this.db.Patients
-                .FirstOrDefault(p => p.Id == patientId);
+                .Where(p => p.Id == patientId)
+                .Select(p => new { p.Person.FullName, p.LastUsedHealthInsuranceId })
+                .FirstOrDefault();
 
             if (patient != null)
             {
-                viewModel.PatientFullNameLookup = PersonHelper.GetFullName(patient.Person);
+                viewModel.PatientNameLookup = patient.FullName;
                 viewModel.HealthInsuranceId = patient.LastUsedHealthInsuranceId;
                 viewModel.HealthInsuranceName = this.db.HealthInsurances
                     .Where(hi => hi.Id == patient.LastUsedHealthInsuranceId)
@@ -333,8 +334,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             var localNow = this.GetPracticeLocalNow();
 
-            var appointmentLocalStart = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, appointment.Start);
-            var appointmentLocalEnd = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, appointment.End);
+            var appointmentLocalStart = ConvertToLocalDateTime(this.DbPractice, appointment.Start);
+            var appointmentLocalEnd = ConvertToLocalDateTime(this.DbPractice, appointment.End);
 
             var viewModel = new AppointmentViewModel()
                 {
@@ -369,7 +370,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     break;
                 case TypeAppointment.MedicalAppointment:
                     viewModel.IsGenericAppointment = false;
-                    viewModel.PatientFullNameLookup = PersonHelper.GetFullName(appointment.Patient.Person);
+                    viewModel.PatientNameLookup = appointment.Patient.Person.FullName;
                     viewModel.PatientId = appointment.PatientId;
                     break;
                 default:
@@ -389,8 +390,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // This is a generic appointment, so we must clear validation for patient.
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
-                this.ModelState.ClearPropertyErrors(() => formModel.PatientFullName);
-                this.ModelState.ClearPropertyErrors(() => formModel.PatientFullNameLookup);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientGender);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientFirstAppointment);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientEmail);
@@ -404,14 +405,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
-                this.ModelState.ClearPropertyErrors(() => formModel.PatientFullNameLookup);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
             }
             else
             {
                 // This is a medical appointment, so we must clear validation for generic appointment.
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
 
-                this.ModelState.ClearPropertyErrors(() => formModel.PatientFullName);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientGender);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientDateOfBirth);
 
@@ -422,14 +423,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     if (patient == null)
                     {
                         this.ModelState.AddModelError<AppointmentViewModel>(
-                            model => model.PatientFullNameLookup,
-                            "The given patient wasn't found");
+                            model => model.PatientNameLookup,
+                            "O paciente informado não foi encontrado no banco de dados");
                     }
-                    else if (PersonHelper.GetFullName(patient.Person) != formModel.PatientFullNameLookup)
+                    else if (patient.Person.FullName != formModel.PatientNameLookup)
                     {
                         this.ModelState.AddModelError<AppointmentViewModel>(
-                            model => model.PatientFullNameLookup,
-                            "The given patient was found but the names don't match");
+                            model => model.PatientNameLookup,
+                            "O paciente informado foi encontrado mas o nome não coincide");
                     }
                 }
             }
@@ -453,7 +454,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (this.ModelState.IsValid)
             {
                 // Creating the appointment.
-                Appointment appointment;
+                Appointment appointment = null;
 
                 if (formModel.Id == null)
                 {
@@ -479,10 +480,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         return View("NotFound", formModel);
                 }
 
-                var appointmentStart = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice,
+                var appointmentStart = ConvertToUtcDateTime(this.DbPractice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.Start));
 
-                var appointmentEnd = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice,
+                var appointmentEnd = ConvertToUtcDateTime(this.DbPractice,
                     formModel.LocalDateTime + DateTimeHelper.GetTimeSpan(formModel.End));
 
                 if (appointment.Start != appointmentStart)
@@ -513,13 +514,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                 Person =
                                     new Person
                                         {
-                                            FirstName = formModel.PatientFullName,
+                                            FullName = formModel.PatientName,
                                             Gender = (short)formModel.PatientGender,
                                             DateOfBirth =
-                                                ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, formModel.PatientDateOfBirth.Value),
-                                            PhoneMobile = formModel.PatientPhoneMobile,
-                                            PhoneHome = formModel.PatientPhoneHome,
-                                            PhoneWork = formModel.PatientPhoneWork,
+                                                ConvertToUtcDateTime(this.DbPractice, formModel.PatientDateOfBirth.Value),
+                                            PhoneCell = formModel.PatientPhoneCell,
+                                            PhoneLand = formModel.PatientPhoneLand,
                                             CreatedOn = this.GetUtcNow(),
                                             PracticeId = this.DbUser.PracticeId,
                                             Email = formModel.PatientEmail,
@@ -549,7 +549,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     return this.Json((dynamic)new
                     {
                         status = "error",
-                        text = "Could not save appointment. Unexpected error",
+                        text = "Não foi possível salvar a consulta. Erro inexperado",
                         details = ex.Message
                     }, JsonRequestBehavior.AllowGet);
                 }
@@ -842,8 +842,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // For each valid date, we look inside them for available slots.
                 foreach (var eachValidLocalDate in validLocalDates)
                 {
-                    var currentDateStartUtc = ModelDateTimeHelper.ConvertToUtcDateTime(practice, eachValidLocalDate);
-                    var currentDateEndUtc = ModelDateTimeHelper.ConvertToUtcDateTime(practice, eachValidLocalDate.AddDays(1.0).AddTicks(-1));
+                    var currentDateStartUtc = ConvertToUtcDateTime(practice, eachValidLocalDate);
+                    var currentDateEndUtc = ConvertToUtcDateTime(practice, eachValidLocalDate.AddDays(1.0).AddTicks(-1));
 
                     // take all appointments of that day
                     var appointments = db.Appointments
@@ -856,8 +856,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         .Where(s => s.Item1 >= startingFromLocalTime)
                         .Select(s => new
                         {
-                            StartUtc = ModelDateTimeHelper.ConvertToUtcDateTime(practice, s.Item1),
-                            EndUtc = ModelDateTimeHelper.ConvertToUtcDateTime(practice, s.Item2)
+                            StartUtc = ConvertToUtcDateTime(practice, s.Item1),
+                            EndUtc = ConvertToUtcDateTime(practice, s.Item2)
                         })
                         .ToList();
 
@@ -868,8 +868,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                             continue;
 
                         return Tuple.Create(
-                            ModelDateTimeHelper.ConvertToLocalDateTime(practice, slot.StartUtc),
-                            ModelDateTimeHelper.ConvertToLocalDateTime(practice, slot.EndUtc));
+                            ConvertToLocalDateTime(practice, slot.StartUtc),
+                            ConvertToLocalDateTime(practice, slot.EndUtc));
                     };
                 }
             }
@@ -1192,8 +1192,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var startTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.Start);
                 var endTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.End);
 
-                var startTimeUtc = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, startTimeLocal);
-                var endTimeUtc = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, endTimeLocal);
+                var startTimeUtc = ConvertToUtcDateTime(this.DbPractice, startTimeLocal);
+                var endTimeUtc = ConvertToUtcDateTime(this.DbPractice, endTimeLocal);
 
                 var isTimeAvailable = IsTimeAvailableUtc(startTimeUtc, endTimeUtc, this.Doctor.Appointments, excludeAppointmentId);
                 if (!isTimeAvailable)
@@ -1233,13 +1233,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var localFirst = new DateTime(year, month, 1);
             var localLast = localFirst.AddMonths(1);
 
-            var utcFirst = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, localFirst);
-            var utcLast = ModelDateTimeHelper.ConvertToUtcDateTime(this.DbPractice, localLast);
+            var utcFirst = ConvertToUtcDateTime(this.DbPractice, localFirst);
+            var utcLast = ConvertToUtcDateTime(this.DbPractice, localLast);
 
             var result = (from a in this.db.Appointments
                           where a.Start >= utcFirst && a.End < utcLast
                           select a).ToList()
-                .Select(a => ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("'d'dd_MM_yyyy"))
+                .Select(a => ConvertToLocalDateTime(this.DbPractice, a.Start).ToString("'d'dd_MM_yyyy"))
                 .Distinct().ToArray();
 
             return this.Json(result, JsonRequestBehavior.AllowGet);

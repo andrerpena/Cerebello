@@ -25,12 +25,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     Address = new AddressViewModel
                         {
-                            AddressLine1 = address.AddressLine1,
-                            AddressLine2 = address.AddressLine2,
+                            CEP = address.CEP,
                             City = address.City,
-                            County = address.County,
+                            Complement = address.Complement,
+                            Neighborhood = address.Neighborhood,
                             StateProvince = address.StateProvince,
-                            ZipCode = address.ZipCode,
+                            Street = address.Street,
                         },
                     Email = this.DbPractice.Email,
                     Pabx = this.DbPractice.PABX,
@@ -40,7 +40,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     PracticeTimeZone = (short)timeZone,
                     SiteUrl = this.DbPractice.SiteUrl,
                     Doctors = GetDoctorViewModelsFromPractice(this.db, this.DbPractice, this.GetPracticeLocalNow()),
-                    Users = (from u in this.DbPractice.Users.OrderBy(u => u.Person.LastName).ThenBy(u => u.Person.FirstName).ToList()
+                    Users = (from u in this.DbPractice.Users.OrderBy(u => u.Person.FullName).ToList()
                              select UsersController.GetViewModel(u, u.Practice)).ToList()
                 };
 
@@ -72,8 +72,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     ViewModel = new DoctorViewModel()
                     {
                         Id = u.Id,
-                        FirstName = u.Person.FirstName,
-                        LastName = u.Person.LastName,
+                        Name = u.Person.FullName,
                         UrlIdentifier = u.Doctor.UrlIdentifier,
                         CRM = u.Doctor.CRM,
                         MedicalSpecialty = u.Doctor.MedicalSpecialtyName,
@@ -132,14 +131,12 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 if (address == null)
                     this.DbPractice.Address = address = new Address();
                 address.PracticeId = this.DbPractice.Id;
-
+                address.CEP = formModel.Address.CEP;
                 address.City = formModel.Address.City;
-                address.AddressLine1 = formModel.Address.AddressLine1;
-                address.AddressLine2 = formModel.Address.AddressLine2;
-                address.City = formModel.Address.City;
-                address.County = formModel.Address.County;
+                address.Complement = formModel.Address.Complement;
+                address.Neighborhood = formModel.Address.Neighborhood;
                 address.StateProvince = formModel.Address.StateProvince;
-                address.ZipCode = formModel.Address.ZipCode;
+                address.Street = formModel.Address.Street;
 
                 this.db.SaveChanges();
 

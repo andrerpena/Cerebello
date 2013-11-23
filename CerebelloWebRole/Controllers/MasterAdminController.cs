@@ -100,7 +100,7 @@ namespace CerebelloWebRole.Controllers
                     return this.View(viewModel);
                 }
 
-                var localNow = ModelDateTimeHelper.ConvertToLocalDateTime(practice, utcNow);
+                var localNow = PracticeController.ConvertToLocalDateTime(practice, utcNow);
 
                 if (step == 1)
                 {
@@ -125,7 +125,7 @@ namespace CerebelloWebRole.Controllers
                     practice.AccountContract.BillingPeriodSize,
                     practice.AccountContract.BillingPeriodType);
 
-                var invoiceStartUtc = ModelDateTimeHelper.ConvertToUtcDateTime(practice, selectedInvoiceInfo.Start);
+                var invoiceStartUtc = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.Start);
                 billing = db.Billings.SingleOrDefault(b => b.PracticeId == practice.Id
                     && b.MainAccountContractId == practice.ActiveAccountContractId
                     && b.ReferenceDate == invoiceStartUtc);
@@ -140,11 +140,11 @@ namespace CerebelloWebRole.Controllers
                            IssuanceDate = utcNow,
                            MainAmount = selectedInvoiceInfo.TotalAmount,
                            MainDiscount = selectedInvoiceInfo.TotalDiscount,
-                           DueDate = ModelDateTimeHelper.ConvertToUtcDateTime(practice, selectedInvoiceInfo.DueDate),
+                           DueDate = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.DueDate),
                            IdentitySetName = idSet,
                            IdentitySetNumber = db.Billings.Count(b => b.PracticeId == practice.Id && b.IdentitySetName == idSet) + 1,
-                           ReferenceDate = ModelDateTimeHelper.ConvertToUtcDateTime(practice, selectedInvoiceInfo.Start),
-                           ReferenceDateEnd = ModelDateTimeHelper.ConvertToUtcDateTime(practice, selectedInvoiceInfo.End),
+                           ReferenceDate = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.Start),
+                           ReferenceDateEnd = PracticeController.ConvertToUtcDateTime(practice, selectedInvoiceInfo.End),
                            MainAccountContractId = practice.ActiveAccountContractId.Value,
                        };
 
@@ -244,8 +244,8 @@ namespace CerebelloWebRole.Controllers
             var billingsDic = new Dictionary<DateTime, InvoiceInfo>();
             foreach (var activeAccountContract in activeAccountContracts)
             {
-                var accountStart = ModelDateTimeHelper.ConvertToLocalDateTime(practice, activeAccountContract.StartDate);
-                var accountEnd = ModelDateTimeHelper.ConvertToLocalDateTime(practice, activeAccountContract.EndDate);
+                var accountStart = PracticeController.ConvertToLocalDateTime(practice, activeAccountContract.StartDate);
+                var accountEnd = PracticeController.ConvertToLocalDateTime(practice, activeAccountContract.EndDate);
 
                 var currentContractInterval = new ContinuousSet<DateTime>();
                 if (accountStart.HasValue)
@@ -260,8 +260,8 @@ namespace CerebelloWebRole.Controllers
                     if (eachBilling.ReferenceDate == null)
                         continue;
 
-                    var billingRefStart = ModelDateTimeHelper.ConvertToLocalDateTime(practice, (DateTime)eachBilling.ReferenceDate);
-                    var billingRefEnd = ModelDateTimeHelper.ConvertToLocalDateTime(practice, eachBilling.ReferenceDateEnd);
+                    var billingRefStart = PracticeController.ConvertToLocalDateTime(practice, (DateTime)eachBilling.ReferenceDate);
+                    var billingRefEnd = PracticeController.ConvertToLocalDateTime(practice, eachBilling.ReferenceDateEnd);
 
                     if (billingRefEnd.HasValue)
                         dateSetBillings.AddInterval(billingRefStart, true, billingRefEnd.Value, false);
@@ -275,7 +275,7 @@ namespace CerebelloWebRole.Controllers
                                 IsSaved = true,
                                 Start = billingRefStart,
                                 End = billingRefEnd,
-                                DueDate = ModelDateTimeHelper.ConvertToLocalDateTime(practice, eachBilling.DueDate),
+                                DueDate = PracticeController.ConvertToLocalDateTime(practice, eachBilling.DueDate),
                             };
 
                     billingInfo.Items.Add(
@@ -326,7 +326,7 @@ namespace CerebelloWebRole.Controllers
 
         private static IEnumerable<DateTimeInterval> GetAccountContractBillingCycles(AccountContract accountContract)
         {
-            var start = ModelDateTimeHelper.ConvertToLocalDateTime(accountContract.Practice, accountContract.StartDate);
+            var start = PracticeController.ConvertToLocalDateTime(accountContract.Practice, accountContract.StartDate);
 
             if (start == null)
                 return Enumerable.Empty<DateTimeInterval>();

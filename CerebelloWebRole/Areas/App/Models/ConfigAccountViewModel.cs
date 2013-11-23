@@ -20,27 +20,27 @@ namespace CerebelloWebRole.Areas.App.Models
             /// <summary>
             /// Gets or sets the due date of the billing.
             /// </summary>
-            [Display(Name = "Due date")]
+            [Display(Name = "Data de vencimento")]
             public DateTime DueDate { get; set; }
 
             /// <summary>
             /// Gets or sets the value of the billing.
             /// </summary>
-            [Display(Name = "Value")]
+            [Display(Name = "Valor")]
             public decimal Value { get; set; }
 
             /// <summary>
             /// Gets or sets the effective date of the payment.
             /// When not paid, this value is null.
             /// </summary>
-            [Display(Name = "Payment date")]
+            [Display(Name = "Data efetiva do pagamento")]
             public DateTime? EffectiveDate { get; set; }
 
             /// <summary>
             /// Gets or sets the effective value of the payment.
             /// When not paid, this value is null.
             /// </summary>
-            [Display(Name = "Payment date")]
+            [Display(Name = "Valor efetivo do pagamento")]
             public decimal? EffectiveValue { get; set; }
 
             /// <summary>
@@ -154,7 +154,7 @@ namespace CerebelloWebRole.Areas.App.Models
             /// </summary>
             public ContractStatus Status { get; set; }
 
-            [Display(Name = "Plan title")]
+            [Display(Name = "Título do plano")]
             public string PlanTitle { get; set; }
 
             public string Text { get; set; }

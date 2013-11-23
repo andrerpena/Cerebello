@@ -8,24 +8,24 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public int? Id { get; set; }
 
-        [Display(Name = "Medicine")]
+        [Display(Name = "Medicamento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("É necessário selecionar um medicamento cadastrado da lista. Ao começar a digitar, o sistema irá sugerir medicamentos. Caso o medicamento procurado não possa ser encontrado, clique no botão +. É possível cadastrar um medicamento novo ou importar um do banco da Anvisa")]
         public int? MedicineId { get; set; }
 
-        [Display(Name = "Medicine")]
+        [Display(Name = "Medicamento")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string MedicineText { get; set; }
 
-        [Display(Name="Quantity")]
+        [Display(Name="Quantidade")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Quantity { get; set; }
 
-        [Display(Name = "Prescription")]
+        [Display(Name = "Prescrição")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public string Prescription { get; set; }
 
-        [Display(Name = "Obsevations")]
+        [Display(Name = "Observações")]
         public string Observations { get; set; }
     }
 }

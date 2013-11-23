@@ -103,24 +103,7 @@
     $.deleteConfirmation = function (options) {
         var deleteConfirmation = new DeleteConfirmation(options);
         deleteConfirmation.init();
+
         return deleteConfirmation;
     };
-
-    window.deleteConfirmation = function(objectType, deleteUrl, redirectUrl) {
-        /// <summary>Shows a confirmation window before deleting an object</summary>
-        /// <param name="objectType" type="String">the type of the object being deleted (e.g: past medical history)</param>
-        /// <param name="deleteUrl" type="String">The url to call to actually delete the object</param>
-        /// <param name="redirectUrl" type="String">The url to redirect the user in case the object is actually deleted</param>
-        /// <returns type="Boolean">returns always false</returns>
-        $.deleteConfirmation({
-            objectType: objectType,
-            url: deleteUrl,
-            success: function(data) {
-                alert("The " + objectType + " has been deleted");
-                window.location = redirectUrl;
-            }
-        });
-        return false;
-    };
-
 })(jQuery);

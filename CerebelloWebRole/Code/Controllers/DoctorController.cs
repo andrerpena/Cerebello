@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 
 namespace CerebelloWebRole.Code
@@ -63,7 +61,7 @@ namespace CerebelloWebRole.Code
             var doctorViewModels = allDoctors.Select(doc => new DoctorViewModel
                 {
                     Id = doc.Id,
-                    FirstName = PersonHelper.GetFullName(doc.Users.ElementAt(0).Person),
+                    Name = doc.Users.ElementAt(0).Person.FullName,
                     UrlIdentifier = doc.UrlIdentifier,
                     ImageUrl = GravatarHelper.GetGravatarUrl(doc.Users.ElementAt(0).Person.EmailGravatarHash, GravatarHelper.Size.s32),
                     CRM = doc.CRM,

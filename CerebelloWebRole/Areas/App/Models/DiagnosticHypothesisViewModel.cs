@@ -15,26 +15,26 @@ namespace CerebelloWebRole.Areas.App.Models
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "ICD-10")]
+        [Display(Name = "CID-10")]
         public string Cid10Code { get; set; }
 
         /// <summary>
         /// Cid 10 name
         /// </summary>
-        [Display(Name = "Diagnostic hypothesis")]
+        [Display(Name = "Hipótese diagnóstica")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [Tooltip("É possível usar tando doenças/condições listadas no CID-10 quanto texto livre. Ao começar a digitar, o sistema irá sugerir itens da lista do CID-10. Caso um desses itens seja selecionado, o código CID-10 será associado a esta hipótese")]
         public string Cid10Name { get; set; }
 
-        [Display(Name = "Description")]
+        [Display(Name = "Notas")]
         public string Text { get; set; }
 
         [Required]
         public int? PatientId { get; set; }
 
-        [Display(Name = "Record date")]
+        [Display(Name = "Data de registro")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
-        [Tooltip("This is mainly used for registering past records")]
+        [Tooltip("Data em que a hipótese diagnóstica foi registrada")]
         public DateTime? MedicalRecordDate { get; set; }
     }
 }

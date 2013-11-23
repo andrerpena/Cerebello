@@ -8,24 +8,24 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public int? Id { get; set; }
 
-        [Display(Name = "Name")]
+        [Display(Name = "Nome")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         [StringLength(Constants.DB_NAME_MAX_LENGTH, ErrorMessageResourceName = "MaxLengthValidationMessage")]
         public string Name { get; set; }
 
-        [Display(Name = "Medical appointment cost")]
+        [Display(Name = "Valor da nova consulta")]
         public decimal? NewAppointmentValue { get; set; }
 
-        [Display(Name = "Returning medical appointment cost")]
+        [Display(Name = "Valor da consulta de retorno")]
         public decimal? ReturnAppointmentValue { get; set; }
 
-        [Display(Name = "Return interval in days", Description = "Interval in which, if the patient returns, the consultation is considered a return")]
+        [Display(Name = "Intervalo de retorno em dias", Description = "Intervalo no qual uma consulta subsequente é considerada como sendo retorno pelo convênio médico.")]
         public int? ReturnDaysInterval { get; set; }
 
-        [Display(Name = "Active", Description = "Indicates whether this health insurance is active")]
+        [Display(Name = "Está ativo?", Description = "Indica se novas consultas podem ser marcadas usando este convênio.")]
         public bool IsActive { get; set; }
 
-        [Display(Name = "Private pay", Description = "Indicates that the consultation is payed by the patient")]
+        [Display(Name = "É particular?", Description = "Indica se é uma forma de atendimento particular, ao invés de um atendimento conveniado.")]
         public bool IsParticular { get; set; }
     }
 }

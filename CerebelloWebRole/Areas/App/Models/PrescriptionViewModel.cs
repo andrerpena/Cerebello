@@ -5,17 +5,15 @@ namespace CerebelloWebRole.Areas.App.Models
 {
     public class PrescriptionViewModel
     {
-        [Display(Name = "Patient")]
+        [Display(Name = "Paciente")]
         public int PatientId { get; set; }
-        [Display(Name = "Patient first name")]
-        public string PatientFirstName { get; set; }
-        [Display(Name = "Patient last name")]
-        public string PatientLastName { get; set; }
-        [Display(Name = "Prescription")]
+        [Display(Name = "Paciente")]
+        public string PatientName { get; set; }
+        [Display(Name = "Prescrição")]
         public string Prescription { get; set; }
-        [Display(Name = "Date")]
+        [Display(Name = "Data")]
         public DateTime Date { get; set; }
-        [Display(Name = "Quantity")]
+        [Display(Name = "Quantidade")]
         public string Quantity { get; set; }
     }
 }

@@ -24,7 +24,7 @@
                 </p>
                 foreach (var anamneseId in session.AnamneseIds)
                 {
-                    @this.Html.Action("Details", "PastMedicalHistories", new { id = anamneseId })
+                @this.Html.Action("Details", "Anamneses", new { id = anamneseId })
                 }
             }
             @if (session.PhysicalExaminationIds.Count > 0)

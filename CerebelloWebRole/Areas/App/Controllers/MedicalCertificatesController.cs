@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using iTextSharp.text;
@@ -117,7 +116,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         ///         
         ///     5   If the model does not exist, all fields must be accepted
         ///     
-        /// Notes:
+        /// Observations:
         ///     
         ///     
         ///     
@@ -149,7 +148,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     {
                         var field = formModel.Fields[i];
                         if (string.IsNullOrEmpty(field.Value))
-                            this.ModelState.AddModelError("Fields[" + i + "]", "Field value is required");
+                            this.ModelState.AddModelError("Fields[" + i + "]", "O valor do campo é requerido");
                     }
                 }
             }
@@ -326,7 +325,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 match =>
                 {
                     if (StringHelper.RemoveDiacritics(match.Groups[1].Value).ToLower() == "paciente")
-                        return PersonHelper.GetFullName(certificate.Patient.Person);
+                        return certificate.Patient.Person.FullName;
                     var matchingField = certificate.Fields.FirstOrDefault(f => f.Name.Trim() == match.Groups[1].Value.Trim());
                     if (matchingField != null)
                         return matchingField.Value;

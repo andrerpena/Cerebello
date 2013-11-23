@@ -9,7 +9,7 @@
     bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
     bool isSubsequentAppointment = !isGenericAppointment && !isFirstAppointment;
 
-    string saveButtonText = isGenericAppointment ? "save appointment" : "save consultation";
+    string saveButtonText = isGenericAppointment ? "salvar compromisso" : "salvar consulta";
 
     Func<bool, string> funcDisplay = b => b ? "table-row" : "none";
 }
@@ -56,14 +56,14 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="subsequent-appointments-only" style="display: @funcDisplay(isSubsequentAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientFullNameLookup)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientNameLookup)</th>
                     <td>
                         @Html.AutocompleteFor(
                             model => model.PatientId,
-                            model => model.PatientFullNameLookup,
+                            model => model.PatientNameLookup,
                             Url.Action("LookupPatients", "Patients"))
                         <script type="text/javascript">
-                            $("#PatientFullNameLookup").autocomplete({
+                            $("#PatientNameLookup").autocomplete({
                                 change: function (data) {
                                     if (data) {
                                         $("#HealthInsuranceId").val(data.InsuranceId);
@@ -85,9 +85,9 @@
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientFullName)</th>
+                    <th>@Html.LabelForRequired(model => model.PatientName)</th>
                     <td>
-                        @Html.EditorFor(model => model.PatientFullName)
+                        @Html.EditorFor(model => model.PatientName)
                         <a id="existing-user-link" href="#" class="block-little-link">O paciente já é cadastrado</a>
                     </td>
                 </tr>
@@ -130,13 +130,13 @@
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientPhoneHome)</th>
-                    <td>@Html.EditorFor(model => model.PatientPhoneHome)</td>
+                    <th>@Html.LabelForRequired(model => model.PatientPhoneLand)</th>
+                    <td>@Html.EditorFor(model => model.PatientPhoneLand)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
-                    <th>@Html.LabelForRequired(model => model.PatientPhoneMobile)</th>
-                    <td>@Html.EditorFor(model => model.PatientPhoneMobile)</td>
+                    <th>@Html.LabelForRequired(model => model.PatientPhoneCell)</th>
+                    <td>@Html.EditorFor(model => model.PatientPhoneCell)</td>
                 </tr>
                 
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
@@ -218,7 +218,7 @@
                 }
             },
             error: function (e) {
-                alert("Could not save appintment. Unexpected error.");
+                alert("Não foi possível salvar a consulta. Erro inesperado.");
             }
         });
 
@@ -244,8 +244,8 @@
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
             $("#IsGenericAppointment").val(false);
-            $("#PatientFullNameLookup").focus();
-            $("#save-button").val("save consultation");
+            $("#PatientNameLookup").focus();
+            $("#save-button").val("salvar consulta");
             $(this).trigger("modal-resize");
         });
 
@@ -261,7 +261,7 @@
             $(".generic-appointment-only").show();
             $("#IsGenericAppointment").val(true);
             $("#Description").focus();
-            $("#save-button").val("save appointment");
+            $("#save-button").val("salvar compromisso");
             $(this).trigger("modal-resize");
         });
 
@@ -270,7 +270,7 @@
             $(".subsequent-appointments-only").hide();
             $(".first-appointment-only").show();
             $("#PatientFirstAppointment").val(true);
-            $("#PatientFirstName").focus();
+            $("#PatientName").focus();
             $(this).trigger("modal-resize");
         });
 
@@ -279,7 +279,7 @@
             $(".first-appointment-only").hide();
             $(".subsequent-appointments-only").show();
             $("#PatientFirstAppointment").val(false);
-            $("#PatientFullNameLookup").focus();
+            $("#PatientNameLookup").focus();
             $(this).trigger("modal-resize");
         });
 
@@ -371,7 +371,7 @@
             }
         });
 
-        $("#PatientFullNameLookup").focus();
+        $("#PatientNameLookup").focus();
 
     </script>
 </div>

@@ -7,7 +7,6 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.Security;
 using Cerebello.Model;
-using CerebelloWebRole.Areas.App.Helpers;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
 using CerebelloWebRole.Models;
@@ -58,10 +57,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     .Select(b => new ConfigAccountViewModel.BillingCycle
                     {
                         // ReSharper disable PossibleInvalidOperationException
-                        CycleStart = (DateTime)ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, b.ReferenceDate),
+                        CycleStart = (DateTime)this.ConvertToLocalDateTime(b.ReferenceDate),
                         // ReSharper restore PossibleInvalidOperationException
-                        CycleEnd = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, b.ReferenceDateEnd),
-                        DueDate = ModelDateTimeHelper.ConvertToLocalDateTime(this.DbPractice, b.DueDate),
+                        CycleEnd = this.ConvertToLocalDateTime(b.ReferenceDateEnd),
+                        DueDate = this.ConvertToLocalDateTime(b.DueDate),
                         Value = b.MainAmount - b.MainDiscount,
                         IsPaid = b.IsPayd,
                         EffectiveValue = b.PaydAmount,
@@ -143,14 +142,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 {
                     // Rendering message bodies from partial view.
                     var emailViewModel = new UserEmailViewModel(eachDoctorUser);
-                    var toAddress = new MailAddress(eachDoctorUser.Person.Email, PersonHelper.GetFullName(eachDoctorUser.Person));
+                    var toAddress = new MailAddress(eachDoctorUser.Person.Email, eachDoctorUser.Person.FullName);
                     var mailMessage = this.CreateEmailMessagePartial("AccountDataEmail", toAddress, emailViewModel);
 
                     // attaching pdf
                     var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor);
 
                     mailMessage.Attachments.Add(
-                        new Attachment(pdf, "Prontuários.pdf", MimeTypesHelper.GetContentType(".pdf")));
+                        new Attachment(
+                            new MemoryStream(pdf.DocumentBytes), "Prontuários.pdf", pdf.MimeType));
 
                     // attaching xml
                     var xml = ReportController.ExportDoctorXml(this.db, this.DbPractice, eachDoctorUser.Doctor);
@@ -289,7 +289,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         // sending e-mail to cerebello@cerebello.com.br
                         // to remember us to send the payment request
                         var emailViewModel = new InternalUpgradeEmailViewModel(this.DbUser, viewModel);
-                        var toAddress = new MailAddress("cerebello@cerebello.com.br", PersonHelper.GetFullName(this.DbUser.Person));
+                        var toAddress = new MailAddress("cerebello@cerebello.com.br", this.DbUser.Person.FullName);
                         var mailMessage = this.CreateEmailMessagePartial("InternalUpgradeEmail", toAddress, emailViewModel);
                         this.SendEmailAsync(mailMessage).ContinueWith(t =>
                             {

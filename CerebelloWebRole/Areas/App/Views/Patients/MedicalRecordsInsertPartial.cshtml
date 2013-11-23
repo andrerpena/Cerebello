@@ -97,58 +97,67 @@
 }
 <div class="new-medical-appointment-panel-wrapper">
     <div class="new-medical-appointment-panel">
-        <!-- past medical history -->
+        <!-- anamnese -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PastMedicalHistories", new { patientId = Model.Id, y, m, d })">Past medical history</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-anamnese" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Anamneses", new { patientId = Model.Id, y, m, d })">Nova anamnese</a>
+            <div id="new-anamnese-wrapper" class="appointment-panel-wrapper">
             </div>
         </div>
         <!-- physical examination -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PhysicalExamination", new { patientId = Model.Id, y, m, d })">Physical exam</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-physicalExamination" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "PhysicalExamination", new { patientId = Model.Id, y, m, d })">Novo exame físico</a>
+            <div id="new-physicalExamination-wrapper" class="appointment-panel-wrapper">
             </div>
         </div>
         <!-- diagnostic hypotheses -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "DiagnosticHypotheses", new { patientId = Model.Id, y, m, d })">Diagnostic hypotheses</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-diagnostic-hipothesis" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "DiagnosticHypotheses", new { patientId = Model.Id, y, m, d })">Nova hipótese diagnóstica</a>
+            <div id="new-diagnostic-hipothesis-wrapper" class="appointment-panel-wrapper">
             </div>
         </div>
         <!-- receipt -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Receipts", new { patientId = Model.Id, y, m, d })">New prescription</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-receipt" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Receipts", new { patientId = Model.Id, y, m, d })">Nova receita</a>
+            <div id="new-receipt-wrapper" class="appointment-panel-wrapper">
             </div>
         </div>
         <!-- exam requirement -->
         <div>
-            <a  class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Exams", new { patientId = Model.Id, y, m, d })">New exam or preceeding request</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-exam" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Exams", new { patientId = Model.Id, y, m, d })">Nova solicitação de exame ou procedimento</a>
+            <div class="new-exams-wrapper appointment-panel-wrapper">
             </div>
         </div>
         <!-- exam result -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "ExamResults", new { patientId = Model.Id, y, m, d })">New exam or preceeding result</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-exam-result" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "ExamResults", new { patientId = Model.Id, y, m, d })">Novo resultado de exame ou procedimento</a>
+            <div class="new-exam-result-wrapper appointment-panel-wrapper">
             </div>
         </div>
         <!-- diagnosis -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "Diagnosis", new { patientId = Model.Id, y, m, d })">New diagnosis</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-diagnosis" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "Diagnosis", new { patientId = Model.Id, y, m, d })">Novo diagnóstico</a>
+            <div class="new-diagnosis-wrapper appointment-panel-wrapper">
             </div>
         </div>
         <!-- medical certificate -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "MedicalCertificates", new { patientId = Model.Id, y, m, d })">New medical certificate</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-medical-certificate" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "MedicalCertificates", new { patientId = Model.Id, y, m, d })">Novo atestado médico</a>
+            <div class="medical-certificate-wrapper appointment-panel-wrapper">
             </div>
         </div>
         <!-- patient files -->
         <div>
-            <a class="icon-link icon-link-plus add-appointment-panel" href="@Url.Action("Create", "PatientFiles", new { patientId = Model.Id, y, m, d })">Upload files</a>
-            <div class="appointment-panel-wrapper">
+            <a id="new-patientFile" class="icon-link icon-link-plus add-appointment-panel"
+                href="@Url.Action("Create", "PatientFiles", new { patientId = Model.Id, y, m, d })">Enviar arquivos</a>
+            <div class="medical-certificate-wrapper appointment-panel-wrapper">
             </div>
         </div>
     </div>
