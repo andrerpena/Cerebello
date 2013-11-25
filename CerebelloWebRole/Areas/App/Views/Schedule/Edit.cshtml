@@ -3,13 +3,13 @@
     this.Layout = null;
 
     // This is going to be either 'C' or 'E'
-    char isEditingOrCreating = (char)this.ViewBag.IsEditingOrCreating;
+    var isEditingOrCreating = (char)this.ViewBag.IsEditingOrCreating;
 
-    bool isGenericAppointment = Model.IsGenericAppointment && !Model.PatientFirstAppointment;
-    bool isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
-    bool isSubsequentAppointment = !isGenericAppointment && !isFirstAppointment;
+    var isGenericAppointment = Model.IsGenericAppointment && !Model.PatientFirstAppointment;
+    var isFirstAppointment = Model.PatientFirstAppointment && !Model.IsGenericAppointment;
+    var isSubsequentAppointment = !isGenericAppointment && !isFirstAppointment;
 
-    string saveButtonText = isGenericAppointment ? "salvar compromisso" : "salvar consulta";
+    var saveButtonText = isGenericAppointment ? "salvar compromisso" : "salvar consulta";
 
     Func<bool, string> funcDisplay = b => b ? "table-row" : "none";
 }
@@ -120,6 +120,10 @@
             }
             @if (isEditingOrCreating == 'C' || isFirstAppointment || isSubsequentAppointment)
             {
+                <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
+                    <th>@Html.LabelForRequired(model => model.PatientCode)</th>
+                    <td>@Html.TextBoxFor(model => model.PatientCode)</td>
+                </tr>
                 <tr class="first-appointment-only" style="display: @funcDisplay(isFirstAppointment)">
                     <th>@Html.LabelForRequired(model => model.PatientGender)</th>
                     <td>@Html.EnumDropdownListFor(model => model.PatientGender)</td>

@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.SolutionSetup", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.Manager", "Cerebello.Manager\Cerebello.Manager.csproj", "{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cerebello.SmartRecords", "Cerebello.SmartRecords\Cerebello.SmartRecords.csproj", "{43F84061-CA70-43F3-A0DE-C0052026EFE6}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Cerebello.vsmdi
@@ -108,6 +110,16 @@ Global
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8FBBB0AF-0A1A-41D8-985D-B8AD4C4CE945}.Release|x86.ActiveCfg = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{43F84061-CA70-43F3-A0DE-C0052026EFE6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

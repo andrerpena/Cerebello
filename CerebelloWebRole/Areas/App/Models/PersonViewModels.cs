@@ -37,7 +37,7 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Data de Nascimento")]
         [DateOfBirth]
         // TODO: MVC 4 use HTML 5 <input type="date" for DateTime... this is a problem for IE9 and FireFox />
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [EnumDataType(typeof(TypeMaritalStatus))]
         [Display(Name = "Estado Civil")]

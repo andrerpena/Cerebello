@@ -191,13 +191,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     start = localNow.ToString("HH:mm");
             }
 
-            DateTime localDateAlone = date.Value.Date;
+            var localDateAlone = date.Value.Date;
 
             //var slots = GetDaySlots(dateOnly, this.Doctor);
             var slotDuration = TimeSpan.FromMinutes(this.Doctor.CFG_Schedule.AppointmentTime);
 
             // Getting start date and time.
-            DateTime localStartTime =
+            var localStartTime =
                 string.IsNullOrEmpty(start) ?
                 localDateAlone :
                 localDateAlone + DateTimeHelper.GetTimeSpan(start);
@@ -206,7 +206,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             //FindNearestSlotStartTime(ref start, slots, ref startTime);
 
             // Getting end date and time.
-            DateTime localEndTime =
+            var localEndTime =
                 string.IsNullOrEmpty(end) ?
                 localStartTime + slotDuration :
                 localDateAlone + DateTimeHelper.GetTimeSpan(end);
@@ -223,7 +223,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 var doctor = this.Doctor;
 
                 // Determining the date and time to start scanning for a free time slot.
-                DateTime localStartingFrom = localStartTime;
+                var localStartingFrom = localStartTime;
 
                 if (localNow > localStartingFrom)
                     localStartingFrom = localNow;
@@ -241,15 +241,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // Creating viewmodel.
             var viewModel = new AppointmentViewModel();
 
-            int currentUserPracticeId = this.DbUser.PracticeId;
-
             var patient = this.db.Patients
                 .Where(p => p.Id == patientId)
-                .Select(p => new { p.Person.FullName, p.LastUsedHealthInsuranceId })
+                .Select(p => new { p.Code, p.Person.FullName, p.LastUsedHealthInsuranceId })
                 .FirstOrDefault();
 
             if (patient != null)
             {
+                viewModel.PatientCode = patient.Code.HasValue ? patient.Code.Value.ToString("D6") : "000000";
                 viewModel.PatientNameLookup = patient.FullName;
                 viewModel.HealthInsuranceId = patient.LastUsedHealthInsuranceId;
                 viewModel.HealthInsuranceName = this.db.HealthInsurances
@@ -257,6 +256,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     .Select(hi => hi.Name)
                     .SingleOrDefault();
                 viewModel.PatientId = patientId;
+            }
+            else
+            {
+                var currentLastCode = this.db.Patients.Max(p => p.Code);
+                if (!currentLastCode.HasValue)
+                    currentLastCode = 0;
+                viewModel.PatientCode = (currentLastCode + 1).Value.ToString("D6");
             }
 
             viewModel.LocalDateTime = localDateAlone;
@@ -390,6 +396,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // This is a generic appointment, so we must clear validation for patient.
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientCode);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientGender);
@@ -403,7 +410,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // This is a medical appointment, so we must clear validation for generic appointment.
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
-
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientId);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientNameLookup);
             }
@@ -411,7 +417,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 // This is a medical appointment, so we must clear validation for generic appointment.
                 this.ModelState.ClearPropertyErrors(() => formModel.Description);
-
+                this.ModelState.ClearPropertyErrors(() => formModel.PatientCode);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientName);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientGender);
                 this.ModelState.ClearPropertyErrors(() => formModel.PatientDateOfBirth);
@@ -448,6 +454,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         ModelState.AddModelError<AppointmentViewModel>(
                             model => model.Status,
                             "Não é permitido determinar o Status para consultas agendadas para o futuro");
+            }
+
+            // Verify if the patient code is valid
+            if (formModel.PatientFirstAppointment && formModel.PatientCode != null)
+            {
+                var patientCodeAsInt = default(int);
+                int.TryParse(formModel.PatientCode, out patientCodeAsInt);
+                if (patientCodeAsInt != default(int) && this.db.Patients.Any(p => p.Code == patientCodeAsInt))
+                    this.ModelState.AddModelError<AppointmentViewModel>(
+                        model => model.PatientCode, "O código do paciente informado pertence a outro paciente");
             }
 
             // Saving data if model is valid.
@@ -525,6 +541,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                                             Email = formModel.PatientEmail,
                                             EmailGravatarHash = GravatarHelper.GetGravatarHash(formModel.PatientEmail)
                                         },
+                                Code = int.Parse(formModel.PatientCode),
                                 LastUsedHealthInsuranceId = formModel.HealthInsuranceId,
                                 Doctor = this.Doctor,
                                 PracticeId = this.DbUser.PracticeId,
@@ -1176,19 +1193,9 @@ namespace CerebelloWebRole.Areas.App.Controllers
             if (viewModel.LocalDateTime != viewModel.LocalDateTime.Date)
                 throw new ArgumentException("viewModel.Date must be the date alone, without time data.");
 
-            ModelStateDictionary inconsistencyMessages = new ModelStateDictionary();
+            var inconsistencyMessages = new ModelStateDictionary();
             if (!string.IsNullOrEmpty(viewModel.Start) && !string.IsNullOrEmpty(viewModel.End))
             {
-                var isTimeValid = ValidateTime(
-                    this.db,
-                    this.Doctor,
-                    viewModel.LocalDateTime,
-                    viewModel.Start,
-                    viewModel.End,
-                    this.ModelState,
-                    inconsistencyMessages,
-                    localNow);
-
                 var startTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.Start);
                 var endTimeLocal = viewModel.LocalDateTime + DateTimeHelper.GetTimeSpan(viewModel.End);
 

@@ -51,6 +51,10 @@ namespace CerebelloWebRole.Areas.App.Models
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String PatientName { get; set; }
 
+        [Display(Name = "Código")]
+        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
+        public string PatientCode { get; set; }
+
         [Display(Name = "E-mail")]
         [Code.EmailAddress]
         public string PatientEmail { get; set; }

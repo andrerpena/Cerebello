@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,10 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
 using Cerebello.Model;
+using Cerebello.SmartRecords;
 using CerebelloWebRole.Areas.App.Models;
 using CerebelloWebRole.Code;
-using Telerik.Reporting;
-using Telerik.Reporting.Processing;
-using Telerik.Reporting.XmlSerialization;
-using Report = Telerik.Reporting.Report;
-using SubReport = Telerik.Reporting.SubReport;
+using SmartRecords;
 
 namespace CerebelloWebRole.Areas.App.Controllers
 {
@@ -44,46 +42,132 @@ namespace CerebelloWebRole.Areas.App.Controllers
             return stringBuilder.ToString();
         }
 
-        internal static RenderingResult ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
+        internal static byte[] ExportPatientsPdf(int? patientId, CerebelloEntitiesAccessFilterWrapper db, Practice practice, Doctor doctor)
         {
             var reportDataSource = new ReportData(db, practice).GetReportDataSourceForPdf(doctor, patientId);
-            Report telerikReport;
 
-            if (DebugConfig.IsDebug && DebugConfig.UseLocalResourcesOnly)
+            // the frame determines what is displayed in the header and in the
+            // footer of your report pages
+            var frame = new ReportFrame(
+                new ReportFrameData()
+                {
+                    Header1 = doctor.CFG_Documents.Header1,
+                    Header2 = doctor.CFG_Documents.Header2,
+                    FooterLeft1 = doctor.CFG_Documents.FooterLeft1,
+                    FooterLeft2 = doctor.CFG_Documents.FooterLeft2,
+                    FooterRight1 = doctor.CFG_Documents.FooterRight1,
+                    FooterRight2 = doctor.CFG_Documents.FooterRight2
+                });
+
+            // creates a new report
+            var report = new Report(frame);
+            foreach (var patient in reportDataSource.Patients)
             {
-                // Getting file name of the report model.
-                var resourcePath = String.Format("C:\\Cerebello\\CerebelloWebRole\\Content\\Reports\\PatientsList\\Doctor.trdx");
+                // creates a data-context for each contact inside the report.
+                // a data context is a section of your report that is bound to
+                // a particular data object.
+                using (var patientContext = report.AddDataContext(patient))
+                {
+                    // creates a title for the contact
+                    patientContext.AddTitle(ReportTitleSize.H1, m => "Paciente: " + m.FullName);
 
-                // Creating the report and exporting PDF.
-                telerikReport = CreateReportFromFile(resourcePath);
+                    // creates a Card to display the contacts details
+                    var card = patientContext.AddCard();
+                    card.AddField(m => m.FullName, true);
+                    card.AddField(m => m.Gender);
+                    card.AddField(m => m.DateOfBirth);
+                    card.AddField(m => m.Profissao);
+                    card.AddField(m => m.MaritalStatus);
+                    card.AddField(m => m.PhoneLand);
+                    card.AddField(m => m.PhoneCell);
+                    card.AddField(m => m.Email, true);
+                    card.AddField(m => m.Observations, true);
+
+                    // creates another Card for displaying the contact's address details
+                    patientContext.AddTitle(ReportTitleSize.H2, m => "Endereço");
+                    var addressCard = patientContext.AddCard(m => m.Address);
+                    addressCard.AddField(m => m.Street, true);
+                    addressCard.AddField(m => m.Neighborhood, true);
+                    addressCard.AddField(m => m.Complement);
+                    addressCard.AddField(m => m.City);
+                    addressCard.AddField(m => m.StateProvince);
+                    addressCard.AddField(m => m.CEP);
+
+                    for (var i = 0; i < patient.Sessions.Count; i++)
+                    {
+                        var closureI = i;
+                        var session = patient.Sessions[i];
+
+                        patientContext.AddTitle(ReportTitleSize.H2, m => "Consulta do dia " + session.Date.ToShortDateString() + " às " + session.Date.ToShortTimeString());
+
+                        for (var j = 0; j < session.Anamneses.Count; j++)
+                        {
+                            var closureJ = j;
+                            patientContext.AddTitle(ReportTitleSize.H2, m => "Anamnese");
+                            var anamneseCard = patientContext.AddCard(c => c.Sessions[closureI].Anamneses[closureJ]);
+                            anamneseCard.AddField(m => m.ChiefComplaint, true);
+                            anamneseCard.AddField(m => m.HistoryOfThePresentIllness, true);
+                            anamneseCard.AddField(m => m.PastMedicalHistory, true);
+                            anamneseCard.AddField(m => m.ReviewOfSystems, true);
+                            anamneseCard.AddField(m => m.FamilyDeseases, true);
+                            anamneseCard.AddField(m => m.SocialHistory, true);
+                            anamneseCard.AddField(m => m.RegularAndAcuteMedications, true);
+                            anamneseCard.AddField(m => m.Allergies, true);
+                            anamneseCard.AddField(m => m.SexualHistory, true);
+                            anamneseCard.AddField(m => m.Conclusion, true);
+                        }
+
+                        for (var j = 0; j < session.PhysicalExaminations.Count; j++)
+                        {
+                            var closureJ = j;
+                            patientContext.AddTitle(ReportTitleSize.H2, m => "Exame físico");
+                            var physicalExaminationCard = patientContext.AddCard(c => c.Sessions[closureI].PhysicalExaminations[closureJ]);
+                            physicalExaminationCard.AddField(m => m.Notes);
+                        }
+
+                        for (var j = 0; j < session.DiagnosticHipotheses.Count; j++)
+                        {
+                            var closureJ = j;
+                            patientContext.AddTitle(ReportTitleSize.H2, m => "Hipótese diagnóstica");
+                            var physicalExaminationCard = patientContext.AddCard(c => c.Sessions[closureI].DiagnosticHipotheses[closureJ]);
+                            physicalExaminationCard.AddField(m => m.Cid10Code);
+                            physicalExaminationCard.AddField(m => m.Cid10Name);
+                            physicalExaminationCard.AddField(m => m.Text);
+                        }
+
+                        for (var j = 0; j < session.Prescriptions.Count; j++)
+                        {
+                            var closureJ = j;
+                            patientContext.AddTitle(ReportTitleSize.H2, m => "Receita");
+                            var prescriptionGrid = patientContext.AddGrid(c => c.Sessions[closureI].Prescriptions[closureJ].PrescriptionMedicines);
+                            prescriptionGrid.AddColumn(m => m.MedicineText);
+                            prescriptionGrid.AddColumn(m => m.Quantity);
+                            prescriptionGrid.AddColumn(m => m.Prescription);
+                            prescriptionGrid.AddColumn(m => m.Observations);
+                        }
+
+                        if (session.ExaminationRequests.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H2, m => "Pedidos de exame ou procedimento");
+                            var examinationRequestsGrid = patientContext.AddGrid(c => c.Sessions[closureI].ExaminationRequests);
+                            examinationRequestsGrid.AddColumn(m => m.MedicalProcedureName);
+                            examinationRequestsGrid.AddColumn(m => m.MedicalProcedureCode);
+                            examinationRequestsGrid.AddColumn(m => m.Notes);
+                        }
+
+                        if (session.ExaminationResults.Any())
+                        {
+                            patientContext.AddTitle(ReportTitleSize.H2, m => "Resultados de exame ou procedimento");
+                            var examinationResultGrid = patientContext.AddGrid(c => c.Sessions[closureI].ExaminationResults);
+                            examinationResultGrid.AddColumn(m => m.MedicalProcedureName);
+                            examinationResultGrid.AddColumn(m => m.MedicalProcedureCode);
+                            examinationResultGrid.AddColumn(m => m.Text);
+                        }
+                    }
+                }
             }
-            else
-            {
-                // Getting resource name of the report model.
-                var resourcePath = String.Format("Content\\Reports\\PatientsList\\Doctor.trdx");
 
-                // Creating the report and exporting PDF.
-                telerikReport = CreateReportFromResource(resourcePath);
-            }
-
-            // Creating the report and exporting PDF.
-            using (telerikReport)
-            {
-                telerikReport.DataSource = new[] { reportDataSource };
-
-                // setting up the report parameters
-                telerikReport.ReportParameters["Header1"].Value = doctor.CFG_Documents.Header1;
-                telerikReport.ReportParameters["Header2"].Value = doctor.CFG_Documents.Header2;
-                telerikReport.ReportParameters["FooterLeft1"].Value = doctor.CFG_Documents.FooterLeft1;
-                telerikReport.ReportParameters["FooterLeft2"].Value = doctor.CFG_Documents.FooterLeft2;
-                telerikReport.ReportParameters["FooterRight1"].Value = doctor.CFG_Documents.FooterRight1;
-                telerikReport.ReportParameters["FooterRight2"].Value = doctor.CFG_Documents.FooterRight2;
-
-                // Exporting PDF from report.
-                var reportProcessor = new ReportProcessor();
-                var pdf = reportProcessor.RenderReport("PDF", telerikReport, null);
-                return pdf;
-            }
+            return report.SaveToByteArray();
         }
 
         [SelfPermission]
@@ -92,58 +176,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             var pdf = ExportPatientsPdf(patientId, this.db, this.DbPractice, this.Doctor);
 
             // Returning the generated PDF as a file.
-            return this.File(pdf.DocumentBytes, pdf.MimeType);
-        }
-
-        private static Report CreateReportFromResource(string resourceName)
-        {
-            var asm = typeof(ReportController).Assembly;
-            var asmName = asm.GetName().Name;
-
-            var resName = Path.Combine(asmName, resourceName)
-                .Replace("\\", ".");
-
-            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
-            Report report;
-            using (var xmlReader = XmlReader.Create(asm.GetManifestResourceStream(resName), settings))
-            {
-                var xmlSerializer = new ReportXmlSerializer();
-                report = (Report)xmlSerializer.Deserialize(xmlReader);
-            }
-
-            var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
-            foreach (var eachSubReport in subReports)
-            {
-                var resourceNameSub = Path.Combine(Path.GetDirectoryName(resourceName), String.Format("{0}.trdx", eachSubReport.Name));
-                var reportSub = CreateReportFromResource(resourceNameSub);
-                report.Disposed += (s, e) => reportSub.Dispose();
-                eachSubReport.ReportSource = reportSub;
-            }
-
-            return report;
-        }
-
-        private static Report CreateReportFromFile(string fileName)
-        {
-            var settings = new XmlReaderSettings { IgnoreWhitespace = true };
-            Report report;
-            using (var fileStream = System.IO.File.Open(fileName, FileMode.Open))
-            using (var xmlReader = XmlReader.Create(fileStream, settings))
-            {
-                var xmlSerializer = new ReportXmlSerializer();
-                report = (Report)xmlSerializer.Deserialize(xmlReader);
-            }
-
-            var subReports = report.Items.Find(typeof(SubReport), true).OfType<SubReport>();
-            foreach (var eachSubReport in subReports)
-            {
-                var resourceNameSub = Path.Combine(Path.GetDirectoryName(fileName), String.Format("{0}.trdx", eachSubReport.Name));
-                var reportSub = CreateReportFromFile(resourceNameSub);
-                report.Disposed += (s, e) => reportSub.Dispose();
-                eachSubReport.ReportSource = reportSub;
-            }
-
-            return report;
+            return this.File(pdf, "application/pdf");
         }
     }
 
@@ -245,7 +278,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Date = arg.Date,
                     Anamneses = this.db.Anamnese.Where(x => arg.AnamneseIds.Contains(x.Id))
                         .Select(anamneseGetter).ToList(),
-                    Receipts = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
+                    Prescriptions = this.db.Receipts.Where(x => arg.ReceiptIds.Contains(x.Id))
                         .Select(receiptGetter).ToList(),
                     PhysicalExaminations = this.db.PhysicalExaminations.Where(x => arg.PhysicalExaminationIds.Contains(x.Id))
                         .Select(physicalExaminationGetter).ToList(),
@@ -335,11 +368,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
         public class PdfPatientData : XmlPatientData
         {
+            [Display(Name = "Sexo")]
             public new string Gender
             {
                 get { return EnumHelper.GetValueDisplayDictionary(typeof(TypeGender))[(int)base.Gender]; }
             }
 
+            [Display(Name = "Estado civil")]
             public new string MaritalStatus
             {
                 get
@@ -350,6 +385,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 }
             }
 
+            [Display(Name = "Proprietário do CPF")]
             public new string CpfOwner
             {
                 get
@@ -430,7 +466,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             public List<AnamneseViewModel> Anamneses { get; set; }
             public List<PhysicalExaminationViewModel> PhysicalExaminations { get; set; }
-            public List<ReceiptViewModel> Receipts { get; set; }
+            public List<ReceiptViewModel> Prescriptions { get; set; }
             public List<ExaminationRequestViewModel> ExaminationRequests { get; set; }
             public List<ExaminationResultViewModel> ExaminationResults { get; set; }
             public List<DiagnosisViewModel> Diagnosis { get; set; }
@@ -439,3 +475,4 @@ namespace CerebelloWebRole.Areas.App.Controllers
         }
     }
 }
+

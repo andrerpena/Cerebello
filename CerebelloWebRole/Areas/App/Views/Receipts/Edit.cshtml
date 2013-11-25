@@ -16,9 +16,9 @@
         @this.Html.HiddenFor(model => model.IssuanceDate)
 
         <ul class="edit-list medicines-list">
-            @if (this.Model != null && this.Model.ReceiptMedicines.Count > 0)
+            @if (this.Model != null && this.Model.PrescriptionMedicines.Count > 0)
             {
-                foreach (var receiptMedicine in this.Model.ReceiptMedicines)
+                foreach (var receiptMedicine in this.Model.PrescriptionMedicines)
                 {
                     @this.Html.Partial("ReceiptMedicineEditor", new ViewDataDictionary(this.ViewData) { Model = receiptMedicine })
                 }

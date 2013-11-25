@@ -777,7 +777,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Registration" Type="varchar" MaxLength="100" />
+          <Property Name="Code" Type="int" />
           <Property Name="DoctorId" Type="int" Nullable="false" />
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
@@ -2226,7 +2226,6 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="Registration" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="DoctorId" Type="Int32" Nullable="false" />
           <Property Name="PersonId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_Patient_Doctor" FromRole="Patient" ToRole="Doctor" />
@@ -2248,6 +2247,7 @@
           <Property Type="Boolean" Name="IsBackedUp" Nullable="false" />
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Patient_Practice" FromRole="Patient" ToRole="Practice" />
           <NavigationProperty Name="GoogleDrivePatientInfoes" Relationship="Cerebello.Model.FK_GoogleDrivePatientInfo_Patient" FromRole="Patient" ToRole="GoogleDrivePatientInfo" />
+          <Property Type="Int32" Name="Code" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -3755,11 +3755,11 @@
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Patients"><EntityTypeMapping TypeName="Cerebello.Model.Patient"><MappingFragment StoreEntitySet="Patient">
-            <ScalarProperty Name="IsBackedUp" ColumnName="IsBackedUp" />
+            <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="IsBackedUp" ColumnName="IsBackedUp" />
                 <ScalarProperty Name="LastUsedHealthInsuranceId" ColumnName="LastUsedHealthInsuranceId" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Registration" ColumnName="Registration" />
             <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>

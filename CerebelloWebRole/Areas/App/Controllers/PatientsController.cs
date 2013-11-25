@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -22,7 +23,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             public DateTime LocalDate { get; set; }
         }
 
-        protected static PatientViewModel GetViewModel(PracticeController controller, [NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments, bool includeAddressData = true)
+        private static PatientViewModel GetViewModel(PracticeController controller, [NotNull] Patient patient, bool includeSessions, bool includeFutureAppointments, bool includeAddressData = true)
         {
             if (patient == null) throw new ArgumentNullException("patient");
 
@@ -32,6 +33,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             FillPersonViewModel(controller.DbPractice, patient.Person, viewModel);
 
             viewModel.Id = patient.Id;
+            viewModel.Code = patient.Code.HasValue ? patient.Code.Value.ToString("D6") : "000000";
             viewModel.PatientId = patient.Id;
             viewModel.PersonId = patient.Person.Id;
             viewModel.Observations = patient.Person.Observations;
@@ -409,7 +411,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
         {
             PatientViewModel viewModel = null;
 
-            if (id != null)
+            if (id.HasValue)
             {
                 // editing an existing patient
                 var patient = this.db.Patients.First(p => p.Id == id);
@@ -419,6 +421,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
             }
             else
             {
+                viewModel = new PatientViewModel();
+                // the suggested next patient code for the practice. Patient code is not unique for each doctor, it's unique for each each practice
+                var currentLastCode = this.db.Patients.Max(p => p.Code);
+                if (!currentLastCode.HasValue)
+                    currentLastCode = 0;
+                viewModel.Code = (currentLastCode + 1).Value.ToString("D6");
+
                 // if this account has a patient limit, then we should tell the user
                 var patientLimit = this.DbPractice.AccountContract.PatientsLimit;
 
@@ -448,6 +457,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
             // if this account has a patient limit, then we should tell the user if he/she blows up the limit
             var patientLimit = this.DbPractice.AccountContract.PatientsLimit;
 
+            // verify patient limit
             if (patientLimit != null)
             {
                 var patientCount = this.db.Patients.Count(p => p.PracticeId == this.DbPractice.Id);
@@ -459,6 +469,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
                         "Não é possível adicionar mais pacientes, pois já foi atingido o limite de {0} pacientes de sua conta.",
                         patientLimit);
                 }
+            }
+
+            // Verify if the patient code is valid
+            if (formModel.Code != null)
+            {
+                var patientCodeAsInt = default(int);
+                int.TryParse(formModel.Code, out patientCodeAsInt);
+                if (patientCodeAsInt != default(int) && this.db.Patients.Any(p => p.Code == patientCodeAsInt))
+                    this.ModelState.AddModelError<PatientViewModel>(
+                        model => model.Code, "O código do paciente informado pertence a outro paciente");
             }
 
             if (ModelState.IsValid)
@@ -481,11 +501,13 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Doctor = this.Doctor;
 
                 patient.IsBackedUp = false;
+                patient.Code = int.Parse(formModel.Code);
                 patient.Person.BirthPlace = formModel.BirthPlace;
                 patient.Person.CPF = formModel.Cpf;
                 patient.Person.CPFOwner = formModel.CpfOwner;
                 patient.Person.CreatedOn = this.GetUtcNow();
-                patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
+                Debug.Assert(formModel.DateOfBirth != null, "formModel.DateOfBirth != null");
+                patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth.Value);
                 patient.Person.FullName = formModel.FullName;
                 patient.Person.Gender = (short)formModel.Gender;
                 patient.Person.MaritalStatus = formModel.MaritalStatus;

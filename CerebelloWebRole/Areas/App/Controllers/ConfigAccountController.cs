@@ -149,8 +149,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     var pdf = ReportController.ExportPatientsPdf(null, this.db, this.DbPractice, eachDoctorUser.Doctor);
 
                     mailMessage.Attachments.Add(
-                        new Attachment(
-                            new MemoryStream(pdf.DocumentBytes), "Prontuários.pdf", pdf.MimeType));
+                        new Attachment(new MemoryStream(pdf), "Prontuários.pdf", "application/pdf"));
 
                     // attaching xml
                     var xml = ReportController.ExportDoctorXml(this.db, this.DbPractice, eachDoctorUser.Doctor);

@@ -13,6 +13,7 @@
 
     var editPanel = this.Html.CreateEditPanel();
     editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
+    editPanel.AddField(m => m.Code, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.Gender, @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
     editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
     editPanel.AddField(m => m.MaritalStatus, @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);

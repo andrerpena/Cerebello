@@ -323,7 +323,8 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             if (user != null)
             {
-                user.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth);
+                if (formModel.DateOfBirth.HasValue)
+                    user.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth.Value);
                 user.Person.BirthPlace = formModel.BirthPlace;
                 user.Person.CPF = formModel.Cpf;
                 user.Person.CPFOwner = formModel.CpfOwner;

@@ -242,9 +242,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Reporting, Version=6.2.12.1017, Culture=neutral, PublicKeyToken=a9d7983dfcc261be">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
@@ -1160,6 +1157,10 @@
     <ProjectReference Include="..\Cerebello.Model\Cerebello.Model.csproj">
       <Project>{D5F1D306-C581-42FD-935B-72F71B18775D}</Project>
       <Name>Cerebello.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cerebello.SmartRecords\Cerebello.SmartRecords.csproj">
+      <Project>{43f84061-ca70-43f3-a0de-c0052026efe6}</Project>
+      <Name>Cerebello.SmartRecords</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

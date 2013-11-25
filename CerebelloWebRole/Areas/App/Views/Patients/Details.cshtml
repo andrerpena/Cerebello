@@ -12,9 +12,9 @@
     // creating details CardView
     var cardView = Html.CreateCardView();
     cardView.AddField(m => m.FullName, wholeRow: true);
+    cardView.AddField(m => m.Code);
     cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.ToShortDateString())
-    (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth, localNow))</text>, wholeRow: true);
+    cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.HasValue ? (@item.DateOfBirth.Value.ToShortDateString() + " " + (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth.Value, localNow))) : "")</text>, wholeRow: true);
     cardView.AddField(m => m.Profissao);
     cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
     cardView.AddField(m => m.Cpf);

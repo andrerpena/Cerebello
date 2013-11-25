@@ -11774,30 +11774,6 @@ namespace Cerebello.Model
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String Registration
-        {
-            get
-            {
-                return _Registration;
-            }
-            set
-            {
-                OnRegistrationChanging(value);
-                ReportPropertyChanging("Registration");
-                _Registration = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("Registration");
-                OnRegistrationChanged();
-            }
-        }
-        private global::System.String _Registration;
-        partial void OnRegistrationChanging(global::System.String value);
-        partial void OnRegistrationChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.Int32 DoctorId
@@ -11914,6 +11890,30 @@ namespace Cerebello.Model
         private global::System.Boolean _IsBackedUp;
         partial void OnIsBackedUpChanging(global::System.Boolean value);
         partial void OnIsBackedUpChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Code
+        {
+            get
+            {
+                return _Code;
+            }
+            set
+            {
+                OnCodeChanging(value);
+                ReportPropertyChanging("Code");
+                _Code = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Code");
+                OnCodeChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Code;
+        partial void OnCodeChanging(Nullable<global::System.Int32> value);
+        partial void OnCodeChanged();
 
         #endregion
 

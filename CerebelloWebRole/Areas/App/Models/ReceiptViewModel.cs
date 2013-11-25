@@ -13,7 +13,7 @@ namespace CerebelloWebRole.Areas.App.Models
     {
         public ReceiptViewModel()
         {
-            this.ReceiptMedicines = new List<ReceiptMedicineViewModel>();
+            this.PrescriptionMedicines = new List<ReceiptMedicineViewModel>();
         }
 
         public int? Id { get; set; }
@@ -21,7 +21,7 @@ namespace CerebelloWebRole.Areas.App.Models
         // Propriedade não está sendo usada?
         //public DateTime? Date { get; set; }
 
-        public List<ReceiptMedicineViewModel> ReceiptMedicines { get; set; }
+        public List<ReceiptMedicineViewModel> PrescriptionMedicines { get; set; }
 
         [Display(Name = "Data de emissão")]
         [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]

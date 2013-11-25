@@ -24,7 +24,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     Id = receipt.Id,
                     PatientId = receipt.PatientId, // expected to be null here
                     IssuanceDate = toLocal(receipt.IssuanceDate),
-                    ReceiptMedicines = (from rm in receipt.ReceiptMedicines
+                    PrescriptionMedicines = (from rm in receipt.ReceiptMedicines
                                         select new ReceiptMedicineViewModel()
                                             {
                                                 Id = rm.Id,
@@ -82,14 +82,14 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
             Receipt receipt;
 
-            if (formModel.ReceiptMedicines == null)
+            if (formModel.PrescriptionMedicines == null)
                 this.ModelState.AddModelError("Medicines", "A receita deve ter pelo menos um medicamento");
 
             // we cannot trust that the autocomplete has removed incorrect
             // value from the client. 
-            for (var i = 0; i < formModel.ReceiptMedicines.Count; i++)
+            for (var i = 0; i < formModel.PrescriptionMedicines.Count; i++)
             {
-                var medication = formModel.ReceiptMedicines[i];
+                var medication = formModel.PrescriptionMedicines[i];
                 if (medication.MedicineId != null)
                     continue;
                 // it's necessary to remove this value from the ModelState to
@@ -113,10 +113,10 @@ namespace CerebelloWebRole.Areas.App.Controllers
             else
                 receipt = this.db.Receipts.FirstOrDefault(r => r.Id == formModel.Id);
 
-            if (formModel.ReceiptMedicines.Count == 0)
+            if (formModel.PrescriptionMedicines.Count == 0)
             {
                 this.ModelState.AddModelError(
-                    () => formModel.ReceiptMedicines,
+                    () => formModel.PrescriptionMedicines,
                     "Não é possível criar uma receita sem medicamentos.");
             }
 
@@ -126,7 +126,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 // otherwise this is going to throw exceptions.
                 Debug.Assert(receipt != null, "receipt != null");
                 receipt.ReceiptMedicines.Update(
-                        formModel.ReceiptMedicines,
+                        formModel.PrescriptionMedicines,
                         (vm, m) => vm.Id == m.Id,
                         (vm, m) =>
                         {

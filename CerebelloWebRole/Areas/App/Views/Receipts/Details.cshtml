@@ -4,9 +4,9 @@
 }
 <div class="receipt-details medical-appointment-details-panel" data-val-id="receipt-@Model.Id">
     <ul class="view-list receipts-list">
-        @if (Model != null && Model.ReceiptMedicines != null)
+        @if (Model != null && Model.PrescriptionMedicines != null)
         {
-            foreach (var medicine in Model.ReceiptMedicines)
+            foreach (var medicine in Model.PrescriptionMedicines)
             {
                 @Html.Partial("ReceiptMedicineDetails", medicine)
             }
