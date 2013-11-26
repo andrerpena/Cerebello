@@ -339,17 +339,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     return null;
                 }
             }
-
-            public new string CpfOwner
-            {
-                get
-                {
-                    if (base.CpfOwner.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value];
-                    return null;
-                }
-            }
-
+            
             public new string MedicalEntityJurisdiction
             {
                 get
@@ -384,17 +374,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     return null;
                 }
             }
-
-            [Display(Name = "Proprietário do CPF")]
-            public new string CpfOwner
-            {
-                get
-                {
-                    if (base.CpfOwner.HasValue)
-                        return EnumHelper.GetValueDisplayDictionary(typeof(TypeCpfOwner))[(int)base.CpfOwner.Value];
-                    return null;
-                }
-            }
         }
 
 
@@ -412,12 +391,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
             {
                 get { return (TypeMaritalStatus?)base.MaritalStatus; }
                 set { base.MaritalStatus = (short?)value; }
-            }
-
-            public new TypeCpfOwner? CpfOwner
-            {
-                get { return (TypeCpfOwner?)base.CpfOwner; }
-                set { base.CpfOwner = (short?)value; }
             }
 
             public new TypeEstadoBrasileiro? MedicalEntityJurisdiction
@@ -444,13 +417,7 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 get { return (TypeMaritalStatus?)base.MaritalStatus; }
                 set { base.MaritalStatus = (short?)value; }
             }
-
-            public new TypeCpfOwner? CpfOwner
-            {
-                get { return (TypeCpfOwner?)base.CpfOwner; }
-                set { base.CpfOwner = (short?)value; }
-            }
-
+            
             public List<AppointmentViewModel> Appointments { get; set; }
 
             [XmlElement]

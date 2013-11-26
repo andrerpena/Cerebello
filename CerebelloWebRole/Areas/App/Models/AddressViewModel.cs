@@ -7,7 +7,6 @@ namespace CerebelloWebRole.Areas.App.Models
     public class AddressViewModel
     {
         [Display(Name = "Logradouro")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String Street { get; set; }
 
         [Display(Name = "Complemento")]
@@ -17,11 +16,9 @@ namespace CerebelloWebRole.Areas.App.Models
         public String Neighborhood { get; set; }
 
         [Display(Name = "Estado")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String StateProvince { get; set; }
 
         [Display(Name = "Cidade")]
-        [Required(ErrorMessageResourceType = typeof(ModelStrings), ErrorMessageResourceName = "RequiredValidationMessage")]
         public String City { get; set; }
 
         [Display(Name = "CEP")]

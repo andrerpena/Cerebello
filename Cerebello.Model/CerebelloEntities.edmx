@@ -820,7 +820,7 @@
           <Property Name="MaritalStatus" Type="smallint" />
           <Property Name="BirthPlace" Type="varchar" MaxLength="100" />
           <Property Name="CPF" Type="varchar" MaxLength="12" />
-          <Property Name="CPFOwner" Type="smallint" />
+          <Property Name="RG" Type="varchar" MaxLength="20" />
           <Property Name="Observations" Type="text" />
           <Property Name="Profession" Type="varchar" MaxLength="100" />
           <Property Name="PhoneLand" Type="varchar" MaxLength="20" />
@@ -829,6 +829,13 @@
           <Property Name="EmailGravatarHash" Type="varchar" MaxLength="200" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
           <Property Name="PictureBlobName" Type="varchar" MaxLength="200" />
+          <Property Name="Ethnicity" Type="int" />
+          <Property Name="Schooling" Type="int" />
+          <Property Name="FatherName" Type="varchar" MaxLength="200" />
+          <Property Name="MotherName" Type="varchar" MaxLength="200" />
+          <Property Name="FatherProfession" Type="varchar" MaxLength="100" />
+          <Property Name="MotherProfession" Type="varchar" MaxLength="100" />
+          <Property Name="Responsible" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="PersonAddress">
           <Key>
@@ -2261,7 +2268,6 @@
           <Property Name="MaritalStatus" Type="Int16" />
           <Property Name="BirthPlace" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="CPF" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="CPFOwner" Type="Int16" />
           <Property Name="Observations" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
           <Property Name="Profession" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Patients" Relationship="Cerebello.Model.FK_Patient_Person" FromRole="Person" ToRole="Patient" />
@@ -2274,6 +2280,14 @@
           <NavigationProperty Name="Addresses" Relationship="Cerebello.Model.PersonAddress" FromRole="Person" ToRole="Address" />
           <Property Type="String" Name="PictureBlobName" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="GoogleUserAccoutInfoes" Relationship="Cerebello.Model.FK_GoogleAccoutInfo_Person1" FromRole="Person" ToRole="GoogleUserAccoutInfo" />
+          <Property Type="String" Name="RG" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Ethnicity" />
+          <Property Type="Int32" Name="Schooling" />
+          <Property Type="String" Name="FatherName" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MotherName" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="FatherProfession" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MotherProfession" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Responsible" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Practice">
           <Key>
@@ -3764,6 +3778,14 @@
             <ScalarProperty Name="PersonId" ColumnName="PersonId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="People"><EntityTypeMapping TypeName="Cerebello.Model.Person"><MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="Responsible" ColumnName="Responsible" />
+                <ScalarProperty Name="MotherProfession" ColumnName="MotherProfession" />
+                <ScalarProperty Name="FatherProfession" ColumnName="FatherProfession" />
+                <ScalarProperty Name="MotherName" ColumnName="MotherName" />
+                <ScalarProperty Name="FatherName" ColumnName="FatherName" />
+                <ScalarProperty Name="Schooling" ColumnName="Schooling" />
+                <ScalarProperty Name="Ethnicity" ColumnName="Ethnicity" />
+                <ScalarProperty Name="RG" ColumnName="RG" />
                 <ScalarProperty Name="PictureBlobName" ColumnName="PictureBlobName" />
                 <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
                 <ScalarProperty Name="PhoneLand" ColumnName="PhoneLand" />
@@ -3778,7 +3800,6 @@
             <ScalarProperty Name="MaritalStatus" ColumnName="MaritalStatus" />
             <ScalarProperty Name="BirthPlace" ColumnName="BirthPlace" />
             <ScalarProperty Name="CPF" ColumnName="CPF" />
-            <ScalarProperty Name="CPFOwner" ColumnName="CPFOwner" />
             <ScalarProperty Name="Observations" ColumnName="Observations" />
             <ScalarProperty Name="Profession" ColumnName="Profession" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>

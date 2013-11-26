@@ -327,7 +327,6 @@ namespace CerebelloWebRole.Areas.App.Controllers
                     user.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth.Value);
                 user.Person.BirthPlace = formModel.BirthPlace;
                 user.Person.CPF = formModel.Cpf;
-                user.Person.CPFOwner = formModel.CpfOwner;
                 user.Person.CreatedOn = this.GetUtcNow();
                 user.Person.MaritalStatus = formModel.MaritalStatus;
                 user.Person.Profession = formModel.Profissao;

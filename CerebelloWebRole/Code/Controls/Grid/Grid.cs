@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 
 namespace CerebelloWebRole.Code
 {
@@ -15,6 +16,8 @@ namespace CerebelloWebRole.Code
     {
         private readonly HtmlHelper htmlHelper;
         private readonly IEnumerable<TModel> model;
+
+        protected string Title { get; set; }
 
         public List<GridFieldBase> Fields { get; set; }
 
@@ -25,7 +28,7 @@ namespace CerebelloWebRole.Code
 
         public int? RowsPerPage { get; set; }
 
-        public Grid(HtmlHelper htmlHelper, IEnumerable<TModel> model, int? rowsPerPage = null, int? count = null)
+        public Grid(HtmlHelper htmlHelper, IEnumerable<TModel> model, int? rowsPerPage = null, int? count = null, string title = null)
         {
             if (rowsPerPage.HasValue != count.HasValue)
                 throw new Exception("When rowsPerPage is set on a Grid, count must be set as well and vice-versa");
@@ -35,6 +38,7 @@ namespace CerebelloWebRole.Code
             this.Fields = new List<GridFieldBase>();
             this.RowsPerPage = rowsPerPage;
             this.Count = count;
+            this.Title = title;
         }
 
         public void AddField<TValue>(Expression<Func<TModel, TValue>> exp, Func<TModel, object> format = null, string header = null, bool canSort = false, bool wordWrap = false, string cssClass = null)
@@ -95,8 +99,15 @@ namespace CerebelloWebRole.Code
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
-            if(this.model == null)
+            if (this.model == null)
                 throw new Exception("Cannot render grid. Model is null");
+
+            var wrapperDiv = new TagBuilder("div");
+            wrapperDiv.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            wrapperDiv.AddCssClass("grid");
+
+            if (!string.IsNullOrEmpty(this.Title))
+                wrapperDiv.InnerHtml += new TagBuilder("h2") { InnerHtml = this.Title };
 
             if (this.model.Any())
             {
@@ -168,7 +179,7 @@ namespace CerebelloWebRole.Code
                             canSort: field.CanSort));
                 }
 
-                return new MvcHtmlString(webGrid.GetHtml(
+                wrapperDiv.InnerHtml += new MvcHtmlString(webGrid.GetHtml(
                         columns: webGridColumns,
                         tableStyle: "webgrid",
                         headerStyle: "webgrid-header",
@@ -177,12 +188,15 @@ namespace CerebelloWebRole.Code
                         selectedRowStyle: "webgrid-selected-row",
                         rowStyle: "webgrid-row-style").ToString());
             }
+            else
+            {
+                var noRecords = new TagBuilder("div");
+                noRecords.AddCssClass("message-warning");
+                noRecords.SetInnerText("Não existem registros a serem exibidos");
+                wrapperDiv.InnerHtml += noRecords;    
+            }
 
-            var noRecords = new TagBuilder("div");
-            noRecords.AddCssClass("message-warning");
-            noRecords.SetInnerText("Não existem registros a serem exibidos");
-
-            return new MvcHtmlString(noRecords.ToString());
+            return new MvcHtmlString(wrapperDiv.ToString());
         }
     }
 }

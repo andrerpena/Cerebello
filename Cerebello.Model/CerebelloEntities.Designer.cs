@@ -13179,30 +13179,6 @@ namespace Cerebello.Model
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> CPFOwner
-        {
-            get
-            {
-                return _CPFOwner;
-            }
-            set
-            {
-                OnCPFOwnerChanging(value);
-                ReportPropertyChanging("CPFOwner");
-                _CPFOwner = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("CPFOwner");
-                OnCPFOwnerChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _CPFOwner;
-        partial void OnCPFOwnerChanging(Nullable<global::System.Int16> value);
-        partial void OnCPFOwnerChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String Observations
         {
             get
@@ -13389,6 +13365,198 @@ namespace Cerebello.Model
         private global::System.String _PictureBlobName;
         partial void OnPictureBlobNameChanging(global::System.String value);
         partial void OnPictureBlobNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String RG
+        {
+            get
+            {
+                return _RG;
+            }
+            set
+            {
+                OnRGChanging(value);
+                ReportPropertyChanging("RG");
+                _RG = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("RG");
+                OnRGChanged();
+            }
+        }
+        private global::System.String _RG;
+        partial void OnRGChanging(global::System.String value);
+        partial void OnRGChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Ethnicity
+        {
+            get
+            {
+                return _Ethnicity;
+            }
+            set
+            {
+                OnEthnicityChanging(value);
+                ReportPropertyChanging("Ethnicity");
+                _Ethnicity = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Ethnicity");
+                OnEthnicityChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Ethnicity;
+        partial void OnEthnicityChanging(Nullable<global::System.Int32> value);
+        partial void OnEthnicityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Schooling
+        {
+            get
+            {
+                return _Schooling;
+            }
+            set
+            {
+                OnSchoolingChanging(value);
+                ReportPropertyChanging("Schooling");
+                _Schooling = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Schooling");
+                OnSchoolingChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Schooling;
+        partial void OnSchoolingChanging(Nullable<global::System.Int32> value);
+        partial void OnSchoolingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String FatherName
+        {
+            get
+            {
+                return _FatherName;
+            }
+            set
+            {
+                OnFatherNameChanging(value);
+                ReportPropertyChanging("FatherName");
+                _FatherName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("FatherName");
+                OnFatherNameChanged();
+            }
+        }
+        private global::System.String _FatherName;
+        partial void OnFatherNameChanging(global::System.String value);
+        partial void OnFatherNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String MotherName
+        {
+            get
+            {
+                return _MotherName;
+            }
+            set
+            {
+                OnMotherNameChanging(value);
+                ReportPropertyChanging("MotherName");
+                _MotherName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("MotherName");
+                OnMotherNameChanged();
+            }
+        }
+        private global::System.String _MotherName;
+        partial void OnMotherNameChanging(global::System.String value);
+        partial void OnMotherNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String FatherProfession
+        {
+            get
+            {
+                return _FatherProfession;
+            }
+            set
+            {
+                OnFatherProfessionChanging(value);
+                ReportPropertyChanging("FatherProfession");
+                _FatherProfession = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("FatherProfession");
+                OnFatherProfessionChanged();
+            }
+        }
+        private global::System.String _FatherProfession;
+        partial void OnFatherProfessionChanging(global::System.String value);
+        partial void OnFatherProfessionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String MotherProfession
+        {
+            get
+            {
+                return _MotherProfession;
+            }
+            set
+            {
+                OnMotherProfessionChanging(value);
+                ReportPropertyChanging("MotherProfession");
+                _MotherProfession = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("MotherProfession");
+                OnMotherProfessionChanged();
+            }
+        }
+        private global::System.String _MotherProfession;
+        partial void OnMotherProfessionChanging(global::System.String value);
+        partial void OnMotherProfessionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Responsible
+        {
+            get
+            {
+                return _Responsible;
+            }
+            set
+            {
+                OnResponsibleChanging(value);
+                ReportPropertyChanging("Responsible");
+                _Responsible = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Responsible");
+                OnResponsibleChanged();
+            }
+        }
+        private global::System.String _Responsible;
+        partial void OnResponsibleChanging(global::System.String value);
+        partial void OnResponsibleChanged();
 
         #endregion
 

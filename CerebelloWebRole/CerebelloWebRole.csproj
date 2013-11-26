@@ -14,7 +14,7 @@
     <RootNamespace>CerebelloWebRole</RootNamespace>
     <AssemblyName>CerebelloWebRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -945,7 +945,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Docs\Models\" />
-    <Folder Include="Code\Controls\CardView\WindowsAzure\" />
     <Folder Include="Code\Setup\" />
     <Folder Include="Content\Images\App\Site\" />
   </ItemGroup>

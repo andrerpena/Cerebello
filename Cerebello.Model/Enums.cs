@@ -133,6 +133,39 @@ namespace Cerebello.Model
         Female = 1
     }
 
+    /// <summary>
+    /// Ethnicity type
+    /// </summary>
+    public enum TypeEthnicity
+    {
+        [Display(Name = "Branca")]
+        White = 0,
+
+        [Display(Name = "Negra")]
+        Black = 1,
+
+        [Display(Name = "Parda")]
+        Brown = 2
+    }
+
+    /// <summary>
+    /// Ethnicity type
+    /// </summary>
+    public enum TypeSchooling
+    {
+        [Display(Name = "Nenhuma")]
+        None = 0,
+
+        [Display(Name = "Ensino básico")]
+        Primary = 1,
+
+        [Display(Name = "Ensino médio")]
+        HighSchool = 2,
+
+        [Display(Name = "Ensino superior")]
+        HigherEducation = 3
+    }
+
     public static class TimeZoneName
     {
         public const string GmtL4_GmtL3 = "Central Brazilian Standard Time";

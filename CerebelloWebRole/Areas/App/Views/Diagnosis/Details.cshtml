@@ -5,7 +5,7 @@
 <div class="diagnosis-details medical-appointment-details-panel" data-val-id="diagnosis-@Model.Id">
     @if (Model != null)
     {
-        var cardView = this.Html.CreateCardView(true);
+        var cardView = this.Html.CreateCardView(suppressEmptyCells: true);
         cardView.AddField(model => model.Cid10Name, wholeRow: true);
         cardView.AddField(model => model.Cid10Code, header: "Código CID-10", wholeRow: true);
         cardView.AddField(model => model.Text, wholeRow: true);

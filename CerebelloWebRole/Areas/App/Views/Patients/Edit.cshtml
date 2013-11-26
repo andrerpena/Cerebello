@@ -11,19 +11,35 @@
         this.ViewBag.Title = "Novo paciente · Cerebello";
     }
 
-    var editPanel = this.Html.CreateEditPanel();
-    editPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
-    editPanel.AddField(m => m.Code, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.Gender, @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
-    editPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.MaritalStatus, @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
-    editPanel.AddField(m => m.BirthPlace);
-    editPanel.AddField(m => m.Cpf);
-    editPanel.AddField(m => m.Profissao);
-    editPanel.AddField(m => m.Email, wholeRow: true);
-    editPanel.AddField(m => m.PhoneLand, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.PhoneCell, EditPanelFieldSize.Small);
-    editPanel.AddField(m => m.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>, wholeRow: true);
+    var basicInfoPanel = this.Html.CreateEditPanel();
+    basicInfoPanel.AddField(m => m.FullName, EditPanelFieldSize.Large);
+    basicInfoPanel.AddField(m => m.Code, EditPanelFieldSize.Small);
+    basicInfoPanel.AddField(m => m.Gender, @<text>@Html.EnumDropdownListFor(model => model.Gender)</text>);
+    basicInfoPanel.AddField(m => m.DateOfBirth, EditPanelFieldSize.Small);
+    basicInfoPanel.AddField(m => m.Email, wholeRow: true);
+
+    var phonesPanel = this.Html.CreateEditPanel();
+    phonesPanel.AddField(m => m.PhoneCell, EditPanelFieldSize.Small);
+    phonesPanel.AddField(m => m.PhoneLand, EditPanelFieldSize.Small);
+
+    var complementaryDataPanel = this.Html.CreateEditPanel();
+    complementaryDataPanel.AddField(m => m.BirthPlace);
+    complementaryDataPanel.AddField(m => m.Cpf);
+    complementaryDataPanel.AddField(m => m.Rg);
+    complementaryDataPanel.AddField(m => m.Ethnicity, @<text>@Html.EnumDropdownListFor(model => model.Ethnicity)</text>);
+    complementaryDataPanel.AddField(m => m.MaritalStatus, @<text>@Html.EnumDropdownListFor(model => model.MaritalStatus)</text>);
+    complementaryDataPanel.AddField(m => m.Profissao);
+    complementaryDataPanel.AddField(m => m.Schooling, @<text>@Html.EnumDropdownListFor(model => model.Schooling)</text>);
+
+    var familyPanel = this.Html.CreateEditPanel();
+    familyPanel.AddField(m => m.MotherName);
+    familyPanel.AddField(m => m.MotherProfession);
+    familyPanel.AddField(m => m.FatherName);
+    familyPanel.AddField(m => m.FatherProfession);
+    familyPanel.AddField(m => m.Responsible);
+
+    var otherInfoPanel = this.Html.CreateEditPanel();
+    otherInfoPanel.AddField(m => m.Observations, EditPanelFieldSize.Large, @<text>@Html.TextAreaFor(model => model.Observations)</text>, wholeRow: true);
 }
 @section Styles {
     <link rel="Stylesheet" type="text/css" href="/content/styles/app/patients_edit.css" />
@@ -50,13 +66,24 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(false)
-    @editPanel.GetHtml()
 
-    <h2>
-        @Html.LabelFor(model => model.Address)
-    </h2>
-    
+    <h2>Geral</h2>
+    @basicInfoPanel.GetHtml()
+
+    <h2>Telefones</h2>
+    @phonesPanel.GetHtml()
+
+    <h2>Endereço</h2>
     @Html.EditorFor(model => model.Address)
+
+    <h2>Dados complementares</h2>
+    @complementaryDataPanel.GetHtml()
+
+    <h2>Dados familiares</h2>
+    @familyPanel.GetHtml()
+
+    <h2>Outras informações</h2>
+    @otherInfoPanel.GetHtml()
     
     <div class="submit-bar">
         <input type="submit" value="salvar paciente" />

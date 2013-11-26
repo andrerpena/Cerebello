@@ -1,4 +1,8 @@
-﻿.webgrid {
+﻿.grid h2 {
+    border-bottom: none;
+}
+
+.webgrid {
     border: 1px solid #E3E3E3;
     border-collapse: collapse;
     width: 100%;

@@ -5,7 +5,7 @@
 <div class="anamnese-details medical-appointment-details-panel" data-val-id="anamnese-@Model.Id">
     @if (Model != null)
     {
-        var cardView = this.Html.CreateCardView(true);
+        var cardView = this.Html.CreateCardView(suppressEmptyCells: true);
         cardView.AddField(model => model.ChiefComplaint, wholeRow: true);
         cardView.AddField(model => model.HistoryOfThePresentIllness, wholeRow: true);
         cardView.AddField(model => model.PastMedicalHistory, wholeRow: true);

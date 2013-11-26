@@ -19,12 +19,15 @@ namespace CerebelloWebRole.Code
 
         public int FieldsPerRow { get; set; }
 
-        public CardViewResponsive(HtmlHelper<TModel> htmlHelper, int fieldsPerRow = 2, bool suppressEmptyCells = false)
+        protected string Title { get; set; }
+
+        public CardViewResponsive(HtmlHelper<TModel> htmlHelper, string title = null, int fieldsPerRow = 2, bool suppressEmptyCells = false)
         {
             this.suppressEmptyCells = suppressEmptyCells;
             this.Fields = new List<CardViewFieldBase>();
             this.HtmlHelper = htmlHelper;
             this.FieldsPerRow = fieldsPerRow;
+            this.Title = title;
         }
 
         /// <summary>
@@ -65,6 +68,8 @@ namespace CerebelloWebRole.Code
 
         public MvcHtmlString GetHtml(object htmlAttributes = null)
         {
+            var renderedFields = 0;
+
             var rows = new List<List<CardViewFieldBase>>();
             // a primeira coisa a fazer é organizar os campos em rows
             {
@@ -96,7 +101,9 @@ namespace CerebelloWebRole.Code
             var wrapperDiv = new TagBuilder("div");
             wrapperDiv.MergeAttributes(new RouteValueDictionary(htmlAttributes));
             wrapperDiv.AddCssClass("cardview");
-            var wrapperDivContentBuilder = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(this.Title))
+                wrapperDiv.InnerHtml += new TagBuilder("h2") { InnerHtml = this.Title };
 
             for (var i = 0; i < rows.Count; i++)
             {
@@ -114,6 +121,9 @@ namespace CerebelloWebRole.Code
                     // it must be suppressed. Oh really?
                     if (string.IsNullOrEmpty(cellValueInnerHtml) && this.suppressEmptyCells)
                         continue;
+
+                    renderedFields++;
+
                     var cellHeaderInnerHtml = field.Label(this.HtmlHelper).ToString();
 
                     var divColumn = new TagBuilder("div");
@@ -141,10 +151,12 @@ namespace CerebelloWebRole.Code
                     continue;
 
                 divRow.InnerHtml = divRowContentBuilder.ToString();
-                wrapperDivContentBuilder.Append(divRow);
+                wrapperDiv.InnerHtml += divRow.ToString();
             }
 
-            wrapperDiv.InnerHtml = wrapperDivContentBuilder.ToString();
+            if (suppressEmptyCells && renderedFields == 0)
+                return new MvcHtmlString("");
+
             return new MvcHtmlString(wrapperDiv.ToString());
         }
     }

@@ -114,10 +114,16 @@ namespace CerebelloWebRole.Areas.App.Controllers
             viewModel.FullName = person.FullName;
             viewModel.Gender = person.Gender;
             viewModel.MaritalStatus = person.MaritalStatus;
-            viewModel.CpfOwner = person.CPFOwner;
+            viewModel.Ethnicity = person.Ethnicity;
+            viewModel.Schooling = person.Schooling;
+            viewModel.FatherName = person.FatherName;
+            viewModel.FatherProfession = person.FatherProfession;
+            viewModel.MotherName = person.MotherName;
+            viewModel.MotherProfession = person.MotherProfession;
             viewModel.DateOfBirth = ConvertToLocalDateTime(practice, person.DateOfBirth);
             viewModel.Profissao = person.Profession;
             viewModel.Cpf = person.CPF;
+            viewModel.Rg = person.RG;
             viewModel.Email = person.Email;
             viewModel.PhoneCell = person.PhoneCell;
             viewModel.PhoneLand = person.PhoneLand;
@@ -501,10 +507,17 @@ namespace CerebelloWebRole.Areas.App.Controllers
                 patient.Doctor = this.Doctor;
 
                 patient.IsBackedUp = false;
+                Debug.Assert(formModel.Code != null, "formModel.Code != null");
                 patient.Code = int.Parse(formModel.Code);
                 patient.Person.BirthPlace = formModel.BirthPlace;
                 patient.Person.CPF = formModel.Cpf;
-                patient.Person.CPFOwner = formModel.CpfOwner;
+                patient.Person.RG = formModel.Rg;
+                patient.Person.Ethnicity = (int?)formModel.Ethnicity;
+                patient.Person.Schooling = (int?)formModel.Schooling;
+                patient.Person.FatherName = formModel.FatherName;
+                patient.Person.FatherProfession = formModel.FatherProfession;
+                patient.Person.MotherName = formModel.MotherName;
+                patient.Person.MotherProfession = formModel.MotherProfession;
                 patient.Person.CreatedOn = this.GetUtcNow();
                 Debug.Assert(formModel.DateOfBirth != null, "formModel.DateOfBirth != null");
                 patient.Person.DateOfBirth = ConvertToUtcDateTime(this.DbPractice, formModel.DateOfBirth.Value);
@@ -520,19 +533,15 @@ namespace CerebelloWebRole.Areas.App.Controllers
 
                 // handle patient address
                 if (!patient.Person.Addresses.Any())
-                {
-                    patient.Person.Addresses.Add(
-                        new Address
-                            {
-                                PracticeId = this.DbUser.PracticeId,
-                                CEP = formModel.Address.CEP,
-                                City = formModel.Address.City,
-                                Complement = formModel.Address.Complement,
-                                Neighborhood = formModel.Address.Neighborhood,
-                                StateProvince = formModel.Address.StateProvince,
-                                Street = formModel.Address.Street,
-                            });
-                }
+                    patient.Person.Addresses.Add(new Address { PracticeId = this.DbUser.PracticeId });
+
+                var patientAddress = patient.Person.Addresses.First();
+                patientAddress.CEP = formModel.Address.CEP;
+                patientAddress.City = formModel.Address.City;
+                patientAddress.Complement = formModel.Address.Complement;
+                patientAddress.Neighborhood = formModel.Address.Neighborhood;
+                patientAddress.StateProvince = formModel.Address.StateProvince;
+                patientAddress.Street = formModel.Address.Street;
 
                 this.db.SaveChanges();
                 return this.RedirectToAction("Details", new { id = patient.Id });

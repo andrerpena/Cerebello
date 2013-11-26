@@ -175,9 +175,9 @@ namespace CerebelloWebRole.Code
         }
         #endregion
         #region Controls: CardView
-        public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html, bool suppressEmptyCells = false)
+        public static CardViewResponsive<TModel> CreateCardView<TModel>(this HtmlHelper<TModel> html, string title = null, bool suppressEmptyCells = false)
         {
-            return new CardViewResponsive<TModel>(html, suppressEmptyCells: suppressEmptyCells);
+            return new CardViewResponsive<TModel>(html, title, suppressEmptyCells: suppressEmptyCells);
         }
         #endregion
         #region Controls: EditPanel
@@ -195,17 +195,17 @@ namespace CerebelloWebRole.Code
         /// <summary>
         /// Creates a grid considering the current view Model as a type identifier
         /// </summary>
-        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int rowsPerPage, int totalCount)
+        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, int rowsPerPage, int totalCount, string title = null)
         {
-            return new Grid<TModel>(htmlHelper, model, rowsPerPage, totalCount);
+            return new Grid<TModel>(htmlHelper, model, rowsPerPage, totalCount, title);
         }
 
         /// <summary>
         /// Creates a grid considering the current view Model as a type identifier
         /// </summary>
-        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model)
+        public static Grid<TModel> CreateGrid<TModel, TViewModel>(this HtmlHelper<TViewModel> htmlHelper, IEnumerable<TModel> model, string title = null)
         {
-            return new Grid<TModel>(htmlHelper, model);
+            return new Grid<TModel>(htmlHelper, model, title: title);
         }
         #endregion
         #region Controls: ButtonLink

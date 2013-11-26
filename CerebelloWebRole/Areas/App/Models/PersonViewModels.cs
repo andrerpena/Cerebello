@@ -44,17 +44,15 @@ namespace CerebelloWebRole.Areas.App.Models
         [XmlIgnore]
         public short? MaritalStatus { get; set; }
 
-        [Display(Name = "Naturalidade")]
+        [Display(Name = "Nacionalidade")]
         public String BirthPlace { get; set; }
 
         [Display(Name = "CPF")]
         public String Cpf { get; set; }
 
-        [Display(Name = "Proprietário do CPF")]
-        [EnumDataType(typeof(TypeCpfOwner))]
-        [XmlIgnore]
-        public short? CpfOwner { get; set; }
-
+        [Display(Name = "RG")]
+        public string Rg { get; set; }
+        
         [Display(Name = "Profissão")]
         public String Profissao { get; set; }
 
@@ -70,6 +68,29 @@ namespace CerebelloWebRole.Areas.App.Models
         [Display(Name = "Telefone celular")]
         [UIHint("Phone")]
         public String PhoneCell { get; set; }
+
+        [Display(Name = "Etnia")]
+        [EnumDataType(typeof(TypeEthnicity))]
+        public int? Ethnicity { get; set; }
+
+        [Display(Name = "Escolaridade")]
+        [EnumDataType(typeof(TypeSchooling))]
+        public int? Schooling { get; set; }
+
+        [Display(Name = "Nome da mãe")]
+        public string MotherName { get; set; }
+
+        [Display(Name = "Profissão da mãe")]
+        public string MotherProfession { get; set; }
+
+        [Display(Name = "Nome do pai")]
+        public string FatherName { get; set; }
+
+        [Display(Name = "Profissão do pai")]
+        public string FatherProfession { get; set; }
+
+        [Display(Name = "Responsável")]
+        public string Responsible { get; set; }
 
         [Display(Name = "Endereço")]
         public AddressViewModel Address { get; set; }

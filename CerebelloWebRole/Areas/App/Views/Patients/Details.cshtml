@@ -10,21 +10,45 @@
     var retornoDateStr = localNow.AddDays(30).ToString("yyyy-MM-dd");
 
     // creating details CardView
-    var cardView = Html.CreateCardView();
-    cardView.AddField(m => m.FullName, wholeRow: true);
-    cardView.AddField(m => m.Code);
-    cardView.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
-    cardView.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.HasValue ? (@item.DateOfBirth.Value.ToShortDateString() + " " + (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth.Value, localNow))) : "")</text>, wholeRow: true);
-    cardView.AddField(m => m.Profissao);
-    cardView.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeMaritalStatus))</text>);
-    cardView.AddField(m => m.Cpf);
-    cardView.AddField(m => m.CpfOwner, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeCpfOwner))</text>);
-    cardView.AddField(m => m.PhoneLand);
-    cardView.AddField(m => m.PhoneCell);
-    cardView.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);
-    cardView.AddField(m => m.Observations, wholeRow: true);
+    var basicCard = Html.CreateCardView("Geral");
+    basicCard.AddField(m => m.FullName, wholeRow: true);
+    basicCard.AddField(m => m.Code);
+    basicCard.AddField(m => m.Gender, @<text>@EnumHelper.GetText(@item.Gender, typeof(TypeGender))</text>);
+    basicCard.AddField(m => m.DateOfBirth, @<text> @(@item.DateOfBirth.HasValue ? (@item.DateOfBirth.Value.ToShortDateString() + " (" + (@DateTimeHelper.GetPersonAgeInWords(@item.DateOfBirth.Value, localNow))) + ")" : "")</text>, wholeRow: true);
+    basicCard.AddField(m => m.Email, @<text><a href="mailto:@item.Email">@item.Email</a></text>, wholeRow: true);
 
-    var futureAppointmentsGrid = this.Html.CreateGrid(this.Model.FutureAppointments);
+    var phonesCard = this.Html.CreateCardView("Telefones", true);
+    phonesCard.AddField(m => m.PhoneLand);
+    phonesCard.AddField(m => m.PhoneCell);
+
+    var addressCard = Html.CreateCardView("Endereço", true);
+    addressCard.AddField(model => model.Address.Street, wholeRow: true);
+    addressCard.AddField(model => model.Address.Complement);
+    addressCard.AddField(model => model.Address.Neighborhood);
+    addressCard.AddField(model => model.Address.City);
+    addressCard.AddField(model => model.Address.StateProvince);
+    addressCard.AddField(model => model.Address.CEP);
+
+    var complementaryCard = this.Html.CreateCardView("Dados complementares", true);
+    complementaryCard.AddField(m => m.BirthPlace);
+    complementaryCard.AddField(m => m.Cpf);
+    complementaryCard.AddField(m => m.Rg);
+    complementaryCard.AddField(m => m.Ethnicity, @<text>@EnumHelper.GetText(@item.Ethnicity, typeof(TypeEthnicity))</text>);
+    complementaryCard.AddField(m => m.MaritalStatus, @<text>@EnumHelper.GetText(@item.MaritalStatus, typeof(TypeMaritalStatus))</text>);
+    complementaryCard.AddField(m => m.Profissao);
+    complementaryCard.AddField(m => m.Schooling, @<text>@EnumHelper.GetText(@item.Schooling, typeof(TypeSchooling))</text>);
+
+    var familyCard = this.Html.CreateCardView("Dados familiares", true);
+    familyCard.AddField(m => m.MotherName);
+    familyCard.AddField(m => m.MotherProfession);
+    familyCard.AddField(m => m.FatherName);
+    familyCard.AddField(m => m.FatherProfession);
+    familyCard.AddField(m => m.Responsible);
+
+    var otherInfoCard = this.Html.CreateCardView("Outras informações", true);
+    otherInfoCard.AddField(m => m.Observations);
+
+    var futureAppointmentsGrid = this.Html.CreateGrid(this.Model.FutureAppointments, title: "Consultas agendadas para o futuro");
     futureAppointmentsGrid.AddLinkField(model => model.LocalDateTimeSpelled, "Index", "Schedule", a => new { y = a.LocalDateTime.Year, m = a.LocalDateTime.Month, d = a.LocalDateTime.Day });
 }
 @section Title {
@@ -94,16 +118,21 @@
         | <a href="#" id="remove-picture" data-UrlDeletePicture="@this.Url.Action("DeleteProfilePicture", "PersonFiles", new { area = "App", personId = this.Model.PersonId })">Remover foto</a>
     </div>
     <div class="patient-info-content">
-        @cardView.GetHtml()
+        @basicCard.GetHtml()
     </div>
 </div>
-<h2>@Html.LabelFor(model => model.Address)</h2>
-@Html.DisplayFor(model => model.Address)
 
-<h2>Consultas agendadas para o futuro</h2>
-<div style="margin-bottom: 10px">
-    @futureAppointmentsGrid.GetHtml()
-</div>
+@phonesCard.GetHtml()
+
+@addressCard.GetHtml()
+
+@complementaryCard.GetHtml()
+
+@familyCard.GetHtml()
+
+@otherInfoCard.GetHtml()
+
+@futureAppointmentsGrid.GetHtml()
 
 @if (this.ViewBag.CanAccessMedicalRecords == true)
 {
