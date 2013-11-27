@@ -245,6 +245,21 @@ namespace CerebelloWebRole.Code
             get { return new FilteredObjectSetWrapper<DiagnosticHypothesis>(this.innerDb.DiagnosticHypotheses, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
         }
 
+        public FilteredObjectSetWrapper<MedicalRecord> MedicalRecords
+        {
+            get { return new FilteredObjectSetWrapper<MedicalRecord>(this.innerDb.MedicalRecords, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<MedicalRecordField> MedicalRecordFields
+        {
+            get { return new FilteredObjectSetWrapper<MedicalRecordField>(this.innerDb.MedicalRecordFields, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
+        public FilteredObjectSetWrapper<MedicalRecordFieldValue> MedicalRecordFieldValues
+        {
+            get { return new FilteredObjectSetWrapper<MedicalRecordFieldValue>(this.innerDb.MedicalRecordFieldValues, s => s.Where(a => a.PracticeId == this.user.PracticeId)); }
+        }
+
         /// <summary>
         /// Gets the users of the current account, but only if the account is enabled.
         /// When disabled, none will be returned. This kills app usage when account is disabled.
@@ -323,6 +338,8 @@ namespace CerebelloWebRole.Code
         {
             get { return this.innerDb.SYS_Medicine; }
         }
+
+        
 
         public void Dispose()
         {

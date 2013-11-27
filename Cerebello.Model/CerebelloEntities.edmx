@@ -33,6 +33,26 @@
           <EntitySet Name="Leaflet" EntityType="cerebelloModel.Store.Leaflet" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MedicalCertificate" EntityType="cerebelloModel.Store.MedicalCertificate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MedicalCertificateField" EntityType="cerebelloModel.Store.MedicalCertificateField" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MedicalRecord" EntityType="cerebelloModel.Store.MedicalRecord" store:Type="Tables" store:Schema="dbo" store:Name="MedicalRecord">
+            <DefiningQuery>SELECT 
+      [MedicalRecord].[Id] AS [Id], 
+      [MedicalRecord].[Name] AS [Name], 
+      [MedicalRecord].[DoctorId] AS [DoctorId], 
+      [MedicalRecord].[PracticeId] AS [PracticeId]
+      FROM [dbo].[MedicalRecord] AS [MedicalRecord]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="MedicalRecordField" EntityType="cerebelloModel.Store.MedicalRecordField" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MedicalRecordFieldValue" EntityType="cerebelloModel.Store.MedicalRecordFieldValue" store:Type="Tables" store:Schema="dbo" store:Name="MedicalRecordFieldValue">
+            <DefiningQuery>SELECT 
+      [MedicalRecordFieldValue].[Id] AS [Id], 
+      [MedicalRecordFieldValue].[ValueInt] AS [ValueInt], 
+      [MedicalRecordFieldValue].[ValueTextShort] AS [ValueTextShort], 
+      [MedicalRecordFieldValue].[ValueText] AS [ValueText], 
+      [MedicalRecordFieldValue].[ValueDateTime] AS [ValueDateTime], 
+      [MedicalRecordFieldValue].[DoctorId] AS [DoctorId], 
+      [MedicalRecordFieldValue].[PracticeId] AS [PracticeId]
+      FROM [dbo].[MedicalRecordFieldValue] AS [MedicalRecordFieldValue]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="Medicine" EntityType="cerebelloModel.Store.Medicine" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MedicineActiveIngredient" EntityType="cerebelloModel.Store.MedicineActiveIngredient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MedicineLeaflet" EntityType="cerebelloModel.Store.MedicineLeaflet" store:Type="Tables" Schema="dbo" />
@@ -194,6 +214,30 @@
           <AssociationSet Name="FK_MedicalCertificateField_MedicalCertificate" Association="cerebelloModel.Store.FK_MedicalCertificateField_MedicalCertificate">
             <End Role="MedicalCertificate" EntitySet="MedicalCertificate" />
             <End Role="MedicalCertificateField" EntitySet="MedicalCertificateField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecord_Doctor" Association="cerebelloModel.Store.FK_MedicalRecord_Doctor">
+            <End Role="Doctor" EntitySet="Doctor" />
+            <End Role="MedicalRecord" EntitySet="MedicalRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecord_Practice" Association="cerebelloModel.Store.FK_MedicalRecord_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="MedicalRecord" EntitySet="MedicalRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordField_Doctor" Association="cerebelloModel.Store.FK_MedicalRecordField_Doctor">
+            <End Role="Doctor" EntitySet="Doctor" />
+            <End Role="MedicalRecordField" EntitySet="MedicalRecordField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordField_Practice" Association="cerebelloModel.Store.FK_MedicalRecordField_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="MedicalRecordField" EntitySet="MedicalRecordField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordFieldValue_Doctor" Association="cerebelloModel.Store.FK_MedicalRecordFieldValue_Doctor">
+            <End Role="Doctor" EntitySet="Doctor" />
+            <End Role="MedicalRecordFieldValue" EntitySet="MedicalRecordFieldValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordFieldValue_Practice" Association="cerebelloModel.Store.FK_MedicalRecordFieldValue_Practice">
+            <End Role="Practice" EntitySet="Practice" />
+            <End Role="MedicalRecordFieldValue" EntitySet="MedicalRecordFieldValue" />
           </AssociationSet>
           <AssociationSet Name="FK_Medicine_Doctor" Association="cerebelloModel.Store.FK_Medicine_Doctor">
             <End Role="Doctor" EntitySet="Doctor" />
@@ -709,6 +753,48 @@
           <Property Name="MedicalCertificateId" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Value" Type="varchar" MaxLength="50" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'cerebello.dbo.MedicalRecord' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="MedicalRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="DoctorId" />
+            <PropertyRef Name="PracticeId" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="DoctorId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MedicalRecordField">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="DoctorId" Type="int" Nullable="false" />
+          <Property Name="PracticeId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'cerebello.dbo.MedicalRecordFieldValue' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="MedicalRecordFieldValue">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="DoctorId" />
+            <PropertyRef Name="PracticeId" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ValueInt" Type="int" />
+          <Property Name="ValueTextShort" Type="varchar" MaxLength="200" />
+          <Property Name="ValueText" Type="varchar(max)" />
+          <Property Name="ValueDateTime" Type="datetime" />
+          <Property Name="DoctorId" Type="int" Nullable="false" />
           <Property Name="PracticeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Medicine">
@@ -1427,6 +1513,78 @@
             </Principal>
             <Dependent Role="MedicalCertificateField">
               <PropertyRef Name="MedicalCertificateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecord_Doctor">
+          <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+          <End Role="MedicalRecord" Type="cerebelloModel.Store.MedicalRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecord">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecord_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="MedicalRecord" Type="cerebelloModel.Store.MedicalRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecord">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordField_Doctor">
+          <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+          <End Role="MedicalRecordField" Type="cerebelloModel.Store.MedicalRecordField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordField">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordField_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="MedicalRecordField" Type="cerebelloModel.Store.MedicalRecordField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordField">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordFieldValue_Doctor">
+          <End Role="Doctor" Type="cerebelloModel.Store.Doctor" Multiplicity="1" />
+          <End Role="MedicalRecordFieldValue" Type="cerebelloModel.Store.MedicalRecordFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordFieldValue">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordFieldValue_Practice">
+          <End Role="Practice" Type="cerebelloModel.Store.Practice" Multiplicity="1" />
+          <End Role="MedicalRecordFieldValue" Type="cerebelloModel.Store.MedicalRecordFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordFieldValue">
+              <PropertyRef Name="PracticeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2150,6 +2308,33 @@
             <End Role="User" EntitySet="Users" />
             <End Role="FileMetadata" EntitySet="FileMetadatas" />
           </AssociationSet>
+          <EntitySet Name="MedicalRecords" EntityType="Cerebello.Model.MedicalRecord" />
+          <EntitySet Name="MedicalRecordFields" EntityType="Cerebello.Model.MedicalRecordField" />
+          <EntitySet Name="MedicalRecordFieldValues" EntityType="Cerebello.Model.MedicalRecordFieldValue" />
+          <AssociationSet Name="FK_MedicalRecord_Doctor" Association="Cerebello.Model.FK_MedicalRecord_Doctor">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="MedicalRecord" EntitySet="MedicalRecords" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordField_Doctor" Association="Cerebello.Model.FK_MedicalRecordField_Doctor">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="MedicalRecordField" EntitySet="MedicalRecordFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordFieldValue_Doctor" Association="Cerebello.Model.FK_MedicalRecordFieldValue_Doctor">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="MedicalRecordFieldValue" EntitySet="MedicalRecordFieldValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecord_Practice" Association="Cerebello.Model.FK_MedicalRecord_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="MedicalRecord" EntitySet="MedicalRecords" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordField_Practice" Association="Cerebello.Model.FK_MedicalRecordField_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="MedicalRecordField" EntitySet="MedicalRecordFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecordFieldValue_Practice" Association="Cerebello.Model.FK_MedicalRecordFieldValue_Practice">
+            <End Role="Practice" EntitySet="Practices" />
+            <End Role="MedicalRecordFieldValue" EntitySet="MedicalRecordFieldValues" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -2214,6 +2399,9 @@
           <Property Type="Int32" Name="PracticeId" Nullable="false" />
           <NavigationProperty Name="HealthInsurances" Relationship="Cerebello.Model.FK_HealthInsurance_Doctor" FromRole="Doctor" ToRole="HealthInsurance" />
           <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_Doctor_Practice" FromRole="Doctor" ToRole="Practice" />
+          <NavigationProperty Name="MedicalRecords" Relationship="Cerebello.Model.FK_MedicalRecord_Doctor" FromRole="Doctor" ToRole="MedicalRecord" />
+          <NavigationProperty Name="MedicalRecordFields" Relationship="Cerebello.Model.FK_MedicalRecordField_Doctor" FromRole="Doctor" ToRole="MedicalRecordField" />
+          <NavigationProperty Name="MedicalRecordFieldValues" Relationship="Cerebello.Model.FK_MedicalRecordFieldValue_Doctor" FromRole="Doctor" ToRole="MedicalRecordFieldValue" />
         </EntityType>
         <EntityType Name="Laboratory">
           <Key>
@@ -2324,6 +2512,9 @@
           <NavigationProperty Name="Doctors" Relationship="Cerebello.Model.FK_Doctor_Practice" FromRole="Practice" ToRole="Doctor" />
           <Property Type="String" Name="VerificationMethod" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="AccountExpiryDate" Precision="3" />
+          <NavigationProperty Name="MedicalRecords" Relationship="Cerebello.Model.FK_MedicalRecord_Practice" FromRole="Practice" ToRole="MedicalRecord" />
+          <NavigationProperty Name="MedicalRecordFields" Relationship="Cerebello.Model.FK_MedicalRecordField_Practice" FromRole="Practice" ToRole="MedicalRecordField" />
+          <NavigationProperty Name="MedicalRecordFieldValues" Relationship="Cerebello.Model.FK_MedicalRecordFieldValue_Practice" FromRole="Practice" ToRole="MedicalRecordFieldValue" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -3717,6 +3908,120 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MedicalRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="DoctorId" />
+            <PropertyRef Name="PracticeId" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="DoctorId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_MedicalRecord_Doctor" FromRole="MedicalRecord" ToRole="Doctor" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_MedicalRecord_Practice" FromRole="MedicalRecord" ToRole="Practice" />
+        </EntityType>
+        <EntityType Name="MedicalRecordField">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Type" Nullable="false" />
+          <Property Type="Int32" Name="DoctorId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_MedicalRecordField_Doctor" FromRole="MedicalRecordField" ToRole="Doctor" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_MedicalRecordField_Practice" FromRole="MedicalRecordField" ToRole="Practice" />
+        </EntityType>
+        <EntityType Name="MedicalRecordFieldValue">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="DoctorId" />
+            <PropertyRef Name="PracticeId" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ValueInt" />
+          <Property Type="String" Name="ValueTextShort" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ValueText" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ValueDateTime" Precision="3" />
+          <Property Type="Int32" Name="DoctorId" Nullable="false" />
+          <Property Type="Int32" Name="PracticeId" Nullable="false" />
+          <NavigationProperty Name="Doctor" Relationship="Cerebello.Model.FK_MedicalRecordFieldValue_Doctor" FromRole="MedicalRecordFieldValue" ToRole="Doctor" />
+          <NavigationProperty Name="Practice" Relationship="Cerebello.Model.FK_MedicalRecordFieldValue_Practice" FromRole="MedicalRecordFieldValue" ToRole="Practice" />
+        </EntityType>
+        <Association Name="FK_MedicalRecord_Doctor">
+          <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicalRecord" Role="MedicalRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecord">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordField_Doctor">
+          <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicalRecordField" Role="MedicalRecordField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordField">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordFieldValue_Doctor">
+          <End Type="Cerebello.Model.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicalRecordFieldValue" Role="MedicalRecordFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordFieldValue">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecord_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicalRecord" Role="MedicalRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecord">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordField_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicalRecordField" Role="MedicalRecordField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordField">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MedicalRecordFieldValue_Practice">
+          <End Type="Cerebello.Model.Practice" Role="Practice" Multiplicity="1" />
+          <End Type="Cerebello.Model.MedicalRecordFieldValue" Role="MedicalRecordFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Practice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MedicalRecordFieldValue">
+              <PropertyRef Name="PracticeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4442,6 +4747,40 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MedicalRecords">
+            <EntityTypeMapping TypeName="Cerebello.Model.MedicalRecord">
+              <MappingFragment StoreEntitySet="MedicalRecord">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MedicalRecordFields">
+            <EntityTypeMapping TypeName="Cerebello.Model.MedicalRecordField">
+              <MappingFragment StoreEntitySet="MedicalRecordField">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MedicalRecordFieldValues">
+            <EntityTypeMapping TypeName="Cerebello.Model.MedicalRecordFieldValue">
+              <MappingFragment StoreEntitySet="MedicalRecordFieldValue">
+                <ScalarProperty Name="PracticeId" ColumnName="PracticeId" />
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+                <ScalarProperty Name="ValueDateTime" ColumnName="ValueDateTime" />
+                <ScalarProperty Name="ValueText" ColumnName="ValueText" />
+                <ScalarProperty Name="ValueTextShort" ColumnName="ValueTextShort" />
+                <ScalarProperty Name="ValueInt" ColumnName="ValueInt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -4462,7 +4801,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="CerebelloEntities" ZoomLevel="82">
+      <Diagram Name="CerebelloEntities" ZoomLevel="10">
         <EntityTypeShape EntityType="Cerebello.Model.Address" Width="1.5" PointX="37" PointY="2.75" Height="2.7494921874999996" IsExpanded="true" FillColor="DimGray" />
         <EntityTypeShape EntityType="Cerebello.Model.Appointment" Width="2" PointX="26.375" PointY="16.625" Height="2.9417936197916674" IsExpanded="true" FillColor="LightSeaGreen" />
         <EntityTypeShape EntityType="Cerebello.Model.Doctor" Width="3.625" PointX="15.75" PointY="25.125" Height="3.5186979166666674" IsExpanded="true" FillColor="CornflowerBlue" />
@@ -4829,6 +5168,15 @@
         <AssociationConnector Association="Cerebello.Model.FK_Doctor_Practice" />
         <EntityTypeShape EntityType="Cerebello.Model.SPECIAL_Test" Width="1.5" PointX="0.5" PointY="16.25" />
         <AssociationConnector Association="Cerebello.Model.FK_FileMetadata_OwnerUser" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicalRecord" Width="1.5" PointX="11.306019119595186" PointY="0.79126305915008444" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicalRecordField" Width="1.5" PointX="1.9431124971914628" PointY="23.522018905506478" />
+        <EntityTypeShape EntityType="Cerebello.Model.MedicalRecordFieldValue" Width="1.5" PointX="8.1778995041632552" PointY="0.71397313508855786" />
+        <AssociationConnector Association="Cerebello.Model.FK_MedicalRecord_Doctor" />
+        <AssociationConnector Association="Cerebello.Model.FK_MedicalRecordField_Doctor" />
+        <AssociationConnector Association="Cerebello.Model.FK_MedicalRecordFieldValue_Doctor" />
+        <AssociationConnector Association="Cerebello.Model.FK_MedicalRecord_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_MedicalRecordField_Practice" />
+        <AssociationConnector Association="Cerebello.Model.FK_MedicalRecordFieldValue_Practice" />
         </Diagram>
     </Diagrams>
   </Designer>

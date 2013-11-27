@@ -1,0 +1,13 @@
+﻿@model ConfigRecordsViewModel
+
+@{
+    const string title = "Configurações de prontuários";
+    ViewBag.Title = string.Format("{0} · Cerebello", title);
+}
+
+@section Title
+{
+    @title @LockIcon.Icon()
+}
+
+@Html.CollectionEditorFor(model => model.Records, "MedicalRecordEditor", "Adicionar sessão de prontuário")

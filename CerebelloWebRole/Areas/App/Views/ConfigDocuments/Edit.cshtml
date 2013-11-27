@@ -1,6 +1,6 @@
 ﻿@model ConfigDocumentsViewModel
 @{
-    var title = "Configurações de documentos";
+    const string title = "Configurações de documentos";
     ViewBag.Title = string.Format("{0} · Cerebello", title);
     var cancelUrl = ViewBag.ReturnUrl ?? Url.Action("index", "config");
 }

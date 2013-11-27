@@ -1,0 +1,11 @@
+﻿@model ConfigRecordViewModel
+@{
+    Layout = null;
+    var editPanel = this.Html.CreateEditPanel(null);
+    editPanel.AddField(m => m.Name);
+}
+@using (HtmlExtensions.BeginCollectionItem(this.Html, "Records"))
+{
+    @Html.HiddenFor(model => model.Id)
+    @editPanel.GetHtml()
+}

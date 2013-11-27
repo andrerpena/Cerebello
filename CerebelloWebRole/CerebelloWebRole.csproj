@@ -252,8 +252,13 @@
     <Compile Include="Areas\App\Controllers\AppController.cs" />
     <Compile Include="Areas\App\Controllers\CameraWindowController.cs" />
     <Compile Include="Areas\App\Controllers\ConfigBackupController.cs" />
+    <Compile Include="Areas\App\Controllers\ConfigRecordsController.cs" />
     <Compile Include="Areas\App\Controllers\CorreiosController.cs" />
     <Compile Include="Areas\App\Controllers\DiagnosticHypothesesController.cs" />
+    <Compile Include="Areas\App\Models\ConfigRecordFieldValueViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigRecordFieldViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigRecordsViewModel.cs" />
+    <Compile Include="Areas\App\Models\ConfigRecordViewModel.cs" />
     <Compile Include="Areas\App\Models\FileViewModel.cs" />
     <Compile Include="Code\Controllers\CerebelloSiteController.cs" />
     <Compile Include="Code\Extensions\UrlExtensions.cs" />
@@ -871,6 +876,8 @@
     <Content Include="Areas\App\Views\Patients\AddMedicalRecords.cshtml" />
     <Content Include="Areas\App\Views\Patients\MedicalRecordsInsertPartial.cshtml" />
     <Content Include="Areas\App\Views\Patients\MedicalRecordsViewPartial.cshtml" />
+    <Content Include="Areas\App\Views\ConfigRecords\Index.cshtml" />
+    <Content Include="Areas\App\Views\ConfigRecords\MedicalRecordEditor.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />

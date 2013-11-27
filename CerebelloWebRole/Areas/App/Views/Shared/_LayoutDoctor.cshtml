@@ -122,6 +122,9 @@
             <li class="@(this.IsController("ConfigDocuments") ? "youarehere" : "")">
                 <a href="@Url.Action("Edit", "ConfigDocuments")" class="config-icon">Configurações de documentos</a>
             </li>
+            <li class="@(this.IsController("ConfigRecords") ? "youarehere" : "")">
+                <a href="@Url.Action("Index", "ConfigRecords")" class="config-icon">Configurações de prontuário</a>
+            </li>
             <li class="@(this.IsController("ConfigBackup") ? "youarehere" : "")">
                 <a href="@Url.Action("Index", "ConfigBackup")" class="config-icon">Configurações de backup</a> 
             </li>
